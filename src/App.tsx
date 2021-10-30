@@ -19,6 +19,7 @@ import theme from './theme'
 import Farms from './views/Farms'
 import Home from './views/Home'
 import Nests from './views/Nests'
+import Markets from './views/Markets'
 library.add(fas, fab)
 
 const url = new URL(window.location.toString())
@@ -51,6 +52,9 @@ const App: React.FC = () => {
 					</Route>
 					<Route path="/Nests">
 						<Nests />
+					</Route>
+					<Route path="/Markets">
+						<Markets />
 					</Route>
 					<Route path="/Farms">
 						<Farms />
