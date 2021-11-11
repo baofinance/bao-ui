@@ -43,7 +43,7 @@ const Borrowed: React.FC = () => (
 								/>
 								{' '}USDC
 							</td>
-							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>5%</td>
+							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>5.00%</td>
 							<td style={{ justifyContent: 'flex-end', textAlign: 'end', minWidth: '6rem' }}>$500</td>
 						</tr>
 					</tbody>

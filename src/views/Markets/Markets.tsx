@@ -27,19 +27,20 @@ const Markets: React.FC = () => {
 						<Borrowed />
 					</MarketOverview>
 				</Section>
-				<Section>
-					<Supply />
-					<Borrow />
-				</Section>
+					<MarketOverview>
+						<Supply />
+						<Borrow />
+					</MarketOverview>
 			</Container>
 		</Page>
 	)
 }
 
 const MarketOverview = styled.div`
-		display: flex;
-		justify-content: center;
-		width: 100%;
-		margin-top: ${(props) => props.theme.spacing[4]}px;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-top: ${(props) => props.theme.spacing[4]}px;
 `
+
 export default Markets

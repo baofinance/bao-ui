@@ -44,7 +44,7 @@ const Supplied: React.FC = () => (
 								/>
 								{' '}USDC
 							</td>
-							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>5%</td>
+							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>5.00%</td>
 							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>$500</td>
 							<td style={{ justifyContent: 'flex-end', textAlign: 'end', minWidth: '6rem' }}>
 								<FormCheck type="switch" id="custom-switch" />
@@ -58,7 +58,7 @@ const Supplied: React.FC = () => (
 				</Row>
 				<Row sm={2} style={{width: '100%', display: 'flex'}}>
 				<p style={{display: 'flex', justifyContent: 'flex-start', textAlign: 'start', fontSize: '.875rem', color: '#ccc'}}>$500</p>
-				<p style={{display: 'flex', justifyContent: 'flex-end', textAlign: 'right', fontSize: '.875rem', color: '#ccc'}}>23.72%</p>
+				<p style={{display: 'flex', justifyContent: 'flex-end', textAlign: 'right', fontSize: '.875rem', color: '#ccc'}}>5.00%</p>
 				</Row>
 				</TableContainer>
 			</div>
