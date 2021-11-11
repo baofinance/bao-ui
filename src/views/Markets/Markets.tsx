@@ -1,7 +1,7 @@
 import Page from 'components/Page'
 import React, { useEffect, useRef } from 'react'
 import { Container } from 'react-bootstrap'
-import Spacer from 'components/Spacer'
+import Section from 'components/Section'
 import pollyNests from 'assets/img/polly-nests.png'
 import PageHeader from 'components/PageHeader'
 import Overview from './components/Overview'
@@ -9,6 +9,7 @@ import Supplied from './components/Supplied'
 import Borrowed from './components/Borrowed'
 import Supply from './components/Supply'
 import Borrow from './components/Borrow'
+import styled from 'styled-components'
 
 const Markets: React.FC = () => {
 	return (
@@ -19,14 +20,26 @@ const Markets: React.FC = () => {
 				subtitle="Mint, Lend, Borrow"
 			/>
 			<Container>
-			<Overview />
-			<Supplied />
-			<Borrowed />
-			<Supply />
-			<Borrow />
+				<Section>
+					<Overview />
+					<MarketOverview>
+						<Supplied />
+						<Borrowed />
+					</MarketOverview>
+				</Section>
+				<Section>
+					<Supply />
+					<Borrow />
+				</Section>
 			</Container>
 		</Page>
 	)
 }
 
+const MarketOverview = styled.div`
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		margin-top: ${(props) => props.theme.spacing[4]}px;
+`
 export default Markets

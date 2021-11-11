@@ -35,6 +35,8 @@ export default {
     nSTBL: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
     RAI: '0x00e5646f60ac6fb446f621d146b6e1886f002905',
     DEAD: '0x000000000000000000000000000000000000dead',
+    // For Testing
+    PAI: '0x663F5FC0AA8c7EF94F4919FCebE6D6f9918cb318',
   },
   contracts: {
     polly: {
@@ -55,6 +57,7 @@ export default {
         abi: 'weth.json',
       },
     },
+    // Soft Synths
     recipe: {
       137: {
         address: '0x0C9DF041582741b9Ae384F31209A6Dc7ea6B9Bcb',
@@ -71,6 +74,56 @@ export default {
       137: {
         address: '0x174c726ED2E30560935247C410294DB5FfEa39D4',
         abi: 'nestRedeem.json',
+      },
+    },
+    // Hard Synths
+    lens: {
+      137: {
+        address: '0x139Dd8Bb6355d20342e08ff013150b1aE5040a42',
+        abi: 'lens.json',
+      },
+    },
+    comptroller: {
+      137: {
+        address: '0x3695182232138DEbB370F69ee5bbab30C7ecF5d5',
+        abi: 'comptroller.json',
+      },
+    },
+    marketOracle: {
+      137: {
+        address: '0x02e84f2AA4f150a20D83bEa4Db80b657dAE23Aa4',
+        abi: 'marketOracle.json',
+      },
+    },
+    stabilizer: {
+      137: {
+        address: '0xa168F24234f6D3824Dff90C66bdF1471D2012644',
+        abi: 'stabilizer.json',
+      },
+    },
+    // Markets
+    bPAI: {
+      137: {
+        address: '0x368215a12Ef6A3aFb6D6F58352FfC66998AF28eB',
+        abi: 'ctoken.json',
+      },
+    },
+    bMATIC: {
+      137: {
+        address: '0x9106ED6679d2EABBeE7986bE6d71bF29b2abd86F',
+        abi: 'ctoken.json',
+      },
+    },
+    bUSDC: {
+      137: {
+        address: '0x944A7cBeC9abd2EBcb9244ecb1Ee7c8D42DB14c2',
+        abi: 'ctoken.json',
+      },
+    },
+    bnSTBL: {
+      137: {
+        address: '0x12E1E47010f13e127FD81D0B5B3B33BB16c1cdb3',
+        abi: 'ctoken.json',
       },
     },
   },
@@ -206,8 +259,7 @@ export default {
       icon: '/nDEFI.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
-      pairUrl:
-        '#',
+      pairUrl: '#',
     },
     {
       pid: 15,
@@ -260,8 +312,7 @@ export default {
       icon: '/nSTBL.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
-      pairUrl:
-        '#',
+      pairUrl: '#',
     },
     {
       pid: 24,

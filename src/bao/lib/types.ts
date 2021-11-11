@@ -92,3 +92,32 @@ export const ConfirmationType = {
   Both: 2,
   Simulate: 3,
 }
+
+export type Market = {
+  token: string
+  underlying: Token
+  supplyApy: number
+  borrowApy: number
+  rewardApy: number
+  liquidity: number
+  collateralFactor: number
+  reserveFactor: number
+  totalBorrows: number
+  totalReserves: number
+  supplied: number
+  borrowable: boolean
+}
+
+export type SWR = {
+  isLoading?: boolean
+  isError?: any
+}
+
+export type Token = {
+  address: string
+  name: string
+  symbol: string
+  coingeckoId: string
+  image: string
+  decimals: number
+}
