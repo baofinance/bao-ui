@@ -29,8 +29,8 @@ const Borrowed: React.FC = () => (
 				<Table style={{width: '100%'}}>
 					<thead>
 						<tr>
-							<th style={{ justifyContent: 'flex-start', textAlign: 'start', minWidth: '6rem' }}>Asset</th>
-							<th style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>APY</th>
+							<th style={{ justifyContent: 'flex-start', textAlign: 'start', minWidth: '6rem' }}>Borrowed Assets</th>
+							<th style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>APR</th>
 							<th style={{ justifyContent: 'flex-end', textAlign: 'end', minWidth: '6rem' }}>Balance</th>
 						</tr>
 					</thead>

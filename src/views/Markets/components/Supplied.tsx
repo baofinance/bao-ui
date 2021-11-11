@@ -29,7 +29,7 @@ const Supplied: React.FC = () => (
 				<Table style={{width: '100%'}}>
 					<thead>
 						<tr>
-							<th style={{ justifyContent: 'flex-start', textAlign: 'start', minWidth: '6rem' }}>Asset</th>
+							<th style={{ justifyContent: 'flex-start', textAlign: 'start', minWidth: '6rem' }}>Supplied Assets</th>
 							<th style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>APY</th>
 							<th>Balance</th>
 							<th style={{ justifyContent: 'flex-end', textAlign: 'end', minWidth: '6rem' }}>Collateral</th>
