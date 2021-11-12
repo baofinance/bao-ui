@@ -1,110 +1,106 @@
-import { endsWith } from 'lodash'
 import React from 'react'
-import { Col, FormCheck, Row, Table } from 'react-bootstrap'
-import styled from 'styled-components'
+import {
+	HeaderWrapper,
+	ItemContainer,
+	ItemWrapper,
+	MarketHeaderWrapper,
+	MarketItemContainer,
+	MarketItemWrapper,
+	MarketSummary,
+	MarketSummaryHeader,
+	MarketTable,
+	OverviewTableContainer,
+	TableHeader,
+} from './style'
+import { FormCheck, Row } from 'react-bootstrap'
 
 const Supplied: React.FC = () => (
 	<>
-		<div
-			style={{
-				display: 'flex',
-				width: '100%',
-				justifyContent: 'flex-end',
-				borderRadius: '8px',
-				borderRight: '1px #ffffff0f solid',
-				paddingRight: '1rem',
-			}}
-		>
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					width: '100%',
-					paddingBottom: '0px',
-					paddingTop: '0px',
-					color: '#fff',
-				}}
-			>
-				<TableContainer>
-				<Table style={{width: '100%'}}>
-					<thead>
-						<tr>
-							<th style={{ justifyContent: 'flex-start', textAlign: 'start', minWidth: '6rem' }}>Supplied Assets</th>
-							<th style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>APY</th>
-							<th>Balance</th>
-							<th style={{ justifyContent: 'flex-end', textAlign: 'end', minWidth: '6rem' }}>Collateral</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr style={{ borderRadius: '1rem' }}>
-							<td>
-								<img
-									src="USDC.png"
-									style={{ width: '25px', height: '25px', verticalAlign: 'middle' }}
-								/>
-								{' '}USDC
-							</td>
-							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>5.00%</td>
-							<td style={{ justifyContent: 'center', textAlign: 'center', minWidth: '6rem' }}>$500</td>
-							<td style={{ justifyContent: 'flex-end', textAlign: 'end', minWidth: '6rem' }}>
-								<FormCheck type="switch" id="custom-switch" />
-							</td>
-						</tr>
-					</tbody>
-				</Table>
-				<Row sm={2} style={{width: '100%', display: 'flex', marginTop: '2rem'}}>
-				<p style={{display: 'flex', justifyContent: 'flex-start', textAlign: 'start', marginTop: '2rem'}}>Total Supplied</p>
-				<p style={{display: 'flex', justifyContent: 'flex-end', textAlign: 'right', marginTop: '2rem'}}>Net APY</p>
-				</Row>
-				<Row sm={2} style={{width: '100%', display: 'flex'}}>
-				<p style={{display: 'flex', justifyContent: 'flex-start', textAlign: 'start', fontSize: '.875rem', color: '#ccc'}}>$500</p>
-				<p style={{display: 'flex', justifyContent: 'flex-end', textAlign: 'right', fontSize: '.875rem', color: '#ccc'}}>5.00%</p>
-				</Row>
-				</TableContainer>
-			</div>
-		</div>
+		<OverviewTableContainer>
+			<MarketTable>
+				<TableHeader>
+					<HeaderWrapper>Asset</HeaderWrapper>
+					<HeaderWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+					>
+						APY
+					</HeaderWrapper>
+					<HeaderWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+					>
+						Balance
+					</HeaderWrapper>
+					<HeaderWrapper
+						style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+					>
+						Collateral
+					</HeaderWrapper>
+				</TableHeader>
+				<ItemContainer>
+					<ItemWrapper>
+						<img src="USDC.png" />
+						<p>USDC</p>
+					</ItemWrapper>
+					<ItemWrapper
+						style={{
+							justifyContent: 'center',
+							textAlign: 'center',
+						}}
+					>
+						5.00%
+					</ItemWrapper>
+					<ItemWrapper
+						style={{
+							justifyContent: 'flex-end',
+							textAlign: 'end',
+						}}
+					>
+						500 USDC
+					</ItemWrapper>
+					<ItemWrapper
+						style={{
+							justifyContent: 'flex-end',
+							textAlign: 'end',
+						}}
+					>
+						<FormCheck type="switch" id="custom-switch" />
+					</ItemWrapper>
+				</ItemContainer>
+				<MarketSummary>
+					<MarketSummaryHeader>
+						<MarketHeaderWrapper
+							style={{
+								justifyContent: 'flex-start',
+								textAlign: 'start',
+							}}
+						>
+							Total Supplied
+						</MarketHeaderWrapper>
+						<MarketHeaderWrapper
+							style={{
+								justifyContent: 'flex-end',
+								textAlign: 'end',
+							}}
+						>
+							Net APY
+						</MarketHeaderWrapper>
+					</MarketSummaryHeader>
+					<MarketItemContainer>
+						<MarketItemWrapper
+							style={{ justifyContent: 'flex-start', textAlign: 'start' }}
+						>
+							$500
+						</MarketItemWrapper>
+						<MarketItemWrapper
+							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+						>
+							5.00%
+						</MarketItemWrapper>
+					</MarketItemContainer>
+				</MarketSummary>{' '}
+			</MarketTable>
+		</OverviewTableContainer>
 	</>
 )
-
-const TableContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	overflow-x: auto;
-
-	tbody {
-		tr {
-			cursor: pointer;
-
-			&:hover {
-				background-color: ${(props) => props.theme.color.transparent[200]};
-			}
-		}
-	}
-	
-	th {
-		justify-content: space-between;
-		width: 100%;
-		font-size: .875rem;
-		font-weight: ${(props) => props.theme.fontWeight.medium};
-		color: ${(props) => props.theme.color.text[200]};
-		text-transform: uppercase;
-		border: none;
-	}
-
-	td {
-		border: none;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		font-weight: ${(props) => props.theme.fontWeight.medium};
-		font-size: 0.875rem;
-		padding-top: .25rem;
-		padding-bottom: .25rem;
-		padding-left: ${(props) => props.theme.spacing[2]}px;
-		padding-right: ${(props) => props.theme.spacing[2]}px;
-		color: ${(props) => props.theme.color.text[100]};
-	}
-`
 
 export default Supplied

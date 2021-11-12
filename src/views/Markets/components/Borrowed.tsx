@@ -1,19 +1,17 @@
 import React from 'react'
+import { Row } from 'react-bootstrap'
 import {
-	Flex,
+	MarketSummary,
 	HeaderWrapper,
 	ItemContainer,
 	ItemWrapper,
-	MarketContainer,
-	MarketHeader,
-	MarketHeaderContainer,
-	MarketHeaderStack,
-	MarketHeaderSubText,
-	MarketHeaderText,
 	MarketTable,
-	MarketTableContainer,
 	OverviewTableContainer,
 	TableHeader,
+	MarketHeaderWrapper,
+	MarketItemContainer,
+	MarketItemWrapper,
+	MarketSummaryHeader,
 } from './style'
 
 const Borrowed: React.FC = () => (
@@ -55,6 +53,38 @@ const Borrowed: React.FC = () => (
 						500 USDC
 					</ItemWrapper>
 				</ItemContainer>
+				<MarketSummary>
+					<MarketSummaryHeader>
+						<MarketHeaderWrapper
+							style={{
+								justifyContent: 'flex-start',
+								textAlign: 'start',
+							}}
+						>
+							Total Borrowed
+						</MarketHeaderWrapper>
+						<MarketHeaderWrapper
+							style={{
+								justifyContent: 'flex-end',
+								textAlign: 'end',
+							}}
+						>
+							Net APR
+						</MarketHeaderWrapper>
+					</MarketSummaryHeader>
+					<MarketItemContainer>
+						<MarketItemWrapper
+							style={{ justifyContent: 'flex-start', textAlign: 'start' }}
+						>
+							$500
+						</MarketItemWrapper>
+						<MarketItemWrapper
+							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+						>
+							5.00%
+						</MarketItemWrapper>
+					</MarketItemContainer>
+				</MarketSummary>
 			</MarketTable>
 		</OverviewTableContainer>
 	</>

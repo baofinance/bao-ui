@@ -1,7 +1,6 @@
 import Page from 'components/Page'
 import React, { useEffect, useRef } from 'react'
 import { Container } from 'react-bootstrap'
-import Section from 'components/Section'
 import pollyNests from 'assets/img/polly-nests.png'
 import PageHeader from 'components/PageHeader'
 import Overview from './components/Overview'
@@ -21,11 +20,13 @@ const Markets: React.FC = () => {
 			/>
 			<Container>
 				<Section>
+					<SectionInner>
 					<Overview />
 					<UserOverview>
 						<Supplied />
 						<Borrowed />
 					</UserOverview>
+					</SectionInner>
 				</Section>
 					<MarketOverview>
 						<Supply />
@@ -36,11 +37,25 @@ const Markets: React.FC = () => {
 	)
 }
 
+const Section = styled.div`
+    display: block;
+    width: 100%;
+    margin-top: ${(props) => props.theme.spacing[2]}px;
+	padding: ${(props) => props.theme.spacing[4]}px;
+	border-radius: ${(props) => props.theme.borderRadius}px;
+`
+
+const SectionInner = styled.div`
+    justify-content: center;
+    width: 100%;
+	background-color: ${(props) => props.theme.color.transparent[100]};
+	border-radius: ${(props) => props.theme.borderRadius}px;
+`
+
 const UserOverview = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100%;
-	margin-top: ${(props) => props.theme.spacing[4]}px;
 `
 
 const MarketOverview = styled.div`

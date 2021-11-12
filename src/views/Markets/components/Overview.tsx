@@ -33,6 +33,7 @@ const OverviewHeader = styled.div`
 	width: 100%;
 	font-size: 0.875rem;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
+	padding: 24px;
 `
 
 const BorrowLimit = styled.div`
