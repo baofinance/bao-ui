@@ -22,10 +22,10 @@ const Markets: React.FC = () => {
 			<Container>
 				<Section>
 					<Overview />
-					<MarketOverview>
+					<UserOverview>
 						<Supplied />
 						<Borrowed />
-					</MarketOverview>
+					</UserOverview>
 				</Section>
 					<MarketOverview>
 						<Supply />
@@ -36,11 +36,18 @@ const Markets: React.FC = () => {
 	)
 }
 
-const MarketOverview = styled.div`
+const UserOverview = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100%;
 	margin-top: ${(props) => props.theme.spacing[4]}px;
+`
+
+const MarketOverview = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
 `
 
 export default Markets
