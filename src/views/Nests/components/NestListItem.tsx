@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Tooltipped from 'components/Tooltipped'
 import { Nest } from 'contexts/Nests'

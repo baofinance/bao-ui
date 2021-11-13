@@ -20,6 +20,9 @@ const Markets: React.FC = () => {
 			/>
 			<Container>
 				<Section>
+					<SectionHeader>
+						Dashboard
+					</SectionHeader>
 					<SectionInner>
 					<Overview />
 					<UserOverview>
@@ -40,9 +43,19 @@ const Markets: React.FC = () => {
 const Section = styled.div`
     display: block;
     width: 100%;
-    margin-top: ${(props) => props.theme.spacing[2]}px;
 	padding: ${(props) => props.theme.spacing[4]}px;
+	padding-top: 0px;
 	border-radius: ${(props) => props.theme.borderRadius}px;
+`
+
+const SectionHeader = styled.div`
+color: ${(props) => props.theme.color.text[100]};
+font-size: 1.25rem;
+font-weight: ${(props) => props.theme.fontWeight.strong};
+margin: 0;
+text-align: center;
+align-content: center;
+padding-bottom: ${(props) => props.theme.spacing[2]}px;
 `
 
 const SectionInner = styled.div`

@@ -1,6 +1,6 @@
 import { getEarned, getMasterChefContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
 import CardIcon from 'components/CardIcon'

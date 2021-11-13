@@ -1,2 +1,2 @@
-export { default, MaxButton } from './Button';
+export { Button, MaxButton, NavButtons } from './Button';
 

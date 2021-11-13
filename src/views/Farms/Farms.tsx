@@ -1,5 +1,5 @@
 import pollyNests from 'assets/img/polly-nests.png'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import Container from 'components/Container'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'

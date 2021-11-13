@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ParentSize } from '@visx/responsive'
 import BigNumber from 'bignumber.js'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import AreaGraph from 'components/Graphs/AreaGraph/AreaGraph'
 import DonutGraph from 'components/Graphs/PieGraph'
 import { SpinnerLoader } from 'components/Loader'

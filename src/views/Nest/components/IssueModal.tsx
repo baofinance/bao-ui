@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fetchCalcToNest, getRecipeContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Modal, { ModalProps } from 'components/Modal'
 import ModalActions from 'components/ModalActions'

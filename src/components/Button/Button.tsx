@@ -19,7 +19,7 @@ interface ButtonProps {
 	border?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
 	children,
 	disabled,
 	href,
@@ -281,4 +281,47 @@ export const StyledBorderButton = styled(StyledButton)`
 	}
 `
 
-export default Button
+type NavButtonProps = {
+	onClick: (s: any) => void
+	active: string
+	options: string[]
+  }
+
+export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
+	<NavButtonWrapper>
+	  {options.map((option: string) => (
+		<NavButton
+		  key={option}
+		  color={option === active ? '#f8f8ff' : '#c4c3d0'}
+		  onClick={() => onClick(option)}
+		>
+		  {option}
+		</NavButton>
+	  ))}
+	</NavButtonWrapper>
+  )
+
+  const NavButtonWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    background-color: ${(props) => props.theme.color.primary[400]};
+    padding: .25rem;
+    border-radius: 4px;
+    cursor: pointer;
+  `
+
+  const NavButton = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: .5rem;
+    border-radius: 4px;
+    font-weight: ${(props) => props.theme.fontWeight.medium};
+    font-size: 1rem;
+    color: #fff;
+    background-color: ${(props) => props.theme.color.primary[100]};
+
+	&:active {
+		background-color: ${(props) => props.theme.color.primary[400]};
+	}
+  `

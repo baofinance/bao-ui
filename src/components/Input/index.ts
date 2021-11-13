@@ -1,3 +1,3 @@
-export { default } from './Input'
-export type { InputProps } from './Input'
+export { default, Input, BalanceInput } from './Input'
+export type { InputProps, NestInputProps, BalanceInputProps } from './Input'
 

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import Modal, { ModalProps } from 'components/Modal'
 import ModalActions from 'components/ModalActions'
 import ModalTitle from 'components/ModalTitle'

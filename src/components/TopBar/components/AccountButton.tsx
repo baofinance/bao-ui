@@ -7,7 +7,7 @@ import { useWallet } from 'use-wallet'
 import Config from '../../../bao/lib/config'
 import useTokenBalance from '../../../hooks/useTokenBalance'
 import { getDisplayBalance } from '../../../utils/numberFormat'
-import Button from '../../Button'
+import { Button } from '../../Button'
 import WalletProviderModal from '../../WalletProviderModal'
 import AccountModal from './AccountModal'
 

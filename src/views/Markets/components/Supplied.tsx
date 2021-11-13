@@ -11,96 +11,102 @@ import {
 	MarketTable,
 	OverviewTableContainer,
 	TableHeader,
-} from './style'
+} from './styles'
 import { FormCheck, Row } from 'react-bootstrap'
+import useModal from 'hooks/useModal'
+import { MarketSupplyModal } from './Modals'
 
-const Supplied: React.FC = () => (
-	<>
-		<OverviewTableContainer>
-			<MarketTable>
-				<TableHeader>
-					<HeaderWrapper>Asset</HeaderWrapper>
-					<HeaderWrapper
-						style={{ justifyContent: 'center', textAlign: 'center' }}
-					>
-						APY
-					</HeaderWrapper>
-					<HeaderWrapper
-						style={{ justifyContent: 'center', textAlign: 'center' }}
-					>
-						Balance
-					</HeaderWrapper>
-					<HeaderWrapper
-						style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-					>
-						Collateral
-					</HeaderWrapper>
-				</TableHeader>
-				<ItemContainer>
-					<ItemWrapper>
-						<img src="USDC.png" />
-						<p>USDC</p>
-					</ItemWrapper>
-					<ItemWrapper
-						style={{
-							justifyContent: 'center',
-							textAlign: 'center',
-						}}
-					>
-						5.00%
-					</ItemWrapper>
-					<ItemWrapper
-						style={{
-							justifyContent: 'flex-end',
-							textAlign: 'end',
-						}}
-					>
-						500 USDC
-					</ItemWrapper>
-					<ItemWrapper
-						style={{
-							justifyContent: 'flex-end',
-							textAlign: 'end',
-						}}
-					>
-						<FormCheck type="switch" id="custom-switch" />
-					</ItemWrapper>
-				</ItemContainer>
-				<MarketSummary>
-					<MarketSummaryHeader>
-						<MarketHeaderWrapper
+const Supplied: React.FC = () => {
+	const [handleSupply] = useModal(<MarketSupplyModal />)
+
+	return (
+		<>
+			<OverviewTableContainer>
+				<MarketTable>
+					<TableHeader>
+						<HeaderWrapper>Asset</HeaderWrapper>
+						<HeaderWrapper
+							style={{ justifyContent: 'center', textAlign: 'center' }}
+						>
+							APY
+						</HeaderWrapper>
+						<HeaderWrapper
+							style={{ justifyContent: 'center', textAlign: 'center' }}
+						>
+							Balance
+						</HeaderWrapper>
+						<HeaderWrapper
+							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+						>
+							Collateral
+						</HeaderWrapper>
+					</TableHeader>
+					<ItemContainer onClick={handleSupply}>
+						<ItemWrapper>
+							<img src="USDC.png" />
+							<p>USDC</p>
+						</ItemWrapper>
+						<ItemWrapper
 							style={{
-								justifyContent: 'flex-start',
-								textAlign: 'start',
+								justifyContent: 'center',
+								textAlign: 'center',
 							}}
 						>
-							Total Supplied
-						</MarketHeaderWrapper>
-						<MarketHeaderWrapper
+							5.00%
+						</ItemWrapper>
+						<ItemWrapper
 							style={{
 								justifyContent: 'flex-end',
 								textAlign: 'end',
 							}}
 						>
-							Net APY
-						</MarketHeaderWrapper>
-					</MarketSummaryHeader>
-					<MarketItemContainer>
-						<MarketItemWrapper
-							style={{ justifyContent: 'flex-start', textAlign: 'start' }}
+							500 USDC
+						</ItemWrapper>
+						<ItemWrapper
+							style={{
+								justifyContent: 'flex-end',
+								textAlign: 'end',
+							}}
 						>
-							$500
-						</MarketItemWrapper>
-						<MarketItemWrapper
-							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-						>
-							5.00%
-						</MarketItemWrapper>
-					</MarketItemContainer>
-				</MarketSummary>{' '}
-			</MarketTable>
-		</OverviewTableContainer>
-	</>
-)
+							<FormCheck type="switch" id="custom-switch" />
+						</ItemWrapper>
+					</ItemContainer>
+					<MarketSummary>
+						<MarketSummaryHeader>
+							<MarketHeaderWrapper
+								style={{
+									justifyContent: 'flex-start',
+									textAlign: 'start',
+								}}
+							>
+								Total Collateral
+							</MarketHeaderWrapper>
+							<MarketHeaderWrapper
+								style={{
+									justifyContent: 'flex-end',
+									textAlign: 'end',
+								}}
+							>
+								Net APY
+							</MarketHeaderWrapper>
+						</MarketSummaryHeader>
+						<MarketItemContainer>
+							<MarketItemWrapper
+								style={{ justifyContent: 'flex-start', textAlign: 'start' }}
+							>
+								$500
+							</MarketItemWrapper>
+							<MarketItemWrapper
+								style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+							>
+								5.00%
+							</MarketItemWrapper>
+						</MarketItemContainer>
+					</MarketSummary>{' '}
+				</MarketTable>
+			</OverviewTableContainer>
+		</>
+	)
+}
 
 export default Supplied

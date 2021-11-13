@@ -1,5 +1,5 @@
 import pollyIcon from 'assets/img/polly.png'
-import Button from 'components/Button'
+import { Button } from 'components/Button'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
 import CardIcon from 'components/CardIcon'

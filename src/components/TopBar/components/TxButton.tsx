@@ -2,7 +2,7 @@ import usePendingTransactions from 'hooks/usePendingTransactions'
 import React from 'react'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
-import Button from '../../Button'
+import { Button } from '../../Button'
 
 interface TxButtonProps {}
 
