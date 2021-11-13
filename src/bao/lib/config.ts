@@ -1,3 +1,4 @@
+import BaoProvider from 'contexts/BaoProvider'
 import { Config } from './types'
 
 export default {
@@ -36,7 +37,7 @@ export default {
     RAI: '0x00e5646f60ac6fb446f621d146b6e1886f002905',
     DEAD: '0x000000000000000000000000000000000000dead',
     // For Testing
-    PAI: '0x663F5FC0AA8c7EF94F4919FCebE6D6f9918cb318',
+    PAI: '0x035a6a67de5455970b1AEd9342e51915eE4d0F32',
   },
   contracts: {
     polly: {
@@ -85,44 +86,38 @@ export default {
     },
     comptroller: {
       137: {
-        address: '0x3695182232138DEbB370F69ee5bbab30C7ecF5d5',
+        address: '0x6941D73542FBaA2E358F15BD63cc0a7B26B1f17e',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
       137: {
-        address: '0x02e84f2AA4f150a20D83bEa4Db80b657dAE23Aa4',
+        address: '0x357c6a3f442bAa9B8758019BfdAD3fA01dCd2FEF',
         abi: 'marketOracle.json',
       },
     },
     stabilizer: {
       137: {
-        address: '0xa168F24234f6D3824Dff90C66bdF1471D2012644',
+        address: '0xf23B61851e9f8c5C3b7e8882195a021Bfe38689a',
         abi: 'stabilizer.json',
       },
     },
     // Markets
     bPAI: {
       137: {
-        address: '0x368215a12Ef6A3aFb6D6F58352FfC66998AF28eB',
+        address: '0xf3f49C8017ea65921d6dB224A8A34d7f1C5F5414',
         abi: 'ctoken.json',
       },
     },
     bMATIC: {
       137: {
-        address: '0x9106ED6679d2EABBeE7986bE6d71bF29b2abd86F',
-        abi: 'ctoken.json',
-      },
-    },
-    bUSDC: {
-      137: {
-        address: '0x944A7cBeC9abd2EBcb9244ecb1Ee7c8D42DB14c2',
+        address: '0xc6a5ea0c15479D0e60D29E9A03d7be65441c5a75',
         abi: 'ctoken.json',
       },
     },
     bnSTBL: {
       137: {
-        address: '0x12E1E47010f13e127FD81D0B5B3B33BB16c1cdb3',
+        address: '0xBBbCcdF820E2445E123d514557ecf2c53FCC85F1',
         abi: 'ctoken.json',
       },
     },
@@ -138,6 +133,99 @@ export default {
         'https://api.thegraph.com/subgraphs/name/sushiswap/exchange',
     },
   },
+  marketComponents: [
+    {
+      address: '',
+      name: 'Matic',
+      symbol: 'MATIC',
+      coingeckoId: 'polygon',
+      image: 'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png',
+      decimals: 18,
+    },
+    {
+      address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+      name: 'Wrapped Matic',
+      symbol: 'WMATIC',
+      coingeckoId: 'polygon',
+      image: 'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png',
+      decimals: 18,
+    },
+    {
+      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+      name: 'Dai',
+      symbol: 'DAI',
+      coingeckoId: 'dai',
+      image: 'https://assets.coingecko.com/coins/images/9956/small/dai-multi-collateral-mcd.png',
+      decimals: 18,
+    },
+    {
+      address: '0x035a6a67de5455970b1AEd9342e51915eE4d0F32',
+      name: 'Pai',
+      symbol: 'PAI',
+      coingeckoId: 'dai',
+      image: '/assets/pai.png',
+      decimals: 18,
+    },
+    {
+      address: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
+      name: 'Polly',
+      symbol: 'POLLY',
+      coingeckoId: 'polly-finance',
+      image: 'https://assets.coingecko.com/coins/images/18354/small/POLLY.png',
+      decimals: 18,
+    },
+    {
+      address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+      name: 'USDC',
+      symbol: 'USDC',
+      coingeckoId: 'usd-coin',
+      image: 'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png',
+      decimals: 18,
+    },
+    {
+      address: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+      name: 'nSTBL',
+      symbol: 'nSTBL',
+      coingeckoId: '',
+      image: '/assets/nstbl.png',
+      decimals: 18,
+    },  
+  ],
+  markets: [
+    {
+      mid: 1,
+      symbol: 'bPAI',
+      marketAddresses: {
+        137: '0xf3f49C8017ea65921d6dB224A8A34d7f1C5F5414',
+      },
+      underlyingAddresses: {
+        137: '0x035a6a67de5455970b1AEd9342e51915eE4d0F32',
+      },
+      icon: '/pai.png',
+    },
+    {
+      mid: 2,
+      symbol: 'bMATIC',
+      marketAddresses: {
+        137: '0xc6a5ea0c15479D0e60D29E9A03d7be65441c5a75',
+      },
+      underlyingAddresses: {
+        137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+      },
+      icon: '/matic.png',
+    },
+    {
+      mid: 3,
+      symbol: 'bnSTBL',
+      marketAddresses: {
+        137: '0xBBbCcdF820E2445E123d514557ecf2c53FCC85F1',
+      },
+      underlyingAddresses: {
+        137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+      },
+      icon: '/nstbl.png',
+    },
+  ],
   nests: [
     {
       nid: 1,

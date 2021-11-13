@@ -11,6 +11,7 @@ import Config from './config'
 import * as Types from './types'
 
 export class Contracts {
+  [x: string]: any
   networkId: number
   web3: Web3
   defaultConfirmations: number
@@ -21,6 +22,7 @@ export class Contracts {
   contracts: Types.ContractsConfig
   pools: Types.FarmableSupportedPool[]
   nests: Types.ActiveSupportedNest[]
+  markets: Types.ActiveSupportedMarket[]
   blockGasLimit: any
   notifier: any
 

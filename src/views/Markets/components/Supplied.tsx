@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
 	HeaderWrapper,
 	ItemContainer,
@@ -15,9 +15,18 @@ import {
 import { FormCheck, Row } from 'react-bootstrap'
 import useModal from 'hooks/useModal'
 import { MarketSupplyModal } from './Modals'
+import { useWallet } from 'use-wallet'
+import useMarkets from 'hooks/useMarkets'
+import { Market } from 'contexts/Markets'
 
 const Supplied: React.FC = () => {
+	const { account } = useWallet()
+	const [ markets ] = useMarkets()
+	const [modalAsset, setModalAsset] = useState<Market>()
+  
+
 	const [handleSupply] = useModal(<MarketSupplyModal />)
+	
 
 	return (
 		<>

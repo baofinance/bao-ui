@@ -41,6 +41,31 @@ export const getRecipeContract = (bao: Bao) => {
   return bao && bao.contracts && bao.getContract('recipe')
 }
 
+export const getMarkets = (bao: Bao) => {
+  return bao
+    ? bao.contracts.markets.map(
+        ({
+          mid,
+          symbol,
+          marketAddress,
+          marketContract,
+          underlyingAddress,
+          underlyingContract,
+          icon,
+        }) => ({
+          mid,
+          id: symbol,
+          icon,
+          marketAddress,
+          marketContract,
+          underlyingAddress,
+          underlyingContract,
+          symbol,
+        }),
+      )
+    : []
+}
+
 export const getNests = (bao: Bao) => {
   return bao
     ? bao.contracts.nests.map(
