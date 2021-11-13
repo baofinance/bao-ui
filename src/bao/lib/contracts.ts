@@ -7,6 +7,7 @@ import { BaoOptions } from '../Bao'
 import ERC20Abi from './abi/erc20.json'
 import ExperipieAbi from './abi/experipie.json'
 import UNIV2PairAbi from './abi/uni_v2_lp.json'
+import CTokenAbi from './abi/ctoken.json'
 import Config from './config'
 import * as Types from './types'
 
@@ -23,6 +24,7 @@ export class Contracts {
   pools: Types.FarmableSupportedPool[]
   nests: Types.ActiveSupportedNest[]
   markets: Types.ActiveSupportedMarket[]
+  marketComponents: Types.MarketComponent[]
   blockGasLimit: any
   notifier: any
 
@@ -70,6 +72,18 @@ export class Contracts {
           )
         : undefined
 
+        this.markets =
+      networkId === Config.networkId
+        ? Config.markets.map((market) =>
+            Object.assign(market, {
+              marketAddress: market.marketAddresses[networkId],
+              underlyingAddress: market.underlyingAddresses[networkId],
+              marketContract: this.getNewContract(CTokenAbi),
+              underlyingContract: this.getNewContract(ERC20Abi)
+            }),
+          )
+        : undefined
+
     this.setProvider(provider, networkId)
     this.setDefaultAccount(this.web3.eth.defaultAccount)
   }
@@ -101,6 +115,14 @@ export class Contracts {
           setProvider(nestContract, nestAddress),
         )
       }
+      if (this.markets) {
+        this.markets.forEach(
+          ({ marketContract, marketAddress, underlyingContract, underlyingAddress }) => {
+            setProvider(marketContract, marketAddress)
+            setProvider(underlyingContract, underlyingAddress)
+          },
+        )
+      }
     }
   }
 
@@ -108,6 +130,8 @@ export class Contracts {
     this.getContract('polly').options.from = account
     this.getContract('masterChef').options.from = account
     this.getContract('recipe').options.from = account
+    this.getContract('comptroller').options.from = account
+    this.getContract('stabilizer').options.from = account
   }
 
   getContract(contractName: string, networkId = this.networkId): Contract {

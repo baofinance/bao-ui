@@ -44,6 +44,17 @@ export interface SupportedMarket {
   icon: string
 }
 
+export interface MarketComponent {
+  address: {
+    [network: number]: string
+  }
+  name: string
+  symbol: string
+  coingeckoId: string
+  image: string
+  decimals: number
+}
+
 export interface FarmableSupportedPool extends SupportedPool {
   lpAddress: string
   tokenAddress: string
@@ -96,6 +107,7 @@ export interface SubgraphConfig {
 }
 
 export interface Config {
+  marketComponents: any
   networkId: number
   defaultRpc: RpcConfig
   addressMap: AddressMapConfig
