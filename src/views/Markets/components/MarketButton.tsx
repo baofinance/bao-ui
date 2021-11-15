@@ -64,7 +64,7 @@ const SubmitButton = styled.button`
 	border: none;
 	border-bottom: 1px solid ${(props) => props.theme.color.primary[400]};
 	box-shadow: ${(props) => props.theme.boxShadow.default};
-    background-color: ${(props) => props.theme.color.primary[200]};
+    background-color: ${(props) => props.theme.color.primary[100]};
     text-transform: uppercase;
     outline: transparent solid 2px;
     border-radius: .375rem;

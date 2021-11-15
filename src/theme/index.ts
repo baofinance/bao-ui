@@ -4,6 +4,7 @@ import {
   darkGrey,
   green,
   monochrome,
+  background,
   primary,
   red,
   secondary,
@@ -24,6 +25,7 @@ const theme = {
     red,
     green,
     blue,
+    background,
     primary,
     secondary,
     text,
@@ -49,12 +51,16 @@ const theme = {
   },
   boxShadow: {
     default:
-      'inset 0 1px 0 rgb(255 255 255 / 20%), 0 1px 1px rgb(0 0 0 / 19%)',
+      '2px 2px 3px 0 rgba(255, 255, 255, 0.3) inset, -1px -1px 2px 0 rgba(0, 0, 0, .25) inset',
     hover:
-      'inset 0 0px 0 rgb(255 255 255 / 20%), 0 0px 0px rgb(0 0 0 / 19%)',
+      '-1px -1px 2px 0 rgba(0, 0, 0, .25), 2px 2px 3px 0 rgba(255, 255, 255, 0.3)',
+  },
+  border: {
+    default:
+      '1px solid #efeae7',
   },
   buttonGradient: {
-    a: 'linear-gradient(225deg, #1c1c27, #1f1c27) padding-box, linear-gradient(135deg, #373865, #53c7e4) border-box',
+    a: 'linear-gradient(225deg, #efeae7, #efeae7) padding-box, linear-gradient(135deg, #ce6509, #ff9440) border-box',
     hover:
       'linear-gradient(225deg, #242436, #1b1b29) padding-box, linear-gradient(157.5deg, #5455c9, #53c7e4) border-box',
   },

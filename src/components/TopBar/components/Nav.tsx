@@ -64,6 +64,9 @@ const StyledNav = styled.nav`
 `
 
 const StyledLink = styled(NavLink)`
+	transition-property: all;
+	transition-duration: 200ms;
+	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	font-family: 'Rubik', sans-serif;
 	color: ${(props) => props.theme.color.text[100]};
 	font-weight: ${(props) => props.theme.fontWeight.medium};
@@ -74,7 +77,7 @@ const StyledLink = styled(NavLink)`
 		color: ${(props) => props.theme.color.text[300]};
 	}
 	&.active {
-		color: ${(props) => props.theme.color.text[300]};
+		color: ${(props) => props.theme.color.text[400]};
 	}
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
 		padding-left: ${(props) => props.theme.spacing[2]}px;
@@ -83,6 +86,9 @@ const StyledLink = styled(NavLink)`
 `
 
 const StyledAbsoluteLink = styled.a`
+	transition-property: all;
+	transition-duration: 200ms;
+	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	font-family: 'Rubik', sans-serif;
 	color: ${(props) => props.theme.color.text[100]};
 	font-weight: ${(props) => props.theme.fontWeight.medium};
@@ -93,7 +99,7 @@ const StyledAbsoluteLink = styled.a`
 		color: ${(props) => props.theme.color.text[300]};
 	}
 	&.active {
-		color: ${(props) => props.theme.color.text[300]};
+		color: ${(props) => props.theme.color.text[400]};
 	}
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
 		padding-left: ${(props) => props.theme.spacing[2]}px;

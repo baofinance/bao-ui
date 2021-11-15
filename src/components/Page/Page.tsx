@@ -25,7 +25,6 @@ const StyledPageWrapper = styled.div`
 	display: table-cell;
 	vertical-align: middle;
 	min-height: calc(100vh - ${(props) => props.theme.topBarSize}px);
-	background-image: url(${overlay});
 	background-size: cover;
 	background-repeat: no-repeat;
 	top: 0;

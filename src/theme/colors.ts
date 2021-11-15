@@ -17,39 +17,41 @@ export const red = '#d00000'
 export const green = '#008000'
 export const blue = '#0000f0'
 
+export const background ={
+  100: '#fff8ee', //light mode
+  200: '#50251c', //dark mode
+}
+
 export const primary = {
-  100: '#43457d', //light
-  200: '#373865', //main
-  300: '#272849', //dark
-  400: '#171522', //black
+  100: '#efeae7', //light
+  200: '#bdb8b5', //default
+  300: '#8d8885', //dark
 }
 
 export const secondary = {
-  100: '#5e437d', //light
-  200: '#4d3765', //main
-  300: '#372749', //dark
-  400: '#1f1c27', //black
+  100: '#b07a6e', //light
+  200: '#7f4e43', //default
+  300: '#50251c', //dark
 }
 
 export const text = {
-  100: '#f8f8ff', //primary
-  200: '#c4c3d0', //secondary
-  300: '#7793f5', //link
+  100: '#50251c', //primary
+  200: '#fff8ee', //secondary
+  300: '#ff9440', //hover link
+  400: '#ce6509', //active link
 }
 
 export const transparent = {
-  100: 'rgba(0, 0, 0, 0.4)', //dark
+  100: 'rgba(0, 0, 0, 0.1)', //dark
   200: 'rgba(256, 256, 256, 0.1)', //light
   300: 'rgba(256, 256, 256, 0.2)', //button shine
 }
 
 export const accent = {
-  100: '#53c7e4', //light
-  200: '#4ba9e3', //medium
-  300: '#6b9aef', //dark
-  400: '#1fa6e0', //hero light
-  500: '#65c48c', //hero medium
-  600: '#6b9aef', //hero dark
+  100: '#ff9440', //white
+  200: '#ce6509', //light
+  300: '#973800', //dark
+  400: '#640500', //black
 }
 
 export const darkGrey = {

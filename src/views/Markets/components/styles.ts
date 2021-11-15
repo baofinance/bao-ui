@@ -50,7 +50,7 @@ export const MarketHeaderSubText = styled.a`
   text-decoration: none;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  color: ${(props) => props.theme.color.text[200]};
+  color: ${(props) => props.theme.color.text[300]};
   font-size: 0.875rem;
   font-weight: ${(props) => props.theme.fontWeight.medium};
   margin: 0;
@@ -62,7 +62,7 @@ export const MarketTableContainer = styled.div`
   border-radius: 8px;
   margin-top: ${(props) => props.theme.spacing[3]}px;
   padding: ${(props) => props.theme.spacing[3]}px;
-  background-color: ${(props) => props.theme.color.transparent[100]};
+  background-color: ${(props) => props.theme.color.primary[100]};
 `
 
 export const OverviewTableContainer = styled.div`
@@ -86,7 +86,7 @@ export const TableHeader = styled.div`
   width: 100%;
   font-size: 0.875rem;
   font-weight: ${(props) => props.theme.fontWeight.medium};
-  color: ${(props) => props.theme.color.text[200]};
+  color: ${(props) => props.theme.color.text[100]};
   text-transform: uppercase;
   padding-left: ${(props) => props.theme.spacing[3]}px;
   padding-right: ${(props) => props.theme.spacing[3]}px;
@@ -98,8 +98,7 @@ export const HeaderWrapper = styled.div`
 `
 
 export const ItemContainer = styled.div`
-    transition-property: background-color, border-color, color, fill, stroke,
-    opacity, box-shadow, transform;
+    transition-property: all;
     transition-duration: 150ms;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
     display: flex;
@@ -182,5 +181,5 @@ export const MarketItemWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
-  color: ${(props) => props.theme.color.text[200]};
+  color: ${(props) => props.theme.color.text[100]};
 `

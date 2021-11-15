@@ -6,7 +6,7 @@ import styled from 'styled-components'
 export const StyledAlert = styled(Alert)`
   border: none;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  background-color: ${(props) => props.theme.color.transparent[100]};
+  background-color: ${(props) => props.theme.color.primary[100]};
   text-align: center;
   color: ${(props) => props.theme.color.text[100]};
   margin: ${(props) => props.theme.spacing[3]}px auto;
@@ -131,7 +131,10 @@ export const GraphContainer = styled(Col)`
   margin: 0 auto ${(props) => props.theme.spacing[6]}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+  padding-top: 4rem;
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     height: 250px;
@@ -148,15 +151,15 @@ export const PieGraphRow = styled(Row)`
 
 export const StyledTable = styled(Table)`
   width: 100%;
-  margin: 0 auto;
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
   border-radius: ${(props) => props.theme.borderRadius}px;
   color: ${(props) => props.theme.color.text[100]};
-  border-color: transparent;
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
 
   th {
-    padding-top: ${(props) => props.theme.spacing[4]};
-    padding-bottom: ${(props) => props.theme.spacing[4]};
+    padding-top: ${(props) => props.theme.spacing[4]}px;
+    padding-bottom: ${(props) => props.theme.spacing[4]}px;
   }
 
   tbody > tr {
@@ -190,15 +193,22 @@ export const PrefButtons = styled.div`
     color: ${(props) => props.theme.color.text[100]};
     border-radius: ${(props) => props.theme.borderRadius}px;
     width: 48px;
-    background: ${(props) => props.theme.color.transparent[100]};
+    background: ${(props) => props.theme.color.primary[100]};
+    border: ${(props) => props.theme.border.default};
+    box-shadow: ${(props) => props.theme.boxShadow.default};
 
-    &:hover,
+    &:hover {
+      color: ${(props) => props.theme.color.text[400]};
+      background: ${(props) => props.theme.color.primary[100]};
+      box-shadow: ${(props) => props.theme.boxShadow.hover};
+    }
+
     &.active,
     &:active,
     &:focus {
-      color: ${(props) => props.theme.color.text[100]};
-      background: ${(props) => props.theme.color.transparent[200]};
-      box-shadow: none !important;
+      color: ${(props) => props.theme.color.text[200]};
+      background: ${(props) => props.theme.color.secondary[300]};
+      box-shadow: ${(props) => props.theme.boxShadow.hover};
     }
   }
 
@@ -215,14 +225,14 @@ export const StatsRow = styled(Row)`
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     width: 90%;
-    background: ${(props) => props.theme.color.transparent[100]};
+    background: ${(props) => props.theme.color.primary[100]};
     border-radius: ${(props) => props.theme.borderRadius}px;
     margin: ${(props) => props.theme.spacing[4]}px auto;
   }
 `
 
 export const StatCard = styled.div`
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
   width: 90%;
   margin: 0 auto;
   padding: ${(props) => props.theme.spacing[3]}px;
@@ -230,6 +240,8 @@ export const StatCard = styled.div`
   font-weight: ${(props) => props.theme.fontWeight.medium};
   text-align: center;
   color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     padding: ${(props) => props.theme.spacing[2]}px;
@@ -238,16 +250,19 @@ export const StatCard = styled.div`
 `
 
 export const StyledBadge = styled(Badge)`
-  font-size: 1em;
+  font-size: 1rem !important;
   color: ${(props) => props.theme.color.text[100]};
   font-weight: ${(props) => props.theme.fontWeight.medium};
   background-color: ${(props) => props.theme.color.transparent[200]};
 `
 
 export const PriceBadge = styled(Badge)`
-  font-size: 1em;
-  background: ${(props) => props.theme.color.transparent[100]};
+  font-size: 1rem !important;
+  font-weight: ${(props) => props.theme.fontWeight.medium};
+  background: ${(props) => props.theme.color.primary[100]};
   color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
 `
 
 export const Icon = styled.img`
@@ -302,13 +317,15 @@ export const NestSubHeader = styled.h1`
 `
 
 export const NestExplanation = styled.div`
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
   color: ${(props) => props.theme.color.text[100]};
   text-align: left;
   width: 80%;
   margin: auto;
   padding: ${(props) => props.theme.spacing[6]}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     width: 90%;
@@ -322,11 +339,11 @@ export const NestList = styled.ul`
 `
 
 export const QuestionIcon = styled(FontAwesomeIcon)`
-  color: ${(props) => props.theme.color.text[200]};
+  color: ${(props) => props.theme.color.text[100]};
 
   &:hover,
   &:focus {
-    color: ${(props) => props.theme.color.text[100]};
+    color: ${(props) => props.theme.color.text[400]};
     animation: 200ms;
     cursor: pointer;
   }

@@ -6,7 +6,7 @@ const WalletModalCard: React.FC = ({ children }) => (
 )
 
 const StyledCard = styled.div`
-	background: ${(props) => props.theme.color.transparent[100]};
+	background: ${(props) => props.theme.color.primary[100]};
 	border: 1px solid ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;

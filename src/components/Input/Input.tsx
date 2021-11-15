@@ -40,7 +40,7 @@ export const NestInput: React.FC<NestInputProps> = ({
 
 const NestInputWrapper = styled.div`
 	align-items: center;
-	background: ${(props) => props.theme.color.transparent[100]};
+	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;
 	height: 72px;
@@ -110,7 +110,7 @@ const BalanceInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.transparent[100]};
+	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
 `
 

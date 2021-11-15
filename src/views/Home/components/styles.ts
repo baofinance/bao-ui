@@ -1,31 +1,8 @@
-import AAVE from 'assets/img/assets/AAVE.png'
-import ALCX from 'assets/img/assets/ALCX.png'
-import ALPHA from 'assets/img/assets/ALPHA.png'
-import BAL from 'assets/img/assets/BAL.png'
-import BAO from 'assets/img/assets/BAO.png'
-import COMP from 'assets/img/assets/COMP.png'
-import CREAM from 'assets/img/assets/CREAM.png'
-import CRV from 'assets/img/assets/CRV.png'
-import CVX from 'assets/img/assets/CVX.png'
-import DAI from 'assets/img/assets/DAI.png'
-import FRAX from 'assets/img/assets/FRAX.png'
-import GRT from 'assets/img/assets/GRT.png'
-import LINK from 'assets/img/assets/LINK.png'
-import MATIC from 'assets/img/assets/MATIC.png'
-import MKR from 'assets/img/assets/MKR.png'
-import SNX from 'assets/img/assets/SNX.png'
-import SUSHI from 'assets/img/assets/SUSHI.png'
-import UMA from 'assets/img/assets/UMA.png'
-import UNI from 'assets/img/assets/UNI.png'
-import USDC from 'assets/img/assets/USDC.png'
-import USDT from 'assets/img/assets/USDT.png'
-import WETH from 'assets/img/assets/WETH.png'
-import YFI from 'assets/img/assets/YFI.png'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 export const HeroHeader = styled.h6`
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Kaushan Script', sans-serif;
   font-size: 7rem;
   letter-spacing: -0.1rem;
   font-weight: ${(props) => props.theme.fontWeight.strong} !important;
@@ -45,32 +22,12 @@ export const HeroHeader = styled.h6`
   }
 `
 
-export const HeroHeaderGradient = styled(HeroHeader)`
-  display: inline-block;
-  background: ${(props) => props.theme.heroGradient};
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: bounce 10s ease-in-out infinite alternate;
-
-  @keyframes bounce {
-    to {
-      background-position: 200%;
-    }
-  }
-`
-
 export const HeroSubHeader = styled.h6`
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Kaushan Script', sans-serif;
   font-size: 4rem !important;
   letter-spacing: -0.2rem;
   font-weight: ${(props) => props.theme.fontWeight.medium} !important;
-  color: $props{(props) => props.theme.color.text[100]};
-  background: ${(props) => props.theme.heroGradient};
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: bounce 10s ease-in-out infinite alternate;
+  color: ${(props) => props.theme.color.text[100]};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     font-size: 2rem !important;
@@ -94,145 +51,6 @@ export const HeroText = styled.p`
     text-align: left;
     font-size: 1.15rem;
   }
-`
-
-export const BubbleWrap = styled.div`
-  height: 600px;
-  margin-left: calc(-100vw / 2 + 500px / 2);
-  margin-right: calc(-100vw / 2 + 500px / 2);
-  overflow: hidden;
-
-  @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
-    display: none;
-  }
-
-  @media (min-width: ${(props) => props.theme.breakpoints.uhd}px) {
-    display: none;
-  }
-`
-
-export const BubbleContainer = styled.div`
-  position: relative;
-
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
-    display: none;
-  }
-
-  .bubble {
-    opacity: 0.75;
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background-repeat: no-repeat;
-    background-size: 100px 100px;
-    background-position: center center;
-    z-index: -999;
-  }
-
-  .logo1 {
-    background-image: url(${AAVE});
-  }
-  .logo2 {
-    background-image: url(${LINK});
-  }
-  .logo3 {
-    background-image: url(${ALPHA});
-  }
-  .logo4 {
-    background-image: url(${BAL});
-  }
-  .logo5 {
-    background-image: url(${BAO});
-  }
-  .logo6 {
-    background-image: url(${DAI});
-  }
-  .logo7 {
-    background-image: url(${CREAM});
-  }
-  .logo8 {
-    background-image: url(${CRV});
-  }
-  .logo9 {
-    background-image: url(${CVX});
-  }
-  .logo10 {
-    background-image: url(${DAI});
-  }
-  .logo11 {
-    background-image: url(${FRAX});
-  }
-  .logo12 {
-    background-image: url(${GRT});
-  }
-  .logo13 {
-    background-image: url(${SUSHI});
-  }
-  .logo14 {
-    background-image: url(${LINK});
-  }
-  .logo15 {
-    background-image: url(${MATIC});
-  }
-  .logo16 {
-    background-image: url(${MKR});
-  }
-  .logo17 {
-    background-image: url(${SNX});
-  }
-  .logo18 {
-    background-image: url(${SUSHI});
-  }
-  .logo19 {
-    background-image: url(${WETH});
-  }
-  .logo20 {
-    background-image: url(${UNI});
-  }
-  .logo21 {
-    background-image: url(${USDC});
-  }
-  .logo22 {
-    background-image: url(${USDT});
-  }
-  .logo23 {
-    background-image: url(${WETH});
-  }
-  .logo24 {
-    background-image: url(${YFI});
-  }
-  .logo25 {
-    background-image: url(${USDC});
-  }
-  .logo26 {
-    background-image: url(${MATIC});
-  }
-  .logo27 {
-    background-image: url(${GRT});
-  }
-  .logo28 {
-    background-image: url(${UMA});
-  }
-  .logo29 {
-    background-image: url(${COMP});
-  }
-  .logo30 {
-    background-image: url(${SUSHI});
-  }
-  .logo31 {
-    background-image: url(${SNX});
-  }
-  .logo32 {
-    background-image: url(${ALCX});
-  }
-  .logo33 {
-    background-image: url(${AAVE});
-  }
-`
-
-export const BubbleOverlayText = styled.div`
-  z-index: 9999;
-  text-align: left;
 `
 
 export const StyledSectionContainer = styled.div`
@@ -264,7 +82,7 @@ export const StyledCardContainer = styled.div`
 export const StyledCardContent = styled.div`
   color: ${(props) => props.theme.color.text[100]};
   padding: ${(props) => props.theme.spacing[4]}px;
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
   border-radius: ${(props) => props.theme.borderRadius}px;
   height: 550px;
   width: 100%;
@@ -363,10 +181,9 @@ export const InfoContainer = styled.div`
 `
 
 export const InfoHeader = styled.h2`
-  font-family: 'Rubik', sans-serif;
-  font-size: 5rem;
-  letter-spacing: -0.1rem;
-  font-weight: ${(props) => props.theme.fontWeight.medium};
+  font-family: 'Kaushan Script', sans-serif;
+  font-size: 3rem;
+  font-weight: ${(props) => props.theme.fontWeight.strong};
 
   @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
     font-size: 4rem !important;
@@ -397,7 +214,7 @@ export const InfoSubHeader = styled(InfoHeader)`
 export const InfoText = styled.p`
   color: ${(props) => props.theme.color.text[100]};
   font-size: 1.25rem;
-  font-weight: ${(props) => props.theme.fontWeight.regular};
+  font-weight: ${(props) => props.theme.fontWeight.medium};
 `
 
 export const InfoImage = styled.img`
@@ -425,7 +242,7 @@ export const GraphContainer = styled(Col)`
   margin: 0 auto ${(props) => props.theme.spacing[6]}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     height: 250px;
@@ -446,14 +263,15 @@ export const AnalyticsContainer = styled(Row)`
   display: flex;
   flex-direction: row;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  background-color: ${(props) => props.theme.color.transparent[100]};
-  backdrop-filter: blur(5px);
-  margin-top: 200px; // bubble container is 600px high with 100 px margin top/bottom
-  position: absolute;
+  background-color: ${(props) => props.theme.color.primary[100]};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+  border: ${(props) => props.theme.border.default};
+  position: relative;
   width: 80%;
   left: 50%;
   transform: translateX(-50%);
   height: 125px;
+  margin-bottom: 125px;
 
   @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
     flex-direction: column;
@@ -477,13 +295,11 @@ export const Analytic = styled(Col)`
   text-align: center;
   height: 75%;
   display: flex;
-  -webkit-box-align: center;
   align-items: center;
-  -webkit-box-pack: center;
   justify-content: center;
   flex: 1 1;
   padding: ${(props) => props.theme.spacing[5]}px;
-  border-right: 1px solid ${(props) => props.theme.color.transparent[200]};
+  border-right: ${(props) => props.theme.border.default};
 
   &:first-child {
   }
@@ -514,7 +330,7 @@ export const Analytic = styled(Col)`
 `
 
 export const NestBoxHeader = styled.div`
-  font-family: 'Rubik', sans-serif;
+  font-family: 'KaushanScript', sans-serif;
   color: ${(props) => props.theme.color.text[100]};
   margin: auto;
   font-size: 2rem;
@@ -554,7 +370,7 @@ export const PrefButtons = styled.div`
     color: ${(props) => props.theme.color.text[100]};
     border-radius: ${(props) => props.theme.borderRadius}px;
     width: 48px;
-    background: ${(props) => props.theme.color.transparent[100]};
+    background: ${(props) => props.theme.color.primary[100]};
 
     &:hover,
     &.active,
@@ -570,4 +386,122 @@ export const PrefButtons = styled.div`
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     display: none;
   }
+`
+
+export const FloatingWrapper = styled.div`
+	top: 3rem;
+	right: 0rem;
+	position: absolute;
+	overflow: hidden;
+	animation: bannerImgBounce 5s ease-in-out 0s infinite alternate;
+	max-width: 100%;
+	height: auto;
+
+	@keyframes bannerImgBounce {
+		0% {
+			-webkit-transform: translateY(0);
+			transform: translateY(0);
+		}
+		100% {
+			-webkit-transform: translateY(-20px);
+			transform: translateY(-20px);
+		}
+	}
+`
+
+export const FloatingImage = styled.img`
+	display: block;
+	right: 0rem;
+	height: 440px;
+`
+
+export const StyledLeft = styled.div`
+	position: relative;
+	display: flex;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1280px;
+	margin-top: 6rem;
+	margin-bottom: 2rem;
+	@media (min-width: 1024px) {
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		grid-gap: 2rem;
+		gap: 2rem;
+		display: grid;
+		padding: 2rem;
+		margin-top: 6rem;
+	}
+`
+
+export const StyledLeftTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  margin: 0 auto;
+  padding: 0 1rem 0 1rem;
+}
+@media (min-width: 640px) {
+  text-align: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+  @media (min-width: 768px) {
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+@media (min-width: 1024px) {
+  grid-column: span 6/span 6;
+  text-align: left;
+  display: flex;
+}
+`
+
+export const StyledLeftSubTitle = styled.h1`
+	font-weight: 600;
+	margin-top: 1.5rem;
+	pointer-events: none;
+	white-space: wrap;
+	overflow-wrap: normal;
+	font-family: 'Kaushan Script';
+	letter-spacing: -0.025em;
+	text-align: center;
+	@media (min-width: 640px) {
+		margin-top: 1.25rem;
+		line-height: 1;
+		text-align: center;
+		font-size: 2rem;
+	}
+	@media (min-width: 1024px) {
+		margin-top: 1.5rem;
+		font-size: 3rem;
+		line-height: 1;
+		text-align: left;
+	}
+	@media (min-width: 1280px) {
+		font-size: 3rem;
+		line-height: 1;
+	}
+`
+export const StyledLeftText = styled.h2`
+	margin-top: 0.75rem;
+	font-size: 1rem;
+	line-height: 1.5rem;
+
+	@media (min-width: 640px) {
+		margin-top: 1.125rem;
+		font-size: 1.2rem;
+		line-height: 1.75rem;
+		text-align: center;
+	}
+	@media (min-width: 1024px) {
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+		text-align: left;
+	}
+	@media (min-width: 1280px) {
+		font-size: 1.25rem;
+		line-height: 1.75rem;
+	}
 `

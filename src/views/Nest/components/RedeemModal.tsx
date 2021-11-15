@@ -182,7 +182,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
 }
 
 const RedeemToChoice = styled(Form.Select)`
-	background-color: ${(props) => props.theme.color.transparent[100]};
+	background-color: ${(props) => props.theme.color.primary[200]};
 	color: ${(props) => props.theme.color.text[100]};
 	border: none;
 	border-radius: ${(props) => props.theme.borderRadius}px;

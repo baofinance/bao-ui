@@ -1,4 +1,4 @@
-import pollyLogo from 'assets/img/logo.svg'
+import baoLogo from 'assets/img/logo.svg'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -7,12 +7,10 @@ import Tooltipped from '../Tooltipped'
 const Logo: React.FC = () => {
 	return (
 		<StyledLogo to="/">
-			<img src={pollyLogo} height="36" style={{ verticalAlign: 'middle' }} />
+			<img src={baoLogo} height="32" style={{ verticalAlign: 'middle' }} />
 			<StyledText>
 				<TitleText>
-					<Tooltipped content="by Bao.Finance">
-						<span>Polly</span>
-					</Tooltipped>
+						<span>Bao.Finance</span>
 				</TitleText>
 			</StyledText>
 		</StyledLogo>
@@ -23,10 +21,10 @@ const TitleText = styled.div`
 	width: fit-content;
 	white-space: nowrap;
 	color: ${(props) => props.theme.color.text[100]};
-	font-family: 'Rubik', sans-serif;
-	font-size: 2.25rem;
+	font-family: 'Reem Kufi', sans-serif;
+	font-size: 1.5rem;
 	letter-spacing: 0.03rem;
-	margin-left: ${(props) => props.theme.spacing[2]}px;
+	margin-left: ${(props) => props.theme.spacing[1]}px;
 `
 
 const StyledLogo = styled(Link)`
@@ -46,7 +44,7 @@ const StyledText = styled.span`
 	font-size: 1.25rem;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	letter-spacing: 0.03em;
-	margin-left: ${(props) => props.theme.spacing[2]}px;
+	margin-left: ${(props) => props.theme.spacing[1]}px;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
 		display: none;

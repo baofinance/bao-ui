@@ -54,7 +54,7 @@ const BorrowMeterContainer = styled.div`
 	width: 100%;
 	height: 0.25rem;
 	border-radius: 8px;
-	background-color: ${(props) => props.theme.color.transparent[200]};
+	background-color: ${(props) => props.theme.color.transparent[100]};
 `
 
 const BorrowMeter = styled.div`
@@ -62,7 +62,7 @@ const BorrowMeter = styled.div`
 	width: 50%;
 	height: 100%;
 	border-radius: 8px;
-	background-color: #ffffffcf;
+	background-color: ${(props) => props.theme.color.secondary[200]};
 `
 
 export default Overview

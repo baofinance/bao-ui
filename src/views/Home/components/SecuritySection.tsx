@@ -1,5 +1,5 @@
 import React from 'react'
-import { HeroHeader, HeroHeaderGradient, HeroText } from './styles'
+import { HeroHeader, HeroText } from './styles'
 import Spacer from 'components/Spacer'
 
 import immunefi from 'assets/img/immunefi.png'

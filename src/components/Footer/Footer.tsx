@@ -10,7 +10,6 @@ const Footer: React.FC = () => (
 				<Nav />
 			</StyledNavWrapper>
 		</StyledFooterInner>
-		<Branding />
 	</StyledFooter>
 )
 

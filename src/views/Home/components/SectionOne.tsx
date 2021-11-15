@@ -1,16 +1,32 @@
+import chopsticks from 'assets/img/floatingbao.png'
 import React from 'react'
-import { HeroHeader, HeroHeaderGradient, HeroText } from './styles'
+import {
+	FloatingImage,
+	FloatingWrapper,
+	StyledLeft,
+	StyledLeftSubTitle,
+	StyledLeftText,
+	StyledLeftTitle,
+} from './styles'
 
 const SectionOne: React.FC = () => (
 	<>
-		<HeroHeader>
-			<HeroHeaderGradient>Build Your Nest</HeroHeaderGradient>
-		</HeroHeader>
-		<HeroText>
-			With Polly Nests you can diversify your crypto portfolio & earn passive
-			yield in just a few clicks! Nests utilize autonomous strategies that will
-			minimize the effort needed to maximize your returns.
-		</HeroText>
+		<StyledLeft>
+			<StyledLeftTitle>
+				<StyledLeftSubTitle>Deliciously wrapped finance!</StyledLeftSubTitle>
+				<StyledLeftText>
+					Bao (包) stands for a treasure or package. Something wonderful that is
+					wrapped up in another layer. Bao buns, or in Chinese Baozi (包子) are
+					delicious wrapped dumplings. These bao buns are the tradition of
+					taking something good that exists, and wrapping it up into being a new
+					treasure. Bao Finance aims to do this by being a new protocol that
+					adds features to existing DeFi systems.
+				</StyledLeftText>
+			</StyledLeftTitle>
+		</StyledLeft>
+		<FloatingWrapper style={{ maxWidth: '700px' }}>
+			<FloatingImage src={chopsticks} />
+		</FloatingWrapper>{' '}
 	</>
 )
 

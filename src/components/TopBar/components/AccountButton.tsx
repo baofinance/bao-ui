@@ -60,7 +60,7 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 									icon="angle-double-right"
 									style={{
 										margin: '0 4px',
-										color: 'white',
+										color: '#b07a6e',
 									}}
 								/>{' '}
 								{new BigNumber(getDisplayBalance(wethBalance)).toFixed(4)}

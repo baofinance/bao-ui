@@ -171,7 +171,7 @@ export default {
       name: 'Polly',
       symbol: 'POLLY',
       coingeckoId: 'polly-finance',
-      image: 'https://assets.coingecko.com/coins/images/18354/small/POLLY.png',
+      image: 'https://assets.coingecko.com/coins/images/18354/small/BAO.png',
       decimals: 18,
     },
     {
@@ -290,7 +290,7 @@ export default {
       name: 'POLLY-ETH',
       symbol: 'POLLY-ETH SUSHI LP',
       tokenSymbol: 'POLLY',
-      icon: '/POLLY.png',
+      icon: '/BAO.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       pairUrl:
@@ -308,7 +308,7 @@ export default {
       name: 'POLLY-nDEFI',
       symbol: 'POLLY-nDEFI SUSHI LP',
       tokenSymbol: 'POLLY',
-      icon: '/POLLY.png',
+      icon: '/BAO.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       pairUrl:
@@ -326,7 +326,7 @@ export default {
       name: 'POLLY-RAI',
       symbol: 'POLLY-RAI SUSHI LP',
       tokenSymbol: 'POLLY',
-      icon: '/POLLY.png',
+      icon: '/BAO.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       pairUrl:

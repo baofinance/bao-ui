@@ -9,7 +9,7 @@ import { getBalanceNumber, truncateNumber } from '../utils/numberFormat'
 import useAllFarmTVL from './useAllFarmTVL'
 import useBao from './useBao'
 
-const useHomeAnalytics = () => {
+const useProtocolData = () => {
   const [analytics, setAnalytics] = useState<
     | Array<{
         title: string
@@ -91,4 +91,4 @@ const useHomeAnalytics = () => {
   return analytics
 }
 
-export default useHomeAnalytics
+export default useProtocolData

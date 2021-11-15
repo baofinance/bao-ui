@@ -1,8 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
-import ExternalLink from 'components/ExternalLink'
-
 
 interface ButtonProps {
 	children?: React.ReactNode
@@ -38,11 +36,11 @@ export const Button: React.FC<ButtonProps> = ({
 	let buttonColor: string
 	switch (variant) {
 		case 'secondary':
-			buttonColor = '#a1a0a0'
+			buttonColor = '#a29b91'
 			break
 		case 'default':
 		default:
-			buttonColor = '#f7f4f2'
+			buttonColor = '#50251c'
 	}
 
 	let boxShadow: string
@@ -123,10 +121,9 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	target: attrs.target || '',
 }))<StyledButtonProps>`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[200]};
+	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: none;
-	border-bottom: 1px solid ${(props) => props.theme.color.primary[400]};
+	border: ${(props) => props.theme.border.default};
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	padding: ${(props) => -props.theme.spacing[3]}px;
 	color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
@@ -142,13 +139,11 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	width: ${(props) => (props.width ? props.width : '100%')};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: .6s;
 	overflow: hidden;
 
 	@media (max-width: 960px) {
 		/* margin: 0 0.5rem 0 0.5rem; */
 		text-align: center;
-		text-decoration: none;
 		padding: ${(props) => -props.theme.spacing[1]}px
 			${(props) => -props.theme.spacing[3]}px;
 	}
@@ -158,56 +153,11 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 			${(props) => -props.theme.spacing[3]}px;
 	}
 
-	&:focus {
-		outline: 0;
-	}
-
-	&:before{
-		content: '';
-		display: block;
-		position: absolute;
-		background: ${(props) => props.theme.color.transparent[300]};
-		width: 60px;
-		height: 100%;
-		left: 0;
-		top: 0;
-		opacity: .5;
-		filter: blur(30px);
-		transform: translateX(-100px)  skewX(-15deg);
-	  }
-	  &:after{
-		content: '';
-		display: block;
-		position: absolute;
-		background: ${(props) => props.theme.color.transparent[200]};
-		width: 30px;
-		height: 100%;
-		left: 30px;
-		top: 0;
-		opacity: 0;
-		filter: blur(5px);
-		transform: translateX(-100px) skewX(-15deg);
-	  }
-	  &:hover{
-		background: ${(props) => props.theme.color.primary[100]};
-		cursor: pointer;
-		&:before{
-		  transform: translateX(500px)  skewX(-15deg);  
-		  opacity: 0.6;
-		  transition: .7s;
-		}
-		&:after{
-		  transform: translateX(500px) skewX(-15deg);  
-		  opacity: 1;
-		  transition: .7s;
-		}
-	  }
-	}
-
 	&:hover,
 	&:focus,
 	&:active {
-		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+		box-shadow: ${(props) => props.theme.boxShadow.hover};
+		color: ${(props) => props.theme.color.text[300]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
@@ -226,7 +176,7 @@ const StyledLink = styled(Link)`
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[100]};
+		color: ${(props) => props.theme.color.text[400]};
 	}
 `
 
@@ -243,7 +193,7 @@ const ButtonLink = styled.a`
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[100]};
+		color: ${(props) => props.theme.color.text[400]};
 	}
 `
 
@@ -268,16 +218,8 @@ export const MaxButton = styled.a`
 `
 
 export const StyledBorderButton = styled(StyledButton)`
-	background: ${(props) => props.theme.buttonGradient.a};
-	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: 1.75px solid transparent;
-	padding: ${(props) => -props.theme.spacing[3]}px;
-
-	&:hover,
-	&:focus,
-	&:active {
-		background: ${(props) => props.theme.buttonGradient.hover};
-		border: 1.75px solid transparent;
+	&:hover {
+		color: ${(props) => props.theme.color.text[100]};
 	}
 `
 
@@ -285,43 +227,43 @@ type NavButtonProps = {
 	onClick: (s: any) => void
 	active: string
 	options: string[]
-  }
+}
 
 export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
 	<NavButtonWrapper>
-	  {options.map((option: string) => (
-		<NavButton
-		  key={option}
-		  color={option === active ? '#f8f8ff' : '#c4c3d0'}
-		  onClick={() => onClick(option)}
-		>
-		  {option}
-		</NavButton>
-	  ))}
+		{options.map((option: string) => (
+			<NavButton
+				key={option}
+				color={option === active ? '#f8f8ff' : '#c4c3d0'}
+				onClick={() => onClick(option)}
+			>
+				{option}
+			</NavButton>
+		))}
 	</NavButtonWrapper>
-  )
+)
 
-  const NavButtonWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    background-color: ${(props) => props.theme.color.primary[400]};
-    padding: .25rem;
-    border-radius: 4px;
-    cursor: pointer;
-  `
+const NavButtonWrapper = styled.div`
+	display: flex;
+	width: 100%;
+	background-color: ${(props) => props.theme.color.primary[400]};
+	padding: 0.25rem;
+	border-radius: 4px;
+	cursor: pointer;
+`
 
-  const NavButton = styled.div`
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    padding: .5rem;
-    border-radius: 4px;
-    font-weight: ${(props) => props.theme.fontWeight.medium};
-    font-size: 1rem;
-    color: #fff;
-    background-color: ${(props) => props.theme.color.primary[100]};
+const NavButton = styled.div`
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	padding: 0.5rem;
+	border-radius: 4px;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	font-size: 1rem;
+	color: #fff;
+	background-color: ${(props) => props.theme.color.primary[100]};
 
 	&:active {
 		background-color: ${(props) => props.theme.color.primary[400]};
 	}
-  `
+`

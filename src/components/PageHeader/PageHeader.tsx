@@ -47,23 +47,12 @@ const StyledPageHeader = styled.div`
 `
 
 export const StyledTitle = styled.h1`
-	font-family: 'Rubik', sans-serif;
+	font-family: 'Kaushan Script', sans-serif;
 	font-size: 4rem !important;
 	letter-spacing: -0.1rem;
 	text-align: center;
 	font-weight: ${(props) => props.theme.fontWeight.strong} !important;
 	color: ${(props) => props.theme.color.text[100]};
-	background: linear-gradient(
-		to left,
-		${(props) => props.theme.color.accent[300]} 0%,
-		${(props) => props.theme.color.accent[100]} 33%,
-		${(props) => props.theme.color.accent[200]} 66%,
-		${(props) => props.theme.color.accent[300]} 100%
-	);
-	background-size: 200% auto;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	animation: bounce 25s ease-in-out infinite alternate;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
 		font-size: 2.5rem !important;

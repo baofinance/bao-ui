@@ -44,11 +44,7 @@ const StyledResponsiveWrapper = styled.div`
 
 const StyledModal = styled.div`
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
-	background: radial-gradient(
-		circle at center top,
-		${(props) => props.theme.color.darkGrey[800]},
-		${(props) => props.theme.color.darkGrey[900]}
-	);
+	background: ${(props) => props.theme.color.primary[200]};
 	border: 1px solid ${(props) => props.theme.color.primary[400]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;

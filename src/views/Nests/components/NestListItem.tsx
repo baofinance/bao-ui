@@ -71,27 +71,36 @@ const NestListItem: React.FC<NestListItemProps> = ({ nest }) => {
 				</ListCol>
 				<ListCol width={'15%'} align={'center'}>
 					<ColumnText>
-						$
-						{usdPerIndex ? (
-							getDisplayBalance(usdPerIndex, 0)
-						) : (
-							<SpinnerLoader />
-						)}
+						<b>
+							$
+							{usdPerIndex ? (
+								getDisplayBalance(usdPerIndex, 0)
+							) : (
+								<SpinnerLoader />
+							)}{' '}
+						</b>
 					</ColumnText>
 				</ListCol>
 				<ListCol width={'15%'} align={'center'}>
 					<ColumnText>
 						{nestPriceChange24h ? (
 							<>
-								<span
-									style={{
-										color: nestPriceChange24h.isNaN() ? 'white' : nestPriceChange24h.gt(0) ? 'green' : 'red',
-									}}
-								>
-									{priceHistory && (
-										nestPriceChange24h.isNaN() ? '~' : `${getDisplayBalance(nestPriceChange24h, 0)}%`
-									)}
-								</span>
+								<b>
+									<span
+										style={{
+											color: nestPriceChange24h.isNaN()
+												? 'white'
+												: nestPriceChange24h.gt(0)
+												? 'green'
+												: 'red',
+										}}
+									>
+										{priceHistory &&
+											(nestPriceChange24h.isNaN()
+												? '~'
+												: `${getDisplayBalance(nestPriceChange24h, 0)}%`)}
+									</span>
+								</b>
 							</>
 						) : (
 							<SpinnerLoader />

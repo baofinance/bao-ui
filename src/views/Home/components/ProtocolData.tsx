@@ -1,14 +1,16 @@
 import { SpinnerLoader } from 'components/Loader'
-import useHomeAnalytics from 'hooks/useHomeAnalytics'
+import useProtocolData from 'hooks/useProtocolData'
 import React from 'react'
 import { Analytic, AnalyticsContainer } from './styles'
+import gql from 'graphql-tag'
+import styled from 'styled-components'
 
-const HomeAnalytics: React.FC = () => {
-	const homeAnalytics = useHomeAnalytics()
+const ProtocolData: React.FC = () => {
+	const protocolData = useProtocolData()
 	return (
 		<AnalyticsContainer sm={1} lg={4}>
-			{homeAnalytics ? (
-				homeAnalytics.map((_analytic) => (
+			{protocolData ? (
+				protocolData.map((_analytic) => (
 					<Analytic key={Math.random().toString()}>
 						<span>
 							<h2>{_analytic.data}</h2>
@@ -30,4 +32,4 @@ const HomeAnalytics: React.FC = () => {
 	)
 }
 
-export default HomeAnalytics
+export default ProtocolData

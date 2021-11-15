@@ -24,13 +24,13 @@ import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import { provider } from 'web3-core'
+import Config from '../../bao/lib/config'
 import NDEFI from './components/explanations/nDEFI'
 import NSTBL from './components/explanations/nSTBL'
 import IssueModal from './components/IssueModal'
 import NavModal from './components/NavModal'
 import { Progress } from './components/Progress'
 import RedeemModal from './components/RedeemModal'
-import Config from '../../bao/lib/config'
 import {
 	CornerButtons,
 	GraphContainer,
@@ -51,7 +51,7 @@ import {
 	StatCard,
 	StatsRow,
 	StyledBadge,
-	StyledTable,
+	StyledTable
 } from './components/styles'
 
 const Nest: React.FC = () => {
@@ -232,30 +232,11 @@ const Nest: React.FC = () => {
 							</span>
 							<QuestionIcon icon="question-circle" onClick={onNavModal} />
 							<Spacer size={'sm'} />
-							<Tooltipped content={"Based on SushiSwap's Polygon prices"}>
-								<StyledBadge
-									style={{
-										marginRight: '${(props) => props.theme.spacing[2]}px',
-									}}
-								>
-									<img
-										src={require('assets/img/assets/MATIC.png')}
-										style={{ height: '1em' }}
-									/>{' '}
-									{(nav && `$${getDisplayBalance(nav.nav, 0)}`) || (
-										<SpinnerLoader />
-									)}
-								</StyledBadge>
-							</Tooltipped>
-							<span style={{ marginLeft: '5px' }} />
-							<Tooltipped content={"Based on SushiSwap's Mainnet prices"}>
-								<StyledBadge>
-									<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
-									{(nav && `$${getDisplayBalance(nav.mainnetNav, 0)}`) || (
-										<SpinnerLoader />
-									)}
-								</StyledBadge>
-							</Tooltipped>
+							<StyledBadge>
+								{(nav && `$${getDisplayBalance(nav.mainnetNav, 0)}`) || (
+									<SpinnerLoader />
+								)}
+							</StyledBadge>
 						</StatCard>
 					</Col>
 					<Col>
@@ -337,22 +318,22 @@ const Nest: React.FC = () => {
 										<>
 											$
 											{priceHistory &&
-											getDisplayBalance(
-												new BigNumber(
-													priceHistory[priceHistory.length - 1].close,
-												),
-												0,
-											)}
+												getDisplayBalance(
+													new BigNumber(
+														priceHistory[priceHistory.length - 1].close,
+													),
+													0,
+												)}
 											<span
 												className="smalltext"
 												style={{
 													color: nestPriceChange24h.gt(0) ? 'green' : 'red',
 												}}
 											>
-											{priceHistory &&
-											getDisplayBalance(nestPriceChange24h, 0)}
+												{priceHistory &&
+													getDisplayBalance(nestPriceChange24h, 0)}
 												{'%'}
-										</span>
+											</span>
 										</>
 									) : (
 										<SpinnerLoader />
@@ -453,6 +434,7 @@ const Nest: React.FC = () => {
 										</tr>
 									)}
 								</tbody>
+								<Spacer />
 							</StyledTable>
 						) : (
 							<GraphContainer style={{ height: '400px' }}>
@@ -492,12 +474,12 @@ const Nest: React.FC = () => {
 						)}
 					</NestAnalyticsContainer>
 				</NestAnalytics>
-				<NestBoxBreak />
+				<NestBoxHeader>Product Description</NestBoxHeader>
 				<NestExplanation>
 					{/* TODO: Store pointer to nest description in config, this is messy */}
 					{nestTokenAddress === Config.addressMap.nDEFI && <NDEFI />}
 					{nestTokenAddress === Config.addressMap.nSTBL && <NSTBL />}
-						</NestExplanation>
+				</NestExplanation>
 			</NestBox>
 		</>
 	)

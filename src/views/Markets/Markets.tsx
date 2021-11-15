@@ -1,5 +1,4 @@
 import pollyNests from 'assets/img/polly-nests.png'
-import { Button } from 'components/Button'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import WalletProviderModal from 'components/WalletProviderModal'
@@ -9,7 +8,6 @@ import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
-import Config from '../../bao/lib/config'
 import Borrow from './components/Borrow'
 import Borrowed from './components/Borrowed'
 import Overview from './components/Overview'
@@ -23,45 +21,29 @@ const Markets: React.FC = () => {
 	return (
 		<Switch>
 			<Page>
-				{account && ethereum.chainId === Config.defaultRpc.chainId ? (
-					<>
-						<PageHeader
-							icon={pollyNests}
-							title="Markets"
-							subtitle="Mint, Lend, Borrow"
-						/>
-						<Container>
-							<Section>
-								<SectionHeader>Dashboard</SectionHeader>
-								<SectionInner>
-									<Overview />
-									<UserOverview>
-										<Supplied />
-										<Borrowed />
-									</UserOverview>
-								</SectionInner>
-							</Section>
-							<MarketOverview>
-								<Supply />
-								<Borrow />
-							</MarketOverview>
-						</Container>
-					</>
-				) : (
-					<div
-						style={{
-							alignItems: 'center',
-							display: 'flex',
-							flex: 1,
-							justifyContent: 'center',
-						}}
-					>
-						<Button
-							onClick={onPresentWalletProviderModal}
-							text="🔓 Unlock Wallet"
-						/>
-					</div>
-				)}
+				<>
+					<PageHeader
+						icon={pollyNests}
+						title="Markets"
+						subtitle="Mint, Lend, Borrow"
+					/>
+					<Container>
+						<Section>
+							<SectionHeader>Dashboard</SectionHeader>
+							<SectionInner>
+								<Overview />
+								<UserOverview>
+									<Supplied />
+									<Borrowed />
+								</UserOverview>
+							</SectionInner>
+						</Section>
+						<MarketOverview>
+							<Supply />
+							<Borrow />
+						</MarketOverview>
+					</Container>
+				</>
 			</Page>
 		</Switch>
 	)
@@ -88,8 +70,10 @@ const SectionHeader = styled.div`
 const SectionInner = styled.div`
 	justify-content: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.transparent[100]};
+	background-color: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 `
 
 const UserOverview = styled.div`

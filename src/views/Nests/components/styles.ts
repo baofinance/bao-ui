@@ -25,7 +25,9 @@ export const ListLabelContainer = styled.div`
 `
 
 export const ListItemContainer = styled.div`
-  background: ${(props) => props.theme.color.transparent[100]};
+  background: ${(props) => props.theme.color.primary[100]};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+  border: ${(props) => props.theme.border.default};
   border-radius: ${(props) => props.theme.borderRadius}px;
   padding: ${(props) => props.theme.spacing[4]}px;
   display: block;
@@ -39,7 +41,7 @@ export const ListItemContainer = styled.div`
 export const MobileListItemWrapper = styled.div`
   display: none;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
-    background: ${(props) => props.theme.color.transparent[100]};
+    background: ${(props) => props.theme.color.primary[100]};
     border-radius: ${(props) => props.theme.borderRadius}px;
     width: 100%;
     flex-direction: column;
