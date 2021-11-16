@@ -246,7 +246,7 @@ export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
 const NavButtonWrapper = styled.div`
 	display: flex;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[400]};
+	background-color: ${(props) => props.theme.color.secondary[300]};
 	padding: 0.25rem;
 	border-radius: 4px;
 	cursor: pointer;
@@ -259,11 +259,15 @@ const NavButton = styled.div`
 	padding: 0.5rem;
 	border-radius: 4px;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
-	font-size: 1rem;
-	color: #fff;
+	font-size: ${(props) => props.theme.fontSize.default};
+	color: ${(props) => props.theme.color.text[100]};
 	background-color: ${(props) => props.theme.color.primary[100]};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
+
 
 	&:active {
-		background-color: ${(props) => props.theme.color.primary[400]};
+		box-shadow: ${(props) => props.theme.boxShadow.hover};
+		color: ${(props) => props.theme.color.text[200]};
+		background-color: ${(props) => props.theme.color.primary[200]};
 	}
 `

@@ -13,7 +13,7 @@ import {
 } from './colors'
 
 const theme = {
-  borderRadius: 12,
+  borderRadius: 8,
   breakpoints: {
     mobile: 576,
     tablet: 767,
@@ -32,6 +32,15 @@ const theme = {
     transparent,
     accent,
     darkGrey,
+  },
+  fontSize: {
+    xs: '.75rem',
+    sm: '.875rem',
+    default: '1rem',
+    md: '1.15rem',
+    large: '1.25rem',
+    xl: '1.5rem',
+    xxl: '2rem',
   },
   fontWeight: {
     thin: 100,

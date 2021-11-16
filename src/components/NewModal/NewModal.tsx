@@ -39,21 +39,11 @@ const ModalContent = styled.div`
 	position: relative;
 	width: 100%;
 	outline-offset: 2px;
-	background-image: ;
-	background-position-x: ;
-	background-position-y: ;
-	background-size: ;
-	background-repeat-x: ;
-	background-repeat-y: ;
-	background-attachment: ;
-	background-origin: ;
-	background-clip: ;
-	color: rgb(255, 255, 255);
+	color: ${(props) => props.theme.color.text[100]};
 	z-index: 1400;
-	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-		0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 	max-width: 28rem;
-    background: radial-gradient( circle at center top, #202231, #161522 );
+    background: ${(props) => props.theme.color.primary[100]};
 	outline: transparent solid 2px;
 	border-radius: 0.375rem;
 	margin: 8rem;

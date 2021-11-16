@@ -8,11 +8,13 @@ import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
-import Borrow from './components/Borrow'
-import Borrowed from './components/Borrowed'
-import Overview from './components/Overview'
-import Supplied from './components/Supplied'
-import Supply from './components/Supply'
+import {
+	Borrow,
+	Borrowed,
+	Overview,
+	Supplied,
+	Supply,
+} from './components/Tables'
 
 const Markets: React.FC = () => {
 	const { account, ethereum }: any = useWallet()
