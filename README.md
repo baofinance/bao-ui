@@ -1,7 +1,7 @@
 ![GitHub Super-Linter](https://github.com/baofinance/ui/workflows/Lint%20Code%20Base/badge.svg)
 
-# Polly Finance UI
-This is the [pollyfinance.com](https://pollyfinance.com) UI project.
+# Bao Finance UI
+This is the [app.bao.finance](https://app.bao.finance) UI project.
 
 ## Contributing
 Please read through the [contribution guidelines](./CONTRIBUTING.md) for more information on 
