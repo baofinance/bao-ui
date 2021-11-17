@@ -8,6 +8,7 @@ import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
+import useMarkets from '../../hooks/hard-synths/useMarkets'
 import {
 	Borrow,
 	Borrowed,
@@ -19,6 +20,9 @@ import {
 const Markets: React.FC = () => {
 	const { account, ethereum }: any = useWallet()
 	const [onPresentWalletProviderModal] = useModal(<WalletProviderModal />)
+
+	const markets = useMarkets()
+	if (markets) console.log(markets)
 
 	return (
 		<Switch>
