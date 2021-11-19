@@ -143,7 +143,7 @@ export default {
       underlyingAddresses: {
         137: '0x035a6a67de5455970b1AEd9342e51915eE4d0F32',
       },
-      icon: '/pai.png',
+      icon: '/PAI.png',
     },
     {
       mid: 2,
@@ -154,7 +154,7 @@ export default {
       underlyingAddresses: {
         137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
       },
-      icon: '/matic.png',
+      icon: '/wMATIC.png',
     },
     {
       mid: 3,
