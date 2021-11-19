@@ -6,6 +6,7 @@ import { provider } from 'web3-core'
 import { SupportedMarket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
+import { Market } from '../../contexts/Markets'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -22,9 +23,14 @@ const useMarkets = () => {
   const [markets, setMarkets] = useState<Market[] | undefined>()
 
   const fetchMarkets = useCallback(async () => {
-    const contracts: Contract[] = Config.markets.map((market: SupportedMarket) => {
-      return bao.getNewContract('ctoken.json', market.marketAddresses[Config.networkId])
-    })
+    const contracts: Contract[] = Config.markets.map(
+      (market: SupportedMarket) => {
+        return bao.getNewContract(
+          'ctoken.json',
+          market.marketAddresses[Config.networkId],
+        )
+      },
+    )
     const comptroller: Contract = bao.getContract('comptroller')
     const oracle: Contract = bao.getContract('marketOracle')
 
@@ -43,28 +49,58 @@ const useMarkets = () => {
       borrowState,
       oraclePrices, // UNUSED
     ]: any = await Promise.all([
-      Promise.all(contracts.map((contract) => contract.methods.reserveFactorMantissa().call())),
-      Promise.all(contracts.map((contract) => contract.methods.totalReserves().call())),
-      Promise.all(contracts.map((contract) => contract.methods.totalBorrows().call())),
-      Promise.all(contracts.map((contract) => contract.methods.supplyRatePerBlock().call())),
-      Promise.all(contracts.map((contract) => contract.methods.borrowRatePerBlock().call())),
-      Promise.all(contracts.map((contract) => contract.methods.getCash().call())),
       Promise.all(
-        contracts.map((contract) => comptroller.methods.markets(contract.options.address).call())
+        contracts.map((contract) =>
+          contract.methods.reserveFactorMantissa().call(),
+        ),
       ),
       Promise.all(
-        contracts.map((contract) => comptroller.methods.compSpeeds(contract.options.address).call())
-      ), // UNUSED
-      Promise.all(contracts.map((contract) => contract.methods.totalSupply().call())),
+        contracts.map((contract) => contract.methods.totalReserves().call()),
+      ),
       Promise.all(
-        contracts.map((contract) => contract.methods.exchangeRateCurrent().call())
+        contracts.map((contract) => contract.methods.totalBorrows().call()),
       ),
       Promise.all(
         contracts.map((contract) =>
-          comptroller.methods.compBorrowState(contract.options.address).call()
-        )
+          contract.methods.supplyRatePerBlock().call(),
+        ),
       ),
-      Promise.all(addresses.map((address: string) => oracle.methods.getUnderlyingPrice(address).call())), // UNUSED
+      Promise.all(
+        contracts.map((contract) =>
+          contract.methods.borrowRatePerBlock().call(),
+        ),
+      ),
+      Promise.all(
+        contracts.map((contract) => contract.methods.getCash().call()),
+      ),
+      Promise.all(
+        contracts.map((contract) =>
+          comptroller.methods.markets(contract.options.address).call(),
+        ),
+      ),
+      Promise.all(
+        contracts.map((contract) =>
+          comptroller.methods.compSpeeds(contract.options.address).call(),
+        ),
+      ), // UNUSED
+      Promise.all(
+        contracts.map((contract) => contract.methods.totalSupply().call()),
+      ),
+      Promise.all(
+        contracts.map((contract) =>
+          contract.methods.exchangeRateCurrent().call(),
+        ),
+      ),
+      Promise.all(
+        contracts.map((contract) =>
+          comptroller.methods.compBorrowState(contract.options.address).call(),
+        ),
+      ),
+      Promise.all(
+        addresses.map((address: string) =>
+          oracle.methods.getUnderlyingPrice(address).call(),
+        ),
+      ), // UNUSED
     ])
 
     /*
@@ -77,12 +113,13 @@ const useMarkets = () => {
     const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
     const markets: Market[] = contracts.map((contract, i) => {
-      const underlying = Config.markets.find(
-        (market) => market.marketAddresses[Config.networkId] === contract.options.address
-      ).underlyingAddresses[Config.networkId] // contract.options.address !== ANCHOR_ETH ? UNDERLYING[address] : TOKENS.ETH
+      const marketConfig = Config.markets.find(
+        (market) =>
+          market.marketAddresses[Config.networkId] === contract.options.address,
+      ) // contract.options.address !== ANCHOR_ETH ? UNDERLYING[address] : TOKENS.ETH
       return {
         token: contract.options.address,
-        underlying,
+        underlying: marketConfig.underlyingAddresses[Config.networkId],
         supplyApy: supplyApys[i],
         borrowApy: borrowApys[i],
         borrowable: borrowState[i][1] > 0,
@@ -91,7 +128,10 @@ const useMarkets = () => {
         totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
         collateralFactor: decimate(collateralFactors[i][1]).toNumber(),
         reserveFactor: decimate(reserveFactors[i]).toNumber(),
-        supplied: decimate(exchangeRates[i]).times(decimate(totalSupplies[i], 18 /* see note */)).toNumber() // NOTE: Need to add config field for underlying asset's decimals. (totalSupplies[i])
+        supplied: decimate(exchangeRates[i])
+          .times(decimate(totalSupplies[i], 18 /* see note */))
+          .toNumber(), // NOTE: Need to add config field for underlying asset's decimals. (totalSupplies[i])
+        ...marketConfig,
       }
     })
 
@@ -104,20 +144,6 @@ const useMarkets = () => {
   }, [bao, account])
 
   return markets
-}
-
-type Market = {
-  token: string
-  underlying: string
-  supplyApy: number
-  borrowApy: number
-  borrowable: boolean
-  liquidity: number
-  totalReserves: number
-  totalBorrows: number
-  collateralFactor: number
-  reserveFactor: number
-  supplied: number
 }
 
 export default useMarkets

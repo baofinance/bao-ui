@@ -1,13 +1,11 @@
 import Table from 'components/Table'
 import Tooltipped from 'components/Tooltipped'
 import { Market } from 'contexts/Markets'
-import { formatUnits } from 'ethers/lib/utils'
-import { Balance, useAccountBalances } from 'hooks/hard-synths/useBalances'
+import { useAccountBalances } from 'hooks/hard-synths/useBalances'
 import useMarkets from 'hooks/hard-synths/useMarkets'
 import useModal from 'hooks/useModal'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
-import { useWallet } from 'use-wallet'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import {
 	Flex,
@@ -38,53 +36,49 @@ import {
 } from './styles'
 
 export const Overview: React.FC = () => {
-
 	return (
-		<>
-			<OverviewContainer>
-				<OverviewHeader>
-					<BorrowLimit>
-						Borrow Limit{' '}<Tooltipped content={`Some info here.`} />
-					</BorrowLimit>
-					<BorrowText>0%</BorrowText>
-					<BorrowMeterContainer>
-						<BorrowMeter />
-					</BorrowMeterContainer>
-					<BorrowText>$0</BorrowText>
-				</OverviewHeader>
-			</OverviewContainer>
-		</>
+		<OverviewContainer>
+			<OverviewHeader>
+				<BorrowLimit>
+					Borrow Limit <Tooltipped content={`Some info here.`} />
+				</BorrowLimit>
+				<BorrowText>0%</BorrowText>
+				<BorrowMeterContainer>
+					<BorrowMeter />
+				</BorrowMeterContainer>
+				<BorrowText>$0</BorrowText>
+			</OverviewHeader>
+		</OverviewContainer>
 	)
 }
 
 export const Supply: React.FC = () => {
 	const [modalAsset, setModalAsset] = useState<Market>()
-
 	const [handleSupply] = useModal(<MarketSupplyModal />)
 
 	const balances = useAccountBalances()
-	if (balances) console.log(balances)
-
 	const markets = useMarkets()
-	if (markets) console.log(markets)
-
 
 	const columns = [
 		{
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
-			value: ({ icon, symbol }: Balance & Market) => (
-				<ItemWrapper>
-					<img src={icon} />
-					<p>{symbol}</p>
-				</ItemWrapper>
-			),
+			value: (market: Market) => {
+				// underlying symbol
+				const { symbol } = balances.find(
+					(balance) =>
+						balance.address.toLowerCase() === market.underlying.toLowerCase(),
+				)
+
+				return (
+					<ItemWrapper>
+						<img src={market.icon} />
+						<p>{symbol}</p>
+					</ItemWrapper>
+				)
+			},
 		},
 		{
-			header: (
-				<HeaderWrapper>
-					APY
-				</HeaderWrapper>
-			),
+			header: <HeaderWrapper>APY</HeaderWrapper>,
 			value: ({ supplyApy }: Market) => (
 				<ItemWrapper>
 					{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
@@ -92,17 +86,15 @@ export const Supply: React.FC = () => {
 			),
 		},
 		{
-			header: (
-				<HeaderWrapper>
-					Wallet
-				</HeaderWrapper>
-			),
-			value: ({ symbol }: Market) => {
-				const balance = balances.find((balance) => balance.symbol).balance
-
-				return (
-					<ItemWrapper>{`${balance.toFixed(2)} ${symbol}`}</ItemWrapper>
+			header: <HeaderWrapper>Wallet</HeaderWrapper>,
+			value: (market: Market) => {
+				// underlying balance & symbol
+				const { balance, symbol } = balances.find(
+					(balance) =>
+						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
+
+				return <ItemWrapper>{`${balance.toFixed(2)} ${symbol}`}</ItemWrapper>
 			},
 		},
 	]
