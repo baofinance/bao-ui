@@ -96,3 +96,7 @@ const MarketOverview = styled.div`
 `
 
 export default Markets
+function useBalances() {
+	throw new Error('Function not implemented.')
+}
+

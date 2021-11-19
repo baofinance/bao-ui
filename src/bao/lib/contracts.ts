@@ -24,7 +24,6 @@ export class Contracts {
   pools: Types.FarmableSupportedPool[]
   nests: Types.ActiveSupportedNest[]
   markets: Types.ActiveSupportedMarket[]
-  marketComponents: Types.MarketComponent[]
   blockGasLimit: any
   notifier: any
 

@@ -1,6 +1,9 @@
+import Table from 'components/Table'
 import Tooltipped from 'components/Tooltipped'
 import { Market } from 'contexts/Markets'
-import useMarkets from 'hooks/useMarkets'
+import { formatUnits } from 'ethers/lib/utils'
+import { Balance, useAccountBalances } from 'hooks/hard-synths/useBalances'
+import useMarkets from 'hooks/hard-synths/useMarkets'
 import useModal from 'hooks/useModal'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
@@ -20,42 +23,89 @@ import {
 	HeaderWrapper,
 	ItemContainer,
 	ItemWrapper,
-    MarketHeaderWrapper,
-    MarketItemContainer,
-    MarketItemWrapper,
-    MarketSummary,
-    MarketSummaryHeader,
-    OverviewTableContainer,
-    BorrowLimit,
-    BorrowMeter,
-    BorrowMeterContainer,
-    BorrowText,
-    OverviewContainer,
-    OverviewHeader,
+	MarketHeaderWrapper,
+	MarketItemContainer,
+	MarketItemWrapper,
+	MarketSummary,
+	MarketSummaryHeader,
+	OverviewTableContainer,
+	BorrowLimit,
+	BorrowMeter,
+	BorrowMeterContainer,
+	BorrowText,
+	OverviewContainer,
+	OverviewHeader,
 } from './styles'
 
 export const Overview: React.FC = () => {
-    
-    return (
-	<>
-		<OverviewContainer>
-			<OverviewHeader>
-				<BorrowLimit>
-					Borrow Limit{' '}<Tooltipped content={`Some info here.`} />
-				</BorrowLimit>
-				<BorrowText>0%</BorrowText>
-				<BorrowMeterContainer>
-					<BorrowMeter />
-				</BorrowMeterContainer>
-				<BorrowText>$0</BorrowText>
-			</OverviewHeader>
-		</OverviewContainer>
-	</>
-    )
+
+	return (
+		<>
+			<OverviewContainer>
+				<OverviewHeader>
+					<BorrowLimit>
+						Borrow Limit{' '}<Tooltipped content={`Some info here.`} />
+					</BorrowLimit>
+					<BorrowText>0%</BorrowText>
+					<BorrowMeterContainer>
+						<BorrowMeter />
+					</BorrowMeterContainer>
+					<BorrowText>$0</BorrowText>
+				</OverviewHeader>
+			</OverviewContainer>
+		</>
+	)
 }
 
 export const Supply: React.FC = () => {
+	const [modalAsset, setModalAsset] = useState<Market>()
+
 	const [handleSupply] = useModal(<MarketSupplyModal />)
+
+	const balances = useAccountBalances()
+	if (balances) console.log(balances)
+
+	const markets = useMarkets()
+	if (markets) console.log(markets)
+
+
+	const columns = [
+		{
+			header: <HeaderWrapper>Asset</HeaderWrapper>,
+			value: ({ icon, symbol }: Balance & Market) => (
+				<ItemWrapper>
+					<img src={icon} />
+					<p>{symbol}</p>
+				</ItemWrapper>
+			),
+		},
+		{
+			header: (
+				<HeaderWrapper>
+					APY
+				</HeaderWrapper>
+			),
+			value: ({ supplyApy }: Market) => (
+				<ItemWrapper>
+					{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
+				</ItemWrapper>
+			),
+		},
+		{
+			header: (
+				<HeaderWrapper>
+					Wallet
+				</HeaderWrapper>
+			),
+			value: ({ symbol }: Market) => {
+				const balance = balances.find((balance) => balance.symbol).balance
+
+				return (
+					<ItemWrapper>{`${balance.toFixed(2)} ${symbol}`}</ItemWrapper>
+				)
+			},
+		},
+	]
 
 	return (
 		<>
@@ -75,45 +125,7 @@ export const Supply: React.FC = () => {
 							</MarketHeader>
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
-					<MarketTableContainer>
-						<MarketTable>
-							<TableHeader>
-								<HeaderWrapper>Asset</HeaderWrapper>
-								<HeaderWrapper
-									style={{ justifyContent: 'center', textAlign: 'center' }}
-								>
-									APR
-								</HeaderWrapper>
-								<HeaderWrapper
-									style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-								>
-									Liquidity
-								</HeaderWrapper>
-							</TableHeader>
-							<ItemContainer onClick={handleSupply}>
-								<ItemWrapper>
-									<img src="USDC.png" />
-									<p>USDC</p>
-								</ItemWrapper>
-								<ItemWrapper
-									style={{
-										justifyContent: 'center',
-										textAlign: 'center',
-									}}
-								>
-									5.00%
-								</ItemWrapper>
-								<ItemWrapper
-									style={{
-										justifyContent: 'flex-end',
-										textAlign: 'end',
-									}}
-								>
-									$1.0M
-								</ItemWrapper>
-							</ItemContainer>
-						</MarketTable>
-					</MarketTableContainer>
+					<Table columns={columns} items={markets} />
 				</MarketContainer>
 			</Flex>
 		</>
@@ -187,13 +199,9 @@ export const Borrow: React.FC = () => {
 }
 
 export const Supplied: React.FC = () => {
-	const { account } = useWallet()
-	const [ markets ] = useMarkets()
-	const [modalAsset, setModalAsset] = useState<Market>()
-  
 
 	const [handleSupply] = useModal(<MarketSupplyModal />)
-	
+
 
 	return (
 		<>

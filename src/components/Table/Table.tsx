@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { HeaderWrapper, ItemContainer, ItemWrapper, TableHeader } from 'views/Markets/components/styles'
+import { HeaderWrapper, ItemContainer, ItemWrapper, MarketTable, MarketTableContainer, TableHeader } from 'views/Markets/components/styles'
 
 type Column = {
     header: any
@@ -13,25 +13,29 @@ type TableProps = {
 }
 
 export const Table = ({ columns, items, onClick }: TableProps) => (
-    <TableHeader>
-        <HeaderWrapper>
-            {columns.map(({ header }: Column, i) => (
-                <Fragment key={i}>{header}</Fragment>
-            ))}
-        </HeaderWrapper>
-        <ItemContainer>
-            {items?.map((item, i) => (
-                <ItemWrapper
-                    key={i}
-                    onClick={onClick ? (e: React.MouseEvent<HTMLElement>) => onClick(item) : undefined}
-                >
-                    {columns.map(({ value }, j) => (
-                        <Fragment key={j}>{value(item, i)}</Fragment>
+    <MarketTableContainer>
+        <MarketTable>
+            <TableHeader>
+                <HeaderWrapper>
+                    {columns.map(({ header }: Column, i) => (
+                        <Fragment key={i}>{header}</Fragment>
                     ))}
-                </ItemWrapper>
+                </HeaderWrapper>
+            </TableHeader>
+            {items?.map((item, i) => (
+                <ItemContainer>
+                    <ItemWrapper
+                        key={i}
+                    >
+                        {columns.map(({ value }, j) => (
+                            <Fragment key={j}>{value(item, i)}</Fragment>
+                        ))}
+                    </ItemWrapper>
+                </ItemContainer>
             ))}
-        </ItemContainer>
-    </TableHeader>
+        </MarketTable>
+    </MarketTableContainer>
+
 )
 
 export default Table

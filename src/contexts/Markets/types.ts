@@ -5,18 +5,24 @@ export interface MarketComponent {
   name: string
   symbol: string
   coingeckoId: string
-  icon: string
+  image: string
   decimals: number
 }
 
 export interface Market {
-  mid: number
-  marketAddress: string
-  marketContract: Contract
-  underlyingAddress: string
-  underlyingContract: Contract
-  symbol: string
-  icon: string
+  icon?: string
+  symbol?: string
+  token: string
+  underlying: string
+  supplyApy: number
+  borrowApy: number
+  borrowable: boolean
+  liquidity: number
+  totalReserves: number
+  totalBorrows: number
+  collateralFactor: number
+  reserveFactor: number
+  supplied: number
 }
 
 export interface MarketsContext {

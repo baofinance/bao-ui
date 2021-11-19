@@ -1,3 +1,4 @@
+import { MarketComponent } from 'contexts/Markets/types'
 import { Contract } from 'web3-eth-contract'
 
 export interface SupportedPool {
@@ -42,17 +43,18 @@ export interface SupportedMarket {
   }
   symbol: string
   icon: string
-}
-
-export interface MarketComponent {
-  address: {
-    [network: number]: string
-  }
-  name: string
-  symbol: string
-  coingeckoId: string
-  image: string
-  decimals: number
+  token?: string
+  underlying?: string
+  supplyApy?: number
+  borrowApy?: number
+  rewardApy?: number
+  liquidity?: number
+  collateralFactor?: number
+  reserveFactor?: number
+  totalBorrows?: number
+  totalReserves?: number
+  supplied?: number
+  borrowable?: boolean
 }
 
 export interface FarmableSupportedPool extends SupportedPool {
@@ -107,7 +109,6 @@ export interface SubgraphConfig {
 }
 
 export interface Config {
-  marketComponents: any
   networkId: number
   defaultRpc: RpcConfig
   addressMap: AddressMapConfig
