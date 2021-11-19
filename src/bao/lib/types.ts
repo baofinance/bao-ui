@@ -43,6 +43,7 @@ export interface SupportedMarket {
   }
   symbol: string
   icon: string
+  coingeckoId: string
   token?: string
   underlying?: string
   supplyApy?: number

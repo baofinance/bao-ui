@@ -2,6 +2,7 @@ import pollyNests from 'assets/img/polly-nests.png'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import WalletProviderModal from 'components/WalletProviderModal'
+import { usePrice } from 'hooks/hard-synths/usePrices'
 import useModal from 'hooks/useModal'
 import React from 'react'
 import { Container } from 'react-bootstrap'
@@ -20,9 +21,6 @@ import {
 const Markets: React.FC = () => {
 	const { account, ethereum }: any = useWallet()
 	const [onPresentWalletProviderModal] = useModal(<WalletProviderModal />)
-
-	const markets = useMarkets()
-	if (markets) console.log(markets)
 
 	return (
 		<Switch>
@@ -97,6 +95,10 @@ const MarketOverview = styled.div`
 
 export default Markets
 function useBalances() {
+	throw new Error('Function not implemented.')
+}
+
+function usePrices() {
 	throw new Error('Function not implemented.')
 }
 

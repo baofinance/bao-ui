@@ -12,6 +12,7 @@ export interface MarketComponent {
 export interface Market {
   icon?: string
   symbol?: string
+  coingeckoId?: string
   token: string
   underlying: string
   supplyApy: number

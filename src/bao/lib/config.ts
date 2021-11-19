@@ -144,6 +144,7 @@ export default {
         137: '0x035a6a67de5455970b1AEd9342e51915eE4d0F32',
       },
       icon: '/PAI.png',
+      coingeckoId: 'dai',
     },
     {
       mid: 2,
@@ -155,6 +156,7 @@ export default {
         137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
       },
       icon: '/wMATIC.png',
+      coingeckoId: 'polygon',
     },
     {
       mid: 3,
@@ -166,6 +168,7 @@ export default {
         137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
       icon: '/nstbl.png',
+      coingeckoId: 'dai',
     },
   ],
   nests: [

@@ -107,7 +107,6 @@ export const ItemContainer = styled.div`
     width: 100%;
     font-weight: ${(props) => props.theme.fontWeight.medium};
     font-size: ${(props) => props.theme.fontSize.sm};
-    cursor: pointer;
     padding-top: ${(props) => props.theme.spacing[2]}px;
     padding-bottom: ${(props) => props.theme.spacing[2]}px;
     padding-left: ${(props) => props.theme.spacing[3]}px;

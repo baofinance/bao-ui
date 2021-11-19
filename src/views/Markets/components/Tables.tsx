@@ -3,6 +3,7 @@ import Tooltipped from 'components/Tooltipped'
 import { Market } from 'contexts/Markets'
 import { useAccountBalances } from 'hooks/hard-synths/useBalances'
 import useMarkets from 'hooks/hard-synths/useMarkets'
+import { usePrice } from 'hooks/hard-synths/usePrices'
 import useModal from 'hooks/useModal'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
@@ -68,7 +69,7 @@ export const Supply: React.FC = () => {
 					(balance) =>
 						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
-
+			
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
@@ -78,15 +79,15 @@ export const Supply: React.FC = () => {
 			},
 		},
 		{
-			header: <HeaderWrapper>APY</HeaderWrapper>,
+			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>APY</HeaderWrapper>,
 			value: ({ supplyApy }: Market) => (
-				<ItemWrapper>
+				<ItemWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>
 					{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
 				</ItemWrapper>
 			),
 		},
 		{
-			header: <HeaderWrapper>Wallet</HeaderWrapper>,
+			header: <HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>Wallet</HeaderWrapper>,
 			value: (market: Market) => {
 				// underlying balance & symbol
 				const { balance, symbol } = balances.find(
@@ -94,9 +95,9 @@ export const Supply: React.FC = () => {
 						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
 
-				return <ItemWrapper>{`${balance.toFixed(2)} ${symbol}`}</ItemWrapper>
-			},
-		},
+				return <ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>{`${balance.toFixed(2)} ${symbol}`}</ItemWrapper>
+			}
+		}
 	]
 
 	return (
@@ -126,6 +127,10 @@ export const Supply: React.FC = () => {
 
 export const Borrow: React.FC = () => {
 	const [handleBorrow] = useModal(<MarketBorrowModal />)
+	const [modalAsset, setModalAsset] = useState<Market>()
+
+	const balances = useAccountBalances()
+	const markets = useMarkets()
 
 	return (
 		<>
