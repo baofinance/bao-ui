@@ -134,7 +134,6 @@ export const GraphContainer = styled(Col)`
   background: ${(props) => props.theme.color.primary[100]};
   border: ${(props) => props.theme.border.default};
   box-shadow: ${(props) => props.theme.boxShadow.default};
-  padding-top: 4rem;
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     height: 250px;
@@ -151,11 +150,7 @@ export const PieGraphRow = styled(Row)`
 
 export const StyledTable = styled(Table)`
   width: 100%;
-  background: ${(props) => props.theme.color.primary[100]};
-  border-radius: ${(props) => props.theme.borderRadius}px;
   color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
 
   th {
     padding-top: ${(props) => props.theme.spacing[4]}px;
@@ -196,6 +191,7 @@ export const PrefButtons = styled.div`
     background: ${(props) => props.theme.color.primary[100]};
     border: ${(props) => props.theme.border.default};
     box-shadow: ${(props) => props.theme.boxShadow.default};
+    font-weight: ${(props) => props.theme.fontWeight.strong};
 
     &:hover {
       color: ${(props) => props.theme.color.text[400]};
@@ -206,8 +202,8 @@ export const PrefButtons = styled.div`
     &.active,
     &:active,
     &:focus {
-      color: ${(props) => props.theme.color.text[200]};
-      background: ${(props) => props.theme.color.secondary[300]};
+      color: ${(props) => props.theme.color.text[400]};
+      background: ${(props) => props.theme.color.primary[100]};
       box-shadow: ${(props) => props.theme.boxShadow.hover};
     }
   }
@@ -247,6 +243,10 @@ export const StatCard = styled.div`
     padding: ${(props) => props.theme.spacing[2]}px;
     background: transparent;
   }
+`
+
+export const StatHeader = styled.div`
+font-weight: ${(props) => props.theme.fontWeight.strong};
 `
 
 export const StyledBadge = styled(Badge)`
@@ -317,15 +317,10 @@ export const NestSubHeader = styled.h1`
 `
 
 export const NestExplanation = styled.div`
-  background: ${(props) => props.theme.color.primary[100]};
   color: ${(props) => props.theme.color.text[100]};
   text-align: left;
   width: 80%;
   margin: auto;
-  padding: ${(props) => props.theme.spacing[6]}px;
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  border: ${(props) => props.theme.border.default};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     width: 90%;

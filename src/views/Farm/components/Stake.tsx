@@ -1,10 +1,10 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
 import { Button } from 'components/Button'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
 import CardIcon from 'components/CardIcon'
 import IconButton from 'components/IconButton'
-import { AddIcon } from 'components/icons'
 import Label from 'components/Label'
 import Value from 'components/Value'
 import { PoolType } from 'contexts/Farms/types'
@@ -23,7 +23,7 @@ import {
 	StyledActionSpacer,
 	StyledCardActions,
 	StyledCardContentInner,
-	StyledCardHeader,
+	StyledCardHeader
 } from './styles'
 import WithdrawModal from './WithdrawModal'
 
@@ -107,7 +107,7 @@ const Stake: React.FC<StakeProps> = ({
 								<StyledActionSpacer />
 								{poolType !== PoolType.ARCHIVED ? (
 									<IconButton onClick={onPresentDeposit}>
-										<AddIcon />
+										<FontAwesomeIcon icon="plus" />
 									</IconButton>
 								) : (
 									''

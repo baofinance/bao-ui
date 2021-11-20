@@ -6,7 +6,9 @@ import AreaGraph from 'components/Graphs/AreaGraph/AreaGraph'
 import DonutGraph from 'components/Graphs/PieGraph'
 import { SpinnerLoader } from 'components/Loader'
 import Spacer from 'components/Spacer'
+import Table from 'components/Table'
 import Tooltipped from 'components/Tooltipped'
+import { NestComponent } from 'contexts/Nests/types'
 import useBao from 'hooks/useBao'
 import useComposition from 'hooks/useComposition'
 import useGraphPriceHistory from 'hooks/useGraphPriceHistory'
@@ -23,6 +25,7 @@ import { useParams } from 'react-router-dom'
 import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
+import { HeaderWrapper, ItemWrapper } from 'views/Markets/components/styles'
 import { provider } from 'web3-core'
 import Config from '../../bao/lib/config'
 import NDEFI from './components/explanations/nDEFI'
@@ -49,9 +52,9 @@ import {
 	PriceGraph,
 	QuestionIcon,
 	StatCard,
+	StatHeader,
 	StatsRow,
-	StyledBadge,
-	StyledTable
+	StyledBadge
 } from './components/styles'
 
 const Nest: React.FC = () => {
@@ -157,6 +160,58 @@ const Nest: React.FC = () => {
 				.then((_supply: any) => setSupply(new BigNumber(_supply)))
 	}, [bao, ethereum])
 
+	const allocationBreakdown = [
+		{
+			header: <HeaderWrapper style={{ justifyContent: 'start', textAlign: 'start', width: '10%' }}>Asset</HeaderWrapper>,
+			value: (component: NestComponent) => {
+				return (
+					<ItemWrapper style={{ justifyContent: 'start', textAlign: 'start', width: '10%' }}>
+						<img src={component.imageUrl} />
+						<p>{component.symbol}</p>
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '70%' }}>Allocation</HeaderWrapper>,
+			value: (component: NestComponent) => (
+				<ItemWrapper style={{ justifyContent: 'start', width: '70%' }}>
+					<Progress
+						width={
+							(component.percentage / maxAllocationPercentage) *
+							100
+						}
+						label={`${getDisplayBalance(
+							new BigNumber(component.percentage),
+							0,
+						)}%`}
+						assetColor={component.color}
+					/>
+				</ItemWrapper>
+			),
+		},
+		{
+			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '10%' }}>Price</HeaderWrapper>,
+			value: (component: NestComponent) => (
+				<ItemWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '10%' }}>
+					$
+					{getDisplayBalance(
+						component.basePrice || component.price,
+						0,
+					)}
+				</ItemWrapper>
+			),
+		},
+		{
+			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '10%' }}>Strategy</HeaderWrapper>,
+			value: (component: NestComponent) => (
+				<ItemWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '10%' }}>
+					<StyledBadge>{component.strategy}</StyledBadge>
+				</ItemWrapper>
+			),
+		},
+	]
+
 	return (
 		<>
 			<NestBox>
@@ -187,8 +242,8 @@ const Nest: React.FC = () => {
 						{(wethPrice &&
 							sushiPairPrice &&
 							getDisplayBalance(sushiPairPrice.div(wethPrice), 0)) || (
-							<SpinnerLoader />
-						)}{' '}
+								<SpinnerLoader />
+							)}{' '}
 						<FontAwesomeIcon icon={['fab', 'ethereum']} /> = $
 						{(sushiPairPrice && getDisplayBalance(sushiPairPrice, 0)) || (
 							<SpinnerLoader />
@@ -199,22 +254,22 @@ const Nest: React.FC = () => {
 				<StatsRow lg={4} sm={2}>
 					<Col>
 						<StatCard>
-							<span>
+							<StatHeader>
 								<FontAwesomeIcon icon="hand-holding-usd" />
 								<br />
 								Market Cap
-							</span>
+							</StatHeader>
 							<Spacer size={'sm'} />
 							<StyledBadge>{marketCap || <SpinnerLoader />}</StyledBadge>
 						</StatCard>
 					</Col>
 					<Col>
 						<StatCard>
-							<span>
+							<StatHeader>
 								<FontAwesomeIcon icon="coins" />
 								<br />
 								Supply
-							</span>
+							</StatHeader>
 							<Spacer size={'sm'} />
 							<StyledBadge>
 								{(supply && `${getDisplayBalance(supply)} ${nestToken}`) || (
@@ -225,12 +280,12 @@ const Nest: React.FC = () => {
 					</Col>
 					<Col>
 						<StatCard>
-							<span>
+							<StatHeader>
 								<FontAwesomeIcon icon="money-bill-wave" />
 								<br />
 								NAV &nbsp;
-							</span>
-							<QuestionIcon icon="question-circle" onClick={onNavModal} />
+								<QuestionIcon icon="question-circle" onClick={onNavModal} />
+							</StatHeader>
 							<Spacer size={'sm'} />
 							<StyledBadge>
 								{(nav && `$${getDisplayBalance(nav.mainnetNav, 0)}`) || (
@@ -241,7 +296,7 @@ const Nest: React.FC = () => {
 					</Col>
 					<Col>
 						<StatCard>
-							<span>
+							<StatHeader>
 								<FontAwesomeIcon icon="angle-double-up" />
 								<FontAwesomeIcon icon="angle-double-down" />
 								<br />
@@ -254,7 +309,7 @@ const Nest: React.FC = () => {
 										)}) and NAV price.`}
 									/>
 								)}
-							</span>
+							</StatHeader>
 							<Spacer size={'sm'} />
 							<StyledBadge>
 								{(nav &&
@@ -339,7 +394,7 @@ const Nest: React.FC = () => {
 										<SpinnerLoader />
 									)}
 								</NestBoxHeader>
-								<GraphContainer>
+								<GraphContainer style={{ paddingTop: '4rem' }}>
 									<ParentSize>
 										{(parent) =>
 											priceHistory && (
@@ -378,66 +433,9 @@ const Nest: React.FC = () => {
 						</PrefButtons>
 						<br />
 						{!allocationDisplayType ? (
-							<StyledTable bordered hover>
-								<thead>
-									<tr>
-										<th>Token</th>
-										<th>Allocation</th>
-										<th>Price</th>
-										<th className="strategy">Strategy</th>
-									</tr>
-								</thead>
-								<tbody>
-									{(composition &&
-										maxAllocationPercentage &&
-										composition.map((component) => (
-											<tr key={component.symbol}>
-												<td>
-													<Tooltipped content={component.symbol}>
-														<img
-															src={component.imageUrl}
-															style={{ height: '32px' }}
-														/>
-													</Tooltipped>
-												</td>
-												<td>
-													<Progress
-														width={
-															(component.percentage / maxAllocationPercentage) *
-															100
-														}
-														label={`${getDisplayBalance(
-															new BigNumber(component.percentage),
-															0,
-														)}%`}
-														assetColor={component.color}
-													/>
-												</td>
-												<td>
-													$
-													{getDisplayBalance(
-														component.basePrice || component.price,
-														0,
-													)}
-												</td>
-												<td className="strategy">
-													<StyledBadge>{component.strategy}</StyledBadge>
-												</td>
-											</tr>
-										))) || (
-										<tr>
-											{_.times(4, () => (
-												<td>
-													<SpinnerLoader />
-												</td>
-											))}
-										</tr>
-									)}
-								</tbody>
-								<Spacer />
-							</StyledTable>
+							<Table columns={allocationBreakdown} items={composition} />
 						) : (
-							<GraphContainer style={{ height: '400px' }}>
+							<GraphContainer style={{ height: 'auto' }}>
 								<PieGraphRow lg={2}>
 									<Col lg={8}>
 										{composition && (
@@ -474,7 +472,7 @@ const Nest: React.FC = () => {
 						)}
 					</NestAnalyticsContainer>
 				</NestAnalytics>
-				<NestBoxHeader>Product Description</NestBoxHeader>
+				<Spacer size="lg" />
 				<NestExplanation>
 					{/* TODO: Store pointer to nest description in config, this is messy */}
 					{nestTokenAddress === Config.addressMap.nDEFI && <NDEFI />}

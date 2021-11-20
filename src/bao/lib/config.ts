@@ -145,6 +145,7 @@ export default {
       },
       icon: '/PAI.png',
       coingeckoId: 'dai',
+      decimals: 18,
     },
     {
       mid: 2,
@@ -157,6 +158,7 @@ export default {
       },
       icon: '/wMATIC.png',
       coingeckoId: 'polygon',
+      decimals: 18,
     },
     {
       mid: 3,
@@ -169,6 +171,7 @@ export default {
       },
       icon: '/nstbl.png',
       coingeckoId: 'dai',
+      decimals: 18,
     },
   ],
   nests: [

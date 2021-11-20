@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { Button } from 'components/Button'
+import ExternalLink from 'components/ExternalLink'
 import Modal, { ModalProps } from 'components/Modal'
 import ModalActions from 'components/ModalActions'
 import ModalContent from 'components/ModalContent'
@@ -8,8 +9,7 @@ import Spacer from 'components/Spacer'
 import TokenInput from 'components/TokenInput'
 import React, { useCallback, useMemo, useState } from 'react'
 import { getFullDisplayBalance } from 'utils/numberFormat'
-import { StyledInfo } from './styles'
-import ExternalLink from 'components/ExternalLink'
+import { Disclaimer } from 'views/Nest/components/styles'
 
 interface DepositModalProps extends ModalProps {
 	max: BigNumber
@@ -49,18 +49,20 @@ const DepositModal: React.FC<DepositModalProps> = ({
 		<Modal>
 			<ModalTitle text={`Deposit ${tokenName}`} />
 			<ModalContent>
-				<StyledInfo>
-					❗️ Remember a 0.75% fee will be added to the treasury when
-					depositing. 75% of POLLY rewards will be locked and vested for 6
-					years. For more information, please{' '}
-					<ExternalLink
-						href="https://docs.bao.finance/franchises/polly-finance"
-						target="blank"
-					>
-						{' '}
-						read the docs.
-					</ExternalLink>
-				</StyledInfo>
+				<Disclaimer>
+					<p style={{ textAlign: 'left' }}>
+						❗️ Remember a 0.75% fee will be added to the treasury when
+						depositing. 75% of POLLY rewards will be locked and vested for 6
+						years. For more information, please{' '}
+						<ExternalLink
+							href="https://docs.bao.finance/franchises/polly-finance"
+							target="blank"
+						>
+							{' '}
+							read the docs.
+						</ExternalLink>
+					</p>
+				</Disclaimer>
 			</ModalContent>
 			<TokenInput
 				value={val}
@@ -71,7 +73,7 @@ const DepositModal: React.FC<DepositModalProps> = ({
 				symbol={tokenName}
 			/>
 			<ModalActions>
-				<Button text="Cancel" variant="secondary" onClick={onDismiss} />
+				<Button text="Cancel" onClick={onDismiss} />
 				<Button
 					disabled={pendingTx}
 					text={pendingTx ? 'Pending Confirmation' : 'Confirm'}

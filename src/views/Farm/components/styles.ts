@@ -4,13 +4,14 @@ import styled from 'styled-components'
 export const StyledInfo = styled.h3`
   color: ${(props) => props.theme.color.text[100]};
   font-size: 1rem;
-  font-weight: ${(props) => props.theme.fontWeight.regular};
+  font-weight: ${(props) => props.theme.fontWeight.medium};
   margin: 0;
   padding: 0;
   text-align: left;
   width: 80%;
   max-width: 980px;
 `
+
 
 export const StyledDocsWarning = styled.span`
   color: ${(props) => props.theme.color.text[100]};
@@ -102,12 +103,13 @@ export const StyledLink = styled(NavLink)`
   font-weight: ${(props) => props.theme.fontWeight.medium};
   padding-left: ${(props) => props.theme.spacing[3]}px;
   padding-right: ${(props) => props.theme.spacing[3]}px;
-  text-decoration: none;
+
   &:hover {
     color: ${(props) => props.theme.color.text[300]};
   }
+  
   &.active {
-    color: ${(props) => props.theme.color.text[300]};
+    color: ${(props) => props.theme.color.text[400]};
   }
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     padding-left: ${(props) => props.theme.spacing[2]}px;

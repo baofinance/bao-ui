@@ -220,7 +220,7 @@ const IssueModal: React.FC<IssueModalProps> = ({
 				wethBalance={wethBalance}
 			/>
 			<ModalActions>
-				<Button text="Cancel" variant="secondary" onClick={onDismiss} />
+				<Button text="Cancel" onClick={onDismiss} />
 				{issueAllowance && !issueAllowance.gt(0) ? (
 					<Button
 						disabled={requestedApproval}

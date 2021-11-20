@@ -45,6 +45,7 @@ export const StyledCards = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
+
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
     width: 100%;
     flex-flow: column nowrap;
@@ -98,13 +99,14 @@ export const StyledInsight = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  background: ${(props) => props.theme.color.transparent[200]};
+  background: ${(props) => props.theme.color.primary[100]};
   color: ${(props) => props.theme.color.text[100]};
   width: 100%;
   margin-top: ${(props) => props.theme.spacing[2]}px;
   line-height: 32px;
   font-size: 0.75rem;
-  border: 1px solid ${(props) => props.theme.color.darkGrey[800]};
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.hover};
   text-align: center;
   padding: 0 ${(props) => props.theme.spacing[2]}px;
 `

@@ -30,11 +30,10 @@ interface StyledButtonProps {
 const StyledButton = styled.button<StyledButtonProps>`
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
-	border: none;
-	border-bottom: 1px solid ${(props) => props.theme.color.primary[400]};
+	border: ${(props) => props.theme.border.default};
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	border-radius: 32px;
-	color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+	color: ${(props) => props.theme.color.text[100]};
 	cursor: pointer;
 	display: flex;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
@@ -49,7 +48,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 	width: 50px;
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: .6s;
+	transition: .2s;
 	overflow: hidden;
 
 	&:focus {
@@ -58,24 +57,16 @@ const StyledButton = styled.button<StyledButtonProps>`
 
 	  &:hover{
 		background: ${(props) => props.theme.color.primary[100]};
+		box-shadow: ${(props) => props.theme.boxShadow.hover};
+		color: ${(props) => props.theme.color.text[400]};
 		cursor: pointer;
-		&:before{
-		  transform: translateX(500px)  skewX(-15deg);  
-		  opacity: 0.6;
-		  transition: .7s;
-		}
-		&:after{
-		  transform: translateX(500px) skewX(-15deg);  
-		  opacity: 1;
-		  transition: .7s;
-		}
 	  }
 	}
 
 	&:hover,
 	&:focus,
 	&:active {
-		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}

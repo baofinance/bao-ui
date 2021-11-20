@@ -140,6 +140,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
 	overflow: hidden;
+	transition: .2s;
 
 	@media (max-width: 960px) {
 		/* margin: 0 0.5rem 0 0.5rem; */
@@ -157,7 +158,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	&:focus,
 	&:active {
 		box-shadow: ${(props) => props.theme.boxShadow.hover};
-		color: ${(props) => props.theme.color.text[300]};
+		color: ${(props) => props.theme.color.text[400]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
@@ -198,9 +199,9 @@ const ButtonLink = styled.a`
 `
 
 export const MaxButton = styled.a`
-	padding: ${(props) => props.theme.spacing[1]}px;
+	padding: ${(props) => props.theme.spacing[2]}px;
 	color: ${(props) => props.theme.color.text[100]};
-	background: ${(props) => props.theme.buttonGradient.a};
+	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	border: 1.75px solid transparent;
 	vertical-align: middle;
@@ -209,10 +210,14 @@ export const MaxButton = styled.a`
 	user-select: none;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	text-decoration: none;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
+	font-weight: ${(props) => props.theme.fontWeight.strong};
 
 	&:hover {
-		background: ${(props) => props.theme.buttonGradient.hover};
-		color: ${(props) => props.theme.color.text[100]};
+		background: ${(props) => props.theme.color.primary[100]};
+		color: ${(props) => props.theme.color.text[400]};
+		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		cursor: pointer;
 	}
 `

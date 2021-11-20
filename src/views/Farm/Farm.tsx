@@ -122,7 +122,7 @@ const Farm: React.FC = () => {
 				<Spacer size="lg" />
 				<StyledLink exact activeClassName="active" to={{ pathname: '/farms' }}>
 					<HeroSubHeader>
-						<FontAwesomeIcon icon="arrow-left" size="xs" color="#6b9aef" /> Return to Farms
+						<FontAwesomeIcon icon="arrow-left" size="xs" color="#50251c" /> Return to Farms
 					</HeroSubHeader>
 				</StyledLink>
 			</StyledFarm>

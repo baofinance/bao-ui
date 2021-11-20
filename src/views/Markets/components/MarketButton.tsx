@@ -4,32 +4,31 @@ import React from 'react'
 
 type MarketButtonProps = {
 	operation: MarketOperations
-	onDismiss: () => void
 }
 
-export const MarketButton = ({ operation, onDismiss }: MarketButtonProps) => {
+export const MarketButton = ({ operation }: MarketButtonProps) => {
 	switch (operation) {
 		case MarketOperations.supply:
 			return (
 				<ButtonStack>
-					<SubmitButton onClick={onDismiss}>Supply</SubmitButton>
+					<SubmitButton>Supply</SubmitButton>
 				</ButtonStack>
 			)
 
 		case MarketOperations.withdraw:
 			return (
 				<ButtonStack>
-					<SubmitButton onClick={onDismiss}>Withdraw</SubmitButton>
+					<SubmitButton>Withdraw</SubmitButton>
 				</ButtonStack>
 			)
 
 		case MarketOperations.borrow:
-			return <SubmitButton onClick={onDismiss}>Borrow</SubmitButton>
+			return <SubmitButton>Borrow</SubmitButton>
 
 		case MarketOperations.repay:
 			return (
 				<ButtonStack>
-					<SubmitButton onClick={onDismiss}>Repay</SubmitButton>
+					<SubmitButton>Repay</SubmitButton>
 				</ButtonStack>
 			)
 	}

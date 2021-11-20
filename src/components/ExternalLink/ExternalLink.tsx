@@ -29,7 +29,7 @@ text-decoration: none;
   color: ${(props) => props.theme.color.text[300]};
 }
 &.active {
-  color: ${(props) => props.theme.color.text[300]};
+  color: ${(props) => props.theme.color.text[400]};
 }
 `
 

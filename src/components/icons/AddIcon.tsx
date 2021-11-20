@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { IconProps } from '../Icon'
 
 const AddIcon: React.FC<IconProps> = ({ color, size = 24 }) => {
@@ -7,12 +7,20 @@ const AddIcon: React.FC<IconProps> = ({ color, size = 24 }) => {
 	return (
 		<svg height={size} viewBox="0 0 24 24" width={size}>
 			<path d="M0 0h24v24H0z" fill="none" />
-			<path
+			<Icon
 				d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-				fill={color ? color : 'white'}
 			/>
 		</svg>
 	)
 }
 
 export default AddIcon
+
+const Icon = styled.path`
+fill: ${(props) => props.theme.color.text[100]};
+
+&:hover,
+&:focus {
+	fill: ${(props) => props.theme.color.text[400]};
+}
+`

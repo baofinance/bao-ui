@@ -3,6 +3,7 @@ import { NestBoxHeader, NestExplanation, NestHeader, NestList, NestSubHeader } f
 
 const nSTBL: React.FC = () => (
 	<>
+			<NestHeader>Product Description</NestHeader>
 			<p>
 				The Polly Stable Nest provides a way to diversify counterparty risk on
 				stable assets while the underlying assets put to work earning yield on

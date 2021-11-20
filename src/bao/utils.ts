@@ -21,6 +21,10 @@ export const getWethPriceContract = (bao: Bao): Contract => {
   return bao && bao.contracts && bao.getContract('wethPrice')
 }
 
+export const getComptrollerContract = (bao: Bao): Contract => {
+  return bao && bao.contracts && bao.getContract('comptroller')
+}
+
 export const getMasterChefContract = (bao: Bao): Contract => {
   return bao && bao.contracts && bao.getContract('masterChef')
 }
@@ -56,6 +60,7 @@ export const getMarkets = (bao: Bao) => {
           collateralFactor,
           reserveFactor,
           supplied,
+          decimals,
         }) => ({
           token,
           underlying,
@@ -68,6 +73,7 @@ export const getMarkets = (bao: Bao) => {
           collateralFactor,
           reserveFactor,
           supplied,
+          decimals,
         }),
       )
     : []
@@ -415,3 +421,8 @@ export const getUserInfoChef = async (
   pid: number,
   account: string,
 ) => await masterChefContract.methods.userInfo(pid, account).call()
+
+export const getAccountLiquidity = async (
+  comptrollerContract: Contract,
+  account: string,
+) => await comptrollerContract.methods.getAccountLiquidity(account).call()

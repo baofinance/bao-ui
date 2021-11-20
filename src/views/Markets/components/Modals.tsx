@@ -15,12 +15,11 @@ export enum MarketOperations {
 	repay = 'Repay',
 }
 
-interface MarketModalProps extends ModalProps {}
-
 const MarketModal = ({
 	onDismiss,
 	operations,
-}: MarketModalProps & { operations: MarketOperations[] }) => {
+}: ModalProps & { operations: MarketOperations[] }) => {
+
 	const [val, setVal] = useState('')
 	const [operation, setOperation] = useState(operations[0])
 	const [amount, setAmount] = useState<string>('')
@@ -40,7 +39,7 @@ const MarketModal = ({
 					<p>USDC</p>
 				</HeaderWrapper>
 			}
-			footer={<MarketButton operation={operation} onDismiss={onDismiss} />}
+			footer={<MarketButton operation={operation} />}
 		>
 			<CloseButton onClick={onDismiss}>
 				<FontAwesomeIcon icon="window-close" />
@@ -78,13 +77,13 @@ const MarketModal = ({
 	)
 }
 
-export const MarketSupplyModal = ({}: MarketModalProps) => (
+export const MarketSupplyModal = ({ }: ModalProps) => (
 	<MarketModal
 		operations={[MarketOperations.supply, MarketOperations.withdraw]}
 	/>
 )
 
-export const MarketBorrowModal = ({}: MarketModalProps) => (
+export const MarketBorrowModal = ({ }: ModalProps) => (
 	<MarketModal operations={[MarketOperations.borrow, MarketOperations.repay]} />
 )
 

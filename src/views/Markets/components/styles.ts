@@ -50,7 +50,7 @@ export const MarketHeaderSubText = styled.a`
   text-decoration: none;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  color: ${(props) => props.theme.color.text[300]};
+  color: ${(props) => props.theme.color.text[400]};
   font-size: 0.875rem;
   font-weight: ${(props) => props.theme.fontWeight.medium};
   margin: 0;
@@ -63,6 +63,8 @@ export const MarketTableContainer = styled.div`
   margin-top: ${(props) => props.theme.spacing[3]}px;
   padding: ${(props) => props.theme.spacing[3]}px;
   background-color: ${(props) => props.theme.color.primary[100]};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+  border: ${(props) => props.theme.border.default};
 `
 
 export const OverviewTableContainer = styled.div`
@@ -84,12 +86,13 @@ export const TableHeader = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-size: 0.875rem;
+  font-size: ${(props) => props.theme.fontSize.default};
   font-weight: ${(props) => props.theme.fontWeight.medium};
   color: ${(props) => props.theme.color.text[100]};
   text-transform: uppercase;
   padding-left: ${(props) => props.theme.spacing[3]}px;
   padding-right: ${(props) => props.theme.spacing[3]}px;
+  font-weight: ${(props) => props.theme.fontWeight.strong};
 `
 
 export const HeaderWrapper = styled.div`
@@ -106,15 +109,25 @@ export const ItemContainer = styled.div`
     justify-content: space-between;
     width: 100%;
     font-weight: ${(props) => props.theme.fontWeight.medium};
-    font-size: ${(props) => props.theme.fontSize.sm};
+    font-size: ${(props) => props.theme.fontSize.default};
     padding-top: ${(props) => props.theme.spacing[2]}px;
     padding-bottom: ${(props) => props.theme.spacing[2]}px;
     padding-left: ${(props) => props.theme.spacing[3]}px;
     padding-right: ${(props) => props.theme.spacing[3]}px;
     border-radius: 8px;
+    cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.color.transparent[200]};
+        background-color: ${(props) => props.theme.color.primary[300]};
+    }
+
+        &:nth-child(odd){
+          background-color: ${(props) => props.theme.color.primary[200]};
+
+          &:hover {
+            background-color: ${(props) => props.theme.color.primary[300]};
+        }
+        }
 `
 
 export const ItemWrapper = styled.div`
@@ -133,7 +146,7 @@ export const ItemWrapper = styled.div`
     display: block;
     margin-block-start: 1em;
     margin-block-end: 1em;
-    maring: 0px;
+    margin: 0px;
     margin-top: 0px;
     margin-inline: 0.5rem 0px;
     margin-bottom: 0px;

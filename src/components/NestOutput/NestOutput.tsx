@@ -41,6 +41,8 @@ const StyledOutputWrapper = styled.div`
 	display: flex;
 	height: 56px;
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 const StyledOutput = styled.input`

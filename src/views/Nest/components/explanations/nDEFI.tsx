@@ -3,6 +3,7 @@ import { NestBoxHeader, NestExplanation, NestHeader, NestList, NestSubHeader } f
 
 const nDEFI: React.FC = () => (
 	<>
+			<NestHeader>Product Description</NestHeader>
 			<p>
 				The Polly DeFi Nest is divided into key DeFi sectors, which are given a
 				weighting reflecting their maturity and share of the overall market.

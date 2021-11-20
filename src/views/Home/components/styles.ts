@@ -32,12 +32,6 @@ export const HeroSubHeader = styled.h6`
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     font-size: 2rem !important;
   }
-
-  @keyframes bounce {
-    to {
-      background-position: 200%;
-    }
-  }
 `
 
 export const HeroText = styled.p`

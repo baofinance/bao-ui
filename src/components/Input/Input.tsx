@@ -9,7 +9,7 @@ export interface InputProps {
 
 export const Input: React.FC<InputProps> = ({ onChange, placeholder, value }) => {
 	return (
-			<StyledInput/>
+			<StyledInput />
 	)
 }
 
@@ -45,14 +45,7 @@ const NestInputWrapper = styled.div`
 	display: flex;
 	height: 72px;
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
-`
-
-const StyledInputWrapper = styled.div`
-	align-items: center;
-	border-radius: ${(props) => props.theme.borderRadius}px;
-	display: flex;
-	height: 72px;
-	padding: 0 ${(props) => props.theme.spacing[3]}px;
+	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 const StyledInput = styled.input`

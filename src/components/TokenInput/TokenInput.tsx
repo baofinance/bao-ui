@@ -1,3 +1,4 @@
+import NestInput from 'components/NestInput'
 import React from 'react'
 import styled from 'styled-components'
 import { MaxButton } from '../Button'
@@ -23,7 +24,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
 			<StyledMaxText>
 				{max.toLocaleString()} {symbol} Available
 			</StyledMaxText>
-			<Input
+			<NestInput
 				endAdornment={
 					<StyledTokenAdornmentWrapper>
 						<MaxButton onClick={onSelectHalf}>½</MaxButton>
@@ -39,7 +40,8 @@ const TokenInput: React.FC<TokenInputProps> = ({
 	)
 }
 
-const StyledTokenInput = styled.div``
+const StyledTokenInput = styled.div`
+`
 
 const StyledTokenAdornmentWrapper = styled.div`
 	align-items: center;

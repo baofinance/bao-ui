@@ -195,7 +195,7 @@ export const Borrow = () => {
 
 export const Supplied: React.FC = () => {
 
-	const [handleSupply] = useModal(<MarketSupplyModal />)
+	const [handleSupply] = useModal(<MarketSupplyModal />,)
 
 
 	return (
