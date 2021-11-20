@@ -1,39 +1,27 @@
 import Table from 'components/Table'
 import Tooltipped from 'components/Tooltipped'
 import { Market } from 'contexts/Markets'
+import { commify } from 'ethers/lib/utils'
 import { useAccountBalances } from 'hooks/hard-synths/useBalances'
 import useMarkets from 'hooks/hard-synths/useMarkets'
-import { usePrice } from 'hooks/hard-synths/usePrices'
+import { usePrices } from 'hooks/hard-synths/usePrices'
 import useModal from 'hooks/useModal'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import {
-	Flex,
-	MarketContainer,
-	MarketHeaderContainer,
-	MarketHeaderStack,
-	MarketHeader,
-	MarketHeaderText,
-	MarketHeaderSubText,
-	MarketTableContainer,
-	MarketTable,
-	TableHeader,
-	HeaderWrapper,
-	ItemContainer,
-	ItemWrapper,
-	MarketHeaderWrapper,
-	MarketItemContainer,
-	MarketItemWrapper,
-	MarketSummary,
-	MarketSummaryHeader,
-	OverviewTableContainer,
 	BorrowLimit,
 	BorrowMeter,
 	BorrowMeterContainer,
-	BorrowText,
-	OverviewContainer,
-	OverviewHeader,
+	BorrowText, Flex, HeaderWrapper,
+	ItemContainer,
+	ItemWrapper, MarketContainer, MarketHeader, MarketHeaderContainer,
+	MarketHeaderStack, MarketHeaderSubText, MarketHeaderText, MarketHeaderWrapper,
+	MarketItemContainer,
+	MarketItemWrapper,
+	MarketSummary,
+	MarketSummaryHeader, MarketTable, OverviewContainer,
+	OverviewHeader, OverviewTableContainer, TableHeader
 } from './styles'
 
 export const Overview: React.FC = () => {
@@ -69,7 +57,7 @@ export const Supply: React.FC = () => {
 					(balance) =>
 						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
-			
+
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
@@ -125,12 +113,60 @@ export const Supply: React.FC = () => {
 	)
 }
 
-export const Borrow: React.FC = () => {
+type Prices = {
+	prices: {
+		[key: string]: {
+			usd: number
+		}
+	}
+}
+
+export const Borrow = () => {
 	const [handleBorrow] = useModal(<MarketBorrowModal />)
 	const [modalAsset, setModalAsset] = useState<Market>()
 
 	const balances = useAccountBalances()
 	const markets = useMarkets()
+	const { prices } = usePrices()
+
+	const columns = [
+		{
+			header: <HeaderWrapper>Asset</HeaderWrapper>,
+			value: (market: Market) => {
+				// underlying symbol
+				const { symbol } = balances.find(
+					(balance) =>
+						balance.address.toLowerCase() === market.underlying.toLowerCase(),
+				)
+
+				return (
+					<ItemWrapper>
+						<img src={market.icon} />
+						<p>{symbol}</p>
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>APR</HeaderWrapper>,
+			value: ({ borrowApy }: Market) => (
+				<ItemWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>
+					{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
+				</ItemWrapper>
+			),
+		},
+		{
+			header: <HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>Liquidity</HeaderWrapper>,
+			value: (market: Market) => (
+				// underlying balance & symbol
+				<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					{market.liquidity && prices
+						? `$${commify(((market.liquidity * (prices[market.coingeckoId]?.usd || 1)) / 1e6).toFixed(2))}M`
+						: '-'}
+				</ItemWrapper>
+			),
+		},
+	]
 
 	return (
 		<>
@@ -150,45 +186,7 @@ export const Borrow: React.FC = () => {
 							</MarketHeader>
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
-					<MarketTableContainer>
-						<MarketTable>
-							<TableHeader>
-								<HeaderWrapper>Asset</HeaderWrapper>
-								<HeaderWrapper
-									style={{ justifyContent: 'center', textAlign: 'center' }}
-								>
-									APR
-								</HeaderWrapper>
-								<HeaderWrapper
-									style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-								>
-									Liquidity
-								</HeaderWrapper>
-							</TableHeader>
-							<ItemContainer onClick={handleBorrow}>
-								<ItemWrapper>
-									<img src="USDC.png" />
-									<p>USDC</p>
-								</ItemWrapper>
-								<ItemWrapper
-									style={{
-										justifyContent: 'center',
-										textAlign: 'center',
-									}}
-								>
-									5.00%
-								</ItemWrapper>
-								<ItemWrapper
-									style={{
-										justifyContent: 'flex-end',
-										textAlign: 'end',
-									}}
-								>
-									$1.0M
-								</ItemWrapper>
-							</ItemContainer>
-						</MarketTable>
-					</MarketTableContainer>
+					<Table columns={columns} items={markets} />
 				</MarketContainer>
 			</Flex>
 		</>

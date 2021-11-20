@@ -126,3 +126,8 @@ export const ConfirmationType = {
   Both: 2,
   Simulate: 3,
 }
+
+export type SWR = {
+  isLoading?: boolean
+  isError?: any
+}
