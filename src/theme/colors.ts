@@ -23,21 +23,33 @@ export const background ={
 }
 
 export const primary = {
-  100: '#efeae7', //light
-  200: '#bdb8b5', //default
-  300: '#8d8885', //dark
+  100: '#efeae7',
+  200: '#ded4ce',
+  300: '#cebfb6',
+  400: '#bea99d',
+  500: '#ad9485',
+  600: '#9d7e6c',
+  700: '#876a5a',
+  800: '#6e5749',
+  900: '#564439',
 }
 
 export const secondary = {
-  100: '#b07a6e', //light
-  200: '#7f4e43', //default
-  300: '#50251c', //dark
+  100: '#efd7d2',
+  200: '#e4bcb4',
+  300: '#daa195',
+  400: '#cf8677',
+  500: '#c56b59',
+  600: '#b55340',
+  700: '#974535',
+  800: '#79372a',
+  900: '#50251c',
 }
 
 export const text = {
   100: '#50251c', //primary
-  200: '#fff8ee', //secondary
-  300: '#ff9440', //hover link
+  200: '#efeae7', //secondary
+  300: '#f57d14', //hover link
   400: '#ce6509', //active link
 }
 
@@ -48,10 +60,15 @@ export const transparent = {
 }
 
 export const accent = {
-  100: '#ff9440', //white
-  200: '#ce6509', //light
-  300: '#973800', //dark
-  400: '#640500', //black
+  100: '#fde9d8',
+  200: '#fcd4b1', 
+  300: '#fabe89', 
+  400: '#f8a862', 
+  500: '#f7933b',
+  600: '#f57d14',
+  700: '#ce6509',
+  800: '#b05607',
+  900: '#894306',
 }
 
 export const darkGrey = {

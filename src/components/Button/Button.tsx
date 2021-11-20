@@ -213,6 +213,7 @@ export const MaxButton = styled.a`
 	border: ${(props) => props.theme.border.default};
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
+	transition: .2s;
 
 	&:hover {
 		background: ${(props) => props.theme.color.primary[100]};
@@ -268,7 +269,7 @@ const NavButton = styled.div`
 	color: ${(props) => props.theme.color.text[100]};
 	background-color: ${(props) => props.theme.color.primary[100]};
 	box-shadow: ${(props) => props.theme.boxShadow.default};
-
+	transition: .2s;
 
 	&:active {
 		box-shadow: ${(props) => props.theme.boxShadow.hover};
