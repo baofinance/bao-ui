@@ -7,17 +7,7 @@ import { InfoHeader, InfoText } from './styles'
 
 const SectionTwo: React.FC = () => (
 	<>
-		<InfoHeader>We're Building a Crosschain DeFi Ecosystem</InfoHeader>
-		<InfoText>
-			Bao is creating a multinetwork suite of applications that will provide
-			services to DeFi users regardless of their preferred chains. We’ve already
-			deployed our main project and franchised versions of it on xDai, Binance
-			Smart Chain, and Polygon; with more planned in the future.
-		</InfoText>
-
-		<div style={{ marginTop: '3rem' }}></div>
-
-		<InfoHeader>The Bao Vision</InfoHeader>
+		<InfoHeader style={{ textAlign: 'center' }}>The Bao Vision</InfoHeader>
 		<InfoText>
 			Traditional finance doesn’t work. For too long it’s been serving the
 			wealthy suits while erecting barriers of entry for everyone else. They own
@@ -52,14 +42,6 @@ const SectionTwo: React.FC = () => (
 			With this financial data stream you can start any DeFi business you want
 			on top of it, or package and sell the data for others to build on. You
 			become the foundation for the future of finance.
-		</InfoText>
-
-		<InfoHeader>Balancing, Automation, and Options</InfoHeader>
-		<InfoText>
-			Our community wants to build innovative products on top of this
-			cutting-edge technology and create serious competition for the established
-			giants – together. Goodbye Big Banks. <br />
-			Hello BaoBanks.
 		</InfoText>
 	</>
 )

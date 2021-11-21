@@ -41,7 +41,8 @@ const StyledBao = styled.div`
 `
 
 const StyledText = styled.div`
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${(props) => props.theme.color.text[100]};
+	text-align: center;
 `
 
 interface SpinnerProps {
@@ -50,7 +51,7 @@ interface SpinnerProps {
 
 export const SpinnerLoader: React.FC<SpinnerProps> = ({ block }) => {
 	let style: any = {
-		color: `${(props: any) => props.theme.color.text[100]}`,
+		color: `#ad9485`,
 	}
 	if (block)
 		style = {

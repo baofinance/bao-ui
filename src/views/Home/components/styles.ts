@@ -257,9 +257,8 @@ export const AnalyticsContainer = styled(Row)`
   display: flex;
   flex-direction: row;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  background-color: ${(props) => props.theme.color.primary[100]};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
-  border: ${(props) => props.theme.border.default};
+  background-color: ${(props) => props.theme.color.primary[200]};
+  box-shadow: ${(props) => props.theme.boxShadow.hover};
   position: relative;
   width: 80%;
   left: 50%;
@@ -293,7 +292,7 @@ export const Analytic = styled(Col)`
   justify-content: center;
   flex: 1 1;
   padding: ${(props) => props.theme.spacing[5]}px;
-  border-right: ${(props) => props.theme.border.default};
+  border-right: 1px solid ${(props) => props.theme.color.primary[500]};
 
   &:first-child {
   }

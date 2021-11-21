@@ -10,12 +10,12 @@ import Table from 'components/Table'
 import Tooltipped from 'components/Tooltipped'
 import { BasketComponent } from 'contexts/Baskets/types'
 import useBao from 'hooks/useBao'
+import useBasket from 'hooks/useBasket'
+import useBasketRate from 'hooks/useBasketRate'
 import useComposition from 'hooks/useComposition'
 import useGraphPriceHistory from 'hooks/useGraphPriceHistory'
 import useModal from 'hooks/useModal'
 import useNav from 'hooks/useNav'
-import useBasket from 'hooks/useBasket'
-import useBasketRate from 'hooks/useBasketRate'
 import usePairPrice from 'hooks/usePairPrice'
 import useTokenBalance from 'hooks/useTokenBalance'
 import _ from 'lodash'
@@ -35,9 +35,6 @@ import NavModal from './components/NavModal'
 import { Progress } from './components/Progress'
 import RedeemModal from './components/RedeemModal'
 import {
-	CornerButtons,
-	GraphContainer,
-	Icon,
 	BasketAnalytics,
 	BasketAnalyticsContainer,
 	BasketBox,
@@ -45,8 +42,9 @@ import {
 	BasketBoxHeader,
 	BasketButtons,
 	BasketCornerButton,
-	BasketExplanation,
-	PieGraphRow,
+	BasketExplanation, CornerButtons,
+	GraphContainer,
+	Icon, PieGraphRow,
 	PrefButtons,
 	PriceBadge,
 	PriceGraph,
@@ -173,9 +171,9 @@ const Basket: React.FC = () => {
 			},
 		},
 		{
-			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '70%' }}>Allocation</HeaderWrapper>,
+			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center', width: '70%', paddingLeft: '10px', paddingRight: '10px' }}>Allocation</HeaderWrapper>,
 			value: (component: BasketComponent) => (
-				<ItemWrapper style={{ justifyContent: 'start', width: '70%' }}>
+				<ItemWrapper style={{ justifyContent: 'start', width: '70%', paddingLeft: '10px', paddingRight: '10px' }}>
 					<Progress
 						width={
 							(component.percentage / maxAllocationPercentage) *

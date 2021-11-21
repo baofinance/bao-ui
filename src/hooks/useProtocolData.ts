@@ -68,7 +68,7 @@ const useProtocolData = () => {
         data: truncateNumber(new BigNumber(baoSupply)),
       },
       {
-        title: 'Total Value of Baskets',
+        title: 'Baskets TVL',
         data: `$${truncateNumber(totalBasketUsd, 0)}`,
       },
       {
