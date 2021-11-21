@@ -18,6 +18,7 @@ const StyledCardIcon = styled.div`
 	display: flex;
 	justify-content: center;
 	margin: 0 auto ${(props) => props.theme.spacing[3]}px;
+	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 export default CardIcon

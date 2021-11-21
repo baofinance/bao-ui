@@ -28,7 +28,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 	}, [onDismiss, reset])
 
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao.getContract('bao').options.address)
+	const baoBalance = useTokenBalance(bao.getContract('polly').options.address)
 	const wethBalance = useTokenBalance(Config.addressMap.WETH)
 
 	return (

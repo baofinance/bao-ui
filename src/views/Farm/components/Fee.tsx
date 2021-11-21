@@ -59,7 +59,7 @@ const Fee: React.FC<FeeProps> = ({ pid }) => {
 			<p>
 				Please{' '}
 				<ExternalLink
-					href="https://docs.bao.finance/franchises/bao-finance"
+					href="https://docs.bao.finance"
 					target="blank"
 				>
 					{' '}

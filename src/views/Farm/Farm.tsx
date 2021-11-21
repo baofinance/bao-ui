@@ -111,7 +111,7 @@ const Farm: React.FC = () => {
 					fee of 1% - 50 % will be incurred when exiting a farm, depending on
 					the length of time your LP was staked. Please{' '}
 					<ExternalLink
-						href="https://docs.bao.finance/franchises/bao-finance"
+						href="https://docs.bao.finance"
 						target="blank"
 					>
 						{' '}

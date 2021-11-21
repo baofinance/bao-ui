@@ -40,7 +40,7 @@ const Nav: React.FC = () => {
 				Farms
 			</StyledLink>
 			<StyledAbsoluteLink
-				href="https://snapshot.page/#/baofinance.eth"
+				href="https://snapshot.page/#/baovotes.eth"
 				target="_blank"
 			>
 				Vote
@@ -49,7 +49,7 @@ const Nav: React.FC = () => {
 				Forum
 			</StyledAbsoluteLink>
 			<StyledAbsoluteLink
-				href="https://docs.bao.finance/franchises/bao-finance"
+				href="https://docs.bao.finance"
 				target="_blank"
 			>
 				Docs

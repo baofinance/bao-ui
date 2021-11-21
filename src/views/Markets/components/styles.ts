@@ -160,7 +160,7 @@ export const MarketSummary = styled.div`
   width: 100%;
   padding: ${(props) => props.theme.spacing[3]}px;
   padding-bottom: 0px;
-  color: ${(props) => props.theme.color.text[100]};
+  color: ${(props) => props.theme.color.text[200]};
   font-family: 'Poppins', sans-serif;
   margin-top: 2rem;
 `
@@ -171,7 +171,7 @@ export const MarketSummaryHeader = styled.div`
   width: 100%;
   font-size: ${(props) => props.theme.fontSize.default};
   font-weight: ${(props) => props.theme.fontWeight.medium};
-  color: ${(props) => props.theme.color.text[100]};
+  color: ${(props) => props.theme.color.text[200]};
 `
 
 export const MarketHeaderWrapper = styled.div`
@@ -193,7 +193,7 @@ export const MarketItemWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
-  color: ${(props) => props.theme.color.text[100]};
+  color: ${(props) => props.theme.color.text[200]};
 `
 
 export const OverviewContainer = styled.div`
@@ -224,6 +224,7 @@ export const BorrowText = styled.p`
 	margin-inline-end: .5rem;
 	margin-bottom: 0px;
 	margin-inline-start: .5rem;
+  color: ${(props) => props.theme.color.text[200]};
 `
 
 export const BorrowMeterContainer = styled.div`

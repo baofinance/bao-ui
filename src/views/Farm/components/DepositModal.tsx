@@ -55,7 +55,7 @@ const DepositModal: React.FC<DepositModalProps> = ({
 						depositing. 75% of BAO rewards will be locked and vested for 6
 						years. For more information, please{' '}
 						<ExternalLink
-							href="https://docs.bao.finance/franchises/bao-finance"
+							href="https://docs.bao.finance"
 							target="blank"
 						>
 							{' '}
