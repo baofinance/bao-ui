@@ -30,7 +30,7 @@ interface StyledButtonProps {
 const StyledButton = styled.button<StyledButtonProps>`
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
-	border: ${(props) => props.theme.border.default};
+	border: none;
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	border-radius: 32px;
 	color: ${(props) => props.theme.color.text[100]};

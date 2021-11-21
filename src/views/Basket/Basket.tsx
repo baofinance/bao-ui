@@ -236,7 +236,7 @@ const Basket: React.FC = () => {
 				</CornerButtons>
 				<BasketBoxHeader>
 					<Icon src={icon} alt={basketToken} />
-					{/* <br />
+					<br />
 					<PriceBadge>
 						1 {basketToken} ={' '}
 						{(wethPrice &&
@@ -249,7 +249,7 @@ const Basket: React.FC = () => {
 							<SpinnerLoader />
 						)}
 					</PriceBadge>
-					<br /> */}
+					<br />
 				</BasketBoxHeader>
 				<StatsRow lg={4} sm={2}>
 					<Col>

@@ -73,10 +73,9 @@ const SectionHeader = styled.div`
 const SectionInner = styled.div`
 	justify-content: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[100]};
+	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
+	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 const UserOverview = styled.div`

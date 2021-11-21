@@ -62,8 +62,8 @@ export const MarketTableContainer = styled.div`
   border-radius: 8px;
   margin-top: ${(props) => props.theme.spacing[3]}px;
   padding: ${(props) => props.theme.spacing[3]}px;
-  background-color: ${(props) => props.theme.color.primary[100]};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
+  background-color: ${(props) => props.theme.color.primary[200]};
+  box-shadow: ${(props) => props.theme.boxShadow.hover};
   border: ${(props) => props.theme.border.default};
 `
 
@@ -118,14 +118,14 @@ export const ItemContainer = styled.div`
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.color.primary[300]};
+        background-color: ${(props) => props.theme.color.primary[400]};
     }
 
         &:nth-child(odd){
-          background-color: ${(props) => props.theme.color.primary[200]};
+          background-color: ${(props) => props.theme.color.primary[300]};
 
           &:hover {
-            background-color: ${(props) => props.theme.color.primary[300]};
+            background-color: ${(props) => props.theme.color.primary[400]};
         }
         }
 `

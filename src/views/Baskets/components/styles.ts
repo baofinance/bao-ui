@@ -25,9 +25,8 @@ export const ListLabelContainer = styled.div`
 `
 
 export const ListItemContainer = styled.div`
-  background: ${(props) => props.theme.color.primary[100]};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
-  border: ${(props) => props.theme.border.default};
+  background: ${(props) => props.theme.color.primary[200]};
+  box-shadow: ${(props) => props.theme.boxShadow.hover};
   border-radius: ${(props) => props.theme.borderRadius}px;
   padding: ${(props) => props.theme.spacing[4]}px;
   display: block;

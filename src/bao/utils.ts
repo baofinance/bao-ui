@@ -30,7 +30,7 @@ export const getMasterChefContract = (bao: Bao): Contract => {
 }
 
 export const getBaoContract = (bao: Bao): Contract => {
-  return bao && bao.contracts && bao.getContract('bao')
+  return bao && bao.contracts && bao.getContract('polly')
 }
 
 export const getBasketContract = (
