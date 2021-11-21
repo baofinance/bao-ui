@@ -18,9 +18,9 @@ export interface SupportedPool {
   pairUrl: string
 }
 
-export interface SupportedNest {
+export interface SupportedBasket {
   nid: number
-  nestAddresses: {
+  basketAddresses: {
     [network: number]: string
   }
   inputToken: string
@@ -66,9 +66,9 @@ export interface FarmableSupportedPool extends SupportedPool {
   tokenContract: Contract
 }
 
-export interface ActiveSupportedNest extends SupportedNest {
-  nestAddress: string
-  nestContract: Contract
+export interface ActiveSupportedBasket extends SupportedBasket {
+  basketAddress: string
+  basketContract: Contract
 }
 
 export interface ActiveSupportedMarket extends SupportedMarket {
@@ -117,7 +117,7 @@ export interface Config {
   contracts: ContractsConfig
   subgraphs: SubgraphConfig
   farms: SupportedPool[]
-  nests: SupportedNest[]
+  baskets: SupportedBasket[]
   markets: SupportedMarket[]
 }
 

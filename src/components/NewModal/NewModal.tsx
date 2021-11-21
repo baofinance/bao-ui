@@ -1,24 +1,30 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
-import { CloseButton } from 'views/Nest/components/styles'
+import styled from 'styled-components'
+import { CloseButton } from 'views/Basket/components/styles'
 
 export interface NewModalProps {
 	onDismiss?: () => void
-	header?: React.ReactNode
 	children?: React.ReactNode
+	header?: React.ReactNode
 	footer?: React.ReactNode
 }
 
-export const NewModal = ({ header, children, footer }: NewModalProps) => (
-	<ModalContainer>
-		<ModalContent>
-			<ModalHeader>{header}</ModalHeader>
-			<ModalBody>{children}</ModalBody>
-			<ModalFooter>{footer}</ModalFooter>
-		</ModalContent>
-	</ModalContainer>
-)
+const NewModal: React.FC<NewModalProps> = ({ onDismiss, children, header, footer }) => {
+
+	return (
+		<ModalContainer>
+			<ModalContent>
+				<CloseButton onClick={onDismiss}>
+					<FontAwesomeIcon icon="window-close" />
+				</CloseButton>
+				<ModalHeader>{header}</ModalHeader>
+				<ModalBody>{children}</ModalBody>
+				<ModalFooter>{footer}</ModalFooter>
+			</ModalContent>
+		</ModalContainer>
+	)
+}
 
 const ModalContainer = styled.div`
 	display: flex;

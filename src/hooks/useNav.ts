@@ -2,12 +2,12 @@ import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import Config from '../bao/lib/config'
-import { NestComponent } from '../contexts/Nests/types'
+import { BasketComponent } from '../contexts/Baskets/types'
 import GraphUtil from '../utils/graph'
 import useBao from './useBao'
 import { decimate } from '../utils/numberFormat'
 
-const useNav = (composition: Array<NestComponent>, supply: BigNumber) => {
+const useNav = (composition: Array<BasketComponent>, supply: BigNumber) => {
   const [nav, setNav] = useState<
     { nav: BigNumber; mainnetNav: BigNumber } | undefined
   >()
@@ -17,7 +17,7 @@ const useNav = (composition: Array<NestComponent>, supply: BigNumber) => {
     if (!(bao && composition && supply)) return
 
     const mainnetAddresses = composition.map(
-      (component: NestComponent) => MAINNET_ADDRESS_MAP[component.address],
+      (component: BasketComponent) => MAINNET_ADDRESS_MAP[component.address],
     )
     GraphUtil.getPriceHistoryMultiple(mainnetAddresses, 'mainnet', 1).then(
       async (_mainnetPrices: any) => {

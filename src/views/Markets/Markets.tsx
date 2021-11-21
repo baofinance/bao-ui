@@ -1,4 +1,3 @@
-import pollyNests from 'assets/img/polly-nests.png'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import WalletProviderModal from 'components/WalletProviderModal'
@@ -27,7 +26,7 @@ const Markets: React.FC = () => {
 			<Page>
 				<>
 					<PageHeader
-						icon={pollyNests}
+						icon=''
 						title="Markets"
 						subtitle="Mint, Lend, Borrow"
 					/>

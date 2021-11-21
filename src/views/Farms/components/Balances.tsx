@@ -1,9 +1,9 @@
-import { getMasterChefContract, getPollySupply, getReferrals } from 'bao/utils'
+import { getMasterChefContract, getBaoSupply, getReferrals } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
 import Label from 'components/Label'
-import PollyIcon from 'components/PollyIcon'
+import BaoIcon from 'components/BaoIcon'
 import Spacer from 'components/Spacer'
 import Value from 'components/Value'
 import useAllEarnings from 'hooks/useAllEarnings'
@@ -80,7 +80,7 @@ const Balances: React.FC = () => {
 	const [totalReferrals, setTotalReferrals] = useState<string>()
 	const [refLink, setRefLink] = useState<string>()
 	const bao = useBao()
-	const pollyBalance = useTokenBalance(
+	const baoBalance = useTokenBalance(
 		bao && bao.getContract('polly').options.address,
 	)
 	const masterChefContract = getMasterChefContract(bao)
@@ -88,7 +88,7 @@ const Balances: React.FC = () => {
 
 	useEffect(() => {
 		async function fetchTotalSupply() {
-			const supply = await getPollySupply(bao)
+			const supply = await getBaoSupply(bao)
 			setTotalSupply(supply)
 		}
 		if (bao) {
@@ -108,7 +108,7 @@ const Balances: React.FC = () => {
 
 	useEffect(() => {
 		async function fetchRefLink() {
-			const usrReflink = 'www.pollyfinance.com?ref=' + account
+			const usrReflink = 'www.baofinance.com?ref=' + account
 			setRefLink(usrReflink)
 		}
 		if (bao) {
@@ -123,12 +123,12 @@ const Balances: React.FC = () => {
 					<CardContent>
 						<StyledBalances>
 							<StyledBalance>
-								<PollyIcon />
+								<BaoIcon />
 								<Spacer />
 								<div style={{ flex: 1 }}>
-									<Label text="Your POLLY Balance" />
+									<Label text="Your BAO Balance" />
 									<Value
-										value={account ? getBalanceNumber(pollyBalance) : 'Locked'}
+										value={account ? getBalanceNumber(baoBalance) : 'Locked'}
 									/>
 								</div>
 							</StyledBalance>
@@ -137,7 +137,7 @@ const Balances: React.FC = () => {
 					<Footnote>
 						Pending harvest
 						<FootnoteValue>
-							<PendingRewards /> POLLY
+							<PendingRewards /> BAO
 						</FootnoteValue>
 					</Footnote>
 				</Card>
@@ -145,14 +145,14 @@ const Balances: React.FC = () => {
 
 				<Card>
 					<CardContent>
-						<Label text="Total POLLY Supply" />
+						<Label text="Total BAO Supply" />
 						<Value
 							value={totalSupply ? getBalanceNumber(totalSupply) : 'Locked'}
 						/>
 					</CardContent>
 					<Footnote>
 						New rewards per block
-						<FootnoteValue>5 POLLY</FootnoteValue>
+						<FootnoteValue>5 BAO</FootnoteValue>
 					</Footnote>
 				</Card>
 			</StyledWrapper>

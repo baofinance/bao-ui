@@ -239,5 +239,5 @@ export const BorrowMeter = styled.div`
 	width: 50%;
 	height: 100%;
 	border-radius: 8px;
-	background-color: ${(props) => props.theme.color.secondary[200]};
+	background-color: ${(props) => props.theme.color.secondary[900]};
 `

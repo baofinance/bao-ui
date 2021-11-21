@@ -22,7 +22,7 @@ export class Contracts {
   defaultGasPrice: string
   contracts: Types.ContractsConfig
   pools: Types.FarmableSupportedPool[]
-  nests: Types.ActiveSupportedNest[]
+  baskets: Types.ActiveSupportedBasket[]
   markets: Types.ActiveSupportedMarket[]
   blockGasLimit: any
   notifier: any
@@ -61,12 +61,12 @@ export class Contracts {
           )
         : undefined
 
-    this.nests =
+    this.baskets =
       networkId === Config.networkId
-        ? Config.nests.map((nest) =>
-            Object.assign(nest, {
-              nestAddress: nest.nestAddresses[networkId],
-              nestContract: this.getNewContract(ExperipieAbi),
+        ? Config.baskets.map((basket) =>
+            Object.assign(basket, {
+              basketAddress: basket.basketAddresses[networkId],
+              basketContract: this.getNewContract(ExperipieAbi),
             }),
           )
         : undefined
@@ -109,9 +109,9 @@ export class Contracts {
           },
         )
       }
-      if (this.nests) {
-        this.nests.forEach(({ nestAddress, nestContract }) =>
-          setProvider(nestContract, nestAddress),
+      if (this.baskets) {
+        this.baskets.forEach(({ basketAddress, basketContract }) =>
+          setProvider(basketContract, basketAddress),
         )
       }
       if (this.markets) {

@@ -29,18 +29,18 @@ const useProtocolData = () => {
 
     const ethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
     const multicallContext = []
-    for (const nest of Config.nests) {
-      const nestAddress: any =
-        (typeof nest.nestAddresses === 'string' && nest.nestAddresses) ||
-        (nest.nestAddresses && nest.nestAddresses[Config.networkId]) ||
-        nest.outputToken
-      const nestContract = new web3.eth.Contract(
+    for (const basket of Config.baskets) {
+      const basketAddress: any =
+        (typeof basket.basketAddresses === 'string' && basket.basketAddresses) ||
+        (basket.basketAddresses && basket.basketAddresses[Config.networkId]) ||
+        basket.outputToken
+      const basketContract = new web3.eth.Contract(
         experipieAbi as AbiItem[],
-        nestAddress,
+        basketAddress,
       )
       multicallContext.push({
-        ref: nestAddress,
-        contract: nestContract,
+        ref: basketAddress,
+        contract: basketContract,
         calls: [{ method: 'decimals' }, { method: 'totalSupply' }],
       })
     }
@@ -48,35 +48,35 @@ const useProtocolData = () => {
     const results = MultiCall.parseCallResults(
       await multicall.call(MultiCall.createCallContext(multicallContext)),
     )
-    let totalNestUsd = new BigNumber(0)
-    for (const nestAddress of Object.keys(results)) {
+    let totalBasketUsd = new BigNumber(0)
+    for (const basketAddress of Object.keys(results)) {
       const _price =
-        (await GraphUtil.getPriceFromPair(ethPrice, nestAddress)) ||
+        (await GraphUtil.getPriceFromPair(ethPrice, basketAddress)) ||
         new BigNumber(0)
       const _supply = getBalanceNumber(
-        new BigNumber(results[nestAddress][1].values[0].hex),
-        results[nestAddress][0].values[0],
+        new BigNumber(results[basketAddress][1].values[0].hex),
+        results[basketAddress][0].values[0],
       )
-      totalNestUsd = totalNestUsd.plus(_price.times(_supply).toNumber())
+      totalBasketUsd = totalBasketUsd.plus(_price.times(_supply).toNumber())
     }
 
-    const pollySupply = await GraphUtil.getPollySupply()
+    const baoSupply = await GraphUtil.getPollySupply()
 
     setAnalytics([
       {
-        title: 'Polly Supply',
-        data: truncateNumber(new BigNumber(pollySupply)),
+        title: 'Bao Supply',
+        data: truncateNumber(new BigNumber(baoSupply)),
       },
       {
-        title: 'Total Value of Nests',
-        data: `$${truncateNumber(totalNestUsd, 0)}`,
+        title: 'Total Value of Baskets',
+        data: `$${truncateNumber(totalBasketUsd, 0)}`,
       },
       {
         title: 'Farms TVL',
         data: `$${truncateNumber(farmTVL.tvl, 0)}`,
       },
       {
-        title: 'Polly Burned 🔥',
+        title: 'Bao Burned 🔥',
         data: truncateNumber(
           new BigNumber((await GraphUtil.getPollyBurned()).burnedTokens),
         ),

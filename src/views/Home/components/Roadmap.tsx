@@ -59,8 +59,8 @@ const RoadMap = () => {
         <RoadmapHeader>Polygon Franchise & Debut of Soft Synthetics</RoadmapHeader>
         <RoadmapSubHeader>Launch of Soft Synthetics on Polygon Network</RoadmapSubHeader>
         <RoadmapDesc>
-          Soft synthetics, or nests, will be configured pools of assets where users are able to get balanced exposure to
-          a basket of assets by holding one token. Nests will utilize an asset manager that will allow for complex
+          Soft synthetics, or baskets, will be configured pools of assets where users are able to get balanced exposure to
+          a basket of assets by holding one token. Baskets will utilize an asset manager that will allow for complex
           strategies including lending and staking. This will be further incentivized with yield farming opportunities.
         </RoadmapDesc>
       </VerticalTimelineElement>

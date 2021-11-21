@@ -13,12 +13,12 @@ import TopBar from './components/TopBar'
 import BaoProvider from './contexts/BaoProvider'
 import FarmsProvider from './contexts/Farms'
 import ModalsProvider from './contexts/Modals'
-import NestsProvider from './contexts/Nests'
+import BasketsProvider from './contexts/Baskets'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
 import Farms from './views/Farms'
 import Home from './views/Home'
-import Nests from './views/Nests'
+import Baskets from './views/Baskets'
 import Markets from './views/Markets'
 library.add(fas, fab)
 
@@ -50,8 +50,8 @@ const App: React.FC = () => {
 					<Route path="/" exact>
 						<Home />
 					</Route>
-					<Route path="/Nests">
-						<Nests />
+					<Route path="/Baskets">
+						<Baskets />
 					</Route>
 					<Route path="/Markets">
 						<Markets />
@@ -75,13 +75,13 @@ const Providers: React.FC = ({ children }) => {
 				}}
 			>
 				<BaoProvider>
-					<NestsProvider>
+					<BasketsProvider>
 						<TransactionProvider>
 							<FarmsProvider>
 								<ModalsProvider>{children}</ModalsProvider>
 							</FarmsProvider>
 						</TransactionProvider>
-					</NestsProvider>
+					</BasketsProvider>
 				</BaoProvider>
 			</UseWalletProvider>
 		</ThemeProvider>

@@ -126,11 +126,11 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
         let token, tokenPrice, specialPair
         if (
           lpInfo.tokens[0].address.toLowerCase() ===
-            Config.addressMap.POLLY.toLowerCase() &&
+            Config.addressMap.BAO.toLowerCase() &&
           lpInfo.tokens[1].address.toLowerCase() ===
             Config.addressMap.nDEFI.toLowerCase()
         ) {
-          // POLLY-nDEFI pair
+          // BAO-nDEFI pair
           token = lpInfo.tokens[1]
           specialPair = true
         } else if (
@@ -153,7 +153,7 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
             Config.addressMap.nDEFI.toLowerCase() &&
           specialPair
         )
-          // POLLY-nDEFI pair
+          // BAO-nDEFI pair
           tokenPrice = Object.values(tokenPrices).find(
             (priceInfo) =>
               priceInfo.address.toLowerCase() ===

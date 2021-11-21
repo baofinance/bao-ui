@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { Nest, NestComponent } from 'contexts/Nests/types'
+import { Basket, BasketComponent } from 'contexts/Baskets/types'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
@@ -12,17 +12,17 @@ import Config from '../bao/lib/config'
 import { getWethPriceLink } from '../bao/utils'
 import useBao from './useBao'
 
-const useComposition = (nest: Nest) => {
+const useComposition = (basket: Basket) => {
   const { ethereum }: { ethereum: provider } = useWallet()
   const [composition, setComposition] = useState<
-    Array<NestComponent> | undefined
+    Array<BasketComponent> | undefined
   >()
   const bao = useBao()
 
   useEffect(() => {
-    if (!(nest && nest.nestContract)) return
+    if (!(basket && basket.basketContract)) return
 
-    nest.nestContract.methods
+    basket.basketContract.methods
       .getTokens()
       .call()
       .then(async (tokenComposition: string[]) => {
@@ -73,7 +73,7 @@ const useComposition = (nest: Nest) => {
                   ref: 'componentToken',
                   contract: getContract(ethereum, component),
                   calls: [
-                    { method: 'balanceOf', params: [nest.nestTokenAddress] },
+                    { method: 'balanceOf', params: [basket.basketTokenAddress] },
                   ],
                 },
               ]
@@ -150,13 +150,13 @@ const useComposition = (nest: Nest) => {
               name: graphData.name,
               symbol: specialSymbol || graphData.symbol,
               percentage: undefined,
-              color: nest.pieColors[graphData.symbol],
+              color: basket.pieColors[graphData.symbol],
               balance: new BigNumber(
                 componentBalance ||
                   (await getBalance(
                     ethereum,
                     component,
-                    nest.nestTokenAddress,
+                    basket.basketTokenAddress,
                   )),
               ),
               balanceDecimals: specialDecimals || graphData.decimals,
@@ -169,7 +169,7 @@ const useComposition = (nest: Nest) => {
           }),
         )
 
-        // Calculate total USD value of all component tokens in nest contract
+        // Calculate total USD value of all component tokens in basket contract
         const totalUsd = _.sum(
           _.map(res, (component) => {
             if (component && component.price)
@@ -184,7 +184,7 @@ const useComposition = (nest: Nest) => {
           }),
         )
 
-        // Calculate percentages of component tokens in nest contract
+        // Calculate percentages of component tokens in basket contract
         _.each(res, (component) => {
           if (component && component.price)
             component.percentage = component.price
@@ -204,7 +204,7 @@ const useComposition = (nest: Nest) => {
           ),
         )
       })
-  }, [nest])
+  }, [basket])
 
   return composition
 }

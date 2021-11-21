@@ -10,7 +10,7 @@ interface PageHeaderProps {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
 	const titletext = title.toString()
-	if (titletext.toString() === 'PollyChef is Ready') {
+	if (titletext.toString() === 'BaoChef is Ready') {
 		return (
 			<Container size="sm">
 				<StyledPageHeader>

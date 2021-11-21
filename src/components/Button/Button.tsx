@@ -123,7 +123,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: ${(props) => props.theme.border.default};
+	border: none;
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	padding: ${(props) => -props.theme.spacing[3]}px;
 	color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
@@ -203,14 +203,13 @@ export const MaxButton = styled.a`
 	color: ${(props) => props.theme.color.text[100]};
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: 1.75px solid transparent;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
 	transition: 100ms;
 	user-select: none;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	text-decoration: none;
-	border: ${(props) => props.theme.border.default};
+	border: none;
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	transition: .2s;

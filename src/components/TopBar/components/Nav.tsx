@@ -21,9 +21,9 @@ const Nav: React.FC = () => {
 			<StyledLink
 				exact
 				activeClassName="active"
-				to={{ pathname: '/nests', search: '?ref=' + refer }}
+				to={{ pathname: '/baskets', search: '?ref=' + refer }}
 			>
-				Nests
+				Baskets
 			</StyledLink>
 			<StyledLink
 				exact
@@ -40,7 +40,7 @@ const Nav: React.FC = () => {
 				Farms
 			</StyledLink>
 			<StyledAbsoluteLink
-				href="https://snapshot.page/#/pollyfinance.eth"
+				href="https://snapshot.page/#/baofinance.eth"
 				target="_blank"
 			>
 				Vote
@@ -49,7 +49,7 @@ const Nav: React.FC = () => {
 				Forum
 			</StyledAbsoluteLink>
 			<StyledAbsoluteLink
-				href="https://docs.bao.finance/franchises/polly-finance"
+				href="https://docs.bao.finance/franchises/bao-finance"
 				target="_blank"
 			>
 				Docs

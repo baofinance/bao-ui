@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import wethIcon from 'assets/img/assets/WETH.png'
-import pollyIcon from 'assets/img/logo.svg'
+import baoIcon from 'assets/img/logo.svg'
 import { BigNumber } from 'bignumber.js'
 import useBao from 'hooks/useBao'
 import useTokenBalance from 'hooks/useTokenBalance'
@@ -28,7 +28,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 	}, [onDismiss, reset])
 
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao.getContract('polly').options.address)
+	const baoBalance = useTokenBalance(bao.getContract('bao').options.address)
 	const wethBalance = useTokenBalance(Config.addressMap.WETH)
 
 	return (
@@ -60,12 +60,12 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 						<StyledBalanceWrapper>
 							<CardIcon>
 								<span>
-									<img src={pollyIcon} height={50} />
+									<img src={baoIcon} height={50} />
 								</span>
 							</CardIcon>
 							<StyledBalance>
 								<Value value={getDisplayBalance(baoBalance)} />
-								<Label text="POLLY Balance" />
+								<Label text="BAO Balance" />
 							</StyledBalance>
 						</StyledBalanceWrapper>
 					</Col>

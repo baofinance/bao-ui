@@ -1,4 +1,3 @@
-import pollyNests from 'assets/img/polly-nests.png'
 import { Button } from 'components/Button'
 import Container from 'components/Container'
 import Page from 'components/Page'
@@ -28,9 +27,9 @@ const Farms: React.FC = () => {
 					<>
 						<Route exact path={path}>
 							<PageHeader
-								icon={pollyNests}
+								icon=''
 								title="Farms"
-								subtitle="Earn POLLY by staking SushiSwap LP and Nest Tokens!"
+								subtitle="Earn BAO by staking SushiSwap LP and Basket Tokens!"
 							/>
 							<Container>
 								<StyledInfo>
@@ -45,7 +44,7 @@ const Farms: React.FC = () => {
 									</span>{' '}
 									Be sure to read the{' '}
 									<ExternalLink
-										href="https://docs.bao.finance/franchises/polly"
+										href="https://docs.bao.finance/franchises/bao"
 										target="_blank"
 									>
 										docs

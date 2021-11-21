@@ -1,11 +1,9 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import { ModalProps } from 'components/Modal'
 import NewModal from 'components/NewModal'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { CloseButton } from 'views/Nest/components/styles'
 import { MarketButton } from './MarketButton'
 
 export enum MarketOperations {
@@ -41,9 +39,6 @@ const MarketModal = ({
 			}
 			footer={<MarketButton operation={operation} />}
 		>
-			<CloseButton onClick={onDismiss}>
-				<FontAwesomeIcon icon="window-close" />
-			</CloseButton>
 			<ModalStack>
 				<NavButtons
 					options={operations}

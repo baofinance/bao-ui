@@ -1,4 +1,4 @@
-import NestInput from 'components/NestInput'
+import BasketInput from 'components/BasketInput'
 import React from 'react'
 import styled from 'styled-components'
 import { MaxButton } from '../Button'
@@ -24,7 +24,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
 			<StyledMaxText>
 				{max.toLocaleString()} {symbol} Available
 			</StyledMaxText>
-			<NestInput
+			<BasketInput
 				endAdornment={
 					<StyledTokenAdornmentWrapper>
 						<MaxButton onClick={onSelectHalf}>½</MaxButton>

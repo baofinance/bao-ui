@@ -24,14 +24,14 @@ export const background ={
 
 export const primary = {
   100: '#efeae7',
-  200: '#ded4ce',
-  300: '#cebfb6',
-  400: '#bea99d',
-  500: '#ad9485',
-  600: '#9d7e6c',
-  700: '#876a5a',
-  800: '#6e5749',
-  900: '#564439',
+  200: '#e7dfda',
+  300: '#ded4ce',
+  400: '#d6c9c2',
+  500: '#cebfb6',
+  600: '#c6b4a9',
+  700: '#bea99d',
+  800: '#b69e91',
+  900: '#ad9485',
 }
 
 export const secondary = {
@@ -48,7 +48,7 @@ export const secondary = {
 
 export const text = {
   100: '#50251c', //primary
-  200: '#efeae7', //secondary
+  200: '#aa9585', //secondary
   300: '#f57d14', //hover link
   400: '#ce6509', //active link
 }

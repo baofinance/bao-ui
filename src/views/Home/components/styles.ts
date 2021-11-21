@@ -323,7 +323,7 @@ export const Analytic = styled(Col)`
   }
 `
 
-export const NestBoxHeader = styled.div`
+export const BasketBoxHeader = styled.div`
   font-family: 'KaushanScript', sans-serif;
   color: ${(props) => props.theme.color.text[100]};
   margin: auto;

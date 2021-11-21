@@ -1,17 +1,17 @@
 import { TimeseriesData } from 'components/Graphs/AreaGraph/AreaGraph'
-import { Nest } from 'contexts/Nests'
+import { Basket } from 'contexts/Baskets'
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import GraphClient from 'utils/graph'
 
-const useGraphPriceHistory = (nest: Nest) => {
+const useGraphPriceHistory = (basket: Basket) => {
   const [res, setRes] = useState<TimeseriesData[] | undefined>()
 
   const querySubgraph = useCallback(async () => {
-    if (!(nest && nest.nestTokenAddress)) return
+    if (!(basket && basket.basketTokenAddress)) return
 
     const data: any = await GraphClient.getPriceHistory(
-      nest.nestTokenAddress.toLowerCase(),
+      basket.basketTokenAddress.toLowerCase(),
     )
 
     // Workaround while nSTABLE has no price data, remove soon
@@ -36,11 +36,11 @@ const useGraphPriceHistory = (nest: Nest) => {
       }),
     )
     setRes(_.reverse(formattedData))
-  }, [nest])
+  }, [basket])
 
   useEffect(() => {
     querySubgraph()
-  }, [nest])
+  }, [basket])
 
   return res
 }

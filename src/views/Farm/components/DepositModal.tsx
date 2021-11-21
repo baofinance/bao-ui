@@ -9,7 +9,7 @@ import Spacer from 'components/Spacer'
 import TokenInput from 'components/TokenInput'
 import React, { useCallback, useMemo, useState } from 'react'
 import { getFullDisplayBalance } from 'utils/numberFormat'
-import { Disclaimer } from 'views/Nest/components/styles'
+import { Disclaimer } from 'views/Basket/components/styles'
 
 interface DepositModalProps extends ModalProps {
 	max: BigNumber
@@ -52,10 +52,10 @@ const DepositModal: React.FC<DepositModalProps> = ({
 				<Disclaimer>
 					<p style={{ textAlign: 'left' }}>
 						❗️ Remember a 0.75% fee will be added to the treasury when
-						depositing. 75% of POLLY rewards will be locked and vested for 6
+						depositing. 75% of BAO rewards will be locked and vested for 6
 						years. For more information, please{' '}
 						<ExternalLink
-							href="https://docs.bao.finance/franchises/polly-finance"
+							href="https://docs.bao.finance/franchises/bao-finance"
 							target="blank"
 						>
 							{' '}

@@ -52,9 +52,9 @@ const FarmCards: React.FC = () => {
 	const farmsTVL = useAllFarmTVL(bao && bao.web3, bao && bao.multicall)
 	const { ethereum, account } = useWallet()
 
-	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	const [pollyPrice, setPollyPrice] = useState<BigNumber | undefined>()
 	const [pools, setPools] = useState<any | undefined>({
-		[PoolType.POLLY]: [],
+		[PoolType.BAO]: [],
 		[PoolType.SUSHI]: [],
 		[PoolType.ARCHIVED]: [],
 	})
@@ -65,15 +65,15 @@ const FarmCards: React.FC = () => {
 				wethPrice,
 				Config.contracts.polly[Config.networkId].address,
 			)
-			setBaoPrice(pollyPrice)
+			setPollyPrice(pollyPrice)
 		})
 
 		const _pools: any = {
-			[PoolType.POLLY]: [],
+			[PoolType.BAO]: [],
 			[PoolType.SUSHI]: [],
 			[PoolType.ARCHIVED]: [],
 		}
-		if (!(ethereum && farmsTVL && bao) || pools.polly.length)
+		if (!(ethereum && farmsTVL && bao) || pools.bao.length)
 			return setPools(_pools)
 
 		bao.multicall
@@ -114,7 +114,7 @@ const FarmCards: React.FC = () => {
 					)
 					const farmWithStakedValue = {
 						...farm,
-						poolType: farm.poolType || PoolType.POLLY,
+						poolType: farm.poolType || PoolType.BAO,
 						tvl: tvlInfo.tvl,
 						stakedUSD: decimate(
 							result.masterChef[farms.length + i].values[0].hex,
@@ -122,8 +122,8 @@ const FarmCards: React.FC = () => {
 							.div(decimate(tvlInfo.lpStaked))
 							.times(tvlInfo.tvl),
 						apy:
-							baoPrice && farmsTVL
-								? baoPrice
+							pollyPrice && farmsTVL
+								? pollyPrice
 										.times(BLOCKS_PER_YEAR)
 										.times(
 											new BigNumber(result.masterChef[i].values[0].hex).div(
@@ -144,18 +144,18 @@ const FarmCards: React.FC = () => {
 
 	return (
 		<>
-			<h3 style={{ margin: '${(props) => props.theme.spacing[3]}px' }}>
-				<Badge bg="secondary" className="pollyTicker">
-					Polly Price:{' '}
-					{baoPrice ? `$${getDisplayBalance(baoPrice, 0)}` : <SpinnerLoader />}
+			<p style={{ margin: '${(props) => props.theme.spacing[3]}px', fontSize: '1.25rem' }}>
+				<Badge bg="secondary" className="baoTicker">
+					Bao Price:{' '}
+					{pollyPrice ? `$${getDisplayBalance(pollyPrice, 0)}` : <SpinnerLoader />}
 				</Badge>
-			</h3>
+			</p>
 			<Spacer size="md" />
 			<Tabs>
 				<TabPanel>
 					<StyledCards>
-						{pools[PoolType.POLLY] && pools[PoolType.POLLY].length ? (
-							pools[PoolType.POLLY].map((farm: any, i: number) => (
+						{pools[PoolType.BAO] && pools[PoolType.BAO].length ? (
+							pools[PoolType.BAO].map((farm: any, i: number) => (
 								<React.Fragment key={i}>
 									<FarmCard farm={farm} />
 									{(i + 1) % cardsPerRow !== 0 && <StyledSpacer />}
@@ -245,7 +245,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
 	}, [bao, pid, account, setHarvestable])
 
 	const poolActive = true // startTime * 1000 - Date.now() <= 0
-	const nestMint = 'Get ' + farm.tokenSymbol
+	const basketMint = 'Get ' + farm.tokenSymbol
 	const destination = farm.refUrl
 	const pairLink = farm.pairUrl
 
@@ -254,7 +254,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
 			<Card>
 				<CardContent>
 					<StyledContent>
-						{(farm.tokenSymbol === 'POLLY' || farm.tokenSymbol === 'nDEFI' || farm.tokenSymbol === 'nSTBL') && (
+						{(farm.tokenSymbol === 'BAO' || farm.tokenSymbol === 'nDEFI' || farm.tokenSymbol === 'nSTBL') && (
 							<StyledCardAccent />
 						)}
 						<CardIcon>
@@ -286,12 +286,12 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
 							)}
 						</Button>
 						<Spacer size="sm" />
-						<Button text={nestMint} href={destination} />
+						<Button text={basketMint} href={destination} />
 						<StyledInsight>
 							<span>
 								APR{' '}
 								<Tooltipped
-									content={`APRs are affected by a 7-day average price of POLLY which
+									content={`APRs are affected by a 7-day average price of BAO which
 										has not yet stabilized.`}
 								/>
 							</span>

@@ -60,9 +60,9 @@ const theme = {
   },
   boxShadow: {
     default:
-      '2px 2px 3px 0 rgba(255, 255, 255, 0.3) inset, -1px -1px 2px 0 rgba(0, 0, 0, .25) inset',
+      'inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);',
     hover:
-      '-1px -1px 2px 0 rgba(0, 0, 0, .25), 2px 2px 3px 0 rgba(255, 255, 255, 0.3)',
+      'inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);',
   },
   border: {
     default:

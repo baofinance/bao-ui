@@ -13,12 +13,12 @@ export const Input: React.FC<InputProps> = ({ onChange, placeholder, value }) =>
 	)
 }
 
-export interface NestInputProps extends InputProps {
+export interface BasketInputProps extends InputProps {
 	endAdornment?: React.ReactNode
 	startAdornment?: React.ReactNode
 }
 
-export const NestInput: React.FC<NestInputProps> = ({
+export const BasketInput: React.FC<BasketInputProps> = ({
 	endAdornment,
 	onChange,
 	placeholder,
@@ -26,7 +26,7 @@ export const NestInput: React.FC<NestInputProps> = ({
 	value,
 }) => {
 	return (
-		<NestInputWrapper>
+		<BasketInputWrapper>
 			{!!startAdornment && startAdornment}
 			<StyledInput
 				placeholder={placeholder}
@@ -34,11 +34,11 @@ export const NestInput: React.FC<NestInputProps> = ({
 				onChange={onChange}
 			/>
 			{!!endAdornment && endAdornment}
-		</NestInputWrapper>
+		</BasketInputWrapper>
 	)
 }
 
-const NestInputWrapper = styled.div`
+const BasketInputWrapper = styled.div`
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
@@ -77,7 +77,7 @@ const StyledInput = styled.input`
     border-width: 0px;
 `
 
-export default NestInput
+export default BasketInput
 
 export interface BalanceInputProps extends InputProps {
 	label?: React.ReactNode

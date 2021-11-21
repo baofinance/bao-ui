@@ -1,4 +1,4 @@
-import pollyIcon from 'assets/img/bao.png'
+import baoIcon from 'assets/img/bao.png'
 import { Button } from 'components/Button'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
@@ -33,21 +33,21 @@ const Harvest: React.FC<HarvestProps> = ({ pid }) => {
 				<StyledCardContentInner>
 					<StyledCardHeader>
 						<CardIcon>
-							<img src={pollyIcon} height={50} alt="" />
+							<img src={baoIcon} height={50} alt="" />
 						</CardIcon>
 						<Value value={getBalanceNumber(earnings)} />
-						<Label text="POLLY Earned" />
+						<Label text="BAO Earned" />
 					</StyledCardHeader>
 					<Spacer />
 					<StyledCardHeader>
 						<Value value={getBalanceNumber(locks)} />
-						<Label text="Locked POLLY" />
+						<Label text="Locked BAO" />
 						<Spacer />
 					</StyledCardHeader>
 					<StyledCardActions>
 						<Button
 							disabled={!earnings.toNumber() || pendingTx}
-							text={pendingTx ? 'Collecting POLLY' : 'Harvest'}
+							text={pendingTx ? 'Collecting BAO' : 'Harvest'}
 							onClick={async () => {
 								setPendingTx(true)
 								await onReward()

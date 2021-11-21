@@ -10,7 +10,7 @@ import { Button } from 'react-bootstrap'
 import GraphClient from 'utils/graph'
 import { getDisplayBalance } from 'utils/numberFormat'
 import {
-	NestBoxHeader,
+	BasketBoxHeader,
 	PrefButtons,
 	PriceGraphContainer,
 	StyledGraphContainer,
@@ -18,28 +18,28 @@ import {
 
 const PriceGraphs: React.FC = () => {
 	const [priceData, setPriceData] = useState<any | undefined>()
-	const [activeNest, setActiveNest] = useState<any | undefined>()
+	const [activeBasket, setActiveBasket] = useState<any | undefined>()
 
 	const activeToken = useMemo(() => {
 		return _.find(
 			priceData,
-			(d: any) => d.id === Config.addressMap.WETH, // activeNest.nestAddress[137]
+			(d: any) => d.id === Config.addressMap.WETH, // activeBasket.basketAddress[137]
 		)
-	}, [activeNest])
+	}, [activeBasket])
 
-	const nestPriceChange24h = useMemo(() => {
-		if (!(activeNest && activeToken.dayData)) return
+	const basketPriceChange24h = useMemo(() => {
+		if (!(activeBasket && activeToken.dayData)) return
 
 		const { dayData } = activeToken
 		return new BigNumber(dayData[dayData.length - 1].close)
 			.minus(dayData[dayData.length - 2].close)
 			.div(dayData[dayData.length - 1].close)
 			.times(100)
-	}, [activeNest])
+	}, [activeBasket])
 
 	useEffect(() => {
 		GraphClient.getPriceHistoryMultiple(
-			Config.nests.map(() => Config.addressMap.WETH), // nest.nestAddress[137]
+			Config.baskets.map(() => Config.addressMap.WETH), // basket.basketAddress[137]
 		).then((res: any) => {
 			// Clean price data from subgraph
 			const tokens = _.cloneDeep(res.tokens).map((token: any) => {
@@ -47,7 +47,7 @@ const PriceGraphs: React.FC = () => {
 				return token
 			})
 			setPriceData(tokens)
-			setActiveNest(Config.nests[0])
+			setActiveBasket(Config.baskets[0])
 		})
 	}, [])
 
@@ -62,23 +62,23 @@ const PriceGraphs: React.FC = () => {
 	return (
 		<PriceGraphContainer>
 			<PrefButtons style={{ width: '100%' }}>
-				<NestBoxHeader style={{ float: 'left' }}>Nest Price</NestBoxHeader>
-				{Config.nests.map((nest) => (
+				<BasketBoxHeader style={{ float: 'left' }}>Basket Price</BasketBoxHeader>
+				{Config.baskets.map((basket) => (
 					<Button
 						variant="outline-primary"
-						onClick={() => setActiveNest(nest)}
-						active={activeNest === nest}
-						key={nest.symbol}
+						onClick={() => setActiveBasket(basket)}
+						active={activeBasket === basket}
+						key={basket.symbol}
 						style={{
 							margin:
 								'${(props) => props.theme.spacing[1]}px ${(props) => props.theme.spacing[2]}px',
 						}}
 					>
-						{nest.symbol}
+						{basket.symbol}
 					</Button>
 				))}
-				<NestBoxHeader style={{ float: 'right' }}>
-					{nestPriceChange24h ? (
+				<BasketBoxHeader style={{ float: 'right' }}>
+					{basketPriceChange24h ? (
 						<>
 							$
 							{activeToken.dayData &&
@@ -91,23 +91,23 @@ const PriceGraphs: React.FC = () => {
 							<span
 								className="smalltext"
 								style={{
-									color: nestPriceChange24h.gt(0)
+									color: basketPriceChange24h.gt(0)
 										? '${(props) => props.theme.color.green}'
 										: '${(props) => props.theme.color.red}',
 								}}
 							>
 								{activeToken.dayData &&
-									getDisplayBalance(nestPriceChange24h, 0)}
+									getDisplayBalance(basketPriceChange24h, 0)}
 								{'%'}
 							</span>
 						</>
 					) : (
 						<SpinnerLoader />
 					)}
-				</NestBoxHeader>
+				</BasketBoxHeader>
 			</PrefButtons>
 			<Spacer />
-			{activeNest && (
+			{activeBasket && (
 				<StyledGraphContainer>
 					<ParentSize>
 						{(parent) => (

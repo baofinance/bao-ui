@@ -1,6 +1,6 @@
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
-import { NestComponent } from 'contexts/Nests/types'
+import { BasketComponent } from 'contexts/Baskets/types'
 import _ from 'lodash'
 import React, { useState } from 'react'
 import { animated, interpolate, useTransition } from 'react-spring'
@@ -17,7 +17,7 @@ const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 }
 export type DonutProps = {
 	width: number
 	height: number
-	composition: Array<NestComponent>
+	composition: Array<BasketComponent>
 	margin?: typeof defaultMargin
 	animate?: boolean
 }

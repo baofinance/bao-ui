@@ -71,7 +71,7 @@ export default {
         abi: 'chainoracle.json',
       },
     },
-    nestRedeem: {
+    basketRedeem: {
       137: {
         address: '0x174c726ED2E30560935247C410294DB5FfEa39D4',
         abi: 'nestRedeem.json',
@@ -174,10 +174,10 @@ export default {
       decimals: 18,
     },
   ],
-  nests: [
+  baskets: [
     {
       nid: 1,
-      nestAddresses: {
+      basketAddresses: {
         137: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
       },
       inputToken: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -208,7 +208,7 @@ export default {
     },
     {
       nid: 2,
-      nestAddresses: {
+      basketAddresses: {
         137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
       inputToken: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -235,9 +235,9 @@ export default {
         137: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       },
       tokenDecimals: 18,
-      name: 'POLLY-ETH',
-      symbol: 'POLLY-ETH SUSHI LP',
-      tokenSymbol: 'POLLY',
+      name: 'BAO-ETH',
+      symbol: 'BAO-ETH SUSHI LP',
+      tokenSymbol: 'BAO',
       icon: '/BAO.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x4C392822D4bE8494B798cEA17B43d48B2308109C',
@@ -253,9 +253,9 @@ export default {
         137: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       },
       tokenDecimals: 18,
-      name: 'POLLY-nDEFI',
-      symbol: 'POLLY-nDEFI SUSHI LP',
-      tokenSymbol: 'POLLY',
+      name: 'BAO-nDEFI',
+      symbol: 'BAO-nDEFI SUSHI LP',
+      tokenSymbol: 'BAO',
       icon: '/BAO.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x4C392822D4bE8494B798cEA17B43d48B2308109C',
@@ -271,9 +271,9 @@ export default {
         137: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       },
       tokenDecimals: 18,
-      name: 'POLLY-RAI',
-      symbol: 'POLLY-RAI SUSHI LP',
-      tokenSymbol: 'POLLY',
+      name: 'BAO-RAI',
+      symbol: 'BAO-RAI SUSHI LP',
+      tokenSymbol: 'BAO',
       icon: '/BAO.png',
       refUrl:
         'https://app.sushi.com/swap?inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0x4C392822D4bE8494B798cEA17B43d48B2308109C',

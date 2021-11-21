@@ -1,28 +1,28 @@
 import BigNumber from 'bignumber.js'
-import { Nest } from 'contexts/Nests'
+import { Basket } from 'contexts/Baskets'
 import { useCallback, useEffect, useState } from 'react'
 import GraphClient from 'utils/graph'
 import { getWethPriceLink } from '../bao/utils'
 import useBao from './useBao'
 
-const usePairPrice = (nest: Nest) => {
+const usePairPrice = (basket: Basket) => {
   const [res, setRes] = useState<BigNumber | undefined>()
   const bao = useBao()
 
   const querySubgraph = useCallback(async () => {
-    if (!(nest && nest.nestTokenAddress && bao)) return
+    if (!(basket && basket.basketTokenAddress && bao)) return
 
     const wethPrice = await getWethPriceLink(bao)
     const pairPrice = await GraphClient.getPriceFromPair(
       wethPrice,
-      nest.nestTokenAddress,
+      basket.basketTokenAddress,
     )
     setRes(pairPrice)
-  }, [bao, nest])
+  }, [bao, basket])
 
   useEffect(() => {
     querySubgraph()
-  }, [bao, nest])
+  }, [bao, basket])
 
   return res
 }

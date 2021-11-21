@@ -44,7 +44,7 @@ const Farm: React.FC = () => {
 		name: '',
 		icon: '',
 		refUrl: '',
-		poolType: PoolType.POLLY,
+		poolType: PoolType.BAO,
 	}
 
 	useEffect(() => {
@@ -72,7 +72,7 @@ const Farm: React.FC = () => {
 		<>
 			<PageHeader
 				icon={icon}
-				subtitle={`Deposit ${lpTokenName}  Tokens and earn POLLY`}
+				subtitle={`Deposit ${lpTokenName}  Tokens and earn BAO`}
 				title={name}
 			/>
 			<StyledFarm>
@@ -93,7 +93,7 @@ const Farm: React.FC = () => {
 				<Spacer size="lg" />
 				<StyledInfo>
 					⭐️ Every time you stake and unstake LP tokens, the contract will
-					automagically harvest POLLY rewards for you!
+					automagically harvest BAO rewards for you!
 				</StyledInfo>
 				<Spacer />
 				<StyledInfo>
@@ -107,11 +107,11 @@ const Farm: React.FC = () => {
 						Attention:
 					</span>{' '}
 					Please familiarize yourself with the fee structure before using
-					PollyChef. Deposits are subject to a 0.75% fee. Withdrawal slashing
+					BaoChef. Deposits are subject to a 0.75% fee. Withdrawal slashing
 					fee of 1% - 50 % will be incurred when exiting a farm, depending on
 					the length of time your LP was staked. Please{' '}
 					<ExternalLink
-						href="https://docs.bao.finance/franchises/polly-finance"
+						href="https://docs.bao.finance/franchises/bao-finance"
 						target="blank"
 					>
 						{' '}

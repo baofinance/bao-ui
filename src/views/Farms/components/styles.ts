@@ -112,11 +112,11 @@ export const StyledInsight = styled.div`
 `
 
 export const Footnote = styled.div`
-  font-size: 1rem;
+  font-size: 0.875rem;
   padding: ${(props) => props.theme.spacing[2]}px
     ${(props) => props.theme.spacing[3]}px;
-  color: ${(props) => props.theme.color.text[100]};
-  border-top: solid 1px ${(props) => props.theme.color.primary[200]};
+  color: ${(props) => props.theme.color.text[200]};
+  border-top: solid 1px ${(props) => props.theme.color.primary[600]};
 `
 
 export const FootnoteValue = styled.div`

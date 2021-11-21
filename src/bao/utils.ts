@@ -29,16 +29,16 @@ export const getMasterChefContract = (bao: Bao): Contract => {
   return bao && bao.contracts && bao.getContract('masterChef')
 }
 
-export const getPollyContract = (bao: Bao): Contract => {
-  return bao && bao.contracts && bao.getContract('polly')
+export const getBaoContract = (bao: Bao): Contract => {
+  return bao && bao.contracts && bao.getContract('bao')
 }
 
-export const getNestContract = (
+export const getBasketContract = (
   bao: Bao,
   nid: number,
 ): Contract | undefined => {
-  if (bao && bao.contracts && bao.contracts.nests)
-    return _.find(bao.contracts.nests, { nid }).nestContract
+  if (bao && bao.contracts && bao.contracts.baskets)
+    return _.find(bao.contracts.baskets, { nid }).basketContract
 }
 
 export const getRecipeContract = (bao: Bao) => {
@@ -79,27 +79,27 @@ export const getMarkets = (bao: Bao) => {
     : []
 }
 
-export const getNests = (bao: Bao) => {
+export const getBaskets = (bao: Bao) => {
   return bao
-    ? bao.contracts.nests.map(
+    ? bao.contracts.baskets.map(
         ({
           nid,
           name,
           symbol,
           icon,
-          nestAddress,
-          nestContract,
+          basketAddress,
+          basketContract,
           pieColors,
         }) => ({
           nid,
           id: symbol,
           name,
           icon,
-          nestContract,
+          basketContract,
           pieColors,
-          nestTokenAddress: nestAddress,
+          basketTokenAddress: basketAddress,
           inputToken: 'wETH',
-          nestToken: symbol,
+          basketToken: symbol,
           inputTokenAddress: Config.addressMap.WETH,
         }),
       )
@@ -164,10 +164,10 @@ export const getEarned = async (
 }
 
 export const getLockedEarned = async (
-  pollyContract: Contract,
+  baoContract: Contract,
   account: string,
 ): Promise<BigNumber> => {
-  return pollyContract.methods.lockOf(account).call()
+  return baoContract.methods.lockOf(account).call()
 }
 
 export const getTotalLPWethValue = async (
@@ -294,7 +294,7 @@ export const getStaked = async (
   }
 }
 
-export const getPollySupply = async (bao: Bao) => {
+export const getBaoSupply = async (bao: Bao) => {
   return new BigNumber(
     await bao.getContract('polly').methods.totalSupply().call(),
   )
@@ -364,19 +364,19 @@ export const leave = async (
     })
 }
 
-export const fetchCalcToNest = async (
+export const fetchCalcToBasket = async (
   recipeContract: Contract,
-  nestAddress: string,
-  nestAmount: string,
+  basketAddress: string,
+  basketAmount: string,
 ) => {
-  const amount = exponentiate(nestAmount)
+  const amount = exponentiate(basketAmount)
   const amountEthNecessary = await recipeContract.methods
-    .calcToPie(nestAddress, amount.toFixed(0))
+    .calcToPie(basketAddress, amount.toFixed(0))
     .call()
   return decimate(amountEthNecessary)
 }
 
-export const nestIssue = (
+export const basketIssue = (
   recipeContract: Contract,
   _outputToken: string,
   _inputToken: string,
@@ -388,12 +388,12 @@ export const nestIssue = (
     .bake(_inputToken, _outputToken, exponentiate(_maxInput).toString(), _data)
     .send({ from: account })
 
-export const nestRedeem = (
-  nestContract: Contract,
+export const basketRedeem = (
+  basketContract: Contract,
   amount: string,
   account: string,
 ) =>
-  nestContract.methods
+  basketContract.methods
     .exitPool(exponentiate(amount).toString())
     .send({ from: account })
 
