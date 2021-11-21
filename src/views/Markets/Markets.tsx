@@ -1,14 +1,12 @@
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import WalletProviderModal from 'components/WalletProviderModal'
-import { usePrice } from 'hooks/hard-synths/usePrices'
 import useModal from 'hooks/useModal'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
-import useMarkets from '../../hooks/hard-synths/useMarkets'
 import {
 	Borrow,
 	Borrowed,
@@ -25,11 +23,7 @@ const Markets: React.FC = () => {
 		<Switch>
 			<Page>
 				<>
-					<PageHeader
-						icon=''
-						title="Markets"
-						subtitle="Mint, Lend, Borrow"
-					/>
+					<PageHeader icon="" title="Markets" subtitle="Mint, Lend, Borrow" />
 					<Container>
 						<Section>
 							<SectionHeader>Dashboard</SectionHeader>
@@ -85,18 +79,9 @@ const UserOverview = styled.div`
 `
 
 const MarketOverview = styled.div`
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
+	display: flex;
+	justify-content: center;
+	width: 100%;
 `
 
 export default Markets
-function useBalances() {
-	throw new Error('Function not implemented.')
-}
-
-function usePrices() {
-	throw new Error('Function not implemented.')
-}
-
