@@ -10,7 +10,6 @@ import { decimate } from '../../utils/numberFormat'
 export type Balance = {
   address: string
   symbol: string
-  decimals: number
   balance: number
 }
 
@@ -48,7 +47,6 @@ export const useAccountBalances = (): Balance[] => {
       Object.keys(multicallResults).map((address) => ({
         address,
         symbol: multicallResults[address][0].values[0],
-        decimals: multicallResults[address][1].values[0],
         balance: decimate(
           multicallResults[address][2].values[0].hex,
           multicallResults[address][1].values[0],
@@ -88,7 +86,6 @@ export const useSupplyBalances = (): Balance[] => {
             contract,
             calls: [
               { method: 'symbol' },
-              { method: 'decimals' },
               { method: 'balanceOf', params: [account] },
             ],
           })),
@@ -100,10 +97,11 @@ export const useSupplyBalances = (): Balance[] => {
       Object.keys(multicallResults).map((address) => ({
         address,
         symbol: multicallResults[address][0].values[0],
-        decimals: multicallResults[address][1].values[0],
         balance: decimate(
-          multicallResults[address][2].values[0].hex,
-          multicallResults[address][1].values[0],
+          multicallResults[address][1].values[0].hex,
+          Config.markets.find(
+            (market) => market.marketAddresses[Config.networkId] === address,
+          ).decimals, // use underlying decimals
         ).toNumber(),
       })),
     )
@@ -140,7 +138,6 @@ export const useBorrowBalances = (): Balance[] => {
             contract,
             calls: [
               { method: 'symbol' },
-              { method: 'decimals' },
               { method: 'borrowBalanceStored', params: [account] },
             ],
           })),
@@ -152,10 +149,11 @@ export const useBorrowBalances = (): Balance[] => {
       Object.keys(multicallResults).map((address) => ({
         address,
         symbol: multicallResults[address][0].values[0],
-        decimals: multicallResults[address][1].values[0],
         balance: decimate(
-          multicallResults[address][2].values[0].hex,
-          multicallResults[address][1].values[0],
+          multicallResults[address][1].values[0].hex,
+          Config.markets.find(
+            (market) => market.marketAddresses[Config.networkId] === address,
+          ).decimals, // use underlying decimals
         ).toNumber(),
       })),
     )
