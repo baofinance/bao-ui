@@ -52,17 +52,9 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
     const usdSupply = Object.entries(supplyBalances).reduce(
       (prev: number, [, { address, balance }]) => {
-        const underlying = Config.markets.find(
-          (market) =>
-            market.marketAddresses[Config.networkId].toLowerCase() ===
-            address.toLowerCase(),
-        )
         return (
           prev +
-          decimate(
-            balance,
-            underlying.decimals /* Might reference decimals of synth token */,
-          ).toNumber() *
+          balance *
             decimate(exchangeRates[address]).toNumber() *
             prices[address]
         )
@@ -71,29 +63,15 @@ export const useAccountLiquidity = (): AccountLiquidity => {
     )
 
     const usdBorrow = Object.entries(borrowBalances).reduce(
-      (prev: number, [, { address, balance }]) => {
-        const underlying = Config.markets.find(
-          (market) => market.marketAddresses[Config.networkId] === address,
-        )
-        return (
-          prev +
-          decimate(
-            balance,
-            underlying.decimals /* Might reference decimals of synth token */,
-          ).toNumber() *
-            prices[address]
-        )
-      },
+      (prev: number, [, { address, balance }]) =>
+        prev + balance * prices[address],
       0,
     )
 
     const supplyApy = markets.reduce(
-      (prev, { token, supplyApy, decimals }: SupportedMarket) =>
+      (prev, { token, supplyApy }: SupportedMarket) =>
         prev +
-        decimate(
-          supplyBalances.find((balance) => balance.address === token).balance,
-          decimals, // ? Might need underlying decimals here
-        ).toNumber() *
+        supplyBalances.find((balance) => balance.address === token).balance *
           decimate(exchangeRates[token]).toNumber() *
           prices[token] *
           (supplyApy || 1),
@@ -101,12 +79,9 @@ export const useAccountLiquidity = (): AccountLiquidity => {
     )
 
     const borrowApy = markets.reduce(
-      (prev: number, { token, supplyApy, decimals }: SupportedMarket) =>
+      (prev: number, { token, supplyApy }: SupportedMarket) =>
         prev +
-        decimate(
-          borrowBalances.find((balance) => balance.address === token).balance,
-          decimals, // ? Might need underlying decimals here
-        ).toNumber() *
+        borrowBalances.find((balance) => balance.address === token).balance *
           prices[token] *
           (supplyApy || 1),
       0,
