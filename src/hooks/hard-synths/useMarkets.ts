@@ -6,7 +6,6 @@ import { provider } from 'web3-core'
 import { SupportedMarket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
-import { Market } from '../../contexts/Markets'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -20,7 +19,7 @@ const toApy = (rate: number) =>
 const useMarkets = () => {
   const { account }: { account: string; ethereum: provider } = useWallet()
   const bao = useBao()
-  const [markets, setMarkets] = useState<Market[] | undefined>()
+  const [markets, setMarkets] = useState<SupportedMarket[] | undefined>()
 
   const fetchMarkets = useCallback(async () => {
     const contracts: Contract[] = Config.markets.map(
@@ -112,7 +111,7 @@ const useMarkets = () => {
     const supplyApys: number[] = supplyRates.map((rate: number) => toApy(rate))
     const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
-    const markets: Market[] = contracts.map((contract, i) => {
+    const markets: SupportedMarket[] = contracts.map((contract, i) => {
       const marketConfig = Config.markets.find(
         (market) =>
           market.marketAddresses[Config.networkId] === contract.options.address,
