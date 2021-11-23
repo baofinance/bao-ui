@@ -4,7 +4,7 @@ import { useWallet } from 'use-wallet'
 import { useExchangeRates } from './useExchangeRates'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useMarkets } from './useMarkets'
-import { useAnchorPrices } from './usePrices'
+import { useMarketPrices } from './usePrices'
 import { decimate } from '../../utils/numberFormat'
 import { SupportedMarket } from '../../bao/lib/types'
 import Config from '../../bao/lib/config'
@@ -28,7 +28,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
   const supplyBalances = useSupplyBalances()
   const borrowBalances = useBorrowBalances()
   const { exchangeRates } = useExchangeRates()
-  const { prices: oraclePrices } = useAnchorPrices()
+  const { prices: oraclePrices } = useMarketPrices()
 
   const fetchAccountLiquidity = useCallback(async () => {
     const compAccountLiqudity = await bao

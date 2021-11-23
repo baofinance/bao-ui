@@ -42,7 +42,7 @@ export const usePrices = (): SWR & Prices => {
   }
 }
 
-export const useAnchorPrices = (): Prices => {
+export const useMarketPrices = (): Prices => {
   const bao = useBao()
   const [prices, setPrices] = useState<
     undefined | { [key: string]: { usd: number } }
