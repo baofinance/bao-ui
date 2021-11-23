@@ -6,7 +6,6 @@ import { provider } from 'web3-core'
 import { SupportedMarket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
-import { Market } from '../../contexts/Markets'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -17,10 +16,10 @@ export const DAYS_PER_YEAR = 365
 const toApy = (rate: number) =>
   (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100
 
-const useMarkets = () => {
+export const useMarkets = (): SupportedMarket[] | undefined => {
   const { account }: { account: string; ethereum: provider } = useWallet()
   const bao = useBao()
-  const [markets, setMarkets] = useState<Market[] | undefined>()
+  const [markets, setMarkets] = useState<SupportedMarket[] | undefined>()
 
   const fetchMarkets = useCallback(async () => {
     const contracts: Contract[] = Config.markets.map(
@@ -112,7 +111,7 @@ const useMarkets = () => {
     const supplyApys: number[] = supplyRates.map((rate: number) => toApy(rate))
     const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
-    const markets: Market[] = contracts.map((contract, i) => {
+    const markets: SupportedMarket[] = contracts.map((contract, i) => {
       const marketConfig = Config.markets.find(
         (market) =>
           market.marketAddresses[Config.networkId] === contract.options.address,
@@ -146,4 +145,29 @@ const useMarkets = () => {
   return markets
 }
 
-export default useMarkets
+export const useAccountMarkets = (): SupportedMarket[] | undefined => {
+  const bao = useBao()
+  const markets = useMarkets()
+  const { account }: { account: string } = useWallet()
+
+  const [accountMarkets, setAccountMarkets] = useState<SupportedMarket[] | undefined>()
+
+  const fetchAccountMarkets = useCallback(async () => {
+    const comptroller = bao.getContract('comptroller')
+    const _accountMarkets = await comptroller.methods.getAssetsIn(account).call()
+
+    setAccountMarkets(
+      _accountMarkets.map((address: string) =>
+        markets.find(({ token }) => token === address)
+      )
+    )
+  }, [bao, markets, account])
+
+  useEffect(() => {
+    if (!(bao && markets && account)) return
+
+    fetchAccountMarkets()
+  }, [bao, markets, account])
+
+  return accountMarkets
+}
