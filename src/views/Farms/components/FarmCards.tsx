@@ -164,7 +164,7 @@ const FarmCards: React.FC = () => {
 						) : (
 							<StyledLoadingWrapper>
 								Experiencing long load times? Consider changing to Polygon's unified RPC,{' '}
-								<a href={"https://polygon-rpc.com"}>https://polygon-rpc.com</a>
+								<ExternalLink href={"https://polygon-rpc.com"}>https://polygon-rpc.com</ExternalLink>
 								<br />
 								<br />
 								<SpinnerLoader block />

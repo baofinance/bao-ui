@@ -1,7 +1,14 @@
+import { SupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import { ModalProps } from 'components/Modal'
-import NewModal from 'components/NewModal'
+import NewModal, { NewModalProps } from 'components/NewModal'
+import { Market } from 'contexts/Markets'
+import { BigNumber } from 'ethers/lib/ethers'
+import { formatUnits } from 'ethers/lib/utils'
+import { useAccountBalances, useSupplyBalances } from 'hooks/hard-synths/useBalances'
+import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
+import { useMarketPrices } from 'hooks/hard-synths/usePrices'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { MarketButton } from './MarketButton'
@@ -13,14 +20,66 @@ export enum MarketOperations {
 	repay = 'Repay',
 }
 
+type MarketModalProps = NewModalProps & {
+}
+
 const MarketModal = ({
-	onDismiss,
 	operations,
-}: ModalProps & { operations: MarketOperations[] }) => {
+}: MarketModalProps & { operations: MarketOperations[] }) => {
 
 	const [val, setVal] = useState('')
 	const [operation, setOperation] = useState(operations[0])
 	const [amount, setAmount] = useState<string>('')
+	const balances = useAccountBalances()
+	const supplyBalances = useSupplyBalances()
+	const { prices } = useMarketPrices()
+	const { useBorrowable } = useAccountLiquidity()
+	const { exchangeRates } = useExchangeRates()
+
+	// const max = () => {
+	// 	switch (operation) {
+	// 		case MarketOperations.supply:
+	// 			return balances
+	// 				? parseFloat(formatUnits(balances[asset.underlying], asset.decimals))
+	// 				: 0
+	// 		case MarketOperations.withdraw:
+	// 			const supply =
+	// 				supplyBalances && exchangeRates
+	// 					? parseFloat(formatUnits(supplyBalances[asset.token], asset.decimals)) *
+	// 					parseFloat(formatUnits(exchangeRates[asset.token]))
+	// 					: 0
+	// 			const withdrawable = prices
+	// 				? usdBorrowable /
+	// 				(asset.collateralFactor *
+	// 					parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.decimals))))
+	// 				: 0
+	// 			return !usdBorrowable || withdrawable > supply ? supply : withdrawable
+	// 		case MarketOperations.borrow:
+	// 			return prices && usdBorrowable
+	// 				? usdBorrowable /
+	// 				parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.decimals)))
+	// 				: 0
+	// 		case MarketOperations.repay:
+	// 			return balances
+	// 				? parseFloat(formatUnits(balances[asset.underlying || 'ETH'], asset.decimals))
+	// 				: 0
+	// 	}
+	// }
+
+	
+	// const maxLabel = () => {
+	// 	switch (operation) {
+	// 	  case MarketOperations.supply:
+	// 		return 'Wallet'
+	// 	  case MarketOperations.withdraw:
+	// 		return 'Withdrawable'
+	// 	  case MarketOperations.borrow:
+	// 		return 'Borrowable'
+	// 	  case MarketOperations.repay:
+	// 		return 'Wallet'
+	// 	}
+	//   }
+
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -182,3 +241,7 @@ const IconFlex = styled.div`
 		height: 1.25rem;
 	}
 `
+function useAccountLiquidity(): { useBorrowable: any } {
+	throw new Error('Function not implemented.')
+}
+

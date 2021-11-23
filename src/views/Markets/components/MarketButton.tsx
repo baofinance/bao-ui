@@ -54,7 +54,6 @@ const SubmitButton = styled.button`
     line-height: 1.2;
     font-weight: ${(props) => props.theme.fontWeight.medium};
     transition-property: all;
-    transition-duration: 200ms;
     height: 2.5rem;
     min-width: 2.5rem;
     font-size: 13px;
@@ -70,52 +69,17 @@ const SubmitButton = styled.button`
     color: ${(props) => props.theme.color.text[100]};
     opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: .6s;
+	transition: .5s;
 	overflow: hidden;
 
     &:focus {
 		outline: 0;
 	}
 
-	&:before{
-		content: '';
-		display: block;
-		position: absolute;
-		background: ${(props) => props.theme.color.transparent[300]};
-		width: 60px;
-		height: 100%;
-		left: 0;
-		top: 0;
-		opacity: .5;
-		filter: blur(30px);
-		transform: translateX(-100px)  skewX(-15deg);
-	  }
-	  &:after{
-		content: '';
-		display: block;
-		position: absolute;
-		background: ${(props) => props.theme.color.transparent[200]};
-		width: 30px;
-		height: 100%;
-		left: 30px;
-		top: 0;
-		opacity: 0;
-		filter: blur(5px);
-		transform: translateX(-100px) skewX(-15deg);
-	  }
 	  &:hover{
-		background: ${(props) => props.theme.color.primary[100]};
+		background: ${(props) => props.theme.color.primary[200]};
+		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		cursor: pointer;
-		&:before{
-		  transform: translateX(500px)  skewX(-15deg);  
-		  opacity: 0.6;
-		  transition: .7s;
-		}
-		&:after{
-		  transform: translateX(500px) skewX(-15deg);  
-		  opacity: 1;
-		  transition: .7s;
-		}
 	  }
 	}
 

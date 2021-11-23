@@ -56,6 +56,8 @@ export const StyledCards = styled.div`
 export const StyledLoadingWrapper = styled.div`
   align-items: center;
   justify-content: center;
+  text-align: center;
+  color: ${(props) => props.theme.color.text[200]};
 `
 
 export const StyledCardWrapper = styled.div`

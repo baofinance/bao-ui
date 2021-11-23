@@ -42,9 +42,14 @@ export const Overview: React.FC = () => {
 }
 
 export const Supply: React.FC = () => {
-	const [modalAsset, setModalAsset] = useState<Market>()
-	const [handleSupply] = useModal(<MarketSupplyModal />)
+	// const [modalAsset, setModalAsset] = useState<Market>()
+	// const { isOpen, onOpen, onClose } = useDisclosure()
 
+	// const handleSupply = (asset: Market) => {
+	// 	setModalAsset(asset)
+	// 	onOpen()
+	//   }
+	  
 	const balances = useAccountBalances()
 	const markets = useMarkets()
 

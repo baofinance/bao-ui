@@ -146,7 +146,7 @@ export const AssetImage = styled(BasketImage)`
   margin: 0 0 -${(props) => props.theme.spacing[3]}px -${(props) =>
       props.theme.spacing[3]}px;
   vertical-align: super;
-  transition: 200ms;
+  transition: .5s;
   user-select: none;
   -webkit-user-drag: none;
 

@@ -48,7 +48,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 	width: 50px;
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: .2s;
+	transition: .5s;
 	overflow: hidden;
 
 	&:focus {

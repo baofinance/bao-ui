@@ -75,3 +75,23 @@ a:focus {
   background-color: #50251c;
   color: #fff;
 }
+
+.buttonActive {
+  color: #50251c;
+  background-color: #efeae7;
+  box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
+  border: none;
+}
+
+.buttonActive:hover {
+  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  color: #f57d14;
+  background-color: #efeae7;
+}
+
+.buttonInactive {
+  color: #ce6509;
+  background-color: #e7dfda;
+  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  border: none;
+}
