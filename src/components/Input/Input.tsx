@@ -7,12 +7,6 @@ export interface InputProps {
 	value: string
 }
 
-export const Input: React.FC<InputProps> = ({ onChange, placeholder, value }) => {
-	return (
-			<StyledInput />
-	)
-}
-
 export interface BasketInputProps extends InputProps {
 	endAdornment?: React.ReactNode
 	startAdornment?: React.ReactNode
@@ -49,32 +43,29 @@ const BasketInputWrapper = styled.div`
 `
 
 const StyledInput = styled.input`
-    width: 100%;
-    min-width: 0px;
-    outline-offset: 2px;
-    position: relative;
-    appearance: none;
-    transition-property: all;
-    transition-duration: 200ms;
-    font-size: 1.125rem;
-    padding-inline-start: 1rem;
-    padding-inline-end: 1rem;
-    height: 2.5rem;
-    text-align: end;
-    font-weight: ${(props) => props.theme.fontWeight.medium};
-    padding-top: ;
-    padding-bottom: ;
-    padding-left: ;
-    padding-right: .5rem;
-    outline: transparent solid 2px;
-    border-radius: 8px;
-    border-style: solid;
-    border-image: initial;
-    border-color: inherit;
+	width: 100%;
+	min-width: 0px;
+	outline-offset: 2px;
+	position: relative;
+	appearance: none;
+	transition-property: all;
+	transition-duration: 200ms;
+	font-size: 1.125rem;
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	height: 2.5rem;
+	text-align: end;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	padding-right: 0.5rem;
+	outline: transparent solid 2px;
+	border-radius: 8px;
+	border-style: solid;
+	border-image: initial;
+	border-color: inherit;
 	color: ${(props) => props.theme.color.text[100]};
 	background: none;
-    background-color: transparent;
-    border-width: 0px;
+	background-color: transparent;
+	border-width: 0px;
 `
 
 export default BasketInput
@@ -93,7 +84,7 @@ export const BalanceInput = ({
 	<BalanceInputContainer>
 		<BalanceInputWrapper>
 			<BalanceInputMax onClick={onMaxClick}>MAX</BalanceInputMax>
-			<Input value={value} onChange={onChange} placeholder="0" />
+			<StyledInput value={value} onChange={onChange} placeholder="0" />
 		</BalanceInputWrapper>
 		{typeof label === 'string' ? <p>{label}</p> : label}
 	</BalanceInputContainer>
