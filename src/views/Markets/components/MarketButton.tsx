@@ -2,7 +2,7 @@ import { MarketOperations } from './Modals'
 import styled from 'styled-components'
 import React from 'react'
 import { SupportedMarket } from 'bao/lib/types'
-import { BigNumber } from 'ethers'
+import BigNumber from 'bignumber.js'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -92,8 +92,6 @@ const SubmitButton = styled.button`
 	&:focus,
 	&:active {
 		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
-		cursor: ${(props) =>
-			props.disabled ? 'not-allowed' : 'pointer'} !important;
+		cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')} !important;
 	}
-}
 `

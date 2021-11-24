@@ -23,15 +23,15 @@ export const Table = ({ columns, items, onClick }: TableProps) => (
 	<MarketTableContainer>
 		<MarketTable>
 			<TableHeader>
-					{columns.map(({ header }: Column, i) => (
-						<Fragment key={i}>{header}</Fragment>
-					))}
+				{columns.map(({ header }: Column, i) => (
+					<Fragment key={i}>{header}</Fragment>
+				))}
 			</TableHeader>
 			{items?.map((item, i) => (
 				<ItemContainer key={i}>
-						{columns.map(({ value }, j) => (
-							<Fragment key={j}>{value(item, i)}</Fragment>
-						))}
+					{columns.map(({ value }, j) => (
+						<Fragment key={j}>{value(item, i)}</Fragment>
+					))}
 				</ItemContainer>
 			))}
 		</MarketTable>

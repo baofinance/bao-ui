@@ -1,18 +1,21 @@
+import React, { useCallback, useState } from 'react'
 import { SupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import NewModal, { NewModalProps } from 'components/NewModal'
-import { BigNumber } from 'ethers/lib/ethers'
-import { parseUnits } from 'ethers/lib/utils'
-import { useAccountBalances, useSupplyBalances } from 'hooks/hard-synths/useBalances'
+import {
+	useAccountBalances,
+	useSupplyBalances,
+} from 'hooks/hard-synths/useBalances'
+import { useAccountLiquidity } from '../../../hooks/hard-synths/useAccountLiquidity'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useMarketPrices } from 'hooks/hard-synths/usePrices'
 import useBao from 'hooks/useBao'
-import React, { useCallback, useState } from 'react'
+import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-
+import { decimate } from '../../../utils/numberFormat'
 export enum MarketOperations {
 	supply = 'Supply',
 	withdraw = 'Withdraw',
@@ -29,46 +32,53 @@ const MarketModal = ({
 	operations,
 	asset,
 }: MarketModalProps & { operations: MarketOperations[] }) => {
-
 	const [operation, setOperation] = useState(operations[0])
 	const [val, setVal] = useState<string>('')
 	const bao = useBao()
 	const balances = useAccountBalances()
 	const supplyBalances = useSupplyBalances()
 	const { prices } = useMarketPrices()
-	const usdBorrowable = useAccountLiquidity()
+	const { usdBorrowable } = useAccountLiquidity()
 	const { exchangeRates } = useExchangeRates()
 
 	const max = () => {
 		switch (operation) {
 			case MarketOperations.supply:
 				return balances
-					? (balances[asset.underlying], asset.decimals)
+					? balances.find((_balance) => _balance.address === asset.underlying)
+							.balance
 					: 0
 			case MarketOperations.withdraw:
 				const supply =
 					supplyBalances && exchangeRates
-						? (supplyBalances[asset.token], asset.decimals) *
-						(exchangeRates[asset.token])
+						? balances.find((_balance) => _balance.address === asset.token)
+								.balance * exchangeRates[asset.token].toNumber()
 						: 0
 				const withdrawable = prices
 					? usdBorrowable /
-					(asset.collateralFactor *
-						(prices[asset.token], BigNumber.from(36).sub(asset.decimals)))
+					  (asset.collateralFactor *
+							decimate(
+								prices[asset.token],
+								new BigNumber(36).minus(asset.decimals),
+							).toNumber())
 					: 0
 				return !usdBorrowable || withdrawable > supply ? supply : withdrawable
 			case MarketOperations.borrow:
 				return prices && usdBorrowable
 					? usdBorrowable /
-					(prices[asset.token], BigNumber.from(36).sub(asset.decimals))
+							decimate(
+								prices[asset.token],
+								new BigNumber(36).minus(asset.decimals),
+							).toNumber()
 					: 0
 			case MarketOperations.repay:
 				return balances
-					? (balances[asset.underlying || 'ETH'], asset.decimals)
+					? balances.find(
+							(balances) => balances.address === asset.underlying || 'ETH',
+					  ).balance
 					: 0
 		}
 	}
-
 
 	const maxLabel = () => {
 		switch (operation) {
@@ -82,7 +92,6 @@ const MarketModal = ({
 				return 'Wallet'
 		}
 	}
-
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -105,12 +114,20 @@ const MarketModal = ({
 					<p>{asset.symbol}</p>
 				</HeaderWrapper>
 			}
-			footer={<MarketButton
-				operation={operation}
-				asset={asset}
-				val={val && !isNaN(val as any) ? parseUnits(val, asset.decimals) : BigNumber.from(0)}
-				isDisabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max()}
-			/>}
+			footer={
+				<MarketButton
+					operation={operation}
+					asset={asset}
+					val={
+						val && !isNaN(val as any)
+							? decimate(val, asset.decimals)
+							: new BigNumber(0)
+					}
+					isDisabled={
+						!val || !bao || isNaN(val as any) || parseFloat(val) > max()
+					}
+				/>
+			}
 		>
 			<ModalStack>
 				<NavButtons
@@ -122,14 +139,18 @@ const MarketModal = ({
 					<LabelFlex>
 						<LabelStack>
 							<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
-							<AssetLabel>{`${Math.floor(max() * 1e8) / 1e8} ${asset.symbol}`}</AssetLabel>
+							<AssetLabel>
+								{`${Math.floor(max() * 1e8) / 1e8} ${asset.symbol}`}
+							</AssetLabel>
 						</LabelStack>
 					</LabelFlex>
 
 					<BalanceInput
 						value={val}
 						onChange={handleChange}
-						onMaxClick={() => setVal((Math.floor(max() * 1e8) / 1e8).toString())}
+						onMaxClick={() =>
+							setVal((Math.floor(max() * 1e8) / 1e8).toString())
+						}
 						label={
 							<AssetStack>
 								<IconFlex>
@@ -262,7 +283,3 @@ const IconFlex = styled.div`
 		height: 1.25rem;
 	}
 `
-function useAccountLiquidity(): { useBorrowable: any } {
-	throw new Error('Function not implemented.')
-}
-
