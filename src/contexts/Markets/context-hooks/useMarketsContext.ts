@@ -46,7 +46,8 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       totalSupplies,
       exchangeRates,
       borrowState,
-      oraclePrices, // UNUSED
+      oraclePrices, // UNUSED,
+      underlyingSymbols,
     ]: any = await Promise.all([
       Promise.all(
         contracts.map((contract) =>
@@ -100,6 +101,17 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
           oracle.methods.getUnderlyingPrice(address).call(),
         ),
       ), // UNUSED
+      Promise.all(
+        addresses.map((address: string) => {
+          const underlyingAddress = Config.markets.find(
+            (market) => market.marketAddresses[Config.networkId] === address,
+          ).underlyingAddresses[Config.networkId]
+          return bao
+            .getNewContract('erc20.json', underlyingAddress)
+            .methods.symbol()
+            .call()
+        }),
+      ),
     ])
 
     /*
@@ -119,6 +131,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       return {
         token: contract.options.address,
         underlying: marketConfig.underlyingAddresses[Config.networkId],
+        underlyingSymbol: underlyingSymbols[i],
         supplyApy: supplyApys[i],
         borrowApy: borrowApys[i],
         borrowable: borrowState[i][1] > 0,

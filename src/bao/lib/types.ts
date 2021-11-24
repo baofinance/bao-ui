@@ -41,6 +41,7 @@ export interface SupportedMarket {
     [network: number]: string
   }
   symbol: string
+  underlyingSymbol?: string
   icon: string
   coingeckoId: string
   decimals: number

@@ -11,10 +11,10 @@ import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
 import { usePrices } from 'hooks/hard-synths/usePrices'
 import useBao from 'hooks/useBao'
-import useModal from 'hooks/useModal'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { SupportedMarket } from '../../../bao/lib/types'
+import { decimate } from '../../../utils/numberFormat'
 import { MarketSupplyModal } from './Modals'
 import {
 	Flex,
@@ -25,7 +25,9 @@ import {
 	MarketHeaderContainer,
 	MarketHeaderStack,
 	MarketHeaderSubText,
-	MarketHeaderText, MarketTableContainer, OverviewTableContainer
+	MarketHeaderText,
+	MarketTableContainer,
+	OverviewTableContainer
 } from './styles'
 
 export const Supply: React.FC = () => {
@@ -36,7 +38,7 @@ export const Supply: React.FC = () => {
 
 	const handleSupply = (asset: SupportedMarket) => {
 		setModalAsset(asset)
-		setModalShow(true)
+		console.log(asset)
 	}
 
 	const [modalShow, setModalShow] = React.useState(false)
@@ -118,8 +120,7 @@ export const Supply: React.FC = () => {
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
 					<MarketTableContainer>
-						<Table columns={columns} items={markets} onClick={handleSupply} />
-						{modalAsset && <MarketSupplyModal asset={modalAsset} onHide={() => setModalShow(false)} />}
+						<Table columns={columns} items={markets} onClick={() => handleSupply} />
 					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
@@ -225,7 +226,7 @@ export const Borrow = () => {
 export const Supplied: React.FC = () => {
 	const bao = useBao()
 	const markets = useMarkets()
-	const accountLiquidity = useAccountLiquidity()
+	// const accountLiquidity = useAccountLiquidity()
 	const balances = useSupplyBalances()
 	const { exchangeRates } = useExchangeRates()
 	const accountMarkets = useAccountMarkets()
@@ -242,7 +243,7 @@ export const Supplied: React.FC = () => {
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{market.symbol}</p>
+						<p>{market.underlyingSymbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -271,21 +272,20 @@ export const Supplied: React.FC = () => {
 					Balance
 				</HeaderWrapper>
 			),
-			value({ token, underlying, symbol }: SupportedMarket) {
+			value({ token, underlyingSymbol }: SupportedMarket) {
 				// underlying balance & symbol
 				const balanceRes =
 					balances &&
 					balances.find(
-						(balance) =>
-							balance.address.toLowerCase() === token.toLowerCase(),
+						(balance) => balance.address.toLowerCase() === token.toLowerCase(),
 					)
 				const balance = balanceRes ? balanceRes.balance : 0
-				const exchangeRate = exchangeRates[token]
+				const exchangeRate = decimate(exchangeRates[token])
 				const suppliedBalance = balance * exchangeRate.toNumber()
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${suppliedBalance.toFixed(2)} ${symbol}`}
+						{`${suppliedBalance.toFixed(2)} ${underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -328,6 +328,7 @@ export const Supplied: React.FC = () => {
 					columns={columns}
 					items={
 						markets &&
+						balances &&
 						markets.filter(
 							(market: SupportedMarket) =>
 								balances.find((balance) => balance.address === market.token) &&
