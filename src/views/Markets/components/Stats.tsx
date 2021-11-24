@@ -52,14 +52,14 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalance =
 		supplyBalances &&
 		supplyBalances.find(
-			(balance) =>
-				balance.address.toLowerCase() === asset.underlying.toLowerCase(),
+			(balance) => balance.address.toLowerCase() === asset.token.toLowerCase(),
 		) &&
+		exchangeRates &&
 		exchangeRates[asset.token]
 			? supplyBalances.find(
 					(balance) =>
-						balance.address.toLowerCase() === asset.underlying.toLowerCase(),
-			  ).balance * exchangeRates[asset.token].toNumber()
+						balance.address.toLowerCase() === asset.token.toLowerCase(),
+			  ).balance * decimate(exchangeRates[asset.token]).toNumber()
 			: 0
 
 	return (
@@ -72,7 +72,7 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Supply Balance',
-					value: `${Math.floor(supplyBalance * 1e8) / 1e8} ${asset.symbol}`,
+					value: `${supplyBalance.toFixed(2)} ${asset.underlyingSymbol}`,
 				},
 			]}
 		/>

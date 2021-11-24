@@ -123,7 +123,7 @@ const MarketModal = ({
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>
 						<img src={asset.icon} />
-						<p>{asset.symbol}</p>
+						<p>{asset.underlyingSymbol}</p>
 					</HeaderWrapper>
 				</Modal.Title>
 			</Modal.Header>
@@ -139,7 +139,7 @@ const MarketModal = ({
 							<LabelStack>
 								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
 								<AssetLabel>
-									{`${Math.floor(max() * 1e8) / 1e8} ${asset.symbol}`}
+									{`${Math.floor(max() * 1e8) / 1e8} ${asset.underlyingSymbol}`}
 								</AssetLabel>
 							</LabelStack>
 						</LabelFlex>
@@ -155,7 +155,7 @@ const MarketModal = ({
 									<IconFlex>
 										<img src={asset.icon} />
 									</IconFlex>
-									<p>{asset.symbol}</p>
+									<p>{asset.underlyingSymbol}</p>
 								</AssetStack>
 							}
 						/>
