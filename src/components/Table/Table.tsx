@@ -20,7 +20,6 @@ type TableProps = {
 }
 
 export const Table = ({ columns, items, onClick }: TableProps) => (
-	<MarketTableContainer>
 		<MarketTable>
 			<TableHeader>
 				{columns.map(({ header }: Column, i) => (
@@ -35,7 +34,6 @@ export const Table = ({ columns, items, onClick }: TableProps) => (
 				</ItemContainer>
 			))}
 		</MarketTable>
-	</MarketTableContainer>
 )
 
 export default Table

@@ -1,12 +1,11 @@
 import { getComptrollerContract } from 'bao/utils'
 import Table from 'components/Table'
-import Tooltipped from 'components/Tooltipped'
 import { commify } from 'ethers/lib/utils'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
-	useSupplyBalances,
+	useSupplyBalances
 } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
@@ -16,10 +15,6 @@ import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { SupportedMarket } from '../../../bao/lib/types'
 import {
-	BorrowLimit,
-	BorrowMeter,
-	BorrowMeterContainer,
-	BorrowText,
 	Flex,
 	HeaderWrapper,
 	ItemWrapper,
@@ -28,33 +23,8 @@ import {
 	MarketHeaderContainer,
 	MarketHeaderStack,
 	MarketHeaderSubText,
-	MarketHeaderText,
-	MarketHeaderWrapper,
-	MarketItemContainer,
-	MarketItemWrapper,
-	MarketSummary,
-	MarketSummaryHeader,
-	OverviewContainer,
-	OverviewHeader,
-	OverviewTableContainer,
+	MarketHeaderText, MarketTableContainer, OverviewTableContainer
 } from './styles'
-
-export const Overview: React.FC = () => {
-	return (
-		<OverviewContainer>
-			<OverviewHeader>
-				<BorrowLimit>
-					Borrow Limit <Tooltipped content={`Some info here.`} />
-				</BorrowLimit>
-				<BorrowText>0%</BorrowText>
-				<BorrowMeterContainer>
-					<BorrowMeter />
-				</BorrowMeterContainer>
-				<BorrowText>$0</BorrowText>
-			</OverviewHeader>
-		</OverviewContainer>
-	)
-}
 
 export const Supply: React.FC = () => {
 	// const [modalAsset, setModalAsset] = useState<Market>()
@@ -144,7 +114,9 @@ export const Supply: React.FC = () => {
 							</MarketHeader>
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
-					<Table columns={columns} items={markets} />
+					<MarketTableContainer>
+						<Table columns={columns} items={markets} />
+					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
 		</>
@@ -206,12 +178,12 @@ export const Borrow = () => {
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
 						{market.liquidity && prices
 							? `$${commify(
-									(
-										(market.liquidity *
-											(prices[market.coingeckoId]?.usd || 1)) /
-										1e6
-									).toFixed(2),
-							  )}M`
+								(
+									(market.liquidity *
+										(prices[market.coingeckoId]?.usd || 1)) /
+									1e6
+								).toFixed(2),
+							)}M`
 							: '-'}
 					</ItemWrapper>
 				)
@@ -237,7 +209,9 @@ export const Borrow = () => {
 							</MarketHeader>
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
-					<Table columns={columns} items={markets} />
+					<MarketTableContainer>
+						<Table columns={columns} items={markets} />
+					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
 		</>
@@ -260,18 +234,11 @@ export const Supplied: React.FC = () => {
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
 				// underlying symbol
-				const balanceRes =
-					balances &&
-					balances.find(
-						(balance) =>
-							balance.address.toLowerCase() === market.underlying.toLowerCase(),
-					)
-				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{symbol}</p>
+						<p>{market.symbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -306,7 +273,7 @@ export const Supplied: React.FC = () => {
 					balances &&
 					balances.find(
 						(balance) =>
-							balance.address.toLowerCase() === underlying.toLowerCase(),
+							balance.address.toLowerCase() === token.toLowerCase(),
 					)
 				const balance = balanceRes ? balanceRes.balance : 0
 				const exchangeRate = exchangeRates[token]
@@ -332,7 +299,7 @@ export const Supplied: React.FC = () => {
 				return (
 					// underlying balance & symbol
 					<ItemWrapper
-						style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+						style={{ justifyContent: 'center', textAlign: 'center' }}
 						onClick={(event: React.MouseEvent<HTMLElement>) => {
 							event.stopPropagation()
 							const contract = getComptrollerContract(bao)
@@ -362,48 +329,11 @@ export const Supplied: React.FC = () => {
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-									exchangeRates[market.token].toNumber() >=
-									0.01,
+								exchangeRates[market.token].toNumber() >=
+								0.01,
 						)
 					}
 				/>
-
-				<MarketSummary>
-					<MarketSummaryHeader>
-						<MarketHeaderWrapper
-							style={{
-								justifyContent: 'flex-start',
-								textAlign: 'start',
-							}}
-						>
-							Total Collateral
-						</MarketHeaderWrapper>
-						<MarketHeaderWrapper
-							style={{
-								justifyContent: 'flex-end',
-								textAlign: 'end',
-							}}
-						>
-							Net APY
-						</MarketHeaderWrapper>
-					</MarketSummaryHeader>
-					<MarketItemContainer>
-						<ItemWrapper
-							style={{ justifyContent: 'flex-start', textAlign: 'start' }}
-						>
-							{`$${
-								accountLiquidity
-									? commify(accountLiquidity.usdSupply.toFixed(2))
-									: 0
-							}`}
-						</ItemWrapper>
-						<MarketItemWrapper
-							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-						>
-							5.00%
-						</MarketItemWrapper>
-					</MarketItemContainer>
-				</MarketSummary>
 			</OverviewTableContainer>
 		</>
 	)
@@ -424,18 +354,11 @@ export const Borrowed: React.FC = () => {
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
 				// underlying symbol
-				const balanceRes =
-					balances &&
-					balances.find(
-						(balance) =>
-							balance.address.toLowerCase() === market.underlying.toLowerCase(),
-					)
-				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{symbol}</p>
+						<p>{market.symbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -470,13 +393,13 @@ export const Borrowed: React.FC = () => {
 					balances &&
 					balances.find(
 						(balance) =>
-							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+							balance.address.toLowerCase() === market.token.toLowerCase(),
 					)
-				const { balance, symbol } = balanceRes || { balance: 0, symbol: null }
+				const { balance } = balanceRes || { balance: 0, symbol: null }
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${balance.toFixed(2)} ${symbol}`}
+						{`${balance.toFixed(2)} ${market.symbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -494,50 +417,13 @@ export const Borrowed: React.FC = () => {
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-									exchangeRates[market.token].toNumber() >=
-									0.01,
+								exchangeRates[market.token].toNumber() >=
+								0.01,
 						)}
 					/>
 				) : (
 					<ItemWrapper> You don't have any borrowed assets. </ItemWrapper>
 				)}
-
-				<MarketSummary>
-					<MarketSummaryHeader>
-						<MarketHeaderWrapper
-							style={{
-								justifyContent: 'flex-start',
-								textAlign: 'start',
-							}}
-						>
-							Total Debt
-						</MarketHeaderWrapper>
-						<MarketHeaderWrapper
-							style={{
-								justifyContent: 'flex-end',
-								textAlign: 'end',
-							}}
-						>
-							Net APR
-						</MarketHeaderWrapper>
-					</MarketSummaryHeader>
-					<MarketItemContainer>
-						<ItemWrapper
-							style={{ justifyContent: 'flex-start', textAlign: 'start' }}
-						>
-							{`$${
-								accountLiquidity
-									? commify(accountLiquidity.usdBorrow.toFixed(2))
-									: 0
-							}`}
-						</ItemWrapper>
-						<MarketItemWrapper
-							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-						>
-							5.00%
-						</MarketItemWrapper>
-					</MarketItemContainer>
-				</MarketSummary>
 			</OverviewTableContainer>
 		</>
 	)

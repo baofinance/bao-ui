@@ -7,10 +7,10 @@ import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
+import { Overview } from './components/Overview'
 import {
 	Borrow,
 	Borrowed,
-	Overview,
 	Supplied,
 	Supply,
 } from './components/Tables'
