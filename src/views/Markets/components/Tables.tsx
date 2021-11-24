@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { getComptrollerContract } from 'bao/utils'
 import Table from 'components/Table'
 import { commify } from 'ethers/lib/utils'
@@ -5,15 +6,15 @@ import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
-	useSupplyBalances
+	useSupplyBalances,
 } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
 import { usePrices } from 'hooks/hard-synths/usePrices'
 import useBao from 'hooks/useBao'
-import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { SupportedMarket } from '../../../bao/lib/types'
+import { decimate } from '../../../utils/numberFormat'
 import {
 	Flex,
 	HeaderWrapper,
@@ -23,7 +24,9 @@ import {
 	MarketHeaderContainer,
 	MarketHeaderStack,
 	MarketHeaderSubText,
-	MarketHeaderText, MarketTableContainer, OverviewTableContainer
+	MarketHeaderText,
+	MarketTableContainer,
+	OverviewTableContainer,
 } from './styles'
 
 export const Supply: React.FC = () => {
@@ -178,12 +181,12 @@ export const Borrow = () => {
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
 						{market.liquidity && prices
 							? `$${commify(
-								(
-									(market.liquidity *
-										(prices[market.coingeckoId]?.usd || 1)) /
-									1e6
-								).toFixed(2),
-							)}M`
+									(
+										(market.liquidity *
+											(prices[market.coingeckoId]?.usd || 1)) /
+										1e6
+									).toFixed(2),
+							  )}M`
 							: '-'}
 					</ItemWrapper>
 				)
@@ -221,7 +224,7 @@ export const Borrow = () => {
 export const Supplied: React.FC = () => {
 	const bao = useBao()
 	const markets = useMarkets()
-	const accountLiquidity = useAccountLiquidity()
+	// const accountLiquidity = useAccountLiquidity()
 	const balances = useSupplyBalances()
 	const { exchangeRates } = useExchangeRates()
 	const accountMarkets = useAccountMarkets()
@@ -238,7 +241,7 @@ export const Supplied: React.FC = () => {
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{market.symbol}</p>
+						<p>{market.underlyingSymbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -267,21 +270,20 @@ export const Supplied: React.FC = () => {
 					Balance
 				</HeaderWrapper>
 			),
-			value({ token, underlying, symbol }: SupportedMarket) {
+			value({ token, underlyingSymbol }: SupportedMarket) {
 				// underlying balance & symbol
 				const balanceRes =
 					balances &&
 					balances.find(
-						(balance) =>
-							balance.address.toLowerCase() === token.toLowerCase(),
+						(balance) => balance.address.toLowerCase() === token.toLowerCase(),
 					)
 				const balance = balanceRes ? balanceRes.balance : 0
-				const exchangeRate = exchangeRates[token]
+				const exchangeRate = decimate(exchangeRates[token])
 				const suppliedBalance = balance * exchangeRate.toNumber()
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${suppliedBalance.toFixed(2)} ${symbol}`}
+						{`${suppliedBalance.toFixed(2)} ${underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -324,13 +326,14 @@ export const Supplied: React.FC = () => {
 					columns={columns}
 					items={
 						markets &&
+						balances &&
 						markets.filter(
 							(market: SupportedMarket) =>
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-								exchangeRates[market.token].toNumber() >=
-								0.01,
+									exchangeRates[market.token].toNumber() >=
+									0.01,
 						)
 					}
 				/>
