@@ -68,18 +68,24 @@ const MarketModal = ({
 			case MarketOperations.withdraw:
 				const supply =
 					supplyBalances && exchangeRates
-						? balances.find((_balance) => _balance.address === asset.token)
-								.balance * exchangeRates[asset.token].toNumber()
+						? supplyBalances.find(
+								(_balance) =>
+									_balance.address.toLowerCase() === asset.token.toLowerCase(),
+						  ).balance * exchangeRates[asset.token].toNumber()
 						: 0
-				const withdrawable = prices
-					? accountLiquidity.usdBorrowable /
-					  (asset.collateralFactor *
-							decimate(
-								prices[asset.token],
-								new BigNumber(36).minus(asset.decimals),
-							).toNumber())
-					: 0
-				return !accountLiquidity.usdBorrowable || withdrawable > supply ? supply : withdrawable
+				const withdrawable =
+					prices && accountLiquidity
+						? accountLiquidity.usdBorrowable /
+						  (asset.collateralFactor *
+								decimate(
+									prices[asset.token],
+									new BigNumber(36).minus(asset.decimals),
+								).toNumber())
+						: 0
+				return !(accountLiquidity && accountLiquidity.usdBorrowable) ||
+					withdrawable > supply
+					? supply
+					: withdrawable
 			case MarketOperations.borrow:
 				return prices && accountLiquidity.usdBorrowable
 					? accountLiquidity.usdBorrowable /
