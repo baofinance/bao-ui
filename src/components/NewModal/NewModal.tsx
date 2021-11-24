@@ -2,27 +2,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import styled from 'styled-components'
 import { CloseButton } from 'views/Basket/components/styles'
+import { Modal as MarketModal } from 'react-bootstrap'
 
 export interface NewModalProps {
+	isOpen?: boolean
 	onDismiss?: () => void
 	children?: React.ReactNode
 	header?: React.ReactNode
 	footer?: React.ReactNode
 }
 
-const NewModal: React.FC<NewModalProps> = ({ onDismiss, children, header, footer }) => {
+const NewModal: React.FC<NewModalProps> = ({ onDismiss, isOpen, children, header, footer }) => {
 
 	return (
+		<MarketModal onDismiss={onDismiss} isOpen={isOpen}>
 		<ModalContainer>
 			<ModalContent>
-				<CloseButton onClick={onDismiss}>
-					<FontAwesomeIcon icon="window-close" />
-				</CloseButton>
 				<ModalHeader>{header}</ModalHeader>
 				<ModalBody>{children}</ModalBody>
 				<ModalFooter>{footer}</ModalFooter>
 			</ModalContent>
 		</ModalContainer>
+		</MarketModal>
 	)
 }
 

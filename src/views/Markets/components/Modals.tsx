@@ -1,17 +1,17 @@
 import { SupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
-import { ModalProps } from 'components/Modal'
 import NewModal, { NewModalProps } from 'components/NewModal'
-import { Market } from 'contexts/Markets'
 import { BigNumber } from 'ethers/lib/ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { parseUnits } from 'ethers/lib/utils'
 import { useAccountBalances, useSupplyBalances } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useMarketPrices } from 'hooks/hard-synths/usePrices'
+import useBao from 'hooks/useBao'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { MarketButton } from './MarketButton'
+import { MarketStats } from './Stats'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -21,82 +21,96 @@ export enum MarketOperations {
 }
 
 type MarketModalProps = NewModalProps & {
+	asset: SupportedMarket
 }
 
 const MarketModal = ({
+	onDismiss,
 	operations,
+	asset,
 }: MarketModalProps & { operations: MarketOperations[] }) => {
 
-	const [val, setVal] = useState('')
 	const [operation, setOperation] = useState(operations[0])
-	const [amount, setAmount] = useState<string>('')
+	const [val, setVal] = useState<string>('')
+	const bao = useBao()
 	const balances = useAccountBalances()
 	const supplyBalances = useSupplyBalances()
 	const { prices } = useMarketPrices()
-	const { useBorrowable } = useAccountLiquidity()
+	const usdBorrowable = useAccountLiquidity()
 	const { exchangeRates } = useExchangeRates()
 
-	// const max = () => {
-	// 	switch (operation) {
-	// 		case MarketOperations.supply:
-	// 			return balances
-	// 				? parseFloat(formatUnits(balances[asset.underlying], asset.decimals))
-	// 				: 0
-	// 		case MarketOperations.withdraw:
-	// 			const supply =
-	// 				supplyBalances && exchangeRates
-	// 					? parseFloat(formatUnits(supplyBalances[asset.token], asset.decimals)) *
-	// 					parseFloat(formatUnits(exchangeRates[asset.token]))
-	// 					: 0
-	// 			const withdrawable = prices
-	// 				? usdBorrowable /
-	// 				(asset.collateralFactor *
-	// 					parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.decimals))))
-	// 				: 0
-	// 			return !usdBorrowable || withdrawable > supply ? supply : withdrawable
-	// 		case MarketOperations.borrow:
-	// 			return prices && usdBorrowable
-	// 				? usdBorrowable /
-	// 				parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.decimals)))
-	// 				: 0
-	// 		case MarketOperations.repay:
-	// 			return balances
-	// 				? parseFloat(formatUnits(balances[asset.underlying || 'ETH'], asset.decimals))
-	// 				: 0
-	// 	}
-	// }
+	const max = () => {
+		switch (operation) {
+			case MarketOperations.supply:
+				return balances
+					? (balances[asset.underlying], asset.decimals)
+					: 0
+			case MarketOperations.withdraw:
+				const supply =
+					supplyBalances && exchangeRates
+						? (supplyBalances[asset.token], asset.decimals) *
+						(exchangeRates[asset.token])
+						: 0
+				const withdrawable = prices
+					? usdBorrowable /
+					(asset.collateralFactor *
+						(prices[asset.token], BigNumber.from(36).sub(asset.decimals)))
+					: 0
+				return !usdBorrowable || withdrawable > supply ? supply : withdrawable
+			case MarketOperations.borrow:
+				return prices && usdBorrowable
+					? usdBorrowable /
+					(prices[asset.token], BigNumber.from(36).sub(asset.decimals))
+					: 0
+			case MarketOperations.repay:
+				return balances
+					? (balances[asset.underlying || 'ETH'], asset.decimals)
+					: 0
+		}
+	}
 
-	
-	// const maxLabel = () => {
-	// 	switch (operation) {
-	// 	  case MarketOperations.supply:
-	// 		return 'Wallet'
-	// 	  case MarketOperations.withdraw:
-	// 		return 'Withdrawable'
-	// 	  case MarketOperations.borrow:
-	// 		return 'Borrowable'
-	// 	  case MarketOperations.repay:
-	// 		return 'Wallet'
-	// 	}
-	//   }
+
+	const maxLabel = () => {
+		switch (operation) {
+			case MarketOperations.supply:
+				return 'Wallet'
+			case MarketOperations.withdraw:
+				return 'Withdrawable'
+			case MarketOperations.borrow:
+				return 'Borrowable'
+			case MarketOperations.repay:
+				return 'Wallet'
+		}
+	}
 
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
+			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
 		},
 		[setVal],
 	)
 
+	const handleDismiss = () => {
+		setVal('')
+		onDismiss()
+	}
+
 	return (
 		<NewModal
+			onDismiss={handleDismiss}
 			header={
 				<HeaderWrapper>
-					<img src="USDC.png" />
-					<p>USDC</p>
+					<img src={asset.icon} />
+					<p>{asset.symbol}</p>
 				</HeaderWrapper>
 			}
-			footer={<MarketButton operation={operation} />}
+			footer={<MarketButton
+				operation={operation}
+				asset={asset}
+				val={val && !isNaN(val as any) ? parseUnits(val, asset.decimals) : BigNumber.from(0)}
+				isDisabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max()}
+			/>}
 		>
 			<ModalStack>
 				<NavButtons
@@ -107,38 +121,45 @@ const MarketModal = ({
 				<InputStack>
 					<LabelFlex>
 						<LabelStack>
-							<MaxLabel>Wallet:</MaxLabel>
-							<AssetLabel>500.000 USDC</AssetLabel>
+							<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
+							<AssetLabel>{`${Math.floor(max() * 1e8) / 1e8} ${asset.symbol}`}</AssetLabel>
 						</LabelStack>
 					</LabelFlex>
 
 					<BalanceInput
-						value={amount}
+						value={val}
 						onChange={handleChange}
-						onMaxClick={() => setAmount}
+						onMaxClick={() => setVal((Math.floor(max() * 1e8) / 1e8).toString())}
 						label={
 							<AssetStack>
 								<IconFlex>
-									<img src="USDC.png" />
+									<img src={asset.icon} />
 								</IconFlex>
-								<p>USDC</p>
+								<p>{asset.symbol}</p>
 							</AssetStack>
 						}
 					/>
 				</InputStack>
+				<MarketStats operation={operation} asset={asset} amount={val} />
 			</ModalStack>
 		</NewModal>
 	)
 }
 
-export const MarketSupplyModal = ({ }: ModalProps) => (
+export const MarketSupplyModal = ({ onDismiss, asset }: MarketModalProps) => (
 	<MarketModal
 		operations={[MarketOperations.supply, MarketOperations.withdraw]}
+		asset={asset}
+		onDismiss={onDismiss}
 	/>
 )
 
-export const MarketBorrowModal = ({ }: ModalProps) => (
-	<MarketModal operations={[MarketOperations.borrow, MarketOperations.repay]} />
+export const MarketBorrowModal = ({ onDismiss, asset }: MarketModalProps) => (
+	<MarketModal
+		operations={[MarketOperations.borrow, MarketOperations.repay]}
+		asset={asset}
+		onDismiss={onDismiss}
+	/>
 )
 
 const HeaderWrapper = styled.div`

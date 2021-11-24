@@ -1,9 +1,14 @@
 import { MarketOperations } from './Modals'
 import styled from 'styled-components'
 import React from 'react'
+import { SupportedMarket } from 'bao/lib/types'
+import { BigNumber } from 'ethers'
 
 type MarketButtonProps = {
 	operation: MarketOperations
+	asset: SupportedMarket
+	val: BigNumber
+	isDisabled: boolean
 }
 
 export const MarketButton = ({ operation }: MarketButtonProps) => {

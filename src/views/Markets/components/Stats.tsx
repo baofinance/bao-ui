@@ -1,5 +1,5 @@
 import { SupportedMarket } from "bao/lib/types"
-import BigNumber from "bignumber.js"
+import { BigNumber } from 'ethers'
 import { commify, formatUnits } from "ethers/lib/utils"
 import { useAccountLiquidity } from "hooks/hard-synths/useAccountLiquidity"
 import { useBorrowBalances, useSupplyBalances } from "hooks/hard-synths/useBalances"
@@ -43,47 +43,50 @@ const StatBlock = ({ label, stats }: StatBlockProps) => (
         ))}
     </StatWrapper>
 )
-
 const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
     const supplyBalances = useSupplyBalances()
     const { exchangeRates } = useExchangeRates()
 
     const supplyBalance =
-        supplyBalances && exchangeRates
+        supplyBalances.find(
+            (balance) => balance.address.toLowerCase() === asset.underlying.toLowerCase()
+        ) && exchangeRates.find(
+            (exchangeRates: { address: string }) => exchangeRates.address.toLowerCase()
+        )
             ? (supplyBalances[asset.token], asset.decimals) *
-                (exchangeRates[asset.token])
+            (exchangeRates[asset.token])
             : 0
 
-return (
-    <StatBlock
-        label="Supply Stats"
-        stats={[
-            {
-                label: 'Supply APY',
-                value: `${asset.supplyApy.toFixed(2)}%`,
-            },
-            {
-                label: 'Supply Balance',
-                value: `${Math.floor(supplyBalance * 1e8) / 1e8} ${asset.symbol}`,
-            },
-        ]}
-    />
-)
+    return (
+        <StatBlock
+            label="Supply Stats"
+            stats={[
+                {
+                    label: 'Supply APY',
+                    value: `${asset.supplyApy.toFixed(2)}%`,
+                },
+                {
+                    label: 'Supply Balance',
+                    value: `${Math.floor(supplyBalance * 1e8) / 1e8} ${asset.symbol}`,
+                },
+            ]}
+        />
+    )
 }
 
 const MarketDetails = ({ asset }: MarketStatBlockProps) => {
     const { prices } = useMarketPrices()
     const totalBorrowsUsd =
         prices && asset.totalBorrows
-            ? `$${commify((asset.totalBorrows * parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.underlying.decimals)))).toFixed(2))}`
+            ? `$${commify((asset.totalBorrows * (prices[asset.token], BigNumber.from(36).sub(asset.decimals)))).toFixed(2)}`
             : "-";
     const totalReservesUsd =
         prices && asset.totalReserves
-            ? `$${commify((asset.totalReserves * parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.underlying.decimals)))).toFixed(2))}`
+            ? `$${commify((asset.totalReserves * (prices[asset.token], BigNumber.from(36).sub(asset.decimals)))).toFixed(2)}`
             : "-";
     const totalSuppliedUsd =
         prices && asset.supplied
-            ? `$${commify((asset.supplied * parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.underlying.decimals)))).toFixed(2))}`
+            ? `$${commify((asset.supplied * (prices[asset.token], BigNumber.from(36).sub(asset.decimals)))).toFixed(2)}`
             : "-";
     const reserveFactor = asset.reserveFactor ? `${asset.reserveFactor * 100}%` : "-"
 
@@ -117,11 +120,11 @@ const MarketDetails = ({ asset }: MarketStatBlockProps) => {
 }
 
 const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
-    const { balances: borrowBalances } = useBorrowBalances()
+    const borrowBalances = useBorrowBalances()
 
     const borrowBalance =
         borrowBalances && borrowBalances[asset.token]
-            ? parseFloat(formatUnits(borrowBalances[asset.token], asset.underlying.decimals))
+            ? (borrowBalances[asset.token], asset.decimals)
             : 0
 
     return (
@@ -134,7 +137,7 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
                 },
                 {
                     label: 'Borrow Balance',
-                    value: `${borrowBalance.toFixed(2)} ${asset.underlying.symbol}`,
+                    value: `${borrowBalance.toFixed(2)} ${asset.symbol}`,
                 },
             ]}
         />
@@ -149,7 +152,7 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
         prices && amount
             ? asset.collateralFactor *
             amount *
-            parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.underlying.decimals)))
+            parseFloat(prices[asset.token], BigNumber.from(36).sub(asset.decimals))
             : 0
     const borrowable = usdBorrow + usdBorrowable
     const newBorrowable = borrowable + change
@@ -179,7 +182,7 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
     const { usdBorrow, usdBorrowable } = useAccountLiquidity()
     const change =
         prices && amount
-            ? amount * parseFloat(formatUnits(prices[asset.token], BigNumber.from(36).sub(asset.underlying.decimals)))
+            ? amount * parseFloat(prices[asset.token], BigNumber.from(36).sub(asset.decimals))
             : 0
     const borrow = usdBorrow
     const newBorrow = borrow - (change > 0 ? change : 0)
