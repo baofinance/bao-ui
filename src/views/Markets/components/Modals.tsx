@@ -12,11 +12,20 @@ import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useMarketPrices } from 'hooks/hard-synths/usePrices'
 import useBao from 'hooks/useBao'
 import BigNumber from 'bignumber.js'
-import styled from 'styled-components'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
 import { decimate } from '../../../utils/numberFormat'
-import { HeaderWrapper, ModalStack, InputStack, LabelFlex, LabelStack, MaxLabel, AssetLabel, AssetStack, IconFlex } from './styles'
+import {
+	HeaderWrapper,
+	ModalStack,
+	InputStack,
+	LabelFlex,
+	LabelStack,
+	MaxLabel,
+	AssetLabel,
+	AssetStack,
+	IconFlex,
+} from './styles'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -27,11 +36,15 @@ export enum MarketOperations {
 
 type MarketModalProps = ModalProps & {
 	asset: SupportedMarket
+	show: boolean
+	onHide: () => void
 }
 
 const MarketModal = ({
 	operations,
 	asset,
+	show,
+	onHide,
 }: MarketModalProps & { operations: MarketOperations[] }) => {
 	const [operation, setOperation] = useState(operations[0])
 	const [val, setVal] = useState<string>('')
@@ -46,37 +59,40 @@ const MarketModal = ({
 		switch (operation) {
 			case MarketOperations.supply:
 				return balances
-					? balances.find((_balance) => _balance.address === asset.underlying)
-						.balance
+					? balances.find(
+							(_balance) =>
+								_balance.address.toLowerCase() ===
+								asset.underlying.toLowerCase(),
+					  ).balance
 					: 0
 			case MarketOperations.withdraw:
 				const supply =
 					supplyBalances && exchangeRates
 						? balances.find((_balance) => _balance.address === asset.token)
-							.balance * exchangeRates[asset.token].toNumber()
+								.balance * exchangeRates[asset.token].toNumber()
 						: 0
 				const withdrawable = prices
 					? accountLiquidity.usdBorrowable /
-					(asset.collateralFactor *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber())
+					  (asset.collateralFactor *
+							decimate(
+								prices[asset.token],
+								new BigNumber(36).minus(asset.decimals),
+							).toNumber())
 					: 0
 				return !accountLiquidity.usdBorrowable || withdrawable > supply ? supply : withdrawable
 			case MarketOperations.borrow:
 				return prices && accountLiquidity.usdBorrowable
 					? accountLiquidity.usdBorrowable /
-					decimate(
-						prices[asset.token],
-						new BigNumber(36).minus(asset.decimals),
-					).toNumber()
+							decimate(
+								prices[asset.token],
+								new BigNumber(36).minus(asset.decimals),
+							).toNumber()
 					: 0
 			case MarketOperations.repay:
 				return balances
 					? balances.find(
-						(balances) => balances.address === asset.underlying || 'ETH',
-					).balance
+							(balances) => balances.address === asset.underlying || 'ETH',
+					  ).balance
 					: 0
 		}
 	}
@@ -102,9 +118,7 @@ const MarketModal = ({
 	)
 
 	return (
-		<MarketModal
-			asset={asset}
-			operations={operations}>
+		<Modal show={show} onHide={onHide}>
 			<Modal.Header closeButton>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>
@@ -163,24 +177,32 @@ const MarketModal = ({
 					}
 				/>
 			</Modal.Footer>
-		</MarketModal>
+		</Modal>
 	)
 }
 
-export const MarketSupplyModal = ({ isOpen, onDismiss, asset }: MarketModalProps) => (
+export const MarketSupplyModal = ({
+	show,
+	onHide,
+	asset,
+}: MarketModalProps) => (
 	<MarketModal
-		isOpen={isOpen}
 		operations={[MarketOperations.supply, MarketOperations.withdraw]}
 		asset={asset}
-		onDismiss={onDismiss}
+		show={show}
+		onHide={onHide}
 	/>
 )
 
-export const MarketBorrowModal = ({ isOpen, onDismiss, asset }: MarketModalProps) => (
+export const MarketBorrowModal = ({
+	show,
+	onHide,
+	asset,
+}: MarketModalProps) => (
 	<MarketModal
-		isOpen={isOpen}
 		operations={[MarketOperations.borrow, MarketOperations.repay]}
 		asset={asset}
-		onDismiss={onDismiss}
+		show={show}
+		onHide={onHide}
 	/>
 )

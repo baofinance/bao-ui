@@ -5,7 +5,7 @@ import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
-	useSupplyBalances
+	useSupplyBalances,
 } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
@@ -27,21 +27,20 @@ import {
 	MarketHeaderSubText,
 	MarketHeaderText,
 	MarketTableContainer,
-	OverviewTableContainer
+	OverviewTableContainer,
 } from './styles'
 
 export const Supply: React.FC = () => {
 	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
 
 	const balances = useAccountBalances()
 	const markets = useMarkets()
 
 	const handleSupply = (asset: SupportedMarket) => {
 		setModalAsset(asset)
-		console.log(asset)
+		setModalShow(true)
 	}
-
-	const [modalShow, setModalShow] = React.useState(false)
 
 	const columns = [
 		{
@@ -121,7 +120,13 @@ export const Supply: React.FC = () => {
 					</MarketHeaderContainer>
 					<MarketTableContainer>
 						<Table columns={columns} items={markets} onClick={handleSupply} />
-						{ modalAsset && <MarketSupplyModal asset={modalAsset} show={modalShow} onHide={() => setModalShow(false)} /> }
+						{modalAsset && (
+							<MarketSupplyModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
 					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
@@ -184,12 +189,12 @@ export const Borrow = () => {
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
 						{market.liquidity && prices
 							? `$${commify(
-								(
-									(market.liquidity *
-										(prices[market.coingeckoId]?.usd || 1)) /
-									1e6
-								).toFixed(2),
-							)}M`
+									(
+										(market.liquidity *
+											(prices[market.coingeckoId]?.usd || 1)) /
+										1e6
+									).toFixed(2),
+							  )}M`
 							: '-'}
 					</ItemWrapper>
 				)
@@ -335,8 +340,8 @@ export const Supplied: React.FC = () => {
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-								exchangeRates[market.token].toNumber() >=
-								0.01,
+									exchangeRates[market.token].toNumber() >=
+									0.01,
 						)
 					}
 				/>
@@ -423,8 +428,8 @@ export const Borrowed: React.FC = () => {
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-								exchangeRates[market.token].toNumber() >=
-								0.01,
+									exchangeRates[market.token].toNumber() >=
+									0.01,
 						)}
 					/>
 				) : (

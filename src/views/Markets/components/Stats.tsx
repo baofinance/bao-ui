@@ -50,10 +50,12 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const { exchangeRates } = useExchangeRates()
 
 	const supplyBalance =
+		supplyBalances &&
 		supplyBalances.find(
 			(balance) =>
 				balance.address.toLowerCase() === asset.underlying.toLowerCase(),
-		) && exchangeRates[asset.token]
+		) &&
+		exchangeRates[asset.token]
 			? supplyBalances.find(
 					(balance) =>
 						balance.address.toLowerCase() === asset.underlying.toLowerCase(),
@@ -174,7 +176,7 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 
 const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
-	const { usdBorrow, usdBorrowable } = useAccountLiquidity()
+	const accountLiquidity = useAccountLiquidity()
 
 	const change =
 		prices && amount
@@ -185,7 +187,9 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 					new BigNumber(36).minus(asset.decimals),
 			  ).toNumber()
 			: 0
-	const borrowable = usdBorrow + usdBorrowable
+	const borrowable = accountLiquidity
+		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
+		: 0
 	const newBorrowable = borrowable + change
 
 	return (
@@ -198,11 +202,11 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Borrow Limit Used',
-					value: `${(borrowable !== 0
-						? (usdBorrow / borrowable) * 100
+					value: `${(accountLiquidity && borrowable !== 0
+						? (accountLiquidity.usdBorrow / borrowable) * 100
 						: 0
 					).toFixed(2)}% -> ${(newBorrowable !== 0
-						? (usdBorrow / newBorrowable) * 100
+						? (accountLiquidity.usdBorrow / newBorrowable) * 100
 						: 0
 					).toFixed(2)}%`,
 				},
