@@ -2,7 +2,6 @@ import Tooltipped from 'components/Tooltipped'
 import { commify } from 'ethers/lib/utils'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import React from 'react'
-import styled from 'styled-components'
 import {
 	BorrowLimit,
 	BorrowMeterContainer,
@@ -11,25 +10,19 @@ import {
 	MarketHeaderContainer,
 	OverviewContainer,
 	OverviewHeader,
-	TableHeader,
+	TableHeader
 } from './styles'
 
 export const Overview = () => {
 	const accountLiquidity = useAccountLiquidity()
 
-	const BorrowMeter = styled.div`
-		display: flex;
-		width: ${accountLiquidity
-			? Math.floor(
-					(accountLiquidity.usdBorrow /
-						(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
-						100,
-			  )
-			: 0}%;
-		height: 100%;
-		border-radius: 8px;
-		background-color: ${(props) => props.theme.color.secondary[900]};
-	`
+	const dynamicWidth = accountLiquidity
+		? Math.floor(
+			(accountLiquidity.usdBorrow /
+				(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
+			100,
+		)
+		: 0
 
 	return accountLiquidity ? (
 		<>
@@ -59,33 +52,37 @@ export const Overview = () => {
 						Borrow Limit <Tooltipped content={`Some info here.`} />
 					</BorrowLimit>
 					<BorrowText>
-						{`${
-							accountLiquidity
+						{`${accountLiquidity
 								? Math.floor(
-										(accountLiquidity.usdBorrow /
-											(accountLiquidity.usdBorrowable +
-												accountLiquidity.usdBorrow)) *
-											100,
-								  )
+									(accountLiquidity.usdBorrow /
+										(accountLiquidity.usdBorrowable +
+											accountLiquidity.usdBorrow)) *
+									100,
+								)
 								: 0
-						}`}
+							}`}
 						%
 					</BorrowText>
 					<BorrowMeterContainer>
-						<BorrowMeter />
+						<div style={{
+							width: `${dynamicWidth}%`,
+							display: 'flex',
+							height: '100%',
+							borderRadius: '8px',
+							backgroundColor: '#50251c',
+						}} />
 					</BorrowMeterContainer>
 					<BorrowText>
 						$
-						{`${
-							accountLiquidity
+						{`${accountLiquidity
 								? commify(
-										(
-											accountLiquidity.usdBorrowable +
-											accountLiquidity.usdBorrow
-										).toFixed(2),
-								  )
+									(
+										accountLiquidity.usdBorrowable +
+										accountLiquidity.usdBorrow
+									).toFixed(2),
+								)
 								: '0.00'
-						}`}
+							}`}
 					</BorrowText>
 				</OverviewHeader>
 			</OverviewContainer>
