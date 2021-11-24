@@ -15,7 +15,7 @@ import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { SupportedMarket } from '../../../bao/lib/types'
 import { decimate } from '../../../utils/numberFormat'
-import { MarketSupplyModal } from './Modals'
+import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import {
 	Flex,
 	HeaderWrapper,
@@ -135,12 +135,18 @@ export const Supply: React.FC = () => {
 }
 
 export const Borrow = () => {
-	// const [handleBorrow] = useModal(<MarketBorrowModal />)
 	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
 
 	const balances = useAccountBalances()
 	const markets = useMarkets()
 	const { prices } = usePrices()
+
+	const handleBorrow = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
+
 
 	const columns = [
 		{
@@ -189,12 +195,12 @@ export const Borrow = () => {
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
 						{market.liquidity && prices
 							? `$${commify(
-									(
-										(market.liquidity *
-											(prices[market.coingeckoId]?.usd || 1)) /
-										1e6
-									).toFixed(2),
-							  )}M`
+								(
+									(market.liquidity *
+										(prices[market.coingeckoId]?.usd || 1)) /
+									1e6
+								).toFixed(2),
+							)}M`
 							: '-'}
 					</ItemWrapper>
 				)
@@ -221,7 +227,14 @@ export const Borrow = () => {
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
 					<MarketTableContainer>
-						<Table columns={columns} items={markets} />
+						<Table columns={columns} items={markets} onClick={handleBorrow} />
+						{modalAsset && (
+							<MarketBorrowModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
 					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
@@ -232,13 +245,18 @@ export const Borrow = () => {
 export const Supplied: React.FC = () => {
 	const bao = useBao()
 	const markets = useMarkets()
-	// const accountLiquidity = useAccountLiquidity()
+
 	const balances = useSupplyBalances()
 	const { exchangeRates } = useExchangeRates()
 	const accountMarkets = useAccountMarkets()
-	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
 
-	// const [handleSupply] = useModal(<MarketSupplyModal />)
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
+
+	const handleSupply = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
 
 	const columns = [
 		{
@@ -340,11 +358,18 @@ export const Supplied: React.FC = () => {
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-									exchangeRates[market.token].toNumber() >=
-									0.01,
+								exchangeRates[market.token].toNumber() >=
+								0.01,
 						)
 					}
-				/>
+					onClick={handleSupply} />
+				{modalAsset && (
+					<MarketSupplyModal
+						asset={modalAsset}
+						show={modalShow}
+						onHide={() => setModalShow(false)}
+					/>
+				)}
 			</OverviewTableContainer>
 		</>
 	)
@@ -355,10 +380,14 @@ export const Borrowed: React.FC = () => {
 	const accountLiquidity = useAccountLiquidity()
 	const balances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
-	// const accountMarkets = useAccountMarkets()
-	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
 
-	// const [handleSupply] = useModal(<MarketSupplyModal />)
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
+
+	const handleBorrow = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
 
 	const columns = [
 		{
@@ -369,7 +398,7 @@ export const Borrowed: React.FC = () => {
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{market.symbol}</p>
+						<p>{market.underlyingSymbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -428,12 +457,19 @@ export const Borrowed: React.FC = () => {
 								balances.find((balance) => balance.address === market.token) &&
 								balances.find((balance) => balance.address === market.token)
 									.balance *
-									exchangeRates[market.token].toNumber() >=
-									0.01,
+								exchangeRates[market.token].toNumber() >=
+								0.01,
 						)}
-					/>
+						onClick={handleBorrow} />
 				) : (
 					<ItemWrapper> You don't have any borrowed assets. </ItemWrapper>
+				)}
+				{modalAsset && (
+					<MarketBorrowModal
+						asset={modalAsset}
+						show={modalShow}
+						onHide={() => setModalShow(false)}
+					/>
 				)}
 			</OverviewTableContainer>
 		</>

@@ -36,7 +36,7 @@ type MarketStatProps = {
 
 const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<StatWrapper>
-		<StatHeader>{label}</StatHeader>
+		<StatHeader><p>{label}</p></StatHeader>
 		{stats.map(({ label, value }) => (
 			<StatText key={label}>
 				<p>{label}</p>
@@ -51,15 +51,15 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 
 	const supplyBalance =
 		supplyBalances &&
-		supplyBalances.find(
-			(balance) => balance.address.toLowerCase() === asset.token.toLowerCase(),
-		) &&
-		exchangeRates &&
-		exchangeRates[asset.token]
+			supplyBalances.find(
+				(balance) => balance.address.toLowerCase() === asset.token.toLowerCase(),
+			) &&
+			exchangeRates &&
+			exchangeRates[asset.token]
 			? supplyBalances.find(
-					(balance) =>
-						balance.address.toLowerCase() === asset.token.toLowerCase(),
-			  ).balance * decimate(exchangeRates[asset.token]).toNumber()
+				(balance) =>
+					balance.address.toLowerCase() === asset.token.toLowerCase(),
+			).balance * decimate(exchangeRates[asset.token]).toNumber()
 			: 0
 
 	return (
@@ -84,32 +84,32 @@ const MarketDetails = ({ asset }: MarketStatBlockProps) => {
 	const totalBorrowsUsd =
 		prices && asset.totalBorrows
 			? `$${commify(
-					asset.totalBorrows *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber(),
-			  )}`
+				asset.totalBorrows *
+				decimate(
+					prices[asset.token],
+					new BigNumber(36).minus(asset.decimals),
+				).toNumber(),
+			)}`
 			: '-'
 	const totalReservesUsd =
 		prices && asset.totalReserves
 			? `$${commify(
-					asset.totalReserves *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber(),
-			  )}`
+				asset.totalReserves *
+				decimate(
+					prices[asset.token],
+					new BigNumber(36).minus(asset.decimals),
+				).toNumber(),
+			)}`
 			: '-'
 	const totalSuppliedUsd =
 		prices && asset.supplied
 			? `$${commify(
-					asset.supplied *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber(),
-			  )}`
+				asset.supplied *
+				decimate(
+					prices[asset.token],
+					new BigNumber(36).minus(asset.decimals),
+				).toNumber(),
+			)}`
 			: '-'
 	const reserveFactor = asset.reserveFactor
 		? `${asset.reserveFactor * 100}%`
@@ -149,12 +149,12 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 
 	const borrowBalance =
 		borrowBalances &&
-		borrowBalances.find(
-			(_borrowBalance) => _borrowBalance.address === asset.token,
-		)
+			borrowBalances.find(
+				(_borrowBalance) => _borrowBalance.address === asset.token,
+			)
 			? borrowBalances.find(
-					(_borrowBalance) => _borrowBalance.address === asset.token,
-			  ).balance
+				(_borrowBalance) => _borrowBalance.address === asset.token,
+			).balance
 			: 0
 
 	return (
@@ -167,7 +167,7 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Borrow Balance',
-					value: `${borrowBalance.toFixed(2)} ${asset.symbol}`,
+					value: `${borrowBalance.toFixed(2)} ${asset.underlyingSymbol}`,
 				},
 			]}
 		/>
@@ -181,11 +181,11 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const change =
 		prices && amount
 			? asset.collateralFactor *
-			  amount *
-			  decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-			  ).toNumber()
+			amount *
+			decimate(
+				prices[asset.token],
+				new BigNumber(36).minus(asset.decimals),
+			).toNumber()
 			: 0
 	const borrowable = accountLiquidity
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
@@ -217,19 +217,31 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 
 const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
-	const { usdBorrow, usdBorrowable } = useAccountLiquidity()
+	const accountLiquidity = useAccountLiquidity()
 	const change =
 		prices && amount
 			? amount *
-			  decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-			  ).toNumber()
+			decimate(
+				prices[asset.token],
+				new BigNumber(36).minus(asset.decimals),
+			).toNumber()
 			: 0
-	const borrow = usdBorrow
-	const newBorrow = borrow - (change > 0 ? change : 0)
-	const borrowable = usdBorrow + usdBorrowable
-	const newBorrowable = borrowable + (change < 0 ? change : 0)
+
+	const borrow = accountLiquidity
+		? accountLiquidity.usdBorrow
+		: 0
+
+	const newBorrow = borrow 
+	? borrow - (change > 0 ? change : 0)
+	: 0
+
+	const borrowable = accountLiquidity
+	? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
+	: 0
+
+	const newBorrowable = borrowable
+	? borrowable + (change < 0 ? change : 0)
+	: 0
 
 	return (
 		<StatBlock
@@ -237,8 +249,8 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit Remaining',
-					value: `$${usdBorrowable.toFixed(2)} -> $${(
-						usdBorrowable + change
+					value: `$${accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0} -> $${(
+						accountLiquidity ? accountLiquidity.usdBorrowable + change : 0
 					).toFixed(2)}`,
 				},
 				{
@@ -299,13 +311,22 @@ const StatWrapper = styled.div`
 	flex-direction: column;
 	width: 100%;
 	padding-top: ${(props) => props.theme.spacing[2]};
+	margin-top: 1rem;
+    margin-inline: 0px;
+    margin-bottom: 0px;
 `
 
-const StatHeader = styled.p`
+const StatHeader = styled.div`
 	color: ${(props) => props.theme.color.text[200]};
 	font-size: ${(props) => props.theme.fontSize.xs};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	text-transform: uppercase;
+
+	p {
+		margin-top: 0.25rem;
+		margin-inline: 0px;
+		margin-bottom: 0px;
+	}
 `
 
 const StatText = styled.div`
@@ -317,5 +338,9 @@ const StatText = styled.div`
 		color: ${(props) => props.theme.color.text[100]};
 		font-size: ${(props) => props.theme.fontSize.s};
 		font-weight: ${(props) => props.theme.fontWeight.medium};
+		padding-left: 0.5rem;
+		margin-top: 0.25rem;
+		margin-inline: 0px;
+		margin-bottom: 0px;
 	}
 `

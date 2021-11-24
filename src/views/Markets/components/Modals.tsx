@@ -87,7 +87,7 @@ const MarketModal = ({
 					? supply
 					: withdrawable
 			case MarketOperations.borrow:
-				return prices && accountLiquidity.usdBorrowable
+				return prices && accountLiquidity
 					? accountLiquidity.usdBorrowable /
 							decimate(
 								prices[asset.token],
@@ -124,7 +124,7 @@ const MarketModal = ({
 	)
 
 	return (
-		<Modal show={show} onHide={onHide}>
+		<Modal class="marketModal" show={show} onHide={onHide} centered>
 			<Modal.Header closeButton>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>
