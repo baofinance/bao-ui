@@ -20,20 +20,23 @@ type TableProps = {
 }
 
 export const Table = ({ columns, items, onClick }: TableProps) => (
-		<MarketTable>
-			<TableHeader>
-				{columns.map(({ header }: Column, i) => (
-					<Fragment key={i}>{header}</Fragment>
-				))}
-			</TableHeader>
-			{items?.map((item, i) => (
-				<ItemContainer key={i}>
-					{columns.map(({ value }, j) => (
-						<Fragment key={j}>{value(item, i)}</Fragment>
-					))}
-				</ItemContainer>
+	<MarketTable>
+		<TableHeader>
+			{columns.map(({ header }: Column, i) => (
+				<Fragment key={i}>{header}</Fragment>
 			))}
-		</MarketTable>
+		</TableHeader>
+		{items?.map((item, i) => (
+			<ItemContainer
+				key={i}
+				onClick={onClick ? (e: React.MouseEvent<HTMLElement>) => onClick(item) : undefined}
+			>
+				{columns.map(({ value }, j) => (
+					<Fragment key={j}>{value(item, i)}</Fragment>
+				))}
+			</ItemContainer>
+		))}
+	</MarketTable>
 )
 
 export default Table

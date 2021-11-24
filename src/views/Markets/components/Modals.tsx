@@ -28,6 +28,7 @@ type MarketModalProps = NewModalProps & {
 }
 
 const MarketModal = ({
+	isOpen,
 	onDismiss,
 	operations,
 	asset,
@@ -38,7 +39,7 @@ const MarketModal = ({
 	const balances = useAccountBalances()
 	const supplyBalances = useSupplyBalances()
 	const { prices } = useMarketPrices()
-	const { usdBorrowable } = useAccountLiquidity()
+	const accountLiquidity = useAccountLiquidity()
 	const { exchangeRates } = useExchangeRates()
 
 	const max = () => {
@@ -46,36 +47,36 @@ const MarketModal = ({
 			case MarketOperations.supply:
 				return balances
 					? balances.find((_balance) => _balance.address === asset.underlying)
-							.balance
+						.balance
 					: 0
 			case MarketOperations.withdraw:
 				const supply =
 					supplyBalances && exchangeRates
 						? balances.find((_balance) => _balance.address === asset.token)
-								.balance * exchangeRates[asset.token].toNumber()
+							.balance * exchangeRates[asset.token].toNumber()
 						: 0
 				const withdrawable = prices
-					? usdBorrowable /
-					  (asset.collateralFactor *
-							decimate(
-								prices[asset.token],
-								new BigNumber(36).minus(asset.decimals),
-							).toNumber())
+					? accountLiquidity.usdBorrowable /
+					(asset.collateralFactor *
+						decimate(
+							prices[asset.token],
+							new BigNumber(36).minus(asset.decimals),
+						).toNumber())
 					: 0
-				return !usdBorrowable || withdrawable > supply ? supply : withdrawable
+				return !accountLiquidity.usdBorrowable || withdrawable > supply ? supply : withdrawable
 			case MarketOperations.borrow:
-				return prices && usdBorrowable
-					? usdBorrowable /
-							decimate(
-								prices[asset.token],
-								new BigNumber(36).minus(asset.decimals),
-							).toNumber()
+				return prices && accountLiquidity.usdBorrowable
+					? accountLiquidity.usdBorrowable /
+					decimate(
+						prices[asset.token],
+						new BigNumber(36).minus(asset.decimals),
+					).toNumber()
 					: 0
 			case MarketOperations.repay:
 				return balances
 					? balances.find(
-							(balances) => balances.address === asset.underlying || 'ETH',
-					  ).balance
+						(balances) => balances.address === asset.underlying || 'ETH',
+					).balance
 					: 0
 		}
 	}
@@ -107,6 +108,7 @@ const MarketModal = ({
 
 	return (
 		<NewModal
+		isOpen={isOpen}
 			onDismiss={handleDismiss}
 			header={
 				<HeaderWrapper>
@@ -167,16 +169,18 @@ const MarketModal = ({
 	)
 }
 
-export const MarketSupplyModal = ({ onDismiss, asset }: MarketModalProps) => (
+export const MarketSupplyModal = ({ isOpen, onDismiss, asset }: MarketModalProps) => (
 	<MarketModal
+		isOpen={isOpen}
 		operations={[MarketOperations.supply, MarketOperations.withdraw]}
 		asset={asset}
 		onDismiss={onDismiss}
 	/>
 )
 
-export const MarketBorrowModal = ({ onDismiss, asset }: MarketModalProps) => (
+export const MarketBorrowModal = ({ isOpen, onDismiss, asset }: MarketModalProps) => (
 	<MarketModal
+		isOpen={isOpen}
 		operations={[MarketOperations.borrow, MarketOperations.repay]}
 		asset={asset}
 		onDismiss={onDismiss}

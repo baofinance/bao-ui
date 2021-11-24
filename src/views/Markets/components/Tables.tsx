@@ -11,9 +11,11 @@ import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
 import { usePrices } from 'hooks/hard-synths/usePrices'
 import useBao from 'hooks/useBao'
+import useModal from 'hooks/useModal'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { SupportedMarket } from '../../../bao/lib/types'
+import { MarketSupplyModal } from './Modals'
 import {
 	Flex,
 	HeaderWrapper,
@@ -27,13 +29,7 @@ import {
 } from './styles'
 
 export const Supply: React.FC = () => {
-	// const [modalAsset, setModalAsset] = useState<Market>()
-	// const { isOpen, onOpen, onClose } = useDisclosure()
-
-	// const handleSupply = (asset: Market) => {
-	// 	setModalAsset(asset)
-	// 	onOpen()
-	//   }
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
 
 	const balances = useAccountBalances()
 	const markets = useMarkets()
@@ -96,6 +92,13 @@ export const Supply: React.FC = () => {
 		},
 	]
 
+	const handleSupply = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		console.log(asset)
+	}
+
+	const [onSupplyModal] = useModal(<MarketSupplyModal asset={modalAsset} />)
+
 	return (
 		<>
 			<Flex>
@@ -115,7 +118,7 @@ export const Supply: React.FC = () => {
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
 					<MarketTableContainer>
-						<Table columns={columns} items={markets} />
+						<Table columns={columns} items={markets} onClick={() => { handleSupply(modalAsset); onSupplyModal(); }} />
 					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
