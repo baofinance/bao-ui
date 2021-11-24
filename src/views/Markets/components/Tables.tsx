@@ -120,7 +120,8 @@ export const Supply: React.FC = () => {
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
 					<MarketTableContainer>
-						<Table columns={columns} items={markets} onClick={() => handleSupply} />
+						<Table columns={columns} items={markets} onClick={handleSupply} />
+						{ modalAsset && <MarketSupplyModal asset={modalAsset} show={modalShow} onHide={() => setModalShow(false)} /> }
 					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
