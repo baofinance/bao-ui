@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { SupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
-import NewModal, { NewModalProps } from 'components/NewModal'
+import { Modal, ModalProps } from 'react-bootstrap'
 import {
 	useAccountBalances,
 	useSupplyBalances,
@@ -16,6 +16,7 @@ import styled from 'styled-components'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
 import { decimate } from '../../../utils/numberFormat'
+
 export enum MarketOperations {
 	supply = 'Supply',
 	withdraw = 'Withdraw',
@@ -23,13 +24,11 @@ export enum MarketOperations {
 	repay = 'Repay',
 }
 
-type MarketModalProps = NewModalProps & {
+type MarketModalProps = ModalProps & {
 	asset: SupportedMarket
 }
 
 const MarketModal = ({
-	isOpen,
-	onDismiss,
 	operations,
 	asset,
 }: MarketModalProps & { operations: MarketOperations[] }) => {
@@ -101,22 +100,55 @@ const MarketModal = ({
 		[setVal],
 	)
 
-	const handleDismiss = () => {
-		setVal('')
-		onDismiss()
-	}
-
 	return (
-		<NewModal
-		isOpen={isOpen}
-			onDismiss={handleDismiss}
-			header={
-				<HeaderWrapper>
-					<img src={asset.icon} />
-					<p>{asset.symbol}</p>
-				</HeaderWrapper>
-			}
-			footer={
+		<MarketModal
+			asset={asset}
+			operations={operations}>
+			<Modal.Header closeButton>
+				<Modal.Title id="contained-modal-title-vcenter">
+					<HeaderWrapper>
+						<img src={asset.icon} />
+						<p>{asset.symbol}</p>
+					</HeaderWrapper>
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<ModalStack>
+					<NavButtons
+						options={operations}
+						active={operation}
+						onClick={setOperation}
+					/>
+					<InputStack>
+						<LabelFlex>
+							<LabelStack>
+								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
+								<AssetLabel>
+									{`${Math.floor(max() * 1e8) / 1e8} ${asset.symbol}`}
+								</AssetLabel>
+							</LabelStack>
+						</LabelFlex>
+
+						<BalanceInput
+							value={val}
+							onChange={handleChange}
+							onMaxClick={() =>
+								setVal((Math.floor(max() * 1e8) / 1e8).toString())
+							}
+							label={
+								<AssetStack>
+									<IconFlex>
+										<img src={asset.icon} />
+									</IconFlex>
+									<p>{asset.symbol}</p>
+								</AssetStack>
+							}
+						/>
+					</InputStack>
+					<MarketStats operation={operation} asset={asset} amount={val} />
+				</ModalStack>
+			</Modal.Body>
+			<Modal.Footer>
 				<MarketButton
 					operation={operation}
 					asset={asset}
@@ -129,43 +161,8 @@ const MarketModal = ({
 						!val || !bao || isNaN(val as any) || parseFloat(val) > max()
 					}
 				/>
-			}
-		>
-			<ModalStack>
-				<NavButtons
-					options={operations}
-					active={operation}
-					onClick={setOperation}
-				/>
-				<InputStack>
-					<LabelFlex>
-						<LabelStack>
-							<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
-							<AssetLabel>
-								{`${Math.floor(max() * 1e8) / 1e8} ${asset.symbol}`}
-							</AssetLabel>
-						</LabelStack>
-					</LabelFlex>
-
-					<BalanceInput
-						value={val}
-						onChange={handleChange}
-						onMaxClick={() =>
-							setVal((Math.floor(max() * 1e8) / 1e8).toString())
-						}
-						label={
-							<AssetStack>
-								<IconFlex>
-									<img src={asset.icon} />
-								</IconFlex>
-								<p>{asset.symbol}</p>
-							</AssetStack>
-						}
-					/>
-				</InputStack>
-				<MarketStats operation={operation} asset={asset} amount={val} />
-			</ModalStack>
-		</NewModal>
+			</Modal.Footer>
+		</MarketModal>
 	)
 }
 

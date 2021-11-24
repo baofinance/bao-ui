@@ -34,6 +34,13 @@ export const Supply: React.FC = () => {
 	const balances = useAccountBalances()
 	const markets = useMarkets()
 
+	const handleSupply = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
+
+	const [modalShow, setModalShow] = React.useState(false)
+
 	const columns = [
 		{
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
@@ -92,13 +99,6 @@ export const Supply: React.FC = () => {
 		},
 	]
 
-	const handleSupply = (asset: SupportedMarket) => {
-		setModalAsset(asset)
-		console.log(asset)
-	}
-
-	const [onSupplyModal] = useModal(<MarketSupplyModal asset={modalAsset} />)
-
 	return (
 		<>
 			<Flex>
@@ -118,7 +118,8 @@ export const Supply: React.FC = () => {
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
 					<MarketTableContainer>
-						<Table columns={columns} items={markets} onClick={() => { handleSupply(modalAsset); onSupplyModal(); }} />
+						<Table columns={columns} items={markets} onClick={handleSupply} />
+						{modalAsset && <MarketSupplyModal asset={modalAsset} onHide={() => setModalShow(false)} />}
 					</MarketTableContainer>
 				</MarketContainer>
 			</Flex>
