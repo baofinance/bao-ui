@@ -14,6 +14,7 @@ import BaoProvider from './contexts/BaoProvider'
 import FarmsProvider from './contexts/Farms'
 import ModalsProvider from './contexts/Modals'
 import BasketsProvider from './contexts/Baskets'
+import MarketsProvider from './contexts/Markets'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
 import Farms from './views/Farms'
@@ -76,11 +77,13 @@ const Providers: React.FC = ({ children }) => {
 			>
 				<BaoProvider>
 					<BasketsProvider>
-						<TransactionProvider>
-							<FarmsProvider>
-								<ModalsProvider>{children}</ModalsProvider>
-							</FarmsProvider>
-						</TransactionProvider>
+						<MarketsProvider>
+							<TransactionProvider>
+								<FarmsProvider>
+									<ModalsProvider>{children}</ModalsProvider>
+								</FarmsProvider>
+							</TransactionProvider>
+						</MarketsProvider>
 					</BasketsProvider>
 				</BaoProvider>
 			</UseWalletProvider>

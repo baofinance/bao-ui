@@ -1,4 +1,3 @@
-import { MarketComponent } from 'contexts/Markets/types'
 import { Contract } from 'web3-eth-contract'
 
 export interface SupportedPool {
