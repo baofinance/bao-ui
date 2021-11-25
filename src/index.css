@@ -139,3 +139,14 @@ a:focus {
   transition: .5s
 }
 
+.form-check-input:checked {
+  background-color: #50251c;
+  border-color: #50251c;
+  cursor: pointer;
+}
+
+.form-check-input {
+  background-color: #cebfb6;
+  border: 1px solid #cebfb6;
+  cursor: pointer;
+}

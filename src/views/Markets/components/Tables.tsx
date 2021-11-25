@@ -318,8 +318,9 @@ export const Supplied: React.FC = () => {
 			),
 			value(market: SupportedMarket) {
 				const isEnabled =
-					accountMarkets && accountMarkets.find((market) => market.token)
-
+				accountMarkets &&
+				accountMarkets.find((_market) => _market.token === market.token)
+				
 				return (
 					<ItemWrapper
 						style={{ justifyContent: 'center', textAlign: 'center' }}
@@ -332,7 +333,7 @@ export const Supplied: React.FC = () => {
 									.send({ from: account })
 							} else {
 								contract.methods
-									.enterMarket([market.token])
+									.enterMarkets([market.token])
 									.send({ from: account })
 							}
 						}}
