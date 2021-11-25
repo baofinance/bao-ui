@@ -13,6 +13,7 @@ import {
 } from './components/Tables'
 import { SpinnerLoader } from '../../components/Loader'
 import { useMarkets } from '../../hooks/hard-synths/useMarkets'
+import { ProtocolStats } from './components/ProtocolStats'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
@@ -25,17 +26,16 @@ const Markets: React.FC = () => {
 					{markets ? (
 						<>
 							<Section>
-								<SectionHeader>Dashboard</SectionHeader>
 								<Overview />
+								<MarketOverview>
+									<Supplied />
+									<Borrowed />
+								</MarketOverview>
+								<MarketOverview>
+									<Supply />
+									<Borrow />
+								</MarketOverview>
 							</Section>
-							<MarketOverview>
-								<Supplied />
-								<Borrowed />
-							</MarketOverview>
-							<MarketOverview>
-								<Supply />
-								<Borrow />
-							</MarketOverview>
 						</>
 					) : (
 						<SpinnerLoader block />
@@ -49,20 +49,10 @@ const Markets: React.FC = () => {
 const Section = styled.div`
 	display: block;
 	width: 100%;
-	padding: ${(props) => props.theme.spacing[4]}px;
 	padding-top: 0px;
 	border-radius: ${(props) => props.theme.borderRadius}px;
 `
 
-const SectionHeader = styled.div`
-	color: ${(props) => props.theme.color.text[100]};
-	font-size: 1.25rem;
-	font-weight: ${(props) => props.theme.fontWeight.strong};
-	margin: 0;
-	text-align: center;
-	align-content: center;
-	padding-bottom: ${(props) => props.theme.spacing[2]}px;
-`
 
 const SectionInner = styled.div`
 	justify-content: center;

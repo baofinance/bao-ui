@@ -7,7 +7,7 @@ import {
 	BorrowMeterContainer,
 	BorrowText, MarketHeaderContainer,
 	OverviewContainer,
-	OverviewHeader, UserStat, UserStatsContainer, UserStatsWrapper
+	OverviewHeader, ProductDescription, ProtocolStat, ProtocolStatsContainer, ProtocolStatsWrapper, SectionHeader, UserStat, UserStatsContainer, UserStatsWrapper
 } from './styles'
 
 export const Overview = () => {

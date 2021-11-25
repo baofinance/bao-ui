@@ -20,6 +20,7 @@ export const MarketHeaderContainer = styled.div`
   justify-content: space-between;
   min-height: 3.5rem;
   width: 100%;
+  padding: 24px;
 `
 
 export const MarketHeaderStack = styled.div`
@@ -187,6 +188,62 @@ overflow-wrap: break-word;
     }
 `
 
+export const ProtocolStatsContainer = styled.div`
+display: grid;
+grid-template-columns: 2.5fr .75fr .75fr;
+grid-gap: 0.75rem;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    justify-content: space-between;
+    width: 100%;
+    overflow-wrap: break-word;
+    padding: 24px;
+    `
+
+export const ProtocolStatsWrapper = styled.div`
+padding: 16px;
+border-radius: 8px;
+position: relative;
+    flex: 1 1 0%;
+    border-radius: 8px;
+    background-color: ${(props) => props.theme.color.primary[200]};
+    border: 1px solid ${(props) => props.theme.color.secondary[900]};
+`
+
+export const ProtocolStat = styled.div`
+margin: 0px;
+overflow-wrap: break-word;
+text-align: center;
+
+    p {
+      font-size: 1.87rem;
+      margin: 0px;
+    }
+    
+    h1 {
+      font-size: 1rem;
+      color: ${(props) => props.theme.color.text[200]};
+      margin: 0px;
+    }
+`
+
+export const ProductDescription = styled.div`
+margin: 0px;
+overflow-wrap: break-word;
+
+    p {
+      font-size: 1rem;
+      margin: 0px;
+    }
+    
+    h1 {
+      font-size: 1rem;
+      color: ${(props) => props.theme.color.text[200]};
+      margin: 0px;
+    }
+`
+
+
 export const MarketSummary = styled.div`
   display: flex;
   flex-direction: column;
@@ -233,6 +290,7 @@ export const OverviewContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100%;
+  padding: 24px;
 `
 
 export const OverviewHeader = styled.div`
@@ -376,4 +434,14 @@ export const IconFlex = styled.div`
 		width: 1.25rem;
 		height: 1.25rem;
 	}
+`
+
+export const SectionHeader = styled.div`
+	color: ${(props) => props.theme.color.text[100]};
+	font-size: 1.25rem;
+	font-weight: ${(props) => props.theme.fontWeight.strong};
+	margin: 0;
+	text-align: center;
+	align-content: center;
+	padding-bottom: ${(props) => props.theme.spacing[2]}px;
 `
