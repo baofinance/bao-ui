@@ -51,15 +51,15 @@ const App: React.FC = () => {
 					<Route path="/" exact>
 						<Home />
 					</Route>
-					<Route path="/Baskets">
+					{/* <Route path="/Baskets">
 						<Baskets />
-					</Route>
+					</Route> */}
 					<Route path="/Markets">
 						<Markets />
 					</Route>
-					<Route path="/Farms">
+					{/* <Route path="/Farms">
 						<Farms />
-					</Route>
+					</Route> */}
 				</Switch>
 			</Router>
 		</Providers>
@@ -76,15 +76,15 @@ const Providers: React.FC = ({ children }) => {
 				}}
 			>
 				<BaoProvider>
-					<BasketsProvider>
+					{/* <BasketsProvider> */}
 						<MarketsProvider>
 							<TransactionProvider>
-								<FarmsProvider>
+								{/* <FarmsProvider> */}
 									<ModalsProvider>{children}</ModalsProvider>
-								</FarmsProvider>
+								{/* </FarmsProvider> */}
 							</TransactionProvider>
 						</MarketsProvider>
-					</BasketsProvider>
+					{/* </BasketsProvider> */}
 				</BaoProvider>
 			</UseWalletProvider>
 		</ThemeProvider>

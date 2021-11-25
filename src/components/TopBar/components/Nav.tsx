@@ -18,13 +18,13 @@ const Nav: React.FC = () => {
 			>
 				Home
 			</StyledLink>
-			<StyledLink
+			{/* <StyledLink
 				exact
 				activeClassName="active"
 				to={{ pathname: '/baskets', search: '?ref=' + refer }}
 			>
 				Baskets
-			</StyledLink>
+			</StyledLink> */}
 			<StyledLink
 				exact
 				activeClassName="active"
@@ -32,13 +32,13 @@ const Nav: React.FC = () => {
 			>
 				Markets
 			</StyledLink>
-			<StyledLink
+			{/* <StyledLink
 				exact
 				activeClassName="active"
 				to={{ pathname: '/farms', search: '?ref=' + refer }}
 			>
 				Farms
-			</StyledLink>
+			</StyledLink> */}
 			<StyledAbsoluteLink
 				href="https://snapshot.page/#/baovotes.eth"
 				target="_blank"
