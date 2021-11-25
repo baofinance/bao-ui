@@ -67,7 +67,7 @@ export const Overview = () => {
 					<UserStatsWrapper>
 						<UserStat>
 							<h1>Net APY</h1>
-							<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`} %</p>
+							<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
 						</UserStat>
 					</UserStatsWrapper>
 					<UserStatsWrapper>
@@ -80,6 +80,12 @@ export const Overview = () => {
 						<UserStat>
 							<h1>Total Supplied</h1>
 							<p>${`${accountLiquidity ? accountLiquidity.usdSupply.toFixed(2) : 0}`}{' '}</p>
+						</UserStat>
+					</UserStatsWrapper>
+					<UserStatsWrapper>
+						<UserStat>
+							<h1>Liquidation Risk</h1>
+							<p style={{ color: 'green' }}>Low</p>
 						</UserStat>
 					</UserStatsWrapper>
 				</UserStatsContainer>

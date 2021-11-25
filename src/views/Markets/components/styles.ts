@@ -151,7 +151,7 @@ export const ItemWrapper = styled.div`
 
 export const UserStatsContainer = styled.div`
 display: grid;
-grid-template-columns: repeat(3, minmax(0px, 1fr));
+grid-template-columns: repeat(4, minmax(0px, 1fr));
     grid-gap: 0.75rem;
     padding-top: 16px;
     padding-bottom: 16px;
