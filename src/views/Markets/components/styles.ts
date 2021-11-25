@@ -96,7 +96,7 @@ export const TableHeader = styled.div`
 
 export const ItemContainer = styled.div`
     transition-property: all;
-    transition-duration: 150ms;
+    transition-duration: .5s;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
     display: flex;
     align-items: center;

@@ -319,7 +319,6 @@ const StatWrapper = styled.div`
 	background: ${(props) => props.theme.color.primary[200]};
 	padding: 16px;
 	border-radius: 8px;
-	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 const StatHeader = styled.div`

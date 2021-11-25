@@ -26,6 +26,8 @@ import {
 	AssetStack,
 	IconFlex,
 } from './styles'
+import { CloseButton } from 'components/TopBar/components/AccountModal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -60,27 +62,27 @@ const MarketModal = ({
 			case MarketOperations.supply:
 				return balances
 					? balances.find(
-							(_balance) =>
-								_balance.address.toLowerCase() ===
-								asset.underlying.toLowerCase(),
-					  ).balance
+						(_balance) =>
+							_balance.address.toLowerCase() ===
+							asset.underlying.toLowerCase(),
+					).balance
 					: 0
 			case MarketOperations.withdraw:
 				const supply =
 					supplyBalances && exchangeRates
 						? supplyBalances.find(
-								(_balance) =>
-									_balance.address.toLowerCase() === asset.token.toLowerCase(),
-						  ).balance * exchangeRates[asset.token].toNumber()
+							(_balance) =>
+								_balance.address.toLowerCase() === asset.token.toLowerCase(),
+						).balance * exchangeRates[asset.token].toNumber()
 						: 0
 				const withdrawable =
 					prices && accountLiquidity
 						? accountLiquidity.usdBorrowable /
-						  (asset.collateralFactor *
-								decimate(
-									prices[asset.token],
-									new BigNumber(36).minus(asset.decimals),
-								).toNumber())
+						(asset.collateralFactor *
+							decimate(
+								prices[asset.token],
+								new BigNumber(36).minus(asset.decimals),
+							).toNumber())
 						: 0
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) ||
 					withdrawable > supply
@@ -89,16 +91,16 @@ const MarketModal = ({
 			case MarketOperations.borrow:
 				return prices && accountLiquidity
 					? accountLiquidity.usdBorrowable /
-							decimate(
-								prices[asset.token],
-								new BigNumber(36).minus(asset.decimals),
-							).toNumber()
+					decimate(
+						prices[asset.token],
+						new BigNumber(36).minus(asset.decimals),
+					).toNumber()
 					: 0
 			case MarketOperations.repay:
 				return balances
 					? balances.find(
-							(balances) => balances.address === asset.underlying || 'ETH',
-					  ).balance
+						(balances) => balances.address === asset.underlying || 'ETH',
+					).balance
 					: 0
 		}
 	}
@@ -125,7 +127,10 @@ const MarketModal = ({
 
 	return (
 		<Modal class="marketModal" show={show} onHide={onHide} centered>
-			<Modal.Header closeButton>
+			<CloseButton onClick={onHide}>
+				<FontAwesomeIcon icon="window-close" />
+			</CloseButton>
+			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>
 						<img src={asset.icon} />

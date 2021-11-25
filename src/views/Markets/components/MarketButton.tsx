@@ -87,7 +87,7 @@ const SubmitButton = styled.button`
 
 	  &:hover{
 		background: ${(props) => props.theme.color.primary[200]};
-		box-shadow: ${(props) => props.theme.boxShadow.hover};
+		box-shadow: ${(props) => ( !props.disabled ? props.theme.boxShadow.hover : props.theme.boxShadow.default)};
 		cursor: pointer;
 	  }
 	}
