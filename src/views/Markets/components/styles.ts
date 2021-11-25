@@ -63,7 +63,6 @@ export const TableContainer = styled.div`
   margin-top: ${(props) => props.theme.spacing[3]}px;
   padding: ${(props) => props.theme.spacing[3]}px;
   background-color: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
   border: ${(props) => props.theme.border.default};
 `
 
@@ -207,7 +206,6 @@ export const OverviewHeader = styled.div`
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	padding: 24px;
   background-color: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
   border-radius: 8px;
 `
 
