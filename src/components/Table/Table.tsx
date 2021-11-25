@@ -4,7 +4,7 @@ import {
 	ItemContainer,
 	ItemWrapper,
 	MarketTable,
-	MarketTableContainer,
+	TableContainer,
 	TableHeader,
 } from 'views/Markets/components/styles'
 

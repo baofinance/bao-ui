@@ -100,7 +100,7 @@ a:focus {
   background-color: #efeae7 !important;
   box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
   border: 1px solid #e7dfda;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 
 .modal-header {
@@ -109,6 +109,16 @@ a:focus {
 
 .modal-footer {
   border-top: 1px solid #cebfb6;
+}
+
+.btn {
+  border: none !important;
+  outline: none !important;
+}
+
+.btn:active {
+  border: none !important;
+  outline: none !important;
 }
 
 .btn-close {

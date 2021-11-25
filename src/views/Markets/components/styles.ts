@@ -20,7 +20,6 @@ export const MarketHeaderContainer = styled.div`
   justify-content: space-between;
   min-height: 3.5rem;
   width: 100%;
-  padding: 16px;
 `
 
 export const MarketHeaderStack = styled.div`
@@ -57,7 +56,7 @@ export const MarketHeaderSubText = styled.a`
   margin: 0;
 `
 
-export const MarketTableContainer = styled.div`
+export const TableContainer = styled.div`
   display: flex;
   width: 100%;
   border-radius: 8px;

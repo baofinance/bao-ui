@@ -26,7 +26,7 @@ import {
 	MarketHeaderStack,
 	MarketHeaderSubText,
 	MarketHeaderText,
-	MarketTableContainer,
+	TableContainer,
 	OverviewTableContainer,
 } from './styles'
 
@@ -121,7 +121,7 @@ export const Supply: React.FC = () => {
 							</MarketHeader>
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
-					<MarketTableContainer>
+					<TableContainer>
 						<Table columns={columns} items={markets} onClick={handleSupply} />
 						{modalAsset && (
 							<MarketSupplyModal
@@ -130,7 +130,7 @@ export const Supply: React.FC = () => {
 								onHide={() => setModalShow(false)}
 							/>
 						)}
-					</MarketTableContainer>
+					</TableContainer>
 				</MarketContainer>
 			</Flex>
 		</>
@@ -219,18 +219,14 @@ export const Borrow = () => {
 					<MarketHeaderContainer>
 						<MarketHeaderStack>
 							<MarketHeader>
-								<Flex>
-									<MarketHeaderText>Borrow</MarketHeaderText>
-								</Flex>
-								<Flex>
-									<MarketHeaderSubText>
-										Borrow against your supplied collateral
-									</MarketHeaderSubText>
-								</Flex>
+								<MarketHeaderText>Borrow</MarketHeaderText>
+								<MarketHeaderSubText>
+									Borrow against your supplied collateral
+								</MarketHeaderSubText>
 							</MarketHeader>
 						</MarketHeaderStack>
 					</MarketHeaderContainer>
-					<MarketTableContainer>
+					<TableContainer>
 						<Table columns={columns} items={markets} onClick={handleBorrow} />
 						{modalAsset && (
 							<MarketBorrowModal
@@ -239,7 +235,7 @@ export const Borrow = () => {
 								onHide={() => setModalShow(false)}
 							/>
 						)}
-					</MarketTableContainer>
+					</TableContainer>
 				</MarketContainer>
 			</Flex>
 		</>
@@ -465,7 +461,7 @@ export const Borrowed: React.FC = () => {
 						)}
 						onClick={handleBorrow} />
 				) : (
-					<ItemWrapper> You don't have any borrowed assets. </ItemWrapper>
+					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}> You don't have any borrowed assets. </ItemWrapper>
 				)}
 				{modalAsset && (
 					<MarketBorrowModal

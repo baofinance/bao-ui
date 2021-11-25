@@ -35,15 +35,17 @@ type MarketStatProps = {
 }
 
 const StatBlock = ({ label, stats }: StatBlockProps) => (
-	<StatWrapper>
+	<>
 		<StatHeader><p>{label}</p></StatHeader>
-		{stats.map(({ label, value }) => (
-			<StatText key={label}>
-				<p>{label}</p>
-				<p style={{ textAlign: 'end' }}>{value}</p>
-			</StatText>
-		))}
-	</StatWrapper>
+		<StatWrapper>
+			{stats.map(({ label, value }) => (
+				<StatText key={label}>
+					<p>{label}</p>
+					<p style={{ textAlign: 'end' }}>{value}</p>
+				</StatText>
+			))}
+		</StatWrapper>
+	</>
 )
 const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalances = useSupplyBalances()
@@ -231,17 +233,17 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 		? accountLiquidity.usdBorrow
 		: 0
 
-	const newBorrow = borrow 
-	? borrow - (change > 0 ? change : 0)
-	: 0
+	const newBorrow = borrow
+		? borrow - (change > 0 ? change : 0)
+		: 0
 
 	const borrowable = accountLiquidity
-	? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
-	: 0
+		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
+		: 0
 
 	const newBorrowable = borrowable
-	? borrowable + (change < 0 ? change : 0)
-	: 0
+		? borrowable + (change < 0 ? change : 0)
+		: 0
 
 	return (
 		<StatBlock
@@ -311,16 +313,21 @@ const StatWrapper = styled.div`
 	flex-direction: column;
 	width: 100%;
 	padding-top: ${(props) => props.theme.spacing[2]};
-	margin-top: 1rem;
+	margin-top: 0.25rem;
     margin-inline: 0px;
     margin-bottom: 0px;
+	background: ${(props) => props.theme.color.primary[200]};
+	padding: 16px;
+	border-radius: 8px;
+	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 const StatHeader = styled.div`
-	color: ${(props) => props.theme.color.text[200]};
-	font-size: ${(props) => props.theme.fontSize.xs};
+	color: ${(props) => props.theme.color.text[100]};
+	font-size: ${(props) => props.theme.fontSize.sm};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
-	text-transform: uppercase;
+	text-align: center;
+	margin-top: 0.5rem;
 
 	p {
 		margin-top: 0.25rem;
@@ -330,17 +337,36 @@ const StatHeader = styled.div`
 `
 
 const StatText = styled.div`
-	display: flex;
-	justify-content: space-between;
-	padding-top: ${(props) => props.theme.spacing[2]};
+transition-property: all;
+transition-duration: 150ms;
+transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+font-weight: ${(props) => props.theme.fontWeight.medium};
+font-size: ${(props) => props.theme.fontSize.default};
+padding-top: ${(props) => props.theme.spacing[1]}px;
+padding-bottom: ${(props) => props.theme.spacing[1]}px;
+padding-left: ${(props) => props.theme.spacing[2]}px;
+padding-right: ${(props) => props.theme.spacing[2]}px;
+border-radius: 8px;
 
 	p {
 		color: ${(props) => props.theme.color.text[100]};
-		font-size: ${(props) => props.theme.fontSize.s};
+		font-size: ${(props) => props.theme.fontSize.sm};
 		font-weight: ${(props) => props.theme.fontWeight.medium};
-		padding-left: 0.5rem;
-		margin-top: 0.25rem;
-		margin-inline: 0px;
+		display: block;
+		margin-block-start: 1em;
+		margin-block-end: 1em;
+		margin: 0px;
+		margin-top: 0px;
+		margin-inline: 0.5rem 0px;
 		margin-bottom: 0px;
 	}
+
+        &:nth-child(odd){
+          background-color: ${(props) => props.theme.color.primary[300]};
+
+        }
 `

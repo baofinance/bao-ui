@@ -53,8 +53,8 @@ const StyledInput = styled.input`
 	font-size: 1.125rem;
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
-	height: 2.5rem;
-	text-align: end;
+	height: 50px;
+	text-align: start;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	padding-right: 0.5rem;
 	outline: transparent solid 2px;
@@ -83,8 +83,8 @@ export const BalanceInput = ({
 }: BalanceInputProps) => (
 	<BalanceInputContainer>
 		<BalanceInputWrapper>
-			<BalanceInputMax onClick={onMaxClick}>MAX</BalanceInputMax>
 			<StyledInput value={value} onChange={onChange} placeholder="0" />
+			<BalanceInputMax onClick={onMaxClick}>MAX</BalanceInputMax>
 		</BalanceInputWrapper>
 		{typeof label === 'string' ? <p>{label}</p> : label}
 	</BalanceInputContainer>
@@ -97,6 +97,7 @@ const BalanceInputContainer = styled.div`
 	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
 	box-shadow: ${(props) => props.theme.boxShadow.hover};
+	height: 50px;
 `
 
 const BalanceInputWrapper = styled.div`
@@ -109,7 +110,6 @@ const BalanceInputWrapper = styled.div`
 const BalanceInputMax = styled.div`
 	display: flex;
 	cursor: pointer;
-	position: absolute;
 	left: 0px;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	font-size: 0.875rem;

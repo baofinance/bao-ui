@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { HeaderWrapper, ItemWrapper } from 'views/Markets/components/styles'
+import { HeaderWrapper, ItemWrapper, TableContainer } from 'views/Markets/components/styles'
 import { provider } from 'web3-core'
 import Config from '../../bao/lib/config'
 import NDEFI from './components/explanations/nDEFI'
@@ -360,7 +360,7 @@ const Basket: React.FC = () => {
 											onClick={() => setPriceHistoryTimeFrame(timeFrame)}
 											active={priceHistoryTimeFrame === timeFrame}
 											key={timeFrame}
-											style={{ marginTop: '0px', borderColor: 'transparent' }}
+											style={{ marginTop: '0px', border: 'none' }}
 										>
 											{timeFrame}
 										</BootButton>
@@ -416,7 +416,7 @@ const Basket: React.FC = () => {
 								variant="outline-primary"
 								onClick={() => setAllocationDisplayType(false)}
 								active={!allocationDisplayType}
-								style={{ marginTop: '0px', borderColor: 'transparent' }}
+								style={{ marginTop: '0px', border: 'none' }}
 							>
 								<FontAwesomeIcon icon="table" />
 							</BootButton>
@@ -424,14 +424,16 @@ const Basket: React.FC = () => {
 								variant="outline-primary"
 								onClick={() => setAllocationDisplayType(true)}
 								active={allocationDisplayType}
-								style={{ marginTop: '0px', borderColor: 'transparent' }}
+								style={{ marginTop: '0px', border: 'none' }}
 							>
 								<FontAwesomeIcon icon="chart-pie" />
 							</BootButton>
 						</PrefButtons>
 						<br />
 						{!allocationDisplayType ? (
-							<Table columns={allocationBreakdown} items={composition} />
+							<TableContainer>
+								<Table columns={allocationBreakdown} items={composition} />
+							</TableContainer>
 						) : (
 							<GraphContainer style={{ height: 'auto' }}>
 								<PieGraphRow lg={2}>
