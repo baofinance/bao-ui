@@ -1,8 +1,12 @@
 import { MarketOperations } from './Modals'
 import styled from 'styled-components'
-import React from 'react'
+import React, { useState } from 'react'
 import { SupportedMarket } from 'bao/lib/types'
 import BigNumber from 'bignumber.js'
+import useBao from '../../../hooks/useBao'
+import { useWallet } from 'use-wallet'
+import { useApprovals } from '../../../hooks/hard-synths/useApprovals'
+import { approvev2 } from '../../../bao/utils'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -17,30 +21,97 @@ export const MarketButton = ({
 	val,
 	isDisabled,
 }: MarketButtonProps) => {
-	switch (operation) {
-		case MarketOperations.supply:
-			return (
-				<ButtonStack>
-					<SubmitButton disabled={isDisabled}>Supply</SubmitButton>
-				</ButtonStack>
-			)
+	const [pendingTx, setPendingTx] = useState(false)
+	const [confirmations, setConfirmations] = useState<undefined | number>()
 
-		case MarketOperations.withdraw:
-			return (
-				<ButtonStack>
-					<SubmitButton disabled={isDisabled}>Withdraw</SubmitButton>
-				</ButtonStack>
-			)
+	const bao = useBao()
+	const { account } = useWallet()
+	const { approvals } = useApprovals(pendingTx)
 
-		case MarketOperations.borrow:
-			return <SubmitButton disabled={isDisabled}>Borrow</SubmitButton>
+	const handleConfirmations = (confNo: number) => {
+		if (confNo < 15) setConfirmations(confNo)
+		else clearPendingTx()
+	}
 
-		case MarketOperations.repay:
-			return (
-				<ButtonStack>
-					<SubmitButton disabled={isDisabled}>Repay</SubmitButton>
-				</ButtonStack>
-			)
+	const clearPendingTx = () => {
+		setConfirmations(undefined)
+		setPendingTx(false)
+	}
+
+	if (pendingTx) {
+		return (
+			<ButtonStack>
+				<SubmitButton disabled={true}>
+					Pending Transaction
+					{confirmations && ` (${confirmations}/15 Confirmations)`}
+				</SubmitButton>
+			</ButtonStack>
+		)
+	} else {
+		switch (operation) {
+			case MarketOperations.supply:
+				return (
+					<ButtonStack>
+						{approvals && approvals[asset.underlying].gt(0) ? (
+							<SubmitButton
+								disabled={isDisabled}
+								onClick={() => {
+									// TODO: Does not work for MATIC market. Need to support chain's native asset.
+									const contract = bao.getNewContract(
+										'ctoken.json',
+										asset.token,
+									)
+									contract.methods
+										.mint(val)
+										.send({ from: account })
+										.on('confirmation', handleConfirmations)
+										.on('error', clearPendingTx)
+									setPendingTx(true)
+								}}
+							>
+								Supply
+							</SubmitButton>
+						) : (
+							<SubmitButton
+								disabled={!approvals}
+								onClick={() => {
+									const underlyingContract = bao.getNewContract(
+										'erc20.json',
+										asset.underlying,
+									)
+									const marketContract = bao.getNewContract(
+										'ctoken.json',
+										asset.token,
+									)
+									approvev2(underlyingContract, marketContract, account)
+										.on('confirmation', handleConfirmations)
+										.on('error', clearPendingTx)
+									setPendingTx(true)
+								}}
+							>
+								Approve {asset.underlyingSymbol}
+							</SubmitButton>
+						)}
+					</ButtonStack>
+				)
+
+			case MarketOperations.withdraw:
+				return (
+					<ButtonStack>
+						<SubmitButton disabled={isDisabled}>Withdraw</SubmitButton>
+					</ButtonStack>
+				)
+
+			case MarketOperations.borrow:
+				return <SubmitButton disabled={isDisabled}>Borrow</SubmitButton>
+
+			case MarketOperations.repay:
+				return (
+					<ButtonStack>
+						<SubmitButton disabled={isDisabled}>Repay</SubmitButton>
+					</ButtonStack>
+				)
+		}
 	}
 }
 
@@ -87,7 +158,10 @@ const SubmitButton = styled.button`
 
 	  &:hover{
 		background: ${(props) => props.theme.color.primary[200]};
-		box-shadow: ${(props) => ( !props.disabled ? props.theme.boxShadow.hover : props.theme.boxShadow.default)};
+		box-shadow: ${(props) =>
+			!props.disabled
+				? props.theme.boxShadow.hover
+				: props.theme.boxShadow.default};
 		cursor: pointer;
 	  }
 	}

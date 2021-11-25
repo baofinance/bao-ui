@@ -14,7 +14,7 @@ import useBao from 'hooks/useBao'
 import BigNumber from 'bignumber.js'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import { decimate } from '../../../utils/numberFormat'
+import { decimate, exponentiate } from '../../../utils/numberFormat'
 import {
 	HeaderWrapper,
 	ModalStack,
@@ -180,7 +180,7 @@ const MarketModal = ({
 					asset={asset}
 					val={
 						val && !isNaN(val as any)
-							? decimate(val, asset.decimals)
+							? exponentiate(val, asset.decimals)
 							: new BigNumber(0)
 					}
 					isDisabled={

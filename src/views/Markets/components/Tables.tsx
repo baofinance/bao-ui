@@ -5,7 +5,7 @@ import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
-	useSupplyBalances
+	useSupplyBalances,
 } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
@@ -21,9 +21,12 @@ import {
 	HeaderWrapper,
 	ItemWrapper,
 	MarketContainer,
-	MarketHeader, MarketHeaderSubText,
-	MarketHeaderText, TableContainer
+	MarketHeader,
+	MarketHeaderSubText,
+	MarketHeaderText,
+	TableContainer,
 } from './styles'
+import { useWallet } from 'use-wallet'
 
 export const Supply: React.FC = () => {
 	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
@@ -42,10 +45,12 @@ export const Supply: React.FC = () => {
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
 				// underlying symbol
-				const balanceRes = balances && balances.find(
-					(balance) =>
-						balance.address.toLowerCase() === market.underlying.toLowerCase(),
-				)
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+					)
 				const symbol = balanceRes && balanceRes.symbol
 
 				return (
@@ -82,10 +87,12 @@ export const Supply: React.FC = () => {
 			),
 			value(market: SupportedMarket) {
 				// underlying balance & symbol
-				const balanceRes = balances && balances.find(
-					(balance) =>
-						balance.address.toLowerCase() === market.underlying.toLowerCase(),
-				)
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+					)
 				const balance = balanceRes ? balanceRes.balance : 0
 				const symbol = balanceRes && balanceRes.symbol
 
@@ -141,16 +148,17 @@ export const Borrow = () => {
 		setModalShow(true)
 	}
 
-
 	const columns = [
 		{
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
 				// underlying symbol
-				const balanceRes = balances && balances.find(
-					(balance) =>
-						balance.address.toLowerCase() === market.underlying.toLowerCase(),
-				)
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+					)
 				const symbol = balanceRes && balanceRes.symbol
 
 				return (
@@ -190,12 +198,12 @@ export const Borrow = () => {
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
 						{market.liquidity && prices
 							? `$${commify(
-								(
-									(market.liquidity *
-										(prices[market.coingeckoId]?.usd || 1)) /
-									1e6
-								).toFixed(2),
-							)}M`
+									(
+										(market.liquidity *
+											(prices[market.coingeckoId]?.usd || 1)) /
+										1e6
+									).toFixed(2),
+							  )}M`
 							: '-'}
 					</ItemWrapper>
 				)
@@ -232,6 +240,7 @@ export const Borrow = () => {
 export const Supplied: React.FC = () => {
 	const bao = useBao()
 	const markets = useMarkets()
+	const { account } = useWallet()
 
 	const balances = useSupplyBalances()
 	const { exchangeRates } = useExchangeRates()
@@ -312,16 +321,19 @@ export const Supplied: React.FC = () => {
 					accountMarkets && accountMarkets.find((market) => market.token)
 
 				return (
-					// underlying balance & symbol
 					<ItemWrapper
 						style={{ justifyContent: 'center', textAlign: 'center' }}
 						onClick={(event: React.MouseEvent<HTMLElement>) => {
 							event.stopPropagation()
 							const contract = getComptrollerContract(bao)
 							if (isEnabled) {
-								contract.methods.exitMarket(market.token)
+								contract.methods
+									.exitMarket(market.token)
+									.send({ from: account })
 							} else {
-								contract.methods.enterMarket([market.token])
+								contract.methods
+									.enterMarket([market.token])
+									.send({ from: account })
 							}
 						}}
 					>
@@ -345,14 +357,17 @@ export const Supplied: React.FC = () => {
 								exchangeRates &&
 								markets.filter(
 									(market: SupportedMarket) =>
-										balances.find((balance) => balance.address === market.token) &&
+										balances.find(
+											(balance) => balance.address === market.token,
+										) &&
 										balances.find((balance) => balance.address === market.token)
 											.balance *
-										exchangeRates[market.token].toNumber() >=
-										0.01,
+											exchangeRates[market.token].toNumber() >=
+											0.01,
 								)
 							}
-							onClick={handleSupply} />
+							onClick={handleSupply}
+						/>
 						{modalAsset && (
 							<MarketSupplyModal
 								asset={modalAsset}
@@ -446,15 +461,23 @@ export const Borrowed: React.FC = () => {
 								columns={columns}
 								items={markets.filter(
 									(market: SupportedMarket) =>
-										balances.find((balance) => balance.address === market.token) &&
+										balances.find(
+											(balance) => balance.address === market.token,
+										) &&
 										balances.find((balance) => balance.address === market.token)
 											.balance *
-										exchangeRates[market.token].toNumber() >=
-										0.01,
+											exchangeRates[market.token].toNumber() >=
+											0.01,
 								)}
-								onClick={handleBorrow} />
+								onClick={handleBorrow}
+							/>
 						) : (
-							<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}> You don't have any borrowed assets. </ItemWrapper>
+							<ItemWrapper
+								style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+							>
+								{' '}
+								You don't have any borrowed assets.{' '}
+							</ItemWrapper>
 						)}
 						{modalAsset && (
 							<MarketBorrowModal

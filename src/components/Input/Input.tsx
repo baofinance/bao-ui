@@ -97,7 +97,6 @@ const BalanceInputContainer = styled.div`
 	width: 100%;
 	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
-	box-shadow: ${(props) => props.theme.boxShadow.hover};
 	height: 50px;
 `
 
