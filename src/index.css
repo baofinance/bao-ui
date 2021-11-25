@@ -37,10 +37,9 @@ a:focus {
 
 .baoTicker {
   color: #50251c;
-  background-color: #e7dfda !important;
+  background-color: #efeae7 !important;
   padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  border-radius: 8px;
 }
 
 .outline-primary {

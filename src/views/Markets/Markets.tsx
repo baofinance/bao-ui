@@ -53,21 +53,6 @@ const Section = styled.div`
 	border-radius: ${(props) => props.theme.borderRadius}px;
 `
 
-
-const SectionInner = styled.div`
-	justify-content: center;
-	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[200]};
-	border-radius: ${(props) => props.theme.borderRadius}px;
-	box-shadow: ${(props) => props.theme.boxShadow.hover};
-`
-
-const UserOverview = styled.div`
-	display: flex;
-	justify-content: center;
-	width: 100%;
-`
-
 const MarketOverview = styled.div`
 	display: flex;
 	justify-content: center;

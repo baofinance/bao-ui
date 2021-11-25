@@ -19,7 +19,7 @@ const StyledCardIcon = styled.div`
 	justify-content: center;
 	margin: 0 auto ${(props) => props.theme.spacing[3]}px;
 	box-shadow: ${(props) => props.theme.boxShadow.hover};
-	background-color: ${(props) => props.theme.color.primary[300]};
+	background-color: ${(props) => props.theme.color.primary[200]};
 `
 
 export default CardIcon

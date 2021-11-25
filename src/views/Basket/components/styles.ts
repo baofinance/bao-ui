@@ -131,8 +131,7 @@ export const GraphContainer = styled(Col)`
   margin: 0 auto ${(props) => props.theme.spacing[6]}px;
   border-radius: ${(props) => props.theme.borderRadius}px;
   overflow: hidden;
-  background: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
+  background: ${(props) => props.theme.color.primary[100]};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     height: 250px;
@@ -227,7 +226,7 @@ export const StatsRow = styled(Row)`
 `
 
 export const StatCard = styled.div`
-  background: ${(props) => props.theme.color.primary[200]};
+  background: ${(props) => props.theme.color.primary[100]};
   width: 90%;
   margin: 0 auto;
   padding: ${(props) => props.theme.spacing[3]}px;
@@ -235,8 +234,6 @@ export const StatCard = styled.div`
   font-weight: ${(props) => props.theme.fontWeight.medium};
   text-align: center;
   color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     padding: ${(props) => props.theme.spacing[2]}px;
@@ -252,15 +249,13 @@ export const StyledBadge = styled(Badge)`
   font-size: 1rem !important;
   color: ${(props) => props.theme.color.text[100]};
   font-weight: ${(props) => props.theme.fontWeight.medium};
-  background-color: ${(props) => props.theme.color.transparent[200]};
 `
 
 export const PriceBadge = styled(Badge)`
   font-size: 1rem !important;
   font-weight: ${(props) => props.theme.fontWeight.medium};
   color: ${(props) => props.theme.color.text[100]};
-  background-color: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
+  background-color: ${(props) => props.theme.color.primary[100]};
 `
 
 export const Icon = styled.img`

@@ -257,8 +257,7 @@ export const AnalyticsContainer = styled(Row)`
   display: flex;
   flex-direction: row;
   border-radius: ${(props) => props.theme.borderRadius}px;
-  background-color: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
+  background-color: ${(props) => props.theme.color.primary[100]};
   position: relative;
   width: 80%;
   left: 50%;
