@@ -206,6 +206,9 @@ export const OverviewHeader = styled.div`
 	font-size: 0.875rem;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	padding: 24px;
+  background-color: ${(props) => props.theme.color.primary[200]};
+  box-shadow: ${(props) => props.theme.boxShadow.hover};
+  border-radius: 8px;
 `
 
 export const BorrowLimit = styled.div`

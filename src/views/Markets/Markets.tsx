@@ -26,14 +26,12 @@ const Markets: React.FC = () => {
 						<>
 							<Section>
 								<SectionHeader>Dashboard</SectionHeader>
-								<SectionInner>
-									<Overview />
-									<UserOverview>
-										<Supplied />
-										<Borrowed />
-									</UserOverview>
-								</SectionInner>
+								<Overview />
 							</Section>
+							<MarketOverview>
+								<Supplied />
+								<Borrowed />
+							</MarketOverview>
 							<MarketOverview>
 								<Supply />
 								<Borrow />

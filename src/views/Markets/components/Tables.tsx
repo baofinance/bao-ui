@@ -5,7 +5,7 @@ import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
-	useSupplyBalances,
+	useSupplyBalances
 } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
@@ -25,9 +25,7 @@ import {
 	MarketHeaderContainer,
 	MarketHeaderStack,
 	MarketHeaderSubText,
-	MarketHeaderText,
-	TableContainer,
-	OverviewTableContainer,
+	MarketHeaderText, OverviewTableContainer, TableContainer
 } from './styles'
 
 export const Supply: React.FC = () => {
@@ -347,31 +345,35 @@ export const Supplied: React.FC = () => {
 
 	return (
 		<>
-			<OverviewTableContainer>
-				<Table
-					columns={columns}
-					items={
-						markets &&
-						balances &&
-						exchangeRates &&
-						markets.filter(
-							(market: SupportedMarket) =>
-								balances.find((balance) => balance.address === market.token) &&
-								balances.find((balance) => balance.address === market.token)
-									.balance *
-								exchangeRates[market.token].toNumber() >=
-								0.01,
-						)
-					}
-					onClick={handleSupply} />
-				{modalAsset && (
-					<MarketSupplyModal
-						asset={modalAsset}
-						show={modalShow}
-						onHide={() => setModalShow(false)}
-					/>
-				)}
-			</OverviewTableContainer>
+			<Flex>
+				<MarketContainer>
+					<TableContainer>
+						<Table
+							columns={columns}
+							items={
+								markets &&
+								balances &&
+								exchangeRates &&
+								markets.filter(
+									(market: SupportedMarket) =>
+										balances.find((balance) => balance.address === market.token) &&
+										balances.find((balance) => balance.address === market.token)
+											.balance *
+										exchangeRates[market.token].toNumber() >=
+										0.01,
+								)
+							}
+							onClick={handleSupply} />
+						{modalAsset && (
+							<MarketSupplyModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
+					</TableContainer>
+				</MarketContainer>
+			</Flex>
 		</>
 	)
 }
@@ -447,30 +449,34 @@ export const Borrowed: React.FC = () => {
 
 	return (
 		<>
-			<OverviewTableContainer>
-				{accountLiquidity ? (
-					<Table
-						columns={columns}
-						items={markets.filter(
-							(market: SupportedMarket) =>
-								balances.find((balance) => balance.address === market.token) &&
-								balances.find((balance) => balance.address === market.token)
-									.balance *
-								exchangeRates[market.token].toNumber() >=
-								0.01,
-						)}
-						onClick={handleBorrow} />
-				) : (
-					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}> You don't have any borrowed assets. </ItemWrapper>
-				)}
-				{modalAsset && (
-					<MarketBorrowModal
-						asset={modalAsset}
-						show={modalShow}
-						onHide={() => setModalShow(false)}
-					/>
-				)}
-			</OverviewTableContainer>
+			<Flex>
+				<MarketContainer>
+					<TableContainer>
+							{accountLiquidity ? (
+								<Table
+									columns={columns}
+									items={markets.filter(
+										(market: SupportedMarket) =>
+											balances.find((balance) => balance.address === market.token) &&
+											balances.find((balance) => balance.address === market.token)
+												.balance *
+											exchangeRates[market.token].toNumber() >=
+											0.01,
+									)}
+									onClick={handleBorrow} />
+							) : (
+								<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}> You don't have any borrowed assets. </ItemWrapper>
+							)}
+							{modalAsset && (
+								<MarketBorrowModal
+									asset={modalAsset}
+									show={modalShow}
+									onHide={() => setModalShow(false)}
+								/>
+							)}
+					</TableContainer>
+				</MarketContainer>
+			</Flex>
 		</>
 	)
 }
