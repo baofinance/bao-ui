@@ -1,3 +1,4 @@
+import { MaxButton } from 'components/Button'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -84,7 +85,7 @@ export const BalanceInput = ({
 	<BalanceInputContainer>
 		<BalanceInputWrapper>
 			<StyledInput value={value} onChange={onChange} placeholder="0" />
-			<BalanceInputMax onClick={onMaxClick}>MAX</BalanceInputMax>
+			<MaxButton onClick={onMaxClick}>MAX</MaxButton>
 		</BalanceInputWrapper>
 		{typeof label === 'string' ? <p>{label}</p> : label}
 	</BalanceInputContainer>
@@ -94,7 +95,7 @@ const BalanceInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[100]};
+	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
 	box-shadow: ${(props) => props.theme.boxShadow.hover};
 	height: 50px;

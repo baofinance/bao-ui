@@ -213,6 +213,7 @@ export const MaxButton = styled.a`
 	box-shadow: ${(props) => props.theme.boxShadow.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	transition: .5s;
+	font-size: ${(props) => props.theme.fontSize.sm};
 
 	&:hover {
 		background: ${(props) => props.theme.color.primary[100]};

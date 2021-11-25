@@ -388,7 +388,7 @@ export const Borrowed: React.FC = () => {
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{market.symbol}</p>
+						<p>{market.underlyingSymbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -429,7 +429,7 @@ export const Borrowed: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${balance.toFixed(2)} ${market.symbol}`}
+						{`${balance.toFixed(2)} ${market.underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},

@@ -107,7 +107,6 @@ export const StyledInsight = styled.div`
   margin-top: ${(props) => props.theme.spacing[2]}px;
   line-height: 32px;
   font-size: 0.75rem;
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
   text-align: center;
   padding: 0 ${(props) => props.theme.spacing[2]}px;
 `
