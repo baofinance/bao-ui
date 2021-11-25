@@ -63,7 +63,7 @@ export const TableContainer = styled.div`
   border-radius: 8px;
   margin-top: ${(props) => props.theme.spacing[3]}px;
   padding: ${(props) => props.theme.spacing[3]}px;
-  background-color: ${(props) => props.theme.color.primary[200]};
+  background-color: ${(props) => props.theme.color.primary[100]};
   border: ${(props) => props.theme.border.default};
 `
 
@@ -113,14 +113,14 @@ export const ItemContainer = styled.div`
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.color.primary[400]};
+        background-color: ${(props) => props.theme.color.primary[300]};
     }
 
         &:nth-child(odd){
-          background-color: ${(props) => props.theme.color.primary[300]};
+          background-color: ${(props) => props.theme.color.primary[200]};
 
           &:hover {
-            background-color: ${(props) => props.theme.color.primary[400]};
+            background-color: ${(props) => props.theme.color.primary[300]};
         }
         }
 `
@@ -161,7 +161,7 @@ grid-template-columns: repeat(3, minmax(0px, 1fr));
 
 export const UserStatsWrapper = styled.div`
 padding: 16px;
-background-color: ${(props) => props.theme.color.primary[200]};
+background-color: ${(props) => props.theme.color.primary[100]};
 border-radius: 8px;
 position: relative;
     flex: 1 1 0%;
@@ -206,7 +206,7 @@ border-radius: 8px;
 position: relative;
     flex: 1 1 0%;
     border-radius: 8px;
-    background-color: ${(props) => props.theme.color.primary[200]};
+    background-color: ${(props) => props.theme.color.primary[100]};
     border: 1px solid ${(props) => props.theme.color.secondary[900]};
 `
 
@@ -302,7 +302,7 @@ export const OverviewHeader = styled.div`
 	font-size: 0.875rem;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	padding: 24px;
-  background-color: ${(props) => props.theme.color.primary[200]};
+  background-color: ${(props) => props.theme.color.primary[100]};
   border-radius: 8px;
 `
 
