@@ -157,6 +157,8 @@ grid-template-columns: repeat(3, minmax(0px, 1fr));
     padding-bottom: 16px;
     justify-content: space-between;
     width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
 `
 
 export const UserStatsWrapper = styled.div`

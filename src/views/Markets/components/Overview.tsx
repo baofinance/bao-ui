@@ -63,7 +63,6 @@ export const Overview = () => {
 					</BorrowText>
 				</OverviewHeader>
 			</OverviewContainer>
-			<MarketHeaderContainer>
 				<UserStatsContainer>
 					<UserStatsWrapper>
 						<UserStat>
@@ -84,7 +83,6 @@ export const Overview = () => {
 						</UserStat>
 					</UserStatsWrapper>
 				</UserStatsContainer>
-			</MarketHeaderContainer>
 		</>
 	) : (
 		<></>

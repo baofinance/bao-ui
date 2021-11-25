@@ -21,11 +21,8 @@ import {
 	HeaderWrapper,
 	ItemWrapper,
 	MarketContainer,
-	MarketHeader,
-	MarketHeaderContainer,
-	MarketHeaderStack,
-	MarketHeaderSubText,
-	MarketHeaderText, OverviewTableContainer, TableContainer
+	MarketHeader, MarketHeaderSubText,
+	MarketHeaderText, TableContainer
 } from './styles'
 
 export const Supply: React.FC = () => {
@@ -105,20 +102,16 @@ export const Supply: React.FC = () => {
 		<>
 			<Flex>
 				<MarketContainer>
-					<MarketHeaderContainer>
-						<MarketHeaderStack>
-							<MarketHeader>
-								<Flex>
-									<MarketHeaderText>Supply</MarketHeaderText>
-								</Flex>
-								<Flex>
-									<MarketHeaderSubText>
-										Earn interest on your deposits
-									</MarketHeaderSubText>
-								</Flex>
-							</MarketHeader>
-						</MarketHeaderStack>
-					</MarketHeaderContainer>
+					<MarketHeader>
+						<Flex>
+							<MarketHeaderText>Supply</MarketHeaderText>
+						</Flex>
+						<Flex>
+							<MarketHeaderSubText>
+								Earn interest on your deposits
+							</MarketHeaderSubText>
+						</Flex>
+					</MarketHeader>
 					<TableContainer>
 						<Table columns={columns} items={markets} onClick={handleSupply} />
 						{modalAsset && (
@@ -214,16 +207,12 @@ export const Borrow = () => {
 		<>
 			<Flex>
 				<MarketContainer>
-					<MarketHeaderContainer>
-						<MarketHeaderStack>
-							<MarketHeader>
-								<MarketHeaderText>Borrow</MarketHeaderText>
-								<MarketHeaderSubText>
-									Borrow against your supplied collateral
-								</MarketHeaderSubText>
-							</MarketHeader>
-						</MarketHeaderStack>
-					</MarketHeaderContainer>
+					<MarketHeader>
+						<MarketHeaderText>Borrow</MarketHeaderText>
+						<MarketHeaderSubText>
+							Borrow against your supplied collateral
+						</MarketHeaderSubText>
+					</MarketHeader>
 					<TableContainer>
 						<Table columns={columns} items={markets} onClick={handleBorrow} />
 						{modalAsset && (
@@ -346,7 +335,7 @@ export const Supplied: React.FC = () => {
 	return (
 		<>
 			<Flex>
-				<MarketContainer>
+				<MarketContainer style={{ paddingTop: '16px' }}>
 					<TableContainer>
 						<Table
 							columns={columns}
@@ -450,30 +439,30 @@ export const Borrowed: React.FC = () => {
 	return (
 		<>
 			<Flex>
-				<MarketContainer>
+				<MarketContainer style={{ paddingTop: '16px' }}>
 					<TableContainer>
-							{accountLiquidity ? (
-								<Table
-									columns={columns}
-									items={markets.filter(
-										(market: SupportedMarket) =>
-											balances.find((balance) => balance.address === market.token) &&
-											balances.find((balance) => balance.address === market.token)
-												.balance *
-											exchangeRates[market.token].toNumber() >=
-											0.01,
-									)}
-									onClick={handleBorrow} />
-							) : (
-								<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}> You don't have any borrowed assets. </ItemWrapper>
-							)}
-							{modalAsset && (
-								<MarketBorrowModal
-									asset={modalAsset}
-									show={modalShow}
-									onHide={() => setModalShow(false)}
-								/>
-							)}
+						{accountLiquidity ? (
+							<Table
+								columns={columns}
+								items={markets.filter(
+									(market: SupportedMarket) =>
+										balances.find((balance) => balance.address === market.token) &&
+										balances.find((balance) => balance.address === market.token)
+											.balance *
+										exchangeRates[market.token].toNumber() >=
+										0.01,
+								)}
+								onClick={handleBorrow} />
+						) : (
+							<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}> You don't have any borrowed assets. </ItemWrapper>
+						)}
+						{modalAsset && (
+							<MarketBorrowModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
 					</TableContainer>
 				</MarketContainer>
 			</Flex>
