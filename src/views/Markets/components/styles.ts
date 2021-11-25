@@ -148,6 +148,45 @@ export const ItemWrapper = styled.div`
   }
 `
 
+export const UserStatsContainer = styled.div`
+display: grid;
+grid-template-columns: repeat(3, minmax(0px, 1fr));
+    grid-gap: 0.75rem;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    justify-content: space-between;
+    width: 100%;
+`
+
+export const UserStatsWrapper = styled.div`
+padding: 16px;
+background-color: ${(props) => props.theme.color.primary[200]};
+border-radius: 8px;
+position: relative;
+    flex: 1 1 0%;
+    padding-inline-start: 1rem;
+    padding-inline-end: 1rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-radius: 8px;
+`
+
+export const UserStat = styled.div`
+margin: 0px;
+overflow-wrap: break-word;
+
+    p {
+      font-size: 1.87rem;
+      margin: 0px;
+    }
+    
+    h1 {
+      font-size: 1rem;
+      color: ${(props) => props.theme.color.text[200]};
+      margin: 0px;
+    }
+`
+
 export const MarketSummary = styled.div`
   display: flex;
   flex-direction: column;

@@ -5,12 +5,9 @@ import React from 'react'
 import {
 	BorrowLimit,
 	BorrowMeterContainer,
-	BorrowText,
-	HeaderWrapper,
-	MarketHeaderContainer,
+	BorrowText, MarketHeaderContainer,
 	OverviewContainer,
-	OverviewHeader,
-	TableHeader
+	OverviewHeader, UserStat, UserStatsContainer, UserStatsWrapper
 } from './styles'
 
 export const Overview = () => {
@@ -26,26 +23,6 @@ export const Overview = () => {
 
 	return accountLiquidity ? (
 		<>
-			<MarketHeaderContainer>
-				<TableHeader>
-					<HeaderWrapper>
-						{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`} %
-						Net APY
-					</HeaderWrapper>
-					<HeaderWrapper
-						style={{ justifyContent: 'center', textAlign: 'center' }}
-					>
-						${`${accountLiquidity ? accountLiquidity.usdBorrow.toFixed(2) : 0}`}{' '}
-						Borrowed
-					</HeaderWrapper>
-					<HeaderWrapper
-						style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-					>
-						${`${accountLiquidity ? accountLiquidity.usdSupply.toFixed(2) : 0}`}{' '}
-						Supplied
-					</HeaderWrapper>
-				</TableHeader>
-			</MarketHeaderContainer>
 			<OverviewContainer>
 				<OverviewHeader>
 					<BorrowLimit>
@@ -53,13 +30,13 @@ export const Overview = () => {
 					</BorrowLimit>
 					<BorrowText>
 						{`${accountLiquidity.usdBorrowable > 0
-								? Math.floor(
-									(accountLiquidity.usdBorrow /
-										(accountLiquidity.usdBorrowable +
-											accountLiquidity.usdBorrow)) *
-									100,
-								)
-								: 0
+							? Math.floor(
+								(accountLiquidity.usdBorrow /
+									(accountLiquidity.usdBorrowable +
+										accountLiquidity.usdBorrow)) *
+								100,
+							)
+							: 0
 							}`}
 						%
 					</BorrowText>
@@ -75,17 +52,39 @@ export const Overview = () => {
 					<BorrowText>
 						$
 						{`${accountLiquidity
-								? commify(
-									(
-										accountLiquidity.usdBorrowable +
-										accountLiquidity.usdBorrow
-									).toFixed(2),
-								)
-								: '0.00'
+							? commify(
+								(
+									accountLiquidity.usdBorrowable +
+									accountLiquidity.usdBorrow
+								).toFixed(2),
+							)
+							: '0.00'
 							}`}
 					</BorrowText>
 				</OverviewHeader>
 			</OverviewContainer>
+			<MarketHeaderContainer>
+				<UserStatsContainer>
+					<UserStatsWrapper>
+						<UserStat>
+							<h1>Net APY</h1>
+							<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`} %</p>
+						</UserStat>
+					</UserStatsWrapper>
+					<UserStatsWrapper>
+						<UserStat>
+							<h1>Total Borrowed</h1>
+							<p>${`${accountLiquidity ? accountLiquidity.usdBorrow.toFixed(2) : 0}`}{' '}</p>
+						</UserStat>
+					</UserStatsWrapper>
+					<UserStatsWrapper>
+						<UserStat>
+							<h1>Total Supplied</h1>
+							<p>${`${accountLiquidity ? accountLiquidity.usdSupply.toFixed(2) : 0}`}{' '}</p>
+						</UserStat>
+					</UserStatsWrapper>
+				</UserStatsContainer>
+			</MarketHeaderContainer>
 		</>
 	) : (
 		<></>
