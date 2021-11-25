@@ -1,12 +1,9 @@
+import React from 'react'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
-import WalletProviderModal from 'components/WalletProviderModal'
-import useModal from 'hooks/useModal'
-import React from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
 import { Overview } from './components/Overview'
 import {
 	Borrow,
@@ -14,33 +11,38 @@ import {
 	Supplied,
 	Supply,
 } from './components/Tables'
+import { SpinnerLoader } from '../../components/Loader'
+import { useMarkets } from '../../hooks/hard-synths/useMarkets'
 
 const Markets: React.FC = () => {
-	const { account, ethereum }: any = useWallet()
-	const [onPresentWalletProviderModal] = useModal(<WalletProviderModal />)
+	const markets = useMarkets()
 
 	return (
 		<Switch>
 			<Page>
-				<>
-					<PageHeader icon="" title="Markets" subtitle="Mint, Lend, Borrow" />
-					<Container>
-						<Section>
-							<SectionHeader>Dashboard</SectionHeader>
-							<SectionInner>
-								<Overview />
-								<UserOverview>
-									<Supplied />
-									<Borrowed />
-								</UserOverview>
-							</SectionInner>
-						</Section>
-						<MarketOverview>
-							<Supply />
-							<Borrow />
-						</MarketOverview>
-					</Container>
-				</>
+				<PageHeader icon="" title="Markets" subtitle="Mint, Lend, Borrow" />
+				<Container>
+					{markets ? (
+						<>
+							<Section>
+								<SectionHeader>Dashboard</SectionHeader>
+								<SectionInner>
+									<Overview />
+									<UserOverview>
+										<Supplied />
+										<Borrowed />
+									</UserOverview>
+								</SectionInner>
+							</Section>
+							<MarketOverview>
+								<Supply />
+								<Borrow />
+							</MarketOverview>
+						</>
+					) : (
+						<SpinnerLoader block />
+					)}
+				</Container>
 			</Page>
 		</Switch>
 	)

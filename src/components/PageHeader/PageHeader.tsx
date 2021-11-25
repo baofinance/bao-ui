@@ -9,32 +9,14 @@ interface PageHeaderProps {
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
-	const titletext = title.toString()
-	if (titletext.toString() === 'BaoChef is Ready') {
-		return (
-			<Container size="sm">
-				<StyledPageHeader>
-					<StyledTitle>{title}</StyledTitle>
-				</StyledPageHeader>
-			</Container>
-		)
-	} else if (titletext.toString() === 'Select Your Fav Dim Sum Entrees!') {
-		return (
-			<Container size="sm">
-				<StyledPageHeader>
-					<StyledTitle>{title}</StyledTitle>
-				</StyledPageHeader>
-			</Container>
-		)
-	} else {
-		return (
-			<Container size="sm">
-				<StyledPageHeader>
-					<StyledTitle>{title}</StyledTitle>
-				</StyledPageHeader>
-			</Container>
-		)
-	}
+	return (
+		<Container size="sm">
+			<StyledPageHeader>
+				<StyledTitle>{title}</StyledTitle>
+				<p>{subtitle}</p>
+			</StyledPageHeader>
+		</Container>
+	)
 }
 
 const StyledPageHeader = styled.div`

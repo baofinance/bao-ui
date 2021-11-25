@@ -52,7 +52,7 @@ export const Overview = () => {
 						Borrow Limit <Tooltipped content={`Some info here.`} />
 					</BorrowLimit>
 					<BorrowText>
-						{`${accountLiquidity
+						{`${accountLiquidity.usdBorrowable > 0
 								? Math.floor(
 									(accountLiquidity.usdBorrow /
 										(accountLiquidity.usdBorrowable +

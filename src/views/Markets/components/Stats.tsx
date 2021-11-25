@@ -198,14 +198,14 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit',
-					value: `$${borrowable.toFixed(2)} -> $${newBorrowable.toFixed(2)}`,
+					value: `$${borrowable.toFixed(2)} ➜ $${newBorrowable.toFixed(2)}`,
 				},
 				{
 					label: 'Borrow Limit Used',
 					value: `${(accountLiquidity && borrowable !== 0
 						? (accountLiquidity.usdBorrow / borrowable) * 100
 						: 0
-					).toFixed(2)}% -> ${(newBorrowable !== 0
+					).toFixed(2)}% ➜ ${(accountLiquidity && newBorrowable !== 0
 						? (accountLiquidity.usdBorrow / newBorrowable) * 100
 						: 0
 					).toFixed(2)}%`,
@@ -249,7 +249,7 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit Remaining',
-					value: `$${accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0} -> $${(
+					value: `$${accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0} ➜ $${(
 						accountLiquidity ? accountLiquidity.usdBorrowable + change : 0
 					).toFixed(2)}`,
 				},
@@ -258,7 +258,7 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 					value: `${(borrowable !== 0
 						? (borrow / borrowable) * 100
 						: 0
-					).toFixed(2)}% -> ${(newBorrowable !== 0
+					).toFixed(2)}% ➜ ${(newBorrowable !== 0
 						? (newBorrow / newBorrowable) * 100
 						: 0
 					).toFixed(2)}%`,

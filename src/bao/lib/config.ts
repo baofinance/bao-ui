@@ -169,7 +169,7 @@ export default {
       underlyingAddresses: {
         137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
-      icon: '/nstbl.png',
+      icon: '/nSTBL.png',
       coingeckoId: 'dai',
       decimals: 18,
     },

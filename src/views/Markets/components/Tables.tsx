@@ -47,10 +47,11 @@ export const Supply: React.FC = () => {
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
 				// underlying symbol
-				const { symbol } = balances.find(
+				const balanceRes = balances && balances.find(
 					(balance) =>
 						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
+				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper>
@@ -86,10 +87,12 @@ export const Supply: React.FC = () => {
 			),
 			value(market: SupportedMarket) {
 				// underlying balance & symbol
-				const { balance, symbol } = balances.find(
+				const balanceRes = balances && balances.find(
 					(balance) =>
 						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
+				const balance = balanceRes ? balanceRes.balance : 0
+				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
@@ -153,10 +156,11 @@ export const Borrow = () => {
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
 				// underlying symbol
-				const { symbol } = balances.find(
+				const balanceRes = balances && balances.find(
 					(balance) =>
 						balance.address.toLowerCase() === market.underlying.toLowerCase(),
 				)
+				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper>
@@ -353,6 +357,7 @@ export const Supplied: React.FC = () => {
 					items={
 						markets &&
 						balances &&
+						exchangeRates &&
 						markets.filter(
 							(market: SupportedMarket) =>
 								balances.find((balance) => balance.address === market.token) &&
@@ -393,12 +398,10 @@ export const Borrowed: React.FC = () => {
 		{
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
 			value(market: SupportedMarket) {
-				// underlying symbol
-
 				return (
 					<ItemWrapper>
 						<img src={market.icon} />
-						<p>{market.underlyingSymbol}</p>
+						<p>{market.symbol}</p>
 					</ItemWrapper>
 				)
 			},
@@ -428,14 +431,14 @@ export const Borrowed: React.FC = () => {
 				</HeaderWrapper>
 			),
 			value(market: SupportedMarket) {
-				// underlying balance & symbol
+				// underlying balance
 				const balanceRes =
 					balances &&
 					balances.find(
 						(balance) =>
 							balance.address.toLowerCase() === market.token.toLowerCase(),
 					)
-				const { balance } = balanceRes || { balance: 0, symbol: null }
+				const { balance } = balanceRes || { balance: 0 }
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>

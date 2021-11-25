@@ -11,29 +11,34 @@ type MarketButtonProps = {
 	isDisabled: boolean
 }
 
-export const MarketButton = ({ operation }: MarketButtonProps) => {
+export const MarketButton = ({
+	operation,
+	asset,
+	val,
+	isDisabled,
+}: MarketButtonProps) => {
 	switch (operation) {
 		case MarketOperations.supply:
 			return (
 				<ButtonStack>
-					<SubmitButton>Supply</SubmitButton>
+					<SubmitButton disabled={isDisabled}>Supply</SubmitButton>
 				</ButtonStack>
 			)
 
 		case MarketOperations.withdraw:
 			return (
 				<ButtonStack>
-					<SubmitButton>Withdraw</SubmitButton>
+					<SubmitButton disabled={isDisabled}>Withdraw</SubmitButton>
 				</ButtonStack>
 			)
 
 		case MarketOperations.borrow:
-			return <SubmitButton>Borrow</SubmitButton>
+			return <SubmitButton disabled={isDisabled}>Borrow</SubmitButton>
 
 		case MarketOperations.repay:
 			return (
 				<ButtonStack>
-					<SubmitButton>Repay</SubmitButton>
+					<SubmitButton disabled={isDisabled}>Repay</SubmitButton>
 				</ButtonStack>
 			)
 	}
