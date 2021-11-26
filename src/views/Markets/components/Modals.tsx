@@ -99,7 +99,9 @@ const MarketModal = ({
 			case MarketOperations.repay:
 				return balances
 					? balances.find(
-						(balances) => balances.address === asset.underlying || 'ETH',
+						(_balance) =>
+							_balance.address.toLowerCase() ===
+							asset.underlying.toLowerCase(),
 					).balance
 					: 0
 		}

@@ -25,7 +25,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
     const contracts: Contract[] = Config.markets.map(
       (market: SupportedMarket) => {
         return bao.getNewContract(
-          'ctoken.json',
+          market.underlyingAddresses[Config.networkId] === 'ETH' ? 'cether.json' : 'ctoken.json',
           market.marketAddresses[Config.networkId],
         )
       },
@@ -106,10 +106,12 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
           const underlyingAddress = Config.markets.find(
             (market) => market.marketAddresses[Config.networkId] === address,
           ).underlyingAddresses[Config.networkId]
-          return bao
-            .getNewContract('erc20.json', underlyingAddress)
-            .methods.symbol()
-            .call()
+          return underlyingAddress === 'ETH'
+            ? underlyingAddress
+            : bao
+              .getNewContract('erc20.json', underlyingAddress)
+              .methods.symbol()
+              .call()
         }),
       ),
     ])

@@ -14,7 +14,6 @@ const Home: React.FC = () => {
 		<Page>
 			<Container>
 				<SectionOne />
-				<ProtocolData />
 				<SecuritySection />
 				<Spacer size="lg" />
 				<SectionTwo />

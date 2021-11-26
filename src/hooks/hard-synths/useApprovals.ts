@@ -9,7 +9,7 @@ type Approvals = {
   approvals: { [key: string]: BigNumber }
 }
 
-export const useApprovals = (pendingTx: boolean): Approvals => {
+export const useApprovals = (pendingTx: string | boolean): Approvals => {
   const bao = useBao()
   const { account } = useWallet()
   const markets = useMarkets()
@@ -19,11 +19,13 @@ export const useApprovals = (pendingTx: boolean): Approvals => {
 
   const fetchApprovals = useCallback(async () => {
     const multicallContext = MultiCall.createCallContext(
-      markets.map((market) => ({
-        ref: market.underlying,
-        contract: bao.getNewContract('erc20.json', market.underlying),
-        calls: [{ method: 'allowance', params: [account, market.token] }],
-      })),
+      markets
+        .map((market) => market.underlying !== 'ETH' && ({
+          ref: market.underlying,
+          contract: bao.getNewContract('erc20.json', market.underlying),
+          calls: [{ method: 'allowance', params: [account, market.token] }],
+        }))
+        .filter((call) => call),
     )
     const multicallResults = MultiCall.parseCallResults(
       await bao.multicall.call(multicallContext),

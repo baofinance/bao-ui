@@ -7,6 +7,8 @@ import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useApprovals } from '../../../hooks/hard-synths/useApprovals'
 import { approvev2 } from '../../../bao/utils'
+import Config from '../../../bao/lib/config'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -15,13 +17,15 @@ type MarketButtonProps = {
 	isDisabled: boolean
 }
 
+const REQUIRED_CONFIRMATIONS = 5
+
 export const MarketButton = ({
 	operation,
 	asset,
 	val,
 	isDisabled,
 }: MarketButtonProps) => {
-	const [pendingTx, setPendingTx] = useState(false)
+	const [pendingTx, setPendingTx] = useState<string | boolean>(false)
 	const [confirmations, setConfirmations] = useState<undefined | number>()
 
 	const bao = useBao()
@@ -29,7 +33,7 @@ export const MarketButton = ({
 	const { approvals } = useApprovals(pendingTx)
 
 	const handleConfirmations = (confNo: number) => {
-		if (confNo < 15) setConfirmations(confNo)
+		if (confNo < REQUIRED_CONFIRMATIONS) setConfirmations(confNo)
 		else clearPendingTx()
 	}
 
@@ -38,12 +42,26 @@ export const MarketButton = ({
 		setPendingTx(false)
 	}
 
+	const marketContract = bao.getNewContract(
+		asset.underlying === 'ETH' ? 'cether.json' : 'ctoken.json',
+		asset.token,
+	)
+
 	if (pendingTx) {
 		return (
 			<ButtonStack>
 				<SubmitButton disabled={true}>
-					Pending Transaction
-					{confirmations && ` (${confirmations}/15 Confirmations)`}
+					{confirmations
+						? `Transaction Succeeded (${confirmations}/${REQUIRED_CONFIRMATIONS} Confirmations)`
+						: typeof pendingTx === 'string'
+							? (
+									<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target="_blank">
+										Pending Transaction{' '}
+										<FontAwesomeIcon icon='external-link-alt' />
+									</ExternalLink>
+								)
+							: 'Pending Transaction'
+					}
 				</SubmitButton>
 			</ButtonStack>
 		)
@@ -52,18 +70,21 @@ export const MarketButton = ({
 			case MarketOperations.supply:
 				return (
 					<ButtonStack>
-						{approvals && approvals[asset.underlying].gt(0) ? (
+						{approvals && (asset.underlying === 'ETH' || approvals[asset.underlying].gt(0)) ? (
 							<SubmitButton
 								disabled={isDisabled}
 								onClick={() => {
-									// TODO: Does not work for MATIC market. Need to support chain's native asset.
-									const contract = bao.getNewContract(
-										'ctoken.json',
-										asset.token,
-									)
-									contract.methods
-										.mint(val)
-										.send({ from: account })
+									let mintTx
+									if (asset.underlying === 'ETH')
+										mintTx = marketContract.methods
+											.mint()
+											.send({ from: account, value: val })
+									else
+										mintTx = marketContract.methods
+											.mint(val)
+											.send({ from: account })
+									mintTx
+										.on('transactionHash', (txHash: string) => setPendingTx(txHash))
 										.on('confirmation', handleConfirmations)
 										.on('error', clearPendingTx)
 									setPendingTx(true)
@@ -79,11 +100,8 @@ export const MarketButton = ({
 										'erc20.json',
 										asset.underlying,
 									)
-									const marketContract = bao.getNewContract(
-										'ctoken.json',
-										asset.token,
-									)
 									approvev2(underlyingContract, marketContract, account)
+										.on('transactionHash', (txHash: string) => setPendingTx(txHash))
 										.on('confirmation', handleConfirmations)
 										.on('error', clearPendingTx)
 									setPendingTx(true)
@@ -98,17 +116,82 @@ export const MarketButton = ({
 			case MarketOperations.withdraw:
 				return (
 					<ButtonStack>
-						<SubmitButton disabled={isDisabled}>Withdraw</SubmitButton>
+						<SubmitButton
+							disabled={isDisabled}
+							onClick={() => {
+								marketContract.methods
+									.redeemUnderlying(val)
+									.send({ from: account })
+									.on('transactionHash', (txHash: string) => setPendingTx(txHash))
+									.on('confirmation', handleConfirmations)
+									.on('error', clearPendingTx)
+								setPendingTx(true)
+							}}
+						>
+							Withdraw
+						</SubmitButton>
 					</ButtonStack>
 				)
 
 			case MarketOperations.borrow:
-				return <SubmitButton disabled={isDisabled}>Borrow</SubmitButton>
+				return <SubmitButton
+					disabled={isDisabled}
+					onClick={() => {
+						marketContract.methods
+							.borrow(val)
+							.send({ from: account })
+							.on('transactionHash', (txHash: string) => setPendingTx(txHash))
+							.on('confirmation', handleConfirmations)
+							.on('error', clearPendingTx)
+						setPendingTx(true)
+					}}
+				>
+					Borrow
+				</SubmitButton>
 
 			case MarketOperations.repay:
 				return (
 					<ButtonStack>
-						<SubmitButton disabled={isDisabled}>Repay</SubmitButton>
+						{approvals && (asset.underlying === 'ETH' || approvals[asset.underlying].gt(0)) ? (
+							<SubmitButton
+								disabled={isDisabled}
+								onClick={() => {
+									let mintTx
+									if (asset.underlying === 'ETH')
+										mintTx = marketContract.methods
+											.repayBorrow()
+											.send({ from: account, value: val })
+									else
+										mintTx = marketContract.methods
+											.repayBorrow(val)
+											.send({ from: account })
+									mintTx
+										.on('transactionHash', (txHash: string) => setPendingTx(txHash))
+										.on('confirmation', handleConfirmations)
+										.on('error', clearPendingTx)
+									setPendingTx(true)
+								}}
+							>
+								Repay
+							</SubmitButton>
+						) : (
+							<SubmitButton
+								disabled={!approvals}
+								onClick={() => {
+									const underlyingContract = bao.getNewContract(
+										'erc20.json',
+										asset.underlying,
+									)
+									approvev2(underlyingContract, marketContract, account)
+										.on('transactionHash', (txHash: string) => setPendingTx(txHash))
+										.on('confirmation', handleConfirmations)
+										.on('error', clearPendingTx)
+									setPendingTx(true)
+								}}
+							>
+								Approve {asset.underlyingSymbol}
+							</SubmitButton>
+						)}
 					</ButtonStack>
 				)
 		}
@@ -119,6 +202,10 @@ const ButtonStack = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+`
+
+const ExternalLink = styled.a`
+	color: ${(props) => props.theme.color.text[100]};
 `
 
 const SubmitButton = styled.button`

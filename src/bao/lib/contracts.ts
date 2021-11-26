@@ -78,7 +78,7 @@ export class Contracts {
               marketAddress: market.marketAddresses[networkId],
               underlyingAddress: market.underlyingAddresses[networkId],
               marketContract: this.getNewContract(CTokenAbi),
-              underlyingContract: this.getNewContract(ERC20Abi)
+              underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi)
             }),
           )
         : undefined
@@ -118,7 +118,7 @@ export class Contracts {
         this.markets.forEach(
           ({ marketContract, marketAddress, underlyingContract, underlyingAddress }) => {
             setProvider(marketContract, marketAddress)
-            setProvider(underlyingContract, underlyingAddress)
+            if (underlyingContract) setProvider(underlyingContract, underlyingAddress)
           },
         )
       }

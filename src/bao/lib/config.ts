@@ -1,4 +1,3 @@
-import BaoProvider from 'contexts/BaoProvider'
 import { Config } from './types'
 
 export default {
@@ -137,10 +136,10 @@ export default {
         3: '0xaB5BfAE62356DAd4F465BdDDd1dbb2cAF59ee750',
       },
       underlyingAddresses: {
-        3: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+        3: 'ETH',
       },
-      icon: '/wMATIC.png',
-      coingeckoId: 'polygon',
+      icon: '/WETH.png',
+      coingeckoId: 'weth',
       decimals: 18,
     },
     {
