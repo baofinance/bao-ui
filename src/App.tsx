@@ -21,6 +21,8 @@ import Farms from './views/Farms'
 import Home from './views/Home'
 import Baskets from './views/Baskets'
 import Markets from './views/Markets'
+import { SWRConfig } from 'swr'
+import fetcher from 'bao/lib/fetcher'
 library.add(fas, fab)
 
 const url = new URL(window.location.toString())
@@ -70,20 +72,27 @@ const Providers: React.FC = ({ children }) => {
 	return (
 		<ThemeProvider theme={theme}>
 			<UseWalletProvider
-				chainId={137}
+				chainId={3}
 				connectors={{
-					walletconnect: { rpcUrl: 'https://polygon-rpc.com/' },
+					walletconnect: { rpcUrl: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161' },
 				}}
 			>
 				<BaoProvider>
 					{/* <BasketsProvider> */}
-						<MarketsProvider>
-							<TransactionProvider>
-								{/* <FarmsProvider> */}
-									<ModalsProvider>{children}</ModalsProvider>
-								{/* </FarmsProvider> */}
-							</TransactionProvider>
-						</MarketsProvider>
+					<MarketsProvider>
+						<TransactionProvider>
+							{/* <FarmsProvider> */}
+							<SWRConfig
+								value={{
+									fetcher,
+									refreshInterval: 300000,
+								}}
+							>
+								<ModalsProvider>{children}</ModalsProvider>
+							</SWRConfig>
+							{/* </FarmsProvider> */}
+						</TransactionProvider>
+					</MarketsProvider>
 					{/* </BasketsProvider> */}
 				</BaoProvider>
 			</UseWalletProvider>
