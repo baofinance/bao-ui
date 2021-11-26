@@ -151,7 +151,7 @@ export default {
       underlyingAddresses: {
         3: '0x4ebb3b495fFDA62F23868f057BA5bd53fC28Cc65',
       },
-      icon: '/wMATIC.png',
+      icon: '/USDC.png',
       coingeckoId: 'polygon',
       decimals: 6,
     },
@@ -164,7 +164,7 @@ export default {
       underlyingAddresses: {
         3: '0x35adec0258Fe12f181C2FfCA6902471c76Fa3F86',
       },
-      icon: '/wMATIC.png',
+      icon: '/testtoken.png',
       coingeckoId: 'polygon',
       decimals: 18,
     },
@@ -177,7 +177,7 @@ export default {
       underlyingAddresses: {
         3: '0x9f7fABB451CB3adF6E00af872fAe3be29839b76B',
       },
-      icon: '/wMATIC.png',
+      icon: '/testtoken.png',
       coingeckoId: 'polygon',
       decimals: 2,
     },
@@ -190,7 +190,7 @@ export default {
       underlyingAddresses: {
         3: '0xF322fcc292485eD48E59FE5a08B9120915FbD306',
       },
-      icon: '/wMATIC.png',
+      icon: '/testtoken.png',
       coingeckoId: 'polygon',
       decimals: 8,
     },
@@ -203,7 +203,7 @@ export default {
       underlyingAddresses: {
         3: '0xac8eCB351d720501C4D96C661b8Bc99d2b94Cf23',
       },
-      icon: '/wMATIC.png',
+      icon: '/testtoken.png',
       coingeckoId: 'polygon',
       decimals: 12,
     },
