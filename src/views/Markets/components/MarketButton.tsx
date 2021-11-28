@@ -17,7 +17,7 @@ type MarketButtonProps = {
 	isDisabled: boolean
 }
 
-const REQUIRED_CONFIRMATIONS = 5
+const REQUIRED_CONFIRMATIONS = 3
 
 export const MarketButton = ({
 	operation,

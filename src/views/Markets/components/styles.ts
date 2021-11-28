@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 export const Flex = styled.div`
-    display: flex;
-    width: 100%;
-}`
+  display: flex;
+  width: 100%;
+`
 
 export const MarketContainer = styled.div`
   display: flex;

@@ -245,6 +245,7 @@ export const Supplied: React.FC = () => {
 	const balances = useSupplyBalances()
 	const { exchangeRates } = useExchangeRates()
 	const accountMarkets = useAccountMarkets()
+	const accountLiquidity = useAccountLiquidity()
 
 	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
 	const [modalShow, setModalShow] = useState(false)
@@ -349,6 +350,14 @@ export const Supplied: React.FC = () => {
 		<>
 			<Flex>
 				<MarketContainer style={{ paddingTop: '16px' }}>
+					<MarketHeader>
+						<MarketHeaderText>
+							{accountLiquidity && `$${accountLiquidity.usdSupply.toFixed(2)}`}
+						</MarketHeaderText>
+						<MarketHeaderSubText>
+							Your supplied collateral
+						</MarketHeaderSubText>
+					</MarketHeader>
 					<TableContainer>
 						<Table
 							columns={columns}
@@ -456,8 +465,16 @@ export const Borrowed: React.FC = () => {
 		<>
 			<Flex>
 				<MarketContainer style={{ paddingTop: '16px' }}>
+					<MarketHeader>
+						<MarketHeaderText>
+							{accountLiquidity && `$${accountLiquidity.usdBorrow.toFixed(2)}`}
+						</MarketHeaderText>
+						<MarketHeaderSubText>
+							Your borrowed assets
+						</MarketHeaderSubText>
+					</MarketHeader>
 					<TableContainer>
-						{accountLiquidity ? (
+						{accountLiquidity && accountLiquidity.usdBorrow > 0 ? (
 							<Table
 								columns={columns}
 								items={markets.filter(
@@ -474,10 +491,9 @@ export const Borrowed: React.FC = () => {
 							/>
 						) : (
 							<ItemWrapper
-								style={{ justifyContent: 'flex-end', textAlign: 'end' }}
+								style={{ justifyContent: 'flex-end', margin: 'auto' }}
 							>
-								{' '}
-								You don't have any borrowed assets.{' '}
+								You don't have any borrowed assets.
 							</ItemWrapper>
 						)}
 						{modalAsset && (

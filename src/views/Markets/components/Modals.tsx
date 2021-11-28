@@ -130,7 +130,7 @@ const MarketModal = ({
 	return (
 		<Modal class="marketModal" show={show} onHide={onHide} centered>
 			<CloseButton onClick={onHide}>
-				<FontAwesomeIcon icon="window-close" />
+				<FontAwesomeIcon icon="times" />
 			</CloseButton>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">

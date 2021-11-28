@@ -23,6 +23,32 @@ export const Overview = () => {
 
 	return accountLiquidity ? (
 		<>
+			<UserStatsContainer>
+				<UserStatsWrapper>
+					<UserStat>
+						<h1>Net APY</h1>
+						<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
+					</UserStat>
+				</UserStatsWrapper>
+				<UserStatsWrapper>
+					<UserStat>
+						<h1>Total Borrowed</h1>
+						<p>${`${accountLiquidity ? accountLiquidity.usdBorrow.toFixed(2) : 0}`}{' '}</p>
+					</UserStat>
+				</UserStatsWrapper>
+				<UserStatsWrapper>
+					<UserStat>
+						<h1>Total Supplied</h1>
+						<p>${`${accountLiquidity ? accountLiquidity.usdSupply.toFixed(2) : 0}`}{' '}</p>
+					</UserStat>
+				</UserStatsWrapper>
+				<UserStatsWrapper>
+					<UserStat>
+						<h1>Liquidation Risk</h1>
+						<p style={{ color: 'green' }}>Low</p>
+					</UserStat>
+				</UserStatsWrapper>
+			</UserStatsContainer>
 			<OverviewContainer>
 				<OverviewHeader>
 					<BorrowLimit>
@@ -37,7 +63,7 @@ export const Overview = () => {
 								100,
 							)
 							: 0
-							}`}
+						}`}
 						%
 					</BorrowText>
 					<BorrowMeterContainer>
@@ -59,36 +85,10 @@ export const Overview = () => {
 								).toFixed(2),
 							)
 							: '0.00'
-							}`}
+						}`}
 					</BorrowText>
 				</OverviewHeader>
 			</OverviewContainer>
-				<UserStatsContainer>
-					<UserStatsWrapper>
-						<UserStat>
-							<h1>Net APY</h1>
-							<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
-						</UserStat>
-					</UserStatsWrapper>
-					<UserStatsWrapper>
-						<UserStat>
-							<h1>Total Borrowed</h1>
-							<p>${`${accountLiquidity ? accountLiquidity.usdBorrow.toFixed(2) : 0}`}{' '}</p>
-						</UserStat>
-					</UserStatsWrapper>
-					<UserStatsWrapper>
-						<UserStat>
-							<h1>Total Supplied</h1>
-							<p>${`${accountLiquidity ? accountLiquidity.usdSupply.toFixed(2) : 0}`}{' '}</p>
-						</UserStat>
-					</UserStatsWrapper>
-					<UserStatsWrapper>
-						<UserStat>
-							<h1>Liquidation Risk</h1>
-							<p style={{ color: 'green' }}>Low</p>
-						</UserStat>
-					</UserStatsWrapper>
-				</UserStatsContainer>
 		</>
 	) : (
 		<></>
