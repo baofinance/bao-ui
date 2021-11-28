@@ -25,7 +25,9 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
     const contracts: Contract[] = Config.markets.map(
       (market: SupportedMarket) => {
         return bao.getNewContract(
-          market.underlyingAddresses[Config.networkId] === 'ETH' ? 'cether.json' : 'ctoken.json',
+          market.underlyingAddresses[Config.networkId] === 'ETH'
+            ? 'cether.json'
+            : 'ctoken.json',
           market.marketAddresses[Config.networkId],
         )
       },
@@ -109,9 +111,9 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
           return underlyingAddress === 'ETH'
             ? underlyingAddress
             : bao
-              .getNewContract('erc20.json', underlyingAddress)
-              .methods.symbol()
-              .call()
+                .getNewContract('erc20.json', underlyingAddress)
+                .methods.symbol()
+                .call()
         }),
       ),
     ])
@@ -143,8 +145,8 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         collateralFactor: decimate(collateralFactors[i][1]).toNumber(),
         reserveFactor: decimate(reserveFactors[i]).toNumber(),
         supplied: decimate(exchangeRates[i])
-          .times(decimate(totalSupplies[i], 18 /* see note */))
-          .toNumber(), // NOTE: Need to add config field for underlying asset's decimals. (totalSupplies[i])
+          .times(decimate(totalSupplies[i], marketConfig.decimals))
+          .toNumber(),
         ...marketConfig,
       }
     })

@@ -17,15 +17,8 @@ export default {
     uniswapFactory: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     uniswapFactoryV2: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     lendingLogicKashi: '0xcBA495A74e23D5B42853e41334e26DDd322Af082',
-    bUSD: '0xAcB46b496C430882363582a0741e1f46C31429dc',
     WETH: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-    USDC: '0x5ed0E82916F69321D03f5eDeC4f6Eb98408Ea01d',
-    WON: '0x35adec0258Fe12f181C2FfCA6902471c76Fa3F86',
-    '2DEC': '0x9f7fABB451CB3adF6E00af872fAe3be29839b76B',
-    '8DEC': '0xF322fcc292485eD48E59FE5a08B9120915FbD306',
-    '12DEC': '0xac8eCB351d720501C4D96C661b8Bc99d2b94Cf23',
-      DEAD: '0x000000000000000000000000000000000000dead',
-    // For Testing
+    DEAD: '0x000000000000000000000000000000000000dead',
   },
   contracts: {
     polly: {
@@ -66,21 +59,15 @@ export default {
       },
     },
     // Hard Synths
-    lens: {
-      3: {
-        address: '0x139Dd8Bb6355d20342e08ff013150b1aE5040a42',
-        abi: 'lens.json',
-      },
-    },
     comptroller: {
       3: {
-        address: '0x15c27483DE85ab7ca858E089e9D8fb9dd9FE41Cf',
+        address: '0x8B932257a6b5D20EaD78FB4d5Fd00a19daF937b3',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
       3: {
-        address: '0xEa5dd96F0F6AB93F8A3dd0bB94c09996e067be7B',
+        address: '0xf9941b9E8D010d961f7d3D6Aea57a108Bcfe1026',
         abi: 'marketOracle.json',
       },
     },
@@ -88,19 +75,6 @@ export default {
       3: {
         address: '0x11Bb85459214b5981f8CCA90395A0aB6E37c7895',
         abi: 'stabilizer.json',
-      },
-    },
-    // Markets
-    bUSD: {
-      3: {
-        address: '0xf3f49C8017ea65921d6dB224A8A34d7f1C5F5414',
-        abi: 'ctoken.json',
-      },
-    },
-    bETH: {
-      3: {
-        address: '0xc6a5ea0c15479D0e60D29E9A03d7be65441c5a75',
-        abi: 'ctoken.json',
       },
     },
   },
@@ -120,10 +94,10 @@ export default {
       mid: 1,
       symbol: 'bUSD',
       marketAddresses: {
-        3: '0x975654554441B554A4369566E4CB0cD287d21faA',
+        3: '0x8584B05012749bdd32E41f8c7eB973D2283d1e56',
       },
       underlyingAddresses: {
-        3: '0xAcB46b496C430882363582a0741e1f46C31429dc',
+        3: '0xDF559301C178221E8D76E4A91126C504Dfe5947a',
       },
       icon: '/PAI.png',
       coingeckoId: 'dai',
@@ -133,7 +107,7 @@ export default {
       mid: 2,
       symbol: 'bETH',
       marketAddresses: {
-        3: '0xaB5BfAE62356DAd4F465BdDDd1dbb2cAF59ee750',
+        3: '0x1d2728a36dC794e92374e629cC0e7F25C7f60162',
       },
       underlyingAddresses: {
         3: 'ETH',
@@ -146,10 +120,10 @@ export default {
       mid: 3,
       symbol: 'bUSDC',
       marketAddresses: {
-        3: '0x5ed0E82916F69321D03f5eDeC4f6Eb98408Ea01d',
+        3: '0xb4e94d554736C76a9EB44FA1ca561c20AcfdeB26',
       },
       underlyingAddresses: {
-        3: '0x4ebb3b495fFDA62F23868f057BA5bd53fC28Cc65',
+        3: '0x14bFFDf158D0DbDA11E4e4105e6e2FE1D24F4D2e',
       },
       icon: '/USDC.png',
       coingeckoId: 'polygon',
@@ -159,10 +133,10 @@ export default {
       mid: 4,
       symbol: 'bWON',
       marketAddresses: {
-        3: '0xda2CDCB5088A155cdAe2e2d8b42d75c42C556E86',
+        3: '0x7c59B99C07fd6c41cb25c9364FcE4d46a58b4Ce3',
       },
       underlyingAddresses: {
-        3: '0x35adec0258Fe12f181C2FfCA6902471c76Fa3F86',
+        3: '0x96b2fab13ea34EE6bAf8aBD8840eb45e4176251b',
       },
       icon: '/testtoken.png',
       coingeckoId: 'polygon',
@@ -172,10 +146,10 @@ export default {
       mid: 5,
       symbol: '2DEC',
       marketAddresses: {
-        3: '0x1EE9A314577758AefdB8D421e52c3048d8371161',
+        3: '0x53dBc6dF6227838b6609c77037c438D0a33fc446',
       },
       underlyingAddresses: {
-        3: '0x9f7fABB451CB3adF6E00af872fAe3be29839b76B',
+        3: '0x6d6C89CE746284F1d66C4a229cb449b32f494BF5',
       },
       icon: '/testtoken.png',
       coingeckoId: 'polygon',
@@ -185,10 +159,10 @@ export default {
       mid: 6,
       symbol: '8DEC',
       marketAddresses: {
-        3: '0x82d6547392bd2237DAE601bc2450Df076D4cE27D',
+        3: '0x51da2c4A7378c28282Ef3022890A935c56c97E7E',
       },
       underlyingAddresses: {
-        3: '0xF322fcc292485eD48E59FE5a08B9120915FbD306',
+        3: '0x92Af1BCA5B2A1Ecbd835646D22cbc9b01Fb17600',
       },
       icon: '/testtoken.png',
       coingeckoId: 'polygon',
@@ -198,10 +172,10 @@ export default {
       mid: 7,
       symbol: '12DEC',
       marketAddresses: {
-        3: '0xE49112819A80Da2451A6c36b1C5ADc8480fdd5ac',
+        3: '0x30d5237C74520a99F957B3ad7435350C8D71d791',
       },
       underlyingAddresses: {
-        3: '0xac8eCB351d720501C4D96C661b8Bc99d2b94Cf23',
+        3: '0x44658B8C5996D341064F569cdc3f0BD172600a77',
       },
       icon: '/testtoken.png',
       coingeckoId: 'polygon',

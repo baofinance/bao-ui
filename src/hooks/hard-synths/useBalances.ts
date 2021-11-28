@@ -24,23 +24,27 @@ export const useAccountBalances = (): Balance[] => {
 
   const fetchBalances = useCallback(async () => {
     const data: Contract[] = tokens
-      .map((address) =>
-        address !== 'ETH' && bao.getNewContract('erc20.json', address),
+      .map(
+        (address) =>
+          address !== 'ETH' && bao.getNewContract('erc20.json', address),
       )
       .filter((contract) => contract)
 
     const multicallResults = MultiCall.parseCallResults(
       await bao.multicall.call(
         MultiCall.createCallContext(
-          data.map((contract) => contract && ({
-            ref: contract.options.address,
-            contract,
-            calls: [
-              { method: 'symbol' },
-              { method: 'decimals' },
-              { method: 'balanceOf', params: [account] },
-            ],
-          })),
+          data.map(
+            (contract) =>
+              contract && {
+                ref: contract.options.address,
+                contract,
+                calls: [
+                  { method: 'symbol' },
+                  { method: 'decimals' },
+                  { method: 'balanceOf', params: [account] },
+                ],
+              },
+          ),
         ),
       ),
     )
@@ -49,7 +53,9 @@ export const useAccountBalances = (): Balance[] => {
     setBalances(
       tokens.map((address) => ({
         address,
-        symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
+        symbol: multicallResults[address]
+          ? multicallResults[address][0].values[0]
+          : 'ETH',
         balance: multicallResults[address]
           ? decimate(
               multicallResults[address][2].values[0].hex,

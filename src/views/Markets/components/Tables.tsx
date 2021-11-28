@@ -98,7 +98,7 @@ export const Supply: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${balance.toFixed(2)} ${symbol}`}
+						{`${commify(balance.toFixed(2))} ${symbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -306,7 +306,7 @@ export const Supplied: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${suppliedBalance.toFixed(2)} ${underlyingSymbol}`}
+						{`${commify(suppliedBalance.toFixed(2))} ${underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -454,7 +454,7 @@ export const Borrowed: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${balance.toFixed(2)} ${market.underlyingSymbol}`}
+						{`${commify(balance.toFixed(2))} ${market.underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},
