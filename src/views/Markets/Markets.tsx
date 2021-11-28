@@ -13,10 +13,11 @@ import {
 } from './components/Tables'
 import { SpinnerLoader } from '../../components/Loader'
 import { useMarkets } from '../../hooks/hard-synths/useMarkets'
-import { ProtocolStats } from './components/ProtocolStats'
+import { useAccountLiquidity } from '../../hooks/hard-synths/useAccountLiquidity'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
+	const accountLiquidity = useAccountLiquidity()
 
 	return (
 		<Switch>
@@ -27,10 +28,12 @@ const Markets: React.FC = () => {
 						<>
 							<Section>
 								<Overview />
-								<MarketOverview>
-									<Supplied />
-									<Borrowed />
-								</MarketOverview>
+								{accountLiquidity && accountLiquidity.usdSupply > 0 && (
+									<MarketOverview>
+										<Supplied />
+										<Borrowed />
+									</MarketOverview>
+								)}
 								<MarketOverview>
 									<Supply />
 									<Borrow />
