@@ -3,7 +3,7 @@ import { Config } from './types'
 export default {
   networkId: 3,
   defaultRpc: {
-    chainId: '3',
+    chainId: '0x3',
     rpcUrls: ['https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://ropsten.etherscan.io'],
     chainName: 'Ropsten Testnet',
