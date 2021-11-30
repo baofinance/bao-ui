@@ -1,5 +1,4 @@
 import { SupportedMarket } from 'bao/lib/types'
-import { commify } from 'ethers/lib/utils'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useBorrowBalances,
@@ -11,7 +10,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { MarketOperations } from './Modals'
 import BigNumber from 'bignumber.js'
-import { decimate } from '../../../utils/numberFormat'
+import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 
 type Stat = {
 	label: string
@@ -85,32 +84,35 @@ const MarketDetails = ({ asset }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
 	const totalBorrowsUsd =
 		prices && asset.totalBorrows
-			? `$${commify(
+			? `$${getDisplayBalance(
 				asset.totalBorrows *
 				decimate(
 					prices[asset.token],
 					new BigNumber(36).minus(asset.decimals),
 				).toNumber(),
+				0
 			)}`
 			: '-'
 	const totalReservesUsd =
 		prices && asset.totalReserves
-			? `$${commify(
+			? `$${getDisplayBalance(
 				asset.totalReserves *
 				decimate(
 					prices[asset.token],
 					new BigNumber(36).minus(asset.decimals),
 				).toNumber(),
+				0
 			)}`
 			: '-'
 	const totalSuppliedUsd =
 		prices && asset.supplied
-			? `$${commify(
+			? `$${getDisplayBalance(
 				asset.supplied *
 				decimate(
 					prices[asset.token],
 					new BigNumber(36).minus(asset.decimals),
 				).toNumber(),
+				0
 			)}`
 			: '-'
 	const reserveFactor = asset.reserveFactor
@@ -169,7 +171,9 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Borrow Balance',
-					value: `${borrowBalance.toFixed(2)} ${asset.underlyingSymbol}`,
+					value: `${
+						getDisplayBalance(borrowBalance.toFixed(2), 0)
+					} ${asset.underlyingSymbol}`,
 				},
 			]}
 		/>
@@ -200,7 +204,11 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit',
-					value: `$${borrowable.toFixed(2)} ➜ $${newBorrowable.toFixed(2)}`,
+					value: `$${
+						getDisplayBalance(borrowable.toFixed(2), 0)
+					} ➜ $${
+						getDisplayBalance(newBorrowable.toFixed(2), 0)
+					}`,
 				},
 				{
 					label: 'Borrow Limit Used',
@@ -251,9 +259,19 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit Remaining',
-					value: `$${accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0} ➜ $${(
-						accountLiquidity ? accountLiquidity.usdBorrowable + change : 0
-					).toFixed(2)}`,
+					value: `$${
+						getDisplayBalance(
+							accountLiquidity
+								? accountLiquidity.usdBorrowable.toFixed(2)
+								: 0,
+							0
+						)
+					} ➜ $${
+						getDisplayBalance(
+							accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
+							0
+						)
+					}`,
 				},
 				{
 					label: 'Borrow Limit Used',

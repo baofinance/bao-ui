@@ -14,7 +14,7 @@ import useBao from 'hooks/useBao'
 import BigNumber from 'bignumber.js'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import { decimate, exponentiate } from '../../../utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '../../../utils/numberFormat'
 import {
 	HeaderWrapper,
 	ModalStack,
@@ -152,7 +152,7 @@ const MarketModal = ({
 							<LabelStack>
 								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
 								<AssetLabel>
-									{`${Math.floor(max() * 1e8) / 1e8} ${asset.underlyingSymbol}`}
+									{`${getDisplayBalance(max(), 0)} ${asset.underlyingSymbol}`}
 								</AssetLabel>
 							</LabelStack>
 						</LabelFlex>

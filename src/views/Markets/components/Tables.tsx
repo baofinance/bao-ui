@@ -1,6 +1,5 @@
 import { getComptrollerContract } from 'bao/utils'
 import Table from 'components/Table'
-import { commify } from 'ethers/lib/utils'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
@@ -14,7 +13,7 @@ import useBao from 'hooks/useBao'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
 import { SupportedMarket } from '../../../bao/lib/types'
-import { decimate } from '../../../utils/numberFormat'
+import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import {
 	Flex,
@@ -98,7 +97,7 @@ export const Supply: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${commify(balance.toFixed(2))} ${symbol}`}
+						{`${getDisplayBalance(balance.toFixed(2), 0)} ${symbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -197,12 +196,14 @@ export const Borrow = () => {
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
 						{market.liquidity && prices
-							? `$${commify(
+							? `$${getDisplayBalance(
 									(
 										(market.liquidity *
 											(prices[market.coingeckoId]?.usd || 1)) /
 										1e6
 									).toFixed(2),
+								0,
+								1
 							  )}M`
 							: '-'}
 					</ItemWrapper>
@@ -306,7 +307,7 @@ export const Supplied: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${commify(suppliedBalance.toFixed(2))} ${underlyingSymbol}`}
+						{`${getDisplayBalance(suppliedBalance.toFixed(2), 0, 2)} ${underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -352,7 +353,9 @@ export const Supplied: React.FC = () => {
 				<MarketContainer style={{ paddingTop: '16px' }}>
 					<MarketHeader>
 						<MarketHeaderText>
-							{accountLiquidity && `$${accountLiquidity.usdSupply.toFixed(2)}`}
+							{accountLiquidity && `$${
+								getDisplayBalance(accountLiquidity.usdSupply.toFixed(2), 0)
+							}`}
 						</MarketHeaderText>
 						<MarketHeaderSubText>
 							Your supplied collateral
@@ -454,7 +457,7 @@ export const Borrowed: React.FC = () => {
 
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-						{`${commify(balance.toFixed(2))} ${market.underlyingSymbol}`}
+						{`${getDisplayBalance(balance.toFixed(2), 0, 2)} ${market.underlyingSymbol}`}
 					</ItemWrapper>
 				)
 			},
@@ -467,7 +470,9 @@ export const Borrowed: React.FC = () => {
 				<MarketContainer style={{ paddingTop: '16px' }}>
 					<MarketHeader>
 						<MarketHeaderText>
-							{accountLiquidity && `$${accountLiquidity.usdBorrow.toFixed(2)}`}
+							{accountLiquidity && `$${
+								getDisplayBalance(accountLiquidity.usdBorrow.toFixed(2), 0)
+							}`}
 						</MarketHeaderText>
 						<MarketHeaderSubText>
 							Your borrowed assets
