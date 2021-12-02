@@ -7,8 +7,6 @@ import styled from 'styled-components'
 import { Overview } from './components/Overview'
 import {
 	Borrow,
-	Borrowed,
-	Supplied,
 	Supply,
 } from './components/Tables'
 import { SpinnerLoader } from '../../components/Loader'
@@ -27,12 +25,8 @@ const Markets: React.FC = () => {
 					{markets ? (
 						<>
 							<Section>
-								<Overview />
 								{accountLiquidity && accountLiquidity.usdSupply > 0 && (
-									<MarketOverview>
-										<Supplied />
-										<Borrowed />
-									</MarketOverview>
+								<Overview />
 								)}
 								<MarketOverview>
 									<Supply />

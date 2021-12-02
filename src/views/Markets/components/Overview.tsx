@@ -4,9 +4,18 @@ import React from 'react'
 import {
 	BorrowLimit,
 	BorrowMeterContainer,
-	BorrowText, MarketHeaderContainer,
+	BorrowText,
+	MarketHeaderContainer,
 	OverviewContainer,
-	OverviewHeader, ProductDescription, ProtocolStat, ProtocolStatsContainer, ProtocolStatsWrapper, SectionHeader, UserStat, UserStatsContainer, UserStatsWrapper
+	OverviewHeader,
+	ProductDescription,
+	ProtocolStat,
+	ProtocolStatsContainer,
+	ProtocolStatsWrapper,
+	SectionHeader,
+	UserStat,
+	UserStatsContainer,
+	UserStatsWrapper,
 } from './styles'
 import { getDisplayBalance } from '../../../utils/numberFormat'
 
@@ -15,10 +24,10 @@ export const Overview = () => {
 
 	const dynamicWidth = accountLiquidity
 		? Math.floor(
-			(accountLiquidity.usdBorrow /
-				(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
-			100,
-		)
+				(accountLiquidity.usdBorrow /
+					(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
+					100,
+		  )
 		: 0
 
 	return accountLiquidity ? (
@@ -27,7 +36,9 @@ export const Overview = () => {
 				<UserStatsWrapper>
 					<UserStat>
 						<h1>Net APY</h1>
-						<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
+						<p>
+							{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%
+						</p>
 					</UserStat>
 				</UserStatsWrapper>
 				<UserStatsWrapper>
@@ -48,36 +59,51 @@ export const Overview = () => {
 				</UserStatsWrapper>
 				<UserStatsWrapper>
 					<UserStat>
-						<h1>Liquidation Risk</h1>
-						<p style={{ color: 'green' }}>Low</p>
+						<h1>Borrow Limit</h1>
+						<p>
+							{`${
+								accountLiquidity.usdBorrowable > 0
+									? Math.floor(
+											(accountLiquidity.usdBorrow /
+												(accountLiquidity.usdBorrowable +
+													accountLiquidity.usdBorrow)) *
+												100,
+									  )
+									: 0
+							}`}
+							%
+						</p>
 					</UserStat>
 				</UserStatsWrapper>
 			</UserStatsContainer>
-			<OverviewContainer>
+			{/* <OverviewContainer>
 				<OverviewHeader>
 					<BorrowLimit>
 						Borrow Limit <Tooltipped content={`Some info here.`} />
 					</BorrowLimit>
 					<BorrowText>
-						{`${accountLiquidity.usdBorrowable > 0
-							? Math.floor(
-								(accountLiquidity.usdBorrow /
-									(accountLiquidity.usdBorrowable +
-										accountLiquidity.usdBorrow)) *
-								100,
-							)
-							: 0
+						{`${
+							accountLiquidity.usdBorrowable > 0
+								? Math.floor(
+										(accountLiquidity.usdBorrow /
+											(accountLiquidity.usdBorrowable +
+												accountLiquidity.usdBorrow)) *
+											100,
+								  )
+								: 0
 						}`}
 						%
 					</BorrowText>
 					<BorrowMeterContainer>
-						<div style={{
-							width: `${dynamicWidth}%`,
-							display: 'flex',
-							height: '100%',
-							borderRadius: '8px',
-							backgroundColor: '#50251c',
-						}} />
+						<div
+							style={{
+								width: `${dynamicWidth}%`,
+								display: 'flex',
+								height: '100%',
+								borderRadius: '8px',
+								backgroundColor: '#50251c',
+							}}
+						/>
 					</BorrowMeterContainer>
 					<BorrowText>
 						$
@@ -93,7 +119,7 @@ export const Overview = () => {
 						}`}
 					</BorrowText>
 				</OverviewHeader>
-			</OverviewContainer>
+			</OverviewContainer> */}
 		</>
 	) : (
 		<></>
