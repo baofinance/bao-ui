@@ -1,32 +1,27 @@
 import { getComptrollerContract } from 'bao/utils'
 import Table from 'components/Table'
 import { commify } from 'ethers/lib/utils'
-import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
-	useSupplyBalances,
 } from 'hooks/hard-synths/useBalances'
-import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
 import { usePrices } from 'hooks/hard-synths/usePrices'
 import useBao from 'hooks/useBao'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
+import { useWallet } from 'use-wallet'
 import { SupportedMarket } from '../../../bao/lib/types'
-import { decimate } from '../../../utils/numberFormat'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import {
-	Flex,
 	HeaderWrapper,
 	ItemWrapper,
 	MarketContainer,
 	MarketHeader,
-	MarketHeaderSubText,
 	MarketHeaderText,
+	MarketWrapper,
 	TableContainer,
 } from './styles'
-import { useWallet } from 'use-wallet'
 
 export const Supply: React.FC = () => {
 	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
@@ -74,7 +69,7 @@ export const Supply: React.FC = () => {
 			value({ supplyApy }: SupportedMarket) {
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-					{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
+						{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
 					</ItemWrapper>
 				)
 			},
@@ -140,12 +135,10 @@ export const Supply: React.FC = () => {
 
 	return (
 		<>
-			<Flex>
-				<MarketContainer>
+			<MarketContainer>
+				<MarketWrapper>
 					<MarketHeader>
-						<Flex>
-							<MarketHeaderText>Supply Markets</MarketHeaderText>
-						</Flex>
+						<MarketHeaderText>Supply Markets</MarketHeaderText>
 					</MarketHeader>
 					<TableContainer>
 						<Table columns={columns} items={markets} onClick={handleSupply} />
@@ -157,8 +150,8 @@ export const Supply: React.FC = () => {
 							/>
 						)}
 					</TableContainer>
-				</MarketContainer>
-			</Flex>
+				</MarketWrapper>
+			</MarketContainer>
 		</>
 	)
 }
@@ -207,7 +200,7 @@ export const Borrow = () => {
 			value({ borrowApy }: SupportedMarket) {
 				return (
 					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-					{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
+						{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
 					</ItemWrapper>
 				)
 			},
@@ -261,12 +254,10 @@ export const Borrow = () => {
 
 	return (
 		<>
-			<Flex>
-				<MarketContainer>
+			<MarketContainer>
+				<MarketWrapper>
 					<MarketHeader>
-						<Flex>
-							<MarketHeaderText>Borrow Markets</MarketHeaderText>
-						</Flex>
+						<MarketHeaderText>Borrow Markets</MarketHeaderText>
 					</MarketHeader>
 					<TableContainer>
 						<Table columns={columns} items={markets} onClick={handleBorrow} />
@@ -278,8 +269,8 @@ export const Borrow = () => {
 							/>
 						)}
 					</TableContainer>
-				</MarketContainer>
-			</Flex>
+				</MarketWrapper>
+			</MarketContainer>
 		</>
 	)
 }

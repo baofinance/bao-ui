@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 import theme from 'theme'
 
-export const Flex = styled.div`
+export const MarketContainer = styled.div`
   display: flex;
-  width: 100%;
+  flex-basis: 50%;
+  max-width: 50%;
 `
 
-export const MarketContainer = styled.div`
+export const MarketWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -46,7 +47,6 @@ export const MarketHeader = styled.div`
 
 export const MarketHeaderText = styled.p`
   color: ${(props) => props.theme.color.background[100]};
-  font-size: 1.25rem;
   font-weight: ${(props) => props.theme.fontWeight.strong};
   margin: 0;
 `
@@ -94,7 +94,7 @@ export const TableHeader = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-size: ${(props) => props.theme.fontSize.default};
+  font-size: ${(props) => props.theme.fontSize.sm};
   font-weight: ${(props) => props.theme.fontWeight.medium};
   color: ${(props) => props.theme.color.text[200]};
   text-transform: uppercase;
@@ -145,12 +145,12 @@ export const ItemWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
-  font-size: ${(props) => props.theme.fontSize.sm};
 
   img {
     vertical-align: middle;
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 36px;
+    width: 36px;
+    margin-right: 1rem;
   }
 
   p {
@@ -159,27 +159,28 @@ export const ItemWrapper = styled.div`
     margin-block-end: 1em;
     margin: 0px;
     margin-top: 0px;
-    margin-inline: 0.5rem 0px;
     margin-bottom: 0px;
     color: ${(props) => props.theme.color.text[100]};
   }
 `
 
 export const UserStatsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0px, 1fr));
-  grid-gap: 0.75rem;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  justify-content: space-between;
-  width: 100%;
-  padding-left: 24px;
-  padding-right: 24px;
+  position: relative;
+  max-width: 60em;
+  margin: 0 auto;
 `
 
 export const UserStatsWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  margin-right: -0.665rem;
+  margin-left: -0.665rem;
+  box-sizing: border-box;
+`
+
+export const StatWrapper = styled.div`
   padding: 16px;
-  background-color: ${(props) => props.theme.color.primary[100]};
   border-radius: 8px;
   position: relative;
   flex: 1 1 0%;
@@ -188,11 +189,47 @@ export const UserStatsWrapper = styled.div`
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
   border-radius: 8px;
+  text-align: center;
 `
 
 export const UserStat = styled.div`
   margin: 0px;
   overflow-wrap: break-word;
+
+  p {
+    font-size: 1.87rem;
+    margin: 0px;
+  }
+
+  h1 {
+    font-size: 1rem;
+    color: ${(props) => props.theme.color.text[200]};
+    margin: 0px;
+  }
+`
+
+export const BorrowLimitWrapper = styled.div`
+  height: 140px;
+  width: 140px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+`
+
+export const BorrowLimit = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0.1875rem;
+  background-color: #efeae7;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
 
   p {
     font-size: 1.87rem;
@@ -321,12 +358,6 @@ export const OverviewHeader = styled.div`
   padding: 24px;
   background-color: ${(props) => props.theme.color.primary[100]};
   border-radius: 8px;
-`
-
-export const BorrowLimit = styled.div`
-  white-space: nowrap;
-  color: ${(props) => props.theme.color.text[100]};
-  font-size: 1rem;
 `
 
 export const BorrowText = styled.p`
