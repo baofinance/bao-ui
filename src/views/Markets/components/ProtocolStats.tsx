@@ -1,5 +1,4 @@
 import Tooltipped from 'components/Tooltipped'
-import { commify } from 'ethers/lib/utils'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import React from 'react'
 import {

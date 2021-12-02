@@ -1,5 +1,4 @@
 import Tooltipped from 'components/Tooltipped'
-import { commify } from 'ethers/lib/utils'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import React from 'react'
 import {
@@ -9,6 +8,7 @@ import {
 	OverviewContainer,
 	OverviewHeader, ProductDescription, ProtocolStat, ProtocolStatsContainer, ProtocolStatsWrapper, SectionHeader, UserStat, UserStatsContainer, UserStatsWrapper
 } from './styles'
+import { getDisplayBalance } from '../../../utils/numberFormat'
 
 export const Overview = () => {
 	const accountLiquidity = useAccountLiquidity()
@@ -33,13 +33,17 @@ export const Overview = () => {
 				<UserStatsWrapper>
 					<UserStat>
 						<h1>Total Borrowed</h1>
-						<p>${`${accountLiquidity ? accountLiquidity.usdBorrow.toFixed(2) : 0}`}{' '}</p>
+						<p>
+							${`${accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow.toFixed(2), 0) : 0}`}
+						</p>
 					</UserStat>
 				</UserStatsWrapper>
 				<UserStatsWrapper>
 					<UserStat>
 						<h1>Total Supplied</h1>
-						<p>${`${accountLiquidity ? accountLiquidity.usdSupply.toFixed(2) : 0}`}{' '}</p>
+						<p>
+							${`${accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply.toFixed(2), 0) : 0}`}
+						</p>
 					</UserStat>
 				</UserStatsWrapper>
 				<UserStatsWrapper>
@@ -78,11 +82,12 @@ export const Overview = () => {
 					<BorrowText>
 						$
 						{`${accountLiquidity
-							? commify(
+							? getDisplayBalance(
 								(
 									accountLiquidity.usdBorrowable +
 									accountLiquidity.usdBorrow
 								).toFixed(2),
+								0
 							)
 							: '0.00'
 						}`}
