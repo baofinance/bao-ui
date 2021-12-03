@@ -4,9 +4,12 @@ import React from 'react'
 import {
 	BorrowLimit,
 	BorrowMeterContainer,
-	BorrowText, MarketHeaderContainer,
+	BorrowText,
 	OverviewContainer,
-	OverviewHeader, ProductDescription, ProtocolStat, ProtocolStatsContainer, ProtocolStatsWrapper, SectionHeader, UserStat, UserStatsContainer, UserStatsWrapper
+	OverviewHeader,
+	UserStat,
+	UserStatsContainer,
+	UserStatsWrapper,
 } from './styles'
 import { getDisplayBalance } from '../../../utils/numberFormat'
 
@@ -15,10 +18,10 @@ export const Overview = () => {
 
 	const dynamicWidth = accountLiquidity
 		? Math.floor(
-			(accountLiquidity.usdBorrow /
-				(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
-			100,
-		)
+				(accountLiquidity.usdBorrow /
+					(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
+					100,
+		  )
 		: 0
 
 	return accountLiquidity ? (
@@ -27,14 +30,21 @@ export const Overview = () => {
 				<UserStatsWrapper>
 					<UserStat>
 						<h1>Net APY</h1>
-						<p>{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
+						<p>
+							{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%
+						</p>
 					</UserStat>
 				</UserStatsWrapper>
 				<UserStatsWrapper>
 					<UserStat>
 						<h1>Total Borrowed</h1>
 						<p>
-							${`${accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow.toFixed(2), 0) : 0}`}
+							$
+							{`${
+								accountLiquidity
+									? getDisplayBalance(accountLiquidity.usdBorrow.toFixed(2), 0)
+									: 0
+							}`}
 						</p>
 					</UserStat>
 				</UserStatsWrapper>
@@ -42,7 +52,12 @@ export const Overview = () => {
 					<UserStat>
 						<h1>Total Supplied</h1>
 						<p>
-							${`${accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply.toFixed(2), 0) : 0}`}
+							$
+							{`${
+								accountLiquidity
+									? getDisplayBalance(accountLiquidity.usdSupply.toFixed(2), 0)
+									: 0
+							}`}
 						</p>
 					</UserStat>
 				</UserStatsWrapper>
@@ -59,37 +74,41 @@ export const Overview = () => {
 						Borrow Limit <Tooltipped content={`Some info here.`} />
 					</BorrowLimit>
 					<BorrowText>
-						{`${accountLiquidity.usdBorrowable > 0
-							? Math.floor(
-								(accountLiquidity.usdBorrow /
-									(accountLiquidity.usdBorrowable +
-										accountLiquidity.usdBorrow)) *
-								100,
-							)
-							: 0
+						{`${
+							accountLiquidity.usdBorrowable > 0
+								? Math.floor(
+										(accountLiquidity.usdBorrow /
+											(accountLiquidity.usdBorrowable +
+												accountLiquidity.usdBorrow)) *
+											100,
+								  )
+								: 0
 						}`}
 						%
 					</BorrowText>
 					<BorrowMeterContainer>
-						<div style={{
-							width: `${dynamicWidth}%`,
-							display: 'flex',
-							height: '100%',
-							borderRadius: '8px',
-							backgroundColor: '#50251c',
-						}} />
+						<div
+							style={{
+								width: `${dynamicWidth}%`,
+								display: 'flex',
+								height: '100%',
+								borderRadius: '8px',
+								backgroundColor: '#50251c',
+							}}
+						/>
 					</BorrowMeterContainer>
 					<BorrowText>
 						$
-						{`${accountLiquidity
-							? getDisplayBalance(
-								(
-									accountLiquidity.usdBorrowable +
-									accountLiquidity.usdBorrow
-								).toFixed(2),
-								0
-							)
-							: '0.00'
+						{`${
+							accountLiquidity
+								? getDisplayBalance(
+										(
+											accountLiquidity.usdBorrowable +
+											accountLiquidity.usdBorrow
+										).toFixed(2),
+										0,
+								  )
+								: '0.00'
 						}`}
 					</BorrowText>
 				</OverviewHeader>

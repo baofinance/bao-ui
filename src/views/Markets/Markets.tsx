@@ -5,44 +5,20 @@ import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { Overview } from './components/Overview'
-import {
-	Borrow,
-	Borrowed,
-	Supplied,
-	Supply,
-} from './components/Tables'
 import { SpinnerLoader } from '../../components/Loader'
 import { useMarkets } from '../../hooks/hard-synths/useMarkets'
-import { useAccountLiquidity } from '../../hooks/hard-synths/useAccountLiquidity'
+import { MarketList } from './components/MarketList'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
-	const accountLiquidity = useAccountLiquidity()
 
 	return (
 		<Switch>
 			<Page>
 				<PageHeader icon="" title="Markets" subtitle="Mint, Lend, Borrow" />
 				<Container>
-					{markets ? (
-						<>
-							<Section>
-								<Overview />
-								{accountLiquidity && accountLiquidity.usdSupply > 0 && (
-									<MarketOverview>
-										<Supplied />
-										<Borrowed />
-									</MarketOverview>
-								)}
-								<MarketOverview>
-									<Supply />
-									<Borrow />
-								</MarketOverview>
-							</Section>
-						</>
-					) : (
-						<SpinnerLoader block />
-					)}
+					<Overview />
+					{markets ? <MarketList markets={markets} /> : <SpinnerLoader block />}
 				</Container>
 			</Page>
 		</Switch>
