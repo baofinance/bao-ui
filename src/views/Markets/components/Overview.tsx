@@ -31,7 +31,7 @@ export const Overview = () => {
 			<UserStatsContainer>
 				<UserStatsWrapper>
 					<StatWrapper>
-						<UserStat>
+						<UserStat style={{ marginTop: '15px' }}>
 							<h1>Total Supplied</h1>
 							<p>
 								$
@@ -49,9 +49,10 @@ export const Overview = () => {
 					<div style={{ width: 150, height: 150 }}>
 						<CircularProgressbarWithChildren
 							value={borrowLimit}
-							strokeWidth={5}
+							strokeWidth={10}
 							styles={buildStyles({
 								pathColor: '#50251c',
+								strokeLinecap: 'butt',
 							})}
 						>
 							<div
@@ -61,7 +62,7 @@ export const Overview = () => {
 								}}
 							>
 								<BorrowLimitWrapper>
-									<BorrowLimit>
+									<BorrowLimit style={{ marginTop: '15px' }}>
 										<h1>Borrow Limit</h1>
 										<p>
 											{`${
@@ -82,7 +83,7 @@ export const Overview = () => {
 						</CircularProgressbarWithChildren>
 					</div>
 					<StatWrapper>
-						<UserStat>
+						<UserStat style={{ marginTop: '15px' }}>
 							<h1>Total Borrowed</h1>
 							<p>
 								$

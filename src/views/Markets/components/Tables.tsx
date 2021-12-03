@@ -41,7 +41,16 @@ export const Supply: React.FC = () => {
 
 	const columns = [
 		{
-			header: <HeaderWrapper>Asset</HeaderWrapper>,
+			header: (
+				<HeaderWrapper
+					style={{
+						flexBasis: '40%',
+						maxWidth: '40%',
+					}}
+				>
+					Asset
+				</HeaderWrapper>
+			),
 			value(market: SupportedMarket) {
 				// underlying symbol
 				const balanceRes =
@@ -53,7 +62,12 @@ export const Supply: React.FC = () => {
 				const symbol = balanceRes && balanceRes.symbol
 
 				return (
-					<ItemWrapper>
+					<ItemWrapper
+						style={{
+							flexBasis: '40%',
+							maxWidth: '40%',
+						}}
+					>
 						<img src={market.icon} />
 						<p>{symbol}</p>
 					</ItemWrapper>
@@ -62,13 +76,25 @@ export const Supply: React.FC = () => {
 		},
 		{
 			header: (
-				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+				<HeaderWrapper
+					style={{
+						textAlign: 'right',
+						flexBasis: '5%',
+						maxWidth: '5%',
+					}}
+				>
 					APY
 				</HeaderWrapper>
 			),
 			value({ supplyApy }: SupportedMarket) {
 				return (
-					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					<ItemWrapper
+						style={{
+							textAlign: 'right',
+							flexBasis: '5%',
+							maxWidth: '5%',
+						}}
+					>
 						{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
 					</ItemWrapper>
 				)
@@ -76,7 +102,13 @@ export const Supply: React.FC = () => {
 		},
 		{
 			header: (
-				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+				<HeaderWrapper
+					style={{
+						textAlign: 'left',
+						flexBasis: '50%',
+						maxWidth: '50%',
+					}}
+				>
 					Wallet
 				</HeaderWrapper>
 			),
@@ -92,7 +124,13 @@ export const Supply: React.FC = () => {
 				const symbol = balanceRes && balanceRes.symbol
 
 				return (
-					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					<ItemWrapper
+						style={{
+							textAlign: 'left',
+							flexBasis: '50%',
+							maxWidth: '50%',
+						}}
+					>
 						{`${commify(balance.toFixed(2))} ${symbol}`}
 					</ItemWrapper>
 				)
@@ -100,7 +138,14 @@ export const Supply: React.FC = () => {
 		},
 		{
 			header: (
-				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+				<HeaderWrapper
+					style={{
+						justifyContent: 'center',
+						textAlign: 'center',
+						flexBasis: '5%',
+						maxWidth: '5%',
+					}}
+				>
 					Collateral
 				</HeaderWrapper>
 			),
@@ -111,7 +156,12 @@ export const Supply: React.FC = () => {
 
 				return (
 					<ItemWrapper
-						style={{ justifyContent: 'center', textAlign: 'center' }}
+						style={{
+							justifyContent: 'center',
+							textAlign: 'center',
+							flexBasis: '5%',
+							maxWidth: '5%',
+						}}
 						onClick={(event: React.MouseEvent<HTMLElement>) => {
 							event.stopPropagation()
 							const contract = getComptrollerContract(bao)
@@ -172,7 +222,16 @@ export const Borrow = () => {
 
 	const columns = [
 		{
-			header: <HeaderWrapper>Asset</HeaderWrapper>,
+			header: (
+				<HeaderWrapper
+					style={{
+						flexBasis: '40%',
+						maxWidth: '40%',
+					}}
+				>
+					Asset
+				</HeaderWrapper>
+			),
 			value(market: SupportedMarket) {
 				// underlying symbol
 				const balanceRes =
@@ -184,7 +243,12 @@ export const Borrow = () => {
 				const symbol = balanceRes && balanceRes.symbol
 
 				return (
-					<ItemWrapper>
+					<ItemWrapper
+						style={{
+							flexBasis: '40%',
+							maxWidth: '40%',
+						}}
+					>
 						<img src={market.icon} />
 						<p>{symbol}</p>
 					</ItemWrapper>
@@ -193,13 +257,25 @@ export const Borrow = () => {
 		},
 		{
 			header: (
-				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+				<HeaderWrapper
+					style={{
+						textAlign: 'right',
+						flexBasis: '5%',
+						maxWidth: '5%',
+					}}
+				>
 					APR
 				</HeaderWrapper>
 			),
 			value({ borrowApy }: SupportedMarket) {
 				return (
-					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					<ItemWrapper
+						style={{
+							textAlign: 'right',
+							flexBasis: '5%',
+							maxWidth: '5%',
+						}}
+					>
 						{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
 					</ItemWrapper>
 				)
@@ -207,7 +283,13 @@ export const Borrow = () => {
 		},
 		{
 			header: (
-				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+				<HeaderWrapper
+					style={{
+						textAlign: 'left',
+						flexBasis: '50%',
+						maxWidth: '50%',
+					}}
+				>
 					Balance
 				</HeaderWrapper>
 			),
@@ -222,7 +304,13 @@ export const Borrow = () => {
 				const { balance } = balanceRes || { balance: 0 }
 
 				return (
-					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					<ItemWrapper
+						style={{
+							textAlign: 'left',
+							flexBasis: '50%',
+							maxWidth: '50%',
+						}}
+					>
 						{`${commify(balance.toFixed(2))} ${market.underlyingSymbol}`}
 					</ItemWrapper>
 				)
@@ -230,13 +318,27 @@ export const Borrow = () => {
 		},
 		{
 			header: (
-				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+				<HeaderWrapper
+					style={{
+						justifyContent: 'left',
+						textAlign: 'left',
+						flexBasis: '5%',
+						maxWidth: '5%',
+					}}
+				>
 					Liquidity
 				</HeaderWrapper>
 			),
 			value(market: SupportedMarket) {
 				return (
-					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					<ItemWrapper
+						style={{
+							justifyContent: 'left',
+							textAlign: 'left',
+							flexBasis: '5%',
+							maxWidth: '5%',
+						}}
+					>
 						{market.liquidity && prices
 							? `$${commify(
 									(

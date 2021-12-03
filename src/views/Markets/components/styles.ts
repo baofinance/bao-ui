@@ -35,7 +35,6 @@ export const MarketHeader = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-color: ${(props) => props.theme.color.secondary[900]};
   border-radius: 8px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -43,10 +42,12 @@ export const MarketHeader = styled.div`
   padding-bottom: ${(props) => props.theme.spacing[3]}px;
   padding-left: ${(props) => props.theme.spacing[4]}px;
   padding-right: ${(props) => props.theme.spacing[4]}px;
+  text-align: center;
+  font-size: ${(props) => props.theme.fontSize.large}
 `
 
 export const MarketHeaderText = styled.p`
-  color: ${(props) => props.theme.color.background[100]};
+  color: ${(props) => props.theme.color.text[100]};
   font-weight: ${(props) => props.theme.fontWeight.strong};
   margin: 0;
 `
@@ -71,8 +72,6 @@ export const TableContainer = styled.div`
   width: 100%;
   background-color: ${(props) => props.theme.color.primary[100]};
   border-radius: 8px;
-  border-top-right-radius: 0px;
-  border-top-left-radius: 0px;
 `
 
 export const OverviewTableContainer = styled.div`
@@ -97,9 +96,8 @@ export const TableHeader = styled.div`
   font-size: ${(props) => props.theme.fontSize.sm};
   font-weight: ${(props) => props.theme.fontWeight.medium};
   color: ${(props) => props.theme.color.text[200]};
-  text-transform: uppercase;
-  padding-top: ${(props) => props.theme.spacing[2]}px;
-  padding-bottom: ${(props) => props.theme.spacing[2]}px;
+  padding-top: ${(props) => props.theme.spacing[3]}px;
+  padding-bottom: ${(props) => props.theme.spacing[3]}px;
   padding-left: ${(props) => props.theme.spacing[4]}px;
   padding-right: ${(props) => props.theme.spacing[4]}px;
   font-weight: ${(props) => props.theme.fontWeight.strong};
@@ -148,9 +146,9 @@ export const ItemWrapper = styled.div`
 
   img {
     vertical-align: middle;
-    height: 36px;
-    width: 36px;
-    margin-right: 1rem;
+    height: 24px;
+    width: 24px;
+    margin-right: 0.5rem;
   }
 
   p {
@@ -197,23 +195,25 @@ export const UserStat = styled.div`
   overflow-wrap: break-word;
 
   p {
-    font-size: 1.87rem;
+    font-size: 1.5rem;
     margin: 0px;
   }
 
   h1 {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: ${(props) => props.theme.color.text[200]};
     margin: 0px;
   }
 `
 
 export const BorrowLimitWrapper = styled.div`
-  height: 140px;
-  width: 140px;
+  height: 135px;
+  width: 135px;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+  background-color: ${(props) => props.theme.color.primary[100]};
+  border-radius: 50%;
 `
 
 export const BorrowLimit = styled.div`
@@ -224,20 +224,18 @@ export const BorrowLimit = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  margin: 0.1875rem;
-  background-color: #efeae7;
   border-radius: 50%;
   align-items: center;
   justify-content: center;
   padding: 0.25rem;
 
   p {
-    font-size: 1.87rem;
+    font-size: 1.5rem;
     margin: 0px;
   }
 
   h1 {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: ${(props) => props.theme.color.text[200]};
     margin: 0px;
   }

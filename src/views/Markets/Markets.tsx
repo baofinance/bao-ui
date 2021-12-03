@@ -54,6 +54,7 @@ const MarketOverview = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100%;
+	margin-top: 25px;
 `
 
 export default Markets
