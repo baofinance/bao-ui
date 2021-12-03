@@ -111,9 +111,12 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 		[borrowBalances, exchangeRates],
 	)
 
-	const isInMarket =
-		accountMarkets &&
-		accountMarkets.find((_market) => _market.token === market.token)
+	const isInMarket = useMemo(
+		() =>
+			accountMarkets &&
+			accountMarkets.find((_market) => _market.token === market.token),
+		[accountMarkets],
+	)
 
 	return (
 		<Accordion>
@@ -169,6 +172,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 											type="switch"
 											id="custom-switch"
 											checked={!!isInMarket}
+											disabled={isInMarket && borrowed > 0}
 											onClick={(event) => {
 												event.stopPropagation()
 												const contract = getComptrollerContract(bao)
