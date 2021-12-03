@@ -225,7 +225,7 @@ const ExternalLink = styled.a`
 	color: ${(props) => props.theme.color.text[100]};
 `
 
-const SubmitButton = styled.button`
+export const SubmitButton = styled.button`
 	display: inline-flex;
 	appearance: none;
 	align-items: center;

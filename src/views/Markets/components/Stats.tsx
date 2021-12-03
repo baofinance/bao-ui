@@ -33,7 +33,7 @@ type MarketStatProps = {
 	operation: MarketOperations
 }
 
-const StatBlock = ({ label, stats }: StatBlockProps) => (
+export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<>
 		<StatHeader><p>{label}</p></StatHeader>
 		<StatWrapper>

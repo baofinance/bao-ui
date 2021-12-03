@@ -15,6 +15,12 @@ type Prices = {
   }
 }
 
+type MarketPrices = {
+  prices: {
+    [key: string]: number
+  }
+}
+
 export const usePrice = (coingeckoId: string): SWR & Prices => {
   const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoId}`
   const { data, error } = useSWR(url, fetcher)
@@ -42,11 +48,9 @@ export const usePrices = (): SWR & Prices => {
   }
 }
 
-export const useMarketPrices = (): Prices => {
+export const useMarketPrices = (): MarketPrices => {
   const bao = useBao()
-  const [prices, setPrices] = useState<
-    undefined | { [key: string]: { usd: number } }
-  >()
+  const [prices, setPrices] = useState<undefined | { [key: string]: number }>()
 
   const fetchPrices = useCallback(async () => {
     const tokens = Config.markets.map(
