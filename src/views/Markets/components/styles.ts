@@ -164,7 +164,7 @@ export const ItemWrapper = styled.div`
 
 export const UserStatsContainer = styled.div`
   position: relative;
-  max-width: 60rem;
+  max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 50px;
 `
