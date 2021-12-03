@@ -46,10 +46,7 @@ export const Overview = () => {
 								$
 								{`${
 									accountLiquidity
-										? getDisplayBalance(
-												accountLiquidity.usdSupply.toFixed(2),
-												0,
-										  )
+										? getDisplayBalance(accountLiquidity.usdSupply, 0, 2)
 										: 0
 								}`}
 							</p>
@@ -98,10 +95,7 @@ export const Overview = () => {
 								$
 								{`${
 									accountLiquidity
-										? getDisplayBalance(
-												accountLiquidity.usdBorrow.toFixed(2),
-												0,
-										  )
+										? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2)
 										: 0
 								}`}
 							</p>

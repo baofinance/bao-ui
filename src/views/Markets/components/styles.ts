@@ -179,6 +179,8 @@ export const UserStatsWrapper = styled.div`
 `
 
 export const StatWrapper = styled.div`
+  background-color: ${(props) => props.theme.color.primary[100]};
+  margin: 0 1rem;
   padding: 16px;
   border-radius: 8px;
   position: relative;

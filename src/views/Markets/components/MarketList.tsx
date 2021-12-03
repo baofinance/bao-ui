@@ -70,16 +70,16 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 				<StyledAccordionHeader>
 					<Row lg={6} style={{ width: '100%' }}>
 						<Col>
-							<img src={market.icon} /> {market.underlyingSymbol}
+							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
 						<Col>{market.supplyApy.toFixed(2)}%</Col>
 						<Col>
 							{`$${getDisplayBalance(
 								market.supplied *
-								decimate(
-									prices[market.token],
-									new BigNumber(36).minus(market.decimals),
-								).toNumber(),
+									decimate(
+										prices[market.token],
+										new BigNumber(36).minus(market.decimals),
+									).toNumber(),
 								0,
 							)}`}
 						</Col>
@@ -129,17 +129,18 @@ type MarketListItemProps = {
 
 const StyledAccordionHeader = styled(Accordion.Header)`
 	background-color: ${(props) => props.theme.color.primary[100]};
-	height: 75px;
+	height: 60px;
 
 	img {
 		height: 32px;
+		margin-right: 0.75rem;
 		vertical-align: middle;
 	}
 
 	> button {
 		background-color: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
-		height: 75px;
+		height: 60px;
 
 		&:hover,
 		&:focus,
