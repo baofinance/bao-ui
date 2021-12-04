@@ -10,7 +10,7 @@ import { SupportedMarket } from '../../bao/lib/types'
 import Config from '../../bao/lib/config'
 import BigNumber from 'bignumber.js'
 
-type AccountLiquidity = {
+export type AccountLiquidity = {
   netApy: number
   usdSupply: number
   usdBorrow: number

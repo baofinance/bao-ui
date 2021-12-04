@@ -7,7 +7,8 @@ export const getBalanceNumber = (balance: BigNumber, decimals = 18) => {
 
 export const getDisplayBalance = (balance: BigNumber | number | string, decimals = 18, precision?: number) => {
   const displayBalance = new BigNumber(balance).dividedBy(new BigNumber(10).pow(decimals))
-  if (displayBalance.lt(1)) {
+  if (displayBalance.lt(1e-6)) return 0
+  else if (displayBalance.lt(1)) {
     return displayBalance.toPrecision(precision || 4)
   } else {
     return displayBalance
