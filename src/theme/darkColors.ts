@@ -1,5 +1,5 @@
 export const background = {
-  100: '#50251c', //dark mode
+  100: '#202231', //dark mode
   200: '#fff8ee', //dark mode
 }
 

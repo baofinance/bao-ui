@@ -23,6 +23,7 @@ import Home from './views/Home'
 import Markets from './views/Markets'
 import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
+import GlobalStyle from 'GlobalStyle'
 
 library.add(fas, fab)
 
@@ -93,6 +94,7 @@ const Providers: React.FC<ProvidersProps> = ({
 }: ProvidersProps) => {
 	return (
 		<ThemeProvider theme={theme(isDarkMode)}>
+			<GlobalStyle />
 			<UseWalletProvider
 				chainId={3}
 				connectors={{
