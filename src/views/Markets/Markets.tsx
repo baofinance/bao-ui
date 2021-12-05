@@ -3,7 +3,6 @@ import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
-import styled from 'styled-components'
 import { Overview } from './components/Overview'
 import { SpinnerLoader } from '../../components/Loader'
 import { useMarkets } from '../../hooks/hard-synths/useMarkets'
@@ -24,19 +23,5 @@ const Markets: React.FC = () => {
 		</Switch>
 	)
 }
-
-const Section = styled.div`
-	display: block;
-	width: 100%;
-	padding-top: 0px;
-	border-radius: ${(props) => props.theme.borderRadius}px;
-`
-
-const MarketOverview = styled.div`
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	margin-top: 25px;
-`
 
 export default Markets

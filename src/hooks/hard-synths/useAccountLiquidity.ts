@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import useTransactionProvider from '../useTransactionProvider'
 import useBao from '../useBao'
 import { useWallet } from 'use-wallet'
 import { useExchangeRates } from './useExchangeRates'
@@ -22,6 +23,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
     undefined | AccountLiquidity
   >()
 
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
   const { account }: { account: string } = useWallet()
   const markets = useMarkets()
@@ -101,6 +103,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
       usdBorrowable: decimate(compAccountLiqudity[1]).toNumber(),
     })
   }, [
+    transactions,
     bao,
     account,
     markets,
@@ -125,6 +128,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
       return
     fetchAccountLiquidity()
   }, [
+    transactions,
     bao,
     account,
     markets,

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
 import useBao from '../../../hooks/useBao'
+import useTransactionProvider from '../../../hooks/useTransactionProvider'
 import Config from '../../../bao/lib/config'
 import { provider } from 'web3-core'
 import { SupportedMarket } from '../../../bao/lib/types'
@@ -19,6 +20,7 @@ const toApy = (rate: number) =>
 export const useMarketsContext = (): SupportedMarket[] | undefined => {
   const { account }: { account: string; ethereum: provider } = useWallet()
   const bao = useBao()
+  const { transactions } = useTransactionProvider()
   const [markets, setMarkets] = useState<SupportedMarket[] | undefined>()
 
   const fetchMarkets = useCallback(async () => {
@@ -152,12 +154,12 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
     })
 
     setMarkets(markets)
-  }, [bao, account])
+  }, [bao, account, transactions])
 
   useEffect(() => {
     if (!(bao && account)) return
     fetchMarkets()
-  }, [bao, account])
+  }, [bao, account, transactions])
 
   return markets
 }

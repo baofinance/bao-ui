@@ -12,6 +12,7 @@ import {
 	AccountLiquidity,
 	useAccountLiquidity,
 } from '../../../hooks/hard-synths/useAccountLiquidity'
+import useTransactionProvider from '../../../hooks/useTransactionProvider'
 import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useExchangeRates } from '../../../hooks/hard-synths/useExchangeRates'
@@ -25,6 +26,7 @@ import { SubmitButton } from './MarketButton'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { getComptrollerContract } from '../../../bao/utils'
 import { SupportedMarket } from '../../../bao/lib/types'
+import { TransactionReceipt } from 'web3-core'
 
 export const MarketList: React.FC<MarketListProps> = ({
 	markets: _markets,
@@ -116,6 +118,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 }: MarketListItemProps) => {
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
+	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
 	const bao = useBao()
 	const { account }: { account: string } = useWallet()
 
@@ -212,10 +215,28 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 													contract.methods
 														.exitMarket(market.token)
 														.send({ from: account })
+														.on('transactionHash', (txHash: string) =>
+															onAddTransaction({
+																hash: txHash,
+																description: `Exit Market (${market.underlyingSymbol})`,
+															}),
+														)
+														.on('receipt', (receipt: TransactionReceipt) =>
+															onTxReceipt(receipt),
+														)
 												} else {
 													contract.methods
 														.enterMarkets([market.token])
 														.send({ from: account })
+														.on('transactionHash', (txHash: string) =>
+															onAddTransaction({
+																hash: txHash,
+																description: `Enter Market (${market.underlyingSymbol})`,
+															}),
+														)
+														.on('receipt', (receipt: TransactionReceipt) =>
+															onTxReceipt(receipt),
+														)
 												}
 											}}
 										/>

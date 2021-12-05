@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import useBao from '../useBao'
+import useTransactionProvider from '../useTransactionProvider'
 import { SupportedMarket } from '../../bao/lib/types'
 import Config from '../../bao/lib/config'
 import MultiCall from '../../utils/multicall'
@@ -13,6 +14,7 @@ export const useExchangeRates = (): ExchangeRates => {
   const [exchangeRates, setExchangeRates] = useState<
     undefined | { [key: string]: BigNumber }
   >()
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
 
   const fetchExchangeRates = useCallback(async () => {
@@ -39,12 +41,12 @@ export const useExchangeRates = (): ExchangeRates => {
         {},
       ),
     )
-  }, [bao])
+  }, [transactions, bao])
 
   useEffect(() => {
     if (!bao) return
     fetchExchangeRates()
-  }, [bao])
+  }, [transactions, bao])
 
   return {
     exchangeRates,

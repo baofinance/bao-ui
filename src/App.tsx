@@ -4,11 +4,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
-import React, {
-	useCallback,
-	useEffect,
-	useState,
-} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { UseWalletProvider } from 'use-wallet'
