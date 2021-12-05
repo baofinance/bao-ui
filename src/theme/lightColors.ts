@@ -61,9 +61,9 @@ export const transparent = {
 
 export const accent = {
   100: '#fde9d8',
-  200: '#fcd4b1', 
-  300: '#fabe89', 
-  400: '#f8a862', 
+  200: '#fcd4b1',
+  300: '#fabe89',
+  400: '#f8a862',
   500: '#f7933b',
   600: '#f57d14',
   700: '#ce6509',

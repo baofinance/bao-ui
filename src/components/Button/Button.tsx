@@ -155,7 +155,6 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	}
 
 	&:hover,
-	&:focus,
 	&:active {
 		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		color: ${(props) => props.theme.color.text[400]};

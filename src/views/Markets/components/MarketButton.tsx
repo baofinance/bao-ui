@@ -1,14 +1,17 @@
-import { MarketOperations } from './Modals'
-import styled from 'styled-components'
 import React, { useState } from 'react'
-import { SupportedMarket } from 'bao/lib/types'
+import styled from 'styled-components'
+import { MarketOperations } from './Modals'
 import BigNumber from 'bignumber.js'
+import useTransactionProvider from '../../../hooks/useTransactionProvider'
 import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useApprovals } from '../../../hooks/hard-synths/useApprovals'
-import { approvev2 } from '../../../bao/utils'
-import Config from '../../../bao/lib/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Config from '../../../bao/lib/config'
+import { approvev2 } from '../../../bao/utils'
+import { decimate } from '../../../utils/numberFormat'
+import { TransactionReceipt } from 'web3-core'
+import { SupportedMarket } from 'bao/lib/types'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -17,8 +20,6 @@ type MarketButtonProps = {
 	isDisabled: boolean
 }
 
-const REQUIRED_CONFIRMATIONS = 3
-
 export const MarketButton = ({
 	operation,
 	asset,
@@ -26,19 +27,26 @@ export const MarketButton = ({
 	isDisabled,
 }: MarketButtonProps) => {
 	const [pendingTx, setPendingTx] = useState<string | boolean>(false)
-	const [confirmations, setConfirmations] = useState<undefined | number>()
 
+	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
 	const bao = useBao()
 	const { account } = useWallet()
 	const { approvals } = useApprovals(pendingTx)
 
-	const handleConfirmations = (confNo: number) => {
-		if (confNo < REQUIRED_CONFIRMATIONS) setConfirmations(confNo)
-		else clearPendingTx()
+	const clearPendingTx = () => {
+		setPendingTx(false)
 	}
 
-	const clearPendingTx = () => {
-		setConfirmations(undefined)
+	const handlePendingTx = (hash: string, description: string) => {
+		onAddTransaction({
+			hash,
+			description,
+		})
+		setPendingTx(hash)
+	}
+
+	const handleReceipt = (receipt: TransactionReceipt) => {
+		onTxReceipt(receipt)
 		setPendingTx(false)
 	}
 
@@ -51,9 +59,7 @@ export const MarketButton = ({
 		return (
 			<ButtonStack>
 				<SubmitButton disabled={true}>
-					{confirmations ? (
-						`Transaction Succeeded (${confirmations}/${REQUIRED_CONFIRMATIONS} Confirmations)`
-					) : typeof pendingTx === 'string' ? (
+					{typeof pendingTx === 'string' ? (
 						<ExternalLink
 							href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 							target="_blank"
@@ -88,9 +94,16 @@ export const MarketButton = ({
 											.send({ from: account })
 									mintTx
 										.on('transactionHash', (txHash: string) =>
-											setPendingTx(txHash),
+											handlePendingTx(
+												txHash,
+												`Supply ${decimate(val, asset.decimals).toFixed(4)} ${
+													asset.underlyingSymbol
+												}`,
+											),
 										)
-										.on('confirmation', handleConfirmations)
+										.on('receipt', (receipt: TransactionReceipt) =>
+											handleReceipt(receipt),
+										)
 										.on('error', clearPendingTx)
 									setPendingTx(true)
 								}}
@@ -107,9 +120,14 @@ export const MarketButton = ({
 									)
 									approvev2(underlyingContract, marketContract, account)
 										.on('transactionHash', (txHash: string) =>
-											setPendingTx(txHash),
+											handlePendingTx(
+												txHash,
+												`Approve ${asset.underlyingSymbol}`,
+											),
 										)
-										.on('confirmation', handleConfirmations)
+										.on('receipt', (receipt: TransactionReceipt) =>
+											handleReceipt(receipt),
+										)
 										.on('error', clearPendingTx)
 									setPendingTx(true)
 								}}
@@ -130,9 +148,16 @@ export const MarketButton = ({
 									.redeemUnderlying(val.toString())
 									.send({ from: account })
 									.on('transactionHash', (txHash: string) =>
-										setPendingTx(txHash),
+										handlePendingTx(
+											txHash,
+											`Withdraw ${decimate(val, asset.decimals).toFixed(4)} ${
+												asset.underlyingSymbol
+											}`,
+										),
 									)
-									.on('confirmation', handleConfirmations)
+									.on('receipt', (receipt: TransactionReceipt) =>
+										handleReceipt(receipt),
+									)
 									.on('error', clearPendingTx)
 								setPendingTx(true)
 							}}
@@ -150,8 +175,17 @@ export const MarketButton = ({
 							marketContract.methods
 								.borrow(val.toString())
 								.send({ from: account })
-								.on('transactionHash', (txHash: string) => setPendingTx(txHash))
-								.on('confirmation', handleConfirmations)
+								.on('transactionHash', (txHash: string) =>
+									handlePendingTx(
+										txHash,
+										`Borrow ${decimate(val, asset.decimals).toFixed(4)} ${
+											asset.symbol
+										}`,
+									),
+								)
+								.on('receipt', (receipt: TransactionReceipt) =>
+									handleReceipt(receipt),
+								)
 								.on('error', clearPendingTx)
 							setPendingTx(true)
 						}}
@@ -169,20 +203,27 @@ export const MarketButton = ({
 							<SubmitButton
 								disabled={isDisabled}
 								onClick={() => {
-									let mintTx
+									let repayTx
 									if (asset.underlying === 'ETH')
-										mintTx = marketContract.methods
+										repayTx = marketContract.methods
 											.repayBorrow()
 											.send({ from: account, value: val.toString() })
 									else
-										mintTx = marketContract.methods
+										repayTx = marketContract.methods
 											.repayBorrow(val.toString())
 											.send({ from: account })
-									mintTx
+									repayTx
 										.on('transactionHash', (txHash: string) =>
-											setPendingTx(txHash),
+											handlePendingTx(
+												txHash,
+												`Repay ${decimate(val, asset.decimals).toFixed(4)} ${
+													asset.underlyingSymbol
+												}`,
+											),
 										)
-										.on('confirmation', handleConfirmations)
+										.on('receipt', (receipt: TransactionReceipt) =>
+											handleReceipt(receipt),
+										)
 										.on('error', clearPendingTx)
 									setPendingTx(true)
 								}}
@@ -199,9 +240,14 @@ export const MarketButton = ({
 									)
 									approvev2(underlyingContract, marketContract, account)
 										.on('transactionHash', (txHash: string) =>
-											setPendingTx(txHash),
+											handlePendingTx(
+												txHash,
+												`Approve ${asset.underlyingSymbol}`,
+											),
 										)
-										.on('confirmation', handleConfirmations)
+										.on('receipt', (receipt: TransactionReceipt) =>
+											handleReceipt(receipt),
+										)
 										.on('error', clearPendingTx)
 									setPendingTx(true)
 								}}

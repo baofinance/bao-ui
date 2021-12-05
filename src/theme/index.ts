@@ -1,18 +1,7 @@
-import {
-  accent,
-  blue,
-  darkGrey,
-  green,
-  monochrome,
-  background,
-  primary,
-  red,
-  secondary,
-  text,
-  transparent,
-} from './colors'
+import * as LightColors from './lightColors'
+import * as DarkColors from './darkColors'
 
-const theme = {
+const theme = (dark = false) => ({
   borderRadius: 8,
   breakpoints: {
     mobile: 576,
@@ -20,19 +9,7 @@ const theme = {
     fhd: 992,
     uhd: 2160,
   },
-  color: {
-    monochrome,
-    red,
-    green,
-    blue,
-    background,
-    primary,
-    secondary,
-    text,
-    transparent,
-    accent,
-    darkGrey,
-  },
+  color: dark ? DarkColors : LightColors,
   fontSize: {
     xs: '.75rem',
     sm: '.875rem',
@@ -65,8 +42,7 @@ const theme = {
       'inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);',
   },
   border: {
-    default:
-      '1px solid #efeae7',
+    default: '1px solid #efeae7',
   },
   buttonGradient: {
     a: 'linear-gradient(225deg, #efeae7, #efeae7) padding-box, linear-gradient(135deg, #ce6509, #ff9440) border-box',
@@ -76,6 +52,6 @@ const theme = {
   heroGradient:
     'linear-gradient(to left, #6b9aef 0%, #65c48c 33%, #1fa6e0 66%, #6b9aef 100%)',
   topBarSize: 72,
-}
+})
 
 export default theme

@@ -3,6 +3,7 @@ import fetcher from 'bao/lib/fetcher'
 import { SWR } from 'bao/lib/types'
 import useSWR from 'swr'
 import useBao from '../useBao'
+import useTransactionProvider from '../useTransactionProvider'
 import MultiCall from '../../utils/multicall'
 import Config from '../../bao/lib/config'
 import BigNumber from 'bignumber.js'
@@ -49,6 +50,7 @@ export const usePrices = (): SWR & Prices => {
 }
 
 export const useMarketPrices = (): MarketPrices => {
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
   const [prices, setPrices] = useState<undefined | { [key: string]: number }>()
 
@@ -80,12 +82,12 @@ export const useMarketPrices = (): MarketPrices => {
         {},
       ),
     )
-  }, [bao])
+  }, [transactions, bao])
 
   useEffect(() => {
     if (!bao) return
     fetchPrices()
-  }, [bao])
+  }, [transactions, bao])
 
   return {
     prices,

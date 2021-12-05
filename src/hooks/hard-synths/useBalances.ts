@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../useBao'
 import { useWallet } from 'use-wallet'
+import useTransactionProvider from '../useTransactionProvider'
 import { Contract } from 'web3-eth-contract'
 import { provider } from 'web3-core'
 import Config from '../../bao/lib/config'
@@ -14,6 +15,7 @@ export type Balance = {
 }
 
 export const useAccountBalances = (): Balance[] => {
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
   const { account }: { account: string; ethereum: provider } = useWallet()
   const tokens = Config.markets.map(
@@ -64,18 +66,19 @@ export const useAccountBalances = (): Balance[] => {
           : decimate(ethBalance).toNumber(),
       })),
     )
-  }, [bao, account])
+  }, [transactions, bao, account])
 
   useEffect(() => {
     if (!(bao && account)) return
 
     fetchBalances()
-  }, [bao, account])
+  }, [transactions, bao, account])
 
   return balances
 }
 
 export const useSupplyBalances = (): Balance[] => {
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
   const { account }: { account: string; ethereum: provider } = useWallet()
   const tokens = Config.markets.map(
@@ -116,18 +119,19 @@ export const useSupplyBalances = (): Balance[] => {
         ).toNumber(),
       })),
     )
-  }, [bao, account])
+  }, [transactions, bao, account])
 
   useEffect(() => {
     if (!(bao && account)) return
 
     fetchBalances()
-  }, [bao, account])
+  }, [transactions, bao, account])
 
   return balances
 }
 
 export const useBorrowBalances = (): Balance[] => {
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
   const { account }: { account: string; ethereum: provider } = useWallet()
   const tokens = Config.markets.map(
@@ -168,13 +172,13 @@ export const useBorrowBalances = (): Balance[] => {
         ).toNumber(),
       })),
     )
-  }, [bao, account])
+  }, [transactions, bao, account])
 
   useEffect(() => {
     if (!(bao && account)) return
 
     fetchBalances()
-  }, [bao, account])
+  }, [transactions, bao, account])
 
   return balances
 }

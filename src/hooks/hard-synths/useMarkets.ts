@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
+import useTransactionProvider from '../useTransactionProvider'
 import useBao from '../useBao'
 import { SupportedMarket } from '../../bao/lib/types'
 import { Context, MarketsContext } from '../../contexts/Markets'
@@ -10,6 +11,7 @@ export const useMarkets = (): SupportedMarket[] | undefined => {
 }
 
 export const useAccountMarkets = (): SupportedMarket[] | undefined => {
+  const { transactions } = useTransactionProvider()
   const bao = useBao()
   const markets = useMarkets()
   const { account }: { account: string } = useWallet()
@@ -29,13 +31,13 @@ export const useAccountMarkets = (): SupportedMarket[] | undefined => {
         markets.find(({ token }) => token === address),
       ),
     )
-  }, [bao, markets, account])
+  }, [transactions, bao, markets, account])
 
   useEffect(() => {
     if (!(bao && markets && account)) return
 
     fetchAccountMarkets()
-  }, [bao, markets, account])
+  }, [transactions, bao, markets, account])
 
   return accountMarkets
 }
