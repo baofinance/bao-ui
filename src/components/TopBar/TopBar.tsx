@@ -5,12 +5,20 @@ import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
+import { Button } from '../Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 interface TopBarProps {
+	isDarkMode: boolean
+	toggleTheme: () => void
 	onPresentMobileMenu: () => void
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
+const TopBar: React.FC<TopBarProps> = ({
+	onPresentMobileMenu,
+	isDarkMode,
+	toggleTheme,
+}) => {
 	return (
 		<StyledTopBar>
 			<StyledTopBarInner>
@@ -22,6 +30,11 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
 				</StyledNavWrapper>
 				<StyledAccountButtonWrapper>
 					<AccountButton />
+					<StyledThemeButton>
+						<Button onClick={toggleTheme}>
+							<FontAwesomeIcon icon={isDarkMode ? 'moon' : 'sun'} />
+						</Button>
+					</StyledThemeButton>
 					<StyledMenuButton onClick={onPresentMobileMenu}>
 						<MenuIcon />
 					</StyledMenuButton>
@@ -86,6 +99,14 @@ const StyledMenuButton = styled.button`
 		justify-content: center;
 		width: 44px;
 		margin-left: ${(props) => props.theme.spacing[2]}px;
+	}
+`
+
+const StyledThemeButton = styled.div`
+	> button {
+		height: 40px;
+		width: 40px;
+		margin-left: 1rem;
 	}
 `
 
