@@ -1,5 +1,5 @@
 export const background = {
-  100: '#202231', //dark mode
+  100: '#200701', //dark mode
   200: '#fff8ee', //dark mode
 }
 
@@ -20,8 +20,8 @@ export const green = '#008000'
 export const blue = '#0000f0'
 
 export const primary = {
-  100: '#efd7d2',
-  200: '#e4bcb4',
+  100: '#50251c',
+  200: '#7f4e43',
   300: '#daa195',
   400: '#cf8677',
   500: '#c56b59',

@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     color: ${(props: any) => props.theme.color.text[100]};
     overflow-x: hidden; /* Hide horizontal scrollbar */
+    transition: .5s;
   }
 
   html,
