@@ -132,7 +132,7 @@ const MarketModal = ({
 	)
 
 	return (
-		<Modal class="marketModal" show={show} onHide={onHide} centered>
+		<Modal show={show} onHide={onHide} centered>
 			<CloseButton onClick={onHide}>
 				<FontAwesomeIcon icon="times" />
 			</CloseButton>

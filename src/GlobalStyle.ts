@@ -79,38 +79,35 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .buttonActive {
-    color: #50251c;
-    background-color: #efeae7;
-    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
+    color: ${(props: any) => props.theme.color.text[300]};
+    background-color: ${(props: any) => props.theme.color.primary[200]};
     border: none;
   }
 
   .buttonActive:hover {
-    box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
-    color: #f57d14;
-    background-color: #efeae7;
+    color: ${(props: any) => props.theme.color.text[100]};
+    background-color: ${(props: any) => props.theme.color.primary[200]};
   }
 
   .buttonInactive {
-    color: #ce6509;
-    background-color: #e7dfda;
-    box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+    color: ${(props: any) => props.theme.color.text[100]};
+    background-color: ${(props: any) => props.theme.color.primary[300]};
     border: none;
   }
 
   .modal-content {
-    background-color: #efeae7 !important;
-    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
-    border: 1px solid #e7dfda;
+    background-color: ${(props: any) =>
+      props.theme.color.primary[100]} !important;
+    border: 1px solid ${(props: any) => props.theme.color.primary[100]};
     border-radius: 8px;
   }
 
   .modal-header {
-    border-bottom: 1px solid #cebfb6;
+    border-bottom: 1px solid ${(props: any) => props.theme.color.primary[200]};;
   }
 
   .modal-footer {
-    border-top: 1px solid #cebfb6;
+    border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};;
   }
 
   .btn {
@@ -143,14 +140,14 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .form-check-input:checked {
-    background-color: #50251c;
-    border-color: #50251c;
+    background-color: ${(props: any) => props.theme.color.text[400]};
+    border-color: ${(props: any) => props.theme.color.text[400]};
     cursor: pointer;
   }
 
   .form-check-input {
-    background-color: #cebfb6;
-    border: 1px solid #cebfb6;
+    background-color: ${(props: any) => props.theme.color.text[200]};
+    border: 1px solid ${(props: any) => props.theme.color.text[200]};
     cursor: pointer;
   }
 `

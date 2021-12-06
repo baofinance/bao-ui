@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import theme from 'theme'
 
 export const MarketContainer = styled.div`
   display: flex;
@@ -193,8 +192,8 @@ export const StatWrapper = styled.div`
 `
 
 export const UserStat = styled.div`
-  margin: 0px;
   overflow-wrap: break-word;
+  text-align: center;
 
   p {
     font-size: 1.5rem;

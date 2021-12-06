@@ -291,35 +291,29 @@ export const SubmitButton = styled.button`
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
 	border: none;
-	border-bottom: 1px solid ${(props) => props.theme.color.primary[400]};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
-	background-color: ${(props) => props.theme.color.primary[100]};
+	background-color: ${(props) => props.theme.color.primary[300]};
 	outline: transparent solid 2px;
 	border-radius: 8px;
 	color: ${(props) => props.theme.color.text[100]};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: .5s;
+	transition: 0.5s;
 	overflow: hidden;
 
 	&:focus {
 		outline: 0;
 	}
 
-	&:hover{
+	&:hover {
 		background: ${(props) => props.theme.color.primary[200]};
-		box-shadow: ${(props) =>
-			!props.disabled
-				? props.theme.boxShadow.hover
-				: props.theme.boxShadow.default};
 		cursor: pointer;
 	}
-}
 
-&:hover,
-&:focus,
-&:active {
-	color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
-	cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')} !important;
-}
+	&:hover,
+	&:focus,
+	&:active {
+		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+		cursor: ${(props) =>
+			props.disabled ? 'not-allowed' : 'pointer'} !important;
+	}
 `

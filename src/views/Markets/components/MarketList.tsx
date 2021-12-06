@@ -44,7 +44,8 @@ export const MarketList: React.FC<MarketListProps> = ({
 
 		// Place markets with outstanding borrows / supplies first in the list
 		return _markets.sort((a) =>
-			supplyBalances.find((balance) => balance.address === a.token).balance > 0 ||
+			supplyBalances.find((balance) => balance.address === a.token).balance >
+				0 ||
 			borrowBalances.find((balance) => balance.address === a.token).balance > 0
 				? -1
 				: 1,
@@ -174,16 +175,24 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 							)}`}
 						</Col>
 						<Col>
-							{`$${(
+							{`$${getDisplayBalance(
 								suppliedUnderlying *
-								decimate(prices[market.token], 36 - market.decimals).toNumber()
-							).toFixed(2)}`}
+									decimate(
+										prices[market.token],
+										36 - market.decimals,
+									).toNumber(),
+								0,
+							)}`}
 						</Col>
 						<Col>
-							{`$${(
+							{`$${getDisplayBalance(
 								borrowed *
-								decimate(prices[market.token], 36 - market.decimals).toNumber()
-							).toFixed(2)}`}
+									decimate(
+										prices[market.token],
+										36 - market.decimals,
+									).toNumber(),
+								0,
+							)}`}
 						</Col>
 					</Row>
 				</StyledAccordionHeader>
@@ -251,13 +260,14 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 										label: 'Supplied',
 										value: `${suppliedUnderlying.toFixed(4)} ${
 											market.underlyingSymbol
-										} | $${(
+										} | $${getDisplayBalance(
 											suppliedUnderlying *
-											decimate(
-												prices[market.token],
-												36 - market.decimals,
-											).toNumber()
-										).toFixed(2)}`,
+												decimate(
+													prices[market.token],
+													36 - market.decimals,
+												).toNumber(),
+											0,
+										)}`,
 									},
 									{
 										label: 'Wallet Balance',
@@ -287,17 +297,21 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 										label: 'Borrowed',
 										value: `${borrowed.toFixed(4)} ${
 											market.underlyingSymbol
-										} | $${(
+										} | $${getDisplayBalance(
 											borrowed *
-											decimate(
-												prices[market.token],
-												36 - market.decimals,
-											).toNumber()
-										).toFixed(2)}`,
+												decimate(
+													prices[market.token],
+													36 - market.decimals,
+												).toNumber(),
+											0,
+										)}`,
 									},
 									{
 										label: 'Borrow Limit Remaining',
-										value: `$${accountLiquidity.usdBorrowable.toFixed(2)}`,
+										value: `$${getDisplayBalance(
+											accountLiquidity.usdBorrowable,
+											0,
+										)}`,
 									},
 								]}
 							/>
@@ -367,9 +381,25 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			}
 
 			::after {
-				// don't turn arrow blue
-				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${(
+					props,
+				) =>
+					props.theme.color.text[100].replace(
+						'#',
+						'%23',
+					)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 			}
+		}
+
+		::after {
+			// don't turn arrow blue
+			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${(
+				props,
+			) =>
+				props.theme.color.text[100].replace(
+					'#',
+					'%23',
+				)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 		}
 
 		.row > .col {

@@ -31,7 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
 	target,
 	border,
 }) => {
-	const { color, spacing } = useContext(ThemeContext)
+	const { spacing } = useContext(ThemeContext)
 
 	let buttonColor: string
 	switch (variant) {
@@ -43,29 +43,22 @@ export const Button: React.FC<ButtonProps> = ({
 			buttonColor = '#50251c'
 	}
 
-	let boxShadow: string
 	let buttonSize: number
 	let buttonPadding: number
 	let fontSize: string
 	switch (size) {
 		case 'sm':
-			boxShadow = `4px 4px 8px ${color.primary.black},
-        -8px -8px 16px ${color.primary.dark};`
 			buttonPadding = spacing[4]
 			buttonSize = 40
 			fontSize = '0.75rem'
 			break
 		case 'lg':
-			boxShadow = `6px 6px 12px ${color.primary.black},
-        -12px -12px 24px ${color.primary.dark};`
 			buttonPadding = spacing[4]
 			buttonSize = 72
 			fontSize = '1rem'
 			break
 		case 'md':
 		default:
-			boxShadow = `6px 6px 12px ${color.primary.black},
-        -12px -12px 24px -2px ${color.primary.dark};`
 			buttonPadding = spacing[4]
 			buttonSize = 50
 			fontSize = '1rem'
@@ -88,7 +81,6 @@ export const Button: React.FC<ButtonProps> = ({
 	const ButtonComp = !border ? StyledButton : StyledBorderButton
 	return (
 		<ButtonComp
-			boxShadow={boxShadow}
 			color={buttonColor}
 			disabled={disabled}
 			fontSize={fontSize}
@@ -106,8 +98,6 @@ export const Button: React.FC<ButtonProps> = ({
 }
 
 interface StyledButtonProps {
-	boxShadow: string
-	color: string
 	disabled?: boolean
 	fontSize: string
 	padding: number
@@ -119,14 +109,13 @@ interface StyledButtonProps {
 
 const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	target: attrs.target || '',
-})) <StyledButtonProps>`
+}))<StyledButtonProps>`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	border: none;
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	padding: ${(props) => -props.theme.spacing[3]}px;
-	color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+	color: ${(props) => props.theme.color.text[100]};
 	display: ${(props) => (props.inline ? 'inline-block' : 'flex')};
 	font-size: ${(props) => props.fontSize};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
@@ -140,7 +129,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
 	overflow: hidden;
-	transition: .5s;
+	transition: 0.5s;
 
 	@media (max-width: 960px) {
 		/* margin: 0 0.5rem 0 0.5rem; */
@@ -156,10 +145,9 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 
 	&:hover,
 	&:active {
-		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		color: ${(props) => props.theme.color.text[400]};
 		cursor: ${(props) =>
-		props.disabled ? 'not-allowed' : 'pointer'} !important;
+			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
 `
 
@@ -204,20 +192,17 @@ export const MaxButton = styled.a`
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
-	transition: .5s;
+	transition: 0.5s;
 	user-select: none;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	text-decoration: none;
 	border: none;
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
-	transition: .5s;
 	font-size: ${(props) => props.theme.fontSize.sm};
 
 	&:hover {
 		background: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[400]};
-		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		cursor: pointer;
 	}
 `
@@ -239,7 +224,7 @@ export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
 		{options.map((option: string) => (
 			<NavButton
 				key={option}
-				className={option === active ? 'buttonInactive' : 'buttonActive'}
+				className={option === active ? 'buttonActive' : 'buttonInactive'}
 				onClick={() => onClick(option)}
 			>
 				{option}
@@ -260,38 +245,33 @@ const NavButton = styled.button`
 	width: 100%;
 	padding: 0.5rem;
 	margin: 0.25rem;
-	border-radius: 4px;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	font-size: ${(props) => props.theme.fontSize.default};
-	transition: .5s;
+	transition: 0.5s;
 	height: 50px;
-    align-items: center;
-    vertical-align: middle;
-    width: 100%;
-    line-height: 1.2;
-    transition-property: all;
-    min-width: 2.5rem;
-    padding-inline-start: 1rem;
-    padding-inline-end: 1rem;
-    border-radius: 8px;
-	transition: .5s;
+	align-items: center;
+	vertical-align: middle;
+	line-height: 1.2;
+	transition-property: all;
+	min-width: 2.5rem;
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	border-radius: 8px;
 	overflow: hidden;
 
-    &:focus {
+	&:focus {
 		outline: 0;
 	}
 
-	  &:hover{
+	&:hover {
 		background: ${(props) => props.theme.color.primary[200]};
-		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		cursor: pointer;
-	  }
 	}
 
 	&:hover,
 	&:focus,
 	&:active {
-		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
-		cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')} !important;
+		cursor: ${(props) =>
+			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
-	`
+`

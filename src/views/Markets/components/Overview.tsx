@@ -57,7 +57,7 @@ export const Overview = () => {
 			<UserStatsContainer>
 				<UserStatsWrapper>
 					<StatWrapper>
-						<UserStat style={{ marginTop: '15px', textAlign: 'center' }}>
+						<UserStat>
 							<h1>Net APY</h1>
 							<p>
 								{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}
@@ -66,7 +66,7 @@ export const Overview = () => {
 						</UserStat>
 					</StatWrapper>
 					<StatWrapper>
-						<UserStat style={{ marginTop: '15px', textAlign: 'center', marginRight: '15px' }}>
+						<UserStat>
 							<h1>Total Supplied</h1>
 							<p>
 								$
@@ -115,7 +115,7 @@ export const Overview = () => {
 						</CircularProgressbarWithChildren>
 					</div>
 					<StatWrapper>
-						<UserStat style={{ marginTop: '15px', textAlign: 'center' }}>
+						<UserStat>
 							<h1>Total Borrowed</h1>
 							<p>
 								$
@@ -128,7 +128,7 @@ export const Overview = () => {
 						</UserStat>
 					</StatWrapper>
 					<StatWrapper>
-						<UserStat style={{ marginTop: '15px', textAlign: 'center' }}>
+						<UserStat>
 							<h1>Liquidation Risk</h1>
 							<p style={{ color: 'green' }}>Low</p>
 						</UserStat>

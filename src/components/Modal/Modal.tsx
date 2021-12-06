@@ -45,7 +45,6 @@ const StyledResponsiveWrapper = styled.div`
 const StyledModal = styled.div`
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
 	background: ${(props) => props.theme.color.primary[100]};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;
 	flex-direction: column;
