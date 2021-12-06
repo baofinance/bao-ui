@@ -112,12 +112,12 @@ export const MarketList: React.FC<MarketListProps> = ({
 const MarketListHeader: React.FC = () => {
 	const headers = [
 		'Market',
+		'Supplied',
+		'Borrowed',
 		'Supply APY',
 		'Total Supplied',
 		'Borrow APR',
 		'Total Borrowed',
-		'Supplied',
-		'Borrowed',
 	]
 
 	return (
@@ -176,6 +176,31 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 						<Col>
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
+						<Col>
+							{`$${getDisplayBalance(
+								suppliedUnderlying *
+								decimate(
+									prices[market.token],
+									36 - market.decimals,
+								).toNumber(),
+								0,
+							)}`}
+							{isInMarket && (
+								<>
+									{' '}<StyledCheck checked inline />
+								</>
+							)}
+						</Col>
+						<Col>
+							{`$${getDisplayBalance(
+								borrowed *
+								decimate(
+									prices[market.token],
+									36 - market.decimals,
+								).toNumber(),
+								0,
+							)}`}
+						</Col>
 						<Col>{market.supplyApy.toFixed(2)}%</Col>
 						<Col>
 							{`$${getDisplayBalance(
@@ -191,26 +216,6 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 						<Col>
 							{`$${getDisplayBalance(
 								market.totalBorrows *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber(),
-								0,
-							)}`}
-						</Col>
-						<Col>
-							{`$${getDisplayBalance(
-								suppliedUnderlying *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber(),
-								0,
-							)}`}
-						</Col>
-						<Col>
-							{`$${getDisplayBalance(
-								borrowed *
 									decimate(
 										prices[market.token],
 										36 - market.decimals,
@@ -431,6 +436,20 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 
 		.row > .col {
 			margin: auto 0;
+		}
+	}
+`
+
+const StyledCheck = styled(FormCheck)`
+	margin: 0;
+	
+	> input {
+		margin: 0;
+		user-select: none;
+		
+		&:focus {
+			outline: none;
+			box-shadow: none;
 		}
 	}
 `
