@@ -11,13 +11,13 @@ const refer: any = urlParams.get('ref')
 const Nav: React.FC = () => {
 	return (
 		<StyledNav>
-			<StyledLink
+			{/* <StyledLink
 				exact
 				activeClassName="active"
 				to={{ pathname: '/', search: '?ref=' + refer }}
 			>
 				Home
-			</StyledLink>
+			</StyledLink> */}
 			{/* <StyledLink
 				exact
 				activeClassName="active"
