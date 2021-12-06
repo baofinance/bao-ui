@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
     transition: 200ms;
   }
 
+  html {
+    overflow-y: scroll;
+  }
+  
   html,
   body,
   #root {

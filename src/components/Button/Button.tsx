@@ -113,7 +113,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: ${(props) => props.theme.color.primary[200]} 1px solid;
+	border: ${(props) => props.theme.color.primary[300]} 1px solid;
 	padding: ${(props) => -props.theme.spacing[3]}px;
 	color: ${(props) => props.theme.color.text[100]};
 	display: ${(props) => (props.inline ? 'inline-block' : 'flex')};

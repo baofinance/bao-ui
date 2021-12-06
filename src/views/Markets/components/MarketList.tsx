@@ -146,7 +146,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 
 	return (
 		<Accordion>
-			<StyledAccordionItem eventKey="0">
+			<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
 				<StyledAccordionHeader>
 					<Row lg={7} style={{ width: '100%' }}>
 						<Col>
@@ -196,7 +196,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 						</Col>
 					</Row>
 				</StyledAccordionHeader>
-				<Accordion.Body>
+				<StyledAccordionBody>
 					<Row lg={2}>
 						<Col>
 							<h4>
@@ -326,7 +326,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 							/>
 						</Col>
 					</Row>
-				</Accordion.Body>
+				</StyledAccordionBody>
 			</StyledAccordionItem>
 		</Accordion>
 	)
@@ -349,7 +349,7 @@ type MarketListItemProps = {
 
 const StyledAccordionHeader = styled(Accordion.Header)`
 	background-color: ${(props) => props.theme.color.primary[100]};
-	height: 60px;
+	border-radius: 8px;
 
 	img {
 		height: 32px;
@@ -360,7 +360,7 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 	> button {
 		background-color: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
-		height: 60px;
+		padding: 1.25rem;
 
 		&:hover,
 		&:focus,
@@ -369,10 +369,14 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
 			box-shadow: none;
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
+			border-bottom-left-radius: 0px;
+			border-bottom-right-radius: 0px;		
+	
 		}
 
 		&:not(.collapsed) {
-			border-bottom: 2px solid ${(props) => props.theme.color.primary[300]};
 			transition: none;
 
 			&:focus,
@@ -409,7 +413,13 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 `
 
 const StyledAccordionItem = styled(Accordion.Item)`
-	background-color: ${(props) => props.theme.color.primary[100]};
-	margin-bottom: 1em;
+	background-color: transparent;
 	border-color: transparent;
+`
+
+const StyledAccordionBody = styled(Accordion.Body)`
+	background-color: ${(props) => props.theme.color.primary[100]};
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border-top: 2px solid ${(props) => props.theme.color.primary[300]};
 `

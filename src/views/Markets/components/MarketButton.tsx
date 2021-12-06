@@ -290,8 +290,8 @@ export const SubmitButton = styled.button`
 	font-size: ${(props) => props.theme.fontSize.default};
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
-	border: none;
-	background-color: ${(props) => props.theme.color.primary[300]};
+	border: ${(props) => props.theme.color.primary[300]} 1px solid;
+	background-color: ${(props) => props.theme.color.primary[100]};
 	outline: transparent solid 2px;
 	border-radius: 8px;
 	color: ${(props) => props.theme.color.text[100]};
