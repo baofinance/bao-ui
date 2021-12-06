@@ -3,13 +3,20 @@ import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
 import { getBalance } from 'utils/erc20'
 import { provider } from 'web3-core'
+import useBao from './useBao'
 
 const useTokenBalance = (tokenAddress: string) => {
   const [balance, setBalance] = useState(new BigNumber(0))
   const { account, ethereum }: { account: string; ethereum: provider } =
     useWallet()
+  const bao = useBao()
 
   const fetchBalance = useCallback(async () => {
+    if (tokenAddress === 'ETH') {
+      const ethBalance = await bao.web3.eth.getBalance(account)
+      return setBalance(new BigNumber(ethBalance))
+    }
+
     const balance = await getBalance(ethereum, tokenAddress, account)
     setBalance(new BigNumber(balance))
   }, [account, ethereum, tokenAddress])

@@ -15,7 +15,6 @@ import ModalsProvider from './contexts/Modals'
 import MarketsProvider from './contexts/Markets'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
-import Home from './views/Home'
 import Markets from './views/Markets'
 import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
@@ -72,9 +71,6 @@ const App: React.FC = () => {
 					{/* <Route path="/Baskets">
 						<Baskets />
 					</Route> */}
-					<Route path="/Markets">
-						<Markets />
-					</Route>
 					{/* <Route path="/Farms">
 						<Farms />
 					</Route> */}

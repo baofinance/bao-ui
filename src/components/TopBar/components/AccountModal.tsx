@@ -4,12 +4,12 @@ import baoIcon from 'assets/img/logo.svg'
 import { BigNumber } from 'bignumber.js'
 import useBao from 'hooks/useBao'
 import useTokenBalance from 'hooks/useTokenBalance'
+import useTransactionProvider from '../../../hooks/useTransactionProvider'
 import React, { useCallback } from 'react'
 import { Col, Row, CloseButton } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getDisplayBalance } from 'utils/numberFormat'
-import Config from '../../../bao/lib/config'
 import { Button } from '../../Button'
 import CardIcon from '../../CardIcon'
 import Label from '../../Label'
@@ -18,6 +18,8 @@ import ModalContent from '../../ModalContent'
 import ModalTitle from '../../ModalTitle'
 import Spacer from '../../Spacer'
 import Value from '../../Value'
+import { StatBlock } from '../../../views/Markets/components/Stats'
+import _ from 'lodash'
 
 const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 	const { account, reset } = useWallet()
@@ -27,9 +29,10 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 		reset()
 	}, [onDismiss, reset])
 
+	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const baoBalance = useTokenBalance(bao.getContract('polly').options.address)
-	const wethBalance = useTokenBalance(Config.addressMap.WETH)
+	const wethBalance = useTokenBalance('ETH')
 
 	return (
 		<Modal>
@@ -50,7 +53,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 										4,
 									)}
 								/>
-								<Label text="WETH Balance" />
+								<Label text="ETH Balance" />
 							</StyledBalance>
 						</StyledBalanceWrapper>
 					</Col>
@@ -68,7 +71,35 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 						</StyledBalanceWrapper>
 					</Col>
 				</Row>
-
+				{Object.keys(transactions).length > 0 && (
+					<>
+						<p>
+							<span style={{ float: 'left' }}>Recent Transactions</span>
+							<small>
+								<a
+									href="#"
+									style={{ float: 'right' }}
+									onClick={() => {
+										localStorage.setItem('transactions', '{}')
+										window.location.reload()
+									}}
+								>
+									<FontAwesomeIcon icon="times" /> Clear
+								</a>
+							</small>
+						</p>
+						<Spacer size="sm" />
+						<StatBlock
+							label={null}
+							stats={_.reverse(Object.keys(transactions))
+								.slice(0, 5)
+								.map((txHash) => ({
+									label: transactions[txHash].description,
+									value: transactions[txHash].receipt ? 'Completed' : 'Pending',
+								}))}
+						/>
+					</>
+				)}
 				<Spacer />
 				<Button
 					href={`https://polygonscan.com/address/${account}`}

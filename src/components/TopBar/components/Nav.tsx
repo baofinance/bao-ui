@@ -2,12 +2,6 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-const queryString = window.location.search
-
-const urlParams = new URLSearchParams(queryString)
-
-const refer: any = urlParams.get('ref')
-
 const Nav: React.FC = () => {
 	return (
 		<StyledNav>
@@ -28,7 +22,7 @@ const Nav: React.FC = () => {
 			<StyledLink
 				exact
 				activeClassName="active"
-				to={{ pathname: '/markets', search: '?ref=' + refer }}
+				to={{ pathname: '/' }}
 			>
 				Markets
 			</StyledLink>

@@ -39,22 +39,28 @@ export const MarketList: React.FC<MarketListProps> = ({
 	const { exchangeRates } = useExchangeRates()
 	const { prices } = useMarketPrices()
 
-	const markets = useMemo(() => {
+	const activeMarkets = useMemo(() => {
 		if (!(supplyBalances && borrowBalances)) return undefined
 
-		// Place markets with outstanding borrows / supplies first in the list
-		return _markets.sort((a) =>
-			supplyBalances.find((balance) => balance.address === a.token).balance >
+		// Find markets with outstanding supply / borrows
+		return _markets.filter((market) =>
+			supplyBalances.find((balance) => balance.address === market.token).balance >
 				0 ||
-			borrowBalances.find((balance) => balance.address === a.token).balance > 0
-				? -1
-				: 1,
+			borrowBalances.find((balance) => balance.address === market.token).balance > 0
 		)
 	}, [_markets, supplyBalances, borrowBalances])
 
+	const markets = useMemo(() => {
+		if (!activeMarkets) return undefined
+
+		// Place markets with outstanding borrows / supplies first in the list
+		return _markets.filter((market) => !activeMarkets.includes(market))
+	}, [_markets, activeMarkets])
+
 	return (
 		<>
-			{markets &&
+			{activeMarkets &&
+			markets &&
 			accountBalances &&
 			accountLiquidity &&
 			accountMarkets &&
@@ -64,6 +70,24 @@ export const MarketList: React.FC<MarketListProps> = ({
 			prices ? (
 				<>
 					<MarketListHeader />
+					{activeMarkets.length > 0 && (
+						<>
+							{activeMarkets.map((market: SupportedMarket) => (
+								<MarketListItem
+									market={market}
+									accountBalances={accountBalances}
+									accountMarkets={accountMarkets}
+									accountLiquidity={accountLiquidity}
+									supplyBalances={supplyBalances}
+									borrowBalances={borrowBalances}
+									exchangeRates={exchangeRates}
+									prices={prices}
+									key={market.token}
+								/>
+							))}
+							<hr style={{ margin: '12px' }} />
+						</>
+					)}
 					{markets.map((market: SupportedMarket) => (
 						<MarketListItem
 							market={market}
@@ -372,8 +396,7 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			border-top-left-radius: 8px;
 			border-top-right-radius: 8px;
 			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;		
-	
+			border-bottom-right-radius: 0px;
 		}
 
 		&:not(.collapsed) {
