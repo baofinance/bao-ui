@@ -1,11 +1,12 @@
+import React, { useCallback } from 'react'
+import { BigNumber } from 'bignumber.js'
+import Config from '../../../bao/lib/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import wethIcon from 'assets/img/assets/WETH.png'
 import baoIcon from 'assets/img/logo.svg'
-import { BigNumber } from 'bignumber.js'
 import useBao from 'hooks/useBao'
 import useTokenBalance from 'hooks/useTokenBalance'
 import useTransactionProvider from '../../../hooks/useTransactionProvider'
-import React, { useCallback } from 'react'
 import { Col, Row, CloseButton } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
@@ -102,8 +103,8 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 				)}
 				<Spacer />
 				<Button
-					href={`https://polygonscan.com/address/${account}`}
-					text="View on Polygonscan"
+					href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`}
+					text="View on Explorer"
 				/>
 				<Spacer />
 				<Button onClick={handleSignOutClick} text="Sign out" />
