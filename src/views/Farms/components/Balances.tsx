@@ -56,7 +56,7 @@ const PendingRewards: React.FC = () => {
 			style={{
 				transform: `scale(${scale})`,
 				transformOrigin: 'right bottom',
-				transition: 'transform 0.5s',
+				transition: 'transform 200ms',
 				display: 'inline-block',
 			}}
 		>

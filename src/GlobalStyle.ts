@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     color: ${(props: any) => props.theme.color.text[100]};
     overflow-x: hidden; /* Hide horizontal scrollbar */
-    transition: .5s;
+    transition: 200ms;
   }
 
   html,
@@ -121,22 +121,17 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .btn-close {
-    color: #50251c;
-    background-color: #efeae7;
-    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
-    border: none;
-  }
+    float: right;
+    top: ${(props) => props.theme.spacing[3]}px;
+    right: ${(props) => props.theme.spacing[3]}px;
+    font-size: 1rem;
+    position: absolute;
+    color: ${(props) => props.theme.color.text[200]};
+    transition: 200ms;
 
-  .btn-close:hover {
-    box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
-    background-color: #e7dfda;
-    transition: .5s
-  }
-
-  .btn-close:active {
-    box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
-    background-color: #e7dfda;
-    transition: .5s
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .form-check-input:checked {

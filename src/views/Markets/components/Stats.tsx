@@ -355,7 +355,7 @@ const StatHeader = styled.div`
 
 const StatText = styled.div`
 transition-property: all;
-transition-duration: 150ms;
+transition-duration: 200ms;
 transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 display: flex;
 align-items: center;

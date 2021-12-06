@@ -297,7 +297,7 @@ export const SubmitButton = styled.button`
 	color: ${(props) => props.theme.color.text[100]};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: 0.5s;
+	transition: 200ms;
 	overflow: hidden;
 
 	&:focus {

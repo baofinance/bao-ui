@@ -54,7 +54,7 @@ export const MarketHeaderText = styled.p`
 export const MarketHeaderSubText = styled.a`
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow, transform;
-  transition-duration: 150ms;
+  transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
@@ -104,7 +104,7 @@ export const TableHeader = styled.div`
 
 export const ItemContainer = styled.div`
   transition-property: all;
-  transition-duration: 0.5s;
+  transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   display: flex;
   align-items: center;

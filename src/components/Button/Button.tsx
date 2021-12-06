@@ -111,9 +111,9 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	target: attrs.target || '',
 }))<StyledButtonProps>`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[200]};
+	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: none;
+	border: ${(props) => props.theme.color.primary[200]} 1px solid;
 	padding: ${(props) => -props.theme.spacing[3]}px;
 	color: ${(props) => props.theme.color.text[100]};
 	display: ${(props) => (props.inline ? 'inline-block' : 'flex')};
@@ -129,7 +129,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
 	overflow: hidden;
-	transition: 0.5s;
+	transition: 200ms;
 
 	@media (max-width: 960px) {
 		/* margin: 0 0.5rem 0 0.5rem; */
@@ -145,6 +145,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 
 	&:hover,
 	&:active {
+		background-color: ${(props) => props.theme.color.primary[200]};
 		color: ${(props) => props.theme.color.text[400]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
@@ -192,7 +193,7 @@ export const MaxButton = styled.a`
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
-	transition: 0.5s;
+	transition: 200ms;
 	user-select: none;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	text-decoration: none;
@@ -247,7 +248,7 @@ const NavButton = styled.button`
 	margin: 0.25rem;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	font-size: ${(props) => props.theme.fontSize.default};
-	transition: 0.5s;
+	transition: 200ms;
 	height: 50px;
 	align-items: center;
 	vertical-align: middle;

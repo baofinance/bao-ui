@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import useBao from 'hooks/useBao'
 import useTokenBalance from 'hooks/useTokenBalance'
 import React, { useCallback } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, CloseButton } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getDisplayBalance } from 'utils/numberFormat'
@@ -33,9 +33,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 
 	return (
 		<Modal>
-			<CloseButton onClick={onDismiss}>
-				<FontAwesomeIcon icon="window-close" />
-			</CloseButton>
+			<CloseButton onClick={onDismiss} />
 			<ModalTitle text="My Account" />
 			<ModalContent>
 				<Row lg={2}>
@@ -98,19 +96,6 @@ const StyledBalanceWrapper = styled.div`
 
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
 		flex-direction: row;
-	}
-`
-
-export const CloseButton = styled.a`
-	float: right;
-	top: ${(props) => props.theme.spacing[3]}px;
-	right: ${(props) => props.theme.spacing[4]}px;
-	font-size: 1.5rem;
-	position: absolute;
-	color: ${(props) => props.theme.color.text[200]};
-
-	&:hover {
-		cursor: pointer;
 	}
 `
 

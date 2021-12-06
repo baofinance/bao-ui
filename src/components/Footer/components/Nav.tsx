@@ -68,7 +68,7 @@ const StyledNav = styled.nav`
 const StyledLink = styled.a`
 	transition-property: background-color, border-color, color, fill, stroke,
 		opacity, box-shadow, transform;
-	transition-duration: 150ms;
+	transition-duration: 200ms;
 	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	color: ${(props) => props.theme.color.text[100]};
 	padding-left: ${(props) => props.theme.spacing[3]}px;
