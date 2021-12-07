@@ -387,7 +387,7 @@ export const HeaderWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
-  font-size: ${(props) => props.theme.fontSize.sm};
+  font-size: ${(props) => props.theme.fontSize.large};
 
   img {
     vertical-align: middle;
@@ -466,20 +466,20 @@ export const AssetStack = styled.div`
     margin-bottom: 0px;
     color: ${(props) => props.theme.color.text[100]};
     text-align: center;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: ${(props) => props.theme.fontWeight.medium};
   }
 `
 
 export const IconFlex = styled.div`
   display: flex;
-  width: 1.25rem;
+  width: 1.5rem;
 
   img {
     display: block;
     vertical-align: middle;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 `
 

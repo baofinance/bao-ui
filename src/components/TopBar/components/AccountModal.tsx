@@ -7,7 +7,7 @@ import baoIcon from 'assets/img/logo.svg'
 import useBao from 'hooks/useBao'
 import useTokenBalance from 'hooks/useTokenBalance'
 import useTransactionProvider from '../../../hooks/useTransactionProvider'
-import { Col, Row, CloseButton } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getDisplayBalance } from 'utils/numberFormat'
@@ -21,6 +21,7 @@ import Spacer from '../../Spacer'
 import Value from '../../Value'
 import { StatBlock } from '../../../views/Markets/components/Stats'
 import _ from 'lodash'
+import { CloseButton } from 'views/Basket/components/styles'
 
 const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 	const { account, reset } = useWallet()
@@ -37,7 +38,9 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 
 	return (
 		<Modal>
-			<CloseButton onClick={onDismiss} />
+			<CloseButton onClick={onDismiss}>
+				<FontAwesomeIcon icon="window-close" />
+			</CloseButton>
 			<ModalTitle text="My Account" />
 			<ModalContent>
 				<Row lg={2}>

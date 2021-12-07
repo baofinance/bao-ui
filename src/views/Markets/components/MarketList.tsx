@@ -17,7 +17,7 @@ import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useExchangeRates } from '../../../hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets } from '../../../hooks/hard-synths/useMarkets'
-import { Accordion, Col, FormCheck, Row } from 'react-bootstrap'
+import { Accordion, Col, Container, FormCheck, Row } from 'react-bootstrap'
 import { SpinnerLoader } from '../../../components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
@@ -117,19 +117,21 @@ const MarketListHeader: React.FC = () => {
 		'Supplied',
 		'Borrowed',
 		'Supply APY',
-		'Total Supplied',
 		'Borrow APR',
+		'Total Supplied',
 		'Total Borrowed',
 	]
 
 	return (
-		<Row lg={7} style={{ padding: '0.5rem 44px' }}>
+		<Container fluid>
+		<Row lg={7} style={{ padding: '0.5rem 1.5rem' }}>
 			{headers.map((header: string) => (
-				<Col style={{ padding: '0' }} key={header}>
+				<MarketListHeaderCol style={{ padding: '12px', paddingBottom: '0px' }} key={header}>
 					<b>{header}</b>
-				</Col>
+				</MarketListHeaderCol>
 			))}
 		</Row>
+		</Container>
 	)
 }
 
@@ -205,6 +207,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 							)}`}
 						</Col>
 						<Col>{market.supplyApy.toFixed(2)}%</Col>
+						<Col>{market.borrowApy.toFixed(2)}%</Col>
 						<Col>
 							{`$${getDisplayBalance(
 								market.supplied *
@@ -215,7 +218,6 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 								0,
 							)}`}
 						</Col>
-						<Col>{market.borrowApy.toFixed(2)}%</Col>
 						<Col>
 							{`$${getDisplayBalance(
 								market.totalBorrows *
@@ -444,6 +446,15 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 
 		.row > .col {
 			margin: auto 0;
+			text-align: right;
+
+			&:first-child {
+				text-align: left;
+			}
+
+			&:last-child {
+				margin-right: 25px;
+			}
 		}
 	}
 `
@@ -472,4 +483,16 @@ const StyledAccordionBody = styled(Accordion.Body)`
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 	border-top: 2px solid ${(props) => props.theme.color.primary[300]};
+`
+
+const MarketListHeaderCol = styled(Col)`
+	text-align: right;
+
+	&:first-child {
+		text-align: left;
+	}
+
+	&:last-child {
+		margin-right: 45px;
+	}
 `

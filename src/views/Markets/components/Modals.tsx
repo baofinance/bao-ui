@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { SupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
-import { Modal, ModalProps, CloseButton } from 'react-bootstrap'
+import { Modal, ModalProps } from 'react-bootstrap'
 import {
 	useAccountBalances,
 	useSupplyBalances,
@@ -30,6 +30,8 @@ import {
 	AssetStack,
 	IconFlex,
 } from './styles'
+import { CloseButton } from 'views/Basket/components/styles'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -131,7 +133,9 @@ const MarketModal = ({
 
 	return (
 		<Modal show={show} onHide={onHide} centered>
-			<CloseButton onClick={onHide} />
+			<CloseButton onClick={onHide}>
+				<FontAwesomeIcon icon="window-close" />
+			</CloseButton>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>

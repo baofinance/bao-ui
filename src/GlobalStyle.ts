@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   b {
-    font-weight: bold;
+    font-weight: ${(props) => props.theme.fontWeight.medium};
   }
 
   a {
@@ -149,6 +149,18 @@ const GlobalStyle = createGlobalStyle`
     border: 1px solid ${(props: any) => props.theme.color.text[200]};
     cursor: pointer;
   }
+
+  .accordion-item:first-of-type .accordion-button {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+
+  .accordion-item:last-of-type .accordion-button.collapsed {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
 `
 
 export default GlobalStyle
