@@ -135,14 +135,6 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 					value: reserveFactor,
 				},
 				{
-					label: 'Total Supplied',
-					value: totalSuppliedUsd,
-				},
-				{
-					label: 'Total Borrows',
-					value: totalBorrowsUsd,
-				},
-				{
 					label: 'Total Reserves',
 					value: totalReservesUsd,
 				},
