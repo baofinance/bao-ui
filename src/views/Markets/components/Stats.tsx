@@ -23,6 +23,7 @@ type StatBlockProps = {
 }
 
 type MarketStatBlockProps = {
+	title?: string
 	asset: SupportedMarket
 	amount?: number
 }
@@ -35,7 +36,9 @@ type MarketStatProps = {
 
 export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<>
-		<StatHeader><p>{label}</p></StatHeader>
+		<StatHeader>
+			<p>{label}</p>
+		</StatHeader>
 		<StatWrapper>
 			{stats.map(({ label, value }) => (
 				<StatText key={label}>
@@ -52,15 +55,15 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 
 	const supplyBalance =
 		supplyBalances &&
-			supplyBalances.find(
-				(balance) => balance.address.toLowerCase() === asset.token.toLowerCase(),
-			) &&
-			exchangeRates &&
-			exchangeRates[asset.token]
+		supplyBalances.find(
+			(balance) => balance.address.toLowerCase() === asset.token.toLowerCase(),
+		) &&
+		exchangeRates &&
+		exchangeRates[asset.token]
 			? supplyBalances.find(
-				(balance) =>
-					balance.address.toLowerCase() === asset.token.toLowerCase(),
-			).balance * decimate(exchangeRates[asset.token]).toNumber()
+					(balance) =>
+						balance.address.toLowerCase() === asset.token.toLowerCase(),
+			  ).balance * decimate(exchangeRates[asset.token]).toNumber()
 			: 0
 
 	return (
@@ -80,40 +83,40 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	)
 }
 
-const MarketDetails = ({ asset }: MarketStatBlockProps) => {
+export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
 	const totalBorrowsUsd =
 		prices && asset.totalBorrows
 			? `$${getDisplayBalance(
-				asset.totalBorrows *
-				decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-				).toNumber(),
-				0
-			)}`
+					asset.totalBorrows *
+						decimate(
+							prices[asset.token],
+							new BigNumber(36).minus(asset.decimals),
+						).toNumber(),
+					0,
+			  )}`
 			: '-'
 	const totalReservesUsd =
 		prices && asset.totalReserves
 			? `$${getDisplayBalance(
-				asset.totalReserves *
-				decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-				).toNumber(),
-				0
-			)}`
+					asset.totalReserves *
+						decimate(
+							prices[asset.token],
+							new BigNumber(36).minus(asset.decimals),
+						).toNumber(),
+					0,
+			  )}`
 			: '-'
 	const totalSuppliedUsd =
 		prices && asset.supplied
 			? `$${getDisplayBalance(
-				asset.supplied *
-				decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-				).toNumber(),
-				0
-			)}`
+					asset.supplied *
+						decimate(
+							prices[asset.token],
+							new BigNumber(36).minus(asset.decimals),
+						).toNumber(),
+					0,
+			  )}`
 			: '-'
 	const reserveFactor = asset.reserveFactor
 		? `${asset.reserveFactor * 100}%`
@@ -121,7 +124,7 @@ const MarketDetails = ({ asset }: MarketStatBlockProps) => {
 
 	return (
 		<StatBlock
-			label="Market Stats"
+			label={title}
 			stats={[
 				{
 					label: 'Collateral Factor',
@@ -153,12 +156,12 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 
 	const borrowBalance =
 		borrowBalances &&
-			borrowBalances.find(
-				(_borrowBalance) => _borrowBalance.address === asset.token,
-			)
+		borrowBalances.find(
+			(_borrowBalance) => _borrowBalance.address === asset.token,
+		)
 			? borrowBalances.find(
-				(_borrowBalance) => _borrowBalance.address === asset.token,
-			).balance
+					(_borrowBalance) => _borrowBalance.address === asset.token,
+			  ).balance
 			: 0
 
 	return (
@@ -171,9 +174,9 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Borrow Balance',
-					value: `${
-						getDisplayBalance(borrowBalance.toFixed(2), 0)
-					} ${asset.underlyingSymbol}`,
+					value: `${getDisplayBalance(borrowBalance.toFixed(2), 0)} ${
+						asset.underlyingSymbol
+					}`,
 				},
 			]}
 		/>
@@ -187,11 +190,11 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const change =
 		prices && amount
 			? asset.collateralFactor *
-			amount *
-			decimate(
-				prices[asset.token],
-				new BigNumber(36).minus(asset.decimals),
-			).toNumber()
+			  amount *
+			  decimate(
+					prices[asset.token],
+					new BigNumber(36).minus(asset.decimals),
+			  ).toNumber()
 			: 0
 	const borrowable = accountLiquidity
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
@@ -204,11 +207,10 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit',
-					value: `$${
-						getDisplayBalance(borrowable.toFixed(2), 0)
-					} ➜ $${
-						getDisplayBalance(newBorrowable.toFixed(2), 0)
-					}`,
+					value: `$${getDisplayBalance(
+						borrowable.toFixed(2),
+						0,
+					)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
 				},
 				{
 					label: 'Borrow Limit Used',
@@ -231,27 +233,21 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const change =
 		prices && amount
 			? amount *
-			decimate(
-				prices[asset.token],
-				new BigNumber(36).minus(asset.decimals),
-			).toNumber()
+			  decimate(
+					prices[asset.token],
+					new BigNumber(36).minus(asset.decimals),
+			  ).toNumber()
 			: 0
 
-	const borrow = accountLiquidity
-		? accountLiquidity.usdBorrow
-		: 0
+	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : 0
 
-	const newBorrow = borrow
-		? borrow - (change > 0 ? change : 0)
-		: 0
+	const newBorrow = borrow ? borrow - (change > 0 ? change : 0) : 0
 
 	const borrowable = accountLiquidity
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
 		: 0
 
-	const newBorrowable = borrowable
-		? borrowable + (change < 0 ? change : 0)
-		: 0
+	const newBorrowable = borrowable ? borrowable + (change < 0 ? change : 0) : 0
 
 	return (
 		<StatBlock
@@ -259,19 +255,13 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Borrow Limit Remaining',
-					value: `$${
-						getDisplayBalance(
-							accountLiquidity
-								? accountLiquidity.usdBorrowable.toFixed(2)
-								: 0,
-							0
-						)
-					} ➜ $${
-						getDisplayBalance(
-							accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
-							0
-						)
-					}`,
+					value: `$${getDisplayBalance(
+						accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0,
+						0,
+					)} ➜ $${getDisplayBalance(
+						accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
+						0,
+					)}`,
 				},
 				{
 					label: 'Borrow Limit Used',
@@ -296,7 +286,6 @@ export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 				<>
 					<SupplyDetails asset={asset} />
 					<BorrowLimit asset={asset} amount={parsedAmount} />
-					<MarketDetails asset={asset} />
 				</>
 			)
 		case MarketOperations.withdraw:
@@ -304,7 +293,6 @@ export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 				<>
 					<SupplyDetails asset={asset} />
 					<BorrowLimit asset={asset} amount={-1 * parsedAmount} />
-					<MarketDetails asset={asset} />
 				</>
 			)
 		case MarketOperations.borrow:
@@ -332,8 +320,8 @@ const StatWrapper = styled.div`
 	width: 100%;
 	padding-top: ${(props) => props.theme.spacing[2]};
 	margin-top: 0.25rem;
-    margin-inline: 0px;
-    margin-bottom: 0px;
+	margin-inline: 0px;
+	margin-bottom: 0px;
 	background: ${(props) => props.theme.color.primary[200]};
 	padding: 16px;
 	border-radius: 8px;
@@ -354,20 +342,20 @@ const StatHeader = styled.div`
 `
 
 const StatText = styled.div`
-transition-property: all;
-transition-duration: 200ms;
-transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-display: flex;
-align-items: center;
-justify-content: space-between;
-width: 100%;
-font-weight: ${(props) => props.theme.fontWeight.medium};
-font-size: ${(props) => props.theme.fontSize.default};
-padding-top: ${(props) => props.theme.spacing[1]}px;
-padding-bottom: ${(props) => props.theme.spacing[1]}px;
-padding-left: ${(props) => props.theme.spacing[2]}px;
-padding-right: ${(props) => props.theme.spacing[2]}px;
-border-radius: 8px;
+	transition-property: all;
+	transition-duration: 200ms;
+	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	font-size: ${(props) => props.theme.fontSize.default};
+	padding-top: ${(props) => props.theme.spacing[1]}px;
+	padding-bottom: ${(props) => props.theme.spacing[1]}px;
+	padding-left: ${(props) => props.theme.spacing[2]}px;
+	padding-right: ${(props) => props.theme.spacing[2]}px;
+	border-radius: 8px;
 
 	p {
 		color: ${(props) => props.theme.color.text[100]};
@@ -382,8 +370,7 @@ border-radius: 8px;
 		margin-bottom: 0px;
 	}
 
-        &:nth-child(odd){
-          background-color: ${(props) => props.theme.color.primary[300]};
-
-        }
+	&:nth-child(odd) {
+		background-color: ${(props) => props.theme.color.primary[300]};
+	}
 `

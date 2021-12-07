@@ -20,7 +20,7 @@ import { useAccountMarkets } from '../../../hooks/hard-synths/useMarkets'
 import { Accordion, Col, FormCheck, Row } from 'react-bootstrap'
 import { SpinnerLoader } from '../../../components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
-import { StatBlock } from './Stats'
+import { MarketDetails, StatBlock } from './Stats'
 import Tooltipped from '../../../components/Tooltipped'
 import { SubmitButton } from './MarketButton'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
@@ -43,10 +43,12 @@ export const MarketList: React.FC<MarketListProps> = ({
 		if (!(supplyBalances && borrowBalances)) return undefined
 
 		// Find markets with outstanding supply / borrows
-		return _markets.filter((market) =>
-			supplyBalances.find((balance) => balance.address === market.token).balance >
-				0 ||
-			borrowBalances.find((balance) => balance.address === market.token).balance > 0
+		return _markets.filter(
+			(market) =>
+				supplyBalances.find((balance) => balance.address === market.token)
+					.balance > 0 ||
+				borrowBalances.find((balance) => balance.address === market.token)
+					.balance > 0,
 		)
 	}, [_markets, supplyBalances, borrowBalances])
 
@@ -121,7 +123,7 @@ const MarketListHeader: React.FC = () => {
 	]
 
 	return (
-		<Row lg={7} style={{ padding: '0.5rem 2rem' }}>
+		<Row lg={7} style={{ padding: '0.5rem 44px' }}>
 			{headers.map((header: string) => (
 				<Col style={{ padding: '0' }} key={header}>
 					<b>{header}</b>
@@ -179,25 +181,26 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 						<Col>
 							{`$${getDisplayBalance(
 								suppliedUnderlying *
-								decimate(
-									prices[market.token],
-									36 - market.decimals,
-								).toNumber(),
+									decimate(
+										prices[market.token],
+										36 - market.decimals,
+									).toNumber(),
 								0,
 							)}`}
 							{isInMarket && (
 								<>
-									{' '}<StyledCheck checked inline />
+									{' '}
+									<StyledCheck checked inline />
 								</>
 							)}
 						</Col>
 						<Col>
 							{`$${getDisplayBalance(
 								borrowed *
-								decimate(
-									prices[market.token],
-									36 - market.decimals,
-								).toNumber(),
+									decimate(
+										prices[market.token],
+										36 - market.decimals,
+									).toNumber(),
 								0,
 							)}`}
 						</Col>
@@ -226,7 +229,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 					</Row>
 				</StyledAccordionHeader>
 				<StyledAccordionBody>
-					<Row lg={2}>
+					<Row lg={3}>
 						<Col>
 							<h4>
 								Supply
@@ -315,6 +318,10 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 								show={showSupplyModal}
 								onHide={() => setShowSupplyModal(false)}
 							/>
+						</Col>
+						<Col>
+							<h2 style={{ textAlign: 'center' }}>Market Stats</h2>
+							<MarketDetails asset={market} title={null} />
 						</Col>
 						<Col>
 							<h4>Borrow</h4>
@@ -442,11 +449,11 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 
 const StyledCheck = styled(FormCheck)`
 	margin: 0;
-	
+
 	> input {
 		margin: 0;
 		user-select: none;
-		
+
 		&:focus {
 			outline: none;
 			box-shadow: none;
