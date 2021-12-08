@@ -74,7 +74,7 @@ export default {
     },
     stabilizer: {
       3: {
-        address: '0xa3f7F0cd0c16DcE2f26c9784F50561C8F7d68C0a',
+        address: '0xD15C57FE113C6276FAD2F82658BB420351147f5E',
         abi: 'stabilizer.json',
       },
     },

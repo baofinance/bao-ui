@@ -3,27 +3,24 @@ import styled from 'styled-components'
 import Config from '../../../../bao/lib/config'
 import BigNumber from 'bignumber.js'
 import useBao from '../../../../hooks/useBao'
-import { useWallet } from 'use-wallet'
 import useTokenBalance from '../../../../hooks/useTokenBalance'
 import { Card } from 'react-bootstrap'
-import { SubmitButton } from '../../components/MarketButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BalanceInput } from '../../../../components/Input'
 import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
 import { SpinnerLoader } from '../../../../components/Loader'
+import BallastButton from './BallastButton'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
-	const { account } = useWallet()
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->bUSD | true = bUSD->DAI
-	const [inputAVal, setInputAVal] = useState('')
-	const [inputBVal, setInputBVal] = useState('')
+	const [inputVal, setInputVal] = useState('')
 
 	const [reserves, setReserves] = useState<BigNumber | undefined>()
 	const [supplyCap, setSupplyCap] = useState<BigNumber | undefined>()
 
 	const daiBalance = useTokenBalance(
-		'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // DAI on Ropsten, 18 decimals for test contract
+		'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // TestDAI, 18 decimals for test contract
 	)
 	const bUSDBalance = useTokenBalance(Config.addressMap.bUSD)
 
@@ -64,9 +61,9 @@ const BallastSwapper: React.FC = () => {
 				</span>
 			</label>
 			<BalanceInput
-				onMaxClick={() => setInputAVal(decimate(daiBalance).toString())}
-				onChange={(e) => setInputAVal(e.currentTarget.value)}
-				value={inputAVal}
+				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
+				onChange={(e) => setInputVal(e.currentTarget.value)}
+				value={inputVal}
 			/>
 			<DirectionArrow onClick={() => setSwapDirection(!swapDirection)}>
 				<FontAwesomeIcon icon={swapDirection ? 'arrow-up' : 'arrow-down'} />
@@ -85,15 +82,12 @@ const BallastSwapper: React.FC = () => {
 				</span>
 			</label>
 			<BalanceInput
-				onMaxClick={() => setInputBVal(decimate(bUSDBalance).toString())}
-				onChange={(e) => setInputBVal(e.currentTarget.value)}
-				value={inputBVal}
+				onMaxClick={() => setInputVal(decimate(bUSDBalance).toString())}
+				onChange={(e) => setInputVal(e.currentTarget.value)}
+				value={inputVal}
 			/>
 			<br />
-			<SubmitButton>
-				<FontAwesomeIcon icon="sync-alt" style={{ marginRight: '5px' }} />
-				Swap {swapDirection ? 'bUSD to DAI' : 'DAI to bUSD'}
-			</SubmitButton>
+			<BallastButton swapDirection={swapDirection} inputVal={inputVal} />
 		</BallastSwapCard>
 	)
 }

@@ -5,7 +5,11 @@ import useBao from './useBao'
 import { getAllowance } from '../utils/erc20'
 import { BigNumber } from 'bignumber.js'
 
-const useAllowancev2 = (tokenAddress: string, spenderAddress: string, pendingTx: boolean) => {
+const useAllowancev2 = (
+  tokenAddress: string,
+  spenderAddress: string,
+  pendingTx: boolean,
+) => {
   const { account }: { account: string; ethereum: provider } = useWallet()
   const bao = useBao()
 

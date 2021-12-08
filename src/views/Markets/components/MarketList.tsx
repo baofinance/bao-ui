@@ -124,13 +124,16 @@ const MarketListHeader: React.FC = () => {
 
 	return (
 		<Container fluid>
-		<Row lg={7} style={{ padding: '0.5rem 1.5rem' }}>
-			{headers.map((header: string) => (
-				<MarketListHeaderCol style={{ padding: '12px', paddingBottom: '0px' }} key={header}>
-					<b>{header}</b>
-				</MarketListHeaderCol>
-			))}
-		</Row>
+			<Row lg={7} style={{ padding: '0.5rem 1.5rem' }}>
+				{headers.map((header: string) => (
+					<MarketListHeaderCol
+						style={{ padding: '12px', paddingBottom: '0px' }}
+						key={header}
+					>
+						<b>{header}</b>
+					</MarketListHeaderCol>
+				))}
+			</Row>
 		</Container>
 	)
 }
@@ -188,8 +191,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 										36 - market.decimals,
 									).toNumber(),
 								0,
-							)}`}
-							{' '}
+							)}`}{' '}
 							<StyledCheck checked={isInMarket} inline />
 						</Col>
 						<Col>
