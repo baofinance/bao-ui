@@ -26,6 +26,13 @@ const Nav: React.FC = () => {
 			>
 				Markets
 			</StyledLink>
+			<StyledLink
+				exact
+				activeClassName="active"
+				to={{ pathname: '/ballast' }}
+			>
+				Ballast
+			</StyledLink>
 			{/* <StyledLink
 				exact
 				activeClassName="active"

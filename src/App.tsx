@@ -16,6 +16,7 @@ import MarketsProvider from './contexts/Markets'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
 import Markets from './views/Markets'
+import Ballast from './views/Markets/Ballast'
 import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
 import GlobalStyle from 'GlobalStyle'
@@ -67,6 +68,9 @@ const App: React.FC = () => {
 				<Switch>
 					<Route path="/" exact>
 						<Markets />
+					</Route>
+					<Route path="/ballast">
+						<Ballast />
 					</Route>
 					{/* <Route path="/Baskets">
 						<Baskets />
