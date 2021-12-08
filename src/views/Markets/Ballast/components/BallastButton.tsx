@@ -1,18 +1,22 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import BigNumber from 'bignumber.js'
 import Config from '../../../../bao/lib/config'
-import { SubmitButton } from '../../components/MarketButton'
 import useAllowancev2 from '../../../../hooks/useAllowancev2'
 import useBao from '../../../../hooks/useBao'
 import useTransactionProvider from '../../../../hooks/useTransactionProvider'
-import { exponentiate } from '../../../../utils/numberFormat'
 import { useWallet } from 'use-wallet'
-import { TransactionReceipt } from 'web3-core'
-import { SpinnerLoader } from '../../../../components/Loader'
+import { decimate, exponentiate } from '../../../../utils/numberFormat'
 import { approvev2 } from '../../../../bao/utils'
+import { SpinnerLoader } from '../../../../components/Loader'
+import { SubmitButton } from '../../components/MarketButton'
+import { TransactionReceipt } from 'web3-core'
 
 const BallastButton: React.FC<BallastButtonProps> = ({
 	swapDirection,
 	inputVal,
+	maxValues,
+	supplyCap,
+	reserves,
 }: BallastButtonProps) => {
 	const [pendingTx, setPendingTx] = useState(false)
 	const bao = useBao()
@@ -75,6 +79,21 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 		}
 	}
 
+	const handleTx = (tx: any, description: string) => {
+		setPendingTx(true)
+		tx.on('transactionHash', (txHash: string) =>
+			onAddTransaction({
+				hash: txHash,
+				description,
+			}),
+		)
+			.on('receipt', (receipt: TransactionReceipt) => {
+				onTxReceipt(receipt)
+				setPendingTx(false)
+			})
+			.on('error', () => setPendingTx(false))
+	}
+
 	const buttonText = () => {
 		if (!(inputAApproval && inputBApproval)) return <SpinnerLoader />
 
@@ -89,23 +108,18 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 		}
 	}
 
-	const handleTx = (tx: any, description: string) => {
-		setPendingTx(true)
-		tx.on('transactionHash', (txHash: string) => {
-			onAddTransaction({
-				hash: txHash,
-				description,
-			})
-		})
-			.on('receipt', (receipt: TransactionReceipt) => {
-				onTxReceipt(receipt)
-				setPendingTx(false)
-			})
-			.on('error', () => setPendingTx(false))
-	}
+	const isDisabled = useMemo(
+		() =>
+			pendingTx ||
+			new BigNumber(inputVal).isNaN() ||
+			new BigNumber(inputVal).gt(maxValues[swapDirection ? 'sell' : 'buy']) ||
+			(swapDirection && new BigNumber(inputVal).gt(decimate(reserves))) ||
+			(!swapDirection && new BigNumber(inputVal).gt(decimate(supplyCap))),
+		[pendingTx, inputVal, swapDirection, reserves, supplyCap],
+	)
 
 	return (
-		<SubmitButton onClick={handleClick} disabled={pendingTx}>
+		<SubmitButton onClick={handleClick} disabled={isDisabled}>
 			{buttonText()}
 		</SubmitButton>
 	)
@@ -114,6 +128,9 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 type BallastButtonProps = {
 	swapDirection: boolean
 	inputVal: string
+	maxValues: { [key: string]: BigNumber }
+	supplyCap: BigNumber
+	reserves: BigNumber
 }
 
 export default BallastButton

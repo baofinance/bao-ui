@@ -1,51 +1,86 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Config from '../../../../bao/lib/config'
 import BigNumber from 'bignumber.js'
+import Multicall from '../../../../utils/multicall'
 import useBao from '../../../../hooks/useBao'
+import useTransactionProvider from '../../../../hooks/useTransactionProvider'
 import useTokenBalance from '../../../../hooks/useTokenBalance'
-import { Card } from 'react-bootstrap'
+import { Card, Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BalanceInput } from '../../../../components/Input'
-import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
 import { SpinnerLoader } from '../../../../components/Loader'
 import BallastButton from './BallastButton'
+import Tooltipped from '../../../../components/Tooltipped'
+import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
+	const { transactions } = useTransactionProvider()
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->bUSD | true = bUSD->DAI
 	const [inputVal, setInputVal] = useState('')
 
 	const [reserves, setReserves] = useState<BigNumber | undefined>()
 	const [supplyCap, setSupplyCap] = useState<BigNumber | undefined>()
+	const [fees, setFees] = useState<{ [key: string]: BigNumber } | undefined>()
 
 	const daiBalance = useTokenBalance(
-		'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // TestDAI, 18 decimals for test contract
+		'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // Test DAI
 	)
 	const bUSDBalance = useTokenBalance(Config.addressMap.bUSD)
+
+	// TODO: Move this to a hook ?
+	const fetchBallastInfo = useCallback(async () => {
+		const ballastContract = bao.getContract('stabilizer')
+		const ballastQueries = Multicall.createCallContext([
+			{
+				ref: 'Ballast',
+				contract: ballastContract,
+				calls: [
+					{ method: 'supplyCap' },
+					{ method: 'buyFee' },
+					{ method: 'sellFee' },
+					{ method: 'FEE_DENOMINATOR' },
+				],
+			},
+			{
+				ref: 'DAI',
+				contract: bao.getNewContract(
+					'erc20.json',
+					'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // Test DAI
+				),
+				calls: [
+					{ method: 'balanceOf', params: [ballastContract.options.address] },
+				],
+			},
+		])
+		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(
+			await bao.multicall.call(ballastQueries),
+		)
+
+		setSupplyCap(new BigNumber(ballastRes[0].values[0].hex))
+		setFees({
+			buy: new BigNumber(ballastRes[1].values[0].hex),
+			sell: new BigNumber(ballastRes[2].values[0].hex),
+			denominator: new BigNumber(ballastRes[3].values[0].hex),
+		})
+		setReserves(new BigNumber(daiRes[0].values[0].hex))
+	}, [bao, transactions])
 
 	useEffect(() => {
 		if (!bao) return
 
-		const ballastContract = bao.getContract('stabilizer')
-		ballastContract.methods
-			.supplyCap()
-			.call()
-			.then((cap: BigNumber) => setSupplyCap(new BigNumber(cap)))
-		bao
-			.getNewContract(
-				'erc20.json',
-				'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3',
-			)
-			.methods.balanceOf(ballastContract.options.address)
-			.call()
-			.then((reserves: BigNumber) => setReserves(new BigNumber(reserves)))
-	}, [bao])
+		fetchBallastInfo()
+	}, [bao, transactions])
 
 	return (
 		<BallastSwapCard>
 			<h2 style={{ textAlign: 'center' }}>
-				<FontAwesomeIcon icon="ship" />
+				<Tooltipped content="The Ballast is used to mint bUSD with DAI or to redeem DAI for bUSD at a 1:1 rate.">
+					<a>
+						<FontAwesomeIcon icon="ship" />
+					</a>
+				</Tooltipped>
 			</h2>
 			<label>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
@@ -66,7 +101,18 @@ const BallastSwapper: React.FC = () => {
 				value={inputVal}
 			/>
 			<DirectionArrow onClick={() => setSwapDirection(!swapDirection)}>
-				<FontAwesomeIcon icon={swapDirection ? 'arrow-up' : 'arrow-down'} />
+				<Badge pill>
+					<FontAwesomeIcon icon={swapDirection ? 'arrow-up' : 'arrow-down'} />{' '}
+					Fee:{' '}
+					{fees ? (
+						`${fees[swapDirection ? 'sell' : 'buy']
+							.div(fees['denominator'])
+							.times(100)
+							.toString()}%`
+					) : (
+						<SpinnerLoader />
+					)}
+				</Badge>
 			</DirectionArrow>
 			<label>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
@@ -87,7 +133,13 @@ const BallastSwapper: React.FC = () => {
 				value={inputVal}
 			/>
 			<br />
-			<BallastButton swapDirection={swapDirection} inputVal={inputVal} />
+			<BallastButton
+				swapDirection={swapDirection}
+				inputVal={inputVal}
+				maxValues={{ buy: decimate(daiBalance), sell: decimate(bUSDBalance) }}
+				supplyCap={supplyCap}
+				reserves={reserves}
+			/>
 		</BallastSwapCard>
 	)
 }
@@ -110,6 +162,10 @@ const DirectionArrow = styled.a`
 	display: block;
 	margin-top: 1em;
 	color: ${(props) => props.theme.color.text[200]};
+
+	> span {
+		background-color: ${(props) => props.theme.color.text[300]};
+	}
 
 	&:hover {
 		cursor: pointer;
