@@ -45,7 +45,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       supplyRates,
       borrowRates,
       cashes,
-      collateralFactors,
+      marketsInfo,
       speeds, // UNUSED
       totalSupplies,
       exchangeRates,
@@ -144,7 +144,8 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         liquidity: decimate(cashes[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
         totalReserves: decimate(totalReserves[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
         totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
-        collateralFactor: decimate(collateralFactors[i][1]).toNumber(),
+        collateralFactor: decimate(marketsInfo[i][1]).toNumber(),
+        imfFactor: decimate(marketsInfo[i][2]).toNumber(),
         reserveFactor: decimate(reserveFactors[i]).toNumber(),
         supplied: decimate(exchangeRates[i])
           .times(decimate(totalSupplies[i], marketConfig.decimals))

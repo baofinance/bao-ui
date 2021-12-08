@@ -131,6 +131,10 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 					value: `${asset.collateralFactor * 100}%`,
 				},
 				{
+					label: 'Inital Margin Factor',
+					value: `${asset.imfFactor * 100}%`
+				},
+				{
 					label: 'Reserve Factor',
 					value: reserveFactor,
 				},

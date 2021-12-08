@@ -322,7 +322,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 							/>
 						</Col>
 						<Col>
-							<h4 style={{ textAlign: 'center' }}>Market Details</h4>
+							<h4>Market Details</h4>
 							<hr />
 							<MarketDetails asset={market} title={null} />
 						</Col>

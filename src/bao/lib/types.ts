@@ -52,6 +52,7 @@ export interface SupportedMarket {
   rewardApy?: number
   liquidity?: number
   collateralFactor?: number
+  imfFactor?: number
   reserveFactor?: number
   totalBorrows?: number
   totalReserves?: number
