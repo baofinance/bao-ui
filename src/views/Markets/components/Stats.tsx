@@ -132,7 +132,7 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Inital Margin Factor',
-					value: `${asset.imfFactor * 100}%`
+					value: `${asset.imfFactor * 100}%`,
 				},
 				{
 					label: 'Reserve Factor',
