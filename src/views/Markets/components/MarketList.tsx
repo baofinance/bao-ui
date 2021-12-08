@@ -189,12 +189,8 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 									).toNumber(),
 								0,
 							)}`}
-							{isInMarket && (
-								<>
-									{' '}
-									<StyledCheck checked inline />
-								</>
-							)}
+							{' '}
+							<StyledCheck checked={isInMarket} inline />
 						</Col>
 						<Col>
 							{`$${getDisplayBalance(
