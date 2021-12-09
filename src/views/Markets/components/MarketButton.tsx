@@ -50,6 +50,14 @@ export const MarketButton = ({
 		setPendingTx(false)
 	}
 
+	const handleTx = (tx: any, description: string) => {
+		tx.on('transactionHash', (txHash: string) =>
+			handlePendingTx(txHash, description),
+		)
+			.on('receipt', (receipt: TransactionReceipt) => handleReceipt(receipt))
+			.on('error', clearPendingTx)
+	}
+
 	const marketContract = bao.getNewContract(
 		asset.underlying === 'ETH' ? 'cether.json' : 'ctoken.json',
 		asset.token,
@@ -92,19 +100,12 @@ export const MarketButton = ({
 										mintTx = marketContract.methods
 											.mint(val.toString())
 											.send({ from: account })
-									mintTx
-										.on('transactionHash', (txHash: string) =>
-											handlePendingTx(
-												txHash,
-												`Supply ${decimate(val, asset.decimals).toFixed(4)} ${
-													asset.underlyingSymbol
-												}`,
-											),
-										)
-										.on('receipt', (receipt: TransactionReceipt) =>
-											handleReceipt(receipt),
-										)
-										.on('error', clearPendingTx)
+									handleTx(
+										mintTx,
+										`Supply ${decimate(val, asset.decimals).toFixed(4)} ${
+											asset.underlyingSymbol
+										}`,
+									)
 									setPendingTx(true)
 								}}
 							>
@@ -118,17 +119,10 @@ export const MarketButton = ({
 										'erc20.json',
 										asset.underlying,
 									)
-									approvev2(underlyingContract, marketContract, account)
-										.on('transactionHash', (txHash: string) =>
-											handlePendingTx(
-												txHash,
-												`Approve ${asset.underlyingSymbol}`,
-											),
-										)
-										.on('receipt', (receipt: TransactionReceipt) =>
-											handleReceipt(receipt),
-										)
-										.on('error', clearPendingTx)
+									handleTx(
+										approvev2(underlyingContract, marketContract, account),
+										`Approve ${asset.underlyingSymbol}`,
+									)
 									setPendingTx(true)
 								}}
 							>
@@ -144,21 +138,14 @@ export const MarketButton = ({
 						<SubmitButton
 							disabled={isDisabled}
 							onClick={() => {
-								marketContract.methods
-									.redeemUnderlying(val.toString())
-									.send({ from: account })
-									.on('transactionHash', (txHash: string) =>
-										handlePendingTx(
-											txHash,
-											`Withdraw ${decimate(val, asset.decimals).toFixed(4)} ${
-												asset.underlyingSymbol
-											}`,
-										),
-									)
-									.on('receipt', (receipt: TransactionReceipt) =>
-										handleReceipt(receipt),
-									)
-									.on('error', clearPendingTx)
+								handleTx(
+									marketContract.methods
+										.redeemUnderlying(val.toString())
+										.send({ from: account }),
+									`Withdraw ${decimate(val, asset.decimals).toFixed(4)} ${
+										asset.underlyingSymbol
+									}`,
+								)
 								setPendingTx(true)
 							}}
 						>
@@ -172,21 +159,14 @@ export const MarketButton = ({
 					<SubmitButton
 						disabled={isDisabled}
 						onClick={() => {
-							marketContract.methods
-								.borrow(val.toString())
-								.send({ from: account })
-								.on('transactionHash', (txHash: string) =>
-									handlePendingTx(
-										txHash,
-										`Borrow ${decimate(val, asset.decimals).toFixed(4)} ${
-											asset.symbol
-										}`,
-									),
-								)
-								.on('receipt', (receipt: TransactionReceipt) =>
-									handleReceipt(receipt),
-								)
-								.on('error', clearPendingTx)
+							handleTx(
+								marketContract.methods
+									.borrow(val.toString())
+									.send({ from: account }),
+								`Borrow ${decimate(val, asset.decimals).toFixed(4)} ${
+									asset.symbol
+								}`,
+							)
 							setPendingTx(true)
 						}}
 					>
@@ -212,19 +192,12 @@ export const MarketButton = ({
 										repayTx = marketContract.methods
 											.repayBorrow(val.toString())
 											.send({ from: account })
-									repayTx
-										.on('transactionHash', (txHash: string) =>
-											handlePendingTx(
-												txHash,
-												`Repay ${decimate(val, asset.decimals).toFixed(4)} ${
-													asset.underlyingSymbol
-												}`,
-											),
-										)
-										.on('receipt', (receipt: TransactionReceipt) =>
-											handleReceipt(receipt),
-										)
-										.on('error', clearPendingTx)
+									handleTx(
+										repayTx,
+										`Repay ${decimate(val, asset.decimals).toFixed(4)} ${
+											asset.underlyingSymbol
+										}`,
+									)
 									setPendingTx(true)
 								}}
 							>
@@ -238,17 +211,10 @@ export const MarketButton = ({
 										'erc20.json',
 										asset.underlying,
 									)
-									approvev2(underlyingContract, marketContract, account)
-										.on('transactionHash', (txHash: string) =>
-											handlePendingTx(
-												txHash,
-												`Approve ${asset.underlyingSymbol}`,
-											),
-										)
-										.on('receipt', (receipt: TransactionReceipt) =>
-											handleReceipt(receipt),
-										)
-										.on('error', clearPendingTx)
+									handleTx(
+										approvev2(underlyingContract, marketContract, account),
+										`Approve ${asset.underlyingSymbol}`,
+									)
 									setPendingTx(true)
 								}}
 							>
