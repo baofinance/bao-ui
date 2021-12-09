@@ -4,7 +4,7 @@ import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import { Modal, ModalProps } from 'react-bootstrap'
 import {
-	useAccountBalances,
+	useAccountBalances, useBorrowBalances,
 	useSupplyBalances,
 } from 'hooks/hard-synths/useBalances'
 import { useAccountLiquidity } from '../../../hooks/hard-synths/useAccountLiquidity'
@@ -56,6 +56,7 @@ const MarketModal = ({
 	const [val, setVal] = useState<string>('')
 	const bao = useBao()
 	const balances = useAccountBalances()
+	const borrowBalances = useBorrowBalances()
 	const supplyBalances = useSupplyBalances()
 	const { prices } = useMarketPrices()
 	const accountLiquidity = useAccountLiquidity()
@@ -102,10 +103,9 @@ const MarketModal = ({
 					: 0
 			case MarketOperations.repay:
 				return balances
-					? balances.find(
+					? borrowBalances.find(
 							(_balance) =>
-								_balance.address.toLowerCase() ===
-								asset.underlying.toLowerCase(),
+								_balance.address.toLowerCase() === asset.token.toLowerCase(),
 					  ).balance
 					: 0
 		}
@@ -120,7 +120,7 @@ const MarketModal = ({
 			case MarketOperations.borrow:
 				return 'Borrowable'
 			case MarketOperations.repay:
-				return 'Wallet'
+				return 'Borrowed'
 		}
 	}
 
