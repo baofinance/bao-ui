@@ -102,15 +102,15 @@ const BallastSwapper: React.FC = () => {
 				}
 				onChange={(e) => setInputVal(e.currentTarget.value)}
 				value={
-					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
+					swapDirection && fees && !new BigNumber(inputVal).isNaN()
 						? new BigNumber(inputVal)
 								.times(
-									new BigNumber(1).plus(fees['sell'].div(fees['denominator'])),
+									new BigNumber(1).minus(fees['sell'].div(fees['denominator'])),
 								)
 								.toString()
 						: inputVal
 				}
-				disabled={!swapDirection}
+				disabled={swapDirection}
 			/>
 		</>
 	)
@@ -144,15 +144,15 @@ const BallastSwapper: React.FC = () => {
 				}
 				onChange={(e) => setInputVal(e.currentTarget.value)}
 				value={
-					swapDirection && fees && !new BigNumber(inputVal).isNaN()
+					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
 						? new BigNumber(inputVal)
 								.times(
-									new BigNumber(1).plus(fees['sell'].div(fees['denominator'])),
+									new BigNumber(1).minus(fees['sell'].div(fees['denominator'])),
 								)
 								.toString()
 						: inputVal
 				}
-				disabled={swapDirection}
+				disabled={!swapDirection}
 			/>
 		</>
 	)

@@ -54,13 +54,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 			handleTx(
 				ballastContract.methods
-					.sell(
-						exponentiate(inputVal)
-							.times(
-								new BigNumber(1).plus(fees['sell'].div(fees['denominator'])),
-							)
-							.toString(),
-					)
+					.sell(exponentiate(inputVal).toString())
 					.send({ from: account }),
 				'Ballast: Swap bUSD to DAI',
 			)
@@ -79,7 +73,13 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 			handleTx(
 				ballastContract.methods
-					.buy(exponentiate(inputVal).toString())
+					.buy(
+						exponentiate(inputVal)
+							.times(
+								new BigNumber(1).minus(fees['buy'].div(fees['denominator'])),
+							)
+							.toString(),
+					)
 					.send({ from: account }),
 				'Ballast: Swap DAI to bUSD',
 			)
