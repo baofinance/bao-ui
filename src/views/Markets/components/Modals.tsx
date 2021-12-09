@@ -156,7 +156,7 @@ const MarketModal = ({
 							<LabelStack>
 								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
 								<AssetLabel>
-									{`${getDisplayBalance(max(), 0)} ${asset.underlyingSymbol}`}
+									{`${max().toFixed(4)} ${asset.underlyingSymbol}`}
 								</AssetLabel>
 							</LabelStack>
 						</LabelFlex>

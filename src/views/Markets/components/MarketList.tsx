@@ -220,6 +220,7 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 											36 - market.decimals,
 										).toNumber(),
 								0,
+								0,
 							)}`}
 						</Col>
 					</Row>
