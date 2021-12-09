@@ -149,6 +149,7 @@ const BallastSwapCard = styled(Card)`
 	padding: 25px;
 	margin: auto;
 	background-color: ${(props) => props.theme.color.primary[100]};
+	border-radius: ${(props) => props.theme.borderRadius}px;
 
 	label > span {
 		float: right;

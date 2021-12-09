@@ -115,21 +115,18 @@ const MarketListHeader: React.FC = () => {
 	const headers = [
 		'Market',
 		'Supplied',
+		'Collateral',
 		'Borrowed',
 		'Supply APY',
 		'Borrow APR',
-		'Total Supplied',
-		'Total Borrowed',
+		'Liquidity',
 	]
 
 	return (
 		<Container fluid>
-			<Row lg={7} style={{ padding: '0.5rem 1.5rem' }}>
+			<Row style={{ padding: '0.5rem 1.5rem' }}>
 				{headers.map((header: string) => (
-					<MarketListHeaderCol
-						style={{ padding: '12px', paddingBottom: '0px' }}
-						key={header}
-					>
+					<MarketListHeaderCol style={{ paddingBottom: '0px' }} key={header}>
 						<b>{header}</b>
 					</MarketListHeaderCol>
 				))}
@@ -191,8 +188,12 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 										36 - market.decimals,
 									).toNumber(),
 								0,
-							)}`}{' '}
-							<StyledCheck checked={isInMarket} inline />
+							)}`}
+						</Col>
+						<Col style={{ textAlign: 'center' }}>
+							<div style={{ width: 'calc(50%)', float: 'right' }}>
+								<StyledCheck checked={isInMarket} inline />
+							</div>
 						</Col>
 						<Col>
 							{`$${getDisplayBalance(
@@ -212,17 +213,12 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 									decimate(
 										prices[market.token],
 										36 - market.decimals,
-									).toNumber(),
-								0,
-							)}`}
-						</Col>
-						<Col>
-							{`$${getDisplayBalance(
-								market.totalBorrows *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber(),
+									).toNumber() -
+									market.totalBorrows *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber(),
 								0,
 							)}`}
 						</Col>
@@ -289,7 +285,18 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 								label={null}
 								stats={[
 									{
-										label: 'Supplied',
+										label: 'Total Supplied',
+										value: `$${getDisplayBalance(
+											market.supplied *
+												decimate(
+													prices[market.token],
+													36 - market.decimals,
+												).toNumber(),
+											0,
+										)}`,
+									},
+									{
+										label: 'Your Supply',
 										value: `${suppliedUnderlying.toFixed(4)} ${
 											market.underlyingSymbol
 										} | $${getDisplayBalance(
@@ -302,21 +309,16 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 										)}`,
 									},
 									{
+										label: 'Collateral?',
+										value: isInMarket ? 'Yes' : 'No',
+									},
+									{
 										label: 'Wallet Balance',
 										value: `${accountBalances
 											.find((balance) => balance.address === market.underlying)
 											.balance.toFixed(4)} ${market.underlyingSymbol}`,
 									},
 								]}
-							/>
-							<br />
-							<SubmitButton onClick={() => setShowSupplyModal(true)}>
-								Supply / Withdraw
-							</SubmitButton>
-							<MarketSupplyModal
-								asset={market}
-								show={showSupplyModal}
-								onHide={() => setShowSupplyModal(false)}
 							/>
 						</Col>
 						<Col>
@@ -331,7 +333,18 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 								label={null}
 								stats={[
 									{
-										label: 'Borrowed',
+										label: 'Total Borrowed',
+										value: `$${getDisplayBalance(
+											market.totalBorrows *
+												decimate(
+													prices[market.token],
+													36 - market.decimals,
+												).toNumber(),
+											0,
+										)}`,
+									},
+									{
+										label: 'Your Borrow',
 										value: `${borrowed.toFixed(4)} ${
 											market.underlyingSymbol
 										} | $${getDisplayBalance(
@@ -350,9 +363,35 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 											0,
 										)}`,
 									},
+									{
+										label: '% of Your Borrows',
+										value: `${Math.floor(
+											((borrowed *
+												decimate(
+													prices[market.token],
+													36 - market.decimals,
+												).toNumber()) /
+												accountLiquidity.usdBorrow) *
+												100,
+										)}%`,
+									},
 								]}
 							/>
-							<br />
+						</Col>
+					</Row>
+					<br />
+					<Row>
+						<Col>
+							<SubmitButton onClick={() => setShowSupplyModal(true)}>
+								Supply / Withdraw
+							</SubmitButton>
+							<MarketSupplyModal
+								asset={market}
+								show={showSupplyModal}
+								onHide={() => setShowSupplyModal(false)}
+							/>
+						</Col>
+						<Col>
 							<SubmitButton onClick={() => setShowBorrowModal(true)}>
 								Borrow / Repay
 							</SubmitButton>
@@ -491,6 +530,6 @@ const MarketListHeaderCol = styled(Col)`
 	}
 
 	&:last-child {
-		margin-right: 45px;
+		margin-right: 46px;
 	}
 `
