@@ -17,6 +17,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	maxValues,
 	supplyCap,
 	reserves,
+	fees,
 }: BallastButtonProps) => {
 	const [pendingTx, setPendingTx] = useState(false)
 	const bao = useBao()
@@ -101,9 +102,9 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			return 'Pending Transaction'
 		} else {
 			if (swapDirection) {
-				return inputBApproval.gt(0) ? 'Sell bUSD for DAI' : 'Approve bUSD'
+				return inputBApproval.gt(0) ? 'Swap bUSD for DAI' : 'Approve bUSD'
 			} else {
-				return inputAApproval.gt(0) ? 'Buy bUSD with DAI' : 'Approve DAI'
+				return inputAApproval.gt(0) ? 'Swap DAI for bUSD' : 'Approve DAI'
 			}
 		}
 	}
@@ -112,7 +113,13 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 		() =>
 			pendingTx ||
 			new BigNumber(inputVal).isNaN() ||
-			new BigNumber(inputVal).gt(maxValues[swapDirection ? 'sell' : 'buy']) ||
+			new BigNumber(inputVal)
+				.times(
+					new BigNumber(1).plus(
+						fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']),
+					),
+				)
+				.gt(maxValues[swapDirection ? 'sell' : 'buy']) ||
 			(swapDirection && new BigNumber(inputVal).gt(decimate(reserves))) ||
 			(!swapDirection && new BigNumber(inputVal).gt(decimate(supplyCap))),
 		[pendingTx, inputVal, swapDirection, reserves, supplyCap],
@@ -131,6 +138,7 @@ type BallastButtonProps = {
 	maxValues: { [key: string]: BigNumber }
 	supplyCap: BigNumber
 	reserves: BigNumber
+	fees: { [key: string]: BigNumber }
 }
 
 export default BallastButton

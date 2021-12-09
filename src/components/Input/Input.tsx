@@ -67,6 +67,10 @@ const StyledInput = styled.input`
 	background: none;
 	background-color: transparent;
 	border-width: 0px;
+	
+	&:disabled {
+		color: ${(props) => props.theme.color.text[200]};
+	}
 `
 
 export default BasketInput
@@ -74,6 +78,7 @@ export default BasketInput
 export interface BalanceInputProps extends InputProps {
 	label?: React.ReactNode
 	onMaxClick: (e: any) => void
+	disabled?: boolean
 }
 
 export const BalanceInput = ({
@@ -81,11 +86,17 @@ export const BalanceInput = ({
 	label,
 	onChange,
 	onMaxClick,
+	disabled,
 }: BalanceInputProps) => (
 	<BalanceInputContainer>
 		<BalanceInputWrapper>
-			<StyledInput value={value} onChange={onChange} placeholder="0" />
-			<MaxButton onClick={onMaxClick}>MAX</MaxButton>
+			<StyledInput
+				value={value}
+				onChange={onChange}
+				placeholder="0"
+				disabled={disabled}
+			/>
+			{!disabled && <MaxButton onClick={onMaxClick}>MAX</MaxButton>}
 		</BalanceInputWrapper>
 		{typeof label === 'string' ? <p>{label}</p> : label}
 	</BalanceInputContainer>

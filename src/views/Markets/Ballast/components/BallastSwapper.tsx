@@ -73,15 +73,8 @@ const BallastSwapper: React.FC = () => {
 		fetchBallastInfo()
 	}, [bao, transactions])
 
-	return (
-		<BallastSwapCard>
-			<h2 style={{ textAlign: 'center' }}>
-				<Tooltipped content="The Ballast is used to mint bUSD with DAI or to redeem DAI for bUSD at a 1:1 rate.">
-					<a>
-						<FontAwesomeIcon icon="ship" />
-					</a>
-				</Tooltipped>
-			</h2>
+	const daiInput = (
+		<>
 			<label>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
 				{getDisplayBalance(daiBalance).toString()} DAI
@@ -96,24 +89,34 @@ const BallastSwapper: React.FC = () => {
 				</span>
 			</label>
 			<BalanceInput
-				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
+				onMaxClick={() =>
+					setInputVal(
+						decimate(daiBalance)
+							.times(
+								new BigNumber(1).minus(
+									fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']),
+								),
+							)
+							.toString(),
+					)
+				}
 				onChange={(e) => setInputVal(e.currentTarget.value)}
-				value={inputVal}
+				value={
+					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
+						? new BigNumber(inputVal)
+								.times(
+									new BigNumber(1).plus(fees['sell'].div(fees['denominator'])),
+								)
+								.toString()
+						: inputVal
+				}
+				disabled={!swapDirection}
 			/>
-			<DirectionArrow onClick={() => setSwapDirection(!swapDirection)}>
-				<Badge pill>
-					<FontAwesomeIcon icon={swapDirection ? 'arrow-up' : 'arrow-down'} />{' '}
-					Fee:{' '}
-					{fees ? (
-						`${fees[swapDirection ? 'sell' : 'buy']
-							.div(fees['denominator'])
-							.times(100)
-							.toString()}%`
-					) : (
-						<SpinnerLoader />
-					)}
-				</Badge>
-			</DirectionArrow>
+		</>
+	)
+
+	const bUSDInput = (
+		<>
 			<label>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
 				{getDisplayBalance(bUSDBalance).toString()} bUSD
@@ -128,10 +131,58 @@ const BallastSwapper: React.FC = () => {
 				</span>
 			</label>
 			<BalanceInput
-				onMaxClick={() => setInputVal(decimate(bUSDBalance).toString())}
+				onMaxClick={() =>
+					setInputVal(
+						decimate(bUSDBalance)
+							.times(
+								new BigNumber(1).minus(
+									fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']),
+								),
+							)
+							.toString(),
+					)
+				}
 				onChange={(e) => setInputVal(e.currentTarget.value)}
-				value={inputVal}
+				value={
+					swapDirection && fees && !new BigNumber(inputVal).isNaN()
+						? new BigNumber(inputVal)
+								.times(
+									new BigNumber(1).plus(fees['sell'].div(fees['denominator'])),
+								)
+								.toString()
+						: inputVal
+				}
+				disabled={swapDirection}
 			/>
+		</>
+	)
+
+	return (
+		<BallastSwapCard>
+			<h2 style={{ textAlign: 'center' }}>
+				<Tooltipped content="The Ballast is used to mint bUSD with DAI or to redeem DAI for bUSD at a 1:1 rate (not including fees).">
+					<a>
+						<FontAwesomeIcon icon="ship" />
+					</a>
+				</Tooltipped>
+			</h2>
+			{swapDirection ? bUSDInput : daiInput}
+			<SwapDirection onClick={() => setSwapDirection(!swapDirection)}>
+				<Badge pill>
+					<FontAwesomeIcon icon="sync" />
+					{' - '}
+					Fee:{' '}
+					{fees ? (
+						`${fees[swapDirection ? 'sell' : 'buy']
+							.div(fees['denominator'])
+							.times(100)
+							.toString()}%`
+					) : (
+						<SpinnerLoader />
+					)}
+				</Badge>
+			</SwapDirection>
+			{swapDirection ? daiInput : bUSDInput}
 			<br />
 			<BallastButton
 				swapDirection={swapDirection}
@@ -139,6 +190,7 @@ const BallastSwapper: React.FC = () => {
 				maxValues={{ buy: decimate(daiBalance), sell: decimate(bUSDBalance) }}
 				supplyCap={supplyCap}
 				reserves={reserves}
+				fees={fees}
 			/>
 		</BallastSwapCard>
 	)
@@ -158,7 +210,7 @@ const BallastSwapCard = styled(Card)`
 	}
 `
 
-const DirectionArrow = styled.a`
+const SwapDirection = styled.a`
 	text-align: center;
 	display: block;
 	margin-top: 1em;
