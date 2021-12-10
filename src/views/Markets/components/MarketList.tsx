@@ -502,7 +502,7 @@ const StyledCheck = styled(FormCheck)`
 
 	> input {
 		margin: 0;
-		user-select: none;
+		pointer-events: none;
 
 		&:focus {
 			outline: none;
