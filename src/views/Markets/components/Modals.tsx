@@ -102,7 +102,7 @@ const MarketModal = ({
 							).toNumber()
 					: 0
 			case MarketOperations.repay:
-				return balances
+				return borrowBalances
 					? borrowBalances.find(
 							(_balance) =>
 								_balance.address.toLowerCase() === asset.token.toLowerCase(),
@@ -131,9 +131,14 @@ const MarketModal = ({
 		[setVal],
 	)
 
+	const hideModal = useCallback(() => {
+		onHide()
+		setVal('')
+	}, [onHide])
+
 	return (
-		<Modal show={show} onHide={onHide} centered>
-			<CloseButton onClick={onHide}>
+		<Modal show={show} onHide={hideModal} centered>
+			<CloseButton onClick={hideModal}>
 				<FontAwesomeIcon icon="window-close" />
 			</CloseButton>
 			<Modal.Header>
