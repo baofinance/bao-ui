@@ -14,11 +14,7 @@ import useBao from 'hooks/useBao'
 import BigNumber from 'bignumber.js'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import {
-	decimate,
-	exponentiate,
-	getDisplayBalance,
-} from '../../../utils/numberFormat'
+import { decimate, exponentiate } from '../../../utils/numberFormat'
 import {
 	HeaderWrapper,
 	ModalStack,
@@ -102,12 +98,20 @@ const MarketModal = ({
 							).toNumber()
 					: 0
 			case MarketOperations.repay:
-				return borrowBalances
-					? borrowBalances.find(
-							(_balance) =>
-								_balance.address.toLowerCase() === asset.token.toLowerCase(),
-					  ).balance
-					: 0
+				if (borrowBalances && balances) {
+					const borrowBalance = borrowBalances.find(
+						(_balance) =>
+							_balance.address.toLowerCase() === asset.token.toLowerCase(),
+					).balance
+					const walletBalance = balances.find(
+						(_balance) =>
+							_balance.address.toLowerCase() === asset.underlying.toLowerCase(),
+					).balance
+					console.log(borrowBalance, walletBalance, typeof borrowBalance, typeof walletBalance)
+					return walletBalance < borrowBalance ? walletBalance : borrowBalance
+				} else {
+					return 0
+				}
 		}
 	}
 
@@ -120,7 +124,7 @@ const MarketModal = ({
 			case MarketOperations.borrow:
 				return 'Borrowable'
 			case MarketOperations.repay:
-				return 'Borrowed'
+				return 'Max Repay'
 		}
 	}
 
