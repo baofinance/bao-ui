@@ -1,16 +1,17 @@
-import { SupportedMarket } from 'bao/lib/types'
+import React, { useMemo } from 'react'
+import BigNumber from 'bignumber.js'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import {
+	useAccountBalances,
 	useBorrowBalances,
 	useSupplyBalances,
 } from 'hooks/hard-synths/useBalances'
 import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
 import { useMarketPrices } from 'hooks/hard-synths/usePrices'
-import React from 'react'
-import styled from 'styled-components'
 import { MarketOperations } from './Modals'
-import BigNumber from 'bignumber.js'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
+import { SupportedMarket } from 'bao/lib/types'
+import styled from 'styled-components'
 
 type Stat = {
 	label: string
@@ -49,22 +50,37 @@ export const StatBlock = ({ label, stats }: StatBlockProps) => (
 		</StatWrapper>
 	</>
 )
+
 const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalances = useSupplyBalances()
+	const balances = useAccountBalances()
 	const { exchangeRates } = useExchangeRates()
 
-	const supplyBalance =
-		supplyBalances &&
-		supplyBalances.find(
-			(balance) => balance.address.toLowerCase() === asset.token.toLowerCase(),
-		) &&
-		exchangeRates &&
-		exchangeRates[asset.token]
-			? supplyBalances.find(
-					(balance) =>
-						balance.address.toLowerCase() === asset.token.toLowerCase(),
-			  ).balance * decimate(exchangeRates[asset.token]).toNumber()
-			: 0
+	const supplyBalance = useMemo(
+		() =>
+			supplyBalances &&
+			supplyBalances.find(
+				(balance) =>
+					balance.address.toLowerCase() === asset.token.toLowerCase(),
+			) &&
+			exchangeRates &&
+			exchangeRates[asset.token]
+				? supplyBalances.find(
+						(balance) =>
+							balance.address.toLowerCase() === asset.token.toLowerCase(),
+				  ).balance * decimate(exchangeRates[asset.token]).toNumber()
+				: 0,
+		[supplyBalances, exchangeRates],
+	)
+	const walletBalance = useMemo(
+		() =>
+			balances &&
+			balances.find((_balance) => _balance.address === asset.underlying)
+				? balances.find((_balance) => _balance.address === asset.underlying)
+						.balance
+				: 0,
+		[balances],
+	)
 
 	return (
 		<StatBlock
@@ -76,7 +92,11 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Supply Balance',
-					value: `${supplyBalance.toFixed(2)} ${asset.underlyingSymbol}`,
+					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol}`,
+				},
+				{
+					label: 'Wallet Balance',
+					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol}`,
 				},
 			]}
 		/>
@@ -85,32 +105,10 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 
 export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
-	const totalBorrowsUsd =
-		prices && asset.totalBorrows
-			? `$${getDisplayBalance(
-					asset.totalBorrows *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber(),
-					0,
-			  )}`
-			: '-'
 	const totalReservesUsd =
 		prices && asset.totalReserves
 			? `$${getDisplayBalance(
 					asset.totalReserves *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber(),
-					0,
-			  )}`
-			: '-'
-	const totalSuppliedUsd =
-		prices && asset.supplied
-			? `$${getDisplayBalance(
-					asset.supplied *
 						decimate(
 							prices[asset.token],
 							new BigNumber(36).minus(asset.decimals),
@@ -149,16 +147,29 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 
 const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 	const borrowBalances = useBorrowBalances()
+	const balances = useAccountBalances()
 
-	const borrowBalance =
-		borrowBalances &&
-		borrowBalances.find(
-			(_borrowBalance) => _borrowBalance.address === asset.token,
-		)
-			? borrowBalances.find(
-					(_borrowBalance) => _borrowBalance.address === asset.token,
-			  ).balance
-			: 0
+	const borrowBalance = useMemo(
+		() =>
+			borrowBalances &&
+			borrowBalances.find(
+				(_borrowBalance) => _borrowBalance.address === asset.token,
+			)
+				? borrowBalances.find(
+						(_borrowBalance) => _borrowBalance.address === asset.token,
+				  ).balance
+				: 0,
+		[borrowBalances],
+	)
+	const walletBalance = useMemo(
+		() =>
+			balances &&
+			balances.find((_balance) => _balance.address === asset.underlying)
+				? balances.find((_balance) => _balance.address === asset.underlying)
+						.balance
+				: 0,
+		[balances],
+	)
 
 	return (
 		<StatBlock
@@ -170,9 +181,11 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Borrow Balance',
-					value: `${getDisplayBalance(borrowBalance.toFixed(2), 0)} ${
-						asset.underlyingSymbol
-					}`,
+					value: `${borrowBalance.toFixed(4)} ${asset.underlyingSymbol}`,
+				},
+				{
+					label: 'Wallet Balance',
+					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol}`,
 				},
 			]}
 		/>

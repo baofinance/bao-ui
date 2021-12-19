@@ -107,7 +107,6 @@ const MarketModal = ({
 						(_balance) =>
 							_balance.address.toLowerCase() === asset.underlying.toLowerCase(),
 					).balance
-					console.log(borrowBalance, walletBalance, typeof borrowBalance, typeof walletBalance)
 					return walletBalance < borrowBalance ? walletBalance : borrowBalance
 				} else {
 					return 0
