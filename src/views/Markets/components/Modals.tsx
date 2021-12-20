@@ -173,7 +173,12 @@ const MarketModal = ({
 							value={val}
 							onChange={handleChange}
 							onMaxClick={() =>
-								setVal((Math.floor(max() * (10 ** asset.decimals)) / (10 ** asset.decimals)).toString())
+								setVal(
+									(
+										Math.floor(max() * 10 ** asset.decimals) /
+										10 ** asset.decimals
+									).toString(),
+								)
 							}
 							label={
 								<AssetStack>

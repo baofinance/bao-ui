@@ -1,11 +1,13 @@
-import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import React from 'react'
+import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
+import useHealthFactor from '../../../hooks/hard-synths/useHealthFactor'
 import {
 	buildStyles,
 	CircularProgressbarWithChildren,
 } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { getDisplayBalance } from '../../../utils/numberFormat'
+import Tooltipped from '../../../components/Tooltipped'
 import {
 	BorrowLimit,
 	BorrowLimitWrapper,
@@ -17,20 +19,24 @@ import {
 
 export const Overview = () => {
 	const accountLiquidity = useAccountLiquidity()
+	const healthFactor = useHealthFactor()
 
-	const borrowLimit = accountLiquidity
-		? Math.floor(
-				(accountLiquidity.usdBorrow /
-					(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
-					100,
-		  )
-		: 0
+	const borrowLimit =
+		accountLiquidity && accountLiquidity.usdBorrow !== 0
+			? Math.floor(
+					(accountLiquidity.usdBorrow /
+						(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
+						100,
+			  )
+			: 0
 
-	const liquidationRisk = (_borrowLimit: any) => {
-		const r = 255 * _borrowLimit/100;
-		const g = 255 - (255 * _borrowLimit/100);
-		return 'rgb('+r+','+g+',0)';
-	}
+	// TODO: Better health factor color spectrum
+	const healthFactorColor = (healthFactor: number) =>
+		healthFactor <= 1.25
+			? '#e32222'
+			: healthFactor < 1.55
+			? '#ffdf19'
+			: '#45be31'
 
 	return accountLiquidity ? (
 		<>
@@ -116,8 +122,17 @@ export const Overview = () => {
 					</StatWrapper>
 					<StatWrapper>
 						<UserStat>
-							<h1>Liquidation Risk</h1>
-							<p style={{ color: `${liquidationRisk}` }}>Low</p>
+							<h1>
+								Health Factor{' '}
+								<Tooltipped content="Your account health factor is calculated as follows: (USD supplied * average collateral factor) / USD borrowed. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
+							</h1>
+							<p
+								style={{
+									color: `${healthFactor && healthFactorColor(healthFactor)}`,
+								}}
+							>
+								{healthFactor && healthFactor.toFixed(2)}
+							</p>
 						</UserStat>
 					</StatWrapper>
 				</UserStatsWrapper>
