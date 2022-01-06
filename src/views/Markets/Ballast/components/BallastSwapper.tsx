@@ -25,7 +25,7 @@ const BallastSwapper: React.FC = () => {
 	const [fees, setFees] = useState<{ [key: string]: BigNumber } | undefined>()
 
 	const daiBalance = useTokenBalance(
-		'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // Test DAI
+		'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108', // Test DAI
 	)
 	const bUSDBalance = useTokenBalance(Config.addressMap.bUSD)
 
@@ -47,7 +47,7 @@ const BallastSwapper: React.FC = () => {
 				ref: 'DAI',
 				contract: bao.getNewContract(
 					'erc20.json',
-					'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // Test DAI
+					'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108', // Test DAI
 				),
 				calls: [
 					{ method: 'balanceOf', params: [ballastContract.options.address] },

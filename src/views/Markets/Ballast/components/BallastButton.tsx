@@ -25,7 +25,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
 
 	const inputAApproval = useAllowancev2(
-		'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // TestDAI
+		'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108', // TestDAI
 		Config.contracts.stabilizer[Config.networkId].address,
 		pendingTx,
 	)
@@ -63,7 +63,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			if (!inputAApproval.gt(0)) {
 				const tokenContract = bao.getNewContract(
 					'erc20.json',
-					'0xDc3c1D7741E454DEC2d2e6CFFe29605E4b7e01e3', // TestDAI
+					'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108', // TestDAI
 				)
 				return handleTx(
 					approvev2(tokenContract, ballastContract, account),

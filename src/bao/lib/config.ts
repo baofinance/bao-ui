@@ -62,19 +62,19 @@ export default {
     // Hard Synths
     comptroller: {
       3: {
-        address: '0x8B932257a6b5D20EaD78FB4d5Fd00a19daF937b3',
+        address: '0xbF2d7626a66aad910173fB43Ffd738A0F82C7f33',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
       3: {
-        address: '0xf9941b9E8D010d961f7d3D6Aea57a108Bcfe1026',
+        address: '0x48E1654a7F4deB1cd3d9817D44cAebB7f1404f06',
         abi: 'marketOracle.json',
       },
     },
     stabilizer: {
       3: {
-        address: '0xD15C57FE113C6276FAD2F82658BB420351147f5E',
+        address: '0x89BA107c0a767A6eB317F6b1a715A45D05014eB6',
         abi: 'stabilizer.json',
       },
     },
@@ -95,10 +95,10 @@ export default {
       mid: 1,
       symbol: 'bUSD',
       marketAddresses: {
-        3: '0x8584B05012749bdd32E41f8c7eB973D2283d1e56',
+        3: '0x63793577FC659243Df8fF731089FBe60d2A36A0d',
       },
       underlyingAddresses: {
-        3: '0xDF559301C178221E8D76E4A91126C504Dfe5947a',
+        3: '0x0F051F3C818b495ef27AC46462188295F83469A5',
       },
       icon: '/PAI.png',
       coingeckoId: 'dai',
@@ -108,7 +108,7 @@ export default {
       mid: 2,
       symbol: 'bETH',
       marketAddresses: {
-        3: '0x1d2728a36dC794e92374e629cC0e7F25C7f60162',
+        3: '0x895952c8290bf311B4848dE954F1A747Bf97809f',
       },
       underlyingAddresses: {
         3: 'ETH',
@@ -121,66 +121,14 @@ export default {
       mid: 3,
       symbol: 'bUSDC',
       marketAddresses: {
-        3: '0xb4e94d554736C76a9EB44FA1ca561c20AcfdeB26',
+        3: '0xfA3545f9Cca55088B30223bc86BE1AEe0F86eE62',
       },
       underlyingAddresses: {
-        3: '0x14bFFDf158D0DbDA11E4e4105e6e2FE1D24F4D2e',
+        3: '0x48C1be647204eb97BC5C6914e5D60E7A7b7b398B',
       },
       icon: '/USDC.png',
       coingeckoId: 'polygon',
       decimals: 6,
-    },
-    {
-      mid: 4,
-      symbol: 'bWON',
-      marketAddresses: {
-        3: '0x7c59B99C07fd6c41cb25c9364FcE4d46a58b4Ce3',
-      },
-      underlyingAddresses: {
-        3: '0x96b2fab13ea34EE6bAf8aBD8840eb45e4176251b',
-      },
-      icon: '/testtoken.png',
-      coingeckoId: 'polygon',
-      decimals: 18,
-    },
-    {
-      mid: 5,
-      symbol: '2DEC',
-      marketAddresses: {
-        3: '0x53dBc6dF6227838b6609c77037c438D0a33fc446',
-      },
-      underlyingAddresses: {
-        3: '0x6d6C89CE746284F1d66C4a229cb449b32f494BF5',
-      },
-      icon: '/testtoken.png',
-      coingeckoId: 'polygon',
-      decimals: 2,
-    },
-    {
-      mid: 6,
-      symbol: '8DEC',
-      marketAddresses: {
-        3: '0x51da2c4A7378c28282Ef3022890A935c56c97E7E',
-      },
-      underlyingAddresses: {
-        3: '0x92Af1BCA5B2A1Ecbd835646D22cbc9b01Fb17600',
-      },
-      icon: '/testtoken.png',
-      coingeckoId: 'polygon',
-      decimals: 8,
-    },
-    {
-      mid: 7,
-      symbol: '12DEC',
-      marketAddresses: {
-        3: '0x30d5237C74520a99F957B3ad7435350C8D71d791',
-      },
-      underlyingAddresses: {
-        3: '0x44658B8C5996D341064F569cdc3f0BD172600a77',
-      },
-      icon: '/testtoken.png',
-      coingeckoId: 'polygon',
-      decimals: 12,
     },
   ],
   baskets: [
