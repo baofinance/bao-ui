@@ -1,4 +1,5 @@
 import React from 'react'
+import BigNumber from 'bignumber.js'
 import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
 import useHealthFactor from '../../../hooks/hard-synths/useHealthFactor'
 import {
@@ -8,6 +9,7 @@ import {
 import 'react-circular-progressbar/dist/styles.css'
 import { getDisplayBalance } from '../../../utils/numberFormat'
 import Tooltipped from '../../../components/Tooltipped'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	BorrowLimit,
 	BorrowLimitWrapper,
@@ -31,10 +33,10 @@ export const Overview = () => {
 			: 0
 
 	// TODO: Better health factor color spectrum
-	const healthFactorColor = (healthFactor: number) =>
-		healthFactor <= 1.25
+	const healthFactorColor = (healthFactor: BigNumber) =>
+		healthFactor.lte(1.25)
 			? '#e32222'
-			: healthFactor < 1.55
+			: healthFactor.lt(1.55)
 			? '#ffdf19'
 			: '#45be31'
 
@@ -131,7 +133,11 @@ export const Overview = () => {
 									color: `${healthFactor && healthFactorColor(healthFactor)}`,
 								}}
 							>
-								{healthFactor && healthFactor.toFixed(2)}
+								{healthFactor && (
+									healthFactor.isFinite() ? healthFactor.toFixed(2) : (
+										<FontAwesomeIcon icon="infinity" />
+									)
+								)}
 							</p>
 						</UserStat>
 					</StatWrapper>

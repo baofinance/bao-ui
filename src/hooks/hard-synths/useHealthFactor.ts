@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
+import BigNumber from 'bignumber.js'
 import { useAccountMarkets } from './useMarkets'
 import { useAccountLiquidity } from './useAccountLiquidity'
 
 const useHealthFactor = () => {
-  const [healthFactor, setHealthFactor] = useState<number | undefined>()
+  const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
   const markets = useAccountMarkets()
   const accountLiquidity = useAccountLiquidity()
 
@@ -14,7 +15,14 @@ const useHealthFactor = () => {
         (cfTotal, market) => cfTotal + market.collateralFactor,
         0,
       ) / markets.length
-    setHealthFactor((usdSupply * avgCollateralFactor) / usdBorrow)
+    const _healthFactor = new BigNumber(
+      (usdSupply * avgCollateralFactor) / usdBorrow,
+    )
+    setHealthFactor(
+      _healthFactor.isNaN()
+        ? new BigNumber(0)
+        : _healthFactor,
+    )
   }, [markets, accountLiquidity])
 
   useEffect(() => {
