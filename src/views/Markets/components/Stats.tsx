@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 type Stat = {
 	label: string
-	value: string
+	value: any
 }
 
 type StatBlockProps = {
