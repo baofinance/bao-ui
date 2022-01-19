@@ -133,11 +133,12 @@ export const Overview = () => {
 									color: `${healthFactor && healthFactorColor(healthFactor)}`,
 								}}
 							>
-								{healthFactor && (
-									healthFactor.isFinite() ? healthFactor.toFixed(2) : (
+								{healthFactor &&
+									(healthFactor.isFinite() ? (
+										healthFactor.toFixed(2)
+									) : (
 										<FontAwesomeIcon icon="infinity" />
-									)
-								)}
+									))}
 							</p>
 						</UserStat>
 					</StatWrapper>
