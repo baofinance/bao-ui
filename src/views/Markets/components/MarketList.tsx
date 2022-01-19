@@ -40,14 +40,30 @@ export const MarketList: React.FC<MarketListProps> = ({
 	const { prices } = useMarketPrices()
 
 	const collateralMarkets = useMemo(() => {
-		if (!_markets) return
-		return _markets.filter((market) => !market.isSynth)
-	}, [_markets])
+		if (!(_markets && supplyBalances)) return
+		return _markets
+			.filter((market) => !market.isSynth)
+			.sort((a, b) =>
+				supplyBalances.find(
+					(balance) => balance.address.toLowerCase() === b.token.toLowerCase(),
+				).balance > 0
+					? 1
+					: 0,
+			)
+	}, [_markets, supplyBalances])
 
 	const synthMarkets = useMemo(() => {
-		if (!_markets) return
-		return _markets.filter((market) => market.isSynth)
-	}, [_markets])
+		if (!(_markets && borrowBalances)) return
+		return _markets
+			.filter((market) => market.isSynth)
+			.sort((a, b) =>
+				borrowBalances.find(
+					(balance) => balance.address.toLowerCase() === b.token.toLowerCase(),
+				).balance > 0
+					? 1
+					: 0,
+			)
+	}, [_markets, borrowBalances])
 
 	return (
 		<>
@@ -62,20 +78,9 @@ export const MarketList: React.FC<MarketListProps> = ({
 			prices ? (
 				<Row>
 					<Col>
-						<h3
-							style={{
-								margin: '0 12px',
-								fontFamily: 'Rubik',
-								fontWeight: 'bold',
-								textAlign: 'center',
-							}}
-						>
-							Collateral{' '}
-							<small style={{ fontSize: '0.5em', verticalAlign: 'middle' }}>
-								<Tooltipped content="Supply collateral in order to mint synthetic assets." />
-							</small>
-							<hr />
-						</h3>
+						<HrContainer>
+							<hr className="hr-text" data-content="Collateral" />
+						</HrContainer>
 						<MarketListHeader
 							headers={['Asset', 'APY', 'Wallet', 'Liquidity']}
 						/>
@@ -93,20 +98,9 @@ export const MarketList: React.FC<MarketListProps> = ({
 						))}
 					</Col>
 					<Col>
-						<h3
-							style={{
-								margin: '0 12px',
-								fontFamily: 'Rubik',
-								fontWeight: 'bold',
-								textAlign: 'center',
-							}}
-						>
-							Synths{' '}
-							<small style={{ fontSize: '0.5em', verticalAlign: 'middle' }}>
-								<Tooltipped content="Mint synthetic assets using your supplied collateral." />
-							</small>
-							<hr />
-						</h3>
+						<HrContainer>
+							<hr className="hr-text" data-content="Synthetics" />
+						</HrContainer>
 						<MarketListHeader headers={['Asset', 'APR', 'Liquidity']} />
 						{synthMarkets.map((market: SupportedMarket) => (
 							<MarketListItemSynth
@@ -362,10 +356,10 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 				</StyledAccordionHeader>
 				<StyledAccordionBody>
 					<StatBlock
-						label="Borrow Details"
+						label="Debt Information"
 						stats={[
 							{
-								label: 'Total Borrowed',
+								label: 'Total Debt',
 								value: `$${getDisplayBalance(
 									market.totalBorrows *
 										decimate(
@@ -376,7 +370,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								)}`,
 							},
 							{
-								label: 'Your Borrow',
+								label: 'Your Debt',
 								value: `${borrowed.toFixed(4)} ${
 									market.underlyingSymbol
 								} | $${getDisplayBalance(
@@ -389,14 +383,14 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								)}`,
 							},
 							{
-								label: 'Borrow Limit Remaining',
+								label: 'Debt Limit Remaining',
 								value: `$${getDisplayBalance(
 									accountLiquidity.usdBorrowable,
 									0,
 								)}`,
 							},
 							{
-								label: '% of Your Borrows',
+								label: '% of Your Debt',
 								value: `${Math.floor(
 									((borrowed *
 										decimate(
@@ -412,7 +406,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					<MarketDetails asset={market} title="Market Details" />
 					<br />
 					<SubmitButton onClick={() => setShowBorrowModal(true)}>
-						Borrow / Repay
+						Mint / Repay
 					</SubmitButton>
 					<MarketBorrowModal
 						asset={market}
@@ -466,10 +460,7 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
 			box-shadow: none;
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
-			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;
+			border-radius: 8px 8px 0 0;
 		}
 
 		&:not(.collapsed) {
@@ -517,16 +508,43 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 	}
 `
 
-const StyledCheck = styled(FormCheck)`
-	margin: 0;
+const HrContainer = styled.div`
+	.hr-text {
+		line-height: 1em;
+		position: relative;
+		outline: 0;
+		border: 0;
+		color: transparent;
+		text-align: center;
+		height: 1.5em;
+		opacity: 0.85;
 
-	> input {
-		margin: 0;
-		pointer-events: none;
+		&:before {
+			content: '';
+			background: linear-gradient(
+				to right,
+				transparent,
+				${(props) => props.theme.color.text[100]},
+				transparent
+			);
+			position: absolute;
+			left: 0;
+			top: 50%;
+			width: 100%;
+			height: 1px;
+		}
+		&:after {
+			content: attr(data-content);
+			position: relative;
+			display: inline-block;
+			font-family: 'Rubik', sans-serif;
+			font-size: 24px;
+			vertical-align: middle;
 
-		&:focus {
-			outline: none;
-			box-shadow: none;
+			padding: 0 0.5em;
+			line-height: 1em;
+			color: ${(props) => props.theme.color.text[100]};
+			background-color: ${(props) => props.theme.color.background[100]};
 		}
 	}
 `
