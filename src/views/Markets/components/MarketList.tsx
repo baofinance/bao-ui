@@ -22,6 +22,7 @@ import { SpinnerLoader } from '../../../components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
 import Tooltipped from '../../../components/Tooltipped'
+import HrText from '../../../components/HrText'
 import { SubmitButton } from './MarketButton'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { getComptrollerContract } from '../../../bao/utils'
@@ -78,9 +79,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 			prices ? (
 				<Row>
 					<Col>
-						<HrContainer>
-							<hr className="hr-text" data-content="Collateral" />
-						</HrContainer>
+						<HrText content="Collateral" />
 						<MarketListHeader
 							headers={['Asset', 'APY', 'Wallet', 'Liquidity']}
 						/>
@@ -98,9 +97,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 						))}
 					</Col>
 					<Col>
-						<HrContainer>
-							<hr className="hr-text" data-content="Synthetics" />
-						</HrContainer>
+						<HrText content="Synthetics" />
 						<MarketListHeader headers={['Asset', 'APR', 'Liquidity']} />
 						{synthMarkets.map((market: SupportedMarket) => (
 							<MarketListItemSynth
@@ -504,47 +501,6 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			&:last-child {
 				margin-right: 25px;
 			}
-		}
-	}
-`
-
-const HrContainer = styled.div`
-	.hr-text {
-		line-height: 1em;
-		position: relative;
-		outline: 0;
-		border: 0;
-		color: transparent;
-		text-align: center;
-		height: 1.5em;
-		opacity: 0.85;
-
-		&:before {
-			content: '';
-			background: linear-gradient(
-				to right,
-				transparent,
-				${(props) => props.theme.color.text[100]},
-				transparent
-			);
-			position: absolute;
-			left: 0;
-			top: 50%;
-			width: 100%;
-			height: 1px;
-		}
-		&:after {
-			content: attr(data-content);
-			position: relative;
-			display: inline-block;
-			font-family: 'Rubik', sans-serif;
-			font-size: 24px;
-			vertical-align: middle;
-
-			padding: 0 0.5em;
-			line-height: 1em;
-			color: ${(props) => props.theme.color.text[100]};
-			background-color: ${(props) => props.theme.color.background[100]};
 		}
 	}
 `

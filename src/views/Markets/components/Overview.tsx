@@ -55,7 +55,7 @@ export const Overview = () => {
 					</StatWrapper>
 					<StatWrapper>
 						<UserStat>
-							<h1>Total Supplied</h1>
+							<h1>Your Collateral</h1>
 							<p>
 								$
 								{`${
@@ -90,7 +90,7 @@ export const Overview = () => {
 							>
 								<BorrowLimitWrapper>
 									<BorrowLimit style={{ marginTop: '15px' }}>
-										<h1>Borrow Limit</h1>
+										<h1>Debt Limit</h1>
 										<p>
 											{`${
 												accountLiquidity.usdBorrowable > 0
@@ -111,7 +111,7 @@ export const Overview = () => {
 					</div>
 					<StatWrapper>
 						<UserStat>
-							<h1>Total Borrowed</h1>
+							<h1>Total Debt</h1>
 							<p>
 								$
 								{`${
