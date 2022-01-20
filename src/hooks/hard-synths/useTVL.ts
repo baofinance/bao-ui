@@ -22,18 +22,18 @@ export const useTVL = () => {
         ),
       new BigNumber(0),
     )
-    // Assume $1 for DAI - probs not the best move
+    // Assume $1 for DAI - need to use oracle price
     const ballastTvl = decimate(
       await bao.getContract('stabilizer').methods.supply().call(),
     )
     setTvl(marketsTvl.plus(ballastTvl))
-  }, [markets, prices])
+  }, [markets, prices, bao])
 
   useEffect(() => {
-    if (!(markets && prices)) return
+    if (!(markets && prices && bao)) return
 
     fetchTvl()
-  }, [markets, prices])
+  }, [markets, prices, bao])
 
   return tvl
 }
