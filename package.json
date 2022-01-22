@@ -1,10 +1,10 @@
 {
   "name": "yam",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
-    "node": "14.18.1",
-    "npm": "~6.x"
+    "node": "16.13.2",
+    "npm": "~8.x"
   },
   "dependencies": {
     "@apollo/client": "^3.4.1",
