@@ -17,7 +17,7 @@ import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useExchangeRates } from '../../../hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets } from '../../../hooks/hard-synths/useMarkets'
-import { Accordion, Col, Container, FormCheck, Row } from 'react-bootstrap'
+import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstrap'
 import { SpinnerLoader } from '../../../components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
@@ -235,9 +235,18 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 								label: 'Collateral',
 								value: (
 									<Tooltipped
-										content={`${
-											isInMarket ? 'Exit' : 'Enter'
-										} Market w/ Supplied Collateral`}
+										content={
+											<>
+												{isInMarket ? 'Exit' : 'Enter'} Market w/ Supplied
+												Collateral.
+												<br />
+												<br />
+												<Badge bg="warning">WARNING</Badge>
+												<br />
+												Any supplied assets that are flagged as collateral can
+												be seized if you are liquidated.
+											</>
+										}
 									>
 										<FormCheck
 											type="switch"

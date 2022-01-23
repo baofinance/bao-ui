@@ -1,12 +1,13 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import styled from 'styled-components'
+import { Placement } from 'react-bootstrap/types'
 
 interface TooltippedProps {
-	content: string
+	content: any
 	children?: JSX.Element
-	placement?: any
+	placement?: Placement
 }
 
 const Tooltipped: React.FC<TooltippedProps> = ({
