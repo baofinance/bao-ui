@@ -294,9 +294,20 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 					/>
 					<MarketDetails asset={market} title="Market Details" />
 					<br />
-					<SubmitButton onClick={() => setShowSupplyModal(true)}>
-						Supply / Withdraw
-					</SubmitButton>
+					<Row>
+						<Col>
+							<SubmitButton onClick={() => setShowSupplyModal(true)}>
+								Supply / Withdraw
+							</SubmitButton>
+						</Col>
+						<Col>
+							<SubmitButton
+								onClick={() => (window.location.href = `/market/${market.mid}`)}
+							>
+								Go to Details
+							</SubmitButton>
+						</Col>
+					</Row>
 					<MarketSupplyModal
 						asset={market}
 						show={showSupplyModal}
@@ -402,9 +413,20 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					/>
 					<MarketDetails asset={market} title="Market Details" />
 					<br />
-					<SubmitButton onClick={() => setShowBorrowModal(true)}>
-						Mint / Repay
-					</SubmitButton>
+					<Row>
+						<Col>
+							<SubmitButton onClick={() => setShowBorrowModal(true)}>
+								Mint / Repay
+							</SubmitButton>
+						</Col>
+						<Col>
+							<SubmitButton
+								onClick={() => (window.location.href = `/market/${market.mid}`)}
+							>
+								Go to Details
+							</SubmitButton>
+						</Col>
+					</Row>
 					<MarketBorrowModal
 						asset={market}
 						show={showBorrowModal}

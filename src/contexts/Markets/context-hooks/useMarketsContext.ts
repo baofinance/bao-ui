@@ -52,6 +52,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       borrowState,
       oraclePrices, // UNUSED,
       underlyingSymbols,
+      liquidationIncentive,
     ]: any = await Promise.all([
       Promise.all(
         contracts.map((contract) =>
@@ -118,6 +119,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
                 .call()
         }),
       ),
+      comptroller.methods.liquidationIncentiveMantissa().call(),
     ])
 
     /*
@@ -151,6 +153,10 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
           .times(decimate(totalSupplies[i], marketConfig.decimals))
           .toNumber(),
         ...marketConfig,
+        liquidationIncentive: decimate(liquidationIncentive)
+          .minus(1)
+          .times(100)
+          .toNumber(),
       }
     })
 

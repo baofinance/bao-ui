@@ -1,9 +1,3 @@
-// FontAwesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
@@ -14,12 +8,20 @@ import BaoProvider from './contexts/BaoProvider'
 import ModalsProvider from './contexts/Modals'
 import MarketsProvider from './contexts/Markets'
 import TransactionProvider from './contexts/Transactions'
-import theme from './theme'
 import Markets from './views/Markets'
+import Market from 'views/Markets/Market'
 import Ballast from './views/Markets/Ballast'
 import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
+import theme from './theme'
 import GlobalStyle from 'GlobalStyle'
+
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+// Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 library.add(fas, fab)
 
@@ -68,6 +70,9 @@ const App: React.FC = () => {
 				<Switch>
 					<Route path="/" exact>
 						<Markets />
+					</Route>
+					<Route path="/market/:id" exact>
+						<Market />
 					</Route>
 					<Route path="/ballast">
 						<Ballast />
