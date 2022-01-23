@@ -304,7 +304,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							<SubmitButton
 								onClick={() => (window.location.href = `/market/${market.mid}`)}
 							>
-								Go to Details
+								Details
 							</SubmitButton>
 						</Col>
 					</Row>
@@ -423,7 +423,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							<SubmitButton
 								onClick={() => (window.location.href = `/market/${market.mid}`)}
 							>
-								Go to Details
+								Details
 							</SubmitButton>
 						</Col>
 					</Row>

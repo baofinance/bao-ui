@@ -60,6 +60,7 @@ export interface SupportedMarket {
   supplied?: number
   borrowable?: boolean
   liquidationIncentive?: number
+  borrowRestricted?: boolean
 }
 
 export interface FarmableSupportedPool extends SupportedPool {

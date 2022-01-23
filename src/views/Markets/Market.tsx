@@ -1,18 +1,23 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+import Config from '../../bao/lib/config'
 import { useParams } from 'react-router-dom'
 import { useMarkets } from '../../hooks/hard-synths/useMarkets'
 import {
 	useBorrowBalances,
 	useSupplyBalances,
 } from '../../hooks/hard-synths/useBalances'
+import useBao from '../../hooks/useBao'
 import { useMarketPrices } from '../../hooks/hard-synths/usePrices'
 import { SpinnerLoader } from '../../components/Loader'
 import { SubmitButton } from './components/MarketButton'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
 import { MarketDetails, StatBlock } from './components/Stats'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Tooltipped from '../../components/Tooltipped'
+import { MarketBorrowModal, MarketSupplyModal } from './components/Modals'
 import styled from 'styled-components'
 import { decimate, getDisplayBalance } from '../../utils/numberFormat'
+import { SupportedMarket } from '../../bao/lib/types'
 
 const Market = () => {
 	const { id } = useParams()
@@ -20,6 +25,7 @@ const Market = () => {
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
 	const { prices } = useMarketPrices()
+	const bao = useBao()
 
 	const activeMarket = useMemo(() => {
 		if (!markets) return undefined
@@ -64,6 +70,15 @@ const Market = () => {
 		)
 	}, [activeMarket, prices])
 
+	const oracleAddress = useMemo(() => {
+		if (!bao) return
+		const address = bao.getContract('marketOracle').options.address
+		return `${address.slice(0, 6)}...${address.slice(
+			address.length - 4,
+			address.length,
+		)}`
+	}, [bao])
+
 	return markets && activeMarket ? (
 		<Container style={{ marginTop: '2.5em' }}>
 			<h3>
@@ -87,15 +102,27 @@ const Market = () => {
 			<Row>
 				<InfoCol
 					title="Total Supplied"
-					content={`${getDisplayBalance(activeMarket.supplied, 0)} ${
-						activeMarket.underlyingSymbol
-					}`}
+					content={
+						<Tooltipped content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}>
+							<a>
+								<FontAwesomeIcon icon="level-down-alt" />{' '}
+								{getDisplayBalance(activeMarket.supplied, 0)}{' '}
+								{activeMarket.underlyingSymbol}
+							</a>
+						</Tooltipped>
+					}
 				/>
 				<InfoCol
 					title="Total Debt"
-					content={`${getDisplayBalance(activeMarket.totalBorrows, 0)} ${
-						activeMarket.underlyingSymbol
-					}`}
+					content={
+						<Tooltipped content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}>
+							<a>
+								<FontAwesomeIcon icon="level-down-alt" />{' '}
+								{getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
+								{activeMarket.underlyingSymbol}
+							</a>
+						</Tooltipped>
+					}
 				/>
 				<InfoCol
 					title="APY"
@@ -112,12 +139,34 @@ const Market = () => {
 					title="Your Supply"
 					content={`${supplied ? supplied.toFixed(4) : '0'} ${
 						activeMarket.underlyingSymbol
+					} | $${
+						supplied
+							? getDisplayBalance(
+									supplied *
+										decimate(
+											prices[activeMarket.token],
+											36 - activeMarket.decimals,
+										).toNumber(),
+									0,
+							  )
+							: '0'
 					}`}
 				/>
 				<InfoCol
 					title="Your Debt"
 					content={`${borrowed ? borrowed.toFixed(4) : '0'} ${
 						activeMarket.underlyingSymbol
+					} | $${
+						borrowed
+							? getDisplayBalance(
+									borrowed *
+										decimate(
+											prices[activeMarket.token],
+											36 - activeMarket.decimals,
+										).toNumber(),
+									0,
+							  )
+							: '0'
 					}`}
 				/>
 			</Row>
@@ -135,32 +184,51 @@ const Market = () => {
 									label={null}
 									stats={[
 										{
-											label: 'Total Supplied (USD)',
-											value: `$${getDisplayBalance(totalSuppliedUSD, 0)}`,
-										},
-										{
-											label: 'Total Debt (USD)',
-											value: `$${getDisplayBalance(totalBorrowedUSD, 0)}`,
-										},
-										{
 											label: 'Market Utilization',
 											value: `${(
-												((activeMarket.supplied - activeMarket.totalBorrows) /
-													activeMarket.supplied) *
+												(activeMarket.totalBorrows /
+													(activeMarket.supplied +
+														activeMarket.totalBorrows -
+														activeMarket.totalReserves)) *
 												100
 											).toFixed(2)}%`,
 										},
 										{
 											label: 'Liquidation Incentive',
 											value: `${activeMarket.liquidationIncentive}%`,
+										}, 
+										{
+											label: 'Borrow Restricted?',
+											value: `${activeMarket.borrowRestricted ? 'Yes' : 'No'}`,
+										},
+										{
+											label: 'Price Oracle',
+											value: (
+												<a
+													href={`${
+														Config.defaultRpc.blockExplorerUrls[0]
+													}/address/${
+														bao.getContract('marketOracle').options.address
+													}`}
+												>
+													{oracleAddress}{' '}
+													<FontAwesomeIcon icon="external-link-alt" />
+												</a>
+											),
 										},
 									]}
 								/>
 							</Col>
 						</Row>
 						<br />
-						<SubmitButton>Placeholder</SubmitButton>
 					</>
+				}
+			/>
+			<br />
+			<InfoCol
+				title={null}
+				content={
+					<ActionButton market={activeMarket} isSynth={activeMarket.isSynth} />
 				}
 			/>
 		</Container>
@@ -175,17 +243,13 @@ const HorizontalSpacer = () => {
 	)
 }
 
-const MarketTypeBadge = ({ isSynth }: MarketTypeBadgeParams) => {
+const MarketTypeBadge = ({ isSynth }: IsSynthProps) => {
 	return (
 		<Badge pill bg="secondary">
 			<FontAwesomeIcon icon={isSynth ? 'chart-line' : 'landmark'} />{' '}
 			{isSynth ? 'Synthetic' : 'Collateral'}
 		</Badge>
 	)
-}
-
-type MarketTypeBadgeParams = {
-	isSynth: boolean
 }
 
 const InfoCol = ({ title, content }: InfoColParams) => {
@@ -199,6 +263,36 @@ const InfoCol = ({ title, content }: InfoColParams) => {
 	)
 }
 
+const ActionButton = ({ market, isSynth }: IsSynthProps) => {
+	const [showModal, setShowModal] = useState(false)
+
+	return (
+		<>
+			{isSynth ? (
+				<MarketBorrowModal
+					asset={market}
+					show={showModal}
+					onHide={() => setShowModal(false)}
+				/>
+			) : (
+				<MarketSupplyModal
+					asset={market}
+					show={showModal}
+					onHide={() => setShowModal(false)}
+				/>
+			)}
+			<SubmitButton onClick={() => setShowModal(true)}>
+				{isSynth ? 'Mint / Repay' : 'Supply / Withdraw'}
+			</SubmitButton>
+		</>
+	)
+}
+
+type IsSynthProps = {
+	market?: SupportedMarket
+	isSynth: boolean
+}
+
 type InfoColParams = {
 	title: string
 	content: any
@@ -208,7 +302,7 @@ const InfoContainer = styled.div`
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: 12px;
 	padding: 25px 50px;
-	font-size: 16px;
+	font-size: 14px;
 	color: #d3d3d3;
 
 	> p {

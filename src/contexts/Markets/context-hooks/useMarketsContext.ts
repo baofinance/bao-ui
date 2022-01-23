@@ -53,6 +53,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       oraclePrices, // UNUSED,
       underlyingSymbols,
       liquidationIncentive,
+      borrowRestricted,
     ]: any = await Promise.all([
       Promise.all(
         contracts.map((contract) =>
@@ -120,6 +121,9 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         }),
       ),
       comptroller.methods.liquidationIncentiveMantissa().call(),
+      Promise.all(
+        contracts.map((market) => comptroller.methods.borrowRestricted(market.options.address).call())
+      ),
     ])
 
     /*
@@ -143,9 +147,9 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         supplyApy: supplyApys[i],
         borrowApy: borrowApys[i],
         borrowable: borrowState[i][1] > 0,
-        liquidity: decimate(cashes[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
-        totalReserves: decimate(totalReserves[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
-        totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
+        liquidity: decimate(cashes[i], 18 /* see note */).toNumber(),
+        totalReserves: decimate(totalReserves[i], 18 /* see note */).toNumber(),
+        totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(),
         collateralFactor: decimate(marketsInfo[i][1]).toNumber(),
         imfFactor: decimate(marketsInfo[i][2]).toNumber(),
         reserveFactor: decimate(reserveFactors[i]).toNumber(),
@@ -157,6 +161,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
           .minus(1)
           .times(100)
           .toNumber(),
+        borrowRestricted: borrowRestricted[i]
       }
     })
 
