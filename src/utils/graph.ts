@@ -7,9 +7,10 @@ const SUSHI_SUBGRAPH_URLS = {
   mainnet: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange',
 }
 
-// TODO- Move Apollo Clients to provider
+// TODO- Move Apollo Clients to provider so that the chain can be switched
+// TODO- Use config for propogating subgraph clients object
 const clients = {
-  matic: new ApolloClient({
+  maticSushi: new ApolloClient({
     uri: SUSHI_SUBGRAPH_URLS.matic,
     cache: new InMemoryCache(),
   }),
@@ -17,18 +18,27 @@ const clients = {
     uri: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn',
     cache: new InMemoryCache(),
   }),
-  mainnet: new ApolloClient({
+  mainnetSushi: new ApolloClient({
     uri: SUSHI_SUBGRAPH_URLS.mainnet,
+    cache: new InMemoryCache(),
+  }),
+  markets: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/totalpizza/dev-hard-synths',
     cache: new InMemoryCache(),
   }),
 }
 
-const _getClient = (network: string) =>
-  network.toLowerCase() === 'matic' ? clients.matic : clients.mainnet
+type SubgraphOption =
+  | 'maticSushi'
+  | 'maticPollyBurn'
+  | 'mainnetSushi'
+  | 'markets'
+
+const _getClient = (network: SubgraphOption) => clients[network]
 
 const _querySubgraph = (
   query: string,
-  network = 'matic',
+  network: SubgraphOption = 'maticSushi',
   _client?: ApolloClient<any>,
 ) => {
   const client = _client || _getClient(network)
@@ -44,7 +54,7 @@ const _querySubgraph = (
 
 const getPriceHistoryMultiple = async (
   tokenAddresses: string[],
-  network = 'matic',
+  network: SubgraphOption = 'maticSushi',
   first?: number,
 ): Promise<any> =>
   await _querySubgraph(
@@ -54,7 +64,7 @@ const getPriceHistoryMultiple = async (
 
 const getPriceHistory = async (
   tokenAddress: string,
-  network = 'matic',
+  network: SubgraphOption = 'maticSushi',
 ): Promise<any> =>
   await _querySubgraph(_getPriceHistoryQuery(tokenAddress), network)
 
@@ -62,7 +72,7 @@ const getPriceHistory = async (
 const getPriceFromPair = async (
   wethPrice: BigNumber,
   tokenAddress: string,
-  network = 'matic',
+  network: SubgraphOption = 'maticSushi',
 ) => {
   const data: any = await _querySubgraph(
     _getPriceFromPair(tokenAddress.toLowerCase()),
@@ -91,7 +101,7 @@ const getPriceFromPair = async (
 const getPriceFromPairMultiple = async (
   wethPrice: BigNumber,
   tokenAddresses: string[],
-  network = 'matic',
+  network: SubgraphOption = 'maticSushi',
 ): Promise<Array<{ address: string; price: BigNumber }>> => {
   const data: any = await _querySubgraph(
     _getPriceFromPairMultiple(
@@ -128,7 +138,7 @@ const getPriceFromPairMultiple = async (
 
 const getPrice = async (
   tokenAddress: string,
-  network = 'matic',
+  network: SubgraphOption = 'maticSushi',
 ): Promise<BigNumber> => {
   const data: any = await getPriceHistory(tokenAddress, network)
   return data.tokens[0] && new BigNumber(data.tokens[0].dayData[0].priceUSD)
@@ -137,7 +147,7 @@ const getPrice = async (
 const getPollyBurned = async (): Promise<any> => {
   const data: any = await _querySubgraph(
     _getPollyBurnQuery(),
-    'matic',
+    'maticSushi',
     clients.maticPollyBurn,
   )
   return data.burn
@@ -146,11 +156,21 @@ const getPollyBurned = async (): Promise<any> => {
 const getPollySupply = async (): Promise<number> => {
   const data: any = await _querySubgraph(
     _getPollySupplyQuery(),
-    'matic',
+    'maticSushi',
     clients.maticPollyBurn,
   )
   return data.tokenStats.supply
 }
+
+const getMarketInfo = async (tokenAddress: string): Promise<any> =>
+  await _querySubgraph(
+    _getMarketQuery(tokenAddress),
+    'markets',
+    clients.markets,
+  )
+
+const getMarketsInfo = async (): Promise<any> =>
+  await _querySubgraph(_getMarketsQuery(), 'markets', clients.markets)
 
 const _getPriceHistoryQuery = (tokenAddress: string) =>
   `
@@ -254,6 +274,56 @@ const _getPollySupplyQuery = () =>
   }
   `
 
+const _getMarketQuery = (tokenAddress: string) =>
+  `
+  {
+    market(id:"${tokenAddress.toLowerCase()}"){
+      cash,
+      symbol,
+      collateralFactor,
+      exchangeRate,
+      interestRateModelAddress,
+      borrowRate,
+      supplyRate,
+      numberOfBorrowers,
+      numberOfSuppliers,
+      totalBorrows,
+      totalSupply,
+      reserves,
+      underlyingSymbol,
+      accrualBlockNumber,
+      reserveFactor,
+      underlyingPriceUSD,
+      underlyingDecimals
+    }
+  }
+  `
+
+const _getMarketsQuery = () =>
+  `
+  {
+    markets {
+      cash,
+      symbol,
+      collateralFactor,
+      exchangeRate,
+      interestRateModelAddress,
+      borrowRate,
+      supplyRate,
+      numberOfBorrowers,
+      numberOfSuppliers,
+      totalBorrows,
+      totalSupply,
+      reserves,
+      underlyingSymbol,
+      accrualBlockNumber,
+      reserveFactor,
+      underlyingPriceUSD,
+      underlyingDecimals
+    }
+  }
+  `
+
 export default {
   getPriceHistory,
   getPriceHistoryMultiple,
@@ -262,4 +332,6 @@ export default {
   getPrice,
   getPollyBurned,
   getPollySupply,
+  getMarketInfo,
+  getMarketsInfo,
 }

@@ -17,7 +17,14 @@ import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useExchangeRates } from '../../../hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets } from '../../../hooks/hard-synths/useMarkets'
-import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstrap'
+import {
+	Accordion,
+	Badge,
+	Col,
+	Container,
+	FormCheck,
+	Row,
+} from 'react-bootstrap'
 import { SpinnerLoader } from '../../../components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
@@ -98,11 +105,12 @@ export const MarketList: React.FC<MarketListProps> = ({
 					</Col>
 					<Col>
 						<HrText content="Synthetics" />
-						<MarketListHeader headers={['Asset', 'APR', 'Liquidity']} />
+						<MarketListHeader headers={['Asset', 'APR', 'Wallet']} />
 						{synthMarkets.map((market: SupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
 								accountLiquidity={accountLiquidity}
+								accountBalances={accountBalances}
 								borrowBalances={borrowBalances}
 								exchangeRates={exchangeRates}
 								prices={prices}
@@ -173,7 +181,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		<Accordion>
 			<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
 				<StyledAccordionHeader>
-					<Row lg={7} style={{ width: '100%' }}>
+					<Row style={{ width: '100%' }}>
 						<Col>
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
@@ -331,6 +339,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	market,
 	accountLiquidity,
+	accountBalances,
 	borrowBalances,
 	exchangeRates,
 	prices,
@@ -348,26 +357,15 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 		<Accordion>
 			<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
 				<StyledAccordionHeader>
-					<Row lg={7} style={{ width: '100%' }}>
+					<Row style={{ width: '100%' }}>
 						<Col>
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
 						<Col>{market.borrowApy.toFixed(2)}%</Col>
 						<Col>
-							{`$${getDisplayBalance(
-								market.supplied *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber() -
-									market.totalBorrows *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
-								0,
-								0,
-							)}`}
+							{accountBalances
+								.find((balance) => balance.address === market.underlying)
+								.balance.toFixed(4)}
 						</Col>
 					</Row>
 				</StyledAccordionHeader>

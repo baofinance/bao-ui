@@ -62,19 +62,19 @@ export default {
     // Hard Synths
     comptroller: {
       3: {
-        address: '0xbF2d7626a66aad910173fB43Ffd738A0F82C7f33',
+        address: '0xb3ba973514f15724195a980e606F76C7f806a18A',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
       3: {
-        address: '0x48E1654a7F4deB1cd3d9817D44cAebB7f1404f06',
+        address: '0xDb0cE7833bC25951F3B76119a1742101669C1861',
         abi: 'marketOracle.json',
       },
     },
     stabilizer: {
       3: {
-        address: '0x89BA107c0a767A6eB317F6b1a715A45D05014eB6',
+        address: '0xcA94c91D6061f1CB5a268512528AA4e31fFA39CF',
         abi: 'stabilizer.json',
       },
     },
@@ -95,13 +95,13 @@ export default {
       mid: 1,
       symbol: 'bUSD',
       marketAddresses: {
-        3: '0x63793577FC659243Df8fF731089FBe60d2A36A0d',
+        3: '0xeA4447ede0d5730EEA1DE32E9F2C108901603a2a',
       },
       underlyingAddresses: {
-        3: '0x0F051F3C818b495ef27AC46462188295F83469A5',
+        3: '0x6B51a15C86B5B8000E0417E17AE40A574EcBB4bD',
       },
       isSynth: true,
-      icon: '/PAI.png',
+      icon: '/bUSD.png',
       coingeckoId: 'dai',
       decimals: 18,
     },
@@ -109,7 +109,7 @@ export default {
       mid: 2,
       symbol: 'bETH',
       marketAddresses: {
-        3: '0x895952c8290bf311B4848dE954F1A747Bf97809f',
+        3: '0xE49b6bcEb3c022E69b2ce2c7341795796c7cB560',
       },
       underlyingAddresses: {
         3: 'ETH',
@@ -122,13 +122,13 @@ export default {
       mid: 3,
       symbol: 'bUSDC',
       marketAddresses: {
-        3: '0xfA3545f9Cca55088B30223bc86BE1AEe0F86eE62',
+        3: '0x101dF9FF43cEcfc4158e8aCCCf4C094da375dcaA',
       },
       underlyingAddresses: {
-        3: '0x48C1be647204eb97BC5C6914e5D60E7A7b7b398B',
+        3: '0x158EaaF4D1114Af4409E6FA56378367fD58C2fd0',
       },
       icon: '/USDC.png',
-      coingeckoId: 'polygon',
+      coingeckoId: 'usd-coin',
       decimals: 6,
     },
   ],

@@ -45,40 +45,6 @@ export const getRecipeContract = (bao: Bao) => {
   return bao && bao.contracts && bao.getContract('recipe')
 }
 
-export const getMarkets = (bao: Bao) => {
-  return bao
-    ? bao.contracts.markets.map(
-        ({
-          token,
-          underlying,
-          supplyApy,
-          borrowApy,
-          borrowable,
-          liquidity,
-          totalReserves,
-          totalBorrows,
-          collateralFactor,
-          reserveFactor,
-          supplied,
-          decimals,
-        }) => ({
-          token,
-          underlying,
-          supplyApy,
-          borrowApy,
-          borrowable,
-          liquidity,
-          totalReserves,
-          totalBorrows,
-          collateralFactor,
-          reserveFactor,
-          supplied,
-          decimals,
-        }),
-      )
-    : []
-}
-
 export const getBaskets = (bao: Bao) => {
   return bao
     ? bao.contracts.baskets.map(

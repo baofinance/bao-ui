@@ -71,14 +71,16 @@ export class Contracts {
           )
         : undefined
 
-        this.markets =
+    this.markets =
       networkId === Config.networkId
         ? Config.markets.map((market) =>
             Object.assign(market, {
               marketAddress: market.marketAddresses[networkId],
               underlyingAddress: market.underlyingAddresses[networkId],
               marketContract: this.getNewContract(CTokenAbi),
-              underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi)
+              underlyingContract:
+                market.underlyingAddresses[Config.networkId] !== 'ETH' &&
+                this.getNewContract(ERC20Abi),
             }),
           )
         : undefined
@@ -116,9 +118,15 @@ export class Contracts {
       }
       if (this.markets) {
         this.markets.forEach(
-          ({ marketContract, marketAddress, underlyingContract, underlyingAddress }) => {
+          ({
+            marketContract,
+            marketAddress,
+            underlyingContract,
+            underlyingAddress,
+          }) => {
             setProvider(marketContract, marketAddress)
-            if (underlyingContract) setProvider(underlyingContract, underlyingAddress)
+            if (underlyingContract)
+              setProvider(underlyingContract, underlyingAddress)
           },
         )
       }
