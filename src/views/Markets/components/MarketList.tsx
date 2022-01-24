@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
+import Config from '../../../bao/lib/config'
 import styled from 'styled-components'
 import { useMarketPrices } from '../../../hooks/hard-synths/usePrices'
 import {
@@ -284,7 +285,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 														)
 												} else {
 													contract.methods
-														.enterMarkets([market.token])
+														.enterMarkets([market.token], Config.addressMap.DEAD) // Use dead as a placeholder param for `address borrower`, it will be unused
 														.send({ from: account })
 														.on('transactionHash', (txHash: string) =>
 															onAddTransaction({

@@ -1419,6 +1419,11 @@
         "internalType": "address[]",
         "name": "cTokens",
         "type": "address[]"
+      },
+      {
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
       }
     ],
     "name": "enterMarkets",
