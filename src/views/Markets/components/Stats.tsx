@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 type Stat = {
 	label: string
-	value: string
+	value: any
 }
 
 type StatBlockProps = {
@@ -54,6 +54,7 @@ export const StatBlock = ({ label, stats }: StatBlockProps) => (
 const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalances = useSupplyBalances()
 	const balances = useAccountBalances()
+	const { prices } = useMarketPrices()
 	const { exchangeRates } = useExchangeRates()
 
 	const supplyBalance = useMemo(
@@ -81,6 +82,24 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				: 0,
 		[balances],
 	)
+	const supplyBalanceUsd = useMemo(() => {
+		if (!(supplyBalance && prices)) return
+		return getDisplayBalance(
+			decimate(prices[asset.token], 36 - asset.decimals)
+				.times(supplyBalance)
+				.toFixed(2),
+			0
+		)
+	}, [supplyBalance, prices])
+	const walletBalanceUsd = useMemo(() => {
+		if (!(walletBalance && prices)) return
+		return getDisplayBalance(
+			decimate(prices[asset.token], 36 - asset.decimals)
+				.times(walletBalance)
+				.toFixed(2),
+			0,
+		)
+	}, [walletBalance, prices])
 
 	return (
 		<StatBlock
@@ -92,11 +111,15 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Supply Balance',
-					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol}`,
+					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
+						supplyBalanceUsd || '~'
+					}`,
 				},
 				{
 					label: 'Wallet Balance',
-					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol}`,
+					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
+						walletBalanceUsd || '~'
+					}`,
 				},
 			]}
 		/>
@@ -145,9 +168,10 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 	)
 }
 
-const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
+const MintDetails = ({ asset }: MarketStatBlockProps) => {
 	const borrowBalances = useBorrowBalances()
 	const balances = useAccountBalances()
+	const { prices } = useMarketPrices()
 
 	const borrowBalance = useMemo(
 		() =>
@@ -170,18 +194,29 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 				: 0,
 		[balances],
 	)
+	const price = useMemo(() => {
+		if (!(borrowBalance && prices)) return
+		return getDisplayBalance(
+			decimate(prices[asset.token], 36 - asset.decimals)
+				.times(borrowBalance)
+				.toFixed(2),
+			0
+		)
+	}, [borrowBalance, prices])
 
 	return (
 		<StatBlock
-			label="Borrow Stats"
+			label="Mint Info"
 			stats={[
 				{
-					label: 'Borrow APR',
+					label: 'APR',
 					value: `${asset.borrowApy.toFixed(2)}%`,
 				},
 				{
-					label: 'Borrow Balance',
-					value: `${borrowBalance.toFixed(4)} ${asset.underlyingSymbol}`,
+					label: 'Debt Balance',
+					value: `${borrowBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
+						price || '~'
+					}`,
 				},
 				{
 					label: 'Wallet Balance',
@@ -192,7 +227,7 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 	)
 }
 
-const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
+const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
 	const accountLiquidity = useAccountLiquidity()
 
@@ -212,17 +247,17 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 
 	return (
 		<StatBlock
-			label="Borrow Limit Stats"
+			label="Debt Limit Stats"
 			stats={[
 				{
-					label: 'Borrow Limit',
+					label: 'Debt Limit',
 					value: `$${getDisplayBalance(
 						borrowable.toFixed(2),
 						0,
 					)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
 				},
 				{
-					label: 'Borrow Limit Used',
+					label: 'Debt Limit Used',
 					value: `${(accountLiquidity && borrowable !== 0
 						? (accountLiquidity.usdBorrow / borrowable) * 100
 						: 0
@@ -236,7 +271,7 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	)
 }
 
-const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
+const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const { prices } = useMarketPrices()
 	const accountLiquidity = useAccountLiquidity()
 	const change =
@@ -260,10 +295,10 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 
 	return (
 		<StatBlock
-			label="Borrow Limit Stats"
+			label="Debt Limit Stats"
 			stats={[
 				{
-					label: 'Borrow Limit Remaining',
+					label: 'Debt Limit Remaining',
 					value: `$${getDisplayBalance(
 						accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0,
 						0,
@@ -273,7 +308,7 @@ const BorrowLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 					)}`,
 				},
 				{
-					label: 'Borrow Limit Used',
+					label: 'Debt Limit Used',
 					value: `${(borrowable !== 0
 						? (borrow / borrowable) * 100
 						: 0
@@ -294,28 +329,28 @@ export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 			return (
 				<>
 					<SupplyDetails asset={asset} />
-					<BorrowLimit asset={asset} amount={parsedAmount} />
+					<DebtLimit asset={asset} amount={parsedAmount} />
 				</>
 			)
 		case MarketOperations.withdraw:
 			return (
 				<>
 					<SupplyDetails asset={asset} />
-					<BorrowLimit asset={asset} amount={-1 * parsedAmount} />
+					<DebtLimit asset={asset} amount={-1 * parsedAmount} />
 				</>
 			)
-		case MarketOperations.borrow:
+		case MarketOperations.mint:
 			return (
 				<>
-					<BorrowDetails asset={asset} />
-					<BorrowLimitRemaining asset={asset} amount={-1 * parsedAmount} />
+					<MintDetails asset={asset} />
+					<DebtLimitRemaining asset={asset} amount={-1 * parsedAmount} />
 				</>
 			)
 		case MarketOperations.repay:
 			return (
 				<>
-					<BorrowDetails asset={asset} />
-					<BorrowLimitRemaining asset={asset} amount={parsedAmount} />
+					<MintDetails asset={asset} />
+					<DebtLimitRemaining asset={asset} amount={parsedAmount} />
 				</>
 			)
 	}

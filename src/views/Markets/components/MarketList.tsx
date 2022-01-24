@@ -17,11 +17,12 @@ import useBao from '../../../hooks/useBao'
 import { useWallet } from 'use-wallet'
 import { useExchangeRates } from '../../../hooks/hard-synths/useExchangeRates'
 import { useAccountMarkets } from '../../../hooks/hard-synths/useMarkets'
-import { Accordion, Col, Container, FormCheck, Row } from 'react-bootstrap'
+import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstrap'
 import { SpinnerLoader } from '../../../components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
 import Tooltipped from '../../../components/Tooltipped'
+import HrText from '../../../components/HrText'
 import { SubmitButton } from './MarketButton'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { getComptrollerContract } from '../../../bao/utils'
@@ -39,30 +40,36 @@ export const MarketList: React.FC<MarketListProps> = ({
 	const { exchangeRates } = useExchangeRates()
 	const { prices } = useMarketPrices()
 
-	const activeMarkets = useMemo(() => {
-		if (!(supplyBalances && borrowBalances)) return undefined
+	const collateralMarkets = useMemo(() => {
+		if (!(_markets && supplyBalances)) return
+		return _markets
+			.filter((market) => !market.isSynth)
+			.sort((a, b) =>
+				supplyBalances.find(
+					(balance) => balance.address.toLowerCase() === b.token.toLowerCase(),
+				).balance > 0
+					? 1
+					: 0,
+			)
+	}, [_markets, supplyBalances])
 
-		// Find markets with outstanding supply / borrows
-		return _markets.filter(
-			(market) =>
-				supplyBalances.find((balance) => balance.address === market.token)
-					.balance > 0 ||
-				borrowBalances.find((balance) => balance.address === market.token)
-					.balance > 0,
-		)
-	}, [_markets, supplyBalances, borrowBalances])
-
-	const markets = useMemo(() => {
-		if (!activeMarkets) return undefined
-
-		// Place markets with outstanding borrows / supplies first in the list
-		return _markets.filter((market) => !activeMarkets.includes(market))
-	}, [_markets, activeMarkets])
+	const synthMarkets = useMemo(() => {
+		if (!(_markets && borrowBalances)) return
+		return _markets
+			.filter((market) => market.isSynth)
+			.sort((a, b) =>
+				borrowBalances.find(
+					(balance) => balance.address.toLowerCase() === b.token.toLowerCase(),
+				).balance > 0
+					? 1
+					: 0,
+			)
+	}, [_markets, borrowBalances])
 
 	return (
 		<>
-			{activeMarkets &&
-			markets &&
+			{collateralMarkets &&
+			synthMarkets &&
 			accountBalances &&
 			accountLiquidity &&
 			accountMarkets &&
@@ -70,40 +77,40 @@ export const MarketList: React.FC<MarketListProps> = ({
 			borrowBalances &&
 			exchangeRates &&
 			prices ? (
-				<>
-					<MarketListHeader />
-					{activeMarkets.length > 0 && (
-						<>
-							{activeMarkets.map((market: SupportedMarket) => (
-								<MarketListItem
-									market={market}
-									accountBalances={accountBalances}
-									accountMarkets={accountMarkets}
-									accountLiquidity={accountLiquidity}
-									supplyBalances={supplyBalances}
-									borrowBalances={borrowBalances}
-									exchangeRates={exchangeRates}
-									prices={prices}
-									key={market.token}
-								/>
-							))}
-							<hr style={{ margin: '12px' }} />
-						</>
-					)}
-					{markets.map((market: SupportedMarket) => (
-						<MarketListItem
-							market={market}
-							accountBalances={accountBalances}
-							accountMarkets={accountMarkets}
-							accountLiquidity={accountLiquidity}
-							supplyBalances={supplyBalances}
-							borrowBalances={borrowBalances}
-							exchangeRates={exchangeRates}
-							prices={prices}
-							key={market.token}
+				<Row>
+					<Col>
+						<HrText content="Collateral" />
+						<MarketListHeader
+							headers={['Asset', 'APY', 'Wallet', 'Liquidity']}
 						/>
-					))}
-				</>
+						{collateralMarkets.map((market: SupportedMarket) => (
+							<MarketListItemCollateral
+								market={market}
+								accountBalances={accountBalances}
+								accountMarkets={accountMarkets}
+								supplyBalances={supplyBalances}
+								borrowBalances={borrowBalances}
+								exchangeRates={exchangeRates}
+								prices={prices}
+								key={market.token}
+							/>
+						))}
+					</Col>
+					<Col>
+						<HrText content="Synthetics" />
+						<MarketListHeader headers={['Asset', 'APR', 'Liquidity']} />
+						{synthMarkets.map((market: SupportedMarket) => (
+							<MarketListItemSynth
+								market={market}
+								accountLiquidity={accountLiquidity}
+								borrowBalances={borrowBalances}
+								exchangeRates={exchangeRates}
+								prices={prices}
+								key={market.token}
+							/>
+						))}
+					</Col>
+				</Row>
 			) : (
 				<SpinnerLoader block />
 			)}
@@ -111,20 +118,12 @@ export const MarketList: React.FC<MarketListProps> = ({
 	)
 }
 
-const MarketListHeader: React.FC = () => {
-	const headers = [
-		'Market',
-		'Supplied',
-		'Collateral',
-		'Borrowed',
-		'Supply APY',
-		'Borrow APR',
-		'Liquidity',
-	]
-
+const MarketListHeader: React.FC<MarketListHeaderProps> = ({
+	headers,
+}: MarketListHeaderProps) => {
 	return (
 		<Container fluid>
-			<Row style={{ padding: '0.5rem 1.5rem' }}>
+			<Row style={{ padding: '0.5rem 12px' }}>
 				{headers.map((header: string) => (
 					<MarketListHeaderCol style={{ paddingBottom: '0px' }} key={header}>
 						<b>{header}</b>
@@ -135,18 +134,16 @@ const MarketListHeader: React.FC = () => {
 	)
 }
 
-const MarketListItem: React.FC<MarketListItemProps> = ({
+const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	market,
 	accountBalances,
 	accountMarkets,
-	accountLiquidity,
 	supplyBalances,
 	borrowBalances,
 	exchangeRates,
 	prices,
 }: MarketListItemProps) => {
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
 	const bao = useBao()
 	const { account }: { account: string } = useWallet()
@@ -180,33 +177,12 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 						<Col>
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
-						<Col>
-							{`$${getDisplayBalance(
-								suppliedUnderlying *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber(),
-								0,
-							)}`}
-						</Col>
-						<Col style={{ textAlign: 'center' }}>
-							<div style={{ width: 'calc(50%)', float: 'right' }}>
-								<StyledCheck checked={isInMarket} inline />
-							</div>
-						</Col>
-						<Col>
-							{`$${getDisplayBalance(
-								borrowed *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber(),
-								0,
-							)}`}
-						</Col>
 						<Col>{market.supplyApy.toFixed(2)}%</Col>
-						<Col>{market.borrowApy.toFixed(2)}%</Col>
+						<Col>
+							{accountBalances
+								.find((balance) => balance.address === market.underlying)
+								.balance.toFixed(4)}
+						</Col>
 						<Col>
 							{`$${getDisplayBalance(
 								market.supplied *
@@ -226,15 +202,51 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 					</Row>
 				</StyledAccordionHeader>
 				<StyledAccordionBody>
-					<Row lg={3}>
-						<Col>
-							<h4>
-								Supply
-								<span style={{ float: 'right', display: 'inline' }}>
+					<StatBlock
+						label="Supply Details"
+						stats={[
+							{
+								label: 'Total Supplied',
+								value: `${market.supplied.toFixed(4)} ${
+									market.underlyingSymbol
+								} | $${getDisplayBalance(
+									market.supplied *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber(),
+									0,
+								)}`,
+							},
+							{
+								label: 'Your Supply',
+								value: `${suppliedUnderlying.toFixed(4)} ${
+									market.underlyingSymbol
+								} | $${getDisplayBalance(
+									suppliedUnderlying *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber(),
+									0,
+								)}`,
+							},
+							{
+								label: 'Collateral',
+								value: (
 									<Tooltipped
-										content={`${
-											isInMarket ? 'Exit' : 'Enter'
-										} Market w/ Supplied Collateral`}
+										content={
+											<>
+												{isInMarket ? 'Exit' : 'Enter'} Market w/ Supplied
+												Collateral.
+												<br />
+												<br />
+												<Badge bg="warning">WARNING</Badge>
+												<br />
+												Any supplied assets that are flagged as collateral can
+												be seized if you are liquidated.
+											</>
+										}
 									>
 										<FormCheck
 											type="switch"
@@ -279,130 +291,156 @@ const MarketListItem: React.FC<MarketListItemProps> = ({
 											}}
 										/>
 									</Tooltipped>
-								</span>
-							</h4>
-							<hr />
-							<StatBlock
-								label={null}
-								stats={[
-									{
-										label: 'Total Supplied',
-										value: `$${getDisplayBalance(
-											market.supplied *
-												decimate(
-													prices[market.token],
-													36 - market.decimals,
-												).toNumber(),
-											0,
-										)}`,
-									},
-									{
-										label: 'Your Supply',
-										value: `${suppliedUnderlying.toFixed(4)} ${
-											market.underlyingSymbol
-										} | $${getDisplayBalance(
-											suppliedUnderlying *
-												decimate(
-													prices[market.token],
-													36 - market.decimals,
-												).toNumber(),
-											0,
-										)}`,
-									},
-									{
-										label: 'Collateral?',
-										value: isInMarket ? 'Yes' : 'No',
-									},
-									{
-										label: 'Wallet Balance',
-										value: `${accountBalances
-											.find((balance) => balance.address === market.underlying)
-											.balance.toFixed(4)} ${market.underlyingSymbol}`,
-									},
-								]}
-							/>
-						</Col>
-						<Col>
-							<h4>Market Details</h4>
-							<hr />
-							<MarketDetails asset={market} title={null} />
-						</Col>
-						<Col>
-							<h4>Borrow</h4>
-							<hr />
-							<StatBlock
-								label={null}
-								stats={[
-									{
-										label: 'Total Borrowed',
-										value: `$${getDisplayBalance(
-											market.totalBorrows *
-												decimate(
-													prices[market.token],
-													36 - market.decimals,
-												).toNumber(),
-											0,
-										)}`,
-									},
-									{
-										label: 'Your Borrow',
-										value: `${borrowed.toFixed(4)} ${
-											market.underlyingSymbol
-										} | $${getDisplayBalance(
-											borrowed *
-												decimate(
-													prices[market.token],
-													36 - market.decimals,
-												).toNumber(),
-											0,
-										)}`,
-									},
-									{
-										label: 'Borrow Limit Remaining',
-										value: `$${getDisplayBalance(
-											accountLiquidity.usdBorrowable,
-											0,
-										)}`,
-									},
-									{
-										label: '% of Your Borrows',
-										value: `${Math.floor(
-											((borrowed *
-												decimate(
-													prices[market.token],
-													36 - market.decimals,
-												).toNumber()) /
-												accountLiquidity.usdBorrow) *
-												100,
-										)}%`,
-									},
-								]}
-							/>
-						</Col>
-					</Row>
+								),
+							},
+							{
+								label: 'Wallet Balance',
+								value: `${accountBalances
+									.find((balance) => balance.address === market.underlying)
+									.balance.toFixed(4)} ${market.underlyingSymbol}`,
+							},
+						]}
+					/>
+					<MarketDetails asset={market} title="Market Details" />
 					<br />
 					<Row>
 						<Col>
 							<SubmitButton onClick={() => setShowSupplyModal(true)}>
 								Supply / Withdraw
 							</SubmitButton>
-							<MarketSupplyModal
-								asset={market}
-								show={showSupplyModal}
-								onHide={() => setShowSupplyModal(false)}
-							/>
 						</Col>
 						<Col>
-							<SubmitButton onClick={() => setShowBorrowModal(true)}>
-								Borrow / Repay
+							<SubmitButton
+								onClick={() => (window.location.href = `/market/${market.mid}`)}
+							>
+								Details
 							</SubmitButton>
-							<MarketBorrowModal
-								asset={market}
-								show={showBorrowModal}
-								onHide={() => setShowBorrowModal(false)}
-							/>
 						</Col>
 					</Row>
+					<MarketSupplyModal
+						asset={market}
+						show={showSupplyModal}
+						onHide={() => setShowSupplyModal(false)}
+					/>
+				</StyledAccordionBody>
+			</StyledAccordionItem>
+		</Accordion>
+	)
+}
+
+const MarketListItemSynth: React.FC<MarketListItemProps> = ({
+	market,
+	accountLiquidity,
+	borrowBalances,
+	exchangeRates,
+	prices,
+}: MarketListItemProps) => {
+	const [showBorrowModal, setShowBorrowModal] = useState(false)
+
+	const borrowed = useMemo(
+		() =>
+			borrowBalances.find((balance) => balance.address === market.token)
+				.balance,
+		[borrowBalances, exchangeRates],
+	)
+
+	return (
+		<Accordion>
+			<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
+				<StyledAccordionHeader>
+					<Row lg={7} style={{ width: '100%' }}>
+						<Col>
+							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
+						</Col>
+						<Col>{market.borrowApy.toFixed(2)}%</Col>
+						<Col>
+							{`$${getDisplayBalance(
+								market.supplied *
+									decimate(
+										prices[market.token],
+										36 - market.decimals,
+									).toNumber() -
+									market.totalBorrows *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber(),
+								0,
+								0,
+							)}`}
+						</Col>
+					</Row>
+				</StyledAccordionHeader>
+				<StyledAccordionBody>
+					<StatBlock
+						label="Debt Information"
+						stats={[
+							{
+								label: 'Total Debt',
+								value: `$${getDisplayBalance(
+									market.totalBorrows *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber(),
+									0,
+								)}`,
+							},
+							{
+								label: 'Your Debt',
+								value: `${borrowed.toFixed(4)} ${
+									market.underlyingSymbol
+								} | $${getDisplayBalance(
+									borrowed *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber(),
+									0,
+								)}`,
+							},
+							{
+								label: 'Debt Limit Remaining',
+								value: `$${getDisplayBalance(
+									accountLiquidity.usdBorrowable,
+									0,
+								)}`,
+							},
+							{
+								label: '% of Your Debt',
+								value: `${Math.floor(
+									((borrowed *
+										decimate(
+											prices[market.token],
+											36 - market.decimals,
+										).toNumber()) /
+										accountLiquidity.usdBorrow) *
+										100,
+								)}%`,
+							},
+						]}
+					/>
+					<MarketDetails asset={market} title="Market Details" />
+					<br />
+					<Row>
+						<Col>
+							<SubmitButton onClick={() => setShowBorrowModal(true)}>
+								Mint / Repay
+							</SubmitButton>
+						</Col>
+						<Col>
+							<SubmitButton
+								onClick={() => (window.location.href = `/market/${market.mid}`)}
+							>
+								Details
+							</SubmitButton>
+						</Col>
+					</Row>
+					<MarketBorrowModal
+						asset={market}
+						show={showBorrowModal}
+						onHide={() => setShowBorrowModal(false)}
+					/>
 				</StyledAccordionBody>
 			</StyledAccordionItem>
 		</Accordion>
@@ -413,15 +451,19 @@ type MarketListProps = {
 	markets: SupportedMarket[]
 }
 
+type MarketListHeaderProps = {
+	headers: string[]
+}
+
 type MarketListItemProps = {
 	market: SupportedMarket
-	accountBalances: Balance[]
-	accountMarkets: SupportedMarket[]
-	accountLiquidity: AccountLiquidity
-	supplyBalances: Balance[]
-	borrowBalances: Balance[]
-	exchangeRates: { [key: string]: BigNumber }
-	prices: { [key: string]: number }
+	accountBalances?: Balance[]
+	accountMarkets?: SupportedMarket[]
+	accountLiquidity?: AccountLiquidity
+	supplyBalances?: Balance[]
+	borrowBalances?: Balance[]
+	exchangeRates?: { [key: string]: BigNumber }
+	prices?: { [key: string]: number }
 }
 
 const StyledAccordionHeader = styled(Accordion.Header)`
@@ -446,10 +488,7 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
 			box-shadow: none;
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
-			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;
+			border-radius: 8px 8px 0 0;
 		}
 
 		&:not(.collapsed) {
@@ -493,20 +532,6 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			&:last-child {
 				margin-right: 25px;
 			}
-		}
-	}
-`
-
-const StyledCheck = styled(FormCheck)`
-	margin: 0;
-
-	> input {
-		margin: 0;
-		pointer-events: none;
-
-		&:focus {
-			outline: none;
-			box-shadow: none;
 		}
 	}
 `

@@ -163,9 +163,7 @@ export const ItemWrapper = styled.div`
 
 export const UserStatsContainer = styled.div`
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-bottom: 50px;
+  margin: 0 12px 50px;
 `
 
 export const UserStatsWrapper = styled.div`
@@ -180,15 +178,12 @@ export const UserStatsWrapper = styled.div`
 export const StatWrapper = styled.div`
   background-color: ${(props) => props.theme.color.primary[100]};
   margin: 0 1rem;
-  padding: 16px;
   border-radius: 8px;
   position: relative;
   flex: 1 1 0%;
   padding-inline-start: 1rem;
   padding-inline-end: 1rem;
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
-  border-radius: 8px;
+  padding: 1.25rem 16px;
 `
 
 export const UserStat = styled.div`

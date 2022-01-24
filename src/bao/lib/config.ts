@@ -100,6 +100,7 @@ export default {
       underlyingAddresses: {
         3: '0x0F051F3C818b495ef27AC46462188295F83469A5',
       },
+      isSynth: true,
       icon: '/PAI.png',
       coingeckoId: 'dai',
       decimals: 18,

@@ -46,12 +46,12 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       borrowRates,
       cashes,
       marketsInfo,
-      speeds, // UNUSED
       totalSupplies,
       exchangeRates,
       borrowState,
-      oraclePrices, // UNUSED,
       underlyingSymbols,
+      liquidationIncentive,
+      borrowRestricted,
     ]: any = await Promise.all([
       Promise.all(
         contracts.map((contract) =>
@@ -83,11 +83,6 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         ),
       ),
       Promise.all(
-        contracts.map((contract) =>
-          comptroller.methods.compSpeeds(contract.options.address).call(),
-        ),
-      ), // UNUSED
-      Promise.all(
         contracts.map((contract) => contract.methods.totalSupply().call()),
       ),
       Promise.all(
@@ -101,11 +96,6 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         ),
       ),
       Promise.all(
-        addresses.map((address: string) =>
-          oracle.methods.getUnderlyingPrice(address).call(),
-        ),
-      ), // UNUSED
-      Promise.all(
         addresses.map((address: string) => {
           const underlyingAddress = Config.markets.find(
             (market) => market.marketAddresses[Config.networkId] === address,
@@ -118,14 +108,14 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
                 .call()
         }),
       ),
+      comptroller.methods.liquidationIncentiveMantissa().call(),
+      Promise.all(
+        contracts.map((market) =>
+          comptroller.methods.borrowRestricted(market.options.address).call(),
+        ),
+      ),
     ])
 
-    /*
-    --UNUSED--
-    const prices = oraclePrices
-      .map((v: any) => decimate(v, new BigNumber(36).minus(18)) NOTE: Need to add config field for underlying asset's decimals. (UNDERLYING[addresses[i]].decimals)
-      .reduce((p: any, v: any, i: number) => ({...p, [addresses[i]]:v}), {})
-     */
     const supplyApys: number[] = supplyRates.map((rate: number) => toApy(rate))
     const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
@@ -133,7 +123,7 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
       const marketConfig = Config.markets.find(
         (market) =>
           market.marketAddresses[Config.networkId] === contract.options.address,
-      ) // contract.options.address !== ANCHOR_ETH ? UNDERLYING[address] : TOKENS.ETH
+      )
       return {
         token: contract.options.address,
         underlying: marketConfig.underlyingAddresses[Config.networkId],
@@ -141,12 +131,17 @@ export const useMarketsContext = (): SupportedMarket[] | undefined => {
         supplyApy: supplyApys[i],
         borrowApy: borrowApys[i],
         borrowable: borrowState[i][1] > 0,
-        liquidity: decimate(cashes[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
-        totalReserves: decimate(totalReserves[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
-        totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(), // NOTE - decimals from inverse UI: contracts[i].address === ANCHOR_WBTC ? 8 : 18
+        liquidity: decimate(cashes[i], 18 /* see note */).toNumber(),
+        totalReserves: decimate(totalReserves[i], 18 /* see note */).toNumber(),
+        totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(),
         collateralFactor: decimate(marketsInfo[i][1]).toNumber(),
         imfFactor: decimate(marketsInfo[i][2]).toNumber(),
         reserveFactor: decimate(reserveFactors[i]).toNumber(),
+        liquidationIncentive: decimate(liquidationIncentive)
+          .minus(1)
+          .times(100)
+          .toNumber(),
+        borrowRestricted: borrowRestricted[i],
         supplied: decimate(exchangeRates[i])
           .times(decimate(totalSupplies[i], marketConfig.decimals))
           .toNumber(),

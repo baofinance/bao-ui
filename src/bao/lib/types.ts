@@ -40,6 +40,7 @@ export interface SupportedMarket {
   underlyingAddresses: {
     [network: number]: string
   }
+  isSynth: boolean
   symbol: string
   underlyingSymbol?: string
   icon: string
@@ -58,6 +59,8 @@ export interface SupportedMarket {
   totalReserves?: number
   supplied?: number
   borrowable?: boolean
+  liquidationIncentive?: number
+  borrowRestricted?: boolean
 }
 
 export interface FarmableSupportedPool extends SupportedPool {

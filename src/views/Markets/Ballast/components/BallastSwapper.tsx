@@ -215,9 +215,10 @@ const SwapDirection = styled.a`
 	display: block;
 	margin-top: 1em;
 	color: ${(props) => props.theme.color.text[200]};
+	user-select: none;
 
-	> span {
-		background-color: ${(props) => props.theme.color.text[300]};
+	> span.badge {
+		background-color: ${(props) => props.theme.color.text[400]} !important;
 	}
 
 	&:hover {

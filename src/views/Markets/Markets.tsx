@@ -15,7 +15,7 @@ const Markets: React.FC = () => {
 	return (
 		<Switch>
 			<Page>
-				<PageHeader icon="" title="Markets" subtitle="Mint, Lend, Borrow" />
+				<PageHeader icon="" title="Markets" />
 				<Container>
 					<ConnectedCheck>
 						<Overview />
