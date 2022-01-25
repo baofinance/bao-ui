@@ -1007,7 +1007,13 @@
     },
     {
       "constant": false,
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "enterMarket",
+          "type": "bool"
+        }
+      ],
       "name": "mint",
       "outputs": [],
       "payable": true,

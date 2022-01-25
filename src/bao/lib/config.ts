@@ -17,7 +17,7 @@ export default {
     uniswapFactory: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     uniswapFactoryV2: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     lendingLogicKashi: '0xcBA495A74e23D5B42853e41334e26DDd322Af082',
-    bUSD: '0xDF559301C178221E8D76E4A91126C504Dfe5947a',
+    bUSD: '0x189a9E1f512054E03Df2C57C2813D4BfC1d3EE3B',
     WETH: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     DEAD: '0x000000000000000000000000000000000000dead',
   },
@@ -62,19 +62,19 @@ export default {
     // Hard Synths
     comptroller: {
       3: {
-        address: '0xb3ba973514f15724195a980e606F76C7f806a18A',
+        address: '0x4A0031e76932cb1a477af0CC8F3Cfd52eE74A0Ea',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
       3: {
-        address: '0xDb0cE7833bC25951F3B76119a1742101669C1861',
+        address: '0x65E4fde1770A884DB5Ac9fE38C49E94fb8bAbA6f',
         abi: 'marketOracle.json',
       },
     },
     stabilizer: {
       3: {
-        address: '0xcA94c91D6061f1CB5a268512528AA4e31fFA39CF',
+        address: '0xF096450EB75f220ED59c89f9aBe691c58d15a97E',
         abi: 'stabilizer.json',
       },
     },
@@ -95,10 +95,10 @@ export default {
       mid: 1,
       symbol: 'bUSD',
       marketAddresses: {
-        3: '0xeA4447ede0d5730EEA1DE32E9F2C108901603a2a',
+        3: '0xc92A2087bc8c53784Fb14d5a2c946bd1f3aba0fD',
       },
       underlyingAddresses: {
-        3: '0x6B51a15C86B5B8000E0417E17AE40A574EcBB4bD',
+        3: '0x189a9E1f512054E03Df2C57C2813D4BfC1d3EE3B',
       },
       isSynth: true,
       icon: '/bUSD.png',
@@ -109,7 +109,7 @@ export default {
       mid: 2,
       symbol: 'bETH',
       marketAddresses: {
-        3: '0xE49b6bcEb3c022E69b2ce2c7341795796c7cB560',
+        3: '0xa9574a223aa74fB0BDDe9A80F26dA5B5ae0fDf0b',
       },
       underlyingAddresses: {
         3: 'ETH',
@@ -122,10 +122,10 @@ export default {
       mid: 3,
       symbol: 'bUSDC',
       marketAddresses: {
-        3: '0x101dF9FF43cEcfc4158e8aCCCf4C094da375dcaA',
+        3: '0x2ae4407F613D3204805f929E8e0C17D875A74Fdd',
       },
       underlyingAddresses: {
-        3: '0x158EaaF4D1114Af4409E6FA56378367fD58C2fd0',
+        3: '0x71B45f9832eb23cbE5Fc581aE4634c49f7200728',
       },
       icon: '/USDC.png',
       coingeckoId: 'usd-coin',
