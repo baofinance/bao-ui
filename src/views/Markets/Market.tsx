@@ -9,6 +9,7 @@ import {
 } from '../../hooks/hard-synths/useBalances'
 import useBao from '../../hooks/useBao'
 import { useMarketPrices } from '../../hooks/hard-synths/usePrices'
+import { useExchangeRates } from '../../hooks/hard-synths/useExchangeRates'
 import { SpinnerLoader } from '../../components/Loader'
 import { SubmitButton } from './components/MarketButton'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
@@ -25,6 +26,7 @@ const Market = () => {
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
+	const { exchangeRates } = useExchangeRates()
 	const { prices } = useMarketPrices()
 	const bao = useBao()
 
@@ -45,12 +47,14 @@ const Market = () => {
 	}, [activeMarket])
 
 	const supplied = useMemo(() => {
-		if (!(activeMarket && supplyBalances)) return
-		return supplyBalances.find(
-			(balance) =>
-				balance.address.toLowerCase() === activeMarket.token.toLowerCase(),
-		).balance
-	}, [activeMarket, supplyBalances])
+		if (!(activeMarket && supplyBalances && exchangeRates)) return
+		return (
+			supplyBalances.find(
+				(balance) =>
+					balance.address.toLowerCase() === activeMarket.token.toLowerCase(),
+			).balance * decimate(exchangeRates[activeMarket.token]).toNumber()
+		)
+	}, [activeMarket, supplyBalances, exchangeRates])
 
 	const totalSuppliedUSD = useMemo(() => {
 		if (!(activeMarket && prices)) return
