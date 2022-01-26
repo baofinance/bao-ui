@@ -1,84 +1,93 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
+import Config from '../../src/bao/lib/config'
 import BigNumber from 'bignumber.js'
-import _ from 'lodash'
 
-const SUSHI_SUBGRAPH_URLS = {
-  matic: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange',
-  mainnet: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange',
-}
+// TODO- Move Apollo Clients to provider so that the chain can be switched
+const clients: any = Object.keys(Config.subgraphs).reduce((prev, current) => {
+  const _clients = Object.keys(Config.subgraphs[current]).reduce(
+    (_prev, _current: string) => {
+      return {
+        ..._prev,
+        [_current]: {
+          client: new ApolloClient({
+            uri: Config.subgraphs[current][parseInt(_current)],
+            cache: new InMemoryCache(),
+          }),
+        },
+      }
+    },
+    {},
+  )
+  return {
+    ...prev,
+    [current]: {
+      ..._clients,
+    },
+  }
+}, {})
 
-// TODO- Move Apollo Clients to provider
-const clients = {
-  matic: new ApolloClient({
-    uri: SUSHI_SUBGRAPH_URLS.matic,
-    cache: new InMemoryCache(),
-  }),
-  maticPollyBurn: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn',
-    cache: new InMemoryCache(),
-  }),
-  mainnet: new ApolloClient({
-    uri: SUSHI_SUBGRAPH_URLS.mainnet,
-    cache: new InMemoryCache(),
-  }),
-}
-
-const _getClient = (network: string) =>
-  network.toLowerCase() === 'matic' ? clients.matic : clients.mainnet
+const _getClient = (clientName: string, network: number) =>
+  clients[clientName][network].client
 
 const _querySubgraph = (
   query: string,
-  network = 'matic',
+  clientName = 'sushiExchange',
+  networkId = Config.networkId,
   _client?: ApolloClient<any>,
 ) => {
-  const client = _client || _getClient(network)
+  const client = _client || _getClient(clientName, networkId)
   return new Promise((resolve, reject) => {
     client
       .query({
         query: gql(query),
       })
-      .then(({ data }) => resolve(data))
-      .catch((err) => reject(err))
+      .then(({ data }: any) => resolve(data))
+      .catch((err: any) => reject(err))
   })
 }
 
 const getPriceHistoryMultiple = async (
   tokenAddresses: string[],
-  network = 'matic',
+  networkId = 1,
   first?: number,
 ): Promise<any> =>
   await _querySubgraph(
     _getPriceHistoryQueryMultiple(tokenAddresses, first),
-    network,
+    'sushiExchange',
+    networkId,
   )
 
 const getPriceHistory = async (
   tokenAddress: string,
-  network = 'matic',
+  networkId = 1,
 ): Promise<any> =>
-  await _querySubgraph(_getPriceHistoryQuery(tokenAddress), network)
+  await _querySubgraph(
+    _getPriceHistoryQuery(tokenAddress),
+    'sushiExchange',
+    networkId,
+  )
 
 // This is janky, will remove once the sushi subgraph syncs USD prices for most of our tokens
 const getPriceFromPair = async (
   wethPrice: BigNumber,
   tokenAddress: string,
-  network = 'matic',
+  networkId = 1,
 ) => {
   const data: any = await _querySubgraph(
     _getPriceFromPair(tokenAddress.toLowerCase()),
-    network,
+    'sushiExchange',
+    networkId,
   )
   if (!data.token) return
 
-  const quotePair: any = _.find(
-    data.token.basePairs.concat(data.token.quotePairs),
-    (pair: any) => {
+  const quotePair: any = data.token.basePairs
+    .concat(data.token.quotePairs)
+    .find((pair: any) => {
       return (
         pair.token0.symbol.toLowerCase().includes('eth') ||
         pair.token1.symbol.toLowerCase().includes('eth')
       )
-    },
-  )
+    })
   if (!quotePair) return
 
   const wethPerToken = quotePair.token0.symbol.toLowerCase().includes('eth')
@@ -91,27 +100,27 @@ const getPriceFromPair = async (
 const getPriceFromPairMultiple = async (
   wethPrice: BigNumber,
   tokenAddresses: string[],
-  network = 'matic',
+  networkId = 1,
 ): Promise<Array<{ address: string; price: BigNumber }>> => {
   const data: any = await _querySubgraph(
     _getPriceFromPairMultiple(
       tokenAddresses.map((tokenAddress) => tokenAddress.toLowerCase()),
     ),
-    network,
+    'sushiExchange',
+    networkId,
   )
   if (!data.tokens) return
 
   const prices: any[] = []
   data.tokens.forEach((token: any) => {
-    const quotePair: any = _.find(
-      token.basePairs.concat(token.quotePairs),
-      (pair: any) => {
+    const quotePair: any = token.basePairs
+      .concat(token.quotePairs)
+      .find((pair: any) => {
         return (
           pair.token0.symbol.toLowerCase().includes('eth') ||
           pair.token1.symbol.toLowerCase().includes('eth')
         )
-      },
-    )
+      })
     if (!quotePair) return
 
     const wethPerToken = quotePair.token0.symbol.toLowerCase().includes('eth')
@@ -128,29 +137,35 @@ const getPriceFromPairMultiple = async (
 
 const getPrice = async (
   tokenAddress: string,
-  network = 'matic',
+  networkId = 1,
 ): Promise<BigNumber> => {
-  const data: any = await getPriceHistory(tokenAddress, network)
+  const data: any = await getPriceHistory(tokenAddress, networkId)
   return data.tokens[0] && new BigNumber(data.tokens[0].dayData[0].priceUSD)
 }
 
 const getPollyBurned = async (): Promise<any> => {
-  const data: any = await _querySubgraph(
-    _getPollyBurnQuery(),
-    'matic',
-    clients.maticPollyBurn,
-  )
+  const data: any = await _querySubgraph(_getPollyBurnQuery(), 'pollyBurn', 137)
   return data.burn
 }
 
 const getPollySupply = async (): Promise<number> => {
   const data: any = await _querySubgraph(
     _getPollySupplyQuery(),
-    'matic',
-    clients.maticPollyBurn,
+    'pollyBurn',
+    137,
   )
   return data.tokenStats.supply
 }
+
+const getMarketInfo = async (tokenAddress: string): Promise<any> =>
+  await _querySubgraph(
+    _getMarketQuery(tokenAddress),
+    'baoMarkets',
+    Config.networkId,
+  )
+
+const getMarketsInfo = async (): Promise<any> =>
+  await _querySubgraph(_getMarketsQuery(), 'baoMarkets', Config.networkId)
 
 const _getPriceHistoryQuery = (tokenAddress: string) =>
   `
@@ -189,8 +204,7 @@ const _getPriceFromPair = (tokenAddress: string) =>
   `
   {
     token(id:"${tokenAddress}"){
-      ${_.map(
-        ['basePairs', 'quotePairs'],
+      ${['basePairs', 'quotePairs'].map(
         (prefix) => `
           ${prefix} {
             token0 {
@@ -215,8 +229,7 @@ const _getPriceFromPairMultiple = (tokenAddresses: string[]) => {
       .map((address) => `"${address}"`)
       .join(',')}]}){
       id,
-      ${_.map(
-        ['basePairs', 'quotePairs'],
+      ${['basePairs', 'quotePairs'].map(
         (prefix) => `
           ${prefix} {
             token0 {
@@ -254,6 +267,56 @@ const _getPollySupplyQuery = () =>
   }
   `
 
+const _getMarketQuery = (tokenAddress: string) =>
+  `
+  {
+    market(id:"${tokenAddress.toLowerCase()}"){
+      cash,
+      symbol,
+      collateralFactor,
+      exchangeRate,
+      interestRateModelAddress,
+      borrowRate,
+      supplyRate,
+      numberOfBorrowers,
+      numberOfSuppliers,
+      totalBorrows,
+      totalSupply,
+      reserves,
+      underlyingSymbol,
+      accrualBlockNumber,
+      reserveFactor,
+      underlyingPriceUSD,
+      underlyingDecimals
+    }
+  }
+  `
+
+const _getMarketsQuery = () =>
+  `
+  {
+    markets {
+      cash,
+      symbol,
+      collateralFactor,
+      exchangeRate,
+      interestRateModelAddress,
+      borrowRate,
+      supplyRate,
+      numberOfBorrowers,
+      numberOfSuppliers,
+      totalBorrows,
+      totalSupply,
+      reserves,
+      underlyingSymbol,
+      accrualBlockNumber,
+      reserveFactor,
+      underlyingPriceUSD,
+      underlyingDecimals
+    }
+  }
+  `
+
 export default {
   getPriceHistory,
   getPriceHistoryMultiple,
@@ -262,4 +325,6 @@ export default {
   getPrice,
   getPollyBurned,
   getPollySupply,
+  getMarketInfo,
+  getMarketsInfo,
 }

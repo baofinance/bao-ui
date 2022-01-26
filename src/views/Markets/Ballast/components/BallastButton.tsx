@@ -75,9 +75,6 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 				ballastContract.methods
 					.buy(
 						exponentiate(inputVal)
-							.times(
-								new BigNumber(1).minus(fees['buy'].div(fees['denominator'])),
-							)
 							.toString(),
 					)
 					.send({ from: account }),
@@ -120,11 +117,6 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			pendingTx ||
 			new BigNumber(inputVal).isNaN() ||
 			new BigNumber(inputVal)
-				.times(
-					new BigNumber(1).plus(
-						fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']),
-					),
-				)
 				.gt(maxValues[swapDirection ? 'sell' : 'buy']) ||
 			(swapDirection && new BigNumber(inputVal).gt(decimate(reserves))) ||
 			(!swapDirection && new BigNumber(inputVal).gt(decimate(supplyCap))),

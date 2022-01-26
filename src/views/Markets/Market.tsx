@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Config from '../../bao/lib/config'
+import GraphUtil from '../../utils/graph'
 import { useParams } from 'react-router-dom'
 import { useMarkets } from '../../hooks/hard-synths/useMarkets'
 import {
@@ -8,6 +9,7 @@ import {
 } from '../../hooks/hard-synths/useBalances'
 import useBao from '../../hooks/useBao'
 import { useMarketPrices } from '../../hooks/hard-synths/usePrices'
+import { useExchangeRates } from '../../hooks/hard-synths/useExchangeRates'
 import { SpinnerLoader } from '../../components/Loader'
 import { SubmitButton } from './components/MarketButton'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
@@ -24,21 +26,35 @@ const Market = () => {
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
+	const { exchangeRates } = useExchangeRates()
 	const { prices } = useMarketPrices()
 	const bao = useBao()
+
+	const [marketInfo, setMarketInfo] = useState<any | undefined>()
 
 	const activeMarket = useMemo(() => {
 		if (!markets) return undefined
 		return markets.find((market) => market.mid === parseFloat(id))
 	}, [markets])
 
+	// TODO- Use subgraph info
+	useEffect(() => {
+		if (!activeMarket) return
+
+		GraphUtil.getMarketInfo(activeMarket.token).then((_marketInfo) =>
+			setMarketInfo(_marketInfo.market),
+		)
+	}, [activeMarket])
+
 	const supplied = useMemo(() => {
-		if (!(activeMarket && supplyBalances)) return
-		return supplyBalances.find(
-			(balance) =>
-				balance.address.toLowerCase() === activeMarket.token.toLowerCase(),
-		).balance
-	}, [activeMarket, supplyBalances])
+		if (!(activeMarket && supplyBalances && exchangeRates)) return
+		return (
+			supplyBalances.find(
+				(balance) =>
+					balance.address.toLowerCase() === activeMarket.token.toLowerCase(),
+			).balance * decimate(exchangeRates[activeMarket.token]).toNumber()
+		)
+	}, [activeMarket, supplyBalances, exchangeRates])
 
 	const totalSuppliedUSD = useMemo(() => {
 		if (!(activeMarket && prices)) return
@@ -137,37 +153,61 @@ const Market = () => {
 			<Row>
 				<InfoCol
 					title="Your Supply"
-					content={`${supplied ? supplied.toFixed(4) : '0'} ${
-						activeMarket.underlyingSymbol
-					} | $${
-						supplied
-							? getDisplayBalance(
-									supplied *
-										decimate(
-											prices[activeMarket.token],
-											36 - activeMarket.decimals,
-										).toNumber(),
-									0,
-							  )
-							: '0'
-					}`}
+					content={
+						<Tooltipped
+							content={`$${
+								supplied
+									? getDisplayBalance(
+											supplied *
+												decimate(
+													prices[activeMarket.token],
+													36 - activeMarket.decimals,
+												).toNumber(),
+											0,
+									  )
+									: '0'
+							}`}
+						>
+							<a>
+								<FontAwesomeIcon icon="level-down-alt" />{' '}
+								{supplied ? supplied.toFixed(4) : '0'}{' '}
+								{activeMarket.underlyingSymbol}
+							</a>
+						</Tooltipped>
+					}
 				/>
 				<InfoCol
 					title="Your Debt"
-					content={`${borrowed ? borrowed.toFixed(4) : '0'} ${
-						activeMarket.underlyingSymbol
-					} | $${
-						borrowed
-							? getDisplayBalance(
-									borrowed *
-										decimate(
-											prices[activeMarket.token],
-											36 - activeMarket.decimals,
-										).toNumber(),
-									0,
-							  )
-							: '0'
-					}`}
+					content={
+						<Tooltipped
+							content={`$${
+								borrowed
+									? getDisplayBalance(
+											borrowed *
+												decimate(
+													prices[activeMarket.token],
+													36 - activeMarket.decimals,
+												).toNumber(),
+											0,
+									  )
+									: '0'
+							}`}
+						>
+							<a>
+								<FontAwesomeIcon icon="level-down-alt" />{' '}
+								{borrowed ? borrowed.toFixed(4) : '0'}{' '}
+								{activeMarket.underlyingSymbol}
+							</a>
+						</Tooltipped>
+					}
+				/>
+				<InfoCol
+					title="Number of Suppliers"
+					content={marketInfo && marketInfo.numberOfSuppliers}
+				/>
+				<InfoCol
+					title="Number of Borrowers"
+					content={marketInfo && marketInfo.numberOfBorrowers}
 				/>
 			</Row>
 			<br />
@@ -196,7 +236,7 @@ const Market = () => {
 										{
 											label: 'Liquidation Incentive',
 											value: `${activeMarket.liquidationIncentive}%`,
-										}, 
+										},
 										{
 											label: 'Borrow Restricted?',
 											value: `${activeMarket.borrowRestricted ? 'Yes' : 'No'}`,
@@ -303,7 +343,7 @@ const InfoContainer = styled.div`
 	border-radius: 12px;
 	padding: 25px 50px;
 	font-size: 14px;
-	color: #d3d3d3;
+	color: ${(props) => props.theme.color.text[200]};
 
 	> p {
 		color: ${(props) => props.theme.color.text[100]};

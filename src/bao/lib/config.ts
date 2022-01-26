@@ -17,7 +17,7 @@ export default {
     uniswapFactory: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     uniswapFactoryV2: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     lendingLogicKashi: '0xcBA495A74e23D5B42853e41334e26DDd322Af082',
-    bUSD: '0xDF559301C178221E8D76E4A91126C504Dfe5947a',
+    bUSD: '0x189a9E1f512054E03Df2C57C2813D4BfC1d3EE3B',
     WETH: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     DEAD: '0x000000000000000000000000000000000000dead',
   },
@@ -62,46 +62,47 @@ export default {
     // Hard Synths
     comptroller: {
       3: {
-        address: '0xbF2d7626a66aad910173fB43Ffd738A0F82C7f33',
+        address: '0x4A0031e76932cb1a477af0CC8F3Cfd52eE74A0Ea',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
       3: {
-        address: '0x48E1654a7F4deB1cd3d9817D44cAebB7f1404f06',
+        address: '0x65E4fde1770A884DB5Ac9fE38C49E94fb8bAbA6f',
         abi: 'marketOracle.json',
       },
     },
     stabilizer: {
       3: {
-        address: '0x89BA107c0a767A6eB317F6b1a715A45D05014eB6',
+        address: '0xF096450EB75f220ED59c89f9aBe691c58d15a97E',
         abi: 'stabilizer.json',
       },
     },
   },
   subgraphs: {
-    3: {
-      sushiExchange:
-        'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange',
-      pollyBurn: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn',
+    sushiExchange: {
+      3: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange',
+      1: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     },
-    1: {
-      sushiExchange:
-        'https://api.thegraph.com/subgraphs/name/sushiswap/exchange',
+    pollyBurn: {
+      137: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn'
     },
+    baoMarkets: {
+      3: 'https://api.thegraph.com/subgraphs/name/clabby/bao-markets-ropsten-subgraph'
+    }
   },
   markets: [
     {
       mid: 1,
       symbol: 'bUSD',
       marketAddresses: {
-        3: '0x63793577FC659243Df8fF731089FBe60d2A36A0d',
+        3: '0xc92A2087bc8c53784Fb14d5a2c946bd1f3aba0fD',
       },
       underlyingAddresses: {
-        3: '0x0F051F3C818b495ef27AC46462188295F83469A5',
+        3: '0x189a9E1f512054E03Df2C57C2813D4BfC1d3EE3B',
       },
       isSynth: true,
-      icon: '/PAI.png',
+      icon: '/bUSD.png',
       coingeckoId: 'dai',
       decimals: 18,
     },
@@ -109,7 +110,7 @@ export default {
       mid: 2,
       symbol: 'bETH',
       marketAddresses: {
-        3: '0x895952c8290bf311B4848dE954F1A747Bf97809f',
+        3: '0xa9574a223aa74fB0BDDe9A80F26dA5B5ae0fDf0b',
       },
       underlyingAddresses: {
         3: 'ETH',
@@ -122,13 +123,13 @@ export default {
       mid: 3,
       symbol: 'bUSDC',
       marketAddresses: {
-        3: '0xfA3545f9Cca55088B30223bc86BE1AEe0F86eE62',
+        3: '0x2ae4407F613D3204805f929E8e0C17D875A74Fdd',
       },
       underlyingAddresses: {
-        3: '0x48C1be647204eb97BC5C6914e5D60E7A7b7b398B',
+        3: '0x71B45f9832eb23cbE5Fc581aE4634c49f7200728',
       },
       icon: '/USDC.png',
-      coingeckoId: 'polygon',
+      coingeckoId: 'usd-coin',
       decimals: 6,
     },
   ],

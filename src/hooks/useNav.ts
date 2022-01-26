@@ -19,12 +19,12 @@ const useNav = (composition: Array<BasketComponent>, supply: BigNumber) => {
     const mainnetAddresses = composition.map(
       (component: BasketComponent) => MAINNET_ADDRESS_MAP[component.address],
     )
-    GraphUtil.getPriceHistoryMultiple(mainnetAddresses, 'mainnet', 1).then(
+    GraphUtil.getPriceHistoryMultiple(mainnetAddresses, 1, 1).then(
       async (_mainnetPrices: any) => {
         const mainnetPrices = JSON.parse(JSON.stringify(_mainnetPrices)) // Create mutable copy
         const wethPrice = await GraphUtil.getPrice(
           MAINNET_ADDRESS_MAP[Config.addressMap.WETH],
-          'mainnet',
+          1,
         )
         // Check for special case low liquidity pairs
         for (let i = 0; i < mainnetPrices.tokens.length; i++) {
@@ -35,20 +35,25 @@ const useNav = (composition: Array<BasketComponent>, supply: BigNumber) => {
           // RAI Liquidity on SUSHI mainnet is very low, causing a skew in mainnet NAV
           // comparison. This can be removed once RAI has a large enough pool on SUSHI's
           // mainnet exchange.
-          if (mainnetPrices.tokens[i].id === MAINNET_ADDRESS_MAP[Config.addressMap.RAI]) {
+          if (
+            mainnetPrices.tokens[i].id ===
+            MAINNET_ADDRESS_MAP[Config.addressMap.RAI]
+          ) {
             const raiOracle = bao.getNewContract(
               'chainoracle.json',
-              '0x7f45273fD7C644714825345670414Ea649b50b16'
+              '0x7f45273fD7C644714825345670414Ea649b50b16',
             )
             const raiPrice = await raiOracle.methods.latestRoundData().call()
-            mainnetPrices.tokens[i].dayData[0].priceUSD =
-              decimate(raiPrice.answer, 8).toString()
+            mainnetPrices.tokens[i].dayData[0].priceUSD = decimate(
+              raiPrice.answer,
+              8,
+            ).toString()
           } else if (parseFloat(priceInfo.dayData[0].priceUSD) <= 0) {
             mainnetPrices.tokens[i].dayData[0].priceUSD = (
               await GraphUtil.getPriceFromPair(
                 wethPrice,
                 priceInfo.id,
-                'mainnet',
+                1,
               )
             ).toString()
           }

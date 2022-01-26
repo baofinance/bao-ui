@@ -92,11 +92,6 @@ const BallastSwapper: React.FC = () => {
 				onMaxClick={() =>
 					setInputVal(
 						decimate(daiBalance)
-							.times(
-								new BigNumber(1).minus(
-									fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']),
-								),
-							)
 							.toString(),
 					)
 				}
@@ -134,11 +129,6 @@ const BallastSwapper: React.FC = () => {
 				onMaxClick={() =>
 					setInputVal(
 						decimate(bUSDBalance)
-							.times(
-								new BigNumber(1).minus(
-									fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']),
-								),
-							)
 							.toString(),
 					)
 				}

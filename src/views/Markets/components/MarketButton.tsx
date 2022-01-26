@@ -94,11 +94,11 @@ export const MarketButton = ({
 									let mintTx
 									if (asset.underlying === 'ETH')
 										mintTx = marketContract.methods
-											.mint()
+											.mint(true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 											.send({ from: account, value: val.toString() })
 									else
 										mintTx = marketContract.methods
-											.mint(val.toString())
+											.mint(val.toString(), true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 											.send({ from: account })
 									handleTx(
 										mintTx,

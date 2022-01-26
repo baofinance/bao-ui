@@ -4,7 +4,6 @@ import { IndexType } from 'contexts/Baskets/types'
 import useBaskets from 'hooks/useBaskets'
 import React from 'react'
 import 'react-tabs/style/react-tabs.css'
-import { useWallet } from 'use-wallet'
 import BasketListItem from './BasketListItem'
 import {
 	ListLabelCol,
@@ -16,7 +15,6 @@ import {
 
 const BasketList: React.FC = () => {
 	const [baskets] = useBaskets()
-	const { account } = useWallet()
 
 	const indexes: { [key: string]: Basket[] } = {
 		[IndexType.baskets]: [],
