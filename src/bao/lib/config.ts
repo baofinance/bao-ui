@@ -80,15 +80,16 @@ export default {
     },
   },
   subgraphs: {
-    3: {
-      sushiExchange:
-        'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange',
-      pollyBurn: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn',
+    sushiExchange: {
+      3: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange',
+      1: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     },
-    1: {
-      sushiExchange:
-        'https://api.thegraph.com/subgraphs/name/sushiswap/exchange',
+    pollyBurn: {
+      137: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn'
     },
+    baoMarkets: {
+      3: 'https://api.thegraph.com/subgraphs/name/clabby/bao-markets-ropsten-subgraph'
+    }
   },
   markets: [
     {

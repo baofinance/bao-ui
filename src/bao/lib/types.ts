@@ -109,8 +109,8 @@ export interface ContractsConfig {
 }
 
 export interface SubgraphConfig {
-  [networkId: number]: {
-    [name: string]: string
+  [subgraphName: string]: {
+    [networkId: number]: string
   }
 }
 

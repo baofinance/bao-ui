@@ -19,12 +19,12 @@ const useNav = (composition: Array<BasketComponent>, supply: BigNumber) => {
     const mainnetAddresses = composition.map(
       (component: BasketComponent) => MAINNET_ADDRESS_MAP[component.address],
     )
-    GraphUtil.getPriceHistoryMultiple(mainnetAddresses, 'mainnetSushi', 1).then(
+    GraphUtil.getPriceHistoryMultiple(mainnetAddresses, 1, 1).then(
       async (_mainnetPrices: any) => {
         const mainnetPrices = JSON.parse(JSON.stringify(_mainnetPrices)) // Create mutable copy
         const wethPrice = await GraphUtil.getPrice(
           MAINNET_ADDRESS_MAP[Config.addressMap.WETH],
-          'mainnetSushi',
+          1,
         )
         // Check for special case low liquidity pairs
         for (let i = 0; i < mainnetPrices.tokens.length; i++) {
@@ -53,7 +53,7 @@ const useNav = (composition: Array<BasketComponent>, supply: BigNumber) => {
               await GraphUtil.getPriceFromPair(
                 wethPrice,
                 priceInfo.id,
-                'mainnetSushi',
+                1,
               )
             ).toString()
           }
