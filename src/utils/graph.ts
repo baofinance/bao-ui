@@ -23,7 +23,7 @@ const clients = {
     cache: new InMemoryCache(),
   }),
   markets: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/totalpizza/dev-hard-synths',
+    uri: 'https://api.thegraph.com/subgraphs/name/clabby/bao-markets-ropsten-subgraph',
     cache: new InMemoryCache(),
   }),
 }
