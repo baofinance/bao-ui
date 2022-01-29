@@ -99,7 +99,7 @@ export default {
         3: '0xfD4cDC5129Dd794E26FD3764C8f2075EE13B9A53',
       },
       underlyingAddresses: {
-        3: '0x4ab319ae3ef47479c229fe742463b9b2cf1c7647',
+        3: '0x4aB319aE3EF47479C229fE742463B9b2Cf1c7647',
       },
       isSynth: true,
       icon: '/bUSD.png',
@@ -126,7 +126,7 @@ export default {
         3: '0xCaAd85c5a9f31c679742ea6f8654c3B53b4c6d7D',
       },
       underlyingAddresses: {
-        3: '0x1c648c939578a4da0d7fb2384ddb3fce9439d28d',
+        3: '0x1c648C939578a4da0D7Fb2384DdB3FcE9439D28d',
       },
       icon: '/USDC.png',
       coingeckoId: 'usd-coin',
