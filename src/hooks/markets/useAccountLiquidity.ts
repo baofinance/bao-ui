@@ -77,7 +77,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
           .balance *
           decimate(exchangeRates[marketAddress]).toNumber() *
           prices[marketAddress] *
-          (supplyApy || 1),
+          supplyApy,
       0,
     )
 
@@ -87,7 +87,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
         borrowBalances.find((balance) => balance.address === marketAddress)
           .balance *
           prices[marketAddress] *
-          (supplyApy || 1),
+          supplyApy,
       0,
     )
 
