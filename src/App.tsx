@@ -10,7 +10,7 @@ import MarketsProvider from './contexts/Markets'
 import TransactionProvider from './contexts/Transactions'
 import Markets from './views/Markets'
 import Market from 'views/Markets/Market'
-import Ballast from './views/Markets/Ballast'
+import Ballast from './views/Ballast'
 import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
 import theme from './theme'
@@ -24,14 +24,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 library.add(fas, fab)
-
-const url = new URL(window.location.toString())
-if (url.searchParams.has('ref')) {
-	document.querySelectorAll('a[href]').forEach((el) => {
-		const attrUrl = new URL(el.getAttribute('href'))
-		attrUrl.searchParams.set('ref', url.searchParams.get('ref'))
-	})
-}
 
 const App: React.FC = () => {
 	const [mobileMenu, setMobileMenu] = useState(false)
@@ -77,12 +69,6 @@ const App: React.FC = () => {
 					<Route path="/ballast">
 						<Ballast />
 					</Route>
-					{/* <Route path="/Baskets">
-						<Baskets />
-					</Route> */}
-					{/* <Route path="/Farms">
-						<Farms />
-					</Route> */}
 				</Switch>
 			</Router>
 		</Providers>
@@ -106,10 +92,8 @@ const Providers: React.FC<ProvidersProps> = ({
 				}}
 			>
 				<BaoProvider>
-					{/* <BasketsProvider> */}
 					<MarketsProvider>
 						<TransactionProvider>
-							{/* <FarmsProvider> */}
 							<SWRConfig
 								value={{
 									fetcher,
@@ -118,10 +102,8 @@ const Providers: React.FC<ProvidersProps> = ({
 							>
 								<ModalsProvider>{children}</ModalsProvider>
 							</SWRConfig>
-							{/* </FarmsProvider> */}
 						</TransactionProvider>
 					</MarketsProvider>
-					{/* </BasketsProvider> */}
 				</BaoProvider>
 			</UseWalletProvider>
 		</ThemeProvider>

@@ -1,5 +1,5 @@
-import { SupportedMarket } from '../../bao/lib/types'
+import { ActiveSupportedMarket } from '../../bao/lib/types'
 
 export interface MarketsContext {
-  markets: SupportedMarket[]
+  markets: ActiveSupportedMarket[]
 }

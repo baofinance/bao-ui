@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
-import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
+import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
 	useSupplyBalances,
-} from 'hooks/hard-synths/useBalances'
-import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
-import { useMarketPrices } from 'hooks/hard-synths/usePrices'
+} from 'hooks/markets/useBalances'
+import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import { MarketOperations } from './Modals'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
-import { SupportedMarket } from 'bao/lib/types'
+import { ActiveSupportedMarket } from 'bao/lib/types'
 import styled from 'styled-components'
 
 type Stat = {
@@ -25,12 +24,12 @@ type StatBlockProps = {
 
 type MarketStatBlockProps = {
 	title?: string
-	asset: SupportedMarket
+	asset: ActiveSupportedMarket
 	amount?: number
 }
 
 type MarketStatProps = {
-	asset: SupportedMarket
+	asset: ActiveSupportedMarket
 	amount: string
 	operation: MarketOperations
 }
@@ -54,7 +53,6 @@ export const StatBlock = ({ label, stats }: StatBlockProps) => (
 const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalances = useSupplyBalances()
 	const balances = useAccountBalances()
-	const { prices } = useMarketPrices()
 	const { exchangeRates } = useExchangeRates()
 
 	const supplyBalance = useMemo(
@@ -62,44 +60,42 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 			supplyBalances &&
 			supplyBalances.find(
 				(balance) =>
-					balance.address.toLowerCase() === asset.token.toLowerCase(),
+					balance.address.toLowerCase() === asset.marketAddress.toLowerCase(),
 			) &&
 			exchangeRates &&
-			exchangeRates[asset.token]
+			exchangeRates[asset.marketAddress]
 				? supplyBalances.find(
 						(balance) =>
-							balance.address.toLowerCase() === asset.token.toLowerCase(),
-				  ).balance * decimate(exchangeRates[asset.token]).toNumber()
+							balance.address.toLowerCase() ===
+							asset.marketAddress.toLowerCase(),
+				  ).balance * decimate(exchangeRates[asset.marketAddress]).toNumber()
 				: 0,
 		[supplyBalances, exchangeRates],
 	)
 	const walletBalance = useMemo(
 		() =>
 			balances &&
-			balances.find((_balance) => _balance.address === asset.underlying)
-				? balances.find((_balance) => _balance.address === asset.underlying)
-						.balance
+			balances.find((_balance) => _balance.address === asset.underlyingAddress)
+				? balances.find(
+						(_balance) => _balance.address === asset.underlyingAddress,
+				  ).balance
 				: 0,
 		[balances],
 	)
 	const supplyBalanceUsd = useMemo(() => {
-		if (!(supplyBalance && prices)) return
+		if (!(supplyBalance)) return
 		return getDisplayBalance(
-			decimate(prices[asset.token], 36 - asset.decimals)
-				.times(supplyBalance)
-				.toFixed(2),
-			0
-		)
-	}, [supplyBalance, prices])
-	const walletBalanceUsd = useMemo(() => {
-		if (!(walletBalance && prices)) return
-		return getDisplayBalance(
-			decimate(prices[asset.token], 36 - asset.decimals)
-				.times(walletBalance)
-				.toFixed(2),
+			new BigNumber(asset.price).times(supplyBalance).toFixed(2),
 			0,
 		)
-	}, [walletBalance, prices])
+	}, [supplyBalance])
+	const walletBalanceUsd = useMemo(() => {
+		if (!(walletBalance)) return
+		return getDisplayBalance(
+			new BigNumber(asset.price).times(walletBalance).toFixed(2),
+			0,
+		)
+	}, [walletBalance])
 
 	return (
 		<StatBlock
@@ -127,17 +123,9 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 }
 
 export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
-	const { prices } = useMarketPrices()
 	const totalReservesUsd =
-		prices && asset.totalReserves
-			? `$${getDisplayBalance(
-					asset.totalReserves *
-						decimate(
-							prices[asset.token],
-							new BigNumber(36).minus(asset.decimals),
-						).toNumber(),
-					0,
-			  )}`
+		asset.totalReserves
+			? `$${getDisplayBalance(asset.totalReserves * asset.price, 0)}`
 			: '-'
 	const reserveFactor = asset.reserveFactor
 		? `${asset.reserveFactor * 100}%`
@@ -171,16 +159,15 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 const MintDetails = ({ asset }: MarketStatBlockProps) => {
 	const borrowBalances = useBorrowBalances()
 	const balances = useAccountBalances()
-	const { prices } = useMarketPrices()
 
 	const borrowBalance = useMemo(
 		() =>
 			borrowBalances &&
 			borrowBalances.find(
-				(_borrowBalance) => _borrowBalance.address === asset.token,
+				(_borrowBalance) => _borrowBalance.address === asset.marketAddress,
 			)
 				? borrowBalances.find(
-						(_borrowBalance) => _borrowBalance.address === asset.token,
+						(_borrowBalance) => _borrowBalance.address === asset.marketAddress,
 				  ).balance
 				: 0,
 		[borrowBalances],
@@ -188,21 +175,20 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 	const walletBalance = useMemo(
 		() =>
 			balances &&
-			balances.find((_balance) => _balance.address === asset.underlying)
-				? balances.find((_balance) => _balance.address === asset.underlying)
-						.balance
+			balances.find((_balance) => _balance.address === asset.underlyingAddress)
+				? balances.find(
+						(_balance) => _balance.address === asset.underlyingAddress,
+				  ).balance
 				: 0,
 		[balances],
 	)
 	const price = useMemo(() => {
-		if (!(borrowBalance && prices)) return
+		if (!(borrowBalance)) return
 		return getDisplayBalance(
-			decimate(prices[asset.token], 36 - asset.decimals)
-				.times(borrowBalance)
-				.toFixed(2),
-			0
+			new BigNumber(asset.price).times(borrowBalance).toFixed(2),
+			0,
 		)
-	}, [borrowBalance, prices])
+	}, [borrowBalance])
 
 	return (
 		<StatBlock
@@ -228,18 +214,9 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 }
 
 const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
-	const { prices } = useMarketPrices()
 	const accountLiquidity = useAccountLiquidity()
 
-	const change =
-		prices && amount
-			? asset.collateralFactor *
-			  amount *
-			  decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-			  ).toNumber()
-			: 0
+	const change = amount ? asset.collateralFactor * amount * asset.price : 0
 	const borrowable = accountLiquidity
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
 		: 0
@@ -272,16 +249,8 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 }
 
 const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
-	const { prices } = useMarketPrices()
 	const accountLiquidity = useAccountLiquidity()
-	const change =
-		prices && amount
-			? amount *
-			  decimate(
-					prices[asset.token],
-					new BigNumber(36).minus(asset.decimals),
-			  ).toNumber()
-			: 0
+	const change = amount ? amount * asset.price : 0
 
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : 0
 

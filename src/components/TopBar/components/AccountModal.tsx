@@ -4,14 +4,15 @@ import Config from '../../../bao/lib/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import wethIcon from 'assets/img/assets/WETH.png'
 import baoIcon from 'assets/img/logo.svg'
-import useBao from 'hooks/useBao'
-import useTokenBalance from 'hooks/useTokenBalance'
-import useTransactionProvider from '../../../hooks/useTransactionProvider'
+import useBao from 'hooks/base/useBao'
+import useTokenBalance from 'hooks/base/useTokenBalance'
+import useTransactionProvider from '../../../hooks/base/useTransactionProvider'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getDisplayBalance } from 'utils/numberFormat'
 import { Button } from '../../Button'
+import { CloseButton } from '../../../views/Markets/components/styles'
 import CardIcon from '../../CardIcon'
 import Label from '../../Label'
 import Modal, { ModalProps } from '../../Modal'
@@ -21,7 +22,6 @@ import Spacer from '../../Spacer'
 import Value from '../../Value'
 import { StatBlock } from '../../../views/Markets/components/Stats'
 import _ from 'lodash'
-import { CloseButton } from 'views/Basket/components/styles'
 
 const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 	const { account, reset } = useWallet()
@@ -39,7 +39,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 	return (
 		<Modal>
 			<CloseButton onClick={onDismiss}>
-				<FontAwesomeIcon icon="window-close" />
+				<FontAwesomeIcon icon="times" />
 			</CloseButton>
 			<ModalTitle text="My Account" />
 			<ModalContent>

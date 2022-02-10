@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMarkets } from '../../hooks/hard-synths/useMarkets'
+import { useMarkets } from '../../hooks/markets/useMarkets'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import { Container } from 'react-bootstrap'

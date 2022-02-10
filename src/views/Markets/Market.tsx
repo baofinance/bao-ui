@@ -2,14 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Config from '../../bao/lib/config'
 import GraphUtil from '../../utils/graph'
 import { useParams } from 'react-router-dom'
-import { useMarkets } from '../../hooks/hard-synths/useMarkets'
+import { useMarkets } from '../../hooks/markets/useMarkets'
 import {
 	useBorrowBalances,
 	useSupplyBalances,
-} from '../../hooks/hard-synths/useBalances'
-import useBao from '../../hooks/useBao'
-import { useMarketPrices } from '../../hooks/hard-synths/usePrices'
-import { useExchangeRates } from '../../hooks/hard-synths/useExchangeRates'
+} from '../../hooks/markets/useBalances'
+import useBao from '../../hooks/base/useBao'
+import { useExchangeRates } from '../../hooks/markets/useExchangeRates'
 import { SpinnerLoader } from '../../components/Loader'
 import { SubmitButton } from './components/MarketButton'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
@@ -19,7 +18,8 @@ import Tooltipped from '../../components/Tooltipped'
 import { MarketBorrowModal, MarketSupplyModal } from './components/Modals'
 import styled from 'styled-components'
 import { decimate, getDisplayBalance } from '../../utils/numberFormat'
-import { SupportedMarket } from '../../bao/lib/types'
+import { formatAddress } from '../../utils'
+import { ActiveSupportedMarket } from '../../bao/lib/types'
 
 const Market = () => {
 	const { id } = useParams()
@@ -27,7 +27,6 @@ const Market = () => {
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
-	const { prices } = useMarketPrices()
 	const bao = useBao()
 
 	const [marketInfo, setMarketInfo] = useState<any | undefined>()
@@ -37,11 +36,11 @@ const Market = () => {
 		return markets.find((market) => market.mid === parseFloat(id))
 	}, [markets])
 
-	// TODO- Use subgraph info
+	// TODO- Use subgraph info for other stats
 	useEffect(() => {
 		if (!activeMarket) return
 
-		GraphUtil.getMarketInfo(activeMarket.token).then((_marketInfo) =>
+		GraphUtil.getMarketInfo(activeMarket.marketAddress).then((_marketInfo) =>
 			setMarketInfo(_marketInfo.market),
 		)
 	}, [activeMarket])
@@ -51,48 +50,35 @@ const Market = () => {
 		return (
 			supplyBalances.find(
 				(balance) =>
-					balance.address.toLowerCase() === activeMarket.token.toLowerCase(),
-			).balance * decimate(exchangeRates[activeMarket.token]).toNumber()
+					balance.address.toLowerCase() ===
+					activeMarket.marketAddress.toLowerCase(),
+			).balance * decimate(exchangeRates[activeMarket.marketAddress]).toNumber()
 		)
 	}, [activeMarket, supplyBalances, exchangeRates])
 
 	const totalSuppliedUSD = useMemo(() => {
-		if (!(activeMarket && prices)) return
-		return (
-			activeMarket.supplied *
-			decimate(
-				prices[activeMarket.token],
-				36 - activeMarket.decimals,
-			).toNumber()
-		)
-	}, [activeMarket, prices])
+		if (!activeMarket) return
+		return activeMarket.supplied * activeMarket.price
+	}, [activeMarket])
 
 	const borrowed = useMemo(() => {
 		if (!(activeMarket && borrowBalances)) return
 		return borrowBalances.find(
 			(balance) =>
-				balance.address.toLowerCase() === activeMarket.token.toLowerCase(),
+				balance.address.toLowerCase() ===
+				activeMarket.marketAddress.toLowerCase(),
 		).balance
 	}, [activeMarket, borrowBalances])
 
 	const totalBorrowedUSD = useMemo(() => {
-		if (!(activeMarket && prices)) return
-		return (
-			activeMarket.totalBorrows *
-			decimate(
-				prices[activeMarket.token],
-				36 - activeMarket.decimals,
-			).toNumber()
-		)
-	}, [activeMarket, prices])
+		if (!activeMarket) return
+		return activeMarket.totalBorrows * activeMarket.price
+	}, [activeMarket])
 
 	const oracleAddress = useMemo(() => {
 		if (!bao) return
 		const address = bao.getContract('marketOracle').options.address
-		return `${address.slice(0, 6)}...${address.slice(
-			address.length - 4,
-			address.length,
-		)}`
+		return formatAddress(address)
 	}, [bao])
 
 	return markets && activeMarket ? (
@@ -157,14 +143,7 @@ const Market = () => {
 						<Tooltipped
 							content={`$${
 								supplied
-									? getDisplayBalance(
-											supplied *
-												decimate(
-													prices[activeMarket.token],
-													36 - activeMarket.decimals,
-												).toNumber(),
-											0,
-									  )
+									? getDisplayBalance(supplied * activeMarket.price, 0)
 									: '0'
 							}`}
 						>
@@ -182,14 +161,7 @@ const Market = () => {
 						<Tooltipped
 							content={`$${
 								borrowed
-									? getDisplayBalance(
-											borrowed *
-												decimate(
-													prices[activeMarket.token],
-													36 - activeMarket.decimals,
-												).toNumber(),
-											0,
-									  )
+									? getDisplayBalance(borrowed * activeMarket.price, 0)
 									: '0'
 							}`}
 						>
@@ -265,12 +237,7 @@ const Market = () => {
 				}
 			/>
 			<br />
-			<InfoCol
-				title={null}
-				content={
-					<ActionButton market={activeMarket} isSynth={activeMarket.isSynth} />
-				}
-			/>
+			<InfoCol title={null} content={<ActionButton market={activeMarket} />} />
 		</Container>
 	) : (
 		<SpinnerLoader block />
@@ -283,7 +250,7 @@ const HorizontalSpacer = () => {
 	)
 }
 
-const MarketTypeBadge = ({ isSynth }: IsSynthProps) => {
+const MarketTypeBadge = ({ isSynth }: { isSynth: boolean }) => {
 	return (
 		<Badge pill bg="secondary">
 			<FontAwesomeIcon icon={isSynth ? 'chart-line' : 'landmark'} />{' '}
@@ -303,12 +270,12 @@ const InfoCol = ({ title, content }: InfoColParams) => {
 	)
 }
 
-const ActionButton = ({ market, isSynth }: IsSynthProps) => {
+const ActionButton = ({ market }: { market: ActiveSupportedMarket }) => {
 	const [showModal, setShowModal] = useState(false)
 
 	return (
 		<>
-			{isSynth ? (
+			{market.isSynth ? (
 				<MarketBorrowModal
 					asset={market}
 					show={showModal}
@@ -322,15 +289,10 @@ const ActionButton = ({ market, isSynth }: IsSynthProps) => {
 				/>
 			)}
 			<SubmitButton onClick={() => setShowModal(true)}>
-				{isSynth ? 'Mint / Repay' : 'Supply / Withdraw'}
+				{market.isSynth ? 'Mint / Repay' : 'Supply / Withdraw'}
 			</SubmitButton>
 		</>
 	)
-}
-
-type IsSynthProps = {
-	market?: SupportedMarket
-	isSynth: boolean
 }
 
 type InfoColParams = {

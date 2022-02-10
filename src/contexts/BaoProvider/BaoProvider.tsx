@@ -40,10 +40,6 @@ const BaoProvider: React.FC = ({ children }) => {
 		}
 
 		const baoLib = new Bao(ethereum, Config.networkId, {
-			defaultConfirmations: 1,
-			autoGasMultiplier: 1.05,
-			defaultGas: '300000',
-			defaultGasPrice: '20000000000',
 			ethereumNodeTimeout: 10000,
 		})
 		setBao(baoLib)

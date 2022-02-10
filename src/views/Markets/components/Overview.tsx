@@ -1,7 +1,7 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
-import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
-import useHealthFactor from '../../../hooks/hard-synths/useHealthFactor'
+import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
+import useHealthFactor from '../../../hooks/markets/useHealthFactor'
 import {
 	buildStyles,
 	CircularProgressbarWithChildren,

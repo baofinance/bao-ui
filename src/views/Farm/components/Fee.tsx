@@ -1,9 +1,9 @@
 import Tooltipped from 'components/Tooltipped'
-import useBlockDiff from 'hooks/useBlockDiff'
-import useFees from 'hooks/useFees'
+import useBlockDiff from 'hooks/base/useBlockDiff'
+import useFees from 'hooks/farms/useFees'
 import React from 'react'
 import { SpinnerLoader } from '../../../components/Loader'
-import { useUserFarmInfo } from '../../../hooks/useUserFarmInfo'
+import { useUserFarmInfo } from '../../../hooks/farms/useUserFarmInfo'
 import { StyledDocsWarning, Warning } from './styles'
 import ExternalLink from 'components/ExternalLink'
 

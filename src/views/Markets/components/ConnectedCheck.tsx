@@ -1,6 +1,6 @@
 import React from 'react'
 import Config from '../../../bao/lib/config'
-import useModal from '../../../hooks/useModal'
+import useModal from '../../../hooks/base/useModal'
 import WalletProviderModal from '../../../components/WalletProviderModal'
 import { Button } from '../../../components/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

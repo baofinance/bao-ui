@@ -2,22 +2,20 @@ import React, { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import Config from '../../../bao/lib/config'
 import styled from 'styled-components'
-import { useMarketPrices } from '../../../hooks/hard-synths/usePrices'
 import {
 	Balance,
 	useAccountBalances,
 	useBorrowBalances,
 	useSupplyBalances,
-} from '../../../hooks/hard-synths/useBalances'
+} from '../../../hooks/markets/useBalances'
 import {
 	AccountLiquidity,
 	useAccountLiquidity,
-} from '../../../hooks/hard-synths/useAccountLiquidity'
-import useTransactionProvider from '../../../hooks/useTransactionProvider'
-import useBao from '../../../hooks/useBao'
+} from '../../../hooks/markets/useAccountLiquidity'
+import useBao from '../../../hooks/base/useBao'
 import { useWallet } from 'use-wallet'
-import { useExchangeRates } from '../../../hooks/hard-synths/useExchangeRates'
-import { useAccountMarkets } from '../../../hooks/hard-synths/useMarkets'
+import { useExchangeRates } from '../../../hooks/markets/useExchangeRates'
+import { useAccountMarkets } from '../../../hooks/markets/useMarkets'
 import {
 	Accordion,
 	Badge,
@@ -34,8 +32,8 @@ import HrText from '../../../components/HrText'
 import { SubmitButton } from './MarketButton'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { getComptrollerContract } from '../../../bao/utils'
-import { SupportedMarket } from '../../../bao/lib/types'
-import { TransactionReceipt } from 'web3-core'
+import { ActiveSupportedMarket } from '../../../bao/lib/types'
+import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
 
 export const MarketList: React.FC<MarketListProps> = ({
 	markets: _markets,
@@ -46,7 +44,6 @@ export const MarketList: React.FC<MarketListProps> = ({
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
-	const { prices } = useMarketPrices()
 
 	const collateralMarkets = useMemo(() => {
 		if (!(_markets && supplyBalances)) return
@@ -54,7 +51,8 @@ export const MarketList: React.FC<MarketListProps> = ({
 			.filter((market) => !market.isSynth)
 			.sort((a, b) =>
 				supplyBalances.find(
-					(balance) => balance.address.toLowerCase() === b.token.toLowerCase(),
+					(balance) =>
+						balance.address.toLowerCase() === b.marketAddress.toLowerCase(),
 				).balance > 0
 					? 1
 					: 0,
@@ -67,7 +65,8 @@ export const MarketList: React.FC<MarketListProps> = ({
 			.filter((market) => market.isSynth)
 			.sort((a, b) =>
 				borrowBalances.find(
-					(balance) => balance.address.toLowerCase() === b.token.toLowerCase(),
+					(balance) =>
+						balance.address.toLowerCase() === b.marketAddress.toLowerCase(),
 				).balance > 0
 					? 1
 					: 0,
@@ -83,15 +82,14 @@ export const MarketList: React.FC<MarketListProps> = ({
 			accountMarkets &&
 			supplyBalances &&
 			borrowBalances &&
-			exchangeRates &&
-			prices ? (
+			exchangeRates ? (
 				<Row>
 					<Col>
 						<HrText content="Collateral" />
 						<MarketListHeader
 							headers={['Asset', 'APY', 'Wallet', 'Liquidity']}
 						/>
-						{collateralMarkets.map((market: SupportedMarket) => (
+						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
 								market={market}
 								accountBalances={accountBalances}
@@ -99,23 +97,21 @@ export const MarketList: React.FC<MarketListProps> = ({
 								supplyBalances={supplyBalances}
 								borrowBalances={borrowBalances}
 								exchangeRates={exchangeRates}
-								prices={prices}
-								key={market.token}
+								key={market.marketAddress}
 							/>
 						))}
 					</Col>
 					<Col>
 						<HrText content="Synthetics" />
 						<MarketListHeader headers={['Asset', 'APR', 'Wallet']} />
-						{synthMarkets.map((market: SupportedMarket) => (
+						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
 								accountLiquidity={accountLiquidity}
 								accountBalances={accountBalances}
 								borrowBalances={borrowBalances}
 								exchangeRates={exchangeRates}
-								prices={prices}
-								key={market.token}
+								key={market.marketAddress}
 							/>
 						))}
 					</Col>
@@ -150,23 +146,22 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	supplyBalances,
 	borrowBalances,
 	exchangeRates,
-	prices,
 }: MarketListItemProps) => {
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
+	const { handleTx } = useTransactionHandler()
 	const bao = useBao()
 	const { account }: { account: string } = useWallet()
 
 	const suppliedUnderlying = useMemo(
 		() =>
-			supplyBalances.find((balance) => balance.address === market.token)
-				.balance * decimate(exchangeRates[market.token]).toNumber(),
+			supplyBalances.find((balance) => balance.address === market.marketAddress)
+				.balance * decimate(exchangeRates[market.marketAddress]).toNumber(),
 		[supplyBalances, exchangeRates],
 	)
 
 	const borrowed = useMemo(
 		() =>
-			borrowBalances.find((balance) => balance.address === market.token)
+			borrowBalances.find((balance) => balance.address === market.marketAddress)
 				.balance,
 		[borrowBalances, exchangeRates],
 	)
@@ -174,7 +169,9 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const isInMarket = useMemo(
 		() =>
 			accountMarkets &&
-			accountMarkets.find((_market) => _market.token === market.token),
+			accountMarkets.find(
+				(_market) => _market.marketAddress === market.marketAddress,
+			),
 		[accountMarkets],
 	)
 
@@ -189,21 +186,13 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						<Col>{market.supplyApy.toFixed(2)}%</Col>
 						<Col>
 							{accountBalances
-								.find((balance) => balance.address === market.underlying)
+								.find((balance) => balance.address === market.underlyingAddress)
 								.balance.toFixed(4)}
 						</Col>
 						<Col>
 							{`$${getDisplayBalance(
-								market.supplied *
-									decimate(
-										prices[market.token],
-										36 - market.decimals,
-									).toNumber() -
-									market.totalBorrows *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
+								market.supplied * market.price -
+									market.totalBorrows * market.price,
 								0,
 								0,
 							)}`}
@@ -218,25 +207,14 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 								label: 'Total Supplied',
 								value: `${market.supplied.toFixed(4)} ${
 									market.underlyingSymbol
-								} | $${getDisplayBalance(
-									market.supplied *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
-									0,
-								)}`,
+								} | $${getDisplayBalance(market.supplied * market.price, 0)}`,
 							},
 							{
 								label: 'Your Supply',
 								value: `${suppliedUnderlying.toFixed(4)} ${
 									market.underlyingSymbol
 								} | $${getDisplayBalance(
-									suppliedUnderlying *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
+									suppliedUnderlying * market.price,
 									0,
 								)}`,
 							},
@@ -264,38 +242,29 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 											disabled={
 												(isInMarket && borrowed > 0) ||
 												supplyBalances.find(
-													(balance) => balance.address === market.token,
+													(balance) => balance.address === market.marketAddress,
 												).balance === 0
 											}
 											onClick={(event) => {
 												event.stopPropagation()
 												const contract = getComptrollerContract(bao)
 												if (isInMarket) {
-													contract.methods
-														.exitMarket(market.token)
-														.send({ from: account })
-														.on('transactionHash', (txHash: string) =>
-															onAddTransaction({
-																hash: txHash,
-																description: `Exit Market (${market.underlyingSymbol})`,
-															}),
-														)
-														.on('receipt', (receipt: TransactionReceipt) =>
-															onTxReceipt(receipt),
-														)
+													handleTx(
+														contract.methods
+															.exitMarket(market.marketAddress)
+															.send({ from: account }),
+														`Exit Market (${market.underlyingSymbol})`,
+													)
 												} else {
-													contract.methods
-														.enterMarkets([market.token], Config.addressMap.DEAD) // Use dead as a placeholder param for `address borrower`, it will be unused
-														.send({ from: account })
-														.on('transactionHash', (txHash: string) =>
-															onAddTransaction({
-																hash: txHash,
-																description: `Enter Market (${market.underlyingSymbol})`,
-															}),
-														)
-														.on('receipt', (receipt: TransactionReceipt) =>
-															onTxReceipt(receipt),
-														)
+													handleTx(
+														contract.methods
+															.enterMarkets(
+																[market.marketAddress],
+																Config.addressMap.DEAD,
+															)
+															.send({ from: account }), // Use dead as a placeholder param for `address borrower`, it will be unused
+														`Enter Market (${market.underlyingSymbol})`,
+													)
 												}
 											}}
 										/>
@@ -305,7 +274,9 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							{
 								label: 'Wallet Balance',
 								value: `${accountBalances
-									.find((balance) => balance.address === market.underlying)
+									.find(
+										(balance) => balance.address === market.underlyingAddress,
+									)
 									.balance.toFixed(4)} ${market.underlyingSymbol}`,
 							},
 						]}
@@ -343,13 +314,12 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	accountBalances,
 	borrowBalances,
 	exchangeRates,
-	prices,
 }: MarketListItemProps) => {
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 
 	const borrowed = useMemo(
 		() =>
-			borrowBalances.find((balance) => balance.address === market.token)
+			borrowBalances.find((balance) => balance.address === market.marketAddress)
 				.balance,
 		[borrowBalances, exchangeRates],
 	)
@@ -365,7 +335,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						<Col>{market.borrowApy.toFixed(2)}%</Col>
 						<Col>
 							{accountBalances
-								.find((balance) => balance.address === market.underlying)
+								.find((balance) => balance.address === market.underlyingAddress)
 								.balance.toFixed(4)}
 						</Col>
 					</Row>
@@ -377,11 +347,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							{
 								label: 'Total Debt',
 								value: `$${getDisplayBalance(
-									market.totalBorrows *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
+									market.totalBorrows * market.price,
 									0,
 								)}`,
 							},
@@ -389,14 +355,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								label: 'Your Debt',
 								value: `${borrowed.toFixed(4)} ${
 									market.underlyingSymbol
-								} | $${getDisplayBalance(
-									borrowed *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
-									0,
-								)}`,
+								} | $${getDisplayBalance(borrowed * market.price, 0)}`,
 							},
 							{
 								label: 'Debt Limit Remaining',
@@ -408,12 +367,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							{
 								label: '% of Your Debt',
 								value: `${Math.floor(
-									((borrowed *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber()) /
-										accountLiquidity.usdBorrow) *
+									((borrowed * market.price) / accountLiquidity.usdBorrow) *
 										100,
 								)}%`,
 							},
@@ -447,7 +401,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 }
 
 type MarketListProps = {
-	markets: SupportedMarket[]
+	markets: ActiveSupportedMarket[]
 }
 
 type MarketListHeaderProps = {
@@ -455,14 +409,13 @@ type MarketListHeaderProps = {
 }
 
 type MarketListItemProps = {
-	market: SupportedMarket
+	market: ActiveSupportedMarket
 	accountBalances?: Balance[]
-	accountMarkets?: SupportedMarket[]
+	accountMarkets?: ActiveSupportedMarket[]
 	accountLiquidity?: AccountLiquidity
 	supplyBalances?: Balance[]
 	borrowBalances?: Balance[]
 	exchangeRates?: { [key: string]: BigNumber }
-	prices?: { [key: string]: number }
 }
 
 const StyledAccordionHeader = styled(Accordion.Header)`

@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from 'react'
-import { SupportedMarket } from 'bao/lib/types'
+import { ActiveSupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import { Modal, ModalProps } from 'react-bootstrap'
 import {
-	useAccountBalances, useBorrowBalances,
+	useAccountBalances,
+	useBorrowBalances,
 	useSupplyBalances,
-} from 'hooks/hard-synths/useBalances'
-import { useAccountLiquidity } from '../../../hooks/hard-synths/useAccountLiquidity'
-import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
-import { useMarketPrices } from 'hooks/hard-synths/usePrices'
-import useBao from 'hooks/useBao'
+} from 'hooks/markets/useBalances'
+import { useAccountLiquidity } from '../../../hooks/markets/useAccountLiquidity'
+import { useExchangeRates } from 'hooks/markets/useExchangeRates'
+import useBao from 'hooks/base/useBao'
 import BigNumber from 'bignumber.js'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
@@ -25,8 +25,8 @@ import {
 	AssetLabel,
 	AssetStack,
 	IconFlex,
+	CloseButton,
 } from './styles'
-import { CloseButton } from 'views/Basket/components/styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export enum MarketOperations {
@@ -37,7 +37,7 @@ export enum MarketOperations {
 }
 
 type MarketModalProps = ModalProps & {
-	asset: SupportedMarket
+	asset: ActiveSupportedMarket
 	show: boolean
 	onHide: () => void
 }
@@ -54,7 +54,6 @@ const MarketModal = ({
 	const balances = useAccountBalances()
 	const borrowBalances = useBorrowBalances()
 	const supplyBalances = useSupplyBalances()
-	const { prices } = useMarketPrices()
 	const accountLiquidity = useAccountLiquidity()
 	const { exchangeRates } = useExchangeRates()
 
@@ -65,7 +64,7 @@ const MarketModal = ({
 					? balances.find(
 							(_balance) =>
 								_balance.address.toLowerCase() ===
-								asset.underlying.toLowerCase(),
+								asset.underlyingAddress.toLowerCase(),
 					  ).balance
 					: 0
 			case MarketOperations.withdraw:
@@ -73,39 +72,34 @@ const MarketModal = ({
 					supplyBalances && exchangeRates
 						? supplyBalances.find(
 								(_balance) =>
-									_balance.address.toLowerCase() === asset.token.toLowerCase(),
-						  ).balance * decimate(exchangeRates[asset.token]).toNumber()
+									_balance.address.toLowerCase() ===
+									asset.marketAddress.toLowerCase(),
+						  ).balance *
+						  decimate(exchangeRates[asset.marketAddress]).toNumber()
 						: 0
-				const withdrawable =
-					prices && accountLiquidity
-						? accountLiquidity.usdBorrowable /
-						  (asset.collateralFactor *
-								decimate(
-									prices[asset.token],
-									new BigNumber(36).minus(asset.decimals),
-								).toNumber())
-						: 0
+				const withdrawable = accountLiquidity
+					? accountLiquidity.usdBorrowable /
+					  (asset.collateralFactor * asset.price)
+					: 0
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) ||
 					withdrawable > supply
 					? supply
 					: withdrawable
 			case MarketOperations.mint:
-				return prices && accountLiquidity
-					? accountLiquidity.usdBorrowable /
-							decimate(
-								prices[asset.token],
-								new BigNumber(36).minus(asset.decimals),
-							).toNumber()
+				return accountLiquidity
+					? accountLiquidity.usdBorrowable / asset.price
 					: 0
 			case MarketOperations.repay:
 				if (borrowBalances && balances) {
 					const borrowBalance = borrowBalances.find(
 						(_balance) =>
-							_balance.address.toLowerCase() === asset.token.toLowerCase(),
+							_balance.address.toLowerCase() ===
+							asset.marketAddress.toLowerCase(),
 					).balance
 					const walletBalance = balances.find(
 						(_balance) =>
-							_balance.address.toLowerCase() === asset.underlying.toLowerCase(),
+							_balance.address.toLowerCase() ===
+							asset.underlyingAddress.toLowerCase(),
 					).balance
 					return walletBalance < borrowBalance ? walletBalance : borrowBalance
 				} else {
@@ -141,8 +135,8 @@ const MarketModal = ({
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={hideModal}>
-				<FontAwesomeIcon icon="window-close" />
+			<CloseButton onClick={onHide}>
+				<FontAwesomeIcon icon="times" />
 			</CloseButton>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
@@ -175,8 +169,8 @@ const MarketModal = ({
 							onMaxClick={() =>
 								setVal(
 									(
-										Math.floor(max() * 10 ** asset.decimals) /
-										10 ** asset.decimals
+										Math.floor(max() * 10 ** asset.underlyingDecimals) /
+										10 ** asset.underlyingDecimals
 									).toString(),
 								)
 							}
@@ -199,7 +193,7 @@ const MarketModal = ({
 					asset={asset}
 					val={
 						val && !isNaN(val as any)
-							? exponentiate(val, asset.decimals)
+							? exponentiate(val, asset.underlyingDecimals)
 							: new BigNumber(0)
 					}
 					isDisabled={

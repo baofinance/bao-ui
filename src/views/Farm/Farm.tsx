@@ -3,14 +3,13 @@ import { getMasterChefContract } from 'bao/utils'
 import PageHeader from 'components/PageHeader'
 import Spacer from 'components/Spacer'
 import { PoolType } from 'contexts/Farms/types'
-import useBao from 'hooks/useBao'
-import useFarm from 'hooks/useFarm'
-import useRedeem from 'hooks/useRedeem'
+import useBao from 'hooks/base/useBao'
+import useFarm from 'hooks/farms/useFarm'
+import useRedeem from 'hooks/farms/useRedeem'
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
-import { HeroSubHeader } from 'views/Home/components/styles'
 import { provider } from 'web3-core'
 import Harvest from './components/Harvest'
 import Stake from './components/Stake'
@@ -121,9 +120,7 @@ const Farm: React.FC = () => {
 				</StyledInfo>
 				<Spacer size="lg" />
 				<StyledLink exact activeClassName="active" to={{ pathname: '/farms' }}>
-					<HeroSubHeader>
-						<FontAwesomeIcon icon="arrow-left" size="xs" color="#50251c" /> Return to Farms
-					</HeroSubHeader>
+					<FontAwesomeIcon icon="arrow-left" size="xs" color="#50251c" /> Return to Farms
 				</StyledLink>
 			</StyledFarm>
 		</>

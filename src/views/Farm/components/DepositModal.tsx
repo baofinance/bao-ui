@@ -9,7 +9,6 @@ import Spacer from 'components/Spacer'
 import TokenInput from 'components/TokenInput'
 import React, { useCallback, useMemo, useState } from 'react'
 import { getFullDisplayBalance } from 'utils/numberFormat'
-import { Disclaimer } from 'views/Basket/components/styles'
 
 interface DepositModalProps extends ModalProps {
 	max: BigNumber
@@ -49,7 +48,7 @@ const DepositModal: React.FC<DepositModalProps> = ({
 		<Modal>
 			<ModalTitle text={`Deposit ${tokenName}`} />
 			<ModalContent>
-				<Disclaimer>
+				<div>
 					<p style={{ textAlign: 'left' }}>
 						❗️ Remember a 0.75% fee will be added to the treasury when
 						depositing. 75% of BAO rewards will be locked and vested for 6
@@ -62,7 +61,7 @@ const DepositModal: React.FC<DepositModalProps> = ({
 							read the docs.
 						</ExternalLink>
 					</p>
-				</Disclaimer>
+				</div>
 			</ModalContent>
 			<TokenInput
 				value={val}

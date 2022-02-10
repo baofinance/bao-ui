@@ -6,16 +6,7 @@ import Config from './lib/config'
 import { Contracts } from './lib/contracts'
 
 export interface BaoOptions {
-  confirmationType?: number
-  defaultConfirmations: number
-  autoGasMultiplier: number
-  defaultGas: string
-  defaultGasPrice: string
   ethereumNodeTimeout: number
-}
-
-export interface SetsNetworkId {
-  setNetworkId(networkId: number): void
 }
 
 export class Bao {
@@ -23,7 +14,6 @@ export class Bao {
   public readonly contracts: Contracts
   public readonly web3: Web3
   public readonly multicall: MC
-  operation: SetsNetworkId
 
   constructor(
     provider: string | provider,
@@ -60,7 +50,7 @@ export class Bao {
       tryAggregate: true,
     })
 
-    this.contracts = new Contracts(realProvider, networkId, this.web3, options)
+    this.contracts = new Contracts(realProvider, networkId, this.web3)
   }
 
   getContract(contractName: string, networkId = this.networkId): Contract {
@@ -78,6 +68,5 @@ export class Bao {
   setProvider(provider: provider, networkId: number): void {
     this.web3.setProvider(provider)
     this.contracts.setProvider(provider, networkId)
-    this.operation.setNetworkId(networkId)
   }
 }

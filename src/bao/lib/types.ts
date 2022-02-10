@@ -42,12 +42,10 @@ export interface SupportedMarket {
   }
   isSynth: boolean
   symbol: string
-  underlyingSymbol?: string
   icon: string
   coingeckoId: string
-  decimals: number
-  token?: string
-  underlying?: string
+  underlyingDecimals: number
+  underlyingSymbol?: string
   supplyApy?: number
   borrowApy?: number
   rewardApy?: number
@@ -61,6 +59,7 @@ export interface SupportedMarket {
   borrowable?: boolean
   liquidationIncentive?: number
   borrowRestricted?: boolean
+  price?: number
 }
 
 export interface FarmableSupportedPool extends SupportedPool {
@@ -123,13 +122,6 @@ export interface Config {
   farms: SupportedPool[]
   baskets: SupportedBasket[]
   markets: SupportedMarket[]
-}
-
-export const ConfirmationType = {
-  Hash: 0,
-  Confirmed: 1,
-  Both: 2,
-  Simulate: 3,
 }
 
 export type SWR = {

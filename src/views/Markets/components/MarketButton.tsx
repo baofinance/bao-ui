@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { MarketOperations } from './Modals'
 import BigNumber from 'bignumber.js'
-import useTransactionProvider from '../../../hooks/useTransactionProvider'
-import useBao from '../../../hooks/useBao'
+import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
+import useBao from '../../../hooks/base/useBao'
 import { useWallet } from 'use-wallet'
-import { useApprovals } from '../../../hooks/hard-synths/useApprovals'
+import { useApprovals } from '../../../hooks/markets/useApprovals'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Config from '../../../bao/lib/config'
 import { approvev2 } from '../../../bao/utils'
 import { decimate } from '../../../utils/numberFormat'
 import { TransactionReceipt } from 'web3-core'
-import { SupportedMarket } from 'bao/lib/types'
+import { ActiveSupportedMarket } from 'bao/lib/types'
 
 type MarketButtonProps = {
 	operation: MarketOperations
-	asset: SupportedMarket
+	asset: ActiveSupportedMarket
 	val: BigNumber
 	isDisabled: boolean
 }
@@ -26,42 +26,12 @@ export const MarketButton = ({
 	val,
 	isDisabled,
 }: MarketButtonProps) => {
-	const [pendingTx, setPendingTx] = useState<string | boolean>(false)
-
-	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
+	const { pendingTx, handleTx } = useTransactionHandler()
 	const bao = useBao()
 	const { account } = useWallet()
 	const { approvals } = useApprovals(pendingTx)
 
-	const clearPendingTx = () => {
-		setPendingTx(false)
-	}
-
-	const handlePendingTx = (hash: string, description: string) => {
-		onAddTransaction({
-			hash,
-			description,
-		})
-		setPendingTx(hash)
-	}
-
-	const handleReceipt = (receipt: TransactionReceipt) => {
-		onTxReceipt(receipt)
-		setPendingTx(false)
-	}
-
-	const handleTx = (tx: any, description: string) => {
-		tx.on('transactionHash', (txHash: string) =>
-			handlePendingTx(txHash, description),
-		)
-			.on('receipt', (receipt: TransactionReceipt) => handleReceipt(receipt))
-			.on('error', clearPendingTx)
-	}
-
-	const marketContract = bao.getNewContract(
-		asset.underlying === 'ETH' ? 'cether.json' : 'ctoken.json',
-		asset.token,
-	)
+	const { marketContract } = asset
 
 	if (pendingTx) {
 		return (
@@ -86,13 +56,13 @@ export const MarketButton = ({
 				return (
 					<ButtonStack>
 						{approvals &&
-						(asset.underlying === 'ETH' ||
-							approvals[asset.underlying].gt(0)) ? (
+						(asset.underlyingAddress === 'ETH' ||
+							approvals[asset.underlyingAddress].gt(0)) ? (
 							<SubmitButton
 								disabled={isDisabled}
 								onClick={() => {
 									let mintTx
-									if (asset.underlying === 'ETH')
+									if (asset.underlyingAddress === 'ETH')
 										mintTx = marketContract.methods
 											.mint(true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 											.send({ from: account, value: val.toString() })
@@ -102,11 +72,10 @@ export const MarketButton = ({
 											.send({ from: account })
 									handleTx(
 										mintTx,
-										`Supply ${decimate(val, asset.decimals).toFixed(4)} ${
-											asset.underlyingSymbol
-										}`,
+										`Supply ${decimate(val, asset.underlyingDecimals).toFixed(
+											4,
+										)} ${asset.underlyingSymbol}`,
 									)
-									setPendingTx(true)
 								}}
 							>
 								Supply
@@ -115,15 +84,11 @@ export const MarketButton = ({
 							<SubmitButton
 								disabled={!approvals}
 								onClick={() => {
-									const underlyingContract = bao.getNewContract(
-										'erc20.json',
-										asset.underlying,
-									)
+									const { underlyingContract } = asset
 									handleTx(
 										approvev2(underlyingContract, marketContract, account),
 										`Approve ${asset.underlyingSymbol}`,
 									)
-									setPendingTx(true)
 								}}
 							>
 								Approve {asset.underlyingSymbol}
@@ -142,11 +107,10 @@ export const MarketButton = ({
 									marketContract.methods
 										.redeemUnderlying(val.toString())
 										.send({ from: account }),
-									`Withdraw ${decimate(val, asset.decimals).toFixed(4)} ${
-										asset.underlyingSymbol
-									}`,
+									`Withdraw ${decimate(val, asset.underlyingDecimals).toFixed(
+										4,
+									)} ${asset.underlyingSymbol}`,
 								)
-								setPendingTx(true)
 							}}
 						>
 							Withdraw
@@ -163,11 +127,10 @@ export const MarketButton = ({
 								marketContract.methods
 									.borrow(val.toString())
 									.send({ from: account }),
-								`Mint ${decimate(val, asset.decimals).toFixed(4)} ${
+								`Mint ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${
 									asset.symbol
 								}`,
 							)
-							setPendingTx(true)
 						}}
 					>
 						Mint
@@ -178,13 +141,13 @@ export const MarketButton = ({
 				return (
 					<ButtonStack>
 						{approvals &&
-						(asset.underlying === 'ETH' ||
-							approvals[asset.underlying].gt(0)) ? (
+						(asset.underlyingAddress === 'ETH' ||
+							approvals[asset.underlyingAddress].gt(0)) ? (
 							<SubmitButton
 								disabled={isDisabled}
 								onClick={() => {
 									let repayTx
-									if (asset.underlying === 'ETH')
+									if (asset.underlyingAddress === 'ETH')
 										repayTx = marketContract.methods
 											.repayBorrow()
 											.send({ from: account, value: val.toString() })
@@ -194,11 +157,10 @@ export const MarketButton = ({
 											.send({ from: account })
 									handleTx(
 										repayTx,
-										`Repay ${decimate(val, asset.decimals).toFixed(4)} ${
-											asset.underlyingSymbol
-										}`,
+										`Repay ${decimate(val, asset.underlyingDecimals).toFixed(
+											4,
+										)} ${asset.underlyingSymbol}`,
 									)
-									setPendingTx(true)
 								}}
 							>
 								Repay
@@ -207,15 +169,11 @@ export const MarketButton = ({
 							<SubmitButton
 								disabled={!approvals}
 								onClick={() => {
-									const underlyingContract = bao.getNewContract(
-										'erc20.json',
-										asset.underlying,
-									)
+									const { underlyingContract } = asset
 									handleTx(
 										approvev2(underlyingContract, marketContract, account),
 										`Approve ${asset.underlyingSymbol}`,
 									)
-									setPendingTx(true)
 								}}
 							>
 								Approve {asset.underlyingSymbol}
@@ -262,7 +220,6 @@ export const SubmitButton = styled.button`
 	border-radius: 8px;
 	color: ${(props) => props.theme.color.text[100]};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-	position: relative;
 	transition: 200ms;
 	overflow: hidden;
 

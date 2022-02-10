@@ -24,61 +24,11 @@ export const MarketHeaderContainer = styled.div`
   padding: 24px;
 `
 
-export const MarketHeaderStack = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-`
-
-export const MarketHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  border-radius: 8px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  padding-top: ${(props) => props.theme.spacing[3]}px;
-  padding-bottom: ${(props) => props.theme.spacing[3]}px;
-  padding-left: ${(props) => props.theme.spacing[4]}px;
-  padding-right: ${(props) => props.theme.spacing[4]}px;
-  text-align: center;
-  font-size: ${(props) => props.theme.fontSize.large}
-`
-
-export const MarketHeaderText = styled.p`
-  color: ${(props) => props.theme.color.text[100]};
-  font-weight: ${(props) => props.theme.fontWeight.strong};
-  margin: 0;
-`
-
-export const MarketHeaderSubText = styled.a`
-  transition-property: background-color, border-color, color, fill, stroke,
-    opacity, box-shadow, transform;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  cursor: pointer;
-  text-decoration: none;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  color: ${(props) => props.theme.color.text[400]};
-  font-size: 0.875rem;
-  font-weight: ${(props) => props.theme.fontWeight.medium};
-  margin: 0;
-`
-
 export const TableContainer = styled.div`
   display: flex;
   width: 100%;
   background-color: ${(props) => props.theme.color.primary[100]};
   border-radius: 8px;
-`
-
-export const OverviewTableContainer = styled.div`
-  display: flex;
-  width: 100%;
-  border-radius: 8px;
-  margin-top: ${(props) => props.theme.spacing[3]}px;
-  padding: ${(props) => props.theme.spacing[3]}px;
 `
 
 export const MarketTable = styled.div`
@@ -237,18 +187,6 @@ export const BorrowLimit = styled.div`
   }
 `
 
-export const ProtocolStatsContainer = styled.div`
-  display: grid;
-  grid-template-columns: 2.5fr 0.75fr 0.75fr;
-  grid-gap: 0.75rem;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  justify-content: space-between;
-  width: 100%;
-  overflow-wrap: break-word;
-  padding: 24px;
-`
-
 export const ProtocolStatsWrapper = styled.div`
   padding: 16px;
   border-radius: 8px;
@@ -257,23 +195,6 @@ export const ProtocolStatsWrapper = styled.div`
   border-radius: 8px;
   background-color: ${(props) => props.theme.color.primary[100]};
   border: 1px solid ${(props) => props.theme.color.secondary[900]};
-`
-
-export const ProtocolStat = styled.div`
-  margin: 0px;
-  overflow-wrap: break-word;
-  text-align: center;
-
-  p {
-    font-size: 1.87rem;
-    margin: 0px;
-  }
-
-  h1 {
-    font-size: 1rem;
-    color: ${(props) => props.theme.color.text[200]};
-    margin: 0px;
-  }
 `
 
 export const ProductDescription = styled.div`
@@ -486,4 +407,16 @@ export const SectionHeader = styled.div`
   text-align: center;
   align-content: center;
   padding-bottom: ${(props) => props.theme.spacing[2]}px;
+`
+
+export const CloseButton = styled.a`
+  float: right;
+  top: ${(props) => props.theme.spacing[3]}px;
+  right: ${(props) => props.theme.spacing[4]}px;
+  font-size: 1.5rem;
+  position: absolute;
+  color: ${(props) => props.theme.color.background[200]};
+  &:hover {
+    cursor: pointer;
+  }
 `
