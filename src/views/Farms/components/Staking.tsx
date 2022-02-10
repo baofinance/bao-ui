@@ -142,7 +142,7 @@ const Stake: React.FC<StakeProps> = ({
 				<InputStack>
 					<LabelFlex>
 						<LabelStack>
-							<MaxLabel>Available to stake:</MaxLabel>
+							<MaxLabel>Available to deposit:</MaxLabel>
 							<AssetLabel>
 								{`${walletBalance.toFixed(4)} ${tokenName}`}
 							</AssetLabel>
@@ -231,7 +231,7 @@ const Unstake: React.FC<UnstakeProps> = ({
 				<InputStack>
 					<LabelFlex>
 						<LabelStack>
-							<MaxLabel>Available to unstake:</MaxLabel>
+							<MaxLabel>Available to withdraw:</MaxLabel>
 							<AssetLabel>
 								{`${stakedBalance.toFixed(4)} ${tokenName}`}
 							</AssetLabel>
