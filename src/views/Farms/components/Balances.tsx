@@ -18,6 +18,8 @@ import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 import { Footnote, FootnoteValue, StyledInfo } from './styles'
+import GraphUtil from '../../../utils/graph'
+import Config from '../../../bao/lib/config'
 
 const PendingRewards: React.FC = () => {
 	const [start, setStart] = useState(0)
@@ -66,13 +68,10 @@ const PendingRewards: React.FC = () => {
 
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
-	const [totalReferrals, setTotalReferrals] = useState<string>()
-	const [refLink, setRefLink] = useState<string>()
 	const bao = useBao()
 	const baoBalance = useTokenBalance(
 		bao && bao.getContract('bao').options.address,
 	)
-	const masterChefContract = getMasterChefContract(bao)
 	const { account, ethereum }: { account: any; ethereum: any } = useWallet()
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const locks = useLockedEarnings()
@@ -88,112 +87,103 @@ const Balances: React.FC = () => {
 	}, [bao, setTotalSupply])
 
 	useEffect(() => {
-		async function fetchTotalReferrals() {
-			const referrals = await getReferrals(masterChefContract, account)
-			setTotalReferrals(referrals)
-		}
-		if (bao) {
-			fetchTotalReferrals()
-		}
-	}, [bao, setTotalReferrals])
-
-	useEffect(() => {
-		async function fetchRefLink() {
-			const usrReflink = 'www.baofinance.com?ref=' + account
-			setRefLink(usrReflink)
-		}
-		if (bao) {
-			fetchRefLink()
-		}
-	}, [bao, setRefLink])
+		if (!bao) return
+		GraphUtil.getPrice(Config.addressMap.WETH).then(async (wethPrice) => {
+			const baoPrice = await GraphUtil.getPriceFromPair(
+				wethPrice,
+				Config.contracts.bao[Config.networkId].address,
+			)
+			setBaoPrice(baoPrice)
+		})
+	}, [bao, setBaoPrice])
 
 	return (
 		<Fragment>
-				<Row style={{ display: 'flex', flexWrap: 'wrap' }}>
-					<Col style={{ display: 'flex', flexDirection: 'column' }}>
-						<Card>
-							<CardContent>
-								<StyledInfo>
-									❗️{' '}
-									<span
-										style={{
-											fontWeight: 700,
-											color: '${(props) => props.theme.color.red}',
-										}}
-									>
-										Attention:
-									</span>{' '}
-									Be sure to read the{' '}
-									<ExternalLink
-										href="https://docs.bao.finance/franchises/bao"
-										target="_blank"
-									>
-										docs
-									</ExternalLink>{' '}
-									before using the farms so you are familiar with protocol risks
-									and fees!
-								</StyledInfo>
-								<Spacer size="md" />
-								<StyledInfo>
-									❓{' '}
-									<span
-										style={{
-											fontWeight: 700,
-											color: '${(props) => props.theme.color.red}',
-										}}
-									>
-										Don't see your farm?
-									</span>{' '}
-									Visit{' '}
-									<ExternalLink href="https://old.bao.finance" target="_blank">
-										old.bao.finance
-									</ExternalLink>{' '}
-									to withdraw your LP from our archived farms.
-								</StyledInfo>
-							</CardContent>
-						</Card>
-					</Col>
-					<Col style={{ display: 'flex', flexDirection: 'column' }}>
-						<Card>
-							<Footnote>
-								Your BAO Balance
-								<FootnoteValue>
-									{account ? getBalanceNumber(baoBalance).toFixed(2) : 'Locked'}{' '}
-								</FootnoteValue>
-							</Footnote>
-							<Footnote>
-								Your Locked BAO
-								<FootnoteValue>
-									{getBalanceNumber(locks).toFixed(2)}
-								</FootnoteValue>
-							</Footnote>
-							<Footnote>
-								Pending harvest
-								<FootnoteValue>
-									<PendingRewards />
-								</FootnoteValue>
-							</Footnote>
-							<Footnote>
-								Total BAO Supply
-								<FootnoteValue>
-									{totalSupply
-										? getBalanceNumber(totalSupply).toFixed(2)
-										: 'Locked'}
-								</FootnoteValue>
-							</Footnote>
-							<Footnote>
-								BAO Price
-								<FootnoteValue>
-									{baoPrice ? (
-										`$${getDisplayBalance(baoPrice, 0)}`
-									) : (
-										<SpinnerLoader />
-									)}
-								</FootnoteValue>
-							</Footnote>
-						</Card>
-					</Col>
-				</Row>
+			<Row style={{ display: 'flex', flexWrap: 'wrap' }}>
+				<Col style={{ display: 'flex', flexDirection: 'column' }}>
+					<Card>
+						<CardContent>
+							<StyledInfo>
+								❗️{' '}
+								<span
+									style={{
+										fontWeight: 700,
+										color: '${(props) => props.theme.color.red}',
+									}}
+								>
+									Attention:
+								</span>{' '}
+								Be sure to read the{' '}
+								<ExternalLink
+									href="https://docs.bao.finance/franchises/bao"
+									target="_blank"
+								>
+									docs
+								</ExternalLink>{' '}
+								before using the farms so you are familiar with protocol risks
+								and fees!
+							</StyledInfo>
+							<Spacer size="md" />
+							<StyledInfo>
+								❓{' '}
+								<span
+									style={{
+										fontWeight: 700,
+										color: '${(props) => props.theme.color.red}',
+									}}
+								>
+									Don't see your farm?
+								</span>{' '}
+								Visit{' '}
+								<ExternalLink href="https://old.bao.finance" target="_blank">
+									old.bao.finance
+								</ExternalLink>{' '}
+								to withdraw your LP from our archived farms.
+							</StyledInfo>
+						</CardContent>
+					</Card>
+				</Col>
+				<Col style={{ display: 'flex', flexDirection: 'column' }}>
+					<Card>
+						<Footnote>
+							Your BAO Balance
+							<FootnoteValue>
+								{account ? getBalanceNumber(baoBalance).toFixed(2) : 'Locked'}{' '}
+							</FootnoteValue>
+						</Footnote>
+						<Footnote>
+							Your Locked BAO
+							<FootnoteValue>
+								{getBalanceNumber(locks).toFixed(2)}
+							</FootnoteValue>
+						</Footnote>
+						<Footnote>
+							Pending harvest
+							<FootnoteValue>
+								<PendingRewards />
+							</FootnoteValue>
+						</Footnote>
+						<Footnote>
+							Total BAO Supply
+							<FootnoteValue>
+								{totalSupply
+									? getBalanceNumber(totalSupply).toFixed(2)
+									: 'Locked'}
+							</FootnoteValue>
+						</Footnote>
+						<Footnote>
+							BAO Price
+							<FootnoteValue>
+								{baoPrice ? (
+									`$${getDisplayBalance(baoPrice, 0)}`
+								) : (
+									<SpinnerLoader />
+								)}
+							</FootnoteValue>
+						</Footnote>
+					</Card>
+				</Col>
+			</Row>
 		</Fragment>
 	)
 }
