@@ -43,7 +43,7 @@ const Farm: React.FC = () => {
 		name: '',
 		icon: '',
 		refUrl: '',
-		poolType: PoolType.BAO,
+		poolType: PoolType.ACTIVE,
 	}
 
 	useEffect(() => {

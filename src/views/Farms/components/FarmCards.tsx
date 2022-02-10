@@ -52,28 +52,26 @@ const FarmCards: React.FC = () => {
 	const farmsTVL = useAllFarmTVL(bao && bao.web3, bao && bao.multicall)
 	const { ethereum, account } = useWallet()
 
-	const [pollyPrice, setPollyPrice] = useState<BigNumber | undefined>()
+	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const [pools, setPools] = useState<any | undefined>({
-		[PoolType.BAO]: [],
-		[PoolType.SUSHI]: [],
+		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
 	})
 
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async (wethPrice) => {
-			const pollyPrice = await GraphUtil.getPriceFromPair(
+			const baoPrice = await GraphUtil.getPriceFromPair(
 				wethPrice,
-				Config.contracts.polly[Config.networkId].address,
+				Config.contracts.bao[Config.networkId].address,
 			)
-			setPollyPrice(pollyPrice)
+			setBaoPrice(baoPrice)
 		})
 
 		const _pools: any = {
-			[PoolType.BAO]: [],
-			[PoolType.SUSHI]: [],
+			[PoolType.ACTIVE]: [],
 			[PoolType.ARCHIVED]: [],
 		}
-		if (!(ethereum && farmsTVL && bao) || pools.bao.length)
+		if (!(ethereum && farmsTVL && bao))
 			return setPools(_pools)
 
 		bao.multicall
@@ -114,7 +112,7 @@ const FarmCards: React.FC = () => {
 					)
 					const farmWithStakedValue = {
 						...farm,
-						poolType: farm.poolType || PoolType.BAO,
+						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
 						stakedUSD: decimate(
 							result.masterChef[farms.length + i].values[0].hex,
@@ -122,8 +120,8 @@ const FarmCards: React.FC = () => {
 							.div(decimate(tvlInfo.lpStaked))
 							.times(tvlInfo.tvl),
 						apy:
-							pollyPrice && farmsTVL
-								? pollyPrice
+							baoPrice && farmsTVL
+								? baoPrice
 										.times(BLOCKS_PER_YEAR)
 										.times(
 											new BigNumber(result.masterChef[i].values[0].hex).div(
@@ -140,22 +138,22 @@ const FarmCards: React.FC = () => {
 			})
 	}, [farmsTVL, bao])
 
-	const BLOCKS_PER_YEAR = new BigNumber(13428766) // (60 * 60 * 24 * 365.25) / 2.35 (avg Polygon block time)
+	const BLOCKS_PER_YEAR = new BigNumber(2427508) // (60 * 60 * 24 * 365.25) / 13 (avg Ethereum block time)
 
 	return (
 		<>
 			<p style={{ margin: '${(props) => props.theme.spacing[3]}px', fontSize: '1.25rem' }}>
 				<Badge bg="secondary" className="baoTicker">
 					Bao Price:{' '}
-					{pollyPrice ? `$${getDisplayBalance(pollyPrice, 0)}` : <SpinnerLoader />}
+					{baoPrice ? `$${getDisplayBalance(baoPrice, 0)}` : <SpinnerLoader />}
 				</Badge>
 			</p>
 			<Spacer size="md" />
 			<Tabs>
 				<TabPanel>
 					<StyledCards>
-						{pools[PoolType.BAO] && pools[PoolType.BAO].length ? (
-							pools[PoolType.BAO].map((farm: any, i: number) => (
+						{pools[PoolType.ACTIVE] && pools[PoolType.ACTIVE].length ? (
+							pools[PoolType.ACTIVE].map((farm: any, i: number) => (
 								<React.Fragment key={i}>
 									<FarmCard farm={farm} />
 									{(i + 1) % cardsPerRow !== 0 && <StyledSpacer />}
@@ -163,27 +161,11 @@ const FarmCards: React.FC = () => {
 							))
 						) : (
 							<StyledLoadingWrapper>
-								Experiencing long load times? Consider changing to Polygon's unified RPC,{' '}
-								<ExternalLink href={"https://polygon-rpc.com"}>https://polygon-rpc.com</ExternalLink>
+								Experiencing long load times? Consider changing to the mainnet Flashbot Protect RPC,{' '}
+								<ExternalLink href={"https://docs.flashbots.net/flashbots-protect/rpc/quick-start/"}>https://rpc.flashbots.net</ExternalLink>
 								<br />
 								<br />
 								<SpinnerLoader block />
-							</StyledLoadingWrapper>
-						)}
-					</StyledCards>
-				</TabPanel>
-				<TabPanel>
-					<StyledCards>
-						{pools[PoolType.SUSHI] && [PoolType.SUSHI].length ? (
-							pools[PoolType.SUSHI].map((farm: any, i: number) => (
-								<React.Fragment key={i}>
-									<FarmCard farm={farm} />
-									{(i + 1) % cardsPerRow !== 0 && <StyledSpacer />}
-								</React.Fragment>
-							))
-						) : (
-							<StyledLoadingWrapper>
-								<SpinnerLoader />
 							</StyledLoadingWrapper>
 						)}
 					</StyledCards>

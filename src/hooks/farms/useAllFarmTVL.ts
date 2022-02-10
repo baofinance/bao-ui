@@ -59,17 +59,6 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
   return Object.keys(results).map((key: any) => {
     const res0 = results[key]
 
-    if (
-      key.toLowerCase() === Config.addressMap.nDEFI.toLowerCase() ||
-      key.toLowerCase() === Config.addressMap.nSTBL.toLowerCase()
-    )
-      return {
-        singleAsset: true,
-        lpAddress: key,
-        lpStaked: new BigNumber(res0[0].values[0].hex),
-        lpSupply: new BigNumber(res0[1].values[0].hex),
-      }
-
     const reserves = [
       new BigNumber(res0[0].values[0].hex),
       new BigNumber(res0[0].values[1].hex),
@@ -84,7 +73,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
       },
       {
         address: token1Address,
-        balance: decimate(reserves[1]),
+        balance: decimate(reserves[1], token1Address === Config.addressMap.USDC ? 6 : 18), // This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
       },
     ]
 
@@ -104,9 +93,7 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
     const lps: any = await fetchLPInfo(Config.farms, multicall, web3)
     const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
     const tokenPrices = await GraphUtil.getPriceFromPairMultiple(wethPrice, [
-      Config.addressMap.RAI,
-      Config.addressMap.nDEFI,
-      Config.addressMap.nSTBL,
+      Config.addressMap.USDC,
     ])
 
     const tvls: any[] = []
@@ -128,19 +115,12 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
           lpInfo.tokens[0].address.toLowerCase() ===
             Config.addressMap.BAO.toLowerCase() &&
           lpInfo.tokens[1].address.toLowerCase() ===
-            Config.addressMap.nDEFI.toLowerCase()
+            Config.addressMap.USDC.toLowerCase()
         ) {
-          // BAO-nDEFI pair
+          // BAO-USDC pair
           token = lpInfo.tokens[1]
           specialPair = true
-        } else if (
-          lpInfo.tokens[0].address.toLowerCase() ===
-            Config.addressMap.WETH.toLowerCase() ||
-          lpInfo.tokens[0].address.toLowerCase() ===
-            Config.addressMap.RAI.toLowerCase()
-        )
-          // *-wETH pair and *-RAI pair
-          token = lpInfo.tokens[0]
+        }
         else token = lpInfo.tokens[1]
 
         if (
@@ -150,21 +130,14 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
           tokenPrice = wethPrice
         else if (
           token.address.toLowerCase() ===
-            Config.addressMap.nDEFI.toLowerCase() &&
+            Config.addressMap.USDC.toLowerCase() &&
           specialPair
         )
           // BAO-nDEFI pair
           tokenPrice = Object.values(tokenPrices).find(
             (priceInfo) =>
               priceInfo.address.toLowerCase() ===
-              Config.addressMap.nDEFI.toLowerCase(),
-          ).price
-        // *-RAI pair
-        else
-          tokenPrice = Object.values(tokenPrices).find(
-            (priceInfo) =>
-              priceInfo.address.toLowerCase() ===
-              Config.addressMap.RAI.toLowerCase(),
+              Config.addressMap.USDC.toLowerCase(),
           ).price
 
         lpStakedUSD = token.balance

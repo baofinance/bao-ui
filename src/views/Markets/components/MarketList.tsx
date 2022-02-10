@@ -87,7 +87,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 					<Col>
 						<HrText content="Collateral" />
 						<MarketListHeader
-							headers={['Asset', 'APY', 'Wallet', 'Liquidity']}
+							headers={['Asset', 'Wallet', 'Liquidity']}
 						/>
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
@@ -183,7 +183,6 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						<Col>
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
-						<Col>{market.supplyApy.toFixed(2)}%</Col>
 						<Col>
 							{accountBalances
 								.find((balance) => balance.address === market.underlyingAddress)

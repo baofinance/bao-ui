@@ -30,7 +30,7 @@ export const getMasterChefContract = (bao: Bao): Contract => {
 }
 
 export const getBaoContract = (bao: Bao): Contract => {
-  return bao && bao.contracts && bao.getContract('polly')
+  return bao && bao.contracts && bao.getContract('bao')
 }
 
 export const getBasketContract = (
@@ -99,8 +99,8 @@ export const getFarms = (bao: Bao): Farm[] => {
           tokenDecimals,
           tokenSymbol,
           tokenContract,
-          earnToken: 'POLLY',
-          earnTokenAddress: bao.getContract('polly').options.address,
+          earnToken: 'BAO',
+          earnTokenAddress: bao.getContract('bao').options.address,
           icon,
           refUrl,
           pairUrl,
@@ -262,7 +262,7 @@ export const getStaked = async (
 
 export const getBaoSupply = async (bao: Bao) => {
   return new BigNumber(
-    await bao.getContract('polly').methods.totalSupply().call(),
+    await bao.getContract('bao').methods.totalSupply().call(),
   )
 }
 

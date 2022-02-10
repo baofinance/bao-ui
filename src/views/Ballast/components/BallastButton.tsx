@@ -24,7 +24,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputAApproval = useAllowancev2(
-		'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108', // TestDAI
+		Config.addressMap.DAI,
 		Config.contracts.stabilizer[Config.networkId].address,
 		[pendingTx],
 	)
@@ -39,7 +39,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 		const ballastContract = bao.getContract('stabilizer')
 		if (swapDirection) {
-			// bUSD->DAI
+			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
 				const tokenContract = bao.getNewContract(
 					'erc20.json',
@@ -58,11 +58,11 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 				'Ballast: Swap baoUSD to DAI',
 			)
 		} else {
-			// DAI->bUSD
+			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
 				const tokenContract = bao.getNewContract(
 					'erc20.json',
-					'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108', // TestDAI
+					Config.addressMap.DAI,
 				)
 				return handleTx(
 					approvev2(tokenContract, ballastContract, account),
@@ -97,7 +97,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			if (swapDirection) {
 				return inputBApproval.gt(0) ? 'Swap baoUSD for DAI' : 'Approve baoUSD'
 			} else {
-				return inputAApproval.gt(0) ? 'Swap DAI for bUSD' : 'Approve DAI'
+				return inputAApproval.gt(0) ? 'Swap DAI for baoUSD' : 'Approve DAI'
 			}
 		}
 	}

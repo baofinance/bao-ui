@@ -81,7 +81,7 @@ const Balances: React.FC = () => {
 	const [refLink, setRefLink] = useState<string>()
 	const bao = useBao()
 	const baoBalance = useTokenBalance(
-		bao && bao.getContract('polly').options.address,
+		bao && bao.getContract('bao').options.address,
 	)
 	const masterChefContract = getMasterChefContract(bao)
 	const { account, ethereum }: { account: any; ethereum: any } = useWallet()

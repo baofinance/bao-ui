@@ -33,7 +33,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao.getContract('polly').options.address)
+	const baoBalance = useTokenBalance(bao.getContract('bao').options.address)
 	const wethBalance = useTokenBalance('ETH')
 
 	return (

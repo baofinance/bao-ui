@@ -8,9 +8,11 @@ import BaoProvider from './contexts/BaoProvider'
 import ModalsProvider from './contexts/Modals'
 import MarketsProvider from './contexts/Markets'
 import TransactionProvider from './contexts/Transactions'
+import FarmsProvider from './contexts/Farms'
 import Markets from './views/Markets'
 import Market from 'views/Markets/Market'
 import Ballast from './views/Ballast'
+import Farms from './views/Farms'
 import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
 import theme from './theme'
@@ -69,6 +71,9 @@ const App: React.FC = () => {
 					<Route path="/ballast">
 						<Ballast />
 					</Route>
+					<Route path="/farms">
+						<Farms />
+					</Route>
 				</Switch>
 			</Router>
 		</Providers>
@@ -93,16 +98,18 @@ const Providers: React.FC<ProvidersProps> = ({
 			>
 				<BaoProvider>
 					<MarketsProvider>
-						<TransactionProvider>
-							<SWRConfig
-								value={{
-									fetcher,
-									refreshInterval: 300000,
-								}}
-							>
-								<ModalsProvider>{children}</ModalsProvider>
-							</SWRConfig>
-						</TransactionProvider>
+						<FarmsProvider>
+							<TransactionProvider>
+								<SWRConfig
+									value={{
+										fetcher,
+										refreshInterval: 300000,
+									}}
+								>
+									<ModalsProvider>{children}</ModalsProvider>
+								</SWRConfig>
+							</TransactionProvider>
+						</FarmsProvider>
 					</MarketsProvider>
 				</BaoProvider>
 			</UseWalletProvider>

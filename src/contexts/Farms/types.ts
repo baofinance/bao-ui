@@ -2,8 +2,7 @@ import BigNumber from 'bignumber.js/bignumber'
 import { Contract } from 'web3-eth-contract'
 
 export enum PoolType {
-  SUSHI = 'sushi',
-  BAO = 'bao',
+  ACTIVE = 'active',
   ARCHIVED = 'archived',
 }
 
@@ -28,5 +27,4 @@ export interface Farm {
 
 export interface FarmsContext {
   farms: Farm[]
-  unharvested: number
 }

@@ -175,11 +175,11 @@ const Market = () => {
 				/>
 				<InfoCol
 					title="Number of Suppliers"
-					content={marketInfo && marketInfo.numberOfSuppliers}
+					content={marketInfo ? marketInfo.numberOfSuppliers : <SpinnerLoader />}
 				/>
 				<InfoCol
 					title="Number of Borrowers"
-					content={marketInfo && marketInfo.numberOfBorrowers}
+					content={marketInfo ? marketInfo.numberOfBorrowers : <SpinnerLoader />}
 				/>
 			</Row>
 			<br />

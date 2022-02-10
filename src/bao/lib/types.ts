@@ -11,6 +11,7 @@ export interface SupportedPool {
   tokenDecimals: number
   name: string
   symbol: string
+  poolType: string
   tokenSymbol: string
   icon: string
   refUrl: string
