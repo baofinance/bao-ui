@@ -1,27 +1,23 @@
-import { getMasterChefContract, getBaoSupply, getReferrals } from 'bao/utils'
+import { getBaoSupply, getMasterChefContract, getReferrals } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
-import Label from 'components/Label'
-import BaoIcon from 'components/BaoIcon'
+import ExternalLink from 'components/ExternalLink'
+import { SpinnerLoader } from 'components/Loader'
 import Spacer from 'components/Spacer'
-import Value from 'components/Value'
 import useAllEarnings from 'hooks/farms/useAllEarnings'
 import useAllStakedValue from 'hooks/farms/useAllStakedValue'
 import useBao from 'hooks/base/useBao'
 import useFarms from 'hooks/farms/useFarms'
+import useLockedEarnings from 'hooks/farms/useLockedEarnings'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import React, { Fragment, useEffect, useState } from 'react'
+import { Badge, Col, Row } from 'react-bootstrap'
 import CountUp from 'react-countup'
+import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
-import { getBalanceNumber } from 'utils/numberFormat'
-import {
-	Footnote,
-	FootnoteValue,
-	StyledBalance,
-	StyledBalances,
-	StyledWrapper,
-} from './styles'
+import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
+import { Footnote, FootnoteValue, StyledInfo } from './styles'
 
 const PendingRewards: React.FC = () => {
 	const [start, setStart] = useState(0)
@@ -52,18 +48,11 @@ const PendingRewards: React.FC = () => {
 	}, [sumEarning])
 
 	return (
-		<span
-			style={{
-				transform: `scale(${scale})`,
-				transformOrigin: 'right bottom',
-				transition: 'transform 200ms',
-				display: 'inline-block',
-			}}
-		>
+		<span>
 			<CountUp
 				start={start}
 				end={end}
-				decimals={end < 0 ? 4 : end > 1e5 ? 0 : 3}
+				decimals={end < 0 ? 4 : end > 1e5 ? 0 : 2}
 				duration={1}
 				onStart={() => {
 					setScale(1.25)
@@ -85,6 +74,8 @@ const Balances: React.FC = () => {
 	)
 	const masterChefContract = getMasterChefContract(bao)
 	const { account, ethereum }: { account: any; ethereum: any } = useWallet()
+	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	const locks = useLockedEarnings()
 
 	useEffect(() => {
 		async function fetchTotalSupply() {
@@ -118,47 +109,98 @@ const Balances: React.FC = () => {
 
 	return (
 		<Fragment>
-			<StyledWrapper>
-				<Card>
-					<CardContent>
-						<StyledBalances>
-							<StyledBalance>
-								<BaoIcon />
-								<Spacer />
-								<div style={{ flex: 1 }}>
-									<Label text="Your BAO Balance" />
-									<Value
-										value={account ? getBalanceNumber(baoBalance) : 'Locked'}
-									/>
-								</div>
-							</StyledBalance>
-						</StyledBalances>
-					</CardContent>
-					<Footnote>
-						Pending harvest
-						<FootnoteValue>
-							<PendingRewards /> BAO
-						</FootnoteValue>
-					</Footnote>
-				</Card>
-				<Spacer />
-
-				<Card>
-					<CardContent>
-						<Label text="Total BAO Supply" />
-						<Value
-							value={totalSupply ? getBalanceNumber(totalSupply) : 'Locked'}
-						/>
-					</CardContent>
-					<Footnote>
-						New rewards per block
-						<FootnoteValue>5 BAO</FootnoteValue>
-					</Footnote>
-				</Card>
-			</StyledWrapper>
-			<Spacer />
+				<Row style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<Col style={{ display: 'flex', flexDirection: 'column' }}>
+						<Card>
+							<CardContent>
+								<StyledInfo>
+									❗️{' '}
+									<span
+										style={{
+											fontWeight: 700,
+											color: '${(props) => props.theme.color.red}',
+										}}
+									>
+										Attention:
+									</span>{' '}
+									Be sure to read the{' '}
+									<ExternalLink
+										href="https://docs.bao.finance/franchises/bao"
+										target="_blank"
+									>
+										docs
+									</ExternalLink>{' '}
+									before using the farms so you are familiar with protocol risks
+									and fees!
+								</StyledInfo>
+								<Spacer size="md" />
+								<StyledInfo>
+									❓{' '}
+									<span
+										style={{
+											fontWeight: 700,
+											color: '${(props) => props.theme.color.red}',
+										}}
+									>
+										Don't see your farm?
+									</span>{' '}
+									Visit{' '}
+									<ExternalLink href="https://old.bao.finance" target="_blank">
+										old.bao.finance
+									</ExternalLink>{' '}
+									to withdraw your LP from our archived farms.
+								</StyledInfo>
+							</CardContent>
+						</Card>
+					</Col>
+					<Col style={{ display: 'flex', flexDirection: 'column' }}>
+						<Card>
+							<Footnote>
+								Your BAO Balance
+								<FootnoteValue>
+									{account ? getBalanceNumber(baoBalance).toFixed(2) : 'Locked'}{' '}
+								</FootnoteValue>
+							</Footnote>
+							<Footnote>
+								Your Locked BAO
+								<FootnoteValue>
+									{getBalanceNumber(locks).toFixed(2)}
+								</FootnoteValue>
+							</Footnote>
+							<Footnote>
+								Pending harvest
+								<FootnoteValue>
+									<PendingRewards />
+								</FootnoteValue>
+							</Footnote>
+							<Footnote>
+								Total BAO Supply
+								<FootnoteValue>
+									{totalSupply
+										? getBalanceNumber(totalSupply).toFixed(2)
+										: 'Locked'}
+								</FootnoteValue>
+							</Footnote>
+							<Footnote>
+								BAO Price
+								<FootnoteValue>
+									{baoPrice ? (
+										`$${getDisplayBalance(baoPrice, 0)}`
+									) : (
+										<SpinnerLoader />
+									)}
+								</FootnoteValue>
+							</Footnote>
+						</Card>
+					</Col>
+				</Row>
 		</Fragment>
 	)
 }
 
 export default Balances
+
+const BaoPrice = styled.div`
+	margin: 0 auto;
+	text-align: center;
+`

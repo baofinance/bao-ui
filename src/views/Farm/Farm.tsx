@@ -31,7 +31,8 @@ const Farm: React.FC = () => {
 		tokenAddress,
 		earnToken,
 		name,
-		icon,
+		iconA,
+		iconB,
 		refUrl,
 		poolType,
 	} = useFarm(farmId) || {
@@ -41,7 +42,8 @@ const Farm: React.FC = () => {
 		tokenAddress: '',
 		earnToken: '',
 		name: '',
-		icon: '',
+		iconA: '',
+		iconB: '',
 		refUrl: '',
 		poolType: PoolType.ACTIVE,
 	}
@@ -70,7 +72,7 @@ const Farm: React.FC = () => {
 	return (
 		<>
 			<PageHeader
-				icon={icon}
+				icon={iconA}
 				subtitle={`Deposit ${lpTokenName}  Tokens and earn BAO`}
 				title={name}
 			/>
