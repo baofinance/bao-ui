@@ -27,6 +27,7 @@ import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import Earnings from './Earnings'
 import { Staking } from './Staking'
 import { StyledLoadingWrapper } from './styles'
+import { NavButtons } from 'components/Button'
 
 export interface FarmWithStakedValue extends Farm {
 	apy: BigNumber
@@ -257,12 +258,17 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 				</StyledAccordionHeader>
 
 				<StyledAccordionBody>
+					<NavButtons
+						options={operations}
+						active={operation}
+						onClick={setOperation}
+					/>
 					<Row>
 						<Col md={6}>
 							<Earnings pid={farm.pid} />
 						</Col>
 						<Col md={6}>
-							<Staking farm={farm} />
+							<Staking farm={farm} operation={operation} />
 						</Col>
 					</Row>
 				</StyledAccordionBody>

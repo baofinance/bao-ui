@@ -30,9 +30,10 @@ import useUnstake from 'hooks/farms/useUnstake'
 
 interface FarmListItemProps {
 	farm: FarmWithStakedValue
+	operation: string
 }
 
-export const Staking: React.FC<FarmListItemProps> = ({ farm }) => {
+export const Staking: React.FC<FarmListItemProps> = ({ farm, operation }) => {
 	const { account } = useWallet()
 	const { pid } = farm
 	const bao = useBao()
@@ -47,36 +48,28 @@ export const Staking: React.FC<FarmListItemProps> = ({ farm }) => {
 	const tokenBalance = useTokenBalance(lpContract.options.address)
 	const stakedBalance = useStakedBalance(pid)
 
-	const operations = ['Stake', 'Unstake']
-	const [operation, setOperation] = useState(operations[0])
-
 	const { onStake } = useStake(pid)
 	const { onUnstake } = useUnstake(pid)
 
 	return (
 		<>
-			<NavButtons
-				options={operations}
-				active={operation}
-				onClick={setOperation}
-			/>
-					{operation === operations[1] ? (
-						<Unstake
-							pid={farm.pid}
-							tokenName={farm.lpToken.toUpperCase()}
-							max={stakedBalance}
-							onConfirm={onUnstake}
-						/>
-					) : (
-						<Stake
-							lpContract={lpContract}
-							pid={farm.pid}
-							tokenName={farm.lpToken.toUpperCase()}
-							poolType={farm.poolType}
-							max={tokenBalance}
-							onConfirm={onStake}
-						/>
-					)}
+			{operation === "Unstake" ? (
+				<Unstake
+					pid={farm.pid}
+					tokenName={farm.lpToken.toUpperCase()}
+					max={stakedBalance}
+					onConfirm={onUnstake}
+				/>
+			) : (
+				<Stake
+					lpContract={lpContract}
+					pid={farm.pid}
+					tokenName={farm.lpToken.toUpperCase()}
+					poolType={farm.poolType}
+					max={tokenBalance}
+					onConfirm={onStake}
+				/>
+			)}
 		</>
 	)
 }
