@@ -51,7 +51,7 @@ const StyledLogoWrapper = styled.div`
 	}
 `
 const StyledTopBar = styled(Container)`
-	margin: auto;
+	margin: 1em auto auto;
 `
 
 const StyledNavWrapper = styled.div`

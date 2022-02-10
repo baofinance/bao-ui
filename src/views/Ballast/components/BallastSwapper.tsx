@@ -104,7 +104,7 @@ const BallastSwapper: React.FC = () => {
 		<>
 			<label>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
-				{getDisplayBalance(baoUSDBalance).toString()} baoUSD
+				{getDisplayBalance(baoUSDBalance).toString()} BaoUSD
 				<span>
 					Mint Limit:{' '}
 					{supplyCap ? (
@@ -112,7 +112,7 @@ const BallastSwapper: React.FC = () => {
 					) : (
 						<SpinnerLoader />
 					)}{' '}
-					baoUSD
+					BaoUSD
 				</span>
 			</label>
 			<BalanceInput
@@ -135,7 +135,7 @@ const BallastSwapper: React.FC = () => {
 	return (
 		<BallastSwapCard>
 			<h2 style={{ textAlign: 'center' }}>
-				<Tooltipped content="The Ballast is used to mint baoUSD with DAI or to redeem DAI for baoUSD at a 1:1 rate (not including fees).">
+				<Tooltipped content="The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).">
 					<a>
 						<FontAwesomeIcon icon="ship" />
 					</a>

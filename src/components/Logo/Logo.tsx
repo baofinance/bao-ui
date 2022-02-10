@@ -10,7 +10,7 @@ const Logo: React.FC = () => {
 			<img src={baoLogo} height="32" style={{ verticalAlign: 'middle' }} />
 			<StyledText>
 				<TitleText>
-						<span>Bao.Finance</span>
+					Bao Finance
 				</TitleText>
 			</StyledText>
 		</StyledLogo>
@@ -21,7 +21,7 @@ const TitleText = styled.div`
 	width: fit-content;
 	white-space: nowrap;
 	color: ${(props) => props.theme.color.text[100]};
-	font-family: 'Reem Kufi', sans-serif;
+	font-family: 'Kaushan Script', sans-serif;
 	font-size: 1.5rem;
 	letter-spacing: 0.03rem;
 	margin-left: ${(props) => props.theme.spacing[1]}px;

@@ -39,7 +39,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 		const ballastContract = bao.getContract('stabilizer')
 		if (swapDirection) {
-			// baoUSD->DAI
+			// BaoUSD->DAI
 			if (!inputBApproval.gt(0)) {
 				const tokenContract = bao.getNewContract(
 					'erc20.json',
@@ -47,7 +47,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 				)
 				return handleTx(
 					approvev2(tokenContract, ballastContract, account),
-					'Ballast: Approve baoUSD',
+					'Ballast: Approve BaoUSD',
 				)
 			}
 
@@ -55,7 +55,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 				ballastContract.methods
 					.sell(exponentiate(inputVal).toString())
 					.send({ from: account }),
-				'Ballast: Swap baoUSD to DAI',
+				'Ballast: Swap BaoUSD to DAI',
 			)
 		} else {
 			// DAI->baoUSD
@@ -74,7 +74,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 				ballastContract.methods
 					.buy(exponentiate(inputVal).toString())
 					.send({ from: account }),
-				'Ballast: Swap DAI to baoUSD',
+				'Ballast: Swap DAI to BaoUSD',
 			)
 		}
 	}
@@ -95,9 +95,9 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			)
 		} else {
 			if (swapDirection) {
-				return inputBApproval.gt(0) ? 'Swap baoUSD for DAI' : 'Approve baoUSD'
+				return inputBApproval.gt(0) ? 'Swap BaoUSD for DAI' : 'Approve BaoUSD'
 			} else {
-				return inputAApproval.gt(0) ? 'Swap DAI for baoUSD' : 'Approve DAI'
+				return inputAApproval.gt(0) ? 'Swap DAI for BaoUSD' : 'Approve DAI'
 			}
 		}
 	}

@@ -86,9 +86,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 				<Row>
 					<Col>
 						<HrText content="Collateral" />
-						<MarketListHeader
-							headers={['Asset', 'Wallet', 'Liquidity']}
-						/>
+						<MarketListHeader headers={['Asset', 'Wallet', 'Liquidity']} />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
 								market={market}
@@ -366,8 +364,10 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							{
 								label: '% of Your Debt',
 								value: `${Math.floor(
-									((borrowed * market.price) / accountLiquidity.usdBorrow) *
-										100,
+									accountLiquidity.usdBorrow > 0
+										? ((borrowed * market.price) / accountLiquidity.usdBorrow) *
+												100
+										: 0,
 								)}%`,
 							},
 						]}
