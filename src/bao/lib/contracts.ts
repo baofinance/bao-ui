@@ -6,6 +6,7 @@ import ERC20Abi from './abi/erc20.json'
 import ExperipieAbi from './abi/experipie.json'
 import UNIV2PairAbi from './abi/uni_v2_lp.json'
 import CTokenAbi from './abi/ctoken.json'
+import CEtherAbi from './abi/cether.json'
 import Config from './config'
 import * as Types from './types'
 
@@ -21,11 +22,7 @@ export class Contracts {
   blockGasLimit: any
   notifier: any
 
-  constructor(
-    provider: string | provider,
-    networkId: number,
-    web3: Web3,
-  ) {
+  constructor(provider: string | provider, networkId: number, web3: Web3) {
     this.networkId = networkId
     this.web3 = web3
 
@@ -65,7 +62,11 @@ export class Contracts {
             Object.assign(market, {
               marketAddress: market.marketAddresses[networkId],
               underlyingAddress: market.underlyingAddresses[networkId],
-              marketContract: this.getNewContract(CTokenAbi),
+              marketContract: this.getNewContract(
+                market.underlyingAddresses[Config.networkId] === 'ETH'
+                  ? CEtherAbi
+                  : CTokenAbi,
+              ),
               underlyingContract:
                 market.underlyingAddresses[Config.networkId] !== 'ETH' &&
                 this.getNewContract(ERC20Abi),
