@@ -53,7 +53,7 @@ export const Staking: React.FC<FarmListItemProps> = ({ farm, operation }) => {
 
 	return (
 		<>
-			{operation === "Unstake" ? (
+			{operation === 'Unstake' ? (
 				<Unstake
 					pid={farm.pid}
 					tokenName={farm.lpToken.toUpperCase()}
@@ -131,6 +131,11 @@ const Stake: React.FC<StakeProps> = ({
 
 	return (
 		<AccordionCard>
+			<Card.Header>
+				<Card.Title>
+					<Label text={`Stake ${tokenName}`} />
+				</Card.Title>
+			</Card.Header>
 			<Card.Body>
 				<InputStack>
 					<LabelFlex>
@@ -149,7 +154,7 @@ const Stake: React.FC<StakeProps> = ({
 				</InputStack>
 			</Card.Body>
 			<Card.Footer>
-				{!allowance.toNumber() ? (
+			{!allowance.toNumber() ? (
 					<Button
 						disabled={requestedApproval}
 						onClick={handleApprove}
@@ -220,6 +225,11 @@ const Unstake: React.FC<UnstakeProps> = ({
 
 	return (
 		<AccordionCard>
+			<Card.Header>
+				<Card.Title>
+					<Label text={`Unstake ${tokenName}`} />
+				</Card.Title>
+			</Card.Header>
 			<Card.Body>
 				<InputStack>
 					<LabelFlex>

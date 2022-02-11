@@ -162,7 +162,7 @@ export const StyledInfo = styled.h3`
 
 export const AccordionCard = styled(Card)`
 	background: none !important;
-  min-height: 220px;
+  min-height: 250px;
   border: none;
 
 	.card-title {
@@ -191,7 +191,7 @@ export const AccordionCard = styled(Card)`
   align-items: center;
   margin: 0 auto;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: super;
   color: ${(props) => props.theme.color.text[100]};
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     display: none;

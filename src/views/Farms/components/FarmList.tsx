@@ -1,33 +1,32 @@
 import { getEarned, getMasterChefContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
+import { NavButtons } from 'components/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Spacer from 'components/Spacer'
 import { Farm } from 'contexts/Farms'
 import { PoolType } from 'contexts/Farms/types'
 import useBao from 'hooks/base/useBao'
+import useTokenBalance from 'hooks/base/useTokenBalance'
+import useAllFarmTVL from 'hooks/farms/useAllFarmTVL'
 import useFarms from 'hooks/farms/useFarms'
 import useStake from 'hooks/farms/useStake'
 import useStakedBalance from 'hooks/farms/useStakedBalance'
-import useTokenBalance from 'hooks/base/useTokenBalance'
 import useUnstake from 'hooks/farms/useUnstake'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
 import type { CountdownRenderProps } from 'react-countdown'
-import 'react-tabs/style/react-tabs.css'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { bnToDec } from 'utils'
 import { getContract } from 'utils/erc20'
-import { provider } from 'web3-core'
-import Config from '../../../bao/lib/config'
-import useAllFarmTVL from 'hooks/farms/useAllFarmTVL'
 import GraphUtil from 'utils/graph'
 import Multicall from 'utils/multicall'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import Earnings from './Earnings'
+import { provider } from 'web3-core'
+import Config from '../../../bao/lib/config'
+import { Harvest } from './Harvest'
 import { Staking } from './Staking'
 import { StyledLoadingWrapper } from './styles'
-import { NavButtons } from 'components/Button'
 
 export interface FarmWithStakedValue extends Farm {
 	apy: BigNumber
@@ -256,7 +255,6 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 						<Col>{`$${getDisplayBalance(farm.tvl, 0)}`}</Col>
 					</Row>
 				</StyledAccordionHeader>
-
 				<StyledAccordionBody>
 					<NavButtons
 						options={operations}
@@ -265,7 +263,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 					/>
 					<Row>
 						<Col md={6}>
-							<Earnings pid={farm.pid} />
+							<Harvest pid={farm.pid} operation={operation} />
 						</Col>
 						<Col md={6}>
 							<Staking farm={farm} operation={operation} />
