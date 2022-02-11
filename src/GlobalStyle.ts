@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
 
   a:hover,
   a:focus {
-    color: #ce6509;
+		color: ${(props) => props.theme.color.text[100]};
   }
 
   .baoTicker {

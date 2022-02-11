@@ -147,7 +147,7 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	&:hover,
 	&:active {
 		background-color: ${(props) => props.theme.color.primary[200]};
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${(props) => props.theme.color.text[100]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
@@ -166,7 +166,7 @@ const StyledLink = styled(Link)`
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${(props) => props.theme.color.text[100]};
 	}
 `
 
@@ -183,7 +183,7 @@ const ButtonLink = styled.a`
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${(props) => props.theme.color.text[100]};
 	}
 `
 
@@ -204,7 +204,7 @@ export const MaxButton = styled.a`
 
 	&:hover {
 		background: ${(props) => props.theme.color.primary[100]};
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${(props) => props.theme.color.text[100]};
 		cursor: pointer;
 	}
 `
