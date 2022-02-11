@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import useTransactionProvider from './useTransactionProvider'
 import { TransactionReceipt } from 'web3-core'
+import useTransactionProvider from './useTransactionProvider'
 
 const useTransactionHandler = () => {
   const { onAddTransaction, onTxReceipt } = useTransactionProvider()

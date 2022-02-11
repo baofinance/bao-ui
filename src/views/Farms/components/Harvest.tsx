@@ -14,8 +14,7 @@ import React, { useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { getBalanceNumber } from 'utils/numberFormat'
-import { AssetImage, AssetImageContainer } from './styles'
-import { AccordionCard } from './styles'
+import { AccordionCard, AssetImage, AssetImageContainer } from './styles'
 
 interface HarvestProps {
 	pid: number
@@ -56,8 +55,7 @@ const Earnings: React.FC<EarningsProps> = ({ pid }) => {
 					<Col style={{ textAlign: 'center' }}>
 						<AssetImageContainer>
 							<AssetImage src={baoIcon} />
-						</AssetImageContainer>
-						{' '}
+						</AssetImageContainer>{' '}
 						<AssetImageContainer>
 							<Earned value={getBalanceNumber(earnings)} />
 						</AssetImageContainer>

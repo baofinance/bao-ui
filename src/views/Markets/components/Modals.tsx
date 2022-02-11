@@ -25,9 +25,10 @@ import {
 	AssetLabel,
 	AssetStack,
 	IconFlex,
+	CloseButton,
 } from './styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { CloseButton } from 'components/Button/Button'
+import { useMarketPrices } from 'hooks/markets/usePrices'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -56,6 +57,7 @@ const MarketModal = ({
 	const supplyBalances = useSupplyBalances()
 	const accountLiquidity = useAccountLiquidity()
 	const { exchangeRates } = useExchangeRates()
+	const { prices } = useMarketPrices()
 
 	const max = () => {
 		switch (operation) {
@@ -86,7 +88,7 @@ const MarketModal = ({
 					? supply
 					: withdrawable
 			case MarketOperations.mint:
-				return accountLiquidity
+				return prices && accountLiquidity
 					? accountLiquidity.usdBorrowable / asset.price
 					: 0
 			case MarketOperations.repay:
@@ -135,7 +137,9 @@ const MarketModal = ({
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide} onHide={hideModal} />
+			<CloseButton onClick={onHide}>
+				<FontAwesomeIcon icon="times" />
+			</CloseButton>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>

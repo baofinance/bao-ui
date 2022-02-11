@@ -1,6 +1,6 @@
 import { createContext } from 'react'
-import { Transaction, TransactionsMap } from './types'
 import { TransactionReceipt } from 'web3-core'
+import { Transaction, TransactionsMap } from './types'
 
 interface TransactionsContext {
   transactions: TransactionsMap

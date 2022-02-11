@@ -1,25 +1,25 @@
-import { getBaoSupply, getMasterChefContract, getReferrals } from 'bao/utils'
+import Config from 'bao/lib/config'
+import { getBaoSupply } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import Card from 'components/Card'
 import CardContent from 'components/CardContent'
 import ExternalLink from 'components/ExternalLink'
 import { SpinnerLoader } from 'components/Loader'
 import Spacer from 'components/Spacer'
+import useBao from 'hooks/base/useBao'
+import useTokenBalance from 'hooks/base/useTokenBalance'
 import useAllEarnings from 'hooks/farms/useAllEarnings'
 import useAllStakedValue from 'hooks/farms/useAllStakedValue'
-import useBao from 'hooks/base/useBao'
 import useFarms from 'hooks/farms/useFarms'
 import useLockedEarnings from 'hooks/farms/useLockedEarnings'
-import useTokenBalance from 'hooks/base/useTokenBalance'
 import React, { Fragment, useEffect, useState } from 'react'
-import { Badge, Col, Row } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import CountUp from 'react-countup'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
+import GraphUtil from 'utils/graph'
 import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 import { Footnote, FootnoteValue, StyledInfo } from './styles'
-import GraphUtil from 'utils/graph'
-import Config from 'bao/lib/config'
 
 const PendingRewards: React.FC = () => {
 	const [start, setStart] = useState(0)
@@ -112,8 +112,8 @@ const Balances: React.FC = () => {
 											color: '${(props) => props.theme.color.red}',
 										}}
 									>
-									Attention:
-								</span>{' '}
+										Attention:
+									</span>{' '}
 									Be sure to read the{' '}
 									<ExternalLink
 										href="https://docs.bao.finance/franchises/bao"
@@ -133,8 +133,8 @@ const Balances: React.FC = () => {
 											color: '${(props) => props.theme.color.red}',
 										}}
 									>
-									Don't see your farm?
-								</span>{' '}
+										Don't see your farm?
+									</span>{' '}
 									Visit{' '}
 									<ExternalLink href="https://old.bao.finance" target="_blank">
 										old.bao.finance

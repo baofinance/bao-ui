@@ -1,26 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Config from 'bao/lib/config'
-import GraphUtil from 'utils/graph'
-import { NavLink, useParams } from 'react-router-dom'
-import { useMarkets } from 'hooks/markets/useMarkets'
-import {
-	useBorrowBalances,
-	useSupplyBalances,
-} from 'hooks/markets/useBalances'
-import useBao from 'hooks/base/useBao'
-import { useExchangeRates } from 'hooks/markets/useExchangeRates'
-import { SpinnerLoader } from 'components/Loader'
-import { SubmitButton } from './components/MarketButton'
-import { Badge, Col, Container, Row } from 'react-bootstrap'
-import { MarketDetails, StatBlock } from './components/Stats'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Tooltipped from 'components/Tooltipped'
-import { MarketBorrowModal, MarketSupplyModal } from './components/Modals'
-import styled from 'styled-components'
-import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { formatAddress } from 'utils'
+import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
-import useFarms from 'hooks/farms/useFarms'
+import { SpinnerLoader } from 'components/Loader'
+import Tooltipped from 'components/Tooltipped'
+import useBao from 'hooks/base/useBao'
+import { useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
+import { useExchangeRates } from 'hooks/markets/useExchangeRates'
+import { useMarkets } from 'hooks/markets/useMarkets'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Badge, Col, Container, Row } from 'react-bootstrap'
+import { NavLink, useParams } from 'react-router-dom'
+import styled from 'styled-components'
+import { formatAddress } from 'utils'
+import GraphUtil from 'utils/graph'
+import { decimate, getDisplayBalance } from 'utils/numberFormat'
+import { SubmitButton } from './components/MarketButton'
+import { MarketBorrowModal, MarketSupplyModal } from './components/Modals'
+import { MarketDetails, StatBlock } from './components/Stats'
 
 const Market: React.FC = () => {
 	const { marketId } = useParams()
@@ -85,11 +81,7 @@ const Market: React.FC = () => {
 	return markets && activeMarket ? (
 		<Container style={{ marginTop: '2.5em' }}>
 			<h3>
-				<StyledLink
-					exact
-					activeClassName="active"
-					to={{ pathname: '/' }}
-				>
+				<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
 					<FontAwesomeIcon icon="arrow-left" />
 				</StyledLink>
 				<HorizontalSpacer />

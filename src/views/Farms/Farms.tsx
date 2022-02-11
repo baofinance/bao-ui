@@ -15,17 +15,17 @@ const Farms: React.FC = () => {
 	return (
 		<Switch>
 			<Page>
-					<PageHeader
-						icon=""
-						title="Farms"
-						subtitle="Earn BAO by staking Sushiswap & Uniswap LP Tokens!"
-					/>
-					<ConnectedCheck>
-						<Container>
-							<Balances />
-							{farms ? <FarmList /> : <SpinnerLoader block />}
-						</Container>
-					</ConnectedCheck>
+				<PageHeader
+					icon=""
+					title="Farms"
+					subtitle="Earn BAO by staking Sushiswap & Uniswap LP Tokens!"
+				/>
+				<ConnectedCheck>
+					<Container>
+						<Balances />
+						{farms ? <FarmList /> : <SpinnerLoader block />}
+					</Container>
+				</ConnectedCheck>
 			</Page>
 		</Switch>
 	)

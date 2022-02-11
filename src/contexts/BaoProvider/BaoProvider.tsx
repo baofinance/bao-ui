@@ -1,8 +1,8 @@
 import { Bao } from 'bao'
+import Config from 'bao/lib/config'
 import React, { createContext, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
 import Web3 from 'web3'
-import Config from 'bao/lib/config'
 
 export interface BaoContext {
 	bao?: typeof Bao

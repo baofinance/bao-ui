@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { ActiveSupportedMarket } from 'bao/lib/types'
 import BigNumber from 'bignumber.js'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import {
@@ -7,10 +7,10 @@ import {
 	useSupplyBalances,
 } from 'hooks/markets/useBalances'
 import { useExchangeRates } from 'hooks/markets/useExchangeRates'
-import { MarketOperations } from './Modals'
-import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { ActiveSupportedMarket } from 'bao/lib/types'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
+import { decimate, getDisplayBalance } from 'utils/numberFormat'
+import { MarketOperations } from './Modals'
 
 type Stat = {
 	label: string
@@ -83,14 +83,14 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 		[balances],
 	)
 	const supplyBalanceUsd = useMemo(() => {
-		if (!(supplyBalance)) return
+		if (!supplyBalance) return
 		return getDisplayBalance(
 			new BigNumber(asset.price).times(supplyBalance).toFixed(2),
 			0,
 		)
 	}, [supplyBalance])
 	const walletBalanceUsd = useMemo(() => {
-		if (!(walletBalance)) return
+		if (!walletBalance) return
 		return getDisplayBalance(
 			new BigNumber(asset.price).times(walletBalance).toFixed(2),
 			0,
@@ -123,10 +123,9 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 }
 
 export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
-	const totalReservesUsd =
-		asset.totalReserves
-			? `$${getDisplayBalance(asset.totalReserves * asset.price, 0)}`
-			: '-'
+	const totalReservesUsd = asset.totalReserves
+		? `$${getDisplayBalance(asset.totalReserves * asset.price, 0)}`
+		: '-'
 	const reserveFactor = asset.reserveFactor
 		? `${asset.reserveFactor * 100}%`
 		: '-'
@@ -183,7 +182,7 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 		[balances],
 	)
 	const price = useMemo(() => {
-		if (!(borrowBalance)) return
+		if (!borrowBalance) return
 		return getDisplayBalance(
 			new BigNumber(asset.price).times(borrowBalance).toFixed(2),
 			0,

@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
-import useBao from '../base/useBao'
+import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import { useMarkets } from './useMarkets'
-import useTransactionProvider from '../base/useTransactionProvider'
 import MultiCall from 'utils/multicall'
+import useBao from '../base/useBao'
+import useTransactionProvider from '../base/useTransactionProvider'
+import { useMarkets } from './useMarkets'
 
 type Approvals = {
   approvals: { [key: string]: BigNumber }
@@ -27,7 +27,12 @@ export const useApprovals = (pendingTx: string | boolean): Approvals => {
             market.underlyingAddress !== 'ETH' && {
               ref: market.underlyingAddress,
               contract: market.underlyingContract,
-              calls: [{ method: 'allowance', params: [account, market.marketAddress] }],
+              calls: [
+                {
+                  method: 'allowance',
+                  params: [account, market.marketAddress],
+                },
+              ],
             },
         )
         .filter((call) => call),

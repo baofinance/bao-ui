@@ -1,14 +1,14 @@
-import BigNumber from 'bignumber.js/bignumber'
-import { Multicall as MC } from 'ethereum-multicall'
-import { useCallback, useEffect, useState } from 'react'
-import Web3 from 'web3'
-import { AbiItem } from 'web3-utils'
 import erc20Abi from 'bao/lib/abi/erc20.json'
 import lpAbi from 'bao/lib/abi/uni_v2_lp.json'
 import Config from 'bao/lib/config'
+import BigNumber from 'bignumber.js/bignumber'
+import { Multicall as MC } from 'ethereum-multicall'
+import { useCallback, useEffect, useState } from 'react'
 import GraphUtil from 'utils/graph'
 import Multicall from 'utils/multicall'
 import { decimate } from 'utils/numberFormat'
+import Web3 from 'web3'
+import { AbiItem } from 'web3-utils'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
   const results = Multicall.parseCallResults(
@@ -73,7 +73,10 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
       },
       {
         address: token1Address,
-        balance: decimate(reserves[1], token1Address === Config.addressMap.USDC ? 6 : 18), // This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
+        balance: decimate(
+          reserves[1],
+          token1Address === Config.addressMap.USDC ? 6 : 18,
+        ), // This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
       },
     ]
 
@@ -120,8 +123,7 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
           // BAO-USDC pair
           token = lpInfo.tokens[1]
           specialPair = true
-        }
-        else token = lpInfo.tokens[1]
+        } else token = lpInfo.tokens[1]
 
         if (
           token.address.toLowerCase() === Config.addressMap.WETH.toLowerCase()

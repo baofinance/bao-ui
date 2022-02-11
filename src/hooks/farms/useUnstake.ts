@@ -1,6 +1,6 @@
+import { getMasterChefContract, getRefUrl, unstake } from 'bao/utils'
 import { useCallback } from 'react'
 import { useWallet } from 'use-wallet'
-import { getMasterChefContract, getRefUrl, unstake } from 'bao/utils'
 import useBao from '../base/useBao'
 
 const useUnstake = (pid: number) => {

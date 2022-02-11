@@ -1,7 +1,7 @@
+import { getMasterChefContract, getStaked } from 'bao/utils'
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import { getMasterChefContract, getStaked } from 'bao/utils'
 import useBao from '../base/useBao'
 import useBlock from '../base/useBlock'
 

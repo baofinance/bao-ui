@@ -1,15 +1,15 @@
+import Config from 'bao/lib/config'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import useTransactionProvider from '../base/useTransactionProvider'
-import useBao from '../base/useBao'
 import { useWallet } from 'use-wallet'
-import { useExchangeRates } from './useExchangeRates'
+import { decimate } from 'utils/numberFormat'
+import useBao from '../base/useBao'
+import useTransactionProvider from '../base/useTransactionProvider'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
+import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import { decimate } from 'utils/numberFormat'
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import Config from 'bao/lib/config'
-import BigNumber from 'bignumber.js'
 
 export type AccountLiquidity = {
   netApy: number

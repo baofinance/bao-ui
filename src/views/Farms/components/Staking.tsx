@@ -1,32 +1,31 @@
-import { provider } from 'web3-core'
 import BigNumber from 'bignumber.js'
-import { Button, NavButtons } from 'components/Button'
+import { Button } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import Label from 'components/Label'
-import TokenInput from 'components/TokenInput'
 import { PoolType } from 'contexts/Farms/types'
 import useAllowance from 'hooks/base/useAllowance'
 import useApprove from 'hooks/base/useApprove'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
+import useStake from 'hooks/farms/useStake'
+import useStakedBalance from 'hooks/farms/useStakedBalance'
+import useUnstake from 'hooks/farms/useUnstake'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Card } from 'react-bootstrap'
 import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
 import { getFullDisplayBalance } from 'utils/numberFormat'
 import {
+	AssetLabel,
 	InputStack,
 	LabelFlex,
 	LabelStack,
 	MaxLabel,
-	AssetLabel,
 } from 'views/Markets/components/styles'
+import { provider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { AccordionCard } from './styles'
-import useStakedBalance from 'hooks/farms/useStakedBalance'
-import useStake from 'hooks/farms/useStake'
-import useUnstake from 'hooks/farms/useUnstake'
 
 interface FarmListItemProps {
 	farm: FarmWithStakedValue
@@ -154,7 +153,7 @@ const Stake: React.FC<StakeProps> = ({
 				</InputStack>
 			</Card.Body>
 			<Card.Footer>
-			{!allowance.toNumber() ? (
+				{!allowance.toNumber() ? (
 					<Button
 						disabled={requestedApproval}
 						onClick={handleApprove}

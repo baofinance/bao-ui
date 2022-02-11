@@ -1,29 +1,28 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
-import { UseWalletProvider } from 'use-wallet'
-import MobileMenu from './components/MobileMenu'
-import TopBar from './components/TopBar'
-import BaoProvider from './contexts/BaoProvider'
-import ModalsProvider from './contexts/Modals'
-import MarketsProvider from './contexts/Markets'
-import TransactionProvider from './contexts/Transactions'
-import FarmsProvider from './contexts/Farms'
-import Markets from './views/Markets'
-import Market from 'views/Markets/Market'
-import Ballast from './views/Ballast'
-import Farms from './views/Farms'
-import { SWRConfig } from 'swr'
-import fetcher from 'bao/lib/fetcher'
-import theme from './theme'
-import GlobalStyle from 'GlobalStyle'
-
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import fetcher from 'bao/lib/fetcher'
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
+import GlobalStyle from 'GlobalStyle'
+import React, { useCallback, useEffect, useState } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
+import { SWRConfig } from 'swr'
+import { UseWalletProvider } from 'use-wallet'
+import Market from 'views/Markets/Market'
+import MobileMenu from './components/MobileMenu'
+import TopBar from './components/TopBar'
+import BaoProvider from './contexts/BaoProvider'
+import FarmsProvider from './contexts/Farms'
+import MarketsProvider from './contexts/Markets'
+import ModalsProvider from './contexts/Modals'
+import TransactionProvider from './contexts/Transactions'
+import theme from './theme'
+import Ballast from './views/Ballast'
+import Farms from './views/Farms'
+import Markets from './views/Markets'
 
 library.add(fas, fab)
 
@@ -91,8 +90,7 @@ const Providers: React.FC<ProvidersProps> = ({
 				chainId={3}
 				connectors={{
 					walletconnect: {
-						rpcUrl:
-							'https://rpc.flashbots.net',
+						rpcUrl: 'https://rpc.flashbots.net',
 					},
 				}}
 			>

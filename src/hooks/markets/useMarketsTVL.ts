@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
+import { useCallback, useEffect, useState } from 'react'
+import { decimate } from 'utils/numberFormat'
 import useBao from '../base/useBao'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import { decimate } from 'utils/numberFormat'
 
 export const useMarketsTVL = () => {
   const [tvl, setTvl] = useState<BigNumber | undefined>()
@@ -16,7 +16,8 @@ export const useMarketsTVL = () => {
       (prev, current) =>
         prev.plus(
           decimate(
-            (current.supplied - current.totalBorrows) * prices[current.marketAddress],
+            (current.supplied - current.totalBorrows) *
+              prices[current.marketAddress],
             36 - current.underlyingDecimals,
           ),
         ),
