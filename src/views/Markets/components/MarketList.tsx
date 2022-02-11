@@ -34,6 +34,7 @@ import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { getComptrollerContract } from '../../../bao/utils'
 import { ActiveSupportedMarket } from '../../../bao/lib/types'
 import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
+import { Button } from 'components/Button'
 
 export const MarketList: React.FC<MarketListProps> = ({
 	markets: _markets,
@@ -287,11 +288,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							</SubmitButton>
 						</Col>
 						<Col>
-							<SubmitButton
-								onClick={() => (window.location.href = `/market/${market.mid}`)}
-							>
-								Details
-							</SubmitButton>
+						<Button to={`/markets/${market.mid}`} text="Details" />
 						</Col>
 					</Row>
 					<MarketSupplyModal
@@ -381,11 +378,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							</SubmitButton>
 						</Col>
 						<Col>
-							<SubmitButton
-								onClick={() => (window.location.href = `/market/${market.mid}`)}
-							>
-								Details
-							</SubmitButton>
+						<Button to={`/markets/${market.mid}`} text="Details" />
 						</Col>
 					</Row>
 					<MarketBorrowModal

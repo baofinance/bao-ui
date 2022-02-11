@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Config from '../../bao/lib/config'
 import GraphUtil from '../../utils/graph'
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { useMarkets } from '../../hooks/markets/useMarkets'
 import {
 	useBorrowBalances,
@@ -20,9 +20,10 @@ import styled from 'styled-components'
 import { decimate, getDisplayBalance } from '../../utils/numberFormat'
 import { formatAddress } from '../../utils'
 import { ActiveSupportedMarket } from '../../bao/lib/types'
+import useFarms from 'hooks/farms/useFarms'
 
-const Market = () => {
-	const { id } = useParams()
+const Market: React.FC = () => {
+	const { marketId } = useParams()
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
@@ -33,7 +34,7 @@ const Market = () => {
 
 	const activeMarket = useMemo(() => {
 		if (!markets) return undefined
-		return markets.find((market) => market.mid === parseFloat(id))
+		return markets.find((market) => market.mid === parseFloat(marketId))
 	}, [markets])
 
 	// TODO- Use subgraph info for other stats
@@ -84,9 +85,13 @@ const Market = () => {
 	return markets && activeMarket ? (
 		<Container style={{ marginTop: '2.5em' }}>
 			<h3>
-				<a href="/">
+				<StyledLink
+					exact
+					activeClassName="active"
+					to={{ pathname: '/' }}
+				>
 					<FontAwesomeIcon icon="arrow-left" />
-				</a>
+				</StyledLink>
 				<HorizontalSpacer />
 				Back to Markets
 				<span style={{ float: 'right' }}>
@@ -175,11 +180,15 @@ const Market = () => {
 				/>
 				<InfoCol
 					title="Number of Suppliers"
-					content={marketInfo ? marketInfo.numberOfSuppliers : <SpinnerLoader />}
+					content={
+						marketInfo ? marketInfo.numberOfSuppliers : <SpinnerLoader />
+					}
 				/>
 				<InfoCol
 					title="Number of Borrowers"
-					content={marketInfo ? marketInfo.numberOfBorrowers : <SpinnerLoader />}
+					content={
+						marketInfo ? marketInfo.numberOfBorrowers : <SpinnerLoader />
+					}
 				/>
 			</Row>
 			<br />
@@ -312,6 +321,24 @@ const InfoContainer = styled.div`
 		display: block;
 		font-size: 130%;
 		margin-bottom: 0;
+	}
+`
+
+export const StyledLink = styled(NavLink)`
+	color: ${(props) => props.theme.color.text[100]};
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	padding-left: ${(props) => props.theme.spacing[3]}px;
+	padding-right: ${(props) => props.theme.spacing[3]}px;
+	text-decoration: none;
+	&:hover {
+		color: ${(props) => props.theme.color.text[300]};
+	}
+	&.active {
+		color: ${(props) => props.theme.color.text[300]};
+	}
+	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+		padding-left: ${(props) => props.theme.spacing[2]}px;
+		padding-right: ${(props) => props.theme.spacing[2]}px;
 	}
 `
 

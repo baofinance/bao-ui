@@ -1,35 +1,42 @@
-import React from 'react'
-import { useMarkets } from '../../hooks/markets/useMarkets'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
+import { useMarkets } from 'hooks/markets/useMarkets'
+import React from 'react'
 import { Container } from 'react-bootstrap'
-import { Switch } from 'react-router-dom'
-import { Overview } from './components/Overview'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import { SpinnerLoader } from '../../components/Loader'
-import { MarketList } from './components/MarketList'
 import { ConnectedCheck } from './components/ConnectedCheck'
+import { MarketList } from './components/MarketList'
+import { Overview } from './components/Overview'
+import Market from './Market'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
+	const { path } = useRouteMatch()
 
 	return (
 		<Switch>
 			<Page>
 				<PageHeader
 					icon=""
-					title="Markest"
+					title="Markets"
 					subtitle="Mint synthethic assets with multiple types of collateral!"
 				/>
-				<Container>
-					<ConnectedCheck>
-						<Overview />
-						{markets ? (
-							<MarketList markets={markets} />
-						) : (
-							<SpinnerLoader block />
-						)}
-					</ConnectedCheck>
-				</Container>
+				<ConnectedCheck>
+					<Route exact path={path}>
+						<Container>
+							<Overview />
+							{markets ? (
+								<MarketList markets={markets} />
+							) : (
+								<SpinnerLoader block />
+							)}
+						</Container>
+					</Route>
+					<Route path={`${path}/:marketId`}>
+						<Market />
+					</Route>
+				</ConnectedCheck>
 			</Page>
 		</Switch>
 	)
