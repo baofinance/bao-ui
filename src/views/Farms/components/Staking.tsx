@@ -20,7 +20,7 @@ import {
 	InputStack,
 	LabelFlex,
 	LabelStack,
-	MaxLabel,
+	MaxLabel
 } from 'views/Markets/components/styles'
 import { provider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
@@ -62,6 +62,7 @@ export const Staking: React.FC<FarmListItemProps> = ({ farm, operation }) => {
 			) : (
 				<Stake
 					lpContract={lpContract}
+					lpTokenAddress={lpTokenAddress}
 					pid={farm.pid}
 					tokenName={farm.lpToken.toUpperCase()}
 					poolType={farm.poolType}
@@ -75,6 +76,7 @@ export const Staking: React.FC<FarmListItemProps> = ({ farm, operation }) => {
 
 interface StakeProps {
 	lpContract: Contract
+	lpTokenAddress: string
 	pid: number
 	max: BigNumber
 	onConfirm: (amount: string) => void
@@ -84,6 +86,7 @@ interface StakeProps {
 
 const Stake: React.FC<StakeProps> = ({
 	lpContract,
+	lpTokenAddress,
 	pid,
 	poolType,
 	max,
@@ -97,7 +100,7 @@ const Stake: React.FC<StakeProps> = ({
 		return getFullDisplayBalance(max)
 	}, [max])
 
-	const walletBalance = parseInt(fullBalance)
+	const walletBalance = useTokenBalance(lpTokenAddress)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -140,9 +143,7 @@ const Stake: React.FC<StakeProps> = ({
 					<LabelFlex>
 						<LabelStack>
 							<MaxLabel>Available to deposit:</MaxLabel>
-							<AssetLabel>
-								{`${walletBalance.toFixed(4)} ${tokenName}`}
-							</AssetLabel>
+							<AssetLabel>{`${fullBalance} ${tokenName}`}</AssetLabel>
 						</LabelStack>
 					</LabelFlex>
 					<BalanceInput
@@ -234,9 +235,7 @@ const Unstake: React.FC<UnstakeProps> = ({
 					<LabelFlex>
 						<LabelStack>
 							<MaxLabel>Available to withdraw:</MaxLabel>
-							<AssetLabel>
-								{`${stakedBalance.toFixed(4)} ${tokenName}`}
-							</AssetLabel>
+							<AssetLabel>{`${fullBalance} ${tokenName}`}</AssetLabel>
 						</LabelStack>
 					</LabelFlex>
 					<BalanceInput
