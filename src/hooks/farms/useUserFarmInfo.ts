@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import { getMasterChefContract, getUserInfoChef } from '../../bao/utils'
+import { getMasterChefContract, getUserInfoChef } from 'bao/utils'
 import useBao from '../base/useBao'
 
 export const useUserFarmInfo = (pid: number) => {

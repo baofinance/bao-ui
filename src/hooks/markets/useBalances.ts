@@ -4,9 +4,9 @@ import { useWallet } from 'use-wallet'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { Contract } from 'web3-eth-contract'
 import { provider } from 'web3-core'
-import Config from '../../bao/lib/config'
-import MultiCall from '../../utils/multicall'
-import { decimate } from '../../utils/numberFormat'
+import Config from 'bao/lib/config'
+import MultiCall from 'utils/multicall'
+import { decimate } from 'utils/numberFormat'
 
 export type Balance = {
   address: string

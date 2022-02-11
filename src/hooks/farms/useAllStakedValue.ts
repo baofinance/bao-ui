@@ -7,8 +7,8 @@ import {
   getMasterChefContract,
   getTotalLPWethValue,
   getWethContract,
-} from '../../bao/utils'
-import { getContract } from '../../utils/erc20'
+} from 'bao/utils'
+import { getContract } from 'utils/erc20'
 import useBao from '../base/useBao'
 import useBlock from '../base/useBlock'
 

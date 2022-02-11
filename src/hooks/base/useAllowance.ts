@@ -4,7 +4,7 @@ import { useWallet } from 'use-wallet'
 import { getAllowance } from 'utils/erc20'
 import { provider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
-import Config from '../../bao/lib/config'
+import Config from 'bao/lib/config'
 
 const useAllowance = (lpContract: Contract) => {
   const [allowance, setAllowance] = useState(new BigNumber(0))

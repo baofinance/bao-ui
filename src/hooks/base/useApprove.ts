@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useWallet } from 'use-wallet'
 import { provider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
-import { approve, getMasterChefContract } from '../../bao/utils'
+import { approve, getMasterChefContract } from 'bao/utils'
 import useBao from './useBao'
 
 const useApprove = (lpContract: Contract) => {

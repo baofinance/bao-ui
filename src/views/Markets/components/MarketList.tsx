@@ -1,21 +1,21 @@
 import React, { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import Config from '../../../bao/lib/config'
+import Config from 'bao/lib/config'
 import styled from 'styled-components'
 import {
 	Balance,
 	useAccountBalances,
 	useBorrowBalances,
 	useSupplyBalances,
-} from '../../../hooks/markets/useBalances'
+} from 'hooks/markets/useBalances'
 import {
 	AccountLiquidity,
 	useAccountLiquidity,
-} from '../../../hooks/markets/useAccountLiquidity'
-import useBao from '../../../hooks/base/useBao'
+} from 'hooks/markets/useAccountLiquidity'
+import useBao from 'hooks/base/useBao'
 import { useWallet } from 'use-wallet'
-import { useExchangeRates } from '../../../hooks/markets/useExchangeRates'
-import { useAccountMarkets } from '../../../hooks/markets/useMarkets'
+import { useExchangeRates } from 'hooks/markets/useExchangeRates'
+import { useAccountMarkets } from 'hooks/markets/useMarkets'
 import {
 	Accordion,
 	Badge,
@@ -24,16 +24,16 @@ import {
 	FormCheck,
 	Row,
 } from 'react-bootstrap'
-import { SpinnerLoader } from '../../../components/Loader'
+import { SpinnerLoader } from 'components/Loader'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
-import Tooltipped from '../../../components/Tooltipped'
-import HrText from '../../../components/HrText'
+import Tooltipped from 'components/Tooltipped'
+import HrText from 'components/HrText'
 import { SubmitButton } from './MarketButton'
-import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
-import { getComptrollerContract } from '../../../bao/utils'
-import { ActiveSupportedMarket } from '../../../bao/lib/types'
-import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
+import { decimate, getDisplayBalance } from 'utils/numberFormat'
+import { getComptrollerContract } from 'bao/utils'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { Button } from 'components/Button'
 
 export const MarketList: React.FC<MarketListProps> = ({

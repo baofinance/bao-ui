@@ -2,8 +2,8 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
 import useTransactionProvider from '../base/useTransactionProvider'
 import useBao from '../base/useBao'
-import { ActiveSupportedMarket } from '../../bao/lib/types'
-import { Context, MarketsContext } from '../../contexts/Markets'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import { Context, MarketsContext } from 'contexts/Markets'
 
 export const useMarkets = (): ActiveSupportedMarket[] | undefined => {
   const { markets }: MarketsContext = useContext(Context)

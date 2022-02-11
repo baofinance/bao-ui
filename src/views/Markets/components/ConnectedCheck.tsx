@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import Config from '../../../bao/lib/config'
-import useModal from '../../../hooks/base/useModal'
-import WalletProviderModal from '../../../components/WalletProviderModal'
-import { Button } from '../../../components/Button'
+import Config from 'bao/lib/config'
+import useModal from 'hooks/base/useModal'
+import WalletProviderModal from 'components/WalletProviderModal'
+import { Button } from 'components/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWallet } from 'use-wallet'
 

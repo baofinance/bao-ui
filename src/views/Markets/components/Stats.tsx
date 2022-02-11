@@ -8,7 +8,7 @@ import {
 } from 'hooks/markets/useBalances'
 import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import { MarketOperations } from './Modals'
-import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
+import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import styled from 'styled-components'
 

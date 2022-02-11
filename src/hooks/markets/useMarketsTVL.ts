@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import useBao from '../base/useBao'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import { decimate } from '../../utils/numberFormat'
+import { decimate } from 'utils/numberFormat'
 
 export const useMarketsTVL = () => {
   const [tvl, setTvl] = useState<BigNumber | undefined>()

@@ -8,13 +8,13 @@ import {
 	useBorrowBalances,
 	useSupplyBalances,
 } from 'hooks/markets/useBalances'
-import { useAccountLiquidity } from '../../../hooks/markets/useAccountLiquidity'
+import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import useBao from 'hooks/base/useBao'
 import BigNumber from 'bignumber.js'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import { decimate, exponentiate } from '../../../utils/numberFormat'
+import { decimate, exponentiate } from 'utils/numberFormat'
 import {
 	HeaderWrapper,
 	ModalStack,

@@ -6,7 +6,7 @@ import reducer, {
 	receiveTxReceipt,
 	setTransactions,
 } from './reducer'
-import useBao from '../../hooks/base/useBao'
+import useBao from 'hooks/base/useBao'
 import { Transaction, TransactionsMap } from './types'
 import { TransactionReceipt } from 'web3-core'
 

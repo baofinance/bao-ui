@@ -4,7 +4,7 @@ import useBao from '../base/useBao'
 import { useWallet } from 'use-wallet'
 import { useMarkets } from './useMarkets'
 import useTransactionProvider from '../base/useTransactionProvider'
-import MultiCall from '../../utils/multicall'
+import MultiCall from 'utils/multicall'
 
 type Approvals = {
   approvals: { [key: string]: BigNumber }

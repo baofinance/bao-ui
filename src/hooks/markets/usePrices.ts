@@ -4,8 +4,8 @@ import { SWR } from 'bao/lib/types'
 import useSWR from 'swr'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
-import MultiCall from '../../utils/multicall'
-import Config from '../../bao/lib/config'
+import MultiCall from 'utils/multicall'
+import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
 
 type Prices = {

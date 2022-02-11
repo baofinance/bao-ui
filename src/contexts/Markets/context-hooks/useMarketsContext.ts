@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import useBao from '../../../hooks/base/useBao'
-import useTransactionProvider from '../../../hooks/base/useTransactionProvider'
-import Config from '../../../bao/lib/config'
+import useBao from 'hooks/base/useBao'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import Config from 'bao/lib/config'
 import { provider } from 'web3-core'
-import { ActiveSupportedMarket } from '../../../bao/lib/types'
-import { decimate } from '../../../utils/numberFormat'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import { decimate } from 'utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
 
 export const SECONDS_PER_BLOCK = 2

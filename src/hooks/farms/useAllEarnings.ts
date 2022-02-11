@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
 import { provider } from 'web3-core'
-import { getEarned, getFarms, getMasterChefContract } from '../../bao/utils'
+import { getEarned, getFarms, getMasterChefContract } from 'bao/utils'
 import useBao from '../base/useBao'
 import useBlock from '../base/useBlock'
 

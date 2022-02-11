@@ -6,9 +6,9 @@ import { useExchangeRates } from './useExchangeRates'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import { decimate } from '../../utils/numberFormat'
-import { ActiveSupportedMarket } from '../../bao/lib/types'
-import Config from '../../bao/lib/config'
+import { decimate } from 'utils/numberFormat'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
 
 export type AccountLiquidity = {

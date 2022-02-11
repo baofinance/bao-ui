@@ -5,7 +5,7 @@ import { Modal, ModalProps } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { HeaderWrapper } from 'views/Markets/components/styles'
-import Config from '../../bao/lib/config'
+import Config from 'bao/lib/config'
 import { Button } from '../Button'
 import WalletCard from './components/WalletCard'
 

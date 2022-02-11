@@ -18,8 +18,8 @@ import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 import { Footnote, FootnoteValue, StyledInfo } from './styles'
-import GraphUtil from '../../../utils/graph'
-import Config from '../../../bao/lib/config'
+import GraphUtil from 'utils/graph'
+import Config from 'bao/lib/config'
 
 const PendingRewards: React.FC = () => {
 	const [start, setStart] = useState(0)

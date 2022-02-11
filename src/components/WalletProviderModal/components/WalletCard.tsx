@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import Config from '../../../bao/lib/config'
+import Config from 'bao/lib/config'
 import { Button } from '../../Button'
 import CardContent from '../../CardContent'
 import CardIcon from '../../CardIcon'
