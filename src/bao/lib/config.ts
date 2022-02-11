@@ -133,8 +133,8 @@ export default {
       symbol: 'BAO-ETH UNIV2',
       tokenSymbol: 'BAO',
       poolType: 'active',
-      iconA: '/bao.png',
-      iconB: '/weth.png',
+      iconA: '/BAO.png',
+      iconB: '/WETH.png',
       refUrl:
         'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
       pairUrl: '#',
@@ -152,8 +152,8 @@ export default {
       symbol: 'BAO-ETH SLP',
       tokenSymbol: 'BAO',
       poolType: 'active',
-      iconA: '/bao.png',
-      iconB: '/weth.png',
+      iconA: '/BAO.png',
+      iconB: '/WETH.png',
       refUrl:
         'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
       pairUrl: '#',
@@ -171,8 +171,8 @@ export default {
       symbol: 'BAO-USDC SLP',
       tokenSymbol: 'BAO',
       poolType: 'active',
-      iconA: '/bao.png',
-      iconB: '/usdc.png',
+      iconA: '/BAO.png',
+      iconB: '/USDC.png',
       refUrl:
         'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
       pairUrl: '#',

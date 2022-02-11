@@ -144,6 +144,7 @@ const WalletBalance = styled.div`
 
 const InnerWalletBalance = styled.div`
 	display: flex;
+	justify-content: center;
 `
 
 const InnerInnerWalletBalance = styled.div`
