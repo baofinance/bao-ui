@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
@@ -275,4 +276,27 @@ const NavButton = styled.button`
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
+`
+
+type CloseButtonProps = {
+	onClick: (s: any) => void
+	onHide: () => void
+}
+
+export const CloseButton = ({ onHide }: CloseButtonProps) => (
+	<StyledCloseButton onClick={onHide}>
+		<FontAwesomeIcon icon="times" />
+	</StyledCloseButton>
+)
+
+export const StyledCloseButton = styled.a`
+  float: right;
+  top: ${(props) => props.theme.spacing[3]}px;
+  right: ${(props) => props.theme.spacing[4]}px;
+  font-size: 1.5rem;
+  position: absolute;
+  color: ${(props) => props.theme.color.background[200]};
+  &:hover {
+    cursor: pointer;
+  }
 `

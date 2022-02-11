@@ -15,7 +15,11 @@ const Markets: React.FC = () => {
 	return (
 		<Switch>
 			<Page>
-				<PageHeader icon="" title="Markets" />
+				<PageHeader
+					icon=""
+					title="Markest"
+					subtitle="Mint synthethic assets with multiple types of collateral!"
+				/>
 				<Container>
 					<ConnectedCheck>
 						<Overview />

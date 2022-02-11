@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Config from '../../../bao/lib/config'
 import useModal from '../../../hooks/base/useModal'
 import WalletProviderModal from '../../../components/WalletProviderModal'
@@ -12,15 +12,23 @@ export const ConnectedCheck: React.FC = ({ children }) => {
 		'provider',
 	)
 	const { account, ethereum }: any = useWallet()
+	const [showWalletProviderModal, setShowWalletProviderModal] = useState(false)
 
 	return account && ethereum.chainId === Config.defaultRpc.chainId ? (
 		<>{children}</>
 	) : (
-		<div style={{ width: '350px', margin: 'auto' }}>
-			<Button onClick={onPresentWalletProviderModal}>
-				<FontAwesomeIcon icon="wallet" style={{ marginRight: '5px' }} /> Connect
-				Wallet to Enter App
-			</Button>
-		</div>
+		<>
+			<div style={{ width: '350px', margin: 'auto' }}>
+				<Button onClick={() => setShowWalletProviderModal(true)}>
+					<FontAwesomeIcon icon="wallet" style={{ marginRight: '5px' }} />{' '}
+					Connect Wallet to Enter App
+				</Button>
+			</div>
+
+			<WalletProviderModal
+				show={showWalletProviderModal}
+				onHide={() => setShowWalletProviderModal(false)}
+			/>
+		</>
 	)
 }

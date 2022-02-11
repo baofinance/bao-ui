@@ -25,9 +25,9 @@ import {
 	AssetLabel,
 	AssetStack,
 	IconFlex,
-	CloseButton,
 } from './styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { CloseButton } from 'components/Button/Button'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -135,9 +135,7 @@ const MarketModal = ({
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide}>
-				<FontAwesomeIcon icon="times" />
-			</CloseButton>
+			<CloseButton onClick={onHide} onHide={hideModal} />
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>
