@@ -103,43 +103,45 @@ const Balances: React.FC = () => {
 				<Col style={{ display: 'flex', flexDirection: 'column' }}>
 					<Card>
 						<CardContent>
-							<StyledInfo>
-								❗️{' '}
-								<span
-									style={{
-										fontWeight: 700,
-										color: '${(props) => props.theme.color.red}',
-									}}
-								>
+							<div>
+								<StyledInfo>
+									❗️{' '}
+									<span
+										style={{
+											fontWeight: 700,
+											color: '${(props) => props.theme.color.red}',
+										}}
+									>
 									Attention:
 								</span>{' '}
-								Be sure to read the{' '}
-								<ExternalLink
-									href="https://docs.bao.finance/franchises/bao"
-									target="_blank"
-								>
-									docs
-								</ExternalLink>{' '}
-								before using the farms so you are familiar with protocol risks
-								and fees!
-							</StyledInfo>
-							<Spacer size="md" />
-							<StyledInfo>
-								❓{' '}
-								<span
-									style={{
-										fontWeight: 700,
-										color: '${(props) => props.theme.color.red}',
-									}}
-								>
+									Be sure to read the{' '}
+									<ExternalLink
+										href="https://docs.bao.finance/franchises/bao"
+										target="_blank"
+									>
+										docs
+									</ExternalLink>{' '}
+									before using the farms so you are familiar with protocol risks
+									and fees!
+								</StyledInfo>
+								<Spacer size="md" />
+								<StyledInfo>
+									❓{' '}
+									<span
+										style={{
+											fontWeight: 700,
+											color: '${(props) => props.theme.color.red}',
+										}}
+									>
 									Don't see your farm?
 								</span>{' '}
-								Visit{' '}
-								<ExternalLink href="https://old.bao.finance" target="_blank">
-									old.bao.finance
-								</ExternalLink>{' '}
-								to withdraw your LP from our archived farms.
-							</StyledInfo>
+									Visit{' '}
+									<ExternalLink href="https://old.bao.finance" target="_blank">
+										old.bao.finance
+									</ExternalLink>{' '}
+									to withdraw your LP from our archived farms.
+								</StyledInfo>
+							</div>
 						</CardContent>
 					</Card>
 				</Col>

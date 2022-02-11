@@ -174,53 +174,6 @@ interface FarmListItemProps {
 }
 
 const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
-	const [startTime, setStartTime] = useState(0)
-	const [harvestable, setHarvestable] = useState(0)
-
-	const { account } = useWallet()
-	const { pid } = farm
-	const bao = useBao()
-	const { ethereum } = useWallet()
-
-	const lpTokenAddress = farm.lpTokenAddress
-
-	const lpContract = useMemo(() => {
-		return getContract(ethereum as provider, lpTokenAddress)
-	}, [ethereum, lpTokenAddress])
-
-	const renderer = (countdownProps: CountdownRenderProps) => {
-		const { hours, minutes, seconds } = countdownProps
-		const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds
-		const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes
-		const paddedHours = hours < 10 ? `0${hours}` : hours
-		return (
-			<span style={{ width: '100%' }}>
-				{paddedHours}:{paddedMinutes}:{paddedSeconds}
-			</span>
-		)
-	}
-
-	useEffect(() => {
-		async function fetchEarned() {
-			if (bao) return
-			const earned = await getEarned(getMasterChefContract(bao), pid, account)
-			setHarvestable(bnToDec(earned))
-		}
-		if (bao && account) {
-			fetchEarned()
-		}
-	}, [bao, pid, account, setHarvestable])
-
-	const poolActive = true // startTime * 1000 - Date.now() <= 0
-	const basketMint = 'Get ' + farm.tokenSymbol
-	const destination = farm.refUrl
-	const pairLink = farm.pairUrl
-
-	const { onStake } = useStake(pid)
-	const { onUnstake } = useUnstake(pid)
-	const tokenBalance = useTokenBalance(lpContract.options.address)
-	const stakedBalance = useStakedBalance(pid)
-
 	const operations = ['Stake', 'Unstake']
 	const [operation, setOperation] = useState(operations[0])
 
@@ -375,10 +328,7 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
 			box-shadow: none;
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
-			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;
+			border-radius: 8px 8px 0 0;
 		}
 
 		&:not(.collapsed) {

@@ -10,6 +10,10 @@ const StyledCardContent = styled.div`
 	flex: 1;
 	flex-direction: column;
 	padding: ${(props) => props.theme.spacing[3]}px;
+
+	> * {
+		margin: auto;
+	}
 `
 
 export default CardContent
