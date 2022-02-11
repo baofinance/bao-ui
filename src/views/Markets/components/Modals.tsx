@@ -143,6 +143,7 @@ const MarketModal = ({
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
 					<HeaderWrapper>
+						<p>{operation}</p>
 						<img src={asset.icon} />
 						<p>{asset.underlyingSymbol}</p>
 					</HeaderWrapper>

@@ -1,8 +1,6 @@
 import Config from 'bao/lib/config'
 import { getBaoSupply } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import Card from 'components/Card'
-import CardContent from 'components/CardContent'
 import ExternalLink from 'components/ExternalLink'
 import { SpinnerLoader } from 'components/Loader'
 import Spacer from 'components/Spacer'
@@ -13,7 +11,7 @@ import useAllStakedValue from 'hooks/farms/useAllStakedValue'
 import useFarms from 'hooks/farms/useFarms'
 import useLockedEarnings from 'hooks/farms/useLockedEarnings'
 import React, { Fragment, useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Card, Col, Container, Row } from 'react-bootstrap'
 import CountUp from 'react-countup'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
@@ -99,11 +97,11 @@ const Balances: React.FC = () => {
 
 	return (
 		<Fragment>
-			<Row style={{ display: 'flex', flexWrap: 'wrap' }}>
-				<Col style={{ display: 'flex', flexDirection: 'column' }}>
-					<Card>
-						<CardContent>
-							<div>
+			<Container>
+				<Row style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<Col style={{ display: 'flex', flexDirection: 'column' }}>
+						<Card>
+							<Card.Body>
 								<StyledInfo>
 									❗️{' '}
 									<span
@@ -141,51 +139,49 @@ const Balances: React.FC = () => {
 									</ExternalLink>{' '}
 									to withdraw your LP from our archived farms.
 								</StyledInfo>
-							</div>
-						</CardContent>
-					</Card>
-				</Col>
-				<Col style={{ display: 'flex', flexDirection: 'column' }}>
-					<Card>
-						<Footnote>
-							Your BAO Balance
-							<FootnoteValue>
-								{account ? getBalanceNumber(baoBalance).toFixed(2) : 'Locked'}{' '}
-							</FootnoteValue>
-						</Footnote>
-						<Footnote>
-							Your Locked BAO
-							<FootnoteValue>
-								{getBalanceNumber(locks).toFixed(2)}
-							</FootnoteValue>
-						</Footnote>
-						<Footnote>
-							Pending harvest
-							<FootnoteValue>
-								<PendingRewards />
-							</FootnoteValue>
-						</Footnote>
-						<Footnote>
-							Total BAO Supply
-							<FootnoteValue>
-								{totalSupply
-									? getBalanceNumber(totalSupply).toFixed(2)
-									: 'Locked'}
-							</FootnoteValue>
-						</Footnote>
-						<Footnote>
-							BAO Price
-							<FootnoteValue>
-								{baoPrice ? (
-									`$${getDisplayBalance(baoPrice, 0)}`
-								) : (
-									<SpinnerLoader />
-								)}
-							</FootnoteValue>
-						</Footnote>
-					</Card>
-				</Col>
-			</Row>
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col style={{ display: 'flex', flexDirection: 'column' }}>
+						<Card>
+							<Card.Body>
+								<Footnote>
+									Your BAO Balance
+									<FootnoteValue>
+										{account ? getDisplayBalance(baoBalance) : 'Locked'}{' '}
+									</FootnoteValue>
+								</Footnote>
+								<Footnote>
+									Your Locked BAO
+									<FootnoteValue>{getDisplayBalance(locks)}</FootnoteValue>
+								</Footnote>
+								<Footnote>
+									Pending harvest
+									<FootnoteValue>
+										<PendingRewards />
+									</FootnoteValue>
+								</Footnote>
+								<Footnote>
+									Total BAO Supply
+									<FootnoteValue>
+										{totalSupply ? getDisplayBalance(totalSupply) : 'Locked'}
+									</FootnoteValue>
+								</Footnote>
+								<Footnote>
+									BAO Price
+									<FootnoteValue>
+										{baoPrice ? (
+											`$${getDisplayBalance(baoPrice, 0)}`
+										) : (
+											<SpinnerLoader />
+										)}
+									</FootnoteValue>
+								</Footnote>
+							</Card.Body>
+						</Card>
+					</Col>
+				</Row>
+			</Container>
 		</Fragment>
 	)
 }

@@ -40,7 +40,6 @@ const BasketInputWrapper = styled.div`
 	display: flex;
 	height: 72px;
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
-	box-shadow: ${(props) => props.theme.boxShadow.hover};
 `
 
 const StyledInput = styled.input`
@@ -109,6 +108,8 @@ const BalanceInputContainer = styled.div`
 	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
 	height: 50px;
+	box-shadow: ${(props) => props.theme.boxShadow.invert};
+	border: ${(props) => props.theme.border.default};
 `
 
 const BalanceInputWrapper = styled.div`
@@ -116,19 +117,4 @@ const BalanceInputWrapper = styled.div`
 	align-items: center;
 	width: 100%;
 	position: relative;
-`
-
-const BalanceInputMax = styled.div`
-	display: flex;
-	cursor: pointer;
-	left: 0px;
-	font-weight: ${(props) => props.theme.fontWeight.strong};
-	font-size: 0.875rem;
-	margin-left: 1rem;
-	color: ${(props) => props.theme.color.text[200]};
-	z-index: 10;
-
-	&:hover {
-		color: ${(props) => props.theme.color.text[100]};
-	}
 `

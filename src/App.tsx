@@ -64,7 +64,7 @@ const App: React.FC = () => {
 					<Route path="/" exact>
 						<Markets />
 					</Route>
-					<Route path="/markets/:marketId" exact>
+					<Route path="/markets/:marketId">
 						<Market />
 					</Route>
 					<Route path="/ballast">
@@ -87,7 +87,7 @@ const Providers: React.FC<ProvidersProps> = ({
 		<ThemeProvider theme={theme(isDarkMode)}>
 			<GlobalStyle />
 			<UseWalletProvider
-				chainId={3}
+				chainId={1}
 				connectors={{
 					walletconnect: {
 						rpcUrl: 'https://rpc.flashbots.net',

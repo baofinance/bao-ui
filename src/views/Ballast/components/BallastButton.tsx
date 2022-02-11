@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Config from 'bao/lib/config'
 import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
+import { SubmitButton } from 'components/Button/Button'
 import ExternalLink from 'components/ExternalLink'
 import { SpinnerLoader } from 'components/Loader'
 import useAllowancev2 from 'hooks/base/useAllowancev2'
@@ -10,7 +11,6 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import React, { useMemo } from 'react'
 import { useWallet } from 'use-wallet'
 import { decimate, exponentiate } from 'utils/numberFormat'
-import { SubmitButton } from '../../Markets/components/MarketButton'
 
 const BallastButton: React.FC<BallastButtonProps> = ({
 	swapDirection,

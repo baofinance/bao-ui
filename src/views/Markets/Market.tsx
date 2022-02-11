@@ -1,7 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
+import { SubmitButton } from 'components/Button/Button'
 import { SpinnerLoader } from 'components/Loader'
+import PageHeader from 'components/PageHeader'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
 import { useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
@@ -14,7 +16,6 @@ import styled from 'styled-components'
 import { formatAddress } from 'utils'
 import GraphUtil from 'utils/graph'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { SubmitButton } from './components/MarketButton'
 import { MarketBorrowModal, MarketSupplyModal } from './components/Modals'
 import { MarketDetails, StatBlock } from './components/Stats'
 
@@ -79,167 +80,166 @@ const Market: React.FC = () => {
 	}, [bao])
 
 	return markets && activeMarket ? (
-		<Container style={{ marginTop: '2.5em' }}>
-			<h3>
-				<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
-					<FontAwesomeIcon icon="arrow-left" />
-				</StyledLink>
-				<HorizontalSpacer />
-				Back to Markets
-				<span style={{ float: 'right' }}>
-					<img
-						src={activeMarket.icon}
-						style={{ height: '1.75rem', verticalAlign: 'middle' }}
+		<>
+			<Container style={{ marginTop: '2.5em' }}>
+				<BackButton>
+					<p style={{ fontSize: '1.25rem' }}>
+						<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
+							<FontAwesomeIcon icon="arrow-left" /> Back to Markets
+						</StyledLink>
+						<span style={{ float: 'right', fontSize: '1.25rem' }}>
+							<img
+								src={activeMarket.icon}
+								style={{ height: '1.75rem', verticalAlign: 'middle' }}
+							/>{' '}
+							{activeMarket.underlyingSymbol}
+							<HorizontalSpacer />
+							<MarketTypeBadge isSynth={activeMarket.isSynth} />
+						</span>
+					</p>
+				</BackButton>
+				<Row>
+					<InfoCol
+						title="Total Supplied"
+						content={
+							<Tooltipped
+								content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}
+							>
+								<a>
+									<FontAwesomeIcon icon="level-down-alt" />{' '}
+									{getDisplayBalance(activeMarket.supplied, 0)}{' '}
+									{activeMarket.underlyingSymbol}
+								</a>
+							</Tooltipped>
+						}
 					/>
-					<HorizontalSpacer />
-					{activeMarket.underlyingSymbol}
-					<HorizontalSpacer />
-					<MarketTypeBadge isSynth={activeMarket.isSynth} />
-				</span>
-			</h3>
-			<br />
-			<Row>
-				<InfoCol
-					title="Total Supplied"
-					content={
-						<Tooltipped content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}>
-							<a>
-								<FontAwesomeIcon icon="level-down-alt" />{' '}
-								{getDisplayBalance(activeMarket.supplied, 0)}{' '}
-								{activeMarket.underlyingSymbol}
-							</a>
-						</Tooltipped>
-					}
-				/>
-				<InfoCol
-					title="Total Debt"
-					content={
-						<Tooltipped content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}>
-							<a>
-								<FontAwesomeIcon icon="level-down-alt" />{' '}
-								{getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
-								{activeMarket.underlyingSymbol}
-							</a>
-						</Tooltipped>
-					}
-				/>
-				<InfoCol
-					title="APY"
-					content={`${activeMarket.supplyApy.toFixed(2)}%`}
-				/>
-				<InfoCol
-					title="APR"
-					content={`${activeMarket.borrowApy.toFixed(2)}%`}
-				/>
-			</Row>
-			<br />
-			<Row>
-				<InfoCol
-					title="Your Supply"
-					content={
-						<Tooltipped
-							content={`$${
-								supplied
-									? getDisplayBalance(supplied * activeMarket.price, 0)
-									: '0'
-							}`}
-						>
-							<a>
-								<FontAwesomeIcon icon="level-down-alt" />{' '}
-								{supplied ? supplied.toFixed(4) : '0'}{' '}
-								{activeMarket.underlyingSymbol}
-							</a>
-						</Tooltipped>
-					}
-				/>
-				<InfoCol
-					title="Your Debt"
-					content={
-						<Tooltipped
-							content={`$${
-								borrowed
-									? getDisplayBalance(borrowed * activeMarket.price, 0)
-									: '0'
-							}`}
-						>
-							<a>
-								<FontAwesomeIcon icon="level-down-alt" />{' '}
-								{borrowed ? borrowed.toFixed(4) : '0'}{' '}
-								{activeMarket.underlyingSymbol}
-							</a>
-						</Tooltipped>
-					}
-				/>
-				<InfoCol
-					title="Number of Suppliers"
-					content={
-						marketInfo ? marketInfo.numberOfSuppliers : <SpinnerLoader />
-					}
-				/>
-				<InfoCol
-					title="Number of Borrowers"
-					content={
-						marketInfo ? marketInfo.numberOfBorrowers : <SpinnerLoader />
-					}
-				/>
-			</Row>
-			<br />
-			<InfoCol
-				title="Market Details (cont.d)"
-				content={
-					<>
-						<Row>
-							<Col>
-								<MarketDetails asset={activeMarket} />
-							</Col>
-							<Col>
-								<StatBlock
-									label={null}
-									stats={[
-										{
-											label: 'Market Utilization',
-											value: `${(
-												(activeMarket.totalBorrows /
-													(activeMarket.supplied +
-														activeMarket.totalBorrows -
-														activeMarket.totalReserves)) *
-												100
-											).toFixed(2)}%`,
-										},
-										{
-											label: 'Liquidation Incentive',
-											value: `${activeMarket.liquidationIncentive}%`,
-										},
-										{
-											label: 'Borrow Restricted?',
-											value: `${activeMarket.borrowRestricted ? 'Yes' : 'No'}`,
-										},
-										{
-											label: 'Price Oracle',
-											value: (
-												<a
-													href={`${
-														Config.defaultRpc.blockExplorerUrls[0]
-													}/address/${
-														bao.getContract('marketOracle').options.address
-													}`}
-												>
-													{oracleAddress}{' '}
-													<FontAwesomeIcon icon="external-link-alt" />
-												</a>
-											),
-										},
-									]}
-								/>
-							</Col>
-						</Row>
-						<br />
-					</>
-				}
-			/>
-			<br />
-			<InfoCol title={null} content={<ActionButton market={activeMarket} />} />
-		</Container>
+					<InfoCol
+						title="Total Debt"
+						content={
+							<Tooltipped
+								content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}
+							>
+								<a>
+									<FontAwesomeIcon icon="level-down-alt" />{' '}
+									{getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
+									{activeMarket.underlyingSymbol}
+								</a>
+							</Tooltipped>
+						}
+					/>
+					<InfoCol
+						title="APY"
+						content={`${activeMarket.supplyApy.toFixed(2)}%`}
+					/>
+					<InfoCol
+						title="APR"
+						content={`${activeMarket.borrowApy.toFixed(2)}%`}
+					/>
+				</Row>
+				<br />
+				<Row>
+					<InfoCol
+						title="Your Supply"
+						content={
+							<Tooltipped
+								content={`$${
+									supplied
+										? getDisplayBalance(supplied * activeMarket.price, 0)
+										: '0'
+								}`}
+							>
+								<a>
+									<FontAwesomeIcon icon="level-down-alt" />{' '}
+									{supplied ? supplied.toFixed(4) : '0'}{' '}
+									{activeMarket.underlyingSymbol}
+								</a>
+							</Tooltipped>
+						}
+					/>
+					<InfoCol
+						title="Your Debt"
+						content={
+							<Tooltipped
+								content={`$${
+									borrowed
+										? getDisplayBalance(borrowed * activeMarket.price, 0)
+										: '0'
+								}`}
+							>
+								<a>
+									<FontAwesomeIcon icon="level-down-alt" />{' '}
+									{borrowed ? borrowed.toFixed(4) : '0'}{' '}
+									{activeMarket.underlyingSymbol}
+								</a>
+							</Tooltipped>
+						}
+					/>
+					<InfoCol
+						title="Number of Suppliers"
+						content={
+							marketInfo ? marketInfo.numberOfSuppliers : <SpinnerLoader />
+						}
+					/>
+					<InfoCol
+						title="Number of Borrowers"
+						content={
+							marketInfo ? marketInfo.numberOfBorrowers : <SpinnerLoader />
+						}
+					/>
+				</Row>
+				<br />
+				<>
+					<Row>
+						<Col>
+							<MarketDetails asset={activeMarket} />
+						</Col>
+						<Col>
+							<StatBlock
+								label={null}
+								stats={[
+									{
+										label: 'Market Utilization',
+										value: `${(
+											(activeMarket.totalBorrows /
+												(activeMarket.supplied +
+													activeMarket.totalBorrows -
+													activeMarket.totalReserves)) *
+											100
+										).toFixed(2)}%`,
+									},
+									{
+										label: 'Liquidation Incentive',
+										value: `${activeMarket.liquidationIncentive}%`,
+									},
+									{
+										label: 'Borrow Restricted?',
+										value: `${activeMarket.borrowRestricted ? 'Yes' : 'No'}`,
+									},
+									{
+										label: 'Price Oracle',
+										value: (
+											<a
+												href={`${
+													Config.defaultRpc.blockExplorerUrls[0]
+												}/address/${
+													bao.getContract('marketOracle').options.address
+												}`}
+											>
+												{oracleAddress}{' '}
+												<FontAwesomeIcon icon="external-link-alt" />
+											</a>
+										),
+									},
+								]}
+							/>
+						</Col>
+					</Row>
+					<br />
+				</>
+				<br />
+				<ActionButton market={activeMarket} />
+			</Container>
+		</>
 	) : (
 		<SpinnerLoader block />
 	)
@@ -253,7 +253,7 @@ const HorizontalSpacer = () => {
 
 const MarketTypeBadge = ({ isSynth }: { isSynth: boolean }) => {
 	return (
-		<Badge pill bg="secondary">
+		<Badge pill>
 			<FontAwesomeIcon icon={isSynth ? 'chart-line' : 'landmark'} />{' '}
 			{isSynth ? 'Synthetic' : 'Collateral'}
 		</Badge>
@@ -303,10 +303,12 @@ type InfoColParams = {
 
 const InfoContainer = styled.div`
 	background: ${(props) => props.theme.color.primary[100]};
-	border-radius: 12px;
+	border-radius: 8px;
 	padding: 25px 50px;
 	font-size: 14px;
 	color: ${(props) => props.theme.color.text[200]};
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	> p {
 		color: ${(props) => props.theme.color.text[100]};
@@ -331,6 +333,16 @@ export const StyledLink = styled(NavLink)`
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
 		padding-left: ${(props) => props.theme.spacing[2]}px;
 		padding-right: ${(props) => props.theme.spacing[2]}px;
+	}
+`
+
+export const BackButton = styled.div`
+	flex: 1 1 0%;
+	display: block;
+
+	p {
+		display: block;
+		flex: 1 1 0%;
 	}
 `
 

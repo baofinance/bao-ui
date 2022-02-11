@@ -134,6 +134,8 @@ export const StatWrapper = styled.div`
   padding-inline-start: 1rem;
   padding-inline-end: 1rem;
   padding: 1.25rem 16px;
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+  border: ${(props) => props.theme.border.default};
 `
 
 export const UserStat = styled.div`
@@ -317,7 +319,7 @@ export const HeaderWrapper = styled.div`
     margin-block-end: 1em;
     margin: 0px;
     margin-top: 0px;
-    margin-inline: 0.5rem 0px;
+    margin-inline: 0.5rem 0.5rem;
     margin-bottom: 0px;
     color: ${(props) => props.theme.color.text[100]};
     font-weight: ${(props) => props.theme.fontWeight.medium};

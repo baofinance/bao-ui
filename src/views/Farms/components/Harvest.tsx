@@ -1,4 +1,5 @@
 import baoIcon from 'assets/img/logo.svg'
+import BigNumber from 'bignumber.js'
 import { Button } from 'components/Button'
 import Label from 'components/Label'
 import { SpinnerLoader } from 'components/Loader'
@@ -13,7 +14,7 @@ import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import React, { useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { getBalanceNumber } from 'utils/numberFormat'
+import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 import { AccordionCard, AssetImage, AssetImageContainer } from './styles'
 
 interface HarvestProps {
@@ -51,16 +52,23 @@ const Earnings: React.FC<EarningsProps> = ({ pid }) => {
 				</Card.Title>
 			</Card.Header>
 			<Card.Body>
-				<Row>
-					<Col style={{ textAlign: 'center' }}>
-						<AssetImageContainer>
-							<AssetImage src={baoIcon} />
-						</AssetImageContainer>{' '}
-						<AssetImageContainer>
-							<Earned value={getBalanceNumber(earnings)} />
-						</AssetImageContainer>
-					</Col>
-				</Row>
+				<BalancesContainer>
+					<BalancesWrapper>
+						<BalanceContainer>
+							<BalanceWrapper>
+								<BalanceContent>
+									<BalanceImage>
+										<img src={baoIcon} />
+									</BalanceImage>
+									<BalanceSpacer />
+									<BalanceText>
+										<BalanceValue>{getDisplayBalance(earnings)}</BalanceValue>
+									</BalanceText>
+								</BalanceContent>
+							</BalanceWrapper>
+						</BalanceContainer>
+					</BalancesWrapper>
+				</BalancesContainer>
 			</Card.Body>
 			<Card.Footer>
 				<Button
@@ -152,4 +160,78 @@ const Earned = styled(Value)`
 	margin: 0 0 -${(props) => props.theme.spacing[3]}px -${(props) =>
 			props.theme.spacing[3]}px;
 	vertical-align: super;
+`
+
+const BalancesContainer = styled(Col)`
+	display: flex;
+	padding: 24px;
+`
+
+const BalancesWrapper = styled.div`
+	display: flex;
+	width: 100%;
+`
+
+const BalanceContainer = styled.div`
+	flex: 1 1 0%;
+	display: block;
+`
+
+const BalanceWrapper = styled.div`
+	display: flex;
+	justify-content: center;
+`
+
+const BalanceContent = styled.div`
+	-webkit-box-align: center;
+	align-items: center;
+	display: flex;
+`
+
+const BalanceImage = styled.div`
+	display: flex;
+	-webkit-box-pack: center;
+	justify-content: center;
+	min-width: 48px;
+	min-height: 48px;
+	border-radius: 40px;
+	background-color: ${(props) => props.theme.color.primary[200]};
+	box-shadow: ${(props) => props.theme.boxShadow.invert};
+	border: ${(props) => props.theme.border.default};
+
+	img {
+		height: 34px;
+		text-align: center;
+		min-width: 34px;
+		margin: auto;
+	}
+`
+
+const BalanceSpacer = styled.div`
+	height: 8px;
+	min-height: 8px;
+	min-width: 8px;
+	width: 8px;
+`
+
+const BalanceSpacerBig = styled.div`
+	height: 24px;
+	min-height: 24px;
+	min-width: 24px;
+	width: 24px;
+`
+
+const BalanceText = styled.div`
+	display: block;
+	flex: 1 1 0%;
+`
+
+const BalanceValue = styled.div`
+	font-size: 24px;
+	font-weight: 700;
+`
+
+const BalanceTicker = styled.div`
+	color: ${(props) => props.theme.color.text[200]};
+	font-size: 0.875rem;
 `

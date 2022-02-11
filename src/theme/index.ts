@@ -35,15 +35,22 @@ const theme = (dark = false) => ({
     6: 48,
     7: 64,
   },
-  boxShadow: {
-    default:
-      'inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);',
-    hover:
-      'inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);',
-  },
-  border: {
-    default: '1px solid #efeae7',
-  },
+  boxShadow: dark
+    ? {
+        default: '#625f65 1px 1px 0px inset',
+        invert: '#625f65 1px 1px 0px',
+      }
+    : {
+        default: '#f7f4f2 1px 1px 0px inset',
+        invert: '#f7f4f2 1px 1px 0px',
+      },
+  border: dark
+    ? {
+        default: '1px solid #211f22',
+      }
+    : {
+        default: '1px solid #ded4ce',
+      },
   buttonGradient: {
     a: 'linear-gradient(225deg, #efeae7, #efeae7) padding-box, linear-gradient(135deg, #ce6509, #ff9440) border-box',
     hover:

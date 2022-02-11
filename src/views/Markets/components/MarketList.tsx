@@ -3,6 +3,7 @@ import { ActiveSupportedMarket } from 'bao/lib/types'
 import { getComptrollerContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import { Button } from 'components/Button'
+import { SubmitButton } from 'components/Button/Button'
 import HrText from 'components/HrText'
 import { SpinnerLoader } from 'components/Loader'
 import Tooltipped from 'components/Tooltipped'
@@ -32,7 +33,6 @@ import {
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { SubmitButton } from './MarketButton'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
 
@@ -411,8 +411,9 @@ type MarketListItemProps = {
 }
 
 const StyledAccordionHeader = styled(Accordion.Header)`
-	background-color: ${(props) => props.theme.color.primary[100]};
-	border-radius: 8px;
+	&:active {
+		border-radius: 8px 8px 0px 0px;
+	}
 
 	img {
 		height: 32px;
@@ -424,6 +425,9 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		background-color: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
+		border: ${(props) => props.theme.border.default};
+		box-shadow: ${(props) => props.theme.boxShadow.default};
+		border-radius: 8px;
 
 		&:hover,
 		&:focus,
@@ -431,8 +435,9 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		&:not(.collapsed) {
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
-			box-shadow: none;
-			border-radius: 8px 8px 0 0;
+			border: ${(props) => props.theme.border.default};
+			box-shadow: ${(props) => props.theme.boxShadow.default};
+			border-radius: 8px 8px 0px 0px;
 		}
 
 		&:not(.collapsed) {
@@ -489,7 +494,8 @@ const StyledAccordionBody = styled(Accordion.Body)`
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
-	border-top: 2px solid ${(props) => props.theme.color.primary[300]};
+	border: ${(props) => props.theme.border.default};
+	border-top: none;
 `
 
 const MarketListHeaderCol = styled(Col)`

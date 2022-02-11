@@ -163,7 +163,8 @@ export const StyledInfo = styled.h3`
 export const AccordionCard = styled(Card)`
 	background: none !important;
   min-height: 250px;
-  border: none;
+  border: none !important;
+  box-shadow: none !important;
 
 	.card-title {
 		text-align: center;

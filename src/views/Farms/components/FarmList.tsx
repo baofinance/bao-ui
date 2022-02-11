@@ -201,11 +201,13 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 					</Row>
 				</StyledAccordionHeader>
 				<StyledAccordionBody>
-					<NavButtons
-						options={operations}
-						active={operation}
-						onClick={setOperation}
-					/>
+					<Row style={{ marginBottom: '32px' }}>
+						<NavButtons
+							options={operations}
+							active={operation}
+							onClick={setOperation}
+						/>
+					</Row>
 					<Row>
 						<Col md={6}>
 							<Harvest pid={farm.pid} operation={operation} />
@@ -295,12 +297,12 @@ const StyledAccordionBody = styled(Accordion.Body)`
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
-	border-top: 2px solid ${(props) => props.theme.color.primary[300]};
 `
 
 const StyledAccordionHeader = styled(Accordion.Header)`
-	background-color: ${(props) => props.theme.color.primary[100]};
-	border-radius: 8px;
+	&:active {
+		border-radius: 8px 8px 0px 0px;
+	}
 
 	img {
 		height: 32px;
@@ -312,6 +314,9 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		background-color: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
+		border: ${(props) => props.theme.border.default};
+		box-shadow: ${(props) => props.theme.boxShadow.default};
+		border-radius: 8px;
 
 		&:hover,
 		&:focus,
@@ -319,8 +324,9 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		&:not(.collapsed) {
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
-			box-shadow: none;
-			border-radius: 8px 8px 0 0;
+			border: ${(props) => props.theme.border.default};
+			box-shadow: ${(props) => props.theme.boxShadow.default};
+			border-radius: 8px 8px 0px 0px;
 		}
 
 		&:not(.collapsed) {
