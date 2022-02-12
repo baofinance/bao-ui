@@ -85,6 +85,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
     border: none;
+    box-shadow: ${(props) => props.theme.boxShadow.invert};
   }
 
   .buttonActive:hover {
