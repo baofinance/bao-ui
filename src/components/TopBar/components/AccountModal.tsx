@@ -1,80 +1,91 @@
 import React, { useCallback } from 'react'
 import { BigNumber } from 'bignumber.js'
-import Config from '../../../bao/lib/config'
+import Config from 'bao/lib/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import wethIcon from 'assets/img/assets/WETH.png'
 import baoIcon from 'assets/img/logo.svg'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
-import useTransactionProvider from '../../../hooks/base/useTransactionProvider'
-import { Col, Row } from 'react-bootstrap'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getDisplayBalance } from 'utils/numberFormat'
 import { Button } from '../../Button'
-import { CloseButton } from '../../../views/Markets/components/styles'
-import CardIcon from '../../CardIcon'
-import Label from '../../Label'
-import Modal, { ModalProps } from '../../Modal'
-import ModalContent from '../../ModalContent'
-import ModalTitle from '../../ModalTitle'
+
 import Spacer from '../../Spacer'
 import Value from '../../Value'
-import { StatBlock } from '../../../views/Markets/components/Stats'
+import { StatBlock } from 'views/Markets/components/Stats'
 import _ from 'lodash'
+import { AssetImage, AssetImageContainer } from 'views/Farms/components/styles'
+import { HeaderWrapper } from 'views/Markets/components/styles'
+import { CloseButton } from 'components/Button/Button'
 
-const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
+const AccountModal = ({ onHide, show }: ModalProps) => {
 	const { account, reset } = useWallet()
 
 	const handleSignOutClick = useCallback(() => {
-		onDismiss!()
+		onHide!()
 		reset()
-	}, [onDismiss, reset])
+	}, [onHide, reset])
 
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao.getContract('bao').options.address)
+	const baoBalance = useTokenBalance(Config.addressMap.BAO)
 	const wethBalance = useTokenBalance('ETH')
 
+	const hideModal = useCallback(() => {
+		onHide()
+	}, [onHide])
+
 	return (
-		<Modal>
-			<CloseButton onClick={onDismiss}>
-				<FontAwesomeIcon icon="times" />
-			</CloseButton>
-			<ModalTitle text="My Account" />
-			<ModalContent>
-				<Row lg={2}>
-					<Col>
-						<StyledBalanceWrapper>
-							<CardIcon>
-								<span>
-									<img src={wethIcon} height={50} />
-								</span>
-							</CardIcon>
-							<StyledBalance>
-								<Value
-									value={new BigNumber(getDisplayBalance(wethBalance)).toFixed(
-										4,
-									)}
-								/>
-								<Label text="ETH Balance" />
-							</StyledBalance>
-						</StyledBalanceWrapper>
-					</Col>
-					<Col>
-						<StyledBalanceWrapper>
-							<CardIcon>
-								<span>
-									<img src={baoIcon} height={50} />
-								</span>
-							</CardIcon>
-							<StyledBalance>
-								<Value value={getDisplayBalance(baoBalance)} />
-								<Label text="BAO Balance" />
-							</StyledBalance>
-						</StyledBalanceWrapper>
-					</Col>
-				</Row>
+		<Modal show={show} onHide={hideModal} centered>
+			<CloseButton onClick={onHide} onHide={hideModal} />
+			<Modal.Header>
+				<Modal.Title id="contained-modal-title-vcenter">
+					<HeaderWrapper>
+						<p>My Account</p>
+					</HeaderWrapper>
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<WalletBalances>
+					<WalletBalancesInner>
+						<WalletBalance>
+							<InnerWalletBalance>
+								<InnerInnerWalletBalance>
+									<WalletBalanceImage>
+										<img src={wethIcon} />
+									</WalletBalanceImage>
+									<WalletBalanceSpace />
+									<WalletBalanceText>
+										<WalletBalanceValue>
+											{new BigNumber(getDisplayBalance(wethBalance)).toFixed(4)}
+										</WalletBalanceValue>
+										<WalletBalanceTicker>ETH Balance</WalletBalanceTicker>
+									</WalletBalanceText>
+								</InnerInnerWalletBalance>
+							</InnerWalletBalance>
+						</WalletBalance>
+						<WalletBalanceSpacerBig />
+						<WalletBalance>
+							<InnerWalletBalance>
+								<InnerInnerWalletBalance>
+									<WalletBalanceImage>
+										<img src={baoIcon} />
+									</WalletBalanceImage>
+									<WalletBalanceSpace />
+									<WalletBalanceText>
+										<WalletBalanceValue>
+											{new BigNumber(getDisplayBalance(baoBalance)).toFixed(4)}
+										</WalletBalanceValue>
+										<WalletBalanceTicker>BAO Balance</WalletBalanceTicker>
+									</WalletBalanceText>
+								</InnerInnerWalletBalance>
+							</InnerWalletBalance>
+						</WalletBalance>
+					</WalletBalancesInner>
+				</WalletBalances>
 				{Object.keys(transactions).length > 0 && (
 					<>
 						<p>
@@ -104,34 +115,91 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
 						/>
 					</>
 				)}
-				<Spacer />
+			</Modal.Body>
+			<Modal.Footer>
 				<Button
 					href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`}
 					text="View on Explorer"
 				/>
-				<Spacer />
 				<Button onClick={handleSignOutClick} text="Sign out" />
-			</ModalContent>
+			</Modal.Footer>
 		</Modal>
 	)
 }
 
-const StyledBalance = styled.div`
-	align-items: center;
+const WalletBalances = styled(Col)`
 	display: flex;
-	flex-direction: column;
+	padding: 24px;
 `
 
-const StyledBalanceWrapper = styled.div`
+const WalletBalancesInner = styled.div`
+	display: flex;
+	width: 100%;
+`
+
+const WalletBalance = styled.div`
+	flex: 1 1 0%;
+	display: block;
+`
+
+const InnerWalletBalance = styled.div`
+	display: flex;
+	justify-content: center;
+`
+
+const InnerInnerWalletBalance = styled.div`
+	-webkit-box-align: center;
 	align-items: center;
 	display: flex;
-	flex: 1;
-	flex-direction: column;
-	margin-bottom: ${(props) => props.theme.spacing[4]}px;
+`
 
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
-		flex-direction: row;
+const WalletBalanceImage = styled.div`
+	display: flex;
+	-webkit-box-pack: center;
+	justify-content: center;
+	min-width: 48px;
+	min-height: 48px;
+	border-radius: 40px;
+	background-color: ${(props) => props.theme.color.primary[200]};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
+	border: ${(props) => props.theme.border.default};
+
+
+	img {
+		height: 34px;
+		text-align: center;
+		min-width: 34px;
+		margin: auto;
 	}
+`
+
+const WalletBalanceSpace = styled.div`
+	height: 8px;
+	min-height: 8px;
+	min-width: 8px;
+	width: 8px;
+`
+
+const WalletBalanceSpacerBig = styled.div`
+	height: 24px;
+	min-height: 24px;
+	min-width: 24px;
+	width: 24px;
+`
+
+const WalletBalanceText = styled.div`
+	display: block;
+	flex: 1 1 0%;
+`
+
+const WalletBalanceValue = styled.div`
+	font-size: 24px;
+	font-weight: 700;
+`
+
+const WalletBalanceTicker = styled.div`
+	color: ${(props) => props.theme.color.text[200]};
+	font-size: 0.875rem;
 `
 
 export default AccountModal

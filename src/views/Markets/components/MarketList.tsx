@@ -1,21 +1,27 @@
-import React, { useMemo, useState } from 'react'
+import Config from 'bao/lib/config'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import { getComptrollerContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import Config from '../../../bao/lib/config'
-import styled from 'styled-components'
+import { Button } from 'components/Button'
+import { SubmitButton } from 'components/Button/Button'
+import HrText from 'components/HrText'
+import { SpinnerLoader } from 'components/Loader'
+import Tooltipped from 'components/Tooltipped'
+import useBao from 'hooks/base/useBao'
+import useTransactionHandler from 'hooks/base/useTransactionHandler'
+import {
+	AccountLiquidity,
+	useAccountLiquidity,
+} from 'hooks/markets/useAccountLiquidity'
 import {
 	Balance,
 	useAccountBalances,
 	useBorrowBalances,
 	useSupplyBalances,
-} from '../../../hooks/markets/useBalances'
-import {
-	AccountLiquidity,
-	useAccountLiquidity,
-} from '../../../hooks/markets/useAccountLiquidity'
-import useBao from '../../../hooks/base/useBao'
-import { useWallet } from 'use-wallet'
-import { useExchangeRates } from '../../../hooks/markets/useExchangeRates'
-import { useAccountMarkets } from '../../../hooks/markets/useMarkets'
+} from 'hooks/markets/useBalances'
+import { useExchangeRates } from 'hooks/markets/useExchangeRates'
+import { useAccountMarkets } from 'hooks/markets/useMarkets'
+import React, { useMemo, useState } from 'react'
 import {
 	Accordion,
 	Badge,
@@ -24,16 +30,11 @@ import {
 	FormCheck,
 	Row,
 } from 'react-bootstrap'
-import { SpinnerLoader } from '../../../components/Loader'
+import styled from 'styled-components'
+import { useWallet } from 'use-wallet'
+import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
-import Tooltipped from '../../../components/Tooltipped'
-import HrText from '../../../components/HrText'
-import { SubmitButton } from './MarketButton'
-import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
-import { getComptrollerContract } from '../../../bao/utils'
-import { ActiveSupportedMarket } from '../../../bao/lib/types'
-import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
 
 export const MarketList: React.FC<MarketListProps> = ({
 	markets: _markets,
@@ -287,11 +288,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							</SubmitButton>
 						</Col>
 						<Col>
-							<SubmitButton
-								onClick={() => (window.location.href = `/market/${market.mid}`)}
-							>
-								Details
-							</SubmitButton>
+							<Button to={`/markets/${market.mid}`} text="Details" />
 						</Col>
 					</Row>
 					<MarketSupplyModal
@@ -381,11 +378,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							</SubmitButton>
 						</Col>
 						<Col>
-							<SubmitButton
-								onClick={() => (window.location.href = `/market/${market.mid}`)}
-							>
-								Details
-							</SubmitButton>
+							<Button to={`/markets/${market.mid}`} text="Details" />
 						</Col>
 					</Row>
 					<MarketBorrowModal
@@ -418,8 +411,9 @@ type MarketListItemProps = {
 }
 
 const StyledAccordionHeader = styled(Accordion.Header)`
-	background-color: ${(props) => props.theme.color.primary[100]};
-	border-radius: 8px;
+	&:active {
+		border-radius: 8px 8px 0px 0px;
+	}
 
 	img {
 		height: 32px;
@@ -431,6 +425,9 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		background-color: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
+		border: ${(props) => props.theme.border.default};
+		box-shadow: ${(props) => props.theme.boxShadow.default};
+		border-radius: 8px;
 
 		&:hover,
 		&:focus,
@@ -438,8 +435,9 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		&:not(.collapsed) {
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
-			box-shadow: none;
-			border-radius: 8px 8px 0 0;
+			border: ${(props) => props.theme.border.default};
+			box-shadow: ${(props) => props.theme.boxShadow.default};
+			border-radius: 8px 8px 0px 0px;
 		}
 
 		&:not(.collapsed) {
@@ -496,7 +494,8 @@ const StyledAccordionBody = styled(Accordion.Body)`
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
-	border-top: 2px solid ${(props) => props.theme.color.primary[300]};
+	border: ${(props) => props.theme.border.default};
+	border-top: none;
 `
 
 const MarketListHeaderCol = styled(Col)`

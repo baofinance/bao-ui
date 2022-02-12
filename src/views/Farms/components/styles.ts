@@ -1,3 +1,5 @@
+import { Button } from 'components/Button'
+import { Card } from 'react-bootstrap'
 import styled, { keyframes } from 'styled-components'
 
 export const RainbowLight = keyframes`
@@ -116,7 +118,11 @@ export const Footnote = styled.div`
   padding: ${(props) => props.theme.spacing[2]}px
     ${(props) => props.theme.spacing[3]}px;
   color: ${(props) => props.theme.color.text[200]};
-  border-top: solid 1px ${(props) => props.theme.color.primary[600]};
+  border-top: solid 1px ${(props) => props.theme.color.primary[300]};
+
+  :first-child {
+    border-top: none;
+  }
 `
 
 export const FootnoteValue = styled.div`
@@ -127,6 +133,7 @@ export const FootnoteValue = styled.div`
 export const StyledWrapper = styled.div`
   align-items: center;
   display: flex;
+  margin: auto;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
     width: 100%;
     flex-flow: column nowrap;
@@ -150,4 +157,78 @@ export const StyledInfo = styled.h3`
   font-weight: ${(props) => props.theme.fontWeight.regular};
   margin: 0;
   padding: 0;
+  text-align: center;
+`
+
+export const AccordionCard = styled(Card)`
+	background: none !important;
+  min-height: 250px;
+  border: none !important;
+  box-shadow: none !important;
+
+	.card-title {
+		text-align: center;
+	}
+
+	.card-body {
+	}
+	
+	.card-header {
+		background: none !important;
+		border: none !important;
+	}
+	
+	.card-footer {
+		background: none !important;
+		bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    border: none;
+	}
+  `
+
+  export const AssetImageContainer = styled.div`
+  height: 100%;
+  align-items: center;
+  margin: 0 auto;
+  display: inline-block;
+  vertical-align: super;
+  color: ${(props) => props.theme.color.text[100]};
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+    display: none;
+  }
+  }
+`
+
+export const FarmImage = styled.img`
+  height: 50px;
+  margin-right: ${(props) => props.theme.spacing[3]}px;
+  @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+    height: 40px;
+    margin-right: ${(props) => props.theme.spacing[3]}px;
+  }
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+    height: 35px;
+    margin-right: ${(props) => props.theme.spacing[3]}px;
+  }
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+    height: 50px;
+    margin-right: ${(props) => props.theme.spacing[3]}px;
+  }
+`
+
+export const AssetImage = styled(FarmImage)`
+  height: 40px;
+  margin: 0 0 -${(props) => props.theme.spacing[3]}px -${(props) =>
+      props.theme.spacing[3]}px;
+  vertical-align: super;
+  transition: 200ms;
+  user-select: none;
+  -webkit-user-drag: none;
+  @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+    height: 30px;
+  }
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+    height: 25px;
+  }
 `

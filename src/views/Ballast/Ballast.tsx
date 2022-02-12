@@ -1,19 +1,19 @@
+import Page from 'components/Page'
+import PageHeader from 'components/PageHeader'
 import React from 'react'
-import Page from '../../components/Page'
-import PageHeader from '../../components/PageHeader'
 import { Container } from 'react-bootstrap'
+import ConnectedCheck from 'components/ConnectedCheck'
 import BallastSwapper from './components/BallastSwapper'
-import { ConnectedCheck } from '../Markets/components/ConnectedCheck'
 
 const Ballast: React.FC = () => {
 	return (
 		<Page>
 			<PageHeader icon="" title="Ballast" />
-			<Container>
-				<ConnectedCheck>
+			<ConnectedCheck>
+				<Container>
 					<BallastSwapper />
-				</ConnectedCheck>
-			</Container>
+				</Container>
+			</ConnectedCheck>
 		</Page>
 	)
 }

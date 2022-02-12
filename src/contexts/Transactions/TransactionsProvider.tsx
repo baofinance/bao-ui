@@ -1,4 +1,6 @@
+import useBao from 'hooks/base/useBao'
 import React, { useCallback, useEffect, useReducer } from 'react'
+import { TransactionReceipt } from 'web3-core'
 import Context from './context'
 import reducer, {
 	addTransaction,
@@ -6,9 +8,7 @@ import reducer, {
 	receiveTxReceipt,
 	setTransactions,
 } from './reducer'
-import useBao from '../../hooks/base/useBao'
 import { Transaction, TransactionsMap } from './types'
-import { TransactionReceipt } from 'web3-core'
 
 const TransactionsProvider: React.FC = ({ children }) => {
 	const bao = useBao()

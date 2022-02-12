@@ -16,7 +16,8 @@ export interface Farm {
   tokenDecimals: number
   earnToken: string
   earnTokenAddress: string
-  icon: string
+  iconA: string
+  iconB: string
   id: string
   tokenSymbol: string
   refUrl: string

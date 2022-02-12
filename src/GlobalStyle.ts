@@ -9,7 +9,6 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: ${(props: any) => props.theme.color.text[100]};
-    overflow-x: hidden; /* Hide horizontal scrollbar */
     transition: 200ms;
   }
 
@@ -33,13 +32,13 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: #f7f4f2;
+		color: ${(props) => props.theme.color.text[100]};
     text-decoration: none;
   }
 
   a:hover,
   a:focus {
-    color: #ce6509;
+		color: ${(props) => props.theme.color.text[300]};
   }
 
   .baoTicker {
@@ -83,9 +82,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .buttonActive {
-    color: ${(props: any) => props.theme.color.text[300]};
+    color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
     border: none;
+    box-shadow: ${(props) => props.theme.boxShadow.invert};
   }
 
   .buttonActive:hover {
@@ -107,11 +107,15 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .modal-header {
-    border-bottom: 1px solid ${(props: any) => props.theme.color.primary[200]};;
+    border-bottom: 1px solid ${(props: any) => props.theme.color.primary[200]};
   }
 
   .modal-footer {
-    border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};;
+    border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};
+  }
+
+  .modal-open {
+    padding-right: 0px !important; 
   }
 
   .btn {
@@ -160,6 +164,26 @@ const GlobalStyle = createGlobalStyle`
   .accordion-item:last-of-type .accordion-button.collapsed {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+}
+
+.card {
+  background-color: ${(props) => props.theme.color.primary[100]};
+	border-radius: ${(props) => props.theme.borderRadius}px;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+}
+
+.badge {
+  background-color: ${(props) => props.theme.color.text[200]};
+  color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
+  box-shadow: ${(props) => props.theme.boxShadow.default};
+  font-weight: ${(props) => props.theme.fontWeight.medium};
+  vertical-align: middle;
+  font-size: 1rem;
 }
 `
 

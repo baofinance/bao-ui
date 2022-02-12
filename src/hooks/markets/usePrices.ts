@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import Config from 'bao/lib/config'
 import fetcher from 'bao/lib/fetcher'
 import { SWR } from 'bao/lib/types'
+import BigNumber from 'bignumber.js'
+import { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
+import MultiCall from 'utils/multicall'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
-import MultiCall from '../../utils/multicall'
-import Config from '../../bao/lib/config'
-import BigNumber from 'bignumber.js'
 
 type Prices = {
   prices: {

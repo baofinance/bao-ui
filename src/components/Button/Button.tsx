@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
@@ -113,7 +114,8 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: ${(props) => props.theme.color.primary[300]} 1px solid;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 	padding: ${(props) => -props.theme.spacing[3]}px;
 	color: ${(props) => props.theme.color.text[100]};
 	display: ${(props) => (props.inline ? 'inline-block' : 'flex')};
@@ -146,7 +148,8 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	&:hover,
 	&:active {
 		background-color: ${(props) => props.theme.color.primary[200]};
-		color: ${(props) => props.theme.color.text[400]};
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
+		color: ${(props) => props.theme.color.text[100]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
@@ -165,7 +168,7 @@ const StyledLink = styled(Link)`
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${(props) => props.theme.color.text[100]};
 	}
 `
 
@@ -182,7 +185,7 @@ const ButtonLink = styled.a`
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${(props) => props.theme.color.text[100]};
 	}
 `
 
@@ -197,14 +200,16 @@ export const MaxButton = styled.a`
 	user-select: none;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	text-decoration: none;
-	border: none;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	font-size: ${(props) => props.theme.fontSize.sm};
 
 	&:hover {
-		background: ${(props) => props.theme.color.primary[100]};
-		color: ${(props) => props.theme.color.text[400]};
+		background: ${(props) => props.theme.color.primary[200]};
+		color: ${(props) => props.theme.color.text[100]};
 		cursor: pointer;
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `
 
@@ -259,6 +264,8 @@ const NavButton = styled.button`
 	padding-inline-end: 1rem;
 	border-radius: 8px;
 	overflow: hidden;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	&:focus {
 		outline: 0;
@@ -267,6 +274,8 @@ const NavButton = styled.button`
 	&:hover {
 		background: ${(props) => props.theme.color.primary[200]};
 		cursor: pointer;
+		color: ${(props) => props.theme.color.text[100]};
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 
 	&:hover,
@@ -274,5 +283,102 @@ const NavButton = styled.button`
 	&:active {
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
+		color: ${(props) => props.theme.color.text[100]};
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
+	}
+`
+
+type CloseButtonProps = {
+	onClick: (s: any) => void
+	onHide: () => void
+}
+
+export const CloseButton = ({ onHide }: CloseButtonProps) => (
+	<StyledCloseButton onClick={onHide}>
+		<FontAwesomeIcon icon="times" />
+	</StyledCloseButton>
+)
+
+export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
+	<StyledCloseButtonLeft onClick={onHide}>
+		<FontAwesomeIcon icon="times" />
+	</StyledCloseButtonLeft>
+)
+
+export const StyledCloseButton = styled.a`
+	float: right;
+	top: ${(props) => props.theme.spacing[3]}px;
+	right: ${(props) => props.theme.spacing[4]}px;
+	font-size: 1.5rem;
+	position: absolute;
+	color: ${(props) => props.theme.color.background[200]};
+
+	&:hover {
+		cursor: pointer;
+		color: ${(props) => props.theme.color.text[100]};
+	}
+`
+
+export const StyledCloseButtonLeft = styled.a`
+	float: left;
+	top: ${(props) => props.theme.spacing[3]}px;
+	left: ${(props) => props.theme.spacing[4]}px;
+	font-size: 1.5rem;
+	position: absolute;
+	color: ${(props) => props.theme.color.background[200]};
+
+	&:hover {
+		cursor: pointer;
+		color: ${(props) => props.theme.color.text[100]};
+	}
+`
+
+export const SubmitButton = styled.button`
+	display: inline-flex;
+	appearance: none;
+	align-items: center;
+	justify-content: center;
+	user-select: none;
+	position: relative;
+	white-space: nowrap;
+	vertical-align: middle;
+	outline-offset: 2px;
+	width: 100%;
+	line-height: 1.2;
+	font-weight: ${(props) => props.theme.fontWeight.strong};
+	transition-property: all;
+	height: 50px;
+	min-width: 2.5rem;
+	font-size: ${(props) => props.theme.fontSize.default};
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
+	background-color: ${(props) => props.theme.color.primary[100]};
+	outline: transparent solid 2px;
+	border-radius: 8px;
+	color: ${(props) => props.theme.color.text[100]};
+	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+	transition: 200ms;
+	overflow: hidden;
+
+	&:focus {
+		outline: 0;
+	}
+
+	&:hover {
+		background: ${(props) => props.theme.color.primary[200]};
+		cursor: pointer;
+		color: ${(props) => props.theme.color.text[100]};
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
+	}
+
+	&:hover,
+	&:focus,
+	&:active {
+		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+		cursor: ${(props) =>
+			props.disabled ? 'not-allowed' : 'pointer'} !important;
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `

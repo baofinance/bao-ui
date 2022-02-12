@@ -1,17 +1,17 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Config from 'bao/lib/config'
+import { ActiveSupportedMarket } from 'bao/lib/types'
+import { approvev2 } from 'bao/utils'
+import BigNumber from 'bignumber.js'
+import { SubmitButton } from 'components/Button/Button'
+import useBao from 'hooks/base/useBao'
+import useTransactionHandler from 'hooks/base/useTransactionHandler'
+import { useApprovals } from 'hooks/markets/useApprovals'
 import React from 'react'
 import styled from 'styled-components'
-import { MarketOperations } from './Modals'
-import BigNumber from 'bignumber.js'
-import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
-import useBao from '../../../hooks/base/useBao'
 import { useWallet } from 'use-wallet'
-import { useApprovals } from '../../../hooks/markets/useApprovals'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Config from '../../../bao/lib/config'
-import { approvev2 } from '../../../bao/utils'
-import { decimate } from '../../../utils/numberFormat'
-import { TransactionReceipt } from 'web3-core'
-import { ActiveSupportedMarket } from 'bao/lib/types'
+import { decimate } from 'utils/numberFormat'
+import { MarketOperations } from './Modals'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -193,50 +193,4 @@ const ButtonStack = styled.div`
 
 const ExternalLink = styled.a`
 	color: ${(props) => props.theme.color.text[100]};
-`
-
-export const SubmitButton = styled.button`
-	display: inline-flex;
-	appearance: none;
-	align-items: center;
-	justify-content: center;
-	user-select: none;
-	position: relative;
-	white-space: nowrap;
-	vertical-align: middle;
-	outline-offset: 2px;
-	width: 100%;
-	line-height: 1.2;
-	font-weight: ${(props) => props.theme.fontWeight.strong};
-	transition-property: all;
-	height: 50px;
-	min-width: 2.5rem;
-	font-size: ${(props) => props.theme.fontSize.default};
-	padding-inline-start: 1rem;
-	padding-inline-end: 1rem;
-	border: ${(props) => props.theme.color.primary[300]} 1px solid;
-	background-color: ${(props) => props.theme.color.primary[100]};
-	outline: transparent solid 2px;
-	border-radius: 8px;
-	color: ${(props) => props.theme.color.text[100]};
-	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-	transition: 200ms;
-	overflow: hidden;
-
-	&:focus {
-		outline: 0;
-	}
-
-	&:hover {
-		background: ${(props) => props.theme.color.primary[200]};
-		cursor: pointer;
-	}
-
-	&:hover,
-	&:focus,
-	&:active {
-		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
-		cursor: ${(props) =>
-			props.disabled ? 'not-allowed' : 'pointer'} !important;
-	}
 `

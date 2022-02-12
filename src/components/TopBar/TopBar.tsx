@@ -1,12 +1,12 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MenuIcon from 'components/icons/MenuIcon'
 import Logo from 'components/Logo'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
+import { Button } from '../Button'
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
-import { Button } from '../Button'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 interface TopBarProps {
 	isDarkMode: boolean

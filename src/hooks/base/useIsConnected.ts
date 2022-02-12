@@ -1,5 +1,5 @@
+import Config from 'bao/lib/config'
 import { useCallback, useEffect, useState } from 'react'
-import Config from '../../bao/lib/config'
 import useBao from './useBao'
 
 const useIsConnected = (): boolean => {

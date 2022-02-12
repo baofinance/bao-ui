@@ -1,15 +1,15 @@
-import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
+import Tooltipped from 'components/Tooltipped'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
-import useHealthFactor from '../../../hooks/markets/useHealthFactor'
+import useHealthFactor from 'hooks/markets/useHealthFactor'
+import React from 'react'
 import {
 	buildStyles,
 	CircularProgressbarWithChildren,
 } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
-import { getDisplayBalance } from '../../../utils/numberFormat'
-import Tooltipped from '../../../components/Tooltipped'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getDisplayBalance } from 'utils/numberFormat'
 import {
 	BorrowLimit,
 	BorrowLimitWrapper,

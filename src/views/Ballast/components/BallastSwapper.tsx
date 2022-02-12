@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
-import Config from '../../../bao/lib/config'
-import BigNumber from 'bignumber.js'
-import Multicall from '../../../utils/multicall'
-import useBao from '../../../hooks/base/useBao'
-import useTransactionProvider from '../../../hooks/base/useTransactionProvider'
-import useTokenBalance from '../../../hooks/base/useTokenBalance'
-import { Card, Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BalanceInput } from '../../../components/Input'
-import { SpinnerLoader } from '../../../components/Loader'
+import Config from 'bao/lib/config'
+import BigNumber from 'bignumber.js'
+import { BalanceInput } from 'components/Input'
+import { SpinnerLoader } from 'components/Loader'
+import Tooltipped from 'components/Tooltipped'
+import useBao from 'hooks/base/useBao'
+import useTokenBalance from 'hooks/base/useTokenBalance'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Badge, Card } from 'react-bootstrap'
+import styled from 'styled-components'
+import Multicall from 'utils/multicall'
+import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import BallastButton from './BallastButton'
-import Tooltipped from '../../../components/Tooltipped'
-import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
@@ -143,7 +143,7 @@ const BallastSwapper: React.FC = () => {
 			</h2>
 			{swapDirection ? baoUSDInput : daiInput}
 			<SwapDirection onClick={() => setSwapDirection(!swapDirection)}>
-				<Badge pill>
+				<SwapDirectionBadge pill>
 					<FontAwesomeIcon icon="sync" />
 					{' - '}
 					Fee:{' '}
@@ -155,7 +155,7 @@ const BallastSwapper: React.FC = () => {
 					) : (
 						<SpinnerLoader />
 					)}
-				</Badge>
+				</SwapDirectionBadge>
 			</SwapDirection>
 			{swapDirection ? daiInput : baoUSDInput}
 			<br />
@@ -176,6 +176,8 @@ const BallastSwapCard = styled(Card)`
 	margin: auto;
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	label > span {
 		float: right;
@@ -190,13 +192,20 @@ const SwapDirection = styled.a`
 	margin-top: 1em;
 	color: ${(props) => props.theme.color.text[200]};
 	user-select: none;
-
-	> span.badge {
-		background-color: ${(props) => props.theme.color.text[400]} !important;
-	}
+	transition: 200ms;
 
 	&:hover {
 		cursor: pointer;
+	}
+`
+
+const SwapDirectionBadge = styled(Badge)`
+	background-color: ${(props) => props.theme.color.primary[200]} !important;
+	color: ${(props) => props.theme.color.text[100]};
+
+	&:hover {
+		background-color: ${(props) => props.theme.color.primary[300]} !important;
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `
 
