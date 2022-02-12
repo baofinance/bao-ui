@@ -299,10 +299,30 @@ export const CloseButton = ({ onHide }: CloseButtonProps) => (
 	</StyledCloseButton>
 )
 
+export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
+	<StyledCloseButtonLeft onClick={onHide}>
+		<FontAwesomeIcon icon="times" />
+	</StyledCloseButtonLeft>
+)
+
 export const StyledCloseButton = styled.a`
 	float: right;
 	top: ${(props) => props.theme.spacing[3]}px;
 	right: ${(props) => props.theme.spacing[4]}px;
+	font-size: 1.5rem;
+	position: absolute;
+	color: ${(props) => props.theme.color.background[200]};
+
+	&:hover {
+		cursor: pointer;
+		color: ${(props) => props.theme.color.text[100]};
+	}
+`
+
+export const StyledCloseButtonLeft = styled.a`
+	float: left;
+	top: ${(props) => props.theme.spacing[3]}px;
+	left: ${(props) => props.theme.spacing[4]}px;
 	font-size: 1.5rem;
 	position: absolute;
 	color: ${(props) => props.theme.color.background[200]};

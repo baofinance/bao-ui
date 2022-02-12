@@ -2,6 +2,8 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import ExternalLink from 'components/ExternalLink'
+import { CloseButtonLeft } from 'components/Button/Button'
+import { leftPad } from 'web3-utils'
 
 interface MobileMenuProps {
 	onDismiss: () => void
@@ -14,6 +16,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ onDismiss, visible }) => {
 			<StyledMobileMenuWrapper>
 				<StyledBackdrop onClick={onDismiss} />
 				<StyledMobileMenu>
+					<CloseButtonLeft onClick={onDismiss} onHide={onDismiss} />
 					<StyledLink exact activeClassName="active" to="/" onClick={onDismiss}>
 						Markets
 					</StyledLink>
