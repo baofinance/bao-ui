@@ -172,10 +172,6 @@ const GlobalStyle = createGlobalStyle`
   box-shadow: ${(props) => props.theme.boxShadow.default};
 }
 
-.bg-primary {
-  background-color: ${(props) => props.theme.color.primary[100]} !important;
-}
-
 .badge {
   background-color: ${(props) => props.theme.color.text[200]};
   color: ${(props) => props.theme.color.text[100]};

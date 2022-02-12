@@ -143,7 +143,7 @@ const BallastSwapper: React.FC = () => {
 			</h2>
 			{swapDirection ? baoUSDInput : daiInput}
 			<SwapDirection onClick={() => setSwapDirection(!swapDirection)}>
-				<Badge pill>
+				<SwapDirectionBadge pill>
 					<FontAwesomeIcon icon="sync" />
 					{' - '}
 					Fee:{' '}
@@ -155,7 +155,7 @@ const BallastSwapper: React.FC = () => {
 					) : (
 						<SpinnerLoader />
 					)}
-				</Badge>
+				</SwapDirectionBadge>
 			</SwapDirection>
 			{swapDirection ? daiInput : baoUSDInput}
 			<br />
@@ -196,6 +196,15 @@ const SwapDirection = styled.a`
 
 	&:hover {
 		cursor: pointer;
+	}
+`
+
+const SwapDirectionBadge = styled(Badge)`
+	background-color: ${(props) => props.theme.color.primary[200]} !important;
+	color: ${(props) => props.theme.color.text[100]};
+
+	&:hover {
+		background-color: ${(props) => props.theme.color.primary[300]} !important;
 	}
 `
 
