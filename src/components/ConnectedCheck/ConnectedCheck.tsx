@@ -6,7 +6,7 @@ import useModal from 'hooks/base/useModal'
 import React, { useState } from 'react'
 import { useWallet } from 'use-wallet'
 
-export const ConnectedCheck: React.FC = ({ children }) => {
+const ConnectedCheck: React.FC = ({ children }) => {
 	const [onPresentWalletProviderModal] = useModal(
 		<WalletProviderModal />,
 		'provider',
@@ -18,7 +18,7 @@ export const ConnectedCheck: React.FC = ({ children }) => {
 		<>{children}</>
 	) : (
 		<>
-			<div style={{ width: '350px', margin: 'auto' }}>
+			<div style={{ width: '350px', margin: 'auto', padding: '12px' }}>
 				<Button onClick={() => setShowWalletProviderModal(true)}>
 					<FontAwesomeIcon icon="wallet" style={{ marginRight: '5px' }} />{' '}
 					Connect Wallet to Enter App
@@ -32,3 +32,5 @@ export const ConnectedCheck: React.FC = ({ children }) => {
 		</>
 	)
 }
+
+export default ConnectedCheck

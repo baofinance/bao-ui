@@ -5,7 +5,7 @@ import useFarms from 'hooks/farms/useFarms'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch } from 'react-router-dom'
-import { ConnectedCheck } from 'views/Markets/components/ConnectedCheck'
+import ConnectedCheck from 'components/ConnectedCheck'
 import Balances from './components/Balances'
 import { FarmList } from './components/FarmList'
 

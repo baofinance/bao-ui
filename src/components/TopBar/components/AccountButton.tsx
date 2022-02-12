@@ -101,7 +101,7 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 						size="sm"
 						text={
 							<>
-								Connect Wallet{' '}
+								Connect{' '}
 								<FontAwesomeIcon
 									icon="link"
 									style={{
