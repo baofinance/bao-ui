@@ -15,20 +15,20 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ onDismiss, visible }) => {
 				<StyledBackdrop onClick={onDismiss} />
 				<StyledMobileMenu>
 					<StyledLink exact activeClassName="active" to="/" onClick={onDismiss}>
-						Home
+						Markets
 					</StyledLink>
 					<StyledLink
 						exact
 						activeClassName="active"
-						to="/baskets"
+						to="/ballast"
 						onClick={onDismiss}
 					>
-						Baskets
+						Ballast
 					</StyledLink>
 					<StyledLink
 						exact
 						activeClassName="active"
-						to="/Farms"
+						to="/farms"
 						onClick={onDismiss}
 					>
 						Farms
@@ -53,7 +53,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ onDismiss, visible }) => {
 }
 
 const StyledBackdrop = styled.div`
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[500]};
+	opacity: 0.5;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -82,8 +83,10 @@ const slideIn = keyframes`
 `
 
 const StyledMobileMenu = styled.div`
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
 	animation: ${slideIn} 0.3s forwards ease-out;
-	background: radial-gradient(circle at center top, #202231, #161522);
+	background-color: ${(props) => props.theme.color.primary[100]};
 	display: flex;
 	flex: 1;
 	flex-direction: column;
@@ -96,6 +99,8 @@ const StyledMobileMenu = styled.div`
 	padding-top: 100px;
 	padding-bottom: 100px;
 	overflow-y: scroll;
+	border: ${(props) => props.theme.border.default};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 `
 
 const StyledLink = styled(NavLink)`
