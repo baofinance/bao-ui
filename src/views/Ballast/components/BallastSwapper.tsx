@@ -205,6 +205,7 @@ const SwapDirectionBadge = styled(Badge)`
 
 	&:hover {
 		background-color: ${(props) => props.theme.color.primary[300]} !important;
+		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `
 
