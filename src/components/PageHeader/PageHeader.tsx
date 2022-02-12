@@ -1,6 +1,6 @@
 import React from 'react'
+import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import Container from '../Container'
 
 interface PageHeaderProps {
 	icon: any
@@ -10,7 +10,7 @@ interface PageHeaderProps {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
 	return (
-		<Container size="sm">
+		<Container>
 			<StyledPageHeader>
 				<StyledTitle>{title}</StyledTitle>
 			</StyledPageHeader>
