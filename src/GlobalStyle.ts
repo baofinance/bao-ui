@@ -106,11 +106,15 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .modal-header {
-    border-bottom: 1px solid ${(props: any) => props.theme.color.primary[200]};;
+    border-bottom: 1px solid ${(props: any) => props.theme.color.primary[200]};
   }
 
   .modal-footer {
-    border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};;
+    border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};
+  }
+
+  .modal-open {
+    padding-right: 0px !important; 
   }
 
   .btn {
