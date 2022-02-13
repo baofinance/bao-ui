@@ -135,6 +135,11 @@ export const StatWrapper = styled.div`
   padding-inline-end: 1rem;
   padding: 1.25rem 16px;
   border: ${(props) => props.theme.border.default};
+  
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+    width: 50%;
+  }
+
 `
 
 export const UserStat = styled.div`
@@ -144,12 +149,20 @@ export const UserStat = styled.div`
   p {
     font-size: 1.5rem;
     margin: 0px;
+
+    @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+      font-size: 0.875rem;
+    }
   }
 
   h1 {
     font-size: 0.875rem;
     color: ${(props) => props.theme.color.text[200]};
     margin: 0px;
+
+    @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+      font-size: 0.75rem;
+    }
   }
 `
 

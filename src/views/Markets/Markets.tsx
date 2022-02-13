@@ -85,6 +85,10 @@ const StyledAlert = styled(Alert)`
 		color: inherit;
 		font-weight: bold;
 	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+		font-size: 0.875rem;
+	}
 `
 
 export default Markets

@@ -42,8 +42,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .baoTicker {
-    color: ${props => props.theme.color.text[100]};
-    background-color: ${props => props.theme.color.primary[100]} !important;
+    color: ${(props) => props.theme.color.text[100]};
+    background-color: ${(props) => props.theme.color.primary[100]} !important;
     padding: 1rem;
     border-radius: 8px;
   }
