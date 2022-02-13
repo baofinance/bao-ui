@@ -52,11 +52,11 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 const StyledWalletsWrapper = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		height: 100vh;
 		overflow-y: scroll;
 	}
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
 		flex-direction: column;
 		flex-wrap: none;
 	}

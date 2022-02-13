@@ -141,13 +141,13 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 }
 
 const StyledAccountButton = styled.div`
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `
 
 const MobileAccountButton = styled.div`
-	@media (min-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `

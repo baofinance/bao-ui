@@ -48,7 +48,7 @@ export const StyledCards = styled.div`
   flex-flow: row wrap;
   justify-content: space-evenly;
 
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
     width: 100%;
     flex-flow: column nowrap;
     align-items: center;
@@ -134,7 +134,7 @@ export const StyledWrapper = styled.div`
   align-items: center;
   display: flex;
   margin: auto;
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
     width: 100%;
     flex-flow: column nowrap;
     align-items: stretch;
@@ -194,7 +194,7 @@ export const AccordionCard = styled(Card)`
   display: inline-block;
   vertical-align: super;
   color: ${(props) => props.theme.color.text[100]};
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
     display: none;
   }
   }
@@ -203,15 +203,15 @@ export const AccordionCard = styled(Card)`
 export const FarmImage = styled.img`
   height: 50px;
   margin-right: ${(props) => props.theme.spacing[3]}px;
-  @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
     height: 40px;
     margin-right: ${(props) => props.theme.spacing[3]}px;
   }
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
     height: 35px;
     margin-right: ${(props) => props.theme.spacing[3]}px;
   }
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
     height: 50px;
     margin-right: ${(props) => props.theme.spacing[3]}px;
   }
@@ -225,10 +225,10 @@ export const AssetImage = styled(FarmImage)`
   transition: 200ms;
   user-select: none;
   -webkit-user-drag: none;
-  @media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
     height: 30px;
   }
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
     height: 25px;
   }
 `

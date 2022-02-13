@@ -4,10 +4,11 @@ import * as DarkColors from './darkColors'
 const theme = (dark = false) => ({
   borderRadius: 8,
   breakpoints: {
-    mobile: 575.98,
-    tablet: 767.98,
-    fhd: 991.98,
-    uhd: 1199.98,
+    sm: 575.98,
+    md: 767.98,
+    lg: 991.98,
+    xl: 1199.98,
+    xxl: 1399.98,
   },
   color: dark ? DarkColors : LightColors,
   fontSize: {

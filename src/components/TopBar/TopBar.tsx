@@ -46,7 +46,7 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const StyledLogoWrapper = styled.div`
 	width: 200px;
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		width: auto;
 	}
 `
@@ -58,7 +58,7 @@ const StyledNavWrapper = styled.div`
 	display: flex;
 	flex: 1;
 	justify-content: center;
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
 		display: none;
 	}
 `
@@ -78,7 +78,7 @@ const StyledAccountButtonWrapper = styled.div`
 	display: flex;
 	justify-content: flex-end;
 	width: 200px;
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		justify-content: center;
 		width: auto;
 	}
@@ -92,7 +92,7 @@ const StyledMenuButton = styled.button`
 	padding: 0;
 	display: none;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
 		align-items: center;
 		display: flex;
 		height: 44px;

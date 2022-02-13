@@ -226,17 +226,17 @@ export const FarmImage = styled.img`
 	height: 50px;
 	margin-right: ${(props) => props.theme.spacing[3]}px;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		height: 40px;
 		margin-right: ${(props) => props.theme.spacing[3]}px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
 		height: 35px;
 		margin-right: ${(props) => props.theme.spacing[3]}px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		height: 50px;
 		margin-right: ${(props) => props.theme.spacing[3]}px;
 	}
@@ -250,7 +250,7 @@ export const FarmIconContainer = styled.div`
 	vertical-align: middle;
 	color: ${(props) => props.theme.color.text[100]};
 
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `
@@ -267,11 +267,11 @@ export const FarmIcon = styled(FarmImage)`
 		margin-left: 0;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		height: 30px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
 		height: 25px;
 	}
 `
