@@ -108,7 +108,6 @@ const BalanceInputContainer = styled.div`
 	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
 	height: 50px;
-	box-shadow: ${(props) => props.theme.boxShadow.invert};
 	border: ${(props) => props.theme.border.default};
 `
 

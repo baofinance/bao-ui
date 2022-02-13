@@ -46,7 +46,7 @@ const theme = (dark = false) => ({
       },
   border: dark
     ? {
-        default: '1px solid #211f22',
+        default: '1px solid #4b484f',
       }
     : {
         default: '1px solid #ded4ce',

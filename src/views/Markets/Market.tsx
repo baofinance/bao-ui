@@ -83,11 +83,6 @@ const Market: React.FC = () => {
 	return markets && activeMarket ? (
 		<>
 			<Page>
-				<PageHeader
-					icon=""
-					title="Markets"
-					subtitle="Mint synthethic assets with multiple collateral types!"
-				/>
 				<Container style={{ marginTop: '2.5em' }}>
 					<BackButton>
 						<p style={{ fontSize: '1.25rem' }}>
@@ -316,7 +311,6 @@ const InfoContainer = styled.div`
 	font-size: 14px;
 	color: ${(props) => props.theme.color.text[200]};
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	> p {
 		color: ${(props) => props.theme.color.text[100]};

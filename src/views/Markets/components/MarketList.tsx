@@ -426,7 +426,6 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
 		border: ${(props) => props.theme.border.default};
-		box-shadow: ${(props) => props.theme.boxShadow.default};
 		border-radius: 8px;
 
 		&:hover,
@@ -436,7 +435,7 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			background-color: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
 			border: ${(props) => props.theme.border.default};
-			box-shadow: ${(props) => props.theme.boxShadow.default};
+			box-shadow: none;
 			border-radius: 8px 8px 0px 0px;
 		}
 

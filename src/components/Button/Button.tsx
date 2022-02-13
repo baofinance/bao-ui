@@ -115,7 +115,6 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	padding: ${(props) => -props.theme.spacing[3]}px;
 	color: ${(props) => props.theme.color.text[100]};
 	display: ${(props) => (props.inline ? 'inline-block' : 'flex')};
@@ -148,7 +147,6 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	&:hover,
 	&:active {
 		background-color: ${(props) => props.theme.color.primary[200]};
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
 		color: ${(props) => props.theme.color.text[100]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
@@ -192,7 +190,7 @@ const ButtonLink = styled.a`
 export const MaxButton = styled.a`
 	padding: ${(props) => props.theme.spacing[2]}px;
 	color: ${(props) => props.theme.color.text[100]};
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[300]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
@@ -201,15 +199,13 @@ export const MaxButton = styled.a`
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	text-decoration: none;
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	font-size: ${(props) => props.theme.fontSize.sm};
 
 	&:hover {
-		background: ${(props) => props.theme.color.primary[200]};
+		background: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		cursor: pointer;
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `
 
@@ -265,7 +261,6 @@ const NavButton = styled.button`
 	border-radius: 8px;
 	overflow: hidden;
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	&:focus {
 		outline: 0;
@@ -275,7 +270,6 @@ const NavButton = styled.button`
 		background: ${(props) => props.theme.color.primary[200]};
 		cursor: pointer;
 		color: ${(props) => props.theme.color.text[100]};
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 
 	&:hover,
@@ -284,7 +278,6 @@ const NavButton = styled.button`
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 		color: ${(props) => props.theme.color.text[100]};
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `
 
@@ -353,7 +346,6 @@ export const SubmitButton = styled.button`
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	background-color: ${(props) => props.theme.color.primary[100]};
 	outline: transparent solid 2px;
 	border-radius: 8px;
@@ -370,7 +362,6 @@ export const SubmitButton = styled.button`
 		background: ${(props) => props.theme.color.primary[200]};
 		cursor: pointer;
 		color: ${(props) => props.theme.color.text[100]};
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 
 	&:hover,
@@ -379,6 +370,5 @@ export const SubmitButton = styled.button`
 		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
 	}
 `
