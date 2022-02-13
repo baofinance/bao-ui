@@ -25,38 +25,34 @@ const Markets: React.FC = () => {
 				subtitle="Mint synthethic assets with multiple types of collateral!"
 			/>
 			<ConnectedCheck>
-				<Container>
-					<StyledAlert variant="danger">
-						<img src="/siren.gif" style={{ width: '2rem' }} /> <br />
-						Bao Markets is currently in a soft launch. Collateral Factors for
-						synths are set low intentionally, and they will be adjusted as the
-						protocol sees usage over the coming weeks. Please be prudent,{' '}
-						<a href="https://docs.bao.finance">
-							<FontAwesomeIcon icon="file-alt" /> read the docs
-						</a>
-						, and{' '}
-						<a href="https://discord.gg/WPjtXXWnnU">
-							<FontAwesomeIcon icon={['fab', 'discord']} /> ask questions
-						</a>{' '}
-						before interacting with the protocol at this time.
-						<br />
-						<br />
-						Please report any UI bugs on the{' '}
-						<a href="https://github.com/baofinance/bao-ui/issues">
-							<FontAwesomeIcon icon={['fab', 'github']} /> UI's Github
-							Repository
-						</a>{' '}
-						(preferred) or on our{' '}
-						<a href="https://discord.gg/WPjtXXWnnU">
-							<FontAwesomeIcon icon={['fab', 'discord']} /> Discord
-						</a>
-						.
-					</StyledAlert>
-				</Container>
-				<Spacer />
-				<Spacer />
 				<Route exact path={path}>
 					<Container>
+						<StyledAlert variant="danger">
+							<img src="/siren.gif" style={{ width: '2rem' }} /> <br />
+							Bao Markets is currently in a soft launch. Collateral Factors for
+							synths are set low intentionally, and they will be adjusted as the
+							protocol sees usage over the coming weeks. Please be prudent,{' '}
+							<a href="https://docs.bao.finance">
+								<FontAwesomeIcon icon="file-alt" /> read the docs
+							</a>
+							, and{' '}
+							<a href="https://discord.gg/WPjtXXWnnU">
+								<FontAwesomeIcon icon={['fab', 'discord']} /> ask questions
+							</a>{' '}
+							before interacting with the protocol at this time.
+							<br />
+							<br />
+							Please report any UI bugs on the{' '}
+							<a href="https://github.com/baofinance/bao-ui/issues">
+								<FontAwesomeIcon icon={['fab', 'github']} /> UI's Github
+								Repository
+							</a>{' '}
+							(preferred) or on our{' '}
+							<a href="https://discord.gg/WPjtXXWnnU">
+								<FontAwesomeIcon icon={['fab', 'discord']} /> Discord
+							</a>
+							.
+						</StyledAlert>
 						<Overview />
 						{markets ? (
 							<MarketList markets={markets} />
@@ -76,6 +72,7 @@ const Markets: React.FC = () => {
 // TEMP
 const StyledAlert = styled(Alert)`
 	text-align: center;
+	margin: 25px;
 
 	> b {
 		font-weight: bold;
@@ -86,7 +83,7 @@ const StyledAlert = styled(Alert)`
 		font-weight: bold;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		font-size: 0.875rem;
 	}
 `
