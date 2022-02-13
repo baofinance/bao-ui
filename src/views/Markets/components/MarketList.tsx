@@ -85,7 +85,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 			borrowBalances &&
 			exchangeRates ? (
 				<Row>
-					<Col>
+					<Col lg={12} xl={6}>
 						<HrText content="Collateral" />
 						<MarketListHeader headers={['Asset', 'Wallet', 'Liquidity']} />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
@@ -100,7 +100,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 							/>
 						))}
 					</Col>
-					<Col>
+					<Col lg={12} xl={6}>
 						<HrText content="Synthetics" />
 						<MarketListHeader headers={['Asset', 'APR', 'Wallet']} />
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
