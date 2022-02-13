@@ -190,7 +190,7 @@ const ButtonLink = styled.a`
 export const MaxButton = styled.a`
 	padding: ${(props) => props.theme.spacing[2]}px;
 	color: ${(props) => props.theme.color.text[100]};
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[300]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
@@ -203,7 +203,7 @@ export const MaxButton = styled.a`
 	font-size: ${(props) => props.theme.fontSize.sm};
 
 	&:hover {
-		background: ${(props) => props.theme.color.primary[200]};
+		background: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		cursor: pointer;
 	}

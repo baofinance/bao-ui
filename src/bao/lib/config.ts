@@ -91,8 +91,22 @@ export default {
       underlyingDecimals: 18,
     },
     {
+      mid: 4,
+      symbol: 'bdETH',
+      marketAddresses: {
+        1: '0xF635fdF9B36b557bD281aa02fdfaeBEc04CD084A',
+      },
+      underlyingAddresses: {
+        1: 'ETH',
+      },
+      icon: '/WETH.png',
+      coingeckoId: 'weth',
+      underlyingDecimals: 18,
+    },
+    {
       mid: 2,
       symbol: 'bdETH',
+      archived: true,
       marketAddresses: {
         1: '0xe7a52262C1934951207c5fc7A944A82D283C83e5',
       },

@@ -83,11 +83,6 @@ const Market: React.FC = () => {
 	return markets && activeMarket ? (
 		<>
 			<Page>
-				<PageHeader
-					icon=""
-					title="Markets"
-					subtitle="Mint synthethic assets with multiple collateral types!"
-				/>
 				<Container style={{ marginTop: '2.5em' }}>
 					<BackButton>
 						<p style={{ fontSize: '1.25rem' }}>

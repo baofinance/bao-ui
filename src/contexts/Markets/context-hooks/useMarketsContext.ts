@@ -122,7 +122,7 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
     const supplyApys: number[] = supplyRates.map((rate: number) => toApy(rate))
     const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
-    const markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
+    let markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
       const marketConfig = bao.contracts.markets.find(
         (market) =>
           market.marketAddresses[Config.networkId] === contract.options.address,
@@ -157,6 +157,7 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
         ...marketConfig,
       }
     })
+    markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
     setMarkets(markets)
   }, [bao, account, transactions])

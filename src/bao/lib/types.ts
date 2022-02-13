@@ -36,6 +36,7 @@ export interface SupportedBasket {
 
 export interface SupportedMarket {
   mid: number
+  archived?: boolean
   marketAddresses: {
     [network: number]: string
   }
