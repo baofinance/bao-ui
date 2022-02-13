@@ -83,7 +83,7 @@ const Market: React.FC = () => {
 	return markets && activeMarket ? (
 		<>
 			<Page>
-				<Container style={{ marginTop: '2.5em' }}>
+				<Container>
 					<BackButton>
 						<p style={{ fontSize: '1.25rem' }}>
 							<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
@@ -326,12 +326,15 @@ export const StyledLink = styled(NavLink)`
 	padding-left: ${(props) => props.theme.spacing[3]}px;
 	padding-right: ${(props) => props.theme.spacing[3]}px;
 	text-decoration: none;
+
 	&:hover {
 		color: ${(props) => props.theme.color.text[300]};
 	}
+
 	&.active {
 		color: ${(props) => props.theme.color.text[300]};
 	}
+
 	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
 		padding-left: ${(props) => props.theme.spacing[2]}px;
 		padding-right: ${(props) => props.theme.spacing[2]}px;
