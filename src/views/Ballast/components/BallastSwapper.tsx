@@ -199,12 +199,12 @@ const SwapDirection = styled.a`
 `
 
 const SwapDirectionBadge = styled(Badge)`
-	background-color: ${(props) => props.theme.color.accent[500]} !important;
+	background-color: ${(props) => props.theme.color.primary[200]} !important;
 	color: ${(props) => props.theme.color.text[100]};
-	border: none;
-
+	border: ${(props) => props.theme.border.default};
+	
 	&:hover {
-		background-color: ${(props) => props.theme.color.accent[400]} !important;
+		background-color: ${(props) => props.theme.color.primary[300]} !important;
 	}
 `
 
