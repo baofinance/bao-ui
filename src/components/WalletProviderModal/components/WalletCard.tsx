@@ -75,7 +75,6 @@ const WalletIcon = styled.div`
 	align-items: center;
 	display: flex;
 	justify-content: center;
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	margin: 0 auto ${(props) => props.theme.spacing[3]}px;
 `
 

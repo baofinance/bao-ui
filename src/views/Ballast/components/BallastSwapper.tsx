@@ -177,7 +177,6 @@ const BallastSwapCard = styled(Card)`
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	label > span {
 		float: right;
@@ -200,12 +199,12 @@ const SwapDirection = styled.a`
 `
 
 const SwapDirectionBadge = styled(Badge)`
-	background-color: ${(props) => props.theme.color.primary[200]} !important;
+	background-color: ${(props) => props.theme.color.accent[500]} !important;
 	color: ${(props) => props.theme.color.text[100]};
+	border: none;
 
 	&:hover {
-		background-color: ${(props) => props.theme.color.primary[300]} !important;
-		box-shadow: ${(props) => props.theme.boxShadow.invert};
+		background-color: ${(props) => props.theme.color.accent[400]} !important;
 	}
 `
 

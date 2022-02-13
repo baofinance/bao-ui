@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
   html {
     overflow-y: scroll;
   }
-  
+
   html,
   body,
   #root {
@@ -85,7 +85,6 @@ const GlobalStyle = createGlobalStyle`
     color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
     border: none;
-    box-shadow: ${(props) => props.theme.boxShadow.invert};
   }
 
   .buttonActive:hover {
@@ -115,7 +114,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .modal-open {
-    padding-right: 0px !important; 
+    padding-right: 0px !important;
   }
 
   .btn {
@@ -173,14 +172,11 @@ const GlobalStyle = createGlobalStyle`
 	flex: 1;
 	flex-direction: column;
   border: ${(props) => props.theme.border.default};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
 }
 
 .badge {
   background-color: ${(props) => props.theme.color.text[200]};
   color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
-  box-shadow: ${(props) => props.theme.boxShadow.default};
   font-weight: ${(props) => props.theme.fontWeight.medium};
   vertical-align: middle;
   font-size: 1rem;

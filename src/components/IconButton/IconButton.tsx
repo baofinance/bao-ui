@@ -31,7 +31,6 @@ const StyledButton = styled.button<StyledButtonProps>`
 	align-items: center;
 	background: ${(props) => props.theme.color.primary[100]};
 	border: none;
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 	border-radius: 32px;
 	color: ${(props) => props.theme.color.text[100]};
 	cursor: pointer;
@@ -57,7 +56,6 @@ const StyledButton = styled.button<StyledButtonProps>`
 
 	  &:hover{
 		background: ${(props) => props.theme.color.primary[100]};
-		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		color: ${(props) => props.theme.color.text[400]};
 		cursor: pointer;
 	  }
@@ -66,7 +64,6 @@ const StyledButton = styled.button<StyledButtonProps>`
 	&:hover,
 	&:focus,
 	&:active {
-		box-shadow: ${(props) => props.theme.boxShadow.hover};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}

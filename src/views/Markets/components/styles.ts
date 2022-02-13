@@ -134,7 +134,6 @@ export const StatWrapper = styled.div`
   padding-inline-start: 1rem;
   padding-inline-end: 1rem;
   padding: 1.25rem 16px;
-  box-shadow: ${(props) => props.theme.boxShadow.default};
   border: ${(props) => props.theme.border.default};
 `
 

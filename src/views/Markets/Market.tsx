@@ -316,7 +316,6 @@ const InfoContainer = styled.div`
 	font-size: 14px;
 	color: ${(props) => props.theme.color.text[200]};
 	border: ${(props) => props.theme.border.default};
-	box-shadow: ${(props) => props.theme.boxShadow.default};
 
 	> p {
 		color: ${(props) => props.theme.color.text[100]};
