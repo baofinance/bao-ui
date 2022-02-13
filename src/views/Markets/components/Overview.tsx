@@ -9,6 +9,7 @@ import {
 	CircularProgressbarWithChildren,
 } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
+import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
 import {
 	BorrowLimit,
@@ -66,14 +67,7 @@ export const Overview = () => {
 							</p>
 						</UserStat>
 					</StatWrapper>
-					<div
-						style={{
-							width: 150,
-							height: 150,
-							marginRight: '75px',
-							marginLeft: '75px',
-						}}
-					>
+					<BorrowLimitContainer>
 						<CircularProgressbarWithChildren
 							value={borrowLimit}
 							strokeWidth={10}
@@ -108,7 +102,7 @@ export const Overview = () => {
 								</BorrowLimitWrapper>
 							</div>
 						</CircularProgressbarWithChildren>
-					</div>
+					</BorrowLimitContainer>
 					<StatWrapper>
 						<UserStat>
 							<h1>Total Debt</h1>
@@ -149,3 +143,14 @@ export const Overview = () => {
 		<></>
 	)
 }
+
+const BorrowLimitContainer = styled.div`
+	width: 150px;
+	height: 150px;
+	marginright: 75px;
+	marginleft: 75px;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+		display: none;
+	}
+`
