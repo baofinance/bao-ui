@@ -124,25 +124,21 @@ const StyledLink = styled(NavLink)`
 `
 
 const StyledAbsoluteLink = styled.a`
-	transition-property: all;
-	transition-duration: 200ms;
-	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-	font-family: 'Rubik', sans-serif;
-	color: ${(props) => props.theme.color.text[100]};
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	padding-left: ${(props) => props.theme.spacing[3]}px;
-	padding-right: ${(props) => props.theme.spacing[3]}px;
-	text-decoration: none;
-	&:hover {
-		color: ${(props) => props.theme.color.text[300]};
-	}
-	&.active {
-		color: ${(props) => props.theme.color.text[400]};
-	}
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
-		padding-left: ${(props) => props.theme.spacing[2]}px;
-		padding-right: ${(props) => props.theme.spacing[2]}px;
-	}
+box-sizing: border-box;
+color: ${(props) => props.theme.color.text[100]};
+font-size: 1.25rem;
+font-weight: ${(props) => props.theme.fontWeight.strong};
+padding: ${(props) => props.theme.spacing[3]}px
+  ${(props) => props.theme.spacing[4]}px;
+text-align: center;
+text-decoration: none;
+width: 100%;
+&:hover {
+  color: ${(props) => props.theme.color.text[300]};
+}
+&.active {
+  color: ${(props) => props.theme.color.text[400]};
+}
 `
 
 
