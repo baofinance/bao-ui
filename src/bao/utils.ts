@@ -89,6 +89,7 @@ export const getFarms = (bao: Bao): Farm[] => {
           lpContract,
           refUrl,
           pairUrl,
+          type,
         }) => ({
           pid,
           id: symbol,
@@ -106,6 +107,7 @@ export const getFarms = (bao: Bao): Farm[] => {
           iconB,
           refUrl,
           pairUrl,
+          type,
         }),
       )
     : []

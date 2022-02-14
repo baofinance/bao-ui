@@ -185,6 +185,14 @@ export const AccordionCard = styled(Card)`
     justify-content: flex-end;
     border: none;
 	}
+
+  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.75rem;
+	}
+
+  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+    min-height: 200px;
+	}
   `
 
   export const AssetImageContainer = styled.div`

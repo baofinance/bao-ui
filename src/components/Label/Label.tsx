@@ -12,6 +12,10 @@ const Label: React.FC<LabelProps> = ({ text }) => (
 const StyledLabel = styled.div`
 	font-size: 0.875rem;
 	color: ${(props) => props.theme.color.text[200]};
+	
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		  font-size: 0.75rem;
+	  }
 `
 
 export default Label

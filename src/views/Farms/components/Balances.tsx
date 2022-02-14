@@ -99,7 +99,14 @@ const Balances: React.FC = () => {
 		<Fragment>
 			<Container>
 				<Row style={{ display: 'flex', flexWrap: 'wrap' }}>
-					<Col style={{ display: 'flex', flexDirection: 'column' }}>
+					<Col
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							marginBottom: '1rem',
+						}}
+						md={6}
+					>
 						<Card>
 							<Card.Body>
 								<StyledInfo>
@@ -142,7 +149,14 @@ const Balances: React.FC = () => {
 							</Card.Body>
 						</Card>
 					</Col>
-					<Col style={{ display: 'flex', flexDirection: 'column' }}>
+					<Col
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							marginBottom: '1rem',
+						}}
+						md={6}
+					>
 						<Card>
 							<Card.Body>
 								<Footnote>

@@ -2,25 +2,28 @@ import BigNumber from 'bignumber.js'
 import { Button } from 'components/Button'
 import { BalanceInput } from 'components/Input'
 import Label from 'components/Label'
+import { SpinnerLoader } from 'components/Loader'
 import { PoolType } from 'contexts/Farms/types'
 import useAllowance from 'hooks/base/useAllowance'
 import useApprove from 'hooks/base/useApprove'
 import useBao from 'hooks/base/useBao'
+import useBlockDiff from 'hooks/base/useBlockDiff'
 import useTokenBalance from 'hooks/base/useTokenBalance'
+import useFees from 'hooks/farms/useFees'
 import useStake from 'hooks/farms/useStake'
 import useStakedBalance from 'hooks/farms/useStakedBalance'
 import useUnstake from 'hooks/farms/useUnstake'
+import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Card } from 'react-bootstrap'
+import { Card, Col, Row } from 'react-bootstrap'
+import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
 import { getFullDisplayBalance } from 'utils/numberFormat'
 import {
 	AssetLabel,
-	InputStack,
-	LabelFlex,
 	LabelStack,
-	MaxLabel
+	MaxLabel,
 } from 'views/Markets/components/styles'
 import { provider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
@@ -133,25 +136,32 @@ const Stake: React.FC<StakeProps> = ({
 
 	return (
 		<AccordionCard>
-			<Card.Header>
-				<Card.Title>
-					<Label text={`Stake ${tokenName}`} />
-				</Card.Title>
-			</Card.Header>
 			<Card.Body>
-				<InputStack>
-					<LabelFlex>
-						<LabelStack>
-							<MaxLabel>Available to deposit:</MaxLabel>
-							<AssetLabel>{`${fullBalance} ${tokenName}`}</AssetLabel>
-						</LabelStack>
-					</LabelFlex>
-					<BalanceInput
-						onMaxClick={handleSelectMax}
-						onChange={handleChange}
-						value={val}
-					/>
-				</InputStack>
+				<Row>
+					<Col xs={4}>
+						<LabelStart>
+							<MaxLabel>Fee:</MaxLabel>
+							<AssetLabel>0.75%</AssetLabel>
+						</LabelStart>
+					</Col>
+					<Col xs={8}>
+						<LabelEnd>
+							<LabelStack>
+								<MaxLabel>Balance:</MaxLabel>
+								<AssetLabel>{`${fullBalance} ${tokenName}`}</AssetLabel>
+							</LabelStack>
+						</LabelEnd>
+					</Col>
+				</Row>
+				<Row>
+					<Col xs={12}>
+						<BalanceInput
+							onMaxClick={handleSelectMax}
+							onChange={handleChange}
+							value={val}
+						/>
+					</Col>
+				</Row>
 			</Card.Body>
 			<Card.Footer>
 				{!allowance.toNumber() ? (
@@ -223,27 +233,40 @@ const Unstake: React.FC<UnstakeProps> = ({
 		setVal(fullBalance)
 	}, [fullBalance, setVal])
 
+	const userInfo = useUserFarmInfo(pid)
+	const blockDiff = useBlockDiff(userInfo)
+	const fees = useFees(blockDiff)
+
 	return (
 		<AccordionCard>
-			<Card.Header>
-				<Card.Title>
-					<Label text={`Unstake ${tokenName}`} />
-				</Card.Title>
-			</Card.Header>
 			<Card.Body>
-				<InputStack>
-					<LabelFlex>
-						<LabelStack>
-							<MaxLabel>Available to withdraw:</MaxLabel>
-							<AssetLabel>{`${fullBalance} ${tokenName}`}</AssetLabel>
-						</LabelStack>
-					</LabelFlex>
-					<BalanceInput
-						onMaxClick={handleSelectMax}
-						onChange={handleChange}
-						value={val}
-					/>
-				</InputStack>
+				<Row>
+					<Col xs={4}>
+						<LabelStart>
+							<MaxLabel>Fee:</MaxLabel>
+							<AssetLabel>
+								{fees ? `${(fees * 100).toFixed(2)}%` : <SpinnerLoader />}
+							</AssetLabel>
+						</LabelStart>
+					</Col>
+					<Col xs={8}>
+						<LabelEnd>
+							<LabelStack>
+								<MaxLabel>Balance:</MaxLabel>
+								<AssetLabel>{`${fullBalance} ${tokenName}`}</AssetLabel>
+							</LabelStack>
+						</LabelEnd>
+					</Col>
+				</Row>
+				<Row>
+					<Col xs={12}>
+						<BalanceInput
+							onMaxClick={handleSelectMax}
+							onChange={handleChange}
+							value={val}
+						/>
+					</Col>
+				</Row>{' '}
 			</Card.Body>
 			<Card.Footer>
 				<Button
@@ -259,3 +282,36 @@ const Unstake: React.FC<UnstakeProps> = ({
 		</AccordionCard>
 	)
 }
+
+export const LabelEnd = styled.div`
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	width: 100%;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		font-size: 0.75rem !important;
+	}
+`
+
+export const LabelStart = styled.div`
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	width: 100%;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		font-size: 0.75rem !important;
+	}
+`
+
+export const FeeLabel = styled.p`
+	color: ${(props) => props.theme.color.text[200]};
+	font-size: 0.875rem;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	margin-bottom: 0px;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		font-size: 0.75rem;
+	}
+`

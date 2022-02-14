@@ -336,14 +336,10 @@ const StatWrapper = styled.div`
 	background: ${(props) => props.theme.color.primary[200]};
 	padding: 16px;
 	border-radius: 8px;
-	margin-top: -.5rem;
 	margin-bottom: 1rem;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		padding: 15px 30px;
-		margin-top: -.25rem;
-		margin-bottom: .5rem;
-	
+		padding: 15px 30px;	
 		}
 `
 

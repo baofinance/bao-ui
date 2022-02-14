@@ -188,7 +188,7 @@ const BallastSwapper: React.FC = () => {
 }
 
 const BallastSwapCard = styled(Card)`
-	width: 60%;
+	width: 720px;
 	padding: 25px;
 	margin: auto;
 	background-color: ${(props) => props.theme.color.primary[100]};
@@ -201,15 +201,7 @@ const BallastSwapCard = styled(Card)`
 		color: ${(props) => props.theme.color.text[200]};
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		width: 80%;
-	}
-
 	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
-		width: 90%;
-	}
-
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		width: 100%;
 	}
 `

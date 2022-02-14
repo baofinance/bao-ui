@@ -1,5 +1,4 @@
 import baoIcon from 'assets/img/logo.svg'
-import BigNumber from 'bignumber.js'
 import { Button } from 'components/Button'
 import Label from 'components/Label'
 import { SpinnerLoader } from 'components/Loader'
@@ -14,8 +13,8 @@ import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import React, { useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
-import { AccordionCard, AssetImage, AssetImageContainer } from './styles'
+import { getDisplayBalance } from 'utils/numberFormat'
+import { AccordionCard } from './styles'
 
 interface HarvestProps {
 	pid: number
@@ -38,50 +37,49 @@ interface EarningsProps {
 	pid: number
 }
 
-const Earnings: React.FC<EarningsProps> = ({ pid }) => {
+export const Earnings: React.FC<EarningsProps> = ({ pid }) => {
 	const earnings = useEarnings(pid)
-	const locks = useLockedEarnings()
 	const [pendingTx, setPendingTx] = useState(false)
 	const { onReward } = useReward(pid)
 
 	return (
-		<AccordionCard>
-			<Card.Header>
-				<Card.Title>
-					<Label text="BAO Earned" />
-				</Card.Title>
-			</Card.Header>
-			<Card.Body>
-				<BalancesContainer>
-					<BalancesWrapper>
-						<BalanceContainer>
-							<BalanceWrapper>
-								<BalanceContent>
-									<BalanceImage>
-										<img src={baoIcon} />
-									</BalanceImage>
-									<BalanceSpacer />
-									<BalanceText>
-										<BalanceValue>{getDisplayBalance(earnings)}</BalanceValue>
-									</BalanceText>
-								</BalanceContent>
-							</BalanceWrapper>
-						</BalanceContainer>
-					</BalancesWrapper>
-				</BalancesContainer>
-			</Card.Body>
-			<Card.Footer>
-				<Button
-					disabled={!earnings.toNumber() || pendingTx}
-					text={pendingTx ? 'Collecting BAO' : 'Harvest'}
-					onClick={async () => {
-						setPendingTx(true)
-						await onReward()
-						setPendingTx(false)
-					}}
-				/>
-			</Card.Footer>
-		</AccordionCard>
+			<AccordionCard>
+				<Card.Header>
+					<Card.Title>
+						<Label text="BAO Earned" />
+					</Card.Title>
+				</Card.Header>
+				<Card.Body>
+					<BalancesContainer>
+						<BalancesWrapper>
+							<BalanceContainer>
+								<BalanceWrapper>
+									<BalanceContent>
+										<BalanceImage>
+											<img src={baoIcon} />
+										</BalanceImage>
+										<BalanceSpacer />
+										<BalanceText>
+											<BalanceValue>{getDisplayBalance(earnings)}</BalanceValue>
+										</BalanceText>
+									</BalanceContent>
+								</BalanceWrapper>
+							</BalanceContainer>
+						</BalancesWrapper>
+					</BalancesContainer>
+				</Card.Body>
+				<Card.Footer>
+					<Button
+						disabled={!earnings.toNumber() || pendingTx}
+						text={pendingTx ? 'Collecting BAO' : 'Harvest'}
+						onClick={async () => {
+							setPendingTx(true)
+							await onReward()
+							setPendingTx(false)
+						}}
+					/>
+				</Card.Footer>
+			</AccordionCard>
 	)
 }
 
@@ -152,16 +150,6 @@ const FeeWarning: React.FC<FeeProps> = ({ pid }) => {
 	)
 }
 
-const BaoEarnings = styled.div`
-	margin: auto;
-`
-
-const Earned = styled(Value)`
-	margin: 0 0 -${(props) => props.theme.spacing[3]}px -${(props) =>
-			props.theme.spacing[3]}px;
-	vertical-align: super;
-`
-
 const BalancesContainer = styled(Col)`
 	display: flex;
 	padding: 24px;
@@ -228,9 +216,4 @@ const BalanceText = styled.div`
 const BalanceValue = styled.div`
 	font-size: 24px;
 	font-weight: 700;
-`
-
-const BalanceTicker = styled.div`
-	color: ${(props) => props.theme.color.text[200]};
-	font-size: 0.875rem;
 `

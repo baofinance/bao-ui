@@ -17,6 +17,7 @@ export interface SupportedPool {
   iconB: string
   refUrl: string
   pairUrl: string
+  type: string
 }
 
 export interface SupportedBasket {

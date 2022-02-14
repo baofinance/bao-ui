@@ -181,6 +181,16 @@ const GlobalStyle = createGlobalStyle`
   vertical-align: middle;
   font-size: 1rem;
 }
+
+.container, .container-sm, .container-md {
+  @media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+    max-width: 1200px;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+    max-width: 720px;
+  }
+}
 `
 
 export default GlobalStyle
