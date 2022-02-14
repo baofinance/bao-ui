@@ -49,7 +49,6 @@ export const MarketList: React.FC<MarketListProps> = ({
 	const collateralMarkets = useMemo(() => {
 		if (!(_markets && supplyBalances)) return
 		return _markets
-			.filter((market) => !market.isSynth)
 			.sort((a, b) =>
 				supplyBalances.find(
 					(balance) =>
