@@ -269,53 +269,26 @@ const InfoCol = ({ title, content }: InfoColParams) => {
 }
 
 const ActionButton = ({ market }: { market: ActiveSupportedMarket }) => {
-	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const [showBorrowModal, setShowBorrowModal] = useState(false)
+	const [showModal, setShowModal] = useState(false)
 
 	return (
 		<>
 			{market.isSynth ? (
-				<>
-					<MarketSupplyModal
-						asset={market}
-						show={showSupplyModal}
-						onHide={() => setShowSupplyModal(false)}
-					/>
-
-					<MarketBorrowModal
-						asset={market}
-						show={showBorrowModal}
-						onHide={() => setShowBorrowModal(false)}
-					/>
-				</>
+				<MarketBorrowModal
+					asset={market}
+					show={showModal}
+					onHide={() => setShowModal(false)}
+				/>
 			) : (
 				<MarketSupplyModal
 					asset={market}
-					show={showSupplyModal}
-					onHide={() => setShowSupplyModal(false)}
+					show={showModal}
+					onHide={() => setShowModal(false)}
 				/>
 			)}
-
-			{market.isSynth ? (
-				<>
-					<Row>
-						<Col>
-							<SubmitButton onClick={() => setShowSupplyModal(true)}>
-								Supply / Withdraw
-							</SubmitButton>
-						</Col>
-						<Col>
-							<SubmitButton onClick={() => setShowBorrowModal(true)}>
-								Mint / Repay
-							</SubmitButton>
-						</Col>
-					</Row>
-				</>
-			) : (
-				<SubmitButton onClick={() => setShowSupplyModal(true)}>
-					Supply / Withdraw
-				</SubmitButton>
-			)}
+			<SubmitButton onClick={() => setShowModal(true)}>
+				{market.isSynth ? 'Mint / Repay' : 'Supply / Withdraw'}
+			</SubmitButton>
 		</>
 	)
 }
