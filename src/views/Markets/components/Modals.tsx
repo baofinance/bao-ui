@@ -182,7 +182,6 @@ const MarketModal = ({
 									<IconFlex>
 										<img src={asset.icon} />
 									</IconFlex>
-									<p>{asset.underlyingSymbol}</p>
 								</AssetStack>
 							}
 						/>

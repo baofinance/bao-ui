@@ -207,6 +207,10 @@ export const MaxButton = styled.a`
 		color: ${(props) => props.theme.color.text[100]};
 		cursor: pointer;
 	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.75rem;
+	}
 `
 
 export const StyledBorderButton = styled(StyledButton)`

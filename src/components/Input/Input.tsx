@@ -50,7 +50,7 @@ const StyledInput = styled.input`
 	appearance: none;
 	transition-property: all;
 	transition-duration: 200ms;
-	font-size: 1.125rem;
+	font-size: 1rem;
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
 	height: 50px;
@@ -66,9 +66,13 @@ const StyledInput = styled.input`
 	background: none;
 	background-color: transparent;
 	border-width: 0px;
-	
+
 	&:disabled {
 		color: ${(props) => props.theme.color.text[200]};
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.875rem;
 	}
 `
 

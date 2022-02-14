@@ -13,6 +13,8 @@ import styled from 'styled-components'
 import Multicall from 'utils/multicall'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import BallastButton from './BallastButton'
+import baoUSDIcon from 'assets/img/assets/bUSD.png'
+import daiIcon from 'assets/img/assets/DAI.png'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
@@ -70,7 +72,7 @@ const BallastSwapper: React.FC = () => {
 
 	const daiInput = (
 		<>
-			<label>
+			<BallastLabel>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
 				{getDisplayBalance(daiBalance).toString()} DAI
 				<span>
@@ -80,9 +82,8 @@ const BallastSwapper: React.FC = () => {
 					) : (
 						<SpinnerLoader />
 					)}{' '}
-					DAI
 				</span>
-			</label>
+			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
 				onChange={(e) => setInputVal(e.currentTarget.value)}
@@ -96,13 +97,20 @@ const BallastSwapper: React.FC = () => {
 						: inputVal
 				}
 				disabled={swapDirection}
+				label={
+					<AssetStack>
+						<IconFlex>
+							<img src={daiIcon} />
+						</IconFlex>
+					</AssetStack>
+				}
 			/>
 		</>
 	)
 
 	const baoUSDInput = (
 		<>
-			<label>
+			<BallastLabel>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
 				{getDisplayBalance(baoUSDBalance).toString()} BaoUSD
 				<span>
@@ -112,9 +120,8 @@ const BallastSwapper: React.FC = () => {
 					) : (
 						<SpinnerLoader />
 					)}{' '}
-					BaoUSD
 				</span>
-			</label>
+			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(baoUSDBalance).toString())}
 				onChange={(e) => setInputVal(e.currentTarget.value)}
@@ -128,6 +135,13 @@ const BallastSwapper: React.FC = () => {
 						: inputVal
 				}
 				disabled={!swapDirection}
+				label={
+					<AssetStack>
+						<IconFlex>
+							<img src={baoUSDIcon} />
+						</IconFlex>
+					</AssetStack>
+				}
 			/>
 		</>
 	)
@@ -142,8 +156,11 @@ const BallastSwapper: React.FC = () => {
 				</Tooltipped>
 			</h2>
 			{swapDirection ? baoUSDInput : daiInput}
-			<SwapDirection onClick={() => setSwapDirection(!swapDirection)}>
-				<SwapDirectionBadge pill>
+			<SwapDirection>
+				<SwapDirectionBadge
+					pill
+					onClick={() => setSwapDirection(!swapDirection)}
+				>
 					<FontAwesomeIcon icon="sync" />
 					{' - '}
 					Fee:{' '}
@@ -183,6 +200,18 @@ const BallastSwapCard = styled(Card)`
 		margin-bottom: 0.25rem;
 		color: ${(props) => props.theme.color.text[200]};
 	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		width: 80%;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		width: 90%;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		width: 100%;
+	}
 `
 
 const SwapDirection = styled.a`
@@ -202,9 +231,56 @@ const SwapDirectionBadge = styled(Badge)`
 	background-color: ${(props) => props.theme.color.primary[200]} !important;
 	color: ${(props) => props.theme.color.text[100]};
 	border: ${(props) => props.theme.border.default};
-	
+	margin-bottom: 0.5rem;
+
 	&:hover {
 		background-color: ${(props) => props.theme.color.primary[300]} !important;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.875rem !important;
+	}
+`
+
+const BallastLabel = styled.label`
+	font-size: 1rem;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.875rem !important;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		font-size: 0.75rem !important;
+	}
+`
+
+export const AssetStack = styled.div`
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	padding-left: 0.5rem;
+	padding-right: 1rem;
+
+	p {
+		margin-top: 0px;
+		margin-inline: 0.5rem 0px;
+		margin-bottom: 0px;
+		color: ${(props) => props.theme.color.text[100]};
+		text-align: center;
+		font-size: 1rem;
+		font-weight: ${(props) => props.theme.fontWeight.medium};
+	}
+`
+
+export const IconFlex = styled.div`
+	display: flex;
+	width: 1.5rem;
+
+	img {
+		display: block;
+		vertical-align: middle;
+		width: 1.5rem;
+		height: 1.5rem;
 	}
 `
 
