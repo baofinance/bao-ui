@@ -46,7 +46,7 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const StyledLogoWrapper = styled.div`
 	width: 200px;
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
 		width: auto;
 	}
 `
