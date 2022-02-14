@@ -331,12 +331,20 @@ const StatWrapper = styled.div`
 	flex-direction: column;
 	width: 100%;
 	padding-top: ${(props) => props.theme.spacing[2]};
-	margin-top: 0.25rem;
 	margin-inline: 0px;
 	margin-bottom: 0px;
 	background: ${(props) => props.theme.color.primary[200]};
 	padding: 16px;
 	border-radius: 8px;
+	margin-top: -.5rem;
+	margin-bottom: 1rem;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		padding: 15px 30px;
+		margin-top: -.25rem;
+		margin-bottom: .5rem;
+	
+		}
 `
 
 const StatHeader = styled.div`
@@ -371,7 +379,7 @@ const StatText = styled.div`
 
 	p {
 		color: ${(props) => props.theme.color.text[100]};
-		font-size: ${(props) => props.theme.fontSize.sm};
+		font-size: ${(props) => props.theme.fontSize.default};
 		font-weight: ${(props) => props.theme.fontWeight.medium};
 		display: block;
 		margin-block-start: 1em;

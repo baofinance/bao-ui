@@ -1,3 +1,4 @@
+import { parseAndCheckHttpResponse } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
@@ -5,6 +6,7 @@ import { SubmitButton } from 'components/Button/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
+import Spacer from 'components/Spacer'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
 import { useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
@@ -84,25 +86,25 @@ const Market: React.FC = () => {
 		<>
 			<Page>
 				<Container>
-					<BackButton>
+					<MarketHeader>
 						<p style={{ fontSize: '1.25rem' }}>
 							<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
-								<FontAwesomeIcon icon="arrow-left" /> Back to Markets
+								<FontAwesomeIcon icon="arrow-left" />{' '}
+								<BackButtonText>Back to Markets</BackButtonText>
 							</StyledLink>
 							<span style={{ float: 'right', fontSize: '1.25rem' }}>
 								<img
 									src={activeMarket.icon}
 									style={{ height: '1.75rem', verticalAlign: 'middle' }}
 								/>{' '}
-								{activeMarket.underlyingSymbol}
 								<HorizontalSpacer />
 								<MarketTypeBadge isSynth={activeMarket.isSynth} />
 							</span>
 						</p>
-					</BackButton>
-					<Row>
+					</MarketHeader>
+					<Row lg={3} md={6}>
 						<InfoCol
-							title="Total Supplied"
+							title={`Total ${activeMarket.underlyingSymbol} Supplied`}
 							content={
 								<Tooltipped
 									content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}
@@ -110,13 +112,12 @@ const Market: React.FC = () => {
 									<a>
 										<FontAwesomeIcon icon="level-down-alt" />{' '}
 										{getDisplayBalance(activeMarket.supplied, 0)}{' '}
-										{activeMarket.underlyingSymbol}
 									</a>
 								</Tooltipped>
 							}
 						/>
 						<InfoCol
-							title="Total Debt"
+							title={`Total ${activeMarket.underlyingSymbol} Debt`}
 							content={
 								<Tooltipped
 									content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}
@@ -124,7 +125,6 @@ const Market: React.FC = () => {
 									<a>
 										<FontAwesomeIcon icon="level-down-alt" />{' '}
 										{getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
-										{activeMarket.underlyingSymbol}
 									</a>
 								</Tooltipped>
 							}
@@ -138,10 +138,9 @@ const Market: React.FC = () => {
 							content={`${activeMarket.borrowApy.toFixed(2)}%`}
 						/>
 					</Row>
-					<br />
-					<Row>
+					<Row lg={3} md={6}>
 						<InfoCol
-							title="Your Supply"
+							title={`Your ${activeMarket.underlyingSymbol} Supply`}
 							content={
 								<Tooltipped
 									content={`$${
@@ -153,13 +152,12 @@ const Market: React.FC = () => {
 									<a>
 										<FontAwesomeIcon icon="level-down-alt" />{' '}
 										{supplied ? supplied.toFixed(4) : '0'}{' '}
-										{activeMarket.underlyingSymbol}
 									</a>
 								</Tooltipped>
 							}
 						/>
 						<InfoCol
-							title="Your Debt"
+							title={`Your ${activeMarket.underlyingSymbol} Debt`}
 							content={
 								<Tooltipped
 									content={`$${
@@ -171,7 +169,6 @@ const Market: React.FC = () => {
 									<a>
 										<FontAwesomeIcon icon="level-down-alt" />{' '}
 										{borrowed ? borrowed.toFixed(4) : '0'}{' '}
-										{activeMarket.underlyingSymbol}
 									</a>
 								</Tooltipped>
 							}
@@ -189,13 +186,12 @@ const Market: React.FC = () => {
 							}
 						/>
 					</Row>
-					<br />
 					<>
 						<Row>
-							<Col>
+							<Col sm={12}>
 								<MarketDetails asset={activeMarket} />
 							</Col>
-							<Col>
+							<Col sm={12}>
 								<StatBlock
 									label={null}
 									stats={[
@@ -236,9 +232,7 @@ const Market: React.FC = () => {
 								/>
 							</Col>
 						</Row>
-						<br />
 					</>
-					<br />
 					<ActionButton market={activeMarket} />
 				</Container>
 			</Page>
@@ -265,7 +259,7 @@ const MarketTypeBadge = ({ isSynth }: { isSynth: boolean }) => {
 
 const InfoCol = ({ title, content }: InfoColParams) => {
 	return (
-		<Col>
+		<Col md={6} lg={3}>
 			<InfoContainer>
 				<span>{title}</span>
 				<p>{content}</p>
@@ -307,16 +301,23 @@ type InfoColParams = {
 const InfoContainer = styled.div`
 	background: ${(props) => props.theme.color.primary[100]};
 	border-radius: 8px;
-	padding: 25px 50px;
-	font-size: 14px;
+	font-size: ${(props) => props.theme.fontSize.sm};
 	color: ${(props) => props.theme.color.text[200]};
 	border: ${(props) => props.theme.border.default};
+	padding: 25px 50px;
+	margin-bottom: 1rem;
 
 	> p {
 		color: ${(props) => props.theme.color.text[100]};
 		display: block;
-		font-size: 130%;
+		font-size: ${(props) => props.theme.fontSize.default};
 		margin-bottom: 0;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+		padding: 15px 30px;
+		margin-bottom: 0.5rem;
+		}
 	}
 `
 
@@ -341,13 +342,19 @@ export const StyledLink = styled(NavLink)`
 	}
 `
 
-export const BackButton = styled.div`
+export const MarketHeader = styled.div`
 	flex: 1 1 0%;
 	display: block;
 
 	p {
 		display: block;
 		flex: 1 1 0%;
+	}
+`
+
+const BackButtonText = styled.span`
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		display: none;
 	}
 `
 
