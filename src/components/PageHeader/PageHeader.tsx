@@ -35,10 +35,6 @@ export const StyledTitle = styled.h1`
 	font-weight: ${(props) => props.theme.fontWeight.strong} !important;
 	color: ${(props) => props.theme.color.text[100]};
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		font-size: 2.5rem !important;
-	}
-
 	@keyframes bounce {
 		to {
 			background-position: 300%;
