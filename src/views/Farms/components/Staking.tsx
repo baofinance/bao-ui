@@ -96,6 +96,7 @@ const Stake: React.FC<StakeProps> = ({
 	onConfirm,
 	tokenName = '',
 }) => {
+	const bao = useBao()
 	const [val, setVal] = useState('')
 	const [pendingTx, setPendingTx] = useState(false)
 
@@ -174,7 +175,13 @@ const Stake: React.FC<StakeProps> = ({
 					<>
 						{poolType !== PoolType.ARCHIVED ? (
 							<Button
-								disabled={pendingTx}
+								disabled={
+									!val ||
+									!bao ||
+									isNaN(val as any) ||
+									parseFloat(val) > max.toNumber() ||
+									pendingTx
+								}
 								text={pendingTx ? 'Pending Confirmation' : 'Deposit'}
 								onClick={async () => {
 									setPendingTx(true)
@@ -213,6 +220,7 @@ const Unstake: React.FC<UnstakeProps> = ({
 	tokenName = '',
 	pid = null,
 }) => {
+	const bao = useBao()
 	const [val, setVal] = useState('')
 	const [pendingTx, setPendingTx] = useState(false)
 
@@ -270,7 +278,14 @@ const Unstake: React.FC<UnstakeProps> = ({
 			</Card.Body>
 			<Card.Footer>
 				<Button
-					disabled={stakedBalance.eq(new BigNumber(0)) || pendingTx}
+					disabled={
+						!val ||
+						!bao ||
+						isNaN(val as any) ||
+						parseFloat(val) > parseFloat(fullBalance) ||
+						stakedBalance.eq(new BigNumber(0)) ||
+						pendingTx
+					}
 					text={pendingTx ? 'Pending Confirmation' : 'Withdraw'}
 					onClick={async () => {
 						setPendingTx(true)

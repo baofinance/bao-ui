@@ -121,7 +121,7 @@ const Balances: React.FC = () => {
 									</span>{' '}
 									Be sure to read the{' '}
 									<ExternalLink
-										href="https://docs.bao.finance/franchises/bao"
+										href="https://docs.bao.finance/"
 										target="_blank"
 									>
 										docs
