@@ -85,6 +85,12 @@ export interface ActiveSupportedMarket extends SupportedMarket {
   underlyingContract: Contract
 }
 
+export interface ActiveDelphiOracle {
+  address: string
+  name: string
+  creator: string
+}
+
 export interface RpcConfig {
   chainId: string
   rpcUrls: string[]
@@ -115,6 +121,10 @@ export interface SubgraphConfig {
   [subgraphName: string]: {
     [networkId: number]: string
   }
+}
+
+export interface DelphiConfig {
+  factory: string
 }
 
 export interface Config {

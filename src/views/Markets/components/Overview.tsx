@@ -152,7 +152,7 @@ export const Overview = () => {
 										whiteSpace: 'nowrap',
 										color: `${(props: any) => props.theme.color.text[200]}`,
 										fontSize: '0.875rem',
-										fontWeight: '500',
+										fontWeight: 500,
 									}}
 								>
 									Debt Limit

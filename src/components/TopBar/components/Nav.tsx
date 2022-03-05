@@ -10,21 +10,13 @@ const Nav: React.FC = () => {
 				activeClassName="active"
 				to={{ pathname: '/' }}
 			>
-				Markets
+				Explorer
 			</StyledLink>
 			<StyledLink
 				exact
-				activeClassName="active"
-				to={{ pathname: '/ballast' }}
+				to={{ pathname: '/delphi/create' }}
 			>
-				Ballast
-			</StyledLink>
-			<StyledLink
-				exact
-				activeClassName="active"
-				to={{ pathname: '/farms' }}
-			>
-				Farms
+				Create
 			</StyledLink>
 			<StyledAbsoluteLink
 				href="https://snapshot.page/#/baovotes.eth"

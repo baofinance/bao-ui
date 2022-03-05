@@ -1,12 +1,12 @@
 import { Config } from './types'
 
 export default {
-  networkId: 1,
+  networkId: 42,
   defaultRpc: {
-    chainId: '0x1',
-    rpcUrls: ['https://rpc.flashbots.net'],
-    blockExplorerUrls: ['https://etherscan.io'],
-    chainName: 'Ethereum Mainnet',
+    chainId: '0x2a',
+    rpcUrls: ['https://kovan.infura.io/v3/8698bae2b5a5402cafab258bac02e155'],
+    blockExplorerUrls: ['https://kovan.etherscan.io'],
+    chainName: 'Kovan Testnet',
     nativeCurrency: {
       name: 'ETH',
       symbol: 'ETH',
@@ -26,43 +26,13 @@ export default {
     baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
   },
   contracts: {
-    bao: {
-      1: {
-        address: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-        abi: 'bao.json',
-      },
-    },
-    masterChef: {
-      1: {
-        address: '0xBD530a1c060DC600b951f16dc656E4EA451d1A2D',
-        abi: 'masterchef.json',
-      },
-    },
-    weth: {
-      1: {
-        address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-        abi: 'weth.json',
-      },
-    },
-    // Hard Synths
-    comptroller: {
-      1: {
-        address: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
-        abi: 'comptroller.json',
-      },
-    },
-    marketOracle: {
-      1: {
-        address: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
-        abi: 'marketOracle.json',
-      },
-    },
-    stabilizer: {
-      1: {
-        address: '0x720282BB7e721634c95F0933636DE3171dc405de',
-        abi: 'stabilizer.json',
-      },
-    },
+    // Delphi
+    delphiFactory: {
+      42: {
+        address: '0x761820bfD69134F6C807C8A8DA73632c77Ee126A',
+        abi: 'delphiFactory.json'
+      }
+    }
   },
   subgraphs: {
     sushiExchange: {
@@ -74,6 +44,9 @@ export default {
     baoMarkets: {
       1: 'https://api.thegraph.com/subgraphs/name/baofinance/bao-markets',
     },
+    delphiFactory: {
+      42: 'https://api.thegraph.com/subgraphs/name/clabby/delphi-oracles-kovan'
+    }
   },
   markets: [
     {

@@ -167,6 +167,11 @@ const getMarketInfo = async (tokenAddress: string): Promise<any> =>
 const getMarketsInfo = async (): Promise<any> =>
   await _querySubgraph(_getMarketsQuery(), 'baoMarkets', Config.networkId)
 
+const getDelphiFactoryInfo = async (): Promise<any> => {
+  const res: any = await _querySubgraph(_getDelphiFactoryQuery(), 'delphiFactory', Config.networkId)
+  return res.delphiFactories[0]
+}
+
 const _getPriceHistoryQuery = (tokenAddress: string) =>
   `
   {
@@ -317,6 +322,32 @@ const _getMarketsQuery = () =>
   }
   `
 
+const _getDelphiFactoryQuery = () =>
+  `
+  {
+    delphiFactories(first: 1) {
+      id
+      owner
+      oracles {
+        id
+        name
+        creator
+        aggregators
+        equationNodes {
+          id
+          child0
+          child1
+          child2
+          child3
+          value
+        }
+      }
+      endorsed
+      aggregators
+    }
+  }
+  `
+
 export default {
   getPriceHistory,
   getPriceHistoryMultiple,
@@ -327,4 +358,5 @@ export default {
   getPollySupply,
   getMarketInfo,
   getMarketsInfo,
+  getDelphiFactoryInfo
 }
