@@ -1,20 +1,13 @@
+import React from 'react'
+import useFactory from '../../hooks/delphi/useFactory'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
-import React, { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
-import GraphUtil from '../../utils/graph'
 import { SpinnerLoader } from '../../components/Loader'
 import OracleList from './components/OracleList'
 
 const DelphiExplorer: React.FC = () => {
-	const [factory, setFactory] = useState<any | undefined>()
-
-	// TODO: Move to hook
-	useEffect(() => {
-		GraphUtil.getDelphiFactoryInfo().then((res) => {
-			setFactory(res)
-		})
-	}, [])
+	const factory = useFactory()
 
 	return (
 		<Page>

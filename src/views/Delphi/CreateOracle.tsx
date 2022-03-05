@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import Multicall from '../../utils/multicall'
-import GraphUtil from '../../utils/graph'
-import useBao from '../../hooks/base/useBao'
+import React, {useEffect, useState} from 'react'
+import styled from 'styled-components'
+import { getDisplayBalance } from '../../utils/numberFormat'
+import useAvailableAggregators from '../../hooks/delphi/useAvailableAggregators'
+import useFactory from '../../hooks/delphi/useFactory'
 import PageHeader from '../../components/PageHeader'
 import {
 	Col,
@@ -13,56 +14,20 @@ import {
 	Dropdown,
 } from 'react-bootstrap'
 import Page from '../../components/Page'
-import { SubmitButton } from '../../components/Button/Button'
-import styled from 'styled-components'
-import BigNumber from 'bignumber.js'
-import { getDisplayBalance } from '../../utils/numberFormat'
 import ConnectedCheck from '../../components/ConnectedCheck'
+import { SubmitButton } from '../../components/Button/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {StatBlock} from "../Markets/components/Stats";
+import { StatBlock } from '../Markets/components/Stats'
+import { Aggregator, Variables } from './types'
+import { shuntingYard } from '../../utils/shuntingyard'
 
 const CreateOracle: React.FC = () => {
-	const [factory, setFactory] = useState<any | undefined>()
-	const [aggregators, setAggregators] = useState<Aggregator[]>([])
 	const [variables, setVariables] = useState<Variables>({})
 	const [newVariable, setNewVariable] = useState('')
+	const [equation, setEquation] = useState('')
 
-	const bao = useBao()
-
-	// TODO: Move to hook
-	useEffect(() => {
-		GraphUtil.getDelphiFactoryInfo().then((res) => {
-			setFactory(res)
-		})
-	}, [])
-
-	// TODO: Move to hook
-	useEffect(() => {
-		if (!(bao && factory)) return
-
-		const callContext = Multicall.createCallContext(
-			factory.aggregators.map((aggregator: any) => ({
-				ref: aggregator,
-				contract: bao.getNewContract('chainoracle.json', aggregator),
-				calls: [
-					{ method: 'decimals' },
-					{ method: 'description' },
-					{ method: 'latestAnswer' },
-				],
-			})),
-		)
-
-		bao.multicall.call(callContext).then((_res) => {
-			const res = Multicall.parseCallResults(_res)
-			const _aggregators: Aggregator[] = Object.keys(res).map((key) => ({
-				id: key,
-				decimals: res[key][0].values[0],
-				description: res[key][1].values[0],
-				latestAnswer: new BigNumber(res[key][2].values[0].hex),
-			}))
-			setAggregators(_aggregators)
-		})
-	}, [bao, factory])
+	const factory = useFactory()
+	const aggregators = useAvailableAggregators(factory)
 
 	const handleAddVariable = (variable: string, aggregator: Aggregator) => {
 		if (variable.length != 1 || !variable.match(/[a-z]/i)) return
@@ -71,11 +36,24 @@ const CreateOracle: React.FC = () => {
 			...variables,
 			[variable]: aggregator,
 		})
-		console.log({
-			...variables,
-			[variable]: aggregator,
-		})
 	}
+
+	const handleRemoveVariable = (variable: string) => {
+		setVariables(
+			Object.keys(variables).reduce((prev, cur) => {
+				if (cur == variable) return prev
+
+				return {
+					...prev,
+					[cur]: variables[cur],
+				}
+			}, {}),
+		)
+	}
+
+	useEffect(() => {
+		shuntingYard(equation)
+	}, [equation])
 
 	return (
 		<Page>
@@ -85,6 +63,7 @@ const CreateOracle: React.FC = () => {
 					<Row>
 						<StyledCol>
 							<h3>Choose Variables</h3>
+							<br />
 							<InputGroup className="mb-3">
 								<StyledFormControl
 									placeholder="x, y, z, etc."
@@ -104,7 +83,7 @@ const CreateOracle: React.FC = () => {
 													handleAddVariable(newVariable, aggregator)
 												}
 											>
-												{aggregator.description} -{' '}
+												{aggregator.description} <FontAwesomeIcon icon="arrow-right" />{' '}
 												{getDisplayBalance(
 													aggregator.latestAnswer,
 													aggregator.decimals,
@@ -114,15 +93,30 @@ const CreateOracle: React.FC = () => {
 								</DropdownButton>
 							</InputGroup>
 							<br />
-							<StatBlock label={"Variables"} stats={Object.keys(variables).map((key) => {
-								return {
-									label: variables[key].description,
-									value: `${getDisplayBalance(variables[key].latestAnswer, variables[key].decimals)} (e${variables[key].decimals})`
-								}
-							})} />
+							{Object.keys(variables).length > 0 && (
+								<StatBlock
+									label={null}
+									stats={Object.keys(variables).map((key) => {
+										return {
+											label: `${key} = ${variables[key].description}`,
+											value: (
+												<>
+													{`${getDisplayBalance(
+														variables[key].latestAnswer,
+														variables[key].decimals,
+													)} (e${variables[key].decimals})`}{' '}
+													<a onClick={() => handleRemoveVariable(key)} href="#">
+														<FontAwesomeIcon icon="trash" />
+													</a>
+												</>
+											),
+										}
+									})}
+								/>
+							)}
 						</StyledCol>
 						<StyledCol>
-							<h3>Sample Output</h3>
+							<h3>Creation Details</h3>
 							<i>N/A</i>
 						</StyledCol>
 					</Row>
@@ -131,6 +125,8 @@ const CreateOracle: React.FC = () => {
 						as="textarea"
 						placeholder="x * 2"
 						className="form-control"
+						value={equation}
+						onChange={(event: any) => setEquation(event.target.value)}
 					/>
 					<br />
 					<SubmitButton>Create</SubmitButton>
@@ -138,17 +134,6 @@ const CreateOracle: React.FC = () => {
 			</Container>
 		</Page>
 	)
-}
-
-type Variables = {
-	[varLetter: string]: Aggregator
-}
-
-type Aggregator = {
-	id: string
-	description: string
-	decimals: number
-	latestAnswer: BigNumber
 }
 
 const StyledCol = styled(Col)`

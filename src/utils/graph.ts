@@ -335,6 +335,7 @@ const _getDelphiFactoryQuery = () =>
         aggregators
         equationNodes {
           id
+          opcode
           child0
           child1
           child2

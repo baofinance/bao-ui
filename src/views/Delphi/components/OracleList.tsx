@@ -1,52 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import Multicall from '../../../utils/multicall'
+import React from 'react'
 import Config from '../../../bao/lib/config'
-import useBao from '../../../hooks/base/useBao'
 import useIsConnected from '../../../hooks/base/useIsConnected'
-import BigNumber from 'bignumber.js'
+import useOracleValues from '../../../hooks/delphi/useOracleValues'
+import { formatAddress } from '../../../utils'
 import { getDisplayBalance } from '../../../utils/numberFormat'
 import { SpinnerLoader } from '../../../components/Loader'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { formatAddress } from '../../../utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Oracle } from '../types'
 
-const OracleList: React.FC<OracleListProps> = ({
+const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 	oracles,
-}: OracleListProps) => {
-	const bao = useBao()
-	const isConnected = useIsConnected()
+}: {
+	oracles: Oracle[]
+}) => {
+	const oracleValues = useOracleValues(oracles)
 
-	// TODO- Move to hook
-	const [oraclePrices, setOraclePrices] = useState<any | undefined>()
-	useEffect(() => {
-		if (!bao) return
-
-		const callContext = Multicall.createCallContext(
-			oracles.map((cur) => {
-				return {
-					ref: cur.id,
-					contract: bao.getNewContract('delphiOracle.json', cur.id),
-					calls: [{ method: 'getLatestValue' }],
-				}
-			}),
-		)
-
-		bao.multicall.call(callContext).then((_res) => {
-			const res = Multicall.parseCallResults(_res)
-			const prices = Object.keys(res).reduce((prev, cur) => {
-				return {
-					...prev,
-					[cur]: new BigNumber(res[cur][0].values[0].hex),
-				}
-			}, {})
-			setOraclePrices(prices)
-		})
-	}, [bao])
-
-	const OracleListHeader: React.FC<OracleListHeaderProps> = ({
+	const OracleListHeader: React.FC<{ headers: string[] }> = ({
 		headers,
-	}: OracleListHeaderProps) => {
+	}: {
+		headers: string[]
+	}) => {
 		return (
 			<Container fluid>
 				<Row style={{ padding: '0.5rem 12px' }}>
@@ -60,7 +35,11 @@ const OracleList: React.FC<OracleListProps> = ({
 		)
 	}
 
-	const OracleListItem: React.FC<OracleListItemProps> = ({ oracle }) => {
+	const OracleListItem: React.FC<{ oracle: Oracle }> = ({
+		oracle,
+	}: {
+		oracle: Oracle
+	}) => {
 		return (
 			<Accordion>
 				<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
@@ -77,8 +56,8 @@ const OracleList: React.FC<OracleListProps> = ({
 							</Col>
 							<Col>{oracle.aggregators.length}</Col>
 							<Col>
-								{isConnected && oraclePrices ? (
-									`${getDisplayBalance(oraclePrices[oracle.id])}`
+								{oracleValues ? (
+									`${getDisplayBalance(oracleValues[oracle.id])}`
 								) : (
 									<SpinnerLoader />
 								)}
@@ -103,37 +82,6 @@ const OracleList: React.FC<OracleListProps> = ({
 			})}
 		</>
 	)
-}
-
-type Oracle = {
-	id: string
-	factory: string
-	name: string
-	creator: string
-	aggregators: string[]
-	nodes: OracleNode[]
-}
-
-type OracleNode = {
-	id: string
-	oracle: string
-	child0: number
-	child1: number
-	child2: number
-	child3: number
-	value: number
-}
-
-type OracleListProps = {
-	oracles: Oracle[]
-}
-
-type OracleListHeaderProps = {
-	headers: string[]
-}
-
-interface OracleListItemProps {
-	oracle: Oracle
 }
 
 const StyledAccordionItem = styled(Accordion.Item)`
