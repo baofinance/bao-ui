@@ -1,7 +1,17 @@
 import BigNumber from 'bignumber.js'
 
+export type VariableType = 'AGGREGATOR' | 'CONSTANT'
+
 export type Variables = {
-  [varLetter: string]: Aggregator
+  [varLetter: string]: {
+    type: VariableType
+    aggregator?: Aggregator
+    value?: BigNumber
+  }
+}
+
+export type Constants = {
+  [varLetter: string]: BigNumber
 }
 
 export type Aggregator = {

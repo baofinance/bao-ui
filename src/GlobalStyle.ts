@@ -32,13 +32,13 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a {
-		color: ${(props) => props.theme.color.text[100]};
+    color: ${(props) => props.theme.color.text[100]};
     text-decoration: none;
   }
 
   a:hover,
   a:focus {
-		color: ${(props) => props.theme.color.text[300]};
+    color: ${(props) => props.theme.color.text[300]};
   }
 
   .baoTicker {
@@ -163,34 +163,47 @@ const GlobalStyle = createGlobalStyle`
   .accordion-item:last-of-type .accordion-button.collapsed {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
-}
-
-.card {
-  background-color: ${(props) => props.theme.color.primary[100]};
-	border-radius: ${(props) => props.theme.borderRadius}px;
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-  border: ${(props) => props.theme.border.default};
-}
-
-.badge {
-  background-color: ${(props) => props.theme.color.text[200]};
-  color: ${(props) => props.theme.color.text[100]};
-  font-weight: ${(props) => props.theme.fontWeight.medium};
-  vertical-align: middle;
-  font-size: 1rem;
-}
-
-.container, .container-sm, .container-md {
-  @media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
-    max-width: 1200px;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
-    max-width: 720px;
+  .card {
+    background-color: ${(props) => props.theme.color.primary[100]};
+    border-radius: ${(props) => props.theme.borderRadius}px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border: ${(props) => props.theme.border.default};
   }
-}
+
+  .badge {
+    background-color: ${(props) => props.theme.color.text[200]};
+    color: ${(props) => props.theme.color.text[100]};
+    font-weight: ${(props) => props.theme.fontWeight.medium};
+    vertical-align: middle;
+    font-size: 1rem;
+  }
+
+  .container, .container-sm, .container-md {
+    @media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+      max-width: 1200px;
+    }
+
+    @media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+      max-width: 720px;
+    }
+  }
+  
+  .dropdown-menu {
+    background-color: ${(props) => props.theme.color.primary[100]};
+    border-color: ${(props) => props.theme.color.primary[200]};
+    
+    > a {
+      color: ${(props) => props.theme.color.text[100]} !important;
+      
+      &:hover, &:focus, &:active {
+        background-color: ${(props) => props.theme.color.primary[200]};
+      }
+    }
+  }
 `
 
 export default GlobalStyle

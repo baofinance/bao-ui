@@ -29,7 +29,7 @@ export default {
     // Delphi
     delphiFactory: {
       42: {
-        address: '0x761820bfD69134F6C807C8A8DA73632c77Ee126A',
+        address: '0x19eAbBE9dF582930e01E07234EDe36974bd51D4B',
         abi: 'delphiFactory.json'
       }
     }
