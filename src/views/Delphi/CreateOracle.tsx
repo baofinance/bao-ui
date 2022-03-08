@@ -17,6 +17,7 @@ import {
 	Row,
 	Dropdown,
 	Collapse,
+	Alert,
 } from 'react-bootstrap'
 import Page from '../../components/Page'
 import PageHeader from '../../components/PageHeader'
@@ -37,6 +38,7 @@ const CreateOracle: React.FC = () => {
 	const [newConstant, setNewConstant] = useState('')
 	const [name, setName] = useState('')
 	const [equation, setEquation] = useState('')
+	const [alert, setAlert] = useState<string | undefined>()
 
 	const factory = useFactory()
 	const aggregators = useAvailableAggregators(factory)
@@ -109,6 +111,16 @@ const CreateOracle: React.FC = () => {
 			<PageHeader icon="" title="Create Oracle" />
 			<Container>
 				<ConnectedCheck>
+					{alert && (
+						<Alert
+							variant={
+								alert.toLowerCase().includes('error') ? 'danger' : 'success'
+							}
+							style={{ textAlign: 'center' }}
+						>
+							{alert}
+						</Alert>
+					)}
 					<Row>
 						{/* AGGREGATORS */}
 						<StyledCol>
@@ -272,6 +284,13 @@ const CreateOracle: React.FC = () => {
 										gasPrice: await bao.web3.eth.getGasPrice(),
 									}),
 								`Create Oracle - ${name}`,
+								(err, receipt) => {
+									if (err) setAlert(`Error creating oracle: ${err}`)
+									else
+										setAlert(
+											`Success! Created ${name} Oracle at ${receipt.events['OracleCreation'].returnValues['_address']}.`,
+										)
+								},
 							)
 						}}
 					>

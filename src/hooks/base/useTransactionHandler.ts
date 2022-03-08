@@ -23,12 +23,18 @@ const useTransactionHandler = () => {
     setPendingTx(false)
   }
 
-  const handleTx = (tx: any, description: string) => {
+  const handleTx = (tx: any, description: string, callback?: (err: any, res: TransactionReceipt) => void) => {
     tx.on('transactionHash', (txHash: string) =>
       handlePendingTx(txHash, description),
     )
-      .on('receipt', (receipt: TransactionReceipt) => handleReceipt(receipt))
-      .on('error', clearPendingTx)
+      .on('receipt', (receipt: TransactionReceipt) => {
+        handleReceipt(receipt)
+        if (callback) callback(undefined, receipt)
+      })
+      .on('error', (err: any) => {
+        clearPendingTx()
+        if (callback) callback(err, undefined)
+      })
     setPendingTx(true)
   }
 
