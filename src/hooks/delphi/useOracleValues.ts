@@ -33,7 +33,7 @@ const useOracleValues = (oracles: Oracle[]) => {
       }, {})
       setOraclePrices(prices)
     })
-  }, [bao])
+  }, [bao, oracles])
 
   return oraclePrices
 }
