@@ -67,7 +67,12 @@ export const shuntingYard = (infix: string, variables: Variables) => {
         const v = variables[infix[i]]
         if (!v) continue
         if (v.type === 'AGGREGATOR') {
-          operands.push(['1', Object.keys(variables).indexOf(infix[i])])
+          operands.push([
+            '1',
+            Object.keys(variables)
+              .filter((obj) => variables[obj].type === 'AGGREGATOR')
+              .indexOf(infix[i]), // Index of aggregator
+          ])
         } else {
           operands.push(['0', v.value.toString()])
         }

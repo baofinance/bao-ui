@@ -154,10 +154,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .accordion-item:first-of-type .accordion-button {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-radius: 8px 8px 0 0;
   }
 
   .accordion-item:last-of-type .accordion-button.collapsed {
@@ -191,17 +188,29 @@ const GlobalStyle = createGlobalStyle`
       max-width: 720px;
     }
   }
-  
+
   .dropdown-menu {
     background-color: ${(props) => props.theme.color.primary[100]};
     border-color: ${(props) => props.theme.color.primary[200]};
-    
+
     > a {
       color: ${(props) => props.theme.color.text[100]} !important;
-      
+
       &:hover, &:focus, &:active {
         background-color: ${(props) => props.theme.color.primary[200]};
       }
+    }
+  }
+
+  .dropdown-toggle.btn {
+    background-color: ${(props) => props.theme.color.primary[200]};
+    border-color: ${(props) => props.theme.color.primary[300]};
+    color: ${(props) => props.theme.color.text[100]};
+
+    &:focus, &:active, &:hover {
+      background-color: ${(props) => props.theme.color.primary[300]};
+      border-color: ${(props) => props.theme.color.primary[300]};
+      box-shadow: none;
     }
   }
 `

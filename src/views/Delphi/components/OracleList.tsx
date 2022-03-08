@@ -1,6 +1,5 @@
 import React from 'react'
 import Config from '../../../bao/lib/config'
-import useIsConnected from '../../../hooks/base/useIsConnected'
 import useOracleValues from '../../../hooks/delphi/useOracleValues'
 import { formatAddress } from '../../../utils'
 import { getDisplayBalance } from '../../../utils/numberFormat'
@@ -57,7 +56,7 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 							<Col>{oracle.aggregators.length}</Col>
 							<Col>
 								{oracleValues ? (
-									`${getDisplayBalance(oracleValues[oracle.id])}`
+									`${oracleValues[oracle.id] ? getDisplayBalance(oracleValues[oracle.id]) : '~'}`
 								) : (
 									<SpinnerLoader />
 								)}

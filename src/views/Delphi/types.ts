@@ -26,13 +26,13 @@ export type OracleValues = {
 }
 
 export type EquationNode = {
-  id: string
+  id?: string
   opcode: string
-  child0: string
-  child1: string
-  child2: string
-  child3: string
-  value: string
+  child0?: string
+  child1?: string
+  child2?: string
+  child3?: string
+  value?: string
 }
 
 export type Oracle = {
@@ -48,4 +48,12 @@ export type OracleFactory = {
   aggregators: string[]
   endorsed: string[]
   oracles: Oracle[]
+}
+
+export type CreationInfo = {
+  gasEstimate: BigNumber
+  txFee: BigNumber
+  polish: string[]
+  variables: Variables
+  output?: BigNumber
 }

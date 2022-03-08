@@ -24,6 +24,8 @@ const useOracleValues = (oracles: Oracle[]) => {
     bao.multicall.call(callContext).then((_res) => {
       const res = Multicall.parseCallResults(_res)
       const prices = Object.keys(res).reduce((prev, cur) => {
+        if (res[cur][0].values.length === 0) return prev // If the value couldn't be fetched, ignore it.
+
         return {
           ...prev,
           [cur]: new BigNumber(res[cur][0].values[0].hex),

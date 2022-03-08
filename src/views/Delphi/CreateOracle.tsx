@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { getDisplayBalance } from '../../utils/numberFormat'
 import useAvailableAggregators from '../../hooks/delphi/useAvailableAggregators'
@@ -7,7 +8,6 @@ import useCreationInfo from '../../hooks/delphi/useCreationInfo'
 import useTransactionHandler from '../../hooks/base/useTransactionHandler'
 import useBao from '../../hooks/base/useBao'
 import { useWallet } from 'use-wallet'
-import PageHeader from '../../components/PageHeader'
 import {
 	Col,
 	Container,
@@ -16,24 +16,27 @@ import {
 	InputGroup,
 	Row,
 	Dropdown,
+	Collapse,
 } from 'react-bootstrap'
 import Page from '../../components/Page'
+import PageHeader from '../../components/PageHeader'
 import ConnectedCheck from '../../components/ConnectedCheck'
-import Tooltipped from '../../components/Tooltipped'
+import GuideCollapse from './components/GuideCollapse'
 import { SubmitButton } from '../../components/Button/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { StatBlock } from '../Markets/components/Stats'
 import { Aggregator, Variables } from './types'
-import BigNumber from 'bignumber.js'
+import CreationInformation from './components/CreationInformation'
 
-const ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+const ALPHABET = 'abcdefghijklmnopqrstuvwrxyz'.split('')
 
 const CreateOracle: React.FC = () => {
+	const [showGuide, setShowGuide] = useState(false)
 	const [variables, setVariables] = useState<Variables>({})
 	const [newVariable, setNewVariable] = useState('')
 	const [newConstant, setNewConstant] = useState('')
-	const [equation, setEquation] = useState('')
 	const [name, setName] = useState('')
+	const [equation, setEquation] = useState('')
 
 	const factory = useFactory()
 	const aggregators = useAvailableAggregators(factory)
@@ -125,9 +128,8 @@ const CreateOracle: React.FC = () => {
 									}}
 								/>
 								<DropdownButton
-									variant="secondary"
 									title="Aggregator"
-									id="input-group-dropdown-1"
+									className="dropdown-button-custom"
 									align="end"
 								>
 									{aggregators &&
@@ -155,10 +157,10 @@ const CreateOracle: React.FC = () => {
 									stats={aggregatorVariableKeys.map((key) => {
 										const a = variables[key].aggregator
 										return {
-											label: `${key} = ${a.description} = ${`${getDisplayBalance(
+											label: `${key} = ${a.description} = ${getDisplayBalance(
 												a.latestAnswer,
 												a.decimals,
-											)}e18`}`,
+											)}e18`,
 											value: (
 												<>
 													<a onClick={() => handleRemoveVariable(key)} href="#">
@@ -171,6 +173,18 @@ const CreateOracle: React.FC = () => {
 								/>
 							)}
 						</StyledCol>
+						<StyledCol xs={1}>
+							<h3 style={{ marginTop: 'calc(2.75rem)' }}>
+								<a
+									href="#"
+									onClick={() => setShowGuide(!showGuide)}
+									aria-expanded={showGuide}
+									aria-controls="guide-collapse"
+								>
+									<FontAwesomeIcon icon="question-circle" />
+								</a>
+							</h3>
+						</StyledCol>
 						{/* CONSTANTS */}
 						<StyledCol>
 							<h3>Assign Constants</h3>
@@ -181,9 +195,8 @@ const CreateOracle: React.FC = () => {
 									onChange={(event: any) => setNewConstant(event.target.value)}
 								/>
 								<DropdownButton
-									variant="secondary"
 									title="Variable"
-									id="input-group-dropdown-1"
+									className="dropdown-button-custom"
 									align="end"
 								>
 									{ALPHABET.map((letter) => (
@@ -216,6 +229,12 @@ const CreateOracle: React.FC = () => {
 							)}
 						</StyledCol>
 					</Row>
+					{/* GUIDE COLLAPSE */}
+					<Collapse in={showGuide}>
+						<div id="guide-collapse">
+							<GuideCollapse />
+						</div>
+					</Collapse>
 					<br />
 					<StyledFormControl
 						placeholder="Oracle Name - ex. 2xETH"
@@ -226,58 +245,14 @@ const CreateOracle: React.FC = () => {
 					<br />
 					<StyledFormControl
 						as="textarea"
-						placeholder="Equation - ex. x * y"
+						placeholder="Equation - ex. x * y | NOTE: All ChainLink results are standardized to 18 decimals (1e18) for ease of use."
 						className="form-control"
 						value={equation}
 						onChange={(event: any) => setEquation(event.target.value)}
 					/>
 					<br />
 					{equation.length > 0 && (
-						<>
-							<h3>Creation Details</h3>
-							{creationInfo ? (
-								<StatBlock
-									label={null}
-									stats={[
-										{
-											label: 'Est. Creation Tx Fee',
-											value: `${getDisplayBalance(
-												creationInfo.txFee.toString(),
-											)} ETH`,
-										},
-										{
-											label: 'Name',
-											value: name.length === 0 ? '~' : name,
-										},
-										{
-											label: 'Raw Polish Notation',
-											value: (
-												<span>
-													{creationInfo.polish.join(', ')}{' '}
-													<a href="https://github.com/baofinance/delphi/blob/master/src/math/Equation.sol#L9-L35">
-														<Tooltipped content="The Delphi Oracle contract takes in an equation formatted in polish notation (prefix). All operators are formatted as OPCODES, and their mappings can be found in the GitHub repo (click the ? to navigate)." />
-													</a>
-												</span>
-											),
-										},
-										{
-											label: 'Sample Result',
-											value: '~',
-										},
-									]}
-								/>
-							) : (
-								<>
-									<i>
-										Could not get creation info. There may be another oracle that
-										performs the same operation, or your equation may be
-										incomplete.
-									</i>
-									<br />
-								</>
-							)}
-							<br />
-						</>
+						<CreationInformation creationInfo={creationInfo} name={name} />
 					)}
 					<SubmitButton
 						disabled={!creationInfo || name.length < 1}
@@ -287,9 +262,9 @@ const CreateOracle: React.FC = () => {
 									.getContract('delphiFactory')
 									.methods.createOracle(
 										name,
-										Object.keys(variables)
-											.filter((key) => variables[key].type === 'AGGREGATOR')
-											.map((variable) => variables[variable].aggregator.id),
+										aggregatorVariableKeys.map(
+											(variable) => variables[variable].aggregator.id,
+										),
 										creationInfo.polish,
 									)
 									.send({

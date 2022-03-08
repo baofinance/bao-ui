@@ -2,14 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import useBao from '../base/useBao'
 import { shuntingYard } from '../../utils/shuntingyard'
-import { Variables } from '../../views/Delphi/types'
-
-type CreationInfo = {
-  gasEstimate: BigNumber
-  txFee: BigNumber
-  polish: number[]
-  variables: Variables
-}
+import { CreationInfo, EquationNode, Variables } from '../../views/Delphi/types'
+import { setupNodes, solveMath } from '../../utils/equation'
 
 const useCreationInfo = (equation: string, variables: Variables) => {
   const [creationInfo, setCreationInfo] = useState<CreationInfo | undefined>()
@@ -20,6 +14,11 @@ const useCreationInfo = (equation: string, variables: Variables) => {
     const polish = shuntingYard(equation, variables)
 
     try {
+      // Setup nodes as they would be in the contract
+      const nodes: EquationNode[] = []
+      setupNodes(nodes, polish)
+
+      // Gas estimate
       const gasPrice = await bao.web3.eth.getGasPrice()
       const gasEstimate = await factory.methods
         .createOracle(
@@ -27,16 +26,19 @@ const useCreationInfo = (equation: string, variables: Variables) => {
           Object.keys(variables)
             .filter((key) => variables[key].type === 'AGGREGATOR')
             .map((variable) => variables[variable].aggregator.id),
-          polish.map((s: any) => parseFloat(s)),
+          polish,
         )
         .estimateGas({
           gasPrice,
         })
+
+      // Set creation information
       setCreationInfo({
         gasEstimate: new BigNumber(gasEstimate),
         txFee: new BigNumber(gasPrice).times(gasEstimate),
-        polish: polish.map((s: any) => parseFloat(s)),
+        polish,
         variables,
+        output: solveMath(nodes, 0, variables),
       })
     } catch (e) {
       setCreationInfo(undefined)
