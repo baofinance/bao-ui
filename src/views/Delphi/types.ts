@@ -35,12 +35,22 @@ export type EquationNode = {
   value?: string
 }
 
+export type DayData = {
+  id: string
+  high: string
+  low: string
+  open: string
+  close: string
+  timestamp: string
+}
+
 export type Oracle = {
   id: string
   name: string
   aggregators: string[]
   creator: string
   equationNodes: EquationNode[]
+  dayData: DayData[]
 }
 
 export type OracleFactory = {

@@ -168,7 +168,11 @@ const getMarketsInfo = async (): Promise<any> =>
   await _querySubgraph(_getMarketsQuery(), 'baoMarkets', Config.networkId)
 
 const getDelphiFactoryInfo = async (): Promise<any> => {
-  const res: any = await _querySubgraph(_getDelphiFactoryQuery(), 'delphiFactory', Config.networkId)
+  const res: any = await _querySubgraph(
+    _getDelphiFactoryQuery(),
+    'delphiFactory',
+    Config.networkId,
+  )
   return res.delphiFactories[0]
 }
 
@@ -342,6 +346,14 @@ const _getDelphiFactoryQuery = () =>
           child3
           value
         }
+        dayData(first:90,orderBy:timestamp,orderDirection:desc) {
+          id
+          high
+          low
+          open
+          close
+          timestamp          
+        }
       }
       endorsed
       aggregators
@@ -359,5 +371,5 @@ export default {
   getPollySupply,
   getMarketInfo,
   getMarketsInfo,
-  getDelphiFactoryInfo
+  getDelphiFactoryInfo,
 }

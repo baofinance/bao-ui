@@ -267,7 +267,13 @@ const CreateOracle: React.FC = () => {
 						<CreationInformation creationInfo={creationInfo} name={name} />
 					)}
 					<SubmitButton
-						disabled={!creationInfo || name.length < 1}
+						disabled={
+							!creationInfo ||
+							name.length < 1 ||
+							!creationInfo.output.isFinite() ||
+							creationInfo.output.isNaN() ||
+							creationInfo.output.eq(0)
+						}
 						onClick={async () => {
 							txHandler.handleTx(
 								bao

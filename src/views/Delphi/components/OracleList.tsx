@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
+import _ from 'lodash'
 import Config from '../../../bao/lib/config'
 import useOracleValues from '../../../hooks/delphi/useOracleValues'
 import { formatAddress } from '../../../utils'
-import { getDisplayBalance } from '../../../utils/numberFormat'
+import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { SpinnerLoader } from '../../../components/Loader'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Oracle } from '../types'
+import { ParentSize } from '@visx/responsive'
+import Tooltipped from '../../../components/Tooltipped'
+import { DayData, Oracle } from '../types'
+import AreaGraph, {
+	TimeseriesData,
+} from '../../../components/Graphs/AreaGraph/AreaGraph'
 
 const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 	oracles,
@@ -39,24 +45,53 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 	}: {
 		oracle: Oracle
 	}) => {
+		const [open, setOpen] = useState(false)
+
+		const dataExists = useMemo(() => {
+			return oracle && oracle.dayData && oracle.dayData.length >= 2
+		}, [oracle])
+
+		const timeseriesData: TimeseriesData[] | undefined = useMemo(() => {
+			// Don't load timeseries data if it doesn't exist or the accordion is not open
+			if (!(dataExists && open)) return
+
+			let mutableData = JSON.parse(JSON.stringify(oracle.dayData)) // Create mutable copy of oracle's dayData
+			return _.reverse(mutableData).map((day: DayData) => ({
+				high: decimate(day.high).toNumber(),
+				low: decimate(day.low).toNumber(),
+				open: decimate(day.open).toNumber(),
+				close: decimate(day.close).toNumber(),
+				date: new Date(parseInt(day.timestamp) * 1000).toString(),
+			}))
+		}, [oracle, open])
+
 		return (
 			<Accordion>
 				<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
-					<StyledAccordionHeader>
+					<StyledAccordionHeader
+						onClick={() => setTimeout(() => setOpen(!open), 250)}
+					>
 						<Row lg={7} style={{ width: '100%' }}>
 							<Col>{oracle.name}</Col>
-							<Col>
-								<a
-									href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${oracle.id}`}
-								>
-									{formatAddress(oracle.id)}{' '}
-									<FontAwesomeIcon icon="external-link-alt" />
-								</a>
-							</Col>
+							{[oracle.id, oracle.creator].map((addr) => (
+								<Col>
+									<a
+										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${addr}`}
+										target="_blank"
+									>
+										{formatAddress(addr)}{' '}
+										<FontAwesomeIcon icon="external-link-alt" />
+									</a>
+								</Col>
+							))}
 							<Col>{oracle.aggregators.length}</Col>
 							<Col>
 								{oracleValues ? (
-									`${oracleValues[oracle.id] ? getDisplayBalance(oracleValues[oracle.id]) : '~'}`
+									`${
+										oracleValues[oracle.id]
+											? getDisplayBalance(oracleValues[oracle.id])
+											: '~'
+									}`
 								) : (
 									<SpinnerLoader />
 								)}
@@ -64,7 +99,35 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 						</Row>
 					</StyledAccordionHeader>
 					<StyledAccordionBody>
-						<h1>TODO: Analytics, etc.</h1>
+						{timeseriesData ? (
+							<>
+								<h3>
+									<Tooltipped content="Timeseries data is updated every 300 blocks, or roughly every 1 hour assuming block time is ~12 seconds. This chart will only show 90 days of data at maximum." />{' '}
+									Timeseries
+								</h3>
+								<ParentSize>
+									{(parent) => (
+										<AreaGraph
+											width={parent.width}
+											height={300}
+											timeseries={timeseriesData}
+										/>
+									)}
+								</ParentSize>
+							</>
+						) : (
+							<h3 style={{ textAlign: 'center' }}>
+								{dataExists ? (
+									<SpinnerLoader block />
+								) : (
+									<i>
+										<FontAwesomeIcon icon="exclamation-triangle" /> No
+										timeseries data available. The oracle must be live for at
+										least 2 days.
+									</i>
+								)}
+							</h3>
+						)}
 					</StyledAccordionBody>
 				</StyledAccordionItem>
 			</Accordion>
@@ -73,12 +136,24 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 
 	return (
 		<>
-			<OracleListHeader
-				headers={['Name', 'Address', 'No. Aggregators', 'Latest Result']}
-			/>
-			{oracles.map((oracle: Oracle) => {
-				return <OracleListItem oracle={oracle} />
-			})}
+			{oracleValues ? (
+				<>
+					<OracleListHeader
+						headers={[
+							'Name',
+							'Address',
+							'Creator',
+							'No. Aggregators',
+							'Latest Result',
+						]}
+					/>
+					{oracles.map((oracle: Oracle) => {
+						return <OracleListItem oracle={oracle} />
+					})}
+				</>
+			) : (
+				<SpinnerLoader block />
+			)}
 		</>
 	)
 }
@@ -92,6 +167,12 @@ const StyledAccordionBody = styled(Accordion.Body)`
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
+
+	> div {
+		border: 1px solid ${(props) => props.theme.color.primary[200]};
+		border-radius: 8px;
+		overflow: hidden;
+	}
 `
 
 const StyledAccordionHeader = styled(Accordion.Header)`

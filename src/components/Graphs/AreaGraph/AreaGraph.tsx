@@ -12,6 +12,9 @@ import React, { useCallback, useMemo } from 'react'
 import { getDisplayBalance } from 'utils/numberFormat'
 
 export type TimeseriesData = {
+	high?: number
+	low?: number
+	open?: number
 	close: number
 	date: string
 }
@@ -56,7 +59,13 @@ export default withTooltip<AreaProps, TooltipData>(
 	({
 		width,
 		height,
-		timeseries = appleStock,
+		timeseries = appleStock.map((day) => ({
+			date: day.date,
+			high: day.close + (Math.random() * (day.close / 10)),
+			low: day.close - (Math.random() * (day.close / 10)),
+			close: day.close,
+			open: day.close,
+		})).slice(0, 90),
 		timeframe,
 		margin = { top: 0, right: 0, bottom: 0, left: 0 },
 		showTooltip,
@@ -91,8 +100,8 @@ export default withTooltip<AreaProps, TooltipData>(
 				scaleLinear({
 					range: [innerHeight + margin.top, 0],
 					domain: [
-						min(timeSeries, getValue) || 0,
-						max(timeSeries, getValue) || 0,
+						min(timeSeries, (d) => d.low) || 0,
+						max(timeSeries, (d) => d.high) || 0,
 					],
 					nice: true,
 				}),
@@ -106,7 +115,7 @@ export default withTooltip<AreaProps, TooltipData>(
 					| React.TouchEvent<SVGRectElement>
 					| React.MouseEvent<SVGRectElement>,
 			) => {
-				const { x } = localPoint(event) || { x: 0 }
+				const { x, y } = localPoint(event) || { x: 0, y: 0 }
 				const x0 = dateScale.invert(x)
 				const index = bisectDate(timeSeries, x0, 1)
 				const d0 = timeSeries[index - 1]
@@ -121,8 +130,8 @@ export default withTooltip<AreaProps, TooltipData>(
 				}
 				showTooltip({
 					tooltipData: d,
-					tooltipLeft: x,
-					tooltipTop: valueScale(getValue(d)),
+					tooltipLeft: dateScale(getDate(d)),
+					tooltipTop: y,
 				})
 			},
 			[showTooltip, valueScale, dateScale],
@@ -147,14 +156,14 @@ export default withTooltip<AreaProps, TooltipData>(
 					/>
 					<LinearGradient
 						id="area-under-curve-gradient"
-						from="#f48d33"
-						to="#ce6509"
+						from={'#f48d33'}
+						to={'#ce6509'}
 						fromOpacity={0.1}
-						toOpacity={0.25}
+						toOpacity={0.35}
 					/>
 					<LinePath
 						stroke="url(#line-gradient)"
-						strokeWidth={2}
+						strokeWidth={2.5}
 						data={timeSeries}
 						x={(d) => dateScale(getDate(d)) ?? 0}
 						y={(d) => valueScale(getValue(d)) ?? 0}
@@ -169,6 +178,61 @@ export default withTooltip<AreaProps, TooltipData>(
 						fill="url(#area-under-curve-gradient)"
 						curve={curveMonotoneX}
 					/>
+					{timeSeries.map((d) => {
+						return (
+							<>
+								{d.high && d.low && (
+									<>
+										<g>
+											<Line
+												from={{
+													x: dateScale(getDate(d)),
+													y: valueScale(getValue(d)),
+												}}
+												to={{ x: dateScale(getDate(d)), y: valueScale(d.high) }}
+												stroke={'#444'}
+												strokeWidth={2}
+												pointerEvents="none"
+												strokeDasharray="5,2"
+											/>
+											<Line
+												from={{
+													x: dateScale(getDate(d)),
+													y: valueScale(getValue(d)),
+												}}
+												to={{ x: dateScale(getDate(d)), y: valueScale(d.low) }}
+												stroke={'#444'}
+												strokeWidth={2}
+												pointerEvents="none"
+												strokeDasharray="5,2"
+											/>
+										</g>
+										<circle
+											key={Math.random()}
+											r={3}
+											cx={dateScale(getDate(d))}
+											cy={valueScale(d.high)}
+											fill={'#63bd4c'}
+										/>
+										<circle
+											key={Math.random()}
+											r={3}
+											cx={dateScale(getDate(d))}
+											cy={valueScale(d.low)}
+											fill={'#bd4c4c'}
+										/>
+									</>
+								)}
+								<circle
+									key={Math.random()}
+									r={3}
+									cx={dateScale(getDate(d))}
+									cy={valueScale(getValue(d))}
+									fill={'#ffbe18'}
+								/>
+							</>
+						)
+					})}
 					<Bar
 						x={margin.left}
 						y={margin.top}
@@ -186,30 +250,10 @@ export default withTooltip<AreaProps, TooltipData>(
 							<Line
 								from={{ x: tooltipLeft, y: margin.top }}
 								to={{ x: tooltipLeft, y: innerHeight + margin.top }}
-								stroke={'transparent'}
+								stroke={accentColor}
 								strokeWidth={2}
 								pointerEvents="none"
 								strokeDasharray="5,2"
-							/>
-							<circle
-								cx={tooltipLeft}
-								cy={tooltipTop + 1}
-								r={4}
-								fill="black"
-								fillOpacity={0.1}
-								stroke="black"
-								strokeOpacity={0.1}
-								strokeWidth={2}
-								pointerEvents="none"
-							/>
-							<circle
-								cx={tooltipLeft}
-								cy={tooltipTop}
-								r={4}
-								fill={accentColor}
-								stroke="white"
-								strokeWidth={2}
-								pointerEvents="none"
 							/>
 						</g>
 					)}
@@ -222,10 +266,25 @@ export default withTooltip<AreaProps, TooltipData>(
 							left={tooltipLeft + 12}
 							style={tooltipStyles}
 						>
-							{`$${getDisplayBalance(
-								new BigNumber(getValue(tooltipData)),
+							Date: {formatDate(getDate(tooltipData))}
+							<br />
+							<br />
+							High: {getDisplayBalance(new BigNumber(tooltipData.high), 0)}
+							<br />
+							Low: {getDisplayBalance(new BigNumber(tooltipData.low), 0)}
+							<br />
+							Open: {getDisplayBalance(new BigNumber(tooltipData.open), 0)}
+							<br />
+							Close:{' '}
+							{getDisplayBalance(new BigNumber(getValue(tooltipData)), 0)}
+							<br />
+							<br />
+							Range: [
+							{`${getDisplayBalance(
+								new BigNumber(tooltipData.low),
 								0,
-							)} ${formatDate(getDate(tooltipData))}`}
+							)}, ${getDisplayBalance(new BigNumber(tooltipData.high), 0)}`}
+							]
 						</TooltipWithBounds>
 					</div>
 				)}
