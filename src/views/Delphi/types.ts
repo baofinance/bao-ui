@@ -47,6 +47,7 @@ export type DayData = {
 export type Oracle = {
   id: string
   name: string
+  endorsed: boolean
   aggregators: string[]
   creator: string
   equationNodes: EquationNode[]

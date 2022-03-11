@@ -108,39 +108,48 @@ const GuideCollapse: React.FC = () => {
 					},
 					{
 						label: '== (Equality)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator equals the right value, false if not',
 					},
 					{
 						label: '!= (Inequality)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator does not equal the right value, false if not',
 					},
 					{
 						label: '> (Greater than)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator is greater than the right value, false if not',
 					},
 					{
 						label: '>= (Greater than or equal to)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator is greater than or equal to than the value on the right, false if not',
 					},
 					{
 						label: '< (Less than)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator is less than the right value, false if not',
 					},
 					{
 						label: '<= (Less than or equal to)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator is less than or equal to than the value on the right, false if not',
 					},
 					{
 						label: '&& (Boolean And Condition)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator AND the value on the right are true, false if not',
 					},
 					{
 						label: '|| (Boolean Or Condition)',
-						value: 'Coming soon!',
+						value:
+							'True if the value on the left of the operator OR the value on the right are true, false if not',
 					},
 					{
 						label: '?: (Ternary)',
-						value: 'Coming soon!',
+						value:
+							'If the expression before the ? is true, return the expression before the colon. If not, evaluate the expression after the colon.',
 					},
 				]}
 			/>

@@ -4,6 +4,7 @@ import Config from '../../../bao/lib/config'
 import useOracleValues from '../../../hooks/delphi/useOracleValues'
 import { formatAddress } from '../../../utils'
 import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
+import { nodesToTex } from '../../../utils/equation'
 import { SpinnerLoader } from '../../../components/Loader'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -14,6 +15,8 @@ import { DayData, Oracle } from '../types'
 import AreaGraph, {
 	TimeseriesData,
 } from '../../../components/Graphs/AreaGraph/AreaGraph'
+import { StatBlock } from '../../Markets/components/Stats'
+import { MathComponent } from 'mathjax-react'
 
 const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 	oracles,
@@ -65,16 +68,33 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 			}))
 		}, [oracle, open])
 
+		const latexEq = useMemo(
+			() => nodesToTex(oracle, oracle.equationNodes[0]),
+			[oracle, open],
+		)
+
 		return (
 			<Accordion>
 				<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
 					<StyledAccordionHeader
-						onClick={() => setTimeout(() => setOpen(!open), 250)}
+						onClick={() => setOpen(!open)}
 					>
 						<Row lg={7} style={{ width: '100%' }}>
-							<Col>{oracle.name}</Col>
+							<Col>
+								{oracle.endorsed && (
+									<Tooltipped content="Endorsed by Protocol">
+										<a href="#">
+											<FontAwesomeIcon
+												icon="award"
+												style={{ color: '#d0ae3e' }}
+											/>
+										</a>
+									</Tooltipped>
+								)}{' '}
+								{oracle.name}
+							</Col>
 							{[oracle.id, oracle.creator].map((addr) => (
-								<Col>
+								<Col key={addr}>
 									<a
 										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${addr}`}
 										target="_blank"
@@ -99,6 +119,25 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 						</Row>
 					</StyledAccordionHeader>
 					<StyledAccordionBody>
+						<h3>Equation & Variables</h3>
+						<MathComponent tex={latexEq.output} />
+						<br />
+						<StatBlock
+							label={undefined}
+							stats={Object.keys(latexEq.variables).map((key) => ({
+								label: key,
+								value: (
+									<a
+										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${latexEq.variables[key]}`}
+										target="_blank"
+									>
+										{latexEq.variables[key]}{' '}
+										<FontAwesomeIcon icon="external-link-alt" />
+									</a>
+								),
+							}))}
+						/>
+						<br />
 						{timeseriesData ? (
 							<>
 								<h3>
@@ -148,7 +187,7 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 						]}
 					/>
 					{oracles.map((oracle: Oracle) => {
-						return <OracleListItem oracle={oracle} />
+						return <OracleListItem oracle={oracle} key={oracle.id} />
 					})}
 				</>
 			) : (

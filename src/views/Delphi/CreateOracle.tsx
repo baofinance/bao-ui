@@ -108,7 +108,7 @@ const CreateOracle: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader icon="" title="Create Oracle" />
+			<PageHeader icon="" title={(<FontAwesomeIcon icon="calculator" />)} />
 			<Container>
 				<ConnectedCheck>
 					{alert && (
@@ -214,7 +214,7 @@ const CreateOracle: React.FC = () => {
 									{ALPHABET.map((letter) => (
 										<Dropdown.Item
 											onClick={() => handleAddConstant(letter, newConstant)}
-											key={letter}
+											key={Math.random()}
 										>
 											{letter}
 										</Dropdown.Item>

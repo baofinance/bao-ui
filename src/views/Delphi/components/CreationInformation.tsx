@@ -11,7 +11,7 @@ const CreationInformation: React.FC<{
 	return (
 		<>
 			<h3>Creation Details</h3>
-			{creationInfo ? (
+			{creationInfo && creationInfo.output ? (
 				<StatBlock
 					label={null}
 					stats={[

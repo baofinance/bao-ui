@@ -19,19 +19,16 @@ const Nav: React.FC = () => {
 				Create
 			</StyledLink>
 			<StyledAbsoluteLink
-				href="https://snapshot.page/#/baovotes.eth"
+				href="https://github.com/baofinance/delphi"
 				target="_blank"
 			>
-				Vote
-			</StyledAbsoluteLink>
-			<StyledAbsoluteLink href="https://gov.bao.finance" target="_blank">
-				Forum
+				Delphi Repo
 			</StyledAbsoluteLink>
 			<StyledAbsoluteLink
-				href="https://docs.bao.finance"
+				href="https://bao.finance"
 				target="_blank"
 			>
-				Docs
+				Bao Finance
 			</StyledAbsoluteLink>
 		</StyledNav>
 	)

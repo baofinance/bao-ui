@@ -1,10 +1,35 @@
 import React from 'react'
 import styled from 'styled-components'
-import Branding from './components/Branding'
 import Nav from './components/Nav'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Tooltipped from '../Tooltipped'
 
 const Footer: React.FC = () => (
 	<StyledFooter>
+		<div
+			style={{
+				margin: '0 auto',
+				width: '50%',
+				textAlign: 'center',
+				fontFamily: 'Rubik',
+				fontSize: '16px',
+				marginBottom: '5px',
+			}}
+		>
+			Powered by{' '}
+			<img
+				src="/LINK.png"
+				style={{
+					height: '1em',
+					display: 'inline',
+				}}
+			/>{' '}
+			<a href="https://chain.link/">ChainLink</a> and coffee. Made with{' '}
+			<FontAwesomeIcon icon="heart" style={{ color: '#c02969' }} /> by{' '}
+			<Tooltipped content={<><FontAwesomeIcon icon={['fab', 'discord']} /> vex#9406</>} placement="top">
+				<a href="https://twitter.com/vex_0x">vex</a>
+			</Tooltipped>
+		</div>
 		<StyledFooterInner>
 			<StyledNavWrapper>
 				<Nav />

@@ -1,6 +1,6 @@
 // TS implementation of Equation.sol
 
-import { EquationNode, Variables } from '../views/Delphi/types'
+import { EquationNode, Oracle, Variables } from '../views/Delphi/types'
 import BigNumber from 'bignumber.js'
 
 const OPCODE_CONST = 0
@@ -125,6 +125,142 @@ export const solveMath = (
     } else if (opcode === OPCODE_PCT) {
       return leftVal.times(rightVal).div(1e18)
     }
+  } else if (opcode == OPCODE_IF) {
+    const cond = solveBool(nodes, parseInt(node.child0), variables)
+    if (cond) return solveMath(nodes, parseInt(node.child1), variables)
+    else return solveMath(nodes, parseInt(node.child2), variables)
   }
   // TODO: Boolean logic!
+}
+
+const solveBool = (
+  nodes: EquationNode[],
+  index: number,
+  variables: Variables,
+): boolean => {
+  const node: EquationNode = nodes[index]
+  const opcode = parseInt(node.opcode)
+
+  if (opcode === OPCODE_NOT) {
+    return !solveBool(nodes, parseInt(node.child0), variables)
+  } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
+    const leftVal = solveMath(nodes, parseInt(node.child0), variables)
+    const rightVal = solveMath(nodes, parseInt(node.child1), variables)
+
+    if (opcode === OPCODE_EQ) {
+      return leftVal.eq(rightVal)
+    } else if (opcode === OPCODE_NE) {
+      return !leftVal.eq(rightVal)
+    } else if (opcode === OPCODE_LT) {
+      return leftVal.lt(rightVal)
+    } else if (opcode === OPCODE_GT) {
+      return leftVal.gt(rightVal)
+    } else if (opcode === OPCODE_LE) {
+      return leftVal.lte(rightVal)
+    } else if (opcode === OPCODE_GE) {
+      return leftVal.gte(rightVal)
+    }
+  } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
+    const leftBoolVal = solveBool(nodes, parseInt(node.child0), variables)
+
+    if (opcode === OPCODE_AND) {
+      if (leftBoolVal) return solveBool(nodes, parseInt(node.child1), variables)
+      else return false
+    } else if (opcode === OPCODE_OR) {
+      if (leftBoolVal) return true
+      else return solveBool(nodes, parseInt(node.child1), variables)
+    } else if (opcode === OPCODE_IF) {
+      const cond = solveBool(nodes, parseInt(node.child0), variables)
+      if (cond) return solveBool(nodes, parseInt(node.child1), variables)
+      else return solveBool(nodes, parseInt(node.child2), variables)
+    }
+  }
+}
+
+// ---------------
+// LaTeX Parser
+// ---------------
+
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
+
+const TEX_DICT: any = {
+  '4': '+',
+  '5': '-',
+  '6': '\\times',
+  '7': '\\div',
+  '8': '^',
+  '9': '\\times',
+  '10': '==',
+  '11': '!=',
+  '12': '<',
+  '13': '>',
+  '14': '<=',
+  '15': '>=',
+  '16': '~and~',
+  '17': '~or~',
+  '18': '~?~',
+}
+
+export const nodesToTex = (
+  oracle: Oracle,
+  startingNode: EquationNode,
+  variables: { [varLetter: string]: string } = {},
+): { output: string; variables: { [varLetter: string]: string } } => {
+  let output = ''
+
+  if (startingNode && parseInt(startingNode.opcode) > OPCODE_SQRT) {
+    output += '('
+    output += nodesToTex(
+      oracle,
+      oracle.equationNodes[parseInt(startingNode.child0)],
+      variables,
+    ).output
+    output += ` ${TEX_DICT[startingNode.opcode]} `
+
+    // For exponents, we need to wrap the exponent in curly braces for latex to pick up multiple character exponents
+    if (startingNode.opcode === OPCODE_EXP.toString()) output += '{'
+
+    output += nodesToTex(
+      oracle,
+      oracle.equationNodes[parseInt(startingNode.child1)],
+      variables,
+    ).output
+
+    // Handle our only 3-child opcode, ternary statements
+    if (startingNode.opcode === OPCODE_IF.toString()) {
+      output += ':'
+      output += nodesToTex(
+        oracle,
+        oracle.equationNodes[parseInt(startingNode.child2)],
+        variables,
+      ).output
+    }
+
+    // The percent operator works as follows: x * y / 1e18.
+    // Because the division isn't accounted for in the equation tree, we need to add it here
+    if (startingNode.opcode === OPCODE_PCT.toString())
+      output += `\\div ${new BigNumber(1e18).toString()}`
+    // For exponents, we need to wrap the exponent in curly braces for latex to pick up multiple character exponents
+    else if (startingNode.opcode === OPCODE_EXP.toString()) output += '}'
+
+    output += ')'
+  } else if (startingNode && parseInt(startingNode.opcode) === OPCODE_VAR) {
+    let varLetter: string
+    const oracleAddress = oracle.aggregators[parseInt(startingNode.value)]
+    if (Object.values(variables).includes(oracleAddress)) {
+      const keys = Object.keys(variables)
+      varLetter = keys[Object.values(variables).indexOf(oracleAddress)]
+    } else {
+      varLetter = ALPHABET[Object.keys(variables).length]
+      variables[varLetter] = oracle.aggregators[parseInt(startingNode.value)]
+    }
+    output += varLetter
+  } else if (startingNode && parseInt(startingNode.opcode) === OPCODE_CONST) {
+    output += startingNode.value
+  }
+
+  return {
+    output,
+    variables,
+  }
 }

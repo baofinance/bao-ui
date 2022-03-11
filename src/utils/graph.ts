@@ -167,9 +167,9 @@ const getMarketInfo = async (tokenAddress: string): Promise<any> =>
 const getMarketsInfo = async (): Promise<any> =>
   await _querySubgraph(_getMarketsQuery(), 'baoMarkets', Config.networkId)
 
-const getDelphiFactoryInfo = async (): Promise<any> => {
+const getDelphiFactoryInfo = async (search?: string): Promise<any> => {
   const res: any = await _querySubgraph(
-    _getDelphiFactoryQuery(),
+    _getDelphiFactoryQuery(search),
     'delphiFactory',
     Config.networkId,
   )
@@ -326,17 +326,18 @@ const _getMarketsQuery = () =>
   }
   `
 
-const _getDelphiFactoryQuery = () =>
+const _getDelphiFactoryQuery = (search?: string) =>
   `
   {
     delphiFactories(first: 1) {
       id
       owner
-      oracles {
+      oracles(${search ? (search === 'ENDORSED' ? 'where:{endorsed:true}' : `where:{name_contains:"${search}"}`) : 'first: 25'}) {
         id
         name
         creator
         aggregators
+        endorsed
         equationNodes {
           id
           opcode

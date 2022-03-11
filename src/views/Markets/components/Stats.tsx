@@ -36,9 +36,11 @@ type MarketStatProps = {
 
 export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<>
-		<StatHeader>
-			<p>{label}</p>
-		</StatHeader>
+		{label && (
+			<StatHeader>
+				<p>{label}</p>
+			</StatHeader>
+		)}
 		<StatWrapper>
 			{stats.map(({ label, value }) => (
 				<StatText key={label}>

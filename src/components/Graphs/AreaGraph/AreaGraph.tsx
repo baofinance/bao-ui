@@ -208,14 +208,14 @@ export default withTooltip<AreaProps, TooltipData>(
 											/>
 										</g>
 										<circle
-											key={Math.random()}
+											key="high"
 											r={3}
 											cx={dateScale(getDate(d))}
 											cy={valueScale(d.high)}
 											fill={'#63bd4c'}
 										/>
 										<circle
-											key={Math.random()}
+											key="low"
 											r={3}
 											cx={dateScale(getDate(d))}
 											cy={valueScale(d.low)}
@@ -224,7 +224,7 @@ export default withTooltip<AreaProps, TooltipData>(
 									</>
 								)}
 								<circle
-									key={Math.random()}
+									key="spot"
 									r={3}
 									cx={dateScale(getDate(d))}
 									cy={valueScale(getValue(d))}
@@ -261,7 +261,7 @@ export default withTooltip<AreaProps, TooltipData>(
 				{tooltipData && (
 					<div>
 						<TooltipWithBounds
-							key={Math.random()}
+							key="x"
 							top={tooltipTop - 12}
 							left={tooltipLeft + 12}
 							style={tooltipStyles}

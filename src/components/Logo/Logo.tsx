@@ -8,7 +8,6 @@ const Logo: React.FC = () => {
 	return (
 		<StyledLogo to="/">
 			<img src={baoLogo} height="32" style={{ verticalAlign: 'middle' }} />
-			<span style={{ fontSize: '28px' }}>🔮</span>
 			<StyledText>
 				<TitleText>
 					Delphi Testnet

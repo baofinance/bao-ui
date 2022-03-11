@@ -7,9 +7,17 @@ const OPCODES: { [operator: string]: string } = {
   '/': '7',
   '^': '8',
   '%': '9',
+  '==': '10',
+  '!=': '11',
+  '<': '12',
+  '>': '13',
+  '<=': '14',
+  '>=': '15',
+  '&&': '16',
+  '||': '17',
+  '?': '18',
 }
 
-// Only works for symbolic operators, will need to modify this once we add boolean logic
 function isOperator(c: string) {
   return (
     !(c >= 'a' && c <= 'z') &&
@@ -23,11 +31,23 @@ function getPriority(c: string) {
   if (c === '-' || c === '+') return 1
   else if (c === '*' || c === '/') return 2
   else if (c === '^') return 3
+  else if (parseInt(OPCODES[c]) >= 10 && parseInt(OPCODES[c]) <= 15) return 4
+  else if (parseInt(OPCODES[c]) >= 16 && parseInt(OPCODES[c]) >= 18) return 5
   return 0
 }
 
 // Function that converts infix expression to prefix expression.
-export const shuntingYard = (infix: string, variables: Variables) => {
+export const shuntingYard = (infix: string, variables: Variables): any[] => {
+  // Ternary parsing
+  if (infix.includes('?') && infix.includes(':')) {
+    const split = infix.split('?')
+    const split2 = split[1].split(':')
+    return [OPCODES['?']]
+      .concat(shuntingYard(split[0], variables))
+      .concat(shuntingYard(split2[0], variables))
+      .concat(shuntingYard(split2[1], variables))
+  }
+
   infix = infix.replaceAll(' ', '')
 
   let operators = []
@@ -35,20 +55,15 @@ export const shuntingYard = (infix: string, variables: Variables) => {
 
   for (let i = 0; i < infix.length; i++) {
     // If current character is an opening bracket, then push into the operators stack.
-    if (infix[i] == '(') operators.push(infix[i])
-    // If current character is a
-    // closing bracket, then pop from
-    // both stacks and push result
-    // in operands stack until
-    // matching opening bracket is
-    // not found.
-    else if (infix[i] == ')') {
-      while (operators.length != 0 && operators[operators.length - 1] != '(') {
-        // operand 1
+    if (infix[i] === '(') operators.push(infix[i])
+
+    // If current character is a closing bracket, then pop from
+    // both stacks and push result in operands stack until
+    // matching opening bracket is not found.
+    else if (infix[i] === ')') {
+      while (operators.length !== 0 && operators[operators.length - 1] !== '(') {
         let op1: any = operands.pop()
-        // operand 2
         let op2: any = operands.pop()
-        // operator
         let op = operators.pop()
 
         // Add operands and operator in form OPCODE[operator], operand1, operand2.
@@ -97,7 +112,9 @@ export const shuntingYard = (infix: string, variables: Variables) => {
         operands.push([OPCODES[op], op2, op1])
       }
 
-      operators.push(infix[i])
+      operators.push(
+        isTwoCharOperator(infix, i) ? infix[i] + infix[i++ + 1] : infix[i],
+      )
     }
   }
 
@@ -114,7 +131,12 @@ export const shuntingYard = (infix: string, variables: Variables) => {
   return flatten(base)
 }
 
+const isTwoCharOperator = (infix: string, index: number) =>
+  OPCODES[infix[index] + infix[index + 1]]
+
 const flatten = (a: any) => {
+  if (!a) return
+
   let ret: string[] = []
   a.forEach((item: any) => {
     if (typeof item === 'object') {
