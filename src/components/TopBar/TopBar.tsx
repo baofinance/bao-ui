@@ -29,7 +29,6 @@ const TopBar: React.FC<TopBarProps> = ({
 					<Nav />
 				</StyledNavWrapper>
 				<StyledAccountButtonWrapper>
-					<AccountButton />
 					<StyledThemeButton>
 						<Button onClick={toggleTheme}>
 							<FontAwesomeIcon icon={isDarkMode ? 'moon' : 'sun'} />

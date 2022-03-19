@@ -20,9 +20,7 @@ import MarketsProvider from './contexts/Markets'
 import ModalsProvider from './contexts/Modals'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
-import Ballast from './views/Ballast'
-import Farms from './views/Farms'
-import Markets from './views/Markets'
+import Landing from './views/Landing'
 
 library.add(fas, fab)
 
@@ -62,16 +60,7 @@ const App: React.FC = () => {
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
 				<Switch>
 					<Route path="/" exact>
-						<Markets />
-					</Route>
-					<Route path="/markets/:marketId">
-						<Market />
-					</Route>
-					<Route path="/ballast">
-						<Ballast />
-					</Route>
-					<Route path="/farms">
-						<Farms />
+						<Landing />
 					</Route>
 				</Switch>
 			</Router>
