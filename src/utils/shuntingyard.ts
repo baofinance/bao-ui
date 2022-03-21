@@ -128,6 +128,7 @@ export const shuntingYard = (infix: string, variables: Variables): any[] => {
 
   // Final prefix expression is present in operands stack.
   const base = operands[operands.length - 1]
+  console.log(base, flatten(base))
   return flatten(base)
 }
 

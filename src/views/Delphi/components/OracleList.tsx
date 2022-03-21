@@ -11,17 +11,22 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ParentSize } from '@visx/responsive'
 import Tooltipped from '../../../components/Tooltipped'
-import { DayData, Oracle } from '../types'
+import { Aggregators, DayData, Oracle } from '../types'
 import AreaGraph, {
 	TimeseriesData,
 } from '../../../components/Graphs/AreaGraph/AreaGraph'
 import { StatBlock } from '../../Markets/components/Stats'
 import { MathComponent } from 'mathjax-react'
 
-const OracleList: React.FC<{ oracles: Oracle[] }> = ({
+const OracleList: React.FC<{
+	oracles: Oracle[]
+	aggregators: Aggregators
+}> = ({
 	oracles,
+	aggregators,
 }: {
 	oracles: Oracle[]
+	aggregators: Aggregators
 }) => {
 	const oracleValues = useOracleValues(oracles)
 
@@ -76,9 +81,7 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 		return (
 			<Accordion>
 				<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
-					<StyledAccordionHeader
-						onClick={() => setOpen(!open)}
-					>
+					<StyledAccordionHeader onClick={() => setOpen(!open)}>
 						<Row lg={7} style={{ width: '100%' }}>
 							<Col>
 								{oracle.endorsed && (
@@ -120,22 +123,34 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 					</StyledAccordionHeader>
 					<StyledAccordionBody>
 						<h3>Equation & Variables</h3>
-						<MathComponent tex={latexEq.output} />
-						<br />
 						<StatBlock
-							label={undefined}
-							stats={Object.keys(latexEq.variables).map((key) => ({
-								label: key,
-								value: (
-									<a
-										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${latexEq.variables[key]}`}
-										target="_blank"
-									>
-										{latexEq.variables[key]}{' '}
-										<FontAwesomeIcon icon="external-link-alt" />
-									</a>
-								),
-							}))}
+							label={
+								<h5>
+									<MathComponent tex={latexEq.output} />
+								</h5>
+							}
+							stats={Object.keys(latexEq.variables).map((key) => {
+								if (!aggregators[latexEq.variables[key]])
+									return { label: 'ERROR', value: 'ERROR' }
+
+								return {
+									label: `${key} = ${
+										aggregators[latexEq.variables[key]].description
+									} = ${getDisplayBalance(
+										aggregators[latexEq.variables[key]].latestAnswer,
+										aggregators[latexEq.variables[key]].decimals,
+									)}`,
+									value: (
+										<a
+											href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${latexEq.variables[key]}`}
+											target="_blank"
+										>
+											{formatAddress(latexEq.variables[key])}{' '}
+											<FontAwesomeIcon icon="external-link-alt" />
+										</a>
+									),
+								}
+							})}
 						/>
 						<br />
 						{timeseriesData ? (
@@ -144,12 +159,13 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 									<Tooltipped content="Timeseries data is updated every 300 blocks, or roughly every 1 hour assuming block time is ~12 seconds. This chart will only show 90 days of data at maximum." />{' '}
 									Timeseries
 								</h3>
-								<ParentSize>
+								<ParentSize className="delphi-graph">
 									{(parent) => (
 										<AreaGraph
 											width={parent.width}
 											height={300}
 											timeseries={timeseriesData}
+											key={`timeseries-${oracle.id}`}
 										/>
 									)}
 								</ParentSize>
@@ -175,7 +191,7 @@ const OracleList: React.FC<{ oracles: Oracle[] }> = ({
 
 	return (
 		<>
-			{oracleValues ? (
+			{oracleValues && aggregators ? (
 				<>
 					<OracleListHeader
 						headers={[
@@ -207,7 +223,7 @@ const StyledAccordionBody = styled(Accordion.Body)`
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 
-	> div {
+	> div.delphi-graph {
 		border: 1px solid ${(props) => props.theme.color.primary[200]};
 		border-radius: 8px;
 		overflow: hidden;

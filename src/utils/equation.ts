@@ -130,7 +130,6 @@ export const solveMath = (
     if (cond) return solveMath(nodes, parseInt(node.child1), variables)
     else return solveMath(nodes, parseInt(node.child2), variables)
   }
-  // TODO: Boolean logic!
 }
 
 const solveBool = (
@@ -208,6 +207,8 @@ export const nodesToTex = (
 ): { output: string; variables: { [varLetter: string]: string } } => {
   let output = ''
 
+  BigNumber.config({ EXPONENTIAL_AT: 5 })
+
   if (startingNode && parseInt(startingNode.opcode) > OPCODE_SQRT) {
     output += '('
     output += nodesToTex(
@@ -239,7 +240,7 @@ export const nodesToTex = (
     // The percent operator works as follows: x * y / 1e18.
     // Because the division isn't accounted for in the equation tree, we need to add it here
     if (startingNode.opcode === OPCODE_PCT.toString())
-      output += `\\div ${new BigNumber(1e18).toString()}`
+      output += `\\div ${bnToString(new BigNumber(1e18))}`
     // For exponents, we need to wrap the exponent in curly braces for latex to pick up multiple character exponents
     else if (startingNode.opcode === OPCODE_EXP.toString()) output += '}'
 
@@ -256,7 +257,7 @@ export const nodesToTex = (
     }
     output += varLetter
   } else if (startingNode && parseInt(startingNode.opcode) === OPCODE_CONST) {
-    output += startingNode.value
+    output += bnToString(new BigNumber(startingNode.value))
   }
 
   return {
@@ -264,3 +265,6 @@ export const nodesToTex = (
     variables,
   }
 }
+
+const bnToString = (bn: BigNumber) =>
+  bn.toString().replaceAll('+', '').replaceAll('-', '')

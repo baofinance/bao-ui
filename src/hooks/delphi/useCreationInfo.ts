@@ -8,6 +8,7 @@ import { setupNodes, solveMath } from '../../utils/equation'
 const useCreationInfo = (equation: string, variables: Variables) => {
   const [creationInfo, setCreationInfo] = useState<CreationInfo | undefined>()
   const bao = useBao()
+  BigNumber.config({ EXPONENTIAL_AT: 36 })
 
   const fetchCreationInfo = useCallback(async () => {
     const factory = bao.getContract('delphiFactory')

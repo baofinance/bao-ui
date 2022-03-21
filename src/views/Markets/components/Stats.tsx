@@ -18,7 +18,7 @@ type Stat = {
 }
 
 type StatBlockProps = {
-	label: string
+	label: any
 	stats: Stat[]
 }
 

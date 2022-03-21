@@ -26,8 +26,9 @@ import GuideCollapse from './components/GuideCollapse'
 import { SubmitButton } from '../../components/Button/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { StatBlock } from '../Markets/components/Stats'
-import { Aggregator, Variables } from './types'
+import { Aggregator, CreationInfo, Variables } from './types'
 import CreationInformation from './components/CreationInformation'
+import Tooltipped from '../../components/Tooltipped'
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwrxyz'.split('')
 
@@ -108,9 +109,17 @@ const CreateOracle: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader icon="" title={(<FontAwesomeIcon icon="calculator" />)} />
+			<PageHeader icon="" title={<FontAwesomeIcon icon="calculator" />} />
 			<Container>
 				<ConnectedCheck>
+					<Alert
+						variant="warning"
+						style={{ fontWeight: 'bold', textAlign: 'center' }}
+					>
+						Welcome to Delphi! Please click the{' '}
+						<FontAwesomeIcon icon="question-circle" /> and read the guide before
+						creating an oracle.
+					</Alert>
 					{alert && (
 						<Alert
 							variant={
@@ -145,21 +154,18 @@ const CreateOracle: React.FC = () => {
 									align="end"
 								>
 									{aggregators &&
-										aggregators.map((aggregator) => (
-											<Dropdown.Item
-												onClick={() =>
-													handleAddAggregator(newVariable, aggregator)
-												}
-												key={aggregator.id}
-											>
-												{aggregator.description}{' '}
-												<FontAwesomeIcon icon="arrow-right" />{' '}
-												{getDisplayBalance(
-													aggregator.latestAnswer,
-													aggregator.decimals,
-												)}
-											</Dropdown.Item>
-										))}
+										Object.keys(aggregators).map((aggregator) => {
+											const a = aggregators[aggregator]
+											return (
+												<Dropdown.Item
+													onClick={() => handleAddAggregator(newVariable, a)}
+													key={a.id}
+												>
+													{a.description} <FontAwesomeIcon icon="arrow-right" />{' '}
+													{getDisplayBalance(a.latestAnswer, a.decimals)}
+												</Dropdown.Item>
+											)
+										})}
 								</DropdownButton>
 							</InputGroup>
 							<br />
@@ -187,14 +193,16 @@ const CreateOracle: React.FC = () => {
 						</StyledCol>
 						<StyledCol xs={1}>
 							<h3 style={{ marginTop: 'calc(2.75rem)' }}>
-								<a
-									href="#"
-									onClick={() => setShowGuide(!showGuide)}
-									aria-expanded={showGuide}
-									aria-controls="guide-collapse"
-								>
-									<FontAwesomeIcon icon="question-circle" />
-								</a>
+								<Tooltipped content="Guide (Please read before creating an oracle!)">
+									<a
+										href="#"
+										onClick={() => setShowGuide(!showGuide)}
+										aria-expanded={showGuide}
+										aria-controls="guide-collapse"
+									>
+										<FontAwesomeIcon icon="question-circle" />
+									</a>
+								</Tooltipped>
 							</h3>
 						</StyledCol>
 						{/* CONSTANTS */}
@@ -202,7 +210,7 @@ const CreateOracle: React.FC = () => {
 							<h3>Assign Constants</h3>
 							<InputGroup className="mb-3">
 								<StyledFormControl
-									placeholder="1, 2, 3, etc."
+									placeholder="1, 2, 1e18, 2e18, etc."
 									value={newConstant}
 									onChange={(event: any) => setNewConstant(event.target.value)}
 								/>

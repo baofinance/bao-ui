@@ -41,7 +41,11 @@ const GuideCollapse: React.FC = () => {
 					decimal numbers and z=1e18)
 				</li>
 				<li>
-					<i>Boolean logic coming soon</i>
+					Boolean logic can also be used inside of your equation, and available
+					boolean operators can be found below. To add an if/else clause to your
+					equation, use the ternary operator:{' '}
+					<Badge bg="warning">x ? a : b</Badge>. If x is true, the equation will
+					evaluate a, whereas if x is false, it will evaluate b.
 				</li>
 			</ul>
 			<h4>Tips on saving gas</h4>
@@ -60,14 +64,18 @@ const GuideCollapse: React.FC = () => {
 						the complexity of your equation will directly affect how much a user
 						pays for their transaction.
 					</b>{' '}
-					ChainLink aggregator results and extra equation tree nodes add up
-					quickly!
+					Extra fetching of ChainLink aggregator results and equation tree node
+					SLOADs add up quickly! Sometimes, a complex equation is necessary to
+					represent your desired feed. However, all oracle creators should seek
+					to perform their operation with the minimum number of operators
+					possible.
 				</li>
 				<li>
 					When multiplying two aggregator results or 18 decimal numbers
-					together, use the percent operator ( x%y ) to retain precision instead
-					of using an extra variable ( (x*y)/z ) to reduce the amount of nodes
-					that exist in your oracle's equation tree.
+					together, use the percent operator ( <Badge bg="warning">x % y</Badge>{' '}
+					) to retain precision instead of using an extra variable ({' '}
+					<Badge bg="warning">(x * y) / z</Badge> ) to reduce the amount of
+					nodes that exist in your oracle's equation tree.
 				</li>
 			</ul>
 			<StatBlock
@@ -105,6 +113,18 @@ const GuideCollapse: React.FC = () => {
 					{
 						label: 'sqrt(x) (Square Root)',
 						value: 'Coming soon!',
+					},
+					{
+						label: 'nrt(x, y) (nth root)',
+						value: 'Coming soon!'
+					},
+					{
+						label: '[c](x/y)^z - [ c * ((x / y) ^ (z / 1e6)) ] - (Fractional exponents)',
+						value: 'Coming soon!'
+					},
+					{
+						label: 'log(c, x, y) - [ c * log(baseY / baseZ) ] - (Logarithm)',
+						value: 'Coming soon!'
 					},
 					{
 						label: '== (Equality)',

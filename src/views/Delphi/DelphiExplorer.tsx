@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import useFactory from '../../hooks/delphi/useFactory'
+import useAvailableAggregators from '../../hooks/delphi/useAvailableAggregators'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import { Container, FormControl, Nav } from 'react-bootstrap'
@@ -13,6 +14,7 @@ const DelphiExplorer: React.FC = () => {
 	const [search, setSearch] = useState<string | undefined>()
 
 	const factory = useFactory(search)
+	const aggregators = useAvailableAggregators(factory)
 
 	const endorsed = useMemo(
 		() =>
@@ -74,7 +76,10 @@ const DelphiExplorer: React.FC = () => {
 								<br />
 							</>
 						)}
-						<OracleList oracles={endorsedView ? endorsed : factory.oracles} />
+						<OracleList
+							oracles={endorsedView ? endorsed : factory.oracles}
+							aggregators={aggregators}
+						/>
 					</>
 				) : (
 					<SpinnerLoader block />

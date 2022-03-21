@@ -21,6 +21,10 @@ export type Aggregator = {
   latestAnswer: BigNumber
 }
 
+export type Aggregators = {
+  [id: string]: Aggregator
+}
+
 export type OracleValues = {
   [id: string]: BigNumber
 }
