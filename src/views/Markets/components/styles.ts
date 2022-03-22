@@ -222,6 +222,7 @@ export const BorrowMeter = styled.div`
   border-radius: 8px;
   background-color: ${(props) => props.theme.color.secondary[900]};
 `
+
 export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
