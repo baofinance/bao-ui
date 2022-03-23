@@ -1,33 +1,31 @@
-import React, { useCallback } from 'react'
-import { BigNumber } from 'bignumber.js'
-import Config from 'bao/lib/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import wethIcon from 'assets/img/assets/WETH.png'
 import baoIcon from 'assets/img/logo.svg'
+import Config from 'bao/lib/config'
+import { BigNumber } from 'bignumber.js'
+import { CloseButton } from 'components/Button/Button'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
-import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
-import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
-import { getDisplayBalance } from 'utils/numberFormat'
-import { Button } from '../../Button'
-
-import Spacer from '../../Spacer'
-import Value from '../../Value'
-import { StatBlock } from 'views/Markets/components/Stats'
 import _ from 'lodash'
-import { AssetImage, AssetImageContainer } from 'views/Farms/components/styles'
+import React, { useCallback } from 'react'
+import { Col, Modal, ModalProps } from 'react-bootstrap'
+import styled from 'styled-components'
+import { getDisplayBalance } from 'utils/numberFormat'
+import { StatBlock } from 'views/Markets/components/Stats'
 import { HeaderWrapper } from 'views/Markets/components/styles'
-import { CloseButton } from 'components/Button/Button'
+import { Button } from '../../Button'
+import Spacer from '../../Spacer'
+
 
 const AccountModal = ({ onHide, show }: ModalProps) => {
-	const { account, reset } = useWallet()
+	const { account, deactivate } = useWeb3React()
 
 	const handleSignOutClick = useCallback(() => {
 		onHide!()
-		reset()
-	}, [onHide, reset])
+		deactivate()
+	}, [onHide, deactivate])
 
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()

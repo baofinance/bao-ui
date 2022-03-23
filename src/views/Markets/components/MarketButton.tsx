@@ -9,7 +9,7 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useApprovals } from 'hooks/markets/useApprovals'
 import React from 'react'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { decimate } from 'utils/numberFormat'
 import { MarketOperations } from './Modals'
 
@@ -28,7 +28,7 @@ export const MarketButton = ({
 }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const bao = useBao()
-	const { account } = useWallet()
+	const { account } = useWeb3React()
 	const { approvals } = useApprovals(pendingTx)
 
 	const { marketContract } = asset

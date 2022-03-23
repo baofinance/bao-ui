@@ -9,11 +9,9 @@ const Ballast: React.FC = () => {
 	return (
 		<Page>
 			<PageHeader icon="" title="Ballast" />
-			<ConnectedCheck>
-				<Container>
-					<BallastSwapper />
-				</Container>
-			</ConnectedCheck>
+			<Container>
+				<BallastSwapper />
+			</Container>
 		</Page>
 	)
 }

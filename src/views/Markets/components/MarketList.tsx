@@ -31,7 +31,7 @@ import {
 	Row,
 } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import { MarketDetails, StatBlock } from './Stats'
@@ -149,7 +149,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const { handleTx } = useTransactionHandler()
 	const bao = useBao()
-	const { account }: { account: string } = useWallet()
+	const { account } = useWeb3React()
 
 	const suppliedUnderlying = useMemo(
 		() =>

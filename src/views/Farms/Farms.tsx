@@ -7,9 +7,12 @@ import { Container } from 'react-bootstrap'
 import ConnectedCheck from 'components/ConnectedCheck'
 import Balances from './components/Balances'
 import { FarmList } from './components/FarmList'
+import { useWeb3React } from '@web3-react/core'
+import { NetworkFarmList } from './components/NetworkFarmList'
 
 const Farms: React.FC = () => {
 	const farms = useFarms()
+	const { account, library } = useWeb3React()
 
 	return (
 		<Page>
@@ -18,12 +21,10 @@ const Farms: React.FC = () => {
 				title="Farms"
 				subtitle="Earn BAO by staking Sushiswap & Uniswap LP Tokens!"
 			/>
-			<ConnectedCheck>
-				<Container>
-					<Balances />
-					{farms ? <FarmList /> : <SpinnerLoader block />}
-				</Container>
-			</ConnectedCheck>
+			<Container>
+				<Balances />
+				<>{account ? <FarmList /> : <NetworkFarmList />}</>
+			</Container>
 		</Page>
 	)
 }

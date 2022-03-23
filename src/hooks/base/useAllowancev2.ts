@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { getAllowance } from 'utils/erc20'
 import { provider } from 'web3-core'
 import useBao from './useBao'
@@ -10,7 +10,7 @@ const useAllowancev2 = (
   spenderAddress: string,
   updateParams: any[] = [],
 ) => {
-  const { account }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
   const bao = useBao()
 
   const [allowance, setAllowance] = useState<BigNumber | undefined>()

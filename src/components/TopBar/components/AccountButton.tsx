@@ -1,16 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
-import { useWallet } from 'use-wallet'
 import useTokenBalance from 'hooks/base/useTokenBalance'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import React, { useMemo, useState } from 'react'
+import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
 import { Button } from '../../Button'
+import { SpinnerLoader } from '../../Loader'
 import WalletProviderModal from '../../WalletProviderModal'
 import AccountModal from './AccountModal'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
-import { SpinnerLoader } from '../../Loader'
-import useModal from 'hooks/base/useModal'
 
 interface AccountButtonProps {}
 
@@ -20,7 +19,7 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 	const [showWalletProviderModal, setShowWalletProviderModal] = useState(false)
 
 	const { transactions } = useTransactionProvider()
-	const { account } = useWallet()
+	const { account } = useWeb3React()
 	const wethBalance = useTokenBalance('ETH')
 
 	const pendingTxs = useMemo(

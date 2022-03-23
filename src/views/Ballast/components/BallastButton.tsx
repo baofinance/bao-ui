@@ -9,7 +9,7 @@ import useAllowancev2 from 'hooks/base/useAllowancev2'
 import useBao from 'hooks/base/useBao'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import React, { useMemo } from 'react'
-import { useWallet } from 'use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { decimate, exponentiate } from 'utils/numberFormat'
 
 const BallastButton: React.FC<BallastButtonProps> = ({
@@ -20,7 +20,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	reserves,
 }: BallastButtonProps) => {
 	const bao = useBao()
-	const { account } = useWallet()
+	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputAApproval = useAllowancev2(

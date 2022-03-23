@@ -29,4 +29,5 @@ export interface Farm {
 
 export interface FarmsContext {
   farms: Farm[]
+  unharvested: number
 }

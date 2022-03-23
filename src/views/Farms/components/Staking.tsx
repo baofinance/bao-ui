@@ -17,7 +17,7 @@ import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { getContract } from 'utils/erc20'
 import { getFullDisplayBalance } from 'utils/numberFormat'
 import {
@@ -36,16 +36,16 @@ interface FarmListItemProps {
 }
 
 export const Staking: React.FC<FarmListItemProps> = ({ farm, operation }) => {
-	const { account } = useWallet()
+	const { account } = useWeb3React()
 	const { pid } = farm
 	const bao = useBao()
-	const { ethereum } = useWallet()
+	const { library } = useWeb3React()
 
 	const lpTokenAddress = farm.lpTokenAddress
 
 	const lpContract = useMemo(() => {
-		return getContract(ethereum as provider, lpTokenAddress)
-	}, [ethereum, lpTokenAddress])
+		return getContract(library as provider, lpTokenAddress)
+	}, [library, lpTokenAddress])
 
 	const tokenBalance = useTokenBalance(lpContract.options.address)
 	const stakedBalance = useStakedBalance(pid)

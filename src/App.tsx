@@ -5,12 +5,12 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import fetcher from 'bao/lib/fetcher'
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
-import { UseWalletProvider } from 'use-wallet'
 import Market from 'views/Markets/Market'
 import MobileMenu from './components/MobileMenu'
 import TopBar from './components/TopBar'
@@ -86,14 +86,7 @@ const Providers: React.FC<ProvidersProps> = ({
 	return (
 		<ThemeProvider theme={theme(isDarkMode)}>
 			<GlobalStyle />
-			<UseWalletProvider
-				chainId={1}
-				connectors={{
-					walletconnect: {
-						rpcUrl: 'https://rpc.flashbots.net',
-					},
-				}}
-			>
+			<Web3ReactManager>
 				<BaoProvider>
 					<MarketsProvider>
 						<FarmsProvider>
@@ -110,7 +103,7 @@ const Providers: React.FC<ProvidersProps> = ({
 						</FarmsProvider>
 					</MarketsProvider>
 				</BaoProvider>
-			</UseWalletProvider>
+			</Web3ReactManager>
 		</ThemeProvider>
 	)
 }

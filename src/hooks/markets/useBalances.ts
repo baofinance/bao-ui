@@ -1,6 +1,6 @@
 import Config from 'bao/lib/config'
 import { useCallback, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import MultiCall from 'utils/multicall'
 import { decimate } from 'utils/numberFormat'
 import { provider } from 'web3-core'
@@ -17,7 +17,7 @@ export type Balance = {
 export const useAccountBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.underlyingAddresses[Config.networkId],
   )
@@ -80,7 +80,7 @@ export const useAccountBalances = (): Balance[] => {
 export const useSupplyBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.marketAddresses[Config.networkId],
   )
@@ -133,7 +133,7 @@ export const useSupplyBalances = (): Balance[] => {
 export const useBorrowBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.marketAddresses[Config.networkId],
   )
