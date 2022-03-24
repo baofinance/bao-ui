@@ -58,7 +58,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
-											{new BigNumber(getDisplayBalance(wethBalance)).toFixed(4)}
+											{getDisplayBalance(wethBalance.toFixed(4))}
 										</WalletBalanceValue>
 										<WalletBalanceTicker>ETH Balance</WalletBalanceTicker>
 									</WalletBalanceText>
@@ -75,7 +75,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
-											{new BigNumber(getDisplayBalance(baoBalance)).toFixed(4)}
+											{getDisplayBalance(baoBalance.toFixed(4))}
 										</WalletBalanceValue>
 										<WalletBalanceTicker>BAO Balance</WalletBalanceTicker>
 									</WalletBalanceText>
