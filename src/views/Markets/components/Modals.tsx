@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
-import { Modal, ModalProps } from 'react-bootstrap'
+import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import {
 	useAccountBalances,
 	useBorrowBalances,
@@ -29,6 +29,7 @@ import {
 } from './styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useMarketPrices } from 'hooks/markets/usePrices'
+import styled from 'styled-components'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -136,74 +137,83 @@ const MarketModal = ({
 	}, [onHide])
 
 	return (
-		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide}>
-				<FontAwesomeIcon icon="times" />
-			</CloseButton>
-			<Modal.Header>
-				<Modal.Title id="contained-modal-title-vcenter">
-					<HeaderWrapper>
-						<p>{operation}</p>
-						<img src={asset.icon} />
-						<p>{asset.underlyingSymbol}</p>
-					</HeaderWrapper>
-				</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<ModalStack>
-					<NavButtons
-						options={operations}
-						active={operation}
-						onClick={setOperation}
-					/>
-					<InputStack>
-						<LabelFlex>
-							<LabelStack>
-								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
-								<AssetLabel>
-									{`${max().toFixed(4)} ${asset.underlyingSymbol}`}
-								</AssetLabel>
-							</LabelStack>
-						</LabelFlex>
-
-						<BalanceInput
-							value={val}
-							onChange={handleChange}
-							onMaxClick={() =>
-								setVal(
-									(
-										Math.floor(max() * 10 ** asset.underlyingDecimals) /
-										10 ** asset.underlyingDecimals
-									).toString(),
-								)
-							}
-							label={
-								<AssetStack>
-									<IconFlex>
-										<img src={asset.icon} />
-									</IconFlex>
-								</AssetStack>
-							}
+		<>
+			<Modal show={show} onHide={hideModal} centered>
+				<CloseButton onClick={onHide}>
+					<FontAwesomeIcon icon="times" />
+				</CloseButton>
+				<Modal.Header>
+					<Modal.Title id="contained-modal-title-vcenter">
+						<HeaderWrapper>
+							<p>{operation}</p>
+							<img src={asset.icon} />
+						</HeaderWrapper>
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<ModalStack>
+						<NavButtons
+							options={operations}
+							active={operation}
+							onClick={setOperation}
 						/>
-					</InputStack>
-					<MarketStats operation={operation} asset={asset} amount={val} />
-				</ModalStack>
-			</Modal.Body>
-			<Modal.Footer>
-				<MarketButton
-					operation={operation}
-					asset={asset}
-					val={
-						val && !isNaN(val as any)
-							? exponentiate(val, asset.underlyingDecimals)
-							: new BigNumber(0)
-					}
-					isDisabled={
-						!val || !bao || isNaN(val as any) || parseFloat(val) > max()
-					}
-				/>
-			</Modal.Footer>
-		</Modal>
+						<BalanceWrapper>
+							<Col xs={4}>
+								<LabelStart></LabelStart>
+							</Col>
+							<Col xs={8}>
+								<LabelEnd>
+									<LabelStack>
+										<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
+										<AssetLabel>
+											{`${max().toFixed(4)} ${asset.underlyingSymbol}`}
+										</AssetLabel>
+									</LabelStack>
+								</LabelEnd>
+							</Col>
+						</BalanceWrapper>
+						<Row>
+							<Col xs={12}>
+								<BalanceInput
+									value={val}
+									onChange={handleChange}
+									onMaxClick={() =>
+										setVal(
+											(
+												Math.floor(max() * 10 ** asset.underlyingDecimals) /
+												10 ** asset.underlyingDecimals
+											).toString(),
+										)
+									}
+									label={
+										<AssetStack>
+											<IconFlex>
+												<img src={asset.icon} />
+											</IconFlex>
+										</AssetStack>
+									}
+								/>
+							</Col>
+						</Row>
+						<MarketStats operation={operation} asset={asset} amount={val} />
+					</ModalStack>
+				</Modal.Body>
+				<Modal.Footer>
+					<MarketButton
+						operation={operation}
+						asset={asset}
+						val={
+							val && !isNaN(val as any)
+								? exponentiate(val, asset.underlyingDecimals)
+								: new BigNumber(0)
+						}
+						isDisabled={
+							!val || !bao || isNaN(val as any) || parseFloat(val) > max()
+						}
+					/>
+				</Modal.Footer>
+			</Modal>
+		</>
 	)
 }
 
@@ -232,3 +242,51 @@ export const MarketBorrowModal = ({
 		onHide={onHide}
 	/>
 )
+
+export const LabelEnd = styled.div`
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	width: 100%;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		font-size: 0.75rem !important;
+	}
+`
+
+export const LabelStart = styled.div`
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	width: 100%;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		font-size: 0.75rem !important;
+	}
+`
+
+export const FeeLabel = styled.p`
+	color: ${(props) => props.theme.color.text[200]};
+	font-size: 0.875rem;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	margin-bottom: 0px;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		font-size: 0.75rem;
+	}
+`
+
+const BalanceWrapper = styled(Row)`
+	padding: 0.25rem;
+`
+
+export const QuestionIcon = styled(FontAwesomeIcon)`
+	color: ${(props) => props.theme.color.text[200]};
+
+	&:hover,
+	&:focus {
+		color: ${(props) => props.theme.color.text[100]};
+		animation: 200ms;
+		cursor: pointer;
+	}
+`

@@ -228,7 +228,9 @@ export const HeaderWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
-  font-size: ${(props) => props.theme.fontSize.large};
+  font-size: ${(props) => props.theme.fontSize.xl};
+  font-family: 'Rubik', sans-serif;
+  font-weight: ${(props) => props.theme.fontWeight.strong};
 
   img {
     vertical-align: middle;

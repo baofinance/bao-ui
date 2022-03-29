@@ -5,6 +5,7 @@ import baoIcon from 'assets/img/logo.svg'
 import Config from 'bao/lib/config'
 import { BigNumber } from 'bignumber.js'
 import { CloseButton } from 'components/Button/Button'
+import { SpinnerLoader } from 'components/Loader'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
@@ -13,11 +14,11 @@ import React, { useCallback } from 'react'
 import { Col, Modal, ModalProps } from 'react-bootstrap'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
-import { StatBlock } from 'views/Markets/components/Stats'
+import { MaxLabel } from 'views/Farms/components/Actions'
+import { StatWrapper } from 'views/Farms/components/Balances'
 import { HeaderWrapper } from 'views/Markets/components/styles'
 import { Button } from '../../Button'
 import Spacer from '../../Spacer'
-
 
 const AccountModal = ({ onHide, show }: ModalProps) => {
 	const { account, deactivate } = useWeb3React()
@@ -84,35 +85,68 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 						</WalletBalance>
 					</WalletBalancesInner>
 				</WalletBalances>
-				{Object.keys(transactions).length > 0 && (
-					<>
-						<p>
-							<span style={{ float: 'left' }}>Recent Transactions</span>
-							<small>
-								<a
-									href="#"
-									style={{ float: 'right' }}
-									onClick={() => {
-										localStorage.setItem('transactions', '{}')
-										window.location.reload()
-									}}
-								>
-									<FontAwesomeIcon icon="times" /> Clear
-								</a>
-							</small>
-						</p>
+				<>
+					<Spacer size="sm" />
+					<StatWrapper>
+						<span>
+							<span style={{ float: 'left', fontSize: '0.875rem' }}>
+								Recent Transactions
+							</span>
+							{Object.keys(transactions).length > 0 && (
+								<small>
+									<span>
+										<a
+											href="#"
+											style={{ float: 'right', verticalAlign: 'middle' }}
+											onClick={() => {
+												localStorage.setItem('transactions', '{}')
+												window.location.reload()
+											}}
+										>
+											<FontAwesomeIcon
+												icon="times"
+												style={{ verticalAlign: 'middle' }}
+											/>{' '}
+											Clear
+										</a>
+									</span>
+								</small>
+							)}
+						</span>
 						<Spacer size="sm" />
-						<StatBlock
-							label={null}
-							stats={_.reverse(Object.keys(transactions))
-								.slice(0, 5)
-								.map((txHash) => ({
-									label: transactions[txHash].description,
-									value: transactions[txHash].receipt ? 'Completed' : 'Pending',
-								}))}
-						/>
-					</>
-				)}
+						{Object.keys(transactions).length > 0 ? (
+							<>
+								{_.reverse(Object.keys(transactions))
+									.slice(0, 5)
+									.map((txHash) => (
+										<StatText>
+											<p>
+												{transactions[txHash].receipt ? (
+													<FontAwesomeIcon
+														icon="check"
+														style={{
+															color: 'green',
+														}}
+													/>
+												) : (
+													<SpinnerLoader />
+												)}
+											</p>
+											<p style={{ textAlign: 'end' }}>
+												{transactions[txHash].description}
+											</p>
+										</StatText>
+									))}
+							</>
+						) : (
+							<StatText>
+								<MaxLabel>
+									Your completed transactions will show here...
+								</MaxLabel>
+							</StatText>
+						)}
+					</StatWrapper>
+				</>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button
@@ -161,7 +195,6 @@ const WalletBalanceImage = styled.div`
 	background-color: ${(props) => props.theme.color.primary[200]};
 	border: ${(props) => props.theme.border.default};
 
-
 	img {
 		height: 34px;
 		text-align: center;
@@ -197,6 +230,36 @@ const WalletBalanceValue = styled.div`
 const WalletBalanceTicker = styled.div`
 	color: ${(props) => props.theme.color.text[200]};
 	font-size: 0.875rem;
+`
+
+const StatText = styled.div`
+	transition-property: all;
+	transition-duration: 200ms;
+	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	font-size: ${(props) => props.theme.fontSize.default};
+	padding-top: ${(props) => props.theme.spacing[1]}px;
+	padding-bottom: ${(props) => props.theme.spacing[1]}px;
+	padding-left: ${(props) => props.theme.spacing[2]}px;
+	padding-right: ${(props) => props.theme.spacing[2]}px;
+	border-radius: 8px;
+
+	p {
+		color: ${(props) => props.theme.color.text[100]};
+		font-size: ${(props) => props.theme.fontSize.default};
+		font-weight: ${(props) => props.theme.fontWeight.medium};
+		display: block;
+		margin-block-start: 1em;
+		margin-block-end: 1em;
+		margin: 0px;
+		margin-top: 0px;
+		margin-inline: 0.5rem 0px;
+		margin-bottom: 0px;
+	}
 `
 
 export default AccountModal

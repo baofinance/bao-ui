@@ -1,19 +1,13 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import {
-	NoEthereumProviderError,
-	UserRejectedRequestError as UserRejectedRequestErrorInjected
-} from '@web3-react/injected-connector'
-import {
-	coinbaseWallet,
-	injected, walletConnect
-} from 'bao/lib/connectors'
+import { useWeb3React } from '@web3-react/core'
+import Config from 'bao/lib/config'
+import { coinbaseWallet, injected, walletConnect } from 'bao/lib/connectors'
 import { useEagerConnect, useInactiveListener } from 'bao/lib/hooks'
 import { Button, CloseButton } from 'components/Button'
+import { WalletButton } from 'components/Button/Button'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import Web3 from 'web3'
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
@@ -21,21 +15,7 @@ const connectorsByName: { [name: string]: AbstractConnector } = {
 	WalletConnect: walletConnect,
 }
 
-function getErrorMessage(error: Error) {
-	if (error instanceof NoEthereumProviderError) {
-		return 'No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.'
-	} else if (error instanceof UnsupportedChainIdError) {
-		return "You're connected to an unsupported network."
-	} else if (error instanceof UserRejectedRequestErrorInjected) {
-		return 'Please authorize this website to access your Ethereum account.'
-	} else {
-		console.error(error)
-		return 'An unknown error occurred. Check the console for more details.'
-	}
-}
-
 const WalletProviderModal = ({ onHide, show }: ModalProps) => {
-	const context = useWeb3React<Web3>()
 	const {
 		connector,
 		library,
@@ -45,9 +25,14 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		deactivate,
 		active,
 		error,
-	} = context
+	} = useWeb3React()
 
-	// handle logic to recognize the connector currently being activated
+	useEffect(() => {
+		if (account && chainId === Config.networkId) {
+			onHide()
+		}
+	}, [account, onHide])
+
 	const [activatingConnector, setActivatingConnector] = useState<any>()
 	useEffect(() => {
 		if (activatingConnector && activatingConnector === connector) {
@@ -69,6 +54,25 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		onHide()
 	}, [onHide])
 
+	if (
+		window.ethereum &&
+		window.ethereum.chainId !== Config.defaultRpc.chainId
+	) {
+		try {
+			window.ethereum.request({
+				method: 'wallet_switchEthereumChain',
+				params: [{ chainId: Config.defaultRpc.chainId }],
+			})
+		} catch (error) {
+			if (error.code === 4902) {
+				window.ethereum.request({
+					method: 'wallet_addEthereumChain',
+					params: [Config.defaultRpc],
+				})
+			}
+		}
+	}
+
 	return (
 		<Modal show={show} onHide={hideModal} centered>
 			<CloseButton onClick={onHide} onHide={hideModal} />
@@ -84,7 +88,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 						!triedEager || !!activatingConnector || connected || !!error
 
 					return (
-						<Button
+						<WalletButton
 							disabled={disabled}
 							key={name}
 							onClick={() => {
@@ -111,7 +115,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 									{activating ? 'Connecting...' : `${name}`}
 								</Col>
 							</Row>
-						</Button>
+						</WalletButton>
 					)
 				})}
 			</Modal.Body>
@@ -122,23 +126,6 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		</Modal>
 	)
 }
-
-const StyledWalletsWrapper = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		height: 100vh;
-		overflow-y: scroll;
-	}
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
-		flex-direction: column;
-		flex-wrap: none;
-	}
-`
-
-const StyledWalletCard = styled.div`
-	flex-basis: calc(50% - ${(props) => props.theme.spacing[2]}px);
-`
 
 export const ConnectorIconContainer = styled.div`
 	height: 100%;

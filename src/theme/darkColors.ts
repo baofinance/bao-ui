@@ -59,8 +59,8 @@ export const accent = {
 }
 
 export const transparent = {
-  100: 'rgba(0, 0, 0, 0.1)', //dark
-  200: 'rgba(256, 256, 256, 0.1)', //light
+  100: 'rgba(256, 256, 256, 0.1)', //dark
+  200: 'rgba(0, 0, 0, 0.1)', //light
   300: 'rgba(256, 256, 256, 0.2)', //button shine
 }
 

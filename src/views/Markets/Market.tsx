@@ -4,6 +4,7 @@ import { ActiveSupportedMarket } from 'bao/lib/types'
 import { SubmitButton } from 'components/Button/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Page from 'components/Page'
+import Spacer from 'components/Spacer'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
 import { useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
@@ -230,6 +231,7 @@ const Market: React.FC = () => {
 							</Col>
 						</Row>
 					</>
+					<Spacer />
 					<ActionButton market={activeMarket} />
 				</Container>
 			</Page>

@@ -336,7 +336,6 @@ const StatWrapper = styled.div`
 	background: ${(props) => props.theme.color.primary[200]};
 	padding: 16px;
 	border-radius: 8px;
-	margin-bottom: 1rem;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		padding: 15px 30px;	
@@ -345,10 +344,11 @@ const StatWrapper = styled.div`
 
 const StatHeader = styled.div`
 	color: ${(props) => props.theme.color.text[100]};
-	font-size: ${(props) => props.theme.fontSize.sm};
+	font-size: ${(props) => props.theme.fontSize.default};
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	text-align: center;
 	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
 
 	p {
 		margin-top: 0.25rem;

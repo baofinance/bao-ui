@@ -35,10 +35,10 @@ export const BasketInput: React.FC<BasketInputProps> = ({
 
 const BasketInputWrapper = styled.div`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;
-	height: 72px;
+	height: 50px;
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
 `
 

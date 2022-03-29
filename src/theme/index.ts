@@ -47,10 +47,10 @@ const theme = (dark = false) => ({
       },
   border: dark
     ? {
-        default: '1px solid #4b484f',
+        default: '1px solid #78767b',
       }
     : {
-        default: '1px solid #ded4ce',
+        default: '1px solid #d6c9c2',
       },
   buttonGradient: {
     a: 'linear-gradient(225deg, #efeae7, #efeae7) padding-box, linear-gradient(135deg, #ce6509, #ff9440) border-box',
