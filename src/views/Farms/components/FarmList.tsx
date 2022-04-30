@@ -1,8 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
 import { getMasterChefContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { NavButtons } from 'components/Button'
 import { SpinnerLoader } from 'components/Loader'
+import { StyledLoadingWrapper } from 'components/Loader/Loader'
 import Spacer from 'components/Spacer'
 import { Farm } from 'contexts/Farms'
 import { PoolType } from 'contexts/Farms/types'
@@ -10,15 +11,12 @@ import useBao from 'hooks/base/useBao'
 import useAllFarmTVL from 'hooks/farms/useAllFarmTVL'
 import useFarms from 'hooks/farms/useFarms'
 import React, { useEffect, useState } from 'react'
-import { Accordion, Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Form, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
 import GraphUtil from 'utils/graph'
 import Multicall from 'utils/multicall'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { Harvest } from './Harvest'
-import { Staking } from './Staking'
-import { StyledLoadingWrapper } from './styles'
+import { FarmModal } from './Modals'
 
 export interface FarmWithStakedValue extends Farm {
 	apy: BigNumber
@@ -28,14 +26,23 @@ export interface FarmWithStakedValue extends Farm {
 export const FarmList: React.FC = () => {
 	const bao = useBao()
 	const [farms] = useFarms()
-	const farmsTVL = useAllFarmTVL(bao && bao.web3, bao && bao.multicall)
-	const { ethereum, account } = useWallet()
+	const farmsTVL = useAllFarmTVL(bao, bao && bao.multicall)
+	const { account } = useWeb3React()
 
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const [pools, setPools] = useState<any | undefined>({
 		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
 	})
+
+	const tempAddress = '0x0000000000000000000000000000000000000000'
+
+	const userAddress = account ? account : tempAddress
+
+	const BLOCKS_PER_YEAR = new BigNumber(2336000)
+
+	const [archived, showArchived] = useState(false)
+	const [staked, showStaked] = useState(false)
 
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async (wethPrice) => {
@@ -50,7 +57,7 @@ export const FarmList: React.FC = () => {
 			[PoolType.ACTIVE]: [],
 			[PoolType.ARCHIVED]: [],
 		}
-		if (!(ethereum && farmsTVL && bao)) return setPools(_pools)
+		if (!(farmsTVL && bao)) return setPools(_pools)
 
 		bao.multicall
 			.call(
@@ -71,7 +78,7 @@ export const FarmList: React.FC = () => {
 									return {
 										ref: (farms.length + i).toString(),
 										method: 'userInfo',
-										params: [farm.pid, account],
+										params: [farm.pid, userAddress],
 									}
 								}) as any,
 							),
@@ -116,24 +123,62 @@ export const FarmList: React.FC = () => {
 			})
 	}, [farmsTVL, bao])
 
-	const BLOCKS_PER_YEAR = new BigNumber(2336000)
-
 	return (
 		<>
 			<Spacer size="md" />
+			<Container style={{ textAlign: 'right', fontSize: '0.875rem' }}>
+				{/* <Form.Check
+					inline
+					type="switch"
+					id="show-archived"
+					label="Show Staked Only"
+					checked={staked}
+					onChange={(e) => showStaked(e.currentTarget.checked)}
+				/> */}
+				<Form.Check
+					inline
+					type="switch"
+					id="show-archived"
+					label="Show Archived Farms"
+					checked={archived}
+					onChange={(e) => showArchived(e.currentTarget.checked)}
+				/>
+			</Container>
 			<Row>
 				<Col>
-					<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
-					{pools[PoolType.ACTIVE] && pools[PoolType.ACTIVE].length ? (
-						pools[PoolType.ACTIVE].map((farm: any, i: number) => (
-							<React.Fragment key={i}>
-								<FarmListItem farm={farm} />
-							</React.Fragment>
-						))
+					{!account ? (
+						<FarmListHeader headers={['Pool', 'APR', 'TVL']} />
 					) : (
-						<StyledLoadingWrapper>
-							<SpinnerLoader block />
-						</StyledLoadingWrapper>
+						<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
+					)}
+					{!archived ? (
+						<>
+							{pools[PoolType.ACTIVE].length ? (
+								pools[PoolType.ACTIVE].map((farm: any, i: number) => (
+									<React.Fragment key={i}>
+										<FarmListItem farm={farm} />
+									</React.Fragment>
+								))
+							) : (
+								<StyledLoadingWrapper>
+									<SpinnerLoader block />
+								</StyledLoadingWrapper>
+							)}
+						</>
+					) : (
+						<>
+							{pools[PoolType.ARCHIVED].length ? (
+								pools[PoolType.ARCHIVED].map((farm: any, i: number) => (
+									<React.Fragment key={i}>
+										<FarmListItem farm={farm} />
+									</React.Fragment>
+								))
+							) : (
+								<StyledLoadingWrapper>
+									<SpinnerLoader block />
+								</StyledLoadingWrapper>
+							)}
+						</>
 					)}
 				</Col>
 			</Row>
@@ -153,7 +198,7 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({
 			<Row style={{ padding: '0.5rem 12px' }}>
 				{headers.map((header: string) => (
 					<FarmListHeaderCol style={{ paddingBottom: '0px' }} key={header}>
-						<b>{header}</b>
+						{header}
 					</FarmListHeaderCol>
 				))}
 			</Row>
@@ -168,13 +213,20 @@ interface FarmListItemProps {
 const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 	const operations = ['Stake', 'Unstake']
 	const [operation, setOperation] = useState(operations[0])
+	const { account } = useWeb3React()
+
+	const [showFarmModal, setShowFarmModal] = useState(false)
 
 	return (
-		<Accordion>
-			<StyledAccordionItem eventKey="0" style={{ padding: '12px' }}>
+		<>
+			<StyledAccordionItem
+				style={{ padding: '12px' }}
+				onClick={() => setShowFarmModal(true)}
+				disabled={!account}
+			>
 				<StyledAccordionHeader>
 					<Row lg={7} style={{ width: '100%' }}>
-						<Col>
+						<Col style={{ fontWeight: 700 }}>
 							<FarmIconContainer>
 								<FarmIcon src={farm.iconA} />
 								<FarmIcon src={farm.iconB} />
@@ -196,29 +248,17 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 								<SpinnerLoader />
 							)}
 						</Col>
-						<Col>{`$${getDisplayBalance(farm.stakedUSD, 0)}`}</Col>
+						{account && <Col>{`$${getDisplayBalance(farm.stakedUSD, 0)}`}</Col>}
 						<Col>{`$${getDisplayBalance(farm.tvl, 0)}`}</Col>
 					</Row>
 				</StyledAccordionHeader>
-				<StyledAccordionBody>
-					<Row style={{ marginBottom: '32px' }}>
-						<NavButtons
-							options={operations}
-							active={operation}
-							onClick={setOperation}
-						/>
-					</Row>
-					<Row>
-						<Col md={6}>
-							<Harvest pid={farm.pid} operation={operation} />
-						</Col>
-						<Col md={6}>
-							<Staking farm={farm} operation={operation} />
-						</Col>
-					</Row>
-				</StyledAccordionBody>
 			</StyledAccordionItem>
-		</Accordion>
+			<FarmModal
+				farm={farm}
+				show={showFarmModal}
+				onHide={() => setShowFarmModal(false)}
+			/>
+		</>
 	)
 }
 
@@ -226,17 +266,17 @@ export const FarmImage = styled.img`
 	height: 50px;
 	margin-right: ${(props) => props.theme.spacing[3]}px;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		height: 40px;
 		margin-right: ${(props) => props.theme.spacing[3]}px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
 		height: 35px;
 		margin-right: ${(props) => props.theme.spacing[3]}px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		height: 50px;
 		margin-right: ${(props) => props.theme.spacing[3]}px;
 	}
@@ -250,7 +290,7 @@ export const FarmIconContainer = styled.div`
 	vertical-align: middle;
 	color: ${(props) => props.theme.color.text[100]};
 
-	@media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `
@@ -267,16 +307,18 @@ export const FarmIcon = styled(FarmImage)`
 		margin-left: 0;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.fhd}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		height: 30px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
 		height: 25px;
 	}
 `
 
 const FarmListHeaderCol = styled(Col)`
+	font-family: 'Rubik', sans-serif;
+	font-weight: ${(props) => props.theme.fontWeight.strong};
 	text-align: right;
 
 	&:first-child {
@@ -284,34 +326,18 @@ const FarmListHeaderCol = styled(Col)`
 	}
 
 	&:last-child {
-		margin-right: 46px;
+		margin-right: 20px;
 	}
 `
 
-const StyledAccordionItem = styled(Accordion.Item)`
+const StyledAccordionItem = styled.button`
 	background-color: transparent;
 	border-color: transparent;
+	width: 100%;
 `
 
-const StyledAccordionBody = styled(Accordion.Body)`
-	background-color: ${(props) => props.theme.color.primary[100]};
-	border-bottom-left-radius: 8px;
-	border-bottom-right-radius: 8px;
-`
-
-const StyledAccordionHeader = styled(Accordion.Header)`
-	&:active {
-		border-radius: 8px 8px 0px 0px;
-	}
-
-	img {
-		height: 32px;
-		margin-right: 0.75rem;
-		vertical-align: middle;
-	}
-
-	> button {
-		background-color: ${(props) => props.theme.color.primary[100]};
+const StyledAccordionHeader = styled.div`
+		background: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
 		border: ${(props) => props.theme.border.default};
@@ -319,45 +345,12 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 
 		&:hover,
 		&:focus,
-		&:active,
-		&:not(.collapsed) {
-			background-color: ${(props) => props.theme.color.primary[200]};
+		&:active {
+			background: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
-			border: ${(props) => props.theme.border.default};
 			box-shadow: none;
-			border-radius: 8px 8px 0px 0px;
 		}
-
-		&:not(.collapsed) {
-			transition: none;
-
-			&:focus,
-			&:active {
-				border-color: ${(props) => props.theme.color.primary[300]};
-			}
-
-			::after {
-				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${(
-					props,
-				) =>
-					props.theme.color.text[100].replace(
-						'#',
-						'%23',
-					)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-			}
-		}
-
-		::after {
-			// don't turn arrow blue
-			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${(
-				props,
-			) =>
-				props.theme.color.text[100].replace(
-					'#',
-					'%23',
-				)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-		}
-
+		
 		.row > .col {
 			margin: auto 0;
 			text-align: right;
@@ -367,8 +360,17 @@ const StyledAccordionHeader = styled(Accordion.Header)`
 			}
 
 			&:last-child {
-				margin-right: 25px;
 			}
+		}
+		
+		&:active {
+			border-radius: 8px 8px 0px 0px;
+		}
+	
+		img {
+			height: 32px;
+			margin-right: 0.75rem;
+			vertical-align: middle;
 		}
 	}
 `

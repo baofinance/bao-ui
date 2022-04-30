@@ -27,17 +27,14 @@ const Nav: React.FC = () => {
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content="Snapshot" placement="top">
-				<StyledLink
-					target="_blank"
-					href="https://snapshot.page/#/baovotes.eth"
-				>
+				<StyledLink target="_blank" href="https://snapshot.page/#/baovotes.eth">
 					<FontAwesomeIcon icon="bolt" />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content="Documentation" placement="top">
 				<StyledLink
 					target="_blank"
-					href="https://docs.bao.finance"
+					href="https://docs.bao.finance/"
 				>
 					<FontAwesomeIcon icon="book" />
 				</StyledLink>
@@ -48,10 +45,7 @@ const Nav: React.FC = () => {
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content="Bug Bounty Program" placement="top">
-				<StyledLink
-					target="_blank"
-					href="https://www.immunefi.com/bounty/baofinance"
-				>
+				<StyledLink target="_blank" href="https://www.immunefi.com/bounty/baofinance">
 					<FontAwesomeIcon icon="bug" />
 				</StyledLink>
 			</Tooltipped>
@@ -66,10 +60,6 @@ const StyledNav = styled.nav`
 `
 
 const StyledLink = styled.a`
-	transition-property: background-color, border-color, color, fill, stroke,
-		opacity, box-shadow, transform;
-	transition-duration: 200ms;
-	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	color: ${(props) => props.theme.color.text[100]};
 	padding-left: ${(props) => props.theme.spacing[3]}px;
 	padding-right: ${(props) => props.theme.spacing[3]}px;

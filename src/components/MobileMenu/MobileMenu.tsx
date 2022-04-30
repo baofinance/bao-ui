@@ -1,9 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
-import ExternalLink from 'components/ExternalLink'
 import { CloseButtonLeft } from 'components/Button/Button'
-import { leftPad } from 'web3-utils'
 
 interface MobileMenuProps {
 	onDismiss: () => void
@@ -35,6 +33,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ onDismiss, visible }) => {
 						onClick={onDismiss}
 					>
 						Farms
+					</StyledLink>
+					<StyledLink
+						exact
+						activeClassName="active"
+						to="/NFT"
+						onClick={onDismiss}
+					>
+						NFT
 					</StyledLink>
 					<StyledAbsoluteLink
 						href="https://snapshot.page/#/baovotes.eth"
@@ -102,7 +108,7 @@ const StyledMobileMenu = styled.div`
 	padding-top: 100px;
 	padding-bottom: 100px;
 	overflow-y: scroll;
-	border: ${(props) => props.theme.border.default};
+	border: none;
 `
 
 const StyledLink = styled(NavLink)`

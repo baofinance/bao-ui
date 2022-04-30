@@ -1,15 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { SubmitButton } from 'components/Button/Button'
+import { ButtonStack, SubmitButton } from 'components/Button/Button'
+import { ExternalLink } from 'components/Link'
 import useBao from 'hooks/base/useBao'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useApprovals } from 'hooks/markets/useApprovals'
 import React from 'react'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
 import { decimate } from 'utils/numberFormat'
 import { MarketOperations } from './Modals'
 
@@ -18,6 +19,7 @@ type MarketButtonProps = {
 	asset: ActiveSupportedMarket
 	val: BigNumber
 	isDisabled: boolean
+	onHide: () => void
 }
 
 export const MarketButton = ({
@@ -25,10 +27,11 @@ export const MarketButton = ({
 	asset,
 	val,
 	isDisabled,
+	onHide,
 }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const bao = useBao()
-	const { account } = useWallet()
+	const { account } = useWeb3React()
 	const { approvals } = useApprovals(pendingTx)
 
 	const { marketContract } = asset
@@ -75,6 +78,7 @@ export const MarketButton = ({
 										`Supply ${decimate(val, asset.underlyingDecimals).toFixed(
 											4,
 										)} ${asset.underlyingSymbol}`,
+										() => onHide(),
 									)
 								}}
 							>
@@ -110,6 +114,7 @@ export const MarketButton = ({
 									`Withdraw ${decimate(val, asset.underlyingDecimals).toFixed(
 										4,
 									)} ${asset.underlyingSymbol}`,
+									() => onHide(),
 								)
 							}}
 						>
@@ -130,6 +135,7 @@ export const MarketButton = ({
 								`Mint ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${
 									asset.symbol
 								}`,
+								() => onHide(),
 							)
 						}}
 					>
@@ -160,6 +166,7 @@ export const MarketButton = ({
 										`Repay ${decimate(val, asset.underlyingDecimals).toFixed(
 											4,
 										)} ${asset.underlyingSymbol}`,
+										() => onHide(),
 									)
 								}}
 							>
@@ -184,13 +191,3 @@ export const MarketButton = ({
 		}
 	}
 }
-
-const ButtonStack = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-`
-
-const ExternalLink = styled.a`
-	color: ${(props) => props.theme.color.text[100]};
-`

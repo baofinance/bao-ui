@@ -1,5 +1,7 @@
-import * as LightColors from './lightColors'
 import * as DarkColors from './darkColors'
+import * as LightColors from './lightColors'
+import lightOverlay from 'assets/img/background_overlay_light.png'
+import darkOverlay from 'assets/img/background_overlay_dark.png'
 
 const theme = (dark = false) => ({
   borderRadius: 8,
@@ -38,16 +40,16 @@ const theme = (dark = false) => ({
   },
   boxShadow: dark
     ? {
-        default: '#625f65 1px 1px 0px inset',
-        invert: '#625f65 1px 1px 0px',
+        default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
+        invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
       }
     : {
-        default: '#f7f4f2 1px 1px 0px inset',
-        invert: '#f7f4f2 1px 1px 0px',
+        default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
+        invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
       },
   border: dark
     ? {
-        default: '1px solid #4b484f',
+        default: '1px solid #562424',
       }
     : {
         default: '1px solid #ded4ce',
@@ -60,6 +62,22 @@ const theme = (dark = false) => ({
   heroGradient:
     'linear-gradient(to left, #6b9aef 0%, #65c48c 33%, #1fa6e0 66%, #6b9aef 100%)',
   topBarSize: 72,
+  backgroundGradient: dark
+    ? {
+        default:
+          'radial-gradient(circle at center, #210e0e, #210e0e 50%) fixed',
+      }
+    : {
+        default:
+          'radial-gradient(circle at center, #fff8ee, #fff8ee 50%) fixed',
+      },
+  backgroundOverlay: dark
+    ? {
+        default: `url(${darkOverlay})`,
+      }
+    : {
+        default: `url(${lightOverlay})`,
+      },
 })
 
 export default theme

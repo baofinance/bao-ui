@@ -1,21 +1,19 @@
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
 import { getAllowance } from 'utils/erc20'
-import { provider } from 'web3-core'
 import useBao from './useBao'
+import useBlock from './useBlock'
+import useTransactionProvider from './useTransactionProvider'
 
-const useAllowancev2 = (
-  tokenAddress: string,
-  spenderAddress: string,
-  updateParams: any[] = [],
-) => {
-  const { account }: { account: string; ethereum: provider } = useWallet()
+const useAllowancev2 = (tokenAddress: string, spenderAddress: string) => {
+  const { account } = useWeb3React()
   const bao = useBao()
+  const { transactions } = useTransactionProvider()
+  const block = useBlock()
 
   const [allowance, setAllowance] = useState<BigNumber | undefined>()
 
-  updateParams.push(account, tokenAddress, spenderAddress)
   const _getAllowance: any = useCallback(async () => {
     try {
       const tokenContract = bao.getNewContract('erc20.json', tokenAddress)
@@ -28,11 +26,11 @@ const useAllowancev2 = (
     } catch (e) {
       setAllowance(new BigNumber(0))
     }
-  }, updateParams)
+  }, [bao, account, tokenAddress, spenderAddress, block, transactions])
 
   useEffect(() => {
     _getAllowance()
-  }, updateParams)
+  }, [bao, account, tokenAddress, spenderAddress, block, transactions])
 
   return allowance
 }

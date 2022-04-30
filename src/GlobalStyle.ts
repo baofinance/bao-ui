@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   body {
-    background: ${(props: any) => props.theme.color.background[100]};
+    background: ${(props: any) => props.theme.backgroundGradient.default};
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
@@ -57,23 +57,25 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .tooltip > .tooltip-inner {
-    background-color: #181524;
+    background-color: ${(props) => props.theme.color.primary[200]};
+    color: ${(props) => props.theme.color.text[100]};
+    font-weight: ${(props) => props.theme.fontWeight.medium};
   }
 
   .tooltip.bs-tooltip-left > .tooltip-arrow::before {
-    border-left-color: #181524;
+    border-left-color: ${(props) => props.theme.color.primary[300]};
   }
 
   .tooltip.bs-tooltip-right > .tooltip-arrow::before {
-    border-right-color: #181524;
+    border-right-color: ${(props) => props.theme.color.primary[300]};
   }
 
   .tooltip.bs-tooltip-top > .tooltip-arrow::before {
-    border-top-color: #181524;
+    border-top-color: ${(props) => props.theme.color.primary[300]};
   }
 
   .tooltip.bs-tooltip-bottom > .tooltip-arrow::before {
-    border-bottom-color: #181524;
+    border-bottom-color: ${(props) => props.theme.color.primary[300]};
   }
 
   ::selection {
@@ -84,7 +86,7 @@ const GlobalStyle = createGlobalStyle`
   .buttonActive {
     color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
-    border: none;
+    border: ${(props) => props.theme.border.default};
   }
 
   .buttonActive:hover {
@@ -95,22 +97,55 @@ const GlobalStyle = createGlobalStyle`
   .buttonInactive {
     color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[300]};
-    border: none;
+    border: ${(props) => props.theme.border.default};
   }
 
+  .modal {
+    backdrop-filter: blur(6px);
+  }
+  
   .modal-content {
     background-color: ${(props: any) =>
       props.theme.color.primary[100]} !important;
-    border: 1px solid ${(props: any) => props.theme.color.primary[100]};
     border-radius: 8px;
+    border: ${(props) => props.theme.border.default};
+    box-shadow: ${(props) => props.theme.boxShadow.default};
   }
 
   .modal-header {
-    border-bottom: 1px solid ${(props: any) => props.theme.color.primary[200]};
+    border-bottom: none;
   }
 
+  .modal-title {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    min-width: 6rem;
+    font-size: ${(props) => props.theme.fontSize.xl};
+    font-family: 'Rubik', sans-serif;
+    font-weight: ${(props) => props.theme.fontWeight.strong};
+  
+      img {
+        vertical-align: middle;
+        height: 30px;
+        width: 30px;
+      }
+  
+      p {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin: 0px;
+        margin-top: 0px;
+        margin-inline: 0.5rem 0.5rem;
+        margin-bottom: 0px;
+        color: ${(props) => props.theme.color.text[100]};
+        font-weight: ${(props) => props.theme.fontWeight.medium};
+      }
+    }
+  
   .modal-footer {
-    border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};
+    border-top: none;
   }
 
   .modal-open {
@@ -118,12 +153,12 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .btn {
-    border: none !important;
+    border: ${(props) => props.theme.border.default};
     outline: none !important;
   }
 
   .btn:active {
-    border: none !important;
+    border: ${(props) => props.theme.border.default};
     outline: none !important;
   }
 
@@ -168,10 +203,20 @@ const GlobalStyle = createGlobalStyle`
 .card {
   background-color: ${(props) => props.theme.color.primary[100]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	display: flex;
-	flex: 1;
-	flex-direction: column;
   border: ${(props) => props.theme.border.default};
+}
+
+.card-header {
+  background-color: ${(props) => props.theme.color.primary[100]};
+  text-align: center;
+  border: none;
+  padding-top: 1rem;
+  padding-bottom: 0;
+}
+
+.card-footer {
+  background-color: ${(props) => props.theme.color.primary[100]};
+  border: none;
 }
 
 .badge {

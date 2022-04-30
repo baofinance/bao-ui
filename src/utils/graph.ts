@@ -143,15 +143,15 @@ const getPrice = async (
   return data.tokens[0] && new BigNumber(data.tokens[0].dayData[0].priceUSD)
 }
 
-const getPollyBurned = async (): Promise<any> => {
-  const data: any = await _querySubgraph(_getPollyBurnQuery(), 'pollyBurn', 137)
+const getBaoBurned = async (): Promise<any> => {
+  const data: any = await _querySubgraph(_getBaoBurnQuery(), 'baoBurn', 137)
   return data.burn
 }
 
-const getPollySupply = async (): Promise<number> => {
+const getBaoSupply = async (): Promise<number> => {
   const data: any = await _querySubgraph(
-    _getPollySupplyQuery(),
-    'pollyBurn',
+    _getBaoSupplyQuery(),
+    'baoBurn',
     137,
   )
   return data.tokenStats.supply
@@ -248,7 +248,7 @@ const _getPriceFromPairMultiple = (tokenAddresses: string[]) => {
   `
 }
 
-const _getPollyBurnQuery = () =>
+const _getBaoBurnQuery = () =>
   `
   {
     burn(id:"0"){
@@ -258,7 +258,7 @@ const _getPollyBurnQuery = () =>
   }
   `
 
-const _getPollySupplyQuery = () =>
+const _getBaoSupplyQuery = () =>
   `
   {
     tokenStats(id:"0"){
@@ -323,8 +323,8 @@ export default {
   getPriceFromPair,
   getPriceFromPairMultiple,
   getPrice,
-  getPollyBurned,
-  getPollySupply,
+  getBaoBurned,
+  getBaoSupply,
   getMarketInfo,
   getMarketsInfo,
 }

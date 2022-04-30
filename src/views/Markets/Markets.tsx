@@ -1,21 +1,20 @@
-import { SpinnerLoader } from 'components/Loader'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import { useMarkets } from 'hooks/markets/useMarkets'
 import React from 'react'
 import { Alert, Container } from 'react-bootstrap'
 import { Route, useRouteMatch } from 'react-router-dom'
-import ConnectedCheck from 'components/ConnectedCheck'
+import styled from 'styled-components'
 import { MarketList } from './components/MarketList'
 import { Overview } from './components/Overview'
 import Market from './Market'
-import styled from 'styled-components'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Spacer from 'components/Spacer'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
 	const { path } = useRouteMatch()
+	const { account, library } = useWeb3React()
 
 	return (
 		<Page>
@@ -24,9 +23,9 @@ const Markets: React.FC = () => {
 				title="Markets"
 				subtitle="Mint synthethic assets with multiple types of collateral!"
 			/>
-			<ConnectedCheck>
-				<Route exact path={path}>
-					<Container>
+			<Route exact path={path}>
+				<Container>
+					{account && (
 						<StyledAlert variant="danger">
 							<img src="/siren.gif" style={{ width: '2rem' }} /> <br />
 							Bao Markets is currently in a soft launch. Collateral Factors for
@@ -53,18 +52,14 @@ const Markets: React.FC = () => {
 							</a>
 							.
 						</StyledAlert>
-						<Overview />
-						{markets ? (
-							<MarketList markets={markets} />
-						) : (
-							<SpinnerLoader block />
-						)}
-					</Container>
-				</Route>
-				<Route path={`${path}/:marketId`}>
-					<Market />
-				</Route>
-			</ConnectedCheck>
+					)}
+					{account && <Overview />}
+					<MarketList markets={markets} />
+				</Container>
+			</Route>
+			<Route path={`${path}/:marketId`}>
+				<Market />
+			</Route>
 		</Page>
 	)
 }

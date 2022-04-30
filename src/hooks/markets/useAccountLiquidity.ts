@@ -2,7 +2,6 @@ import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
 import { decimate } from 'utils/numberFormat'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
@@ -10,6 +9,7 @@ import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
+import { useWeb3React } from '@web3-react/core'
 
 export type AccountLiquidity = {
   netApy: number
@@ -25,7 +25,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
   const markets = useMarkets()
   const supplyBalances = useSupplyBalances()
   const borrowBalances = useBorrowBalances()
@@ -142,3 +142,4 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
   return accountLiquidity
 }
+

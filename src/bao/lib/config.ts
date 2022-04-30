@@ -63,6 +63,18 @@ export default {
         abi: 'stabilizer.json',
       },
     },
+    nft: {
+      1: {
+        address: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
+        abi: 'nft.json',
+      },
+    },
+    nft2: {
+      1: {
+        address: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
+        abi: 'nft.json',
+      },
+    },
   },
   subgraphs: {
     sushiExchange: {
@@ -144,7 +156,7 @@ export default {
       },
       tokenDecimals: 18,
       name: 'BAO-ETH UNIV2',
-      symbol: 'BAO-ETH UNIV2',
+      symbol: 'UNIV2',
       type: 'UNIV2',
       tokenSymbol: 'BAO',
       poolType: 'active',
@@ -164,7 +176,7 @@ export default {
       },
       tokenDecimals: 18,
       name: 'BAO-ETH SLP',
-      symbol: 'BAO-ETH SLP',
+      symbol: 'SLP',
       type: 'SLP',
       tokenSymbol: 'BAO',
       poolType: 'active',
@@ -184,7 +196,7 @@ export default {
       },
       tokenDecimals: 18,
       name: 'BAO-USDC SLP',
-      symbol: 'BAO-USDC SLP',
+      symbol: 'SLP',
       type: 'SLP',
       tokenSymbol: 'BAO',
       poolType: 'active',

@@ -3,17 +3,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 export interface InputProps {
+	endAdornment?: React.ReactNode
 	onChange: (e: React.FormEvent<HTMLInputElement>) => void
 	placeholder?: string
+	startAdornment?: React.ReactNode
 	value: string
 }
 
-export interface BasketInputProps extends InputProps {
-	endAdornment?: React.ReactNode
-	startAdornment?: React.ReactNode
-}
-
-export const BasketInput: React.FC<BasketInputProps> = ({
+const Input: React.FC<InputProps> = ({
 	endAdornment,
 	onChange,
 	placeholder,
@@ -21,7 +18,7 @@ export const BasketInput: React.FC<BasketInputProps> = ({
 	value,
 }) => {
 	return (
-		<BasketInputWrapper>
+		<StyledInputWrapper>
 			{!!startAdornment && startAdornment}
 			<StyledInput
 				placeholder={placeholder}
@@ -29,13 +26,13 @@ export const BasketInput: React.FC<BasketInputProps> = ({
 				onChange={onChange}
 			/>
 			{!!endAdornment && endAdornment}
-		</BasketInputWrapper>
+		</StyledInputWrapper>
 	)
 }
 
-const BasketInputWrapper = styled.div`
+const StyledInputWrapper = styled.div`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;
 	height: 72px;
@@ -76,7 +73,8 @@ const StyledInput = styled.input`
 	}
 `
 
-export default BasketInput
+
+export default Input
 
 export interface BalanceInputProps extends InputProps {
 	label?: React.ReactNode
@@ -112,7 +110,7 @@ const BalanceInputContainer = styled.div`
 	background-color: ${(props) => props.theme.color.primary[200]};
 	border-radius: 8px;
 	height: 50px;
-	border: ${(props) => props.theme.border.default};
+	border: none;
 `
 
 const BalanceInputWrapper = styled.div`
@@ -120,4 +118,14 @@ const BalanceInputWrapper = styled.div`
 	align-items: center;
 	width: 100%;
 	position: relative;
+`
+
+export const InputStack = styled.div`
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin-inline: 0px;
+  margin-bottom: 0px;
 `

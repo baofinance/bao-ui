@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import {
   getFarms,
   getMasterChefContract,
@@ -5,12 +6,12 @@ import {
   getWethContract,
 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
+import useBlock from 'hooks/base/useBlock'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
 import { getContract } from 'utils/erc20'
 import { provider } from 'web3-core'
 import useBao from '../base/useBao'
-import useBlock from '../base/useBlock'
 
 export interface StakedValue {
   tokenAmount: BigNumber
@@ -22,11 +23,12 @@ export interface StakedValue {
 
 const useAllStakedValue = (): StakedValue[] => {
   const [balances, setBalance] = useState([] as Array<StakedValue>)
-  const { account, ethereum } = useWallet<provider>()
+  const { account } = useWeb3React<provider>()
   const bao = useBao()
   const farms = getFarms(bao)
   const masterChefContract = getMasterChefContract(bao)
   const wethContract = getWethContract(bao)
+  const { transactions } = useTransactionProvider()
   const block = useBlock()
 
   const fetchAllStakedValue = useCallback(async () => {
@@ -36,7 +38,7 @@ const useAllStakedValue = (): StakedValue[] => {
           masterChefContract,
           wethContract,
           lpContract,
-          getContract(ethereum, tokenAddress),
+          getContract(bao, tokenAddress),
           tokenDecimals,
           pid,
         ),
@@ -50,7 +52,7 @@ const useAllStakedValue = (): StakedValue[] => {
     if (account && masterChefContract && bao) {
       fetchAllStakedValue()
     }
-  }, [account, block, masterChefContract, setBalance, bao])
+  }, [account, transactions, masterChefContract, setBalance, bao, block])
 
   return balances
 }

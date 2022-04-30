@@ -1,4 +1,3 @@
-import { lighten } from 'polished'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -29,10 +28,12 @@ interface StyledButtonProps {
 
 const StyledButton = styled.button<StyledButtonProps>`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${(props) => props.theme.color.primary[200]};
 	border: none;
+	border-bottom: 1px solid ${(props) => props.theme.color.primary[400]};
+	box-shadow: ${(props) => props.theme.boxShadow.default};
 	border-radius: 32px;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
 	cursor: pointer;
 	display: flex;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
@@ -47,7 +48,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 	width: 50px;
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: 200ms;
+	transition: .6s;
 	overflow: hidden;
 
 	&:focus {
@@ -56,16 +57,25 @@ const StyledButton = styled.button<StyledButtonProps>`
 
 	  &:hover{
 		background: ${(props) => props.theme.color.primary[100]};
-		color: ${(props) => props.theme.color.text[400]};
 		cursor: pointer;
+		&:before{
+		  transform: translateX(500px)  skewX(-15deg);  
+		  opacity: 0.6;
+		  transition: .7s;
+		}
+		&:after{
+		  transform: translateX(500px) skewX(-15deg);  
+		  opacity: 1;
+		  transition: .7s;
+		}
 	  }
 	}
 
 	&:hover,
 	&:focus,
 	&:active {
-		cursor: ${(props) =>
-			props.disabled ? 'not-allowed' : 'pointer'} !important;
+		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
+		cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')} !important;
 	}
 `
 

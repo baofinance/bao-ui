@@ -1,34 +1,35 @@
-import React, { useCallback, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ActiveSupportedMarket } from 'bao/lib/types'
+import BigNumber from 'bignumber.js'
+import { BalanceWrapper } from 'components/Balance'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
-import { Modal, ModalProps } from 'react-bootstrap'
+import { LabelEnd, LabelStart } from 'components/Label'
+import useBao from 'hooks/base/useBao'
+import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import {
 	useAccountBalances,
 	useBorrowBalances,
 	useSupplyBalances,
 } from 'hooks/markets/useBalances'
-import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import { useExchangeRates } from 'hooks/markets/useExchangeRates'
-import useBao from 'hooks/base/useBao'
-import BigNumber from 'bignumber.js'
+import { useMarketPrices } from 'hooks/markets/usePrices'
+import React, { useCallback, useState } from 'react'
+import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
+import styled from 'styled-components'
+import { decimate, exponentiate } from 'utils/numberFormat'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import { decimate, exponentiate } from 'utils/numberFormat'
 import {
-	HeaderWrapper,
-	ModalStack,
-	InputStack,
-	LabelFlex,
-	LabelStack,
-	MaxLabel,
 	AssetLabel,
 	AssetStack,
-	IconFlex,
 	CloseButton,
+	HeaderWrapper,
+	IconFlex,
+	LabelStack,
+	MaxLabel,
+	ModalStack,
 } from './styles'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useMarketPrices } from 'hooks/markets/usePrices'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -136,74 +137,84 @@ const MarketModal = ({
 	}, [onHide])
 
 	return (
-		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide}>
-				<FontAwesomeIcon icon="times" />
-			</CloseButton>
-			<Modal.Header>
-				<Modal.Title id="contained-modal-title-vcenter">
-					<HeaderWrapper>
-						<p>{operation}</p>
-						<img src={asset.icon} />
-						<p>{asset.underlyingSymbol}</p>
-					</HeaderWrapper>
-				</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<ModalStack>
-					<NavButtons
-						options={operations}
-						active={operation}
-						onClick={setOperation}
-					/>
-					<InputStack>
-						<LabelFlex>
-							<LabelStack>
-								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
-								<AssetLabel>
-									{`${max().toFixed(4)} ${asset.underlyingSymbol}`}
-								</AssetLabel>
-							</LabelStack>
-						</LabelFlex>
-
-						<BalanceInput
-							value={val}
-							onChange={handleChange}
-							onMaxClick={() =>
-								setVal(
-									(
-										Math.floor(max() * 10 ** asset.underlyingDecimals) /
-										10 ** asset.underlyingDecimals
-									).toString(),
-								)
-							}
-							label={
-								<AssetStack>
-									<IconFlex>
-										<img src={asset.icon} />
-									</IconFlex>
-								</AssetStack>
-							}
+		<>
+			<Modal show={show} onHide={hideModal} centered>
+				<CloseButton onClick={hideModal}>
+					<FontAwesomeIcon icon="times" />
+				</CloseButton>
+				<Modal.Header>
+					<Modal.Title id="contained-modal-title-vcenter">
+						<HeaderWrapper>
+							<p>{operation}</p>
+							<img src={asset.icon} />
+						</HeaderWrapper>
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+				<NavButtons
+							options={operations}
+							active={operation}
+							onClick={setOperation}
 						/>
-					</InputStack>
-					<MarketStats operation={operation} asset={asset} amount={val} />
-				</ModalStack>
-			</Modal.Body>
-			<Modal.Footer>
-				<MarketButton
-					operation={operation}
-					asset={asset}
-					val={
-						val && !isNaN(val as any)
-							? exponentiate(val, asset.underlyingDecimals)
-							: new BigNumber(0)
-					}
-					isDisabled={
-						!val || !bao || isNaN(val as any) || parseFloat(val) > max()
-					}
-				/>
-			</Modal.Footer>
-		</Modal>
+					<ModalStack>
+						<BalanceWrapper>
+							<Col xs={4}>
+								<LabelStart></LabelStart>
+							</Col>
+							<Col xs={8}>
+								<LabelEnd>
+									<LabelStack>
+										<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
+										<AssetLabel>
+											{`${max().toFixed(4)} ${asset.underlyingSymbol}`}
+										</AssetLabel>
+									</LabelStack>
+								</LabelEnd>
+							</Col>
+						</BalanceWrapper>
+						<Row>
+							<Col xs={12}>
+								<BalanceInput
+									value={val}
+									onChange={handleChange}
+									onMaxClick={() =>
+										setVal(
+											(
+												Math.floor(max() * 10 ** asset.underlyingDecimals) /
+												10 ** asset.underlyingDecimals
+											).toString(),
+										)
+									}
+									label={
+										<AssetStack>
+											<IconFlex>
+												<img src={asset.icon} />
+											</IconFlex>
+										</AssetStack>
+									}
+								/>
+							</Col>
+						</Row>
+						<MarketStats operation={operation} asset={asset} amount={val} />
+					</ModalStack>
+				</Modal.Body>
+				<Modal.Footer>
+					<MarketButton
+						operation={operation}
+						asset={asset}
+						val={
+							val && !isNaN(val as any)
+								? exponentiate(val, asset.underlyingDecimals)
+								: new BigNumber(0)
+						}
+						isDisabled={
+							!val || !bao || isNaN(val as any) || parseFloat(val) > max()
+						}
+						onHide={hideModal}
+					/>
+				</Modal.Footer>
+			</Modal>
+		</>
 	)
 }
 

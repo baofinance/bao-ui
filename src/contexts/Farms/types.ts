@@ -24,9 +24,9 @@ export interface Farm {
   pairUrl: string
   poolType?: PoolType
   tvl?: BigNumber
-  type: string
 }
 
 export interface FarmsContext {
   farms: Farm[]
+  unharvested: number
 }

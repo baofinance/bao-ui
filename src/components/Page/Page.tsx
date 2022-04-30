@@ -12,12 +12,13 @@ const Page: React.FC = ({ children }) => (
 )
 
 const StyledPageContainer = styled.div`
+	background-image: ${(props) => props.theme.backgroundOverlay.default};
 	display: table;
 	position: absolute;
 	top: ${(props) => props.theme.topBarSize}px;
 	left: 0;
 	height: calc(100vh - ${(props) => props.theme.topBarSize}px);
-	width: 100%;
+	width: 100%; ;
 `
 
 const StyledPageWrapper = styled.div`

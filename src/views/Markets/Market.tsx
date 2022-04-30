@@ -1,11 +1,9 @@
-import { parseAndCheckHttpResponse } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import { SubmitButton } from 'components/Button/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Page from 'components/Page'
-import PageHeader from 'components/PageHeader'
 import Spacer from 'components/Spacer'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
@@ -233,6 +231,7 @@ const Market: React.FC = () => {
 							</Col>
 						</Row>
 					</>
+					<Spacer />
 					<ActionButton market={activeMarket} />
 				</Container>
 			</Page>
@@ -303,7 +302,7 @@ const InfoContainer = styled.div`
 	border-radius: 8px;
 	font-size: ${(props) => props.theme.fontSize.sm};
 	color: ${(props) => props.theme.color.text[200]};
-	border: ${(props) => props.theme.border.default};
+	border: none;
 	padding: 25px 50px;
 	margin-bottom: 1rem;
 

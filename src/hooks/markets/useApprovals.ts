@@ -1,10 +1,10 @@
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
 import MultiCall from 'utils/multicall'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useMarkets } from './useMarkets'
+import { useWeb3React } from '@web3-react/core'
 
 type Approvals = {
   approvals: { [key: string]: BigNumber }
@@ -13,7 +13,7 @@ type Approvals = {
 export const useApprovals = (pendingTx: string | boolean): Approvals => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const markets = useMarkets()
   const [approvals, setApprovals] = useState<
     { [key: string]: BigNumber } | undefined
@@ -61,3 +61,4 @@ export const useApprovals = (pendingTx: string | boolean): Approvals => {
     approvals,
   }
 }
+

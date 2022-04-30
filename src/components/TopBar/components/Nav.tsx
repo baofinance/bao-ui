@@ -5,26 +5,17 @@ import styled from 'styled-components'
 const Nav: React.FC = () => {
 	return (
 		<StyledNav>
-			<StyledLink
-				exact
-				activeClassName="active"
-				to={{ pathname: '/' }}
-			>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
 				Markets
 			</StyledLink>
-			<StyledLink
-				exact
-				activeClassName="active"
-				to={{ pathname: '/ballast' }}
-			>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/ballast' }}>
 				Ballast
 			</StyledLink>
-			<StyledLink
-				exact
-				activeClassName="active"
-				to={{ pathname: '/farms' }}
-			>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/farms' }}>
 				Farms
+			</StyledLink>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/NFT' }}>
+				NFT
 			</StyledLink>
 			<StyledAbsoluteLink
 				href="https://snapshot.page/#/baovotes.eth"
@@ -35,10 +26,7 @@ const Nav: React.FC = () => {
 			<StyledAbsoluteLink href="https://gov.bao.finance" target="_blank">
 				Forum
 			</StyledAbsoluteLink>
-			<StyledAbsoluteLink
-				href="https://docs.bao.finance"
-				target="_blank"
-			>
+			<StyledAbsoluteLink href="https://docs.bao.finance" target="_blank">
 				Docs
 			</StyledAbsoluteLink>
 		</StyledNav>

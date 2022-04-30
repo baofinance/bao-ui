@@ -1,15 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
 import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import { SubmitButton } from 'components/Button/Button'
-import ExternalLink from 'components/ExternalLink'
 import { SpinnerLoader } from 'components/Loader'
 import useAllowancev2 from 'hooks/base/useAllowancev2'
 import useBao from 'hooks/base/useBao'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import React, { useMemo } from 'react'
-import { useWallet } from 'use-wallet'
 import { decimate, exponentiate } from 'utils/numberFormat'
 
 const BallastButton: React.FC<BallastButtonProps> = ({
@@ -20,18 +19,16 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	reserves,
 }: BallastButtonProps) => {
 	const bao = useBao()
-	const { account } = useWallet()
+	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputAApproval = useAllowancev2(
 		Config.addressMap.DAI,
 		Config.contracts.stabilizer[Config.networkId].address,
-		[pendingTx],
 	)
 	const inputBApproval = useAllowancev2(
 		Config.addressMap.baoUSD,
 		Config.contracts.stabilizer[Config.networkId].address,
-		[pendingTx],
 	)
 
 	const handleClick = async () => {
@@ -84,12 +81,12 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 		if (pendingTx) {
 			return typeof pendingTx === 'string' ? (
-				<ExternalLink
+				<a
 					href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 					target="_blank"
 				>
 					Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
-				</ExternalLink>
+				</a>
 			) : (
 				'Pending Transaction'
 			)

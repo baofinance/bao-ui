@@ -1,8 +1,8 @@
 import { Bao } from 'bao'
-import Config from 'bao/lib/config'
 import React, { createContext, useEffect, useState } from 'react'
-import { useWallet } from 'use-wallet'
-import Web3 from 'web3'
+import { useWeb3React } from '@web3-react/core'
+import { Web3Provider } from '@ethersproject/providers'
+import Config from 'bao/lib/config'
 
 export interface BaoContext {
 	bao?: typeof Bao
@@ -21,30 +21,30 @@ declare global {
 }
 
 const BaoProvider: React.FC = ({ children }) => {
-	const wallet = useWallet()
-	const { ethereum, connect }: any = wallet
+	const wallet = useWeb3React()
+	const { library, activate }: any = wallet
 	const [bao, setBao] = useState<any>()
 
-	if (ethereum) ethereum.on('chainChanged', () => window.location.reload())
+	// if (library) library.on('chainChanged', () => window.location.reload())
 
 	window.bao = bao
 
 	useEffect(() => {
-		const { ethereum: windowEth } = window
-		if (windowEth && !ethereum) {
-			// Check if user has connected to the webpage before
-			const mmWeb3 = new Web3(windowEth)
-			mmWeb3.eth.getAccounts().then((accounts: string[]) => {
-				if (accounts.length > 0) connect('injected')
-			})
-		}
+		// const { ethereum: windowEth } = window
+		// if (windowEth && !ethereum) {
+		// 	// Check if user has connected to the webpage before
+		// 	const mmWeb3 = new Web3Provider(windowEth)
+		// 	mmWeb3.eth.getAccounts().then((accounts: string[]) => {
+		// 		if (accounts.length > 0) activate('injected')
+		// 	})
+		// }
 
-		const baoLib = new Bao(ethereum, Config.networkId, {
+		const baoLib = new Bao(library, Config.networkId, {
 			ethereumNodeTimeout: 10000,
 		})
 		setBao(baoLib)
 		window.baosauce = baoLib
-	}, [ethereum])
+	}, [library])
 
 	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
 }

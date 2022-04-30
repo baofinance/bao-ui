@@ -1,3 +1,4 @@
+import { Bao } from 'bao'
 import erc20Abi from 'bao/lib/abi/erc20.json'
 import lpAbi from 'bao/lib/abi/uni_v2_lp.json'
 import Config from 'bao/lib/config'
@@ -7,10 +8,9 @@ import { useCallback, useEffect, useState } from 'react'
 import GraphUtil from 'utils/graph'
 import Multicall from 'utils/multicall'
 import { decimate } from 'utils/numberFormat'
-import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 
-export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
+export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
   const results = Multicall.parseCallResults(
     await multicall.call(
       Multicall.createCallContext(
@@ -18,7 +18,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
           farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
             ? ({
                 ref: farm.lpAddresses[Config.networkId],
-                contract: new web3.eth.Contract(
+                contract: new bao.web3.eth.Contract(
                   erc20Abi as AbiItem[],
                   farm.lpAddresses[Config.networkId],
                 ),
@@ -34,7 +34,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
               } as any)
             : ({
                 ref: farm.lpAddresses[Config.networkId],
-                contract: new web3.eth.Contract(
+                contract: new bao.web3.eth.Contract(
                   lpAbi as AbiItem[],
                   farm.lpAddresses[Config.networkId],
                 ),
@@ -89,11 +89,11 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, web3: Web3) => {
   })
 }
 
-const useAllFarmTVL = (web3: Web3, multicall: MC) => {
+const useAllFarmTVL = (bao: Bao, multicall: MC) => {
   const [tvl, setTvl] = useState<any | undefined>()
 
   const fetchAllFarmTVL = useCallback(async () => {
-    const lps: any = await fetchLPInfo(Config.farms, multicall, web3)
+    const lps: any = await fetchLPInfo(Config.farms, multicall, bao)
     const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
     const tokenPrices = await GraphUtil.getPriceFromPairMultiple(wethPrice, [
       Config.addressMap.USDC,
@@ -159,14 +159,14 @@ const useAllFarmTVL = (web3: Web3, multicall: MC) => {
       tvl: _tvl,
       tvls,
     })
-  }, [web3, multicall])
+  }, [bao, multicall])
 
   useEffect(() => {
     // Only fetch TVL once per page load
-    if (!(web3 && multicall) || tvl) return
+    if (!(bao && multicall) || tvl) return
 
     fetchAllFarmTVL()
-  }, [web3, multicall])
+  }, [bao, multicall])
 
   return tvl
 }

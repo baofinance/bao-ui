@@ -1,10 +1,23 @@
+import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Web3 from 'web3'
+import { provider } from 'web3-core'
 import App from './App'
+
+function getLibrary(provider: provider) {
+	return new Web3(provider)
+}
+
+const Web3ReactNetworkProvider = createWeb3ReactRoot('network')
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<Web3ReactNetworkProvider getLibrary={getLibrary}>
+				<App />
+			</Web3ReactNetworkProvider>
+		</Web3ReactProvider>
 	</React.StrictMode>,
 	document.getElementById('root'),
 )

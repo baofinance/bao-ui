@@ -1,33 +1,32 @@
-import React, { useCallback } from 'react'
-import { BigNumber } from 'bignumber.js'
-import Config from 'bao/lib/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import wethIcon from 'assets/img/assets/WETH.png'
 import baoIcon from 'assets/img/logo.svg'
+import Config from 'bao/lib/config'
+import { BigNumber } from 'bignumber.js'
+import { CloseButton } from 'components/Button/Button'
+import { MaxLabel } from 'components/Label'
+import { SpinnerLoader } from 'components/Loader'
+import { StatWrapper } from 'components/Stats'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
-import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
-import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
-import { getDisplayBalance } from 'utils/numberFormat'
-import { Button } from '../../Button'
-
-import Spacer from '../../Spacer'
-import Value from '../../Value'
-import { StatBlock } from 'views/Markets/components/Stats'
 import _ from 'lodash'
-import { AssetImage, AssetImageContainer } from 'views/Farms/components/styles'
+import React, { useCallback } from 'react'
+import { Col, Modal, ModalProps } from 'react-bootstrap'
+import styled from 'styled-components'
+import { getDisplayBalance } from 'utils/numberFormat'
 import { HeaderWrapper } from 'views/Markets/components/styles'
-import { CloseButton } from 'components/Button/Button'
+import { Button } from '../../Button'
+import Spacer from '../../Spacer'
 
 const AccountModal = ({ onHide, show }: ModalProps) => {
-	const { account, reset } = useWallet()
+	const { account, deactivate } = useWeb3React()
 
 	const handleSignOutClick = useCallback(() => {
 		onHide!()
-		reset()
-	}, [onHide, reset])
+		deactivate()
+	}, [onHide, deactivate])
 
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
@@ -40,12 +39,10 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide} onHide={hideModal} />
+			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					<HeaderWrapper>
-						<p>My Account</p>
-					</HeaderWrapper>
+					<p>My Account</p>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -55,14 +52,14 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={wethIcon} />
+										<img src={wethIcon} alt="wETH" />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
 											{new BigNumber(getDisplayBalance(wethBalance)).toFixed(4)}
 										</WalletBalanceValue>
-										<WalletBalanceTicker>ETH Balance</WalletBalanceTicker>
+										<WalletBalanceTicker>wETH Balance</WalletBalanceTicker>
 									</WalletBalanceText>
 								</InnerInnerWalletBalance>
 							</InnerWalletBalance>
@@ -72,12 +69,12 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={baoIcon} />
+										<img src={baoIcon} alt="BAO" />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
-											{new BigNumber(getDisplayBalance(baoBalance)).toFixed(4)}
+											{getDisplayBalance(baoBalance)}
 										</WalletBalanceValue>
 										<WalletBalanceTicker>BAO Balance</WalletBalanceTicker>
 									</WalletBalanceText>
@@ -86,35 +83,66 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 						</WalletBalance>
 					</WalletBalancesInner>
 				</WalletBalances>
-				{Object.keys(transactions).length > 0 && (
-					<>
-						<p>
-							<span style={{ float: 'left' }}>Recent Transactions</span>
-							<small>
-								<a
-									href="#"
-									style={{ float: 'right' }}
-									onClick={() => {
-										localStorage.setItem('transactions', '{}')
-										window.location.reload()
-									}}
-								>
-									<FontAwesomeIcon icon="times" /> Clear
-								</a>
-							</small>
-						</p>
-						<Spacer size="sm" />
-						<StatBlock
-							label={null}
-							stats={_.reverse(Object.keys(transactions))
-								.slice(0, 5)
-								.map((txHash) => ({
-									label: transactions[txHash].description,
-									value: transactions[txHash].receipt ? 'Completed' : 'Pending',
-								}))}
-						/>
-					</>
-				)}
+				<>
+					<Spacer size="sm" />
+					<TransactionWrapper>
+						<span>
+							<span style={{ float: 'left', fontSize: '0.875rem' }}>
+								Recent Transactions
+							</span>
+							{Object.keys(transactions).length > 0 && (
+								<small>
+									<span>
+										<ClearButton
+											onClick={() => {
+												localStorage.setItem('transactions', '{}')
+												window.location.reload()
+											}}
+										>
+											<FontAwesomeIcon
+												icon="times"
+												style={{ verticalAlign: 'middle' }}
+											/>{' '}
+											Clear
+										</ClearButton>
+									</span>
+								</small>
+							)}
+						</span>
+						<Spacer size="md" />
+						{Object.keys(transactions).length > 0 ? (
+							<>
+								{_.reverse(Object.keys(transactions))
+									.slice(0, 5)
+									.map((txHash) => (
+										<StatText key={txHash}>
+											<MaxLabel>
+												{transactions[txHash].receipt ? (
+													<FontAwesomeIcon
+														icon="check"
+														style={{
+															color: 'green',
+														}}
+													/>
+												) : (
+													<SpinnerLoader />
+												)}
+											</MaxLabel>
+											<MaxLabel style={{ textAlign: 'end' }}>
+												{transactions[txHash].description}
+											</MaxLabel>
+										</StatText>
+									))}
+							</>
+						) : (
+							<StatText>
+								<MaxLabel>
+									Your completed transactions will show here...
+								</MaxLabel>
+							</StatText>
+						)}
+					</TransactionWrapper>
+				</>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button
@@ -161,8 +189,7 @@ const WalletBalanceImage = styled.div`
 	min-height: 48px;
 	border-radius: 40px;
 	background-color: ${(props) => props.theme.color.primary[200]};
-	border: ${(props) => props.theme.border.default};
-
+	border: none;
 
 	img {
 		height: 34px;
@@ -199,6 +226,71 @@ const WalletBalanceValue = styled.div`
 const WalletBalanceTicker = styled.div`
 	color: ${(props) => props.theme.color.text[200]};
 	font-size: 0.875rem;
+`
+
+const StatText = styled.div`
+	transition-property: all;
+	transition-duration: 200ms;
+	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	font-size: ${(props) => props.theme.fontSize.default};
+	padding-top: ${(props) => props.theme.spacing[1]}px;
+	padding-bottom: ${(props) => props.theme.spacing[1]}px;
+	padding-left: ${(props) => props.theme.spacing[2]}px;
+	padding-right: ${(props) => props.theme.spacing[2]}px;
+	border-radius: 8px;
+
+	p {
+		color: ${(props) => props.theme.color.text[100]};
+		font-size: ${(props) => props.theme.fontSize.default};
+		font-weight: ${(props) => props.theme.fontWeight.medium};
+		display: block;
+		margin-block-start: 1em;
+		margin-block-end: 1em;
+		margin: 0px;
+		margin-top: 0px;
+		margin-inline: 0.5rem 0px;
+		margin-bottom: 0px;
+	}
+`
+
+const ClearButton = styled.button`
+	float: right;
+	vertical-align: middle;
+	background-color: ${(props) => props.theme.color.primary[400]} !important;
+	border-radius: 8px;
+	border: none;
+	color: ${(props) => props.theme.color.text[100]};
+
+	&:hover {
+		background-color: ${(props) => props.theme.color.primary[500]} !important;
+	}
+`
+
+export const TransactionWrapper = styled(Col)`
+	background-color: ${(props) => props.theme.color.primary[200]};
+	margin: 0.5rem 0.5rem;
+	border-radius: 8px;
+	position: relative;
+	flex: 1 1 0%;
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	padding: 1.25rem 16px;
+	border: none;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		padding: 1rem 12px;
+		padding-inline-start: 0.75rem;
+		padding-inline-end: 0.75rem;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		min-width: 120px;
+	}
 `
 
 export default AccountModal
