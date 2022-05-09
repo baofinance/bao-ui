@@ -189,7 +189,7 @@ const Market: React.FC = () => {
 							<Col sm={12}>
 								<MarketDetails asset={activeMarket} />
 							</Col>
-							<Col sm={12}>
+							<Col sm={12} style={{ paddingTop: '16px' }}>
 								<StatBlock
 									label={null}
 									stats={[
