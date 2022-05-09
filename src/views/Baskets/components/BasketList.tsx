@@ -8,6 +8,7 @@ import { SpinnerLoader } from '../../../components/Loader'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import Tooltipped from '../../../components/Tooltipped'
 import { getDisplayBalance } from '../../../utils/numberFormat'
+import { useHistory } from 'react-router-dom'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -24,8 +25,11 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 
+	const history = useHistory()
+	const handleClick = () => history.push(`/baskets/${basket.nid}`)
+
 	return (
-		<ListItem>
+		<ListItem onClick={handleClick}>
 			<ListItemHeader>
 				<Row lg={3} style={{ width: '100%' }}>
 					<Col>
@@ -47,7 +51,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<SpinnerLoader />
 						)}
 					</Col>
-					<Col>${rates && getDisplayBalance(rates.usd)}</Col>
+					<Col>${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}</Col>
 				</Row>
 			</ListItemHeader>
 		</ListItem>

@@ -5,14 +5,19 @@ import useGeckoPrices from './useGeckoPrices'
 import MultiCall from 'utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
+import useBasketInfo from './useBasketInfo'
+import useBasketRates from './useNestRate'
 
-type BasketComponent = {
+export type BasketComponent = {
   address: string
   symbol: string
   name: string
   decimals: number
   price: BigNumber
   image: any
+  balance: BigNumber
+  percentage: number
+  color: string
   underlying?: string
   underlyingPrice?: BigNumber
   strategy?: string
@@ -25,6 +30,8 @@ const useComposition = (
     Array<BasketComponent> | undefined
   >()
   const prices = useGeckoPrices()
+  const info = useBasketInfo(basket)
+  const rates = useBasketRates(basket)
   const bao = useBao()
 
   const fetchComposition = useCallback(async () => {
@@ -32,6 +39,8 @@ const useComposition = (
       .getTokens()
       .call()
     const lendingRegistry = bao.getContract('lendingRegistry')
+
+    const marketCap = decimate(info.totalSupply.times(rates.usd), 36)
 
     const tokensQuery = MultiCall.createCallContext(
       tokenComposition
@@ -47,6 +56,7 @@ const useComposition = (
             { method: 'decimals' },
             { method: 'symbol' },
             { method: 'name' },
+            { method: 'balanceOf', params: [basket.address] },
           ],
         })),
     )
@@ -56,17 +66,27 @@ const useComposition = (
 
     const _comp: BasketComponent[] = []
     for (let i = 0; i < tokenComposition.length; i++) {
-      // I don't like this, but MKR doesn't fit the mold.
       const _c: any = tokenInfo[tokenComposition[i]]
         ? {
             decimals: tokenInfo[tokenComposition[i]][0].values[0],
             symbol: tokenInfo[tokenComposition[i]][1].values[0],
             name: tokenInfo[tokenComposition[i]][2].values[0],
+            balance: new BigNumber(
+              tokenInfo[tokenComposition[i]][3].values[0].hex,
+            ),
           }
         : {
+            // I don't like this, but MKR doesn't fit the mold.
             decimals: 18,
             symbol: 'MKR',
             name: 'Maker DAO',
+            balance: await bao
+              .getNewContract(
+                'erc20.json',
+                '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
+              )
+              .methods.balanceOf(basket.address)
+              .call(),
           }
       _c.address = tokenComposition[i]
       _c.price = prices[tokenComposition[i].toLowerCase()]
@@ -95,33 +115,59 @@ const useComposition = (
           .call()
         const exchangeRate = await bao
           .getNewContract('lendingLogicKashi.json', logicAddress)
-          .methods.exchangeRateView(_c.address)
+          .methods.exchangeRate(_c.address)
+          .call()
+        const underlyingDecimals = await bao
+          .getNewContract('erc20.json', lendingRes[0].values[0])
+          .methods.decimals()
           .call()
 
         // Set extra values for lent tokens
         _c.underlying = lendingRes[0].values[0]
         _c.underlyingPrice = prices[_c.underlying.toLowerCase()]
+        _c.strategy = _getStrategy(lendingRes[1].values[0])
         _c.price = decimate(
           prices[_c.underlying.toLowerCase()].times(exchangeRate),
         )
-        _c.strategy = _getStrategy(lendingRes[1].values[0])
+
+        // Adjust price for compound's exchange rate.
+        // wrapped balance * exchange rate / 10 ** (18 - 8 + underlyingDecimals)
+        // Here, the price is already decimated by 1e18, so we can subtract 8
+        // from the underlying token's decimals.
+        if (_c.strategy === 'Compound')
+          _c.price /= 10 ** (underlyingDecimals - 8)
       }
 
       _comp.push({
         ..._c,
         image: require(`assets/img/assets/${_getImageURL(_c.symbol)}.png`),
+        color: basket.pieColors[_c.symbol],
       })
     }
 
+    for (let i = 0; i < _comp.length; i++) {
+      const comp = _comp[i]
+
+      _comp[i].percentage = new BigNumber(comp.balance)
+        .div(10 ** comp.decimals)
+        .times(comp.price)
+        .div(marketCap)
+        .times(100)
+        .toNumber()
+    }
+
     setComposition(_comp)
-  }, [bao, basket, prices])
+  }, [bao, basket, info, rates, prices])
 
   useEffect(() => {
     if (
       !(
+        bao &&
         basket &&
         basket.basketContract &&
         basket.pieColors &&
+        info &&
+        rates &&
         prices &&
         Object.keys(prices).length > 0
       )
@@ -129,7 +175,7 @@ const useComposition = (
       return
 
     fetchComposition()
-  }, [bao, basket, prices])
+  }, [bao, basket, info, rates, prices])
 
   return composition
 }

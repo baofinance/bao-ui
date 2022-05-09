@@ -2,35 +2,45 @@ import { Table } from "react-bootstrap";
 import styled from "styled-components";
 
 export const StyledTable = styled(Table)`
-  width: 100%;
-  margin: 0 auto;
-  background: ${(props) => props.theme.color.transparent[100]};
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  color: ${(props) => props.theme.color.text[100]};
-  border-color: transparent;
+	width: 100%;
+	background: ${(props) => props.theme.color.transparent[100]};
+	border-radius: ${(props) => props.theme.borderRadius}px;
+	color: ${(props) => props.theme.color.text[100]};
+	border-color: transparent;
 
-  th {
-    padding-top: ${(props) => props.theme.spacing[4]};
-    padding-bottom: ${(props) => props.theme.spacing[4]};
-  }
+	th {
+		padding-top: ${(props) => props.theme.spacing[4]};
+		padding-bottom: ${(props) => props.theme.spacing[4]};
+		padding: ${(props) => props.theme.spacing[4]};
+	}
 
-  tbody > tr {
-    vertical-align: middle;
+	> thead > tr > th, > tbody > tr > td {
+		&:first-child {
+			padding-left: 20px;
+		}
+	}
 
-    &:hover {
-      color: ${(props) => props.theme.color.text[100]} !important;
-    }
-  }
+	tbody {
+		border-top-color: ${(props) => props.theme.color.transparent[200]} !important;
 
-  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-    width: 100%;
+		> tr {
+			vertical-align: middle;
 
-    th.strategy {
-      display: none;
-    }
+			> td {
+				color: ${(props) => props.theme.color.text[100]} !important;
+			}
+		}
+	}
 
-    td.strategy {
-      display: none;
-    }
-  }
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		width: 100%;
+
+		th.strategy {
+			display: none;
+		}
+
+		td.strategy {
+			display: none;
+		}
+	}
 `

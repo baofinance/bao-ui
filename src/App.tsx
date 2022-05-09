@@ -1,10 +1,4 @@
-// FontAwesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 import fetcher from 'bao/lib/fetcher'
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -25,6 +19,14 @@ import Farms from './views/Farms'
 import Markets from './views/Markets'
 import NFT from './views/NFT'
 import Baskets from 'views/Baskets'
+import Basket from 'views/Baskets/Basket'
+
+// Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
 library.add(fas, fab)
 
@@ -78,8 +80,11 @@ const App: React.FC = () => {
 					<Route path="/NFT">
 						<NFT />
 					</Route>
-					<Route path="/baskets">
+					<Route path="/baskets" exact>
 						<Baskets />
+					</Route>
+					<Route path="/baskets/:id">
+						<Basket />
 					</Route>
 				</Switch>
 			</Router>

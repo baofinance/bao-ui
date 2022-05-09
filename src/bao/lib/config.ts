@@ -188,7 +188,20 @@ export default {
         '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': 'uniswap',
         '0xba100000625a3754423978a60c9317c58a424e3D': 'balancer',
       },
-      pieColors: {},
+      pieColors: {
+        'aYFI': '#006AE3',
+        'MKR': '#63C3B2',
+        'CVX': '#3A3A3A',
+        'AAVE': '#926BA8',
+        'LDO': '#00A3FF',
+        'LQTY': '#1442CC',
+        'UNI': '#FF047CFF',
+        'FXS': '#393835',
+        'cCOMP': '#00D395',
+        'xSUSHI': '#ea3fb4',
+        'BAL': '#1E1E1E',
+        'aCRV': '#F7E103'
+      },
     },
     {
       nid: 2,
@@ -205,7 +218,12 @@ export default {
         '0x956f47f50a910163d8bf957cf5846d573e7f87ca': 'fei-usd',
         '0x853d955acef822db058eb8505911ed77f175b99e': 'frax',
       },
-      pieColors: {},
+      pieColors: {
+        'aRAI': '#1FC9A8',
+        'cDAI': '#F5AC37',
+        'aFRAX': '#000',
+        'aFEI': '#22996E',
+      },
     },
   ],
   farms: [

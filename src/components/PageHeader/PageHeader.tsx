@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 interface PageHeaderProps {
 	icon: any
-	subtitle?: string
+	subtitle?: any
 	title?: string
 }
 
@@ -13,6 +13,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
 		<Container>
 			<StyledPageHeader>
 				<StyledTitle>{title}</StyledTitle>
+				{subtitle}
 			</StyledPageHeader>
 		</Container>
 	)

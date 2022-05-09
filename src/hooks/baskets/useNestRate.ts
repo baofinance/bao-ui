@@ -7,6 +7,7 @@ import { getWethPriceLink } from '../../bao/utils'
 type BasketRates = {
   eth: BigNumber
   usd: BigNumber
+  dexIndexes: number[]
 }
 
 const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
@@ -24,6 +25,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
     setRates({
       eth: new BigNumber(basketPrice[0]),
       usd: wethPrice.times(basketPrice[0]),
+      dexIndexes: basketPrice[1]
     })
   }, [bao, basket])
 

@@ -325,6 +325,7 @@ export const AssetStack = styled.div`
 export const IconFlex = styled.div`
   display: flex;
   width: 1.5rem;
+  justify-content: center;
 
   img {
     display: block;
@@ -351,6 +352,7 @@ export const CloseButton = styled.a`
   font-size: 1.5rem;
   position: absolute;
   color: ${(props) => props.theme.color.background[200]};
+
   &:hover {
     cursor: pointer;
   }
