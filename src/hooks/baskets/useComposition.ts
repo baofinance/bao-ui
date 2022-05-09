@@ -30,7 +30,6 @@ const useComposition = (
     Array<BasketComponent> | undefined
   >()
   const prices = useGeckoPrices()
-  const info = useBasketInfo(basket)
   const rates = useBasketRates(basket)
   const bao = useBao()
 
@@ -39,8 +38,6 @@ const useComposition = (
       .getTokens()
       .call()
     const lendingRegistry = bao.getContract('lendingRegistry')
-
-    const marketCap = decimate(info.totalSupply.times(rates.usd), 36)
 
     const tokensQuery = MultiCall.createCallContext(
       tokenComposition
@@ -147,6 +144,12 @@ const useComposition = (
       })
     }
 
+    let marketCap = _comp.reduce(
+      (prev, comp) =>
+        prev.plus(decimate(comp.balance, comp.decimals).times(comp.price)),
+      new BigNumber(0),
+    )
+
     // Assign allocation percentages
     for (let i = 0; i < _comp.length; i++) {
       const comp = _comp[i]
@@ -159,7 +162,7 @@ const useComposition = (
     }
 
     setComposition(_comp)
-  }, [bao, basket, info, rates, prices])
+  }, [bao, basket, rates, prices])
 
   useEffect(() => {
     if (
@@ -168,7 +171,6 @@ const useComposition = (
         basket &&
         basket.basketContract &&
         basket.pieColors &&
-        info &&
         rates &&
         prices &&
         Object.keys(prices).length > 0
@@ -177,7 +179,7 @@ const useComposition = (
       return
 
     fetchComposition()
-  }, [bao, basket, info, rates, prices])
+  }, [bao, basket, rates, prices])
 
   return composition
 }

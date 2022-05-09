@@ -4,17 +4,30 @@ import { Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Spacer from '../../../components/Spacer'
 import { StyledBadge } from '../../../components/Badge'
-import { getDisplayBalance } from '../../../utils/numberFormat'
+import { decimate, getDisplayBalance } from '../../../utils/numberFormat'
 import { SpinnerLoader } from '../../../components/Loader'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
+import { BigNumber } from 'bignumber.js'
+import Tooltipped from '../../../components/Tooltipped'
+import useNav from '../../../hooks/baskets/useNav'
 
 type BasketStatsProps = {
 	basket: ActiveSupportedBasket
+	composition: any
 	rates: any
 	info: any
+	pairPrice: BigNumber | undefined
 }
 
-const BasketStats: React.FC<BasketStatsProps> = ({ basket, rates, info }) => {
+const BasketStats: React.FC<BasketStatsProps> = ({
+	basket,
+	composition,
+	rates,
+	info,
+	pairPrice,
+}) => {
+	const nav = useNav(composition, info && info.totalSupply)
+
 	return (
 		<StatsRow lg={4} sm={2}>
 			<Col>
@@ -55,10 +68,15 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, rates, info }) => {
 					<span>
 						<FontAwesomeIcon icon="money-bill-wave" />
 						<br />
-						NAV
+						NAV{' '}
+						<Tooltipped
+							content={`The Net Asset Value is the value of one ${basket && basket.symbol} token if you were to own each underlying asset with identical weighting to the basket.`}
+						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StyledBadge bg="secondary">~</StyledBadge>
+					<StyledBadge bg="secondary">
+						{nav ? `$${getDisplayBalance(nav, 0)}` : <SpinnerLoader />}
+					</StyledBadge>
 				</StatCard>
 			</Col>
 			<Col>
@@ -67,10 +85,30 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, rates, info }) => {
 						<FontAwesomeIcon icon="angle-double-up" />
 						<FontAwesomeIcon icon="angle-double-down" />
 						<br />
-						Premium
+						Premium{' '}
+						<Tooltipped
+							content={`Percent difference between the price on SushiSwap ($${
+								pairPrice && pairPrice.toFixed(2)
+							}) and the price to mint ($${
+								rates && getDisplayBalance(rates.usd)
+							})`}
+						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StyledBadge bg="secondary">~</StyledBadge>
+					<StyledBadge bg="secondary">
+						{pairPrice && rates ? (
+							`${getDisplayBalance(
+								pairPrice
+									.minus(decimate(rates.usd))
+									.abs()
+									.div(decimate(rates.usd))
+									.times(100),
+								0,
+							)}%`
+						) : (
+							<SpinnerLoader />
+						)}
+					</StyledBadge>
 				</StatCard>
 			</Col>
 		</StatsRow>

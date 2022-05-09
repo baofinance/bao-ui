@@ -59,33 +59,7 @@ export const getRecipeContract = (bao: Bao) => {
 }
 
 export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
-  return bao
-    ? bao.contracts.baskets.map(
-        ({
-          nid,
-          name,
-          symbol,
-          icon,
-          address,
-          pieColors,
-          cgIds,
-          basketContract,
-          ovenAddress,
-          ovenContract,
-        }) => ({
-          nid,
-          symbol,
-          name,
-          icon,
-          pieColors,
-          cgIds,
-          address,
-          basketContract,
-          ovenAddress,
-          ovenContract,
-        }),
-      )
-    : []
+  return bao && bao.contracts.baskets
 }
 
 export const getFarms = (bao: Bao): Farm[] => {

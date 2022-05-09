@@ -169,6 +169,7 @@ export default {
       basketAddresses: {
         1: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
       },
+      lpAddress: '0x84e5bf858Ee50bE323143dF88f2089827834b9cE',
       ovenAddress: '0x30DE1e1e4a42557f31F038E3B77672Afd4eAF7DF',
       symbol: 'bDEFI',
       name: 'bDEFI',
@@ -208,6 +209,7 @@ export default {
       basketAddresses: {
         1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
       },
+      lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
       ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
       symbol: 'bSTBL',
       name: 'bSTBL',

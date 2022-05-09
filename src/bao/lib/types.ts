@@ -25,6 +25,7 @@ export interface SupportedBasket {
   basketAddresses?: {
     [network: number]: string
   }
+  lpAddress: string
   symbol: string
   name: string
   icon: string
