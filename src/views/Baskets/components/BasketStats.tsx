@@ -10,6 +10,7 @@ import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import { BigNumber } from 'bignumber.js'
 import Tooltipped from '../../../components/Tooltipped'
 import useNav from '../../../hooks/baskets/useNav'
+import { StatBadge } from 'components/Badge/Badge'
 
 type BasketStatsProps = {
 	basket: ActiveSupportedBasket
@@ -38,13 +39,13 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						Market Cap
 					</span>
 					<Spacer size={'sm'} />
-					<StyledBadge bg="secondary">
+					<StatBadge bg="secondary">
 						{rates && info ? (
 							`$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}`
 						) : (
 							<SpinnerLoader />
 						)}
-					</StyledBadge>
+					</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
@@ -55,12 +56,12 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						Supply
 					</span>
 					<Spacer size={'sm'} />
-					<StyledBadge bg="secondary">
+					<StatBadge bg="secondary">
 						{(info &&
 							`${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || (
 							<SpinnerLoader />
 						)}
-					</StyledBadge>
+					</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
@@ -74,9 +75,9 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StyledBadge bg="secondary">
+					<StatBadge bg="secondary">
 						{nav ? `$${getDisplayBalance(nav, 0)}` : <SpinnerLoader />}
-					</StyledBadge>
+					</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
@@ -95,7 +96,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StyledBadge bg="secondary">
+					<StatBadge bg="secondary">
 						{pairPrice && rates ? (
 							`${getDisplayBalance(
 								pairPrice
@@ -108,7 +109,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						) : (
 							<SpinnerLoader />
 						)}
-					</StyledBadge>
+					</StatBadge>
 				</StatCard>
 			</Col>
 		</StatsRow>

@@ -24,13 +24,6 @@ export const MarketHeaderContainer = styled.div`
   padding: 24px;
 `
 
-export const TableContainer = styled.div`
-  display: flex;
-  width: 100%;
-  background-color: ${(props) => props.theme.color.primary[100]};
-  border-radius: 8px;
-`
-
 export const MarketTable = styled.div`
   display: flex;
   flex-direction: column;

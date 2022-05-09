@@ -11,9 +11,11 @@ import { BasketComponent } from '../../../hooks/baskets/useComposition'
 import { ParentSize } from '@visx/responsive'
 import DonutGraph from '../../../components/Graphs/PieGraph'
 import styled from 'styled-components'
-import { Badge, Col, Row } from 'react-bootstrap'
+import { Badge, Col, Row, Spinner } from 'react-bootstrap'
 import { Button } from '../../../components/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { TableContainer } from 'components/Table'
+import { AssetBadge, CompositionBadge } from 'components/Badge/Badge'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -46,13 +48,14 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 			</Row>
 
 			{displayType === 'TABLE' ? (
+				<TableContainer>
 				<StyledTable bordered hover>
 					<thead>
 						<tr>
 							<th>Token</th>
 							<th>Allocation</th>
 							<th>Price</th>
-							<th>APY</th>
+							<th className="apy">APY</th>
 							<th className="strategy">Strategy</th>
 						</tr>
 					</thead>
@@ -89,28 +92,23 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 											)}
 										</td>
 										<td width="10%">
-											<StyledBadge>
+											<CompositionBadge>
 												{component.apy
 													? component.apy.div(1e18).times(100).toFixed(2)
 													: '0'}
 												%
-											</StyledBadge>
+											</CompositionBadge>
 										</td>
 										<td className="strategy" width="15%">
-											<StyledBadge>{component.strategy || 'None'}</StyledBadge>
+											<CompositionBadge>{component.strategy || 'None'}</CompositionBadge>
 										</td>
 									</tr>
 								))) || (
-							<tr>
-								{_.times(5, () => (
-									<td width="20%">
-										<SpinnerLoader />
-									</td>
-								))}
-							</tr>
-						)}
-					</tbody>
-				</StyledTable>
+									<Spinner animation="grow" />
+							)}
+						</tbody>
+					</StyledTable>
+				</TableContainer>
 			) : (
 				<GraphContainer>
 					<Row style={{ height: '100%' }}>
@@ -149,16 +147,8 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 const GraphContainer = styled.div`
 	height: 500px;
 	border-radius: 8px;
-	background-color: ${(props) => props.theme.color.transparent[100]};
-`
-
-const AssetBadge = styled(Badge)`
-	&.bg-primary {
-		background-color: ${(props: any) => props.color} !important;
-		color: #fff8ee !important;
-	}
-
-	margin: 8px 0;
+	background-color: ${(props) => props.theme.color.primary[100]};
+	border: ${(props) => props.theme.border.default};
 `
 
 export default Composition
