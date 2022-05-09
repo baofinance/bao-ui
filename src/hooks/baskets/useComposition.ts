@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import useBao from 'hooks/base/useBao'
 import useGeckoPrices from './useGeckoPrices'
+import useBasketRates from './useNestRate'
 import MultiCall from 'utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
-import useBasketInfo from './useBasketInfo'
-import useBasketRates from './useNestRate'
+import { fetchSushiApy } from './strategies/useSushiBarApy'
 
 export type BasketComponent = {
   address: string
@@ -21,6 +21,7 @@ export type BasketComponent = {
   underlying?: string
   underlyingPrice?: BigNumber
   strategy?: string
+  apy?: BigNumber
 }
 
 const useComposition = (
@@ -108,26 +109,39 @@ const useComposition = (
           await bao.multicall.call(lendingQuery),
         )
 
+        _c.underlying = lendingRes[0].values[0]
+        _c.underlyingPrice = prices[_c.underlying.toLowerCase()]
+        _c.strategy = _getStrategy(lendingRes[1].values[0])
+
         // Get Exchange Rate
         const logicAddress = await lendingRegistry.methods
           .protocolToLogic(lendingRes[1].values[0])
           .call()
-        const exchangeRate = await bao
-          .getNewContract('lendingLogicKashi.json', logicAddress)
-          .methods.exchangeRate(_c.address)
+        const logicContract = bao.getNewContract(
+          'lendingLogicKashi.json',
+          logicAddress,
+        )
+        const exchangeRate = await logicContract.methods
+          .exchangeRate(_c.address)
           .call()
+        // xSushi APY can't be found on-chain, check for special case
+        const apy =
+          _c.strategy === 'Sushi Bar'
+            ? await fetchSushiApy()
+            : new BigNumber(
+                await logicContract.methods
+                  .getAPRFromUnderlying(lendingRes[0].values[0])
+                  .call(),
+              )
         const underlyingDecimals = await bao
           .getNewContract('erc20.json', lendingRes[0].values[0])
           .methods.decimals()
           .call()
 
-        // Set extra values for lent tokens
-        _c.underlying = lendingRes[0].values[0]
-        _c.underlyingPrice = prices[_c.underlying.toLowerCase()]
-        _c.strategy = _getStrategy(lendingRes[1].values[0])
         _c.price = decimate(
           prices[_c.underlying.toLowerCase()].times(exchangeRate),
         )
+        _c.apy = apy
 
         // Adjust price for compound's exchange rate.
         // wrapped balance * exchange rate / 10 ** (18 - 8 + underlyingDecimals)

@@ -10,9 +10,9 @@ import _ from 'lodash'
 import { BasketComponent } from '../../../hooks/baskets/useComposition'
 import { ParentSize } from '@visx/responsive'
 import DonutGraph from '../../../components/Graphs/PieGraph'
-import styled from "styled-components";
-import {Badge, Col, Row} from "react-bootstrap";
-import {Button} from "../../../components/Button";
+import styled from 'styled-components'
+import { Badge, Col, Row } from 'react-bootstrap'
+import { Button } from '../../../components/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type CompositionProps = {
@@ -34,7 +34,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 		<div style={{ padding: '0 0.75rem' }}>
 			<Row style={{ marginBottom: '1em' }}>
 				<Col lg={1}>
-					<Button  onClick={() => setDisplayType('TABLE')}>
+					<Button onClick={() => setDisplayType('TABLE')}>
 						<FontAwesomeIcon icon="table" />
 					</Button>
 				</Col>
@@ -52,6 +52,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 							<th>Token</th>
 							<th>Allocation</th>
 							<th>Price</th>
+							<th>APY</th>
 							<th className="strategy">Strategy</th>
 						</tr>
 					</thead>
@@ -70,7 +71,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 												/>
 											</Tooltipped>
 										</td>
-										<td width="50%">
+										<td width="40%">
 											<Progress
 												width={(component.percentage / maxPercentage) * 100}
 												label={`${getDisplayBalance(
@@ -87,14 +88,22 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 												0,
 											)}
 										</td>
+										<td width="10%">
+											<StyledBadge>
+												{component.apy
+													? component.apy.div(1e18).times(100).toFixed(2)
+													: '0'}
+												%
+											</StyledBadge>
+										</td>
 										<td className="strategy" width="15%">
 											<StyledBadge>{component.strategy || 'None'}</StyledBadge>
 										</td>
 									</tr>
 								))) || (
 							<tr>
-								{_.times(4, () => (
-									<td width="25%">
+								{_.times(5, () => (
+									<td width="20%">
 										<SpinnerLoader />
 									</td>
 								))}
@@ -121,13 +130,13 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 						<Col lg={4} style={{ margin: 'auto' }}>
 							<Row lg={2}>
 								{composition &&
-								composition.map((component) => (
-									<Col key={component.symbol}>
-										<AssetBadge color={component.color}>
-											{component.symbol}
-										</AssetBadge>
-									</Col>
-								))}
+									composition.map((component) => (
+										<Col key={component.symbol}>
+											<AssetBadge color={component.color}>
+												{component.symbol}
+											</AssetBadge>
+										</Col>
+									))}
 							</Row>
 						</Col>
 					</Row>
@@ -148,7 +157,7 @@ const AssetBadge = styled(Badge)`
 		background-color: ${(props: any) => props.color} !important;
 		color: #fff8ee !important;
 	}
-	
+
 	margin: 8px 0;
 `
 
