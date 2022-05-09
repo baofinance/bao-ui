@@ -181,7 +181,7 @@ const BasketModal: React.FC<ModalProps> = ({
 												value && new BigNumber(value).isFinite()
 													? exponentiate(
 															new BigNumber(value).div(rates.eth),
-													  ).toString()
+													  ).toFixed(16)
 													: '0'
 											}
 											disabled

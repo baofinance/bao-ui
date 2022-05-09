@@ -80,16 +80,18 @@ const useComposition = (
             decimals: 18,
             symbol: 'MKR',
             name: 'Maker DAO',
-            balance: await bao
-              .getNewContract(
-                'erc20.json',
-                '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
-              )
-              .methods.balanceOf(basket.address)
-              .call(),
+            balance: new BigNumber(
+              await bao
+                .getNewContract(
+                  'erc20.json',
+                  '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
+                )
+                .methods.balanceOf(basket.address)
+                .call(),
+            ),
           }
       _c.address = tokenComposition[i]
-      _c.price = prices[tokenComposition[i].toLowerCase()]
+      _c.price = new BigNumber(prices[tokenComposition[i].toLowerCase()])
 
       // Check if component is lent out. If the coin gecko prices array doesn't conclude it,
       // the current component is a wrapped interest bearing token.
@@ -135,7 +137,7 @@ const useComposition = (
         // Here, the price is already decimated by 1e18, so we can subtract 8
         // from the underlying token's decimals.
         if (_c.strategy === 'Compound')
-          _c.price /= 10 ** (underlyingDecimals - 8)
+          _c.price = decimate(_c.price, underlyingDecimals - 8)
       }
 
       _comp.push({
@@ -145,11 +147,11 @@ const useComposition = (
       })
     }
 
+    // Assign allocation percentages
     for (let i = 0; i < _comp.length; i++) {
       const comp = _comp[i]
 
-      _comp[i].percentage = new BigNumber(comp.balance)
-        .div(10 ** comp.decimals)
+      _comp[i].percentage = decimate(new BigNumber(comp.balance), comp.decimals)
         .times(comp.price)
         .div(marketCap)
         .times(100)
@@ -191,7 +193,7 @@ const _getStrategy = (symbol: string) =>
     : 'Unknown'
 
 // Special cases for image URLS, i.e. wrapped assets
-// This sucks. Should figure a better way to do it.
+// This sucks. Should do this more dynamically.
 const _getImageURL = (symbol: string) =>
   symbol.toLowerCase() === 'wmatic'
     ? 'MATIC'

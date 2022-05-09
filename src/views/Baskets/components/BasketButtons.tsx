@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Button } from '../../../components/Button'
-import BasketModal from './Modals'
+import BasketModal from './BasketModal'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 type ModalOperation = 'MINT' | 'REDEEM'
