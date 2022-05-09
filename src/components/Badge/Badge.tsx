@@ -6,6 +6,7 @@ export const StyledBadge = styled(Badge)`
 	color: ${(props) => props.theme.color.text[100]};
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	background-color: ${(props) => props.theme.color.primary[100]} !important;
+	border: ${(props) => props.theme.border.default};
 	`
 
 export const PriceBadge = styled(Badge)`

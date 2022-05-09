@@ -53,7 +53,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 							<tr>
 								<th>Token</th>
 								<th>Allocation</th>
-								<th>Price</th>
+								<th className="price">Price</th>
 								<th className="apy">APY</th>
 								<th className="strategy">Strategy</th>
 							</tr>
@@ -83,14 +83,14 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 													assetColor={component.color}
 												/>
 											</td>
-											<td width="20%">
+											<td className="price" width="20%">
 												$
 												{getDisplayBalance(
 													component.basePrice || component.price,
 													0,
 												)}
 											</td>
-											<td width="10%">
+											<td className="apy" width="10%">
 												<CompositionBadge>
 													{component.apy
 														? `${component.apy.div(1e18).times(100).toFixed(2)}%`

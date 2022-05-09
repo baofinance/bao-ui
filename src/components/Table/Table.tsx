@@ -16,8 +16,10 @@ export const StyledTable = styled(Table)`
 
 	th.strategy,
 	th.price,
+	th.apy,
 	td.strategy,
-	td.price {
+	td.price,
+	td.apy {
 		text-align: center;
 	}
 
