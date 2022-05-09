@@ -11,6 +11,7 @@ import { MerkleTree } from 'merkletreejs'
 import keccak256 from 'keccak256'
 import baoElderWL from 'views/NFT/components/baoElderWL.json'
 import baoSwapWL from 'views/NFT/components/baoSwapWL.json'
+import { ActiveSupportedBasket } from './lib/types'
 
 BigNumber.config({
   EXPONENTIAL_AT: 1000,
@@ -57,7 +58,7 @@ export const getRecipeContract = (bao: Bao) => {
   return bao && bao.contracts && bao.getContract('recipe')
 }
 
-export const getBaskets = (bao: Bao) => {
+export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
   return bao
     ? bao.contracts.baskets.map(
         ({
@@ -65,20 +66,23 @@ export const getBaskets = (bao: Bao) => {
           name,
           symbol,
           icon,
-          basketAddress,
-          basketContract,
+          address,
           pieColors,
+          cgIds,
+          basketContract,
+          ovenAddress,
+          ovenContract,
         }) => ({
           nid,
-          id: symbol,
+          symbol,
           name,
           icon,
-          basketContract,
           pieColors,
-          basketTokenAddress: basketAddress,
-          inputToken: 'wETH',
-          basketToken: symbol,
-          inputTokenAddress: Config.addressMap.WETH,
+          cgIds,
+          address,
+          basketContract,
+          ovenAddress,
+          ovenContract,
         }),
       )
     : []

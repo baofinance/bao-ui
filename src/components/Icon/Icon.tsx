@@ -61,7 +61,7 @@ export const StyledIcon = styled(IconImage)`
   transition: 200ms;
   user-select: none;
   -webkit-user-drag: none;
-  margin-left: -${(props) => props.theme.spacing[3]}px;
+  margin-left: -${(props) => props.theme.spacing[4]}px;
 
   &:first-child {
     margin-left: 0;

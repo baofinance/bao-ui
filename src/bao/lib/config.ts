@@ -44,6 +44,12 @@ export default {
         abi: 'weth.json',
       },
     },
+    wethPrice: {
+      1: {
+        address: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+        abi: 'chainoracle.json',
+      },
+    },
     // Hard Synths
     comptroller: {
       1: {
@@ -63,6 +69,7 @@ export default {
         abi: 'stabilizer.json',
       },
     },
+    // NFT
     nft: {
       1: {
         address: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
@@ -73,6 +80,19 @@ export default {
       1: {
         address: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
         abi: 'nft.json',
+      },
+    },
+    // Baskets
+    recipe: {
+      1: {
+        address: '0x6C9c5fd51B95c7BF365955867268ce2EC25Deb5B',
+        abi: 'recipe.json',
+      },
+    },
+    lendingRegistry: {
+      1: {
+        address: '0x08a2b7D713e388123dc6678168656659d297d397',
+        abi: 'lendingRegistry.json',
       },
     },
   },
@@ -143,7 +163,51 @@ export default {
       underlyingDecimals: 6,
     },
   ],
-  baskets: [],
+  baskets: [
+    {
+      nid: 1,
+      basketAddresses: {
+        1: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
+      },
+      ovenAddress: '0x30DE1e1e4a42557f31F038E3B77672Afd4eAF7DF',
+      symbol: 'bDEFI',
+      name: 'bDEFI',
+      icon: '/ndefi.svg',
+      cgIds: {
+        '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B': 'convex-finance',
+        '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'maker',
+        '0xd533a949740bb3306d119cc777fa900ba034cd52': 'curve-dao-token',
+        '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': 'aave',
+        '0x5a98fcbea516cf06857215779fd812ca3bef1b32': 'lido-dao',
+        '0xc00e94cb662c3520282e6f5717214004a7f26888':
+          'compound-governance-token',
+        '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2': 'sushi',
+        '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e': 'yearn-finance',
+        '0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D': 'liquity',
+        '0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0': 'frax-share',
+        '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': 'uniswap',
+        '0xba100000625a3754423978a60c9317c58a424e3D': 'balancer',
+      },
+      pieColors: {},
+    },
+    {
+      nid: 2,
+      basketAddresses: {
+        1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+      },
+      ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
+      symbol: 'bSTBL',
+      name: 'bSTBL',
+      icon: '/nstbl.svg',
+      cgIds: {
+        '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': 'rai',
+        '0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
+        '0x956f47f50a910163d8bf957cf5846d573e7f87ca': 'fei-usd',
+        '0x853d955acef822db058eb8505911ed77f175b99e': 'frax',
+      },
+      pieColors: {},
+    },
+  ],
   farms: [
     // Active pools
     {

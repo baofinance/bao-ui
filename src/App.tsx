@@ -24,6 +24,7 @@ import Ballast from './views/Ballast'
 import Farms from './views/Farms'
 import Markets from './views/Markets'
 import NFT from './views/NFT'
+import Baskets from 'views/Baskets'
 
 library.add(fas, fab)
 
@@ -76,6 +77,9 @@ const App: React.FC = () => {
 					</Route>
 					<Route path="/NFT">
 						<NFT />
+					</Route>
+					<Route path="/baskets">
+						<Baskets />
 					</Route>
 				</Switch>
 			</Router>
