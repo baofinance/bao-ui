@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
 
 interface PageHeaderProps {
-	icon: any
+	icon?: any
 	subtitle?: any
 	title?: string
 }

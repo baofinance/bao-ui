@@ -32,7 +32,6 @@ const Basket: React.FC = () => {
 	return (
 		<Page>
 			<PageHeader
-				icon=""
 				title={basket && basket.name}
 				subtitle={
 					<StyledBadge>
