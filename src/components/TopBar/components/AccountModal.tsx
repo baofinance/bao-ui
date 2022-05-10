@@ -13,7 +13,7 @@ import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import _ from 'lodash'
 import React, { useCallback } from 'react'
-import { Col, Modal, ModalProps } from 'react-bootstrap'
+import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
 import { HeaderWrapper } from 'views/Markets/components/styles'
@@ -64,7 +64,6 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 								</InnerInnerWalletBalance>
 							</InnerWalletBalance>
 						</WalletBalance>
-						<WalletBalanceSpacerBig />
 						<WalletBalance>
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
@@ -155,17 +154,17 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 	)
 }
 
-const WalletBalances = styled(Col)`
+const WalletBalances = styled.div`
 	display: flex;
 	padding: 24px;
 `
 
-const WalletBalancesInner = styled.div`
+const WalletBalancesInner = styled(Row)`
 	display: flex;
 	width: 100%;
 `
 
-const WalletBalance = styled.div`
+const WalletBalance = styled(Col)`
 	flex: 1 1 0%;
 	display: block;
 `
@@ -204,13 +203,6 @@ const WalletBalanceSpace = styled.div`
 	min-height: 8px;
 	min-width: 8px;
 	width: 8px;
-`
-
-const WalletBalanceSpacerBig = styled.div`
-	height: 24px;
-	min-height: 24px;
-	min-width: 24px;
-	width: 24px;
 `
 
 const WalletBalanceText = styled.div`

@@ -2,7 +2,7 @@ import baoIcon from 'assets/img/logo.svg'
 import { CloseButton, NavButtons } from 'components/Button'
 import { IconContainer, StyledIcon } from 'components/Icon'
 import { SpinnerLoader } from 'components/Loader'
-import { StatBlock } from 'components/Stats'
+import { FeeBlock } from 'components/Stats'
 import useBao from 'hooks/base/useBao'
 import useBlockDiff from 'hooks/base/useBlockDiff'
 import useTokenBalance from 'hooks/base/useTokenBalance'
@@ -121,7 +121,7 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 			</Modal.Header>
 			<Modal.Body style={{ paddingTop: '0' }}>
 				<p style={{ textAlign: 'center' }}><span role="img" aria-label="important">❗</span>BE AWARE OF WITHDRAWAL FEES<span role="img" aria-label="important">❗</span></p>
-				<StatBlock
+				<FeeBlock
 					label=""
 					stats={[
 						{
@@ -159,7 +159,7 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 					]}
 				/>
 				<Row>
-					<p style={{ textAlign: 'center' }}>
+					<p style={{ textAlign: 'center', padding: '16px' }}>
 						Your first deposit activates and each withdraw resets the timer for
 						penalities and fees, this is pool based. Be sure to read the{' '}
 						<a href="https://docs.bao.finance/" target="_blank" rel="noopener noreferrer">

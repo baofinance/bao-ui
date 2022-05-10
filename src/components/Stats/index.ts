@@ -8,4 +8,5 @@ export {
   StatsRow,
   StatText,
   StatHeader,
+  FeeBlock,
 } from './Stats'

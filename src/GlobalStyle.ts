@@ -236,6 +236,17 @@ const GlobalStyle = createGlobalStyle`
     max-width: 720px;
   }
 }
+
+svg.menuIcon {
+  fill: ${(props) => props.theme.color.text[100]};
+}
+
+.row.farmRow {
+  @media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;  
+  }
+}
 `
 
 export default GlobalStyle

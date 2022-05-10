@@ -190,7 +190,7 @@ const ButtonLink = styled.a`
 export const MaxButton = styled.a`
 	padding: ${(props) => props.theme.spacing[2]}px;
 	color: ${(props) => props.theme.color.text[100]};
-	background: ${(props) => props.theme.color.primary[300]};
+	background: ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
@@ -203,7 +203,7 @@ export const MaxButton = styled.a`
 	font-size: ${(props) => props.theme.fontSize.sm};
 
 	&:hover {
-		background: ${(props) => props.theme.color.primary[400]};
+		background: ${(props) => props.theme.color.primary[300]};
 		color: ${(props) => props.theme.color.text[100]};
 		cursor: pointer;
 	}
@@ -266,14 +266,14 @@ const NavButton = styled.button`
 	border-radius: 8px;
 	overflow: hidden;
 	border: ${(props) => props.theme.border.default};
-	background: ${(props) => props.theme.color.primary[300]};
+	background: ${(props) => props.theme.color.primary[200]};
 
 	&:focus {
 		outline: 0;
 	}
 
 	&:hover {
-		background: ${(props) => props.theme.color.primary[400]};
+		background: ${(props) => props.theme.color.primary[300]};
 		cursor: pointer;
 		color: ${(props) => props.theme.color.text[100]};
 	}
@@ -359,6 +359,7 @@ export const SubmitButton = styled.button`
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	transition: 200ms;
 	overflow: hidden;
+	margin-bottom: 6px;
 
 	&:focus {
 		outline: 0;
@@ -399,8 +400,8 @@ export const WalletButton = styled.button`
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: none;
-	background-color: ${(props) => props.theme.color.primary[100]};
+	border: ${(props) => props.theme.border.default};
+	background-color: ${(props) => props.theme.color.primary[200]};
 	outline: transparent solid 2px;
 	color: ${(props) => props.theme.color.text[100]};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
@@ -413,7 +414,7 @@ export const WalletButton = styled.button`
 	}
 
 	  &:hover{
-		background: ${(props) => props.theme.color.primary[200]};
+		background: ${(props) => props.theme.color.primary[300]};
 		cursor: pointer;
 	  }
 	}
@@ -439,6 +440,7 @@ export const CornerButtons = styled.div`
   font-size: 1.5rem;
   position: absolute;
   color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
 
   &:hover {
     cursor: pointer;
@@ -456,6 +458,7 @@ export const CornerButton = styled.a`
   font-size: 1.5rem;
   vertical-align: middle;
   color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
 
   &:hover {
     cursor: pointer;
@@ -470,16 +473,17 @@ export const PrefButtons = styled.div`
     margin-left: ${(props) => props.theme.spacing[2]}px;
     margin-top: ${(props) => props.theme.spacing[4]}px;
     color: ${(props) => props.theme.color.text[100]};
+	border: ${(props) => props.theme.border.default};
     border-radius: ${(props) => props.theme.borderRadius}px;
     width: 48px;
-    background: ${(props) => props.theme.color.transparent[100]};
+    background: ${(props) => props.theme.color.primary[200]};
 
     &:hover,
     &.active,
     &:active,
     &:focus {
       color: ${(props) => props.theme.color.text[100]};
-      background: ${(props) => props.theme.color.transparent[200]};
+      background: ${(props) => props.theme.color.primary[300]};
       box-shadow: none !important;
     }
   }

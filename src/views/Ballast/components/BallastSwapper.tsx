@@ -224,13 +224,13 @@ const SwapDirection = styled.a`
 `
 
 const SwapDirectionBadge = styled(Badge)`
-	background-color: ${(props) => props.theme.color.primary[200]} !important;
+	background-color: ${(props) => props.theme.color.primary[300]} !important;
 	color: ${(props) => props.theme.color.text[100]};
 	border: none;
 	margin-bottom: 0.5rem;
 
 	&:hover {
-		background-color: ${(props) => props.theme.color.primary[300]} !important;
+		background-color: ${(props) => props.theme.color.primary[400]} !important;
 	}
 
 	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
