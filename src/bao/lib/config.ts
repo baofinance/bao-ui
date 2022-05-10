@@ -4,7 +4,7 @@ export default {
   networkId: 1,
   defaultRpc: {
     chainId: '0x1',
-    rpcUrls: ['https://rpc.flashbots.net'],
+    rpcUrls: ['https://mainnet.infura.io/v3/caf20378e5d149b88d43b9eacb902689'],
     blockExplorerUrls: ['https://etherscan.io'],
     chainName: 'Ethereum Mainnet',
     nativeCurrency: {

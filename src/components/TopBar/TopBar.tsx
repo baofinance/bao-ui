@@ -75,8 +75,7 @@ const StyledTopBarInner = styled.div`
 	display: flex;
 	height: ${(props) => props.theme.topBarSize}px;
 	justify-content: space-between;
-	max-width: ${(props) => props.theme.siteWidth}px;
-	width: 90%;
+	width: 98%;
 	z-index: 999999;
 `
 

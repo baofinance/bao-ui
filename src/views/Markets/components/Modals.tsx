@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import BigNumber from 'bignumber.js'
 import { BalanceWrapper } from 'components/Balance'
-import { NavButtons } from 'components/Button'
+import { CloseButton, NavButtons } from 'components/Button'
+import { IconFlex } from 'components/Icon'
 import { BalanceInput } from 'components/Input'
-import { LabelEnd, LabelStart } from 'components/Label'
+import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from 'components/Label'
 import useBao from 'hooks/base/useBao'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import {
@@ -20,16 +21,8 @@ import styled from 'styled-components'
 import { decimate, exponentiate } from 'utils/numberFormat'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import {
-	AssetLabel,
-	AssetStack,
-	CloseButton,
-	HeaderWrapper,
-	IconFlex,
-	LabelStack,
-	MaxLabel,
-	ModalStack,
-} from './styles'
+import { AssetStack, HeaderWrapper, ModalStack } from './styles'
+
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -139,9 +132,7 @@ const MarketModal = ({
 	return (
 		<>
 			<Modal show={show} onHide={hideModal} centered>
-				<CloseButton onClick={hideModal}>
-					<FontAwesomeIcon icon="times" />
-				</CloseButton>
+			<CloseButton onHide={hideModal} onClick={onHide} />
 				<Modal.Header>
 					<Modal.Title id="contained-modal-title-vcenter">
 						<HeaderWrapper>

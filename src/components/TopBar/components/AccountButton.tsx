@@ -96,7 +96,7 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 			<MobileAccountButton>
 				{!account ? (
 					<Button
-						onClick={() => setShowAccountModal(true)}
+						onClick={() => setShowWalletProviderModal(true)}
 						size="sm"
 						text={
 							<>

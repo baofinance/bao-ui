@@ -28,6 +28,22 @@ export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	</>
 )
 
+export const FeeBlock = ({ label, stats }: StatBlockProps) => (
+	<>
+		<StatHeader>
+			<p>{label}</p>
+		</StatHeader>
+		<FeeWrapper>
+			{stats.map(({ label, value }) => (
+				<StatText key={label}>
+					<p>{label}</p>
+					<p style={{ textAlign: 'end' }}>{value}</p>
+				</StatText>
+			))}
+		</FeeWrapper>
+	</>
+)
+
 export const StatHeader = styled.div`
 	color: ${(props) => props.theme.color.text[100]};
 	font-size: ${(props) => props.theme.fontSize.sm};
@@ -96,6 +112,7 @@ export const StatWrapper = styled(Col)`
 	padding-inline-end: 1rem;
 	padding: 1.25rem 16px;
 	border: ${(props) => props.theme.border.default};
+	min-height: 75px;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
 		padding: 1rem 12px;
@@ -164,3 +181,24 @@ export const StatCard = styled.div`
   }
 `
 
+export const FeeWrapper = styled(Col)`
+	background-color: ${(props) => props.theme.color.primary[200]};
+	margin: 0.5rem 0.5rem;
+	border-radius: 8px;
+	position: relative;
+	flex: 1 1 0%;
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	padding: 1.25rem 16px;
+	border: ${(props) => props.theme.border.default};
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		padding: 1rem 12px;
+		padding-inline-start: 0.75rem;
+		padding-inline-end: 0.75rem;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		min-width: 120px;
+	}
+`

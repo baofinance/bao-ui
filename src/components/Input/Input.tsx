@@ -32,10 +32,10 @@ const Input: React.FC<InputProps> = ({
 
 const StyledInputWrapper = styled.div`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[200]};
+	background: ${(props) => props.theme.color.primary[400]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;
-	height: 72px;
+	height: 50px;
 	padding: 0 ${(props) => props.theme.spacing[3]}px;
 `
 
@@ -48,8 +48,6 @@ const StyledInput = styled.input`
 	transition-property: all;
 	transition-duration: 200ms;
 	font-size: 1rem;
-	padding-inline-start: 1rem;
-	padding-inline-end: 1rem;
 	height: 50px;
 	text-align: start;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
@@ -91,7 +89,7 @@ export const BalanceInput = ({
 }: BalanceInputProps) => (
 	<BalanceInputContainer>
 		<BalanceInputWrapper>
-			<StyledInput
+			<StyledBalanceInput
 				value={value}
 				onChange={onChange}
 				placeholder="0"
@@ -103,11 +101,45 @@ export const BalanceInput = ({
 	</BalanceInputContainer>
 )
 
+const StyledBalanceInput = styled.input`
+	width: 100%;
+	min-width: 0px;
+	outline-offset: 2px;
+	position: relative;
+	appearance: none;
+	transition-property: all;
+	transition-duration: 200ms;
+	font-size: 1rem;
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	height: 50px;
+	text-align: start;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	padding-right: 0.5rem;
+	outline: transparent solid 2px;
+	border-radius: 8px;
+	border-style: solid;
+	border-image: initial;
+	border-color: inherit;
+	color: ${(props) => props.theme.color.text[100]};
+	background: none;
+	background-color: transparent;
+	border-width: 0px;
+
+	&:disabled {
+		color: ${(props) => props.theme.color.text[200]};
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.875rem;
+	}
+`
+
 const BalanceInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[200]};
+	background-color: ${(props) => props.theme.color.primary[400]};
 	border-radius: 8px;
 	height: 50px;
 	border: none;

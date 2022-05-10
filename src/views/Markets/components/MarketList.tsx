@@ -40,6 +40,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 	markets: _markets,
 }: MarketListProps) => {
 	const { account } = useWeb3React()
+	const bao = useBao()
 	const accountBalances = useAccountBalances()
 	const accountMarkets = useAccountMarkets()
 	const accountLiquidity = useAccountLiquidity()
@@ -48,7 +49,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 	const { exchangeRates } = useExchangeRates()
 
 	const collateralMarkets = useMemo(() => {
-		if (!(_markets && supplyBalances)) return
+		if (!(bao && _markets && supplyBalances)) return
 		return _markets
 			.filter((market) => !market.isSynth)
 			.sort((a, b) =>
@@ -62,7 +63,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 	}, [_markets, supplyBalances])
 
 	const synthMarkets = useMemo(() => {
-		if (!(_markets && borrowBalances)) return
+		if (!(bao && _markets && borrowBalances)) return
 		return _markets
 			.filter((market) => market.isSynth)
 			.sort((a, b) =>
@@ -209,7 +210,9 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						<StyledAccordionHeader>
 							<Row style={{ width: '100%' }}>
 								<Col>
-									<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
+									<img src={market.icon} />
+									{window.screen.width > 1200 &&
+									<b>{market.underlyingSymbol}</b>}
 								</Col>
 								<Col>
 									{account
@@ -386,7 +389,9 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						<StyledAccordionHeader>
 							<Row style={{ width: '100%' }}>
 								<Col>
-									<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
+									<img src={market.icon} />
+									{window.screen.width > 1200 &&
+									<b>{market.underlyingSymbol}</b>}
 								</Col>
 								<Col>{market.borrowApy.toFixed(2)}%</Col>
 								<Col>
@@ -609,7 +614,7 @@ const OfflineAccordionItem = styled.div`
 `
 
 const OfflineAccordionHeader = styled.div`
-		background: ${(props) => props.theme.color.transparent[100]};
+		background: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
 		border: ${(props) => props.theme.border.default};
@@ -618,7 +623,7 @@ const OfflineAccordionHeader = styled.div`
 		&:hover,
 		&:focus,
 		&:active {
-			background: ${(props) => props.theme.color.transparent[200]};
+			background: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
 			box-shadow: none;
 		}

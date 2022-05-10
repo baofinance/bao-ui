@@ -14,7 +14,12 @@ import 'react-circular-progressbar/dist/styles.css'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
-import { StatWrapper, UserStat, UserStatsContainer, UserStatsWrapper } from 'components/Stats'
+import {
+	StatWrapper,
+	UserStat,
+	UserStatsContainer,
+	UserStatsWrapper,
+} from 'components/Stats'
 
 export const Overview = () => {
 	const bao = useBao()
@@ -51,7 +56,11 @@ export const Overview = () => {
 						<UserStat>
 							<h1>Net APY</h1>
 							<p>
-								{`${bao && account && accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}
+								{`${
+									bao && account && accountLiquidity
+										? accountLiquidity.netApy.toFixed(2)
+										: 0
+								}`}
 								%
 							</p>
 						</UserStat>
@@ -187,7 +196,7 @@ export const Overview = () => {
 							</ProgressBarWrapper>
 
 							<BorrowableLabel>
-								<p>${borrowable}</p>
+								<p>${`${getDisplayBalance(borrowable, 0)}`}</p>
 							</BorrowableLabel>
 						</DebtLimit>
 					</DebtLimitWrapper>
@@ -334,4 +343,3 @@ const BorrowableLabel = styled.div`
 		margin-inline-end: 0px;
 	}
 `
-

@@ -12,6 +12,7 @@ import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import { useMarkets } from 'hooks/markets/useMarkets'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
+import { propTypes } from 'react-bootstrap/esm/Image'
 import { NavLink, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { formatAddress } from 'utils'
@@ -185,51 +186,53 @@ const Market: React.FC = () => {
 						/>
 					</Row>
 					<>
-						<Row>
-							<Col sm={12}>
-								<MarketDetails asset={activeMarket} />
-							</Col>
-							<Col sm={12}>
-								<StatBlock
-									label={null}
-									stats={[
-										{
-											label: 'Market Utilization',
-											value: `${(
-												(activeMarket.totalBorrows /
-													(activeMarket.supplied +
-														activeMarket.totalBorrows -
-														activeMarket.totalReserves)) *
-												100
-											).toFixed(2)}%`,
-										},
-										{
-											label: 'Liquidation Incentive',
-											value: `${activeMarket.liquidationIncentive}%`,
-										},
-										{
-											label: 'Borrow Restricted?',
-											value: `${activeMarket.borrowRestricted ? 'Yes' : 'No'}`,
-										},
-										{
-											label: 'Price Oracle',
-											value: (
-												<a
-													href={`${
-														Config.defaultRpc.blockExplorerUrls[0]
-													}/address/${
-														bao.getContract('marketOracle').options.address
-													}`}
-												>
-													{oracleAddress}{' '}
-													<FontAwesomeIcon icon="external-link-alt" />
-												</a>
-											),
-										},
-									]}
-								/>
-							</Col>
-						</Row>
+						<MarketDetailsContainer>
+							<Row>
+								<Col sm={12}>
+									<MarketDetails asset={activeMarket} />
+									<StatBlock
+										label={null}
+										stats={[
+											{
+												label: 'Market Utilization',
+												value: `${(
+													(activeMarket.totalBorrows /
+														(activeMarket.supplied +
+															activeMarket.totalBorrows -
+															activeMarket.totalReserves)) *
+													100
+												).toFixed(2)}%`,
+											},
+											{
+												label: 'Liquidation Incentive',
+												value: `${activeMarket.liquidationIncentive}%`,
+											},
+											{
+												label: 'Borrow Restricted?',
+												value: `${
+													activeMarket.borrowRestricted ? 'Yes' : 'No'
+												}`,
+											},
+											{
+												label: 'Price Oracle',
+												value: (
+													<a
+														href={`${
+															Config.defaultRpc.blockExplorerUrls[0]
+														}/address/${
+															bao.getContract('marketOracle').options.address
+														}`}
+													>
+														{oracleAddress}{' '}
+														<FontAwesomeIcon icon="external-link-alt" />
+													</a>
+												),
+											},
+										]}
+									/>
+								</Col>
+							</Row>
+						</MarketDetailsContainer>
 					</>
 					<Spacer />
 					<ActionButton market={activeMarket} />
@@ -302,7 +305,7 @@ const InfoContainer = styled.div`
 	border-radius: 8px;
 	font-size: ${(props) => props.theme.fontSize.sm};
 	color: ${(props) => props.theme.color.text[200]};
-	border: none;
+	border: ${(props) => props.theme.border.default};
 	padding: 25px 50px;
 	margin-bottom: 1rem;
 
@@ -340,7 +343,12 @@ export const StyledLink = styled(NavLink)`
 		padding-right: ${(props) => props.theme.spacing[2]}px;
 	}
 `
-
+export const MarketDetailsContainer = styled.div`
+	background: ${(props) => props.theme.color.primary[100]};
+	padding: 16px;
+	border: ${(props) => props.theme.border.default};
+	border-radius: ${(props) => props.theme.borderRadius}px;
+`
 export const MarketHeader = styled.div`
 	flex: 1 1 0%;
 	display: block;
@@ -359,5 +367,6 @@ const BackButtonText = styled.span`
 
 export const MarketBadge = styled(Badge)`
 	background-color: ${(props) => props.theme.color.primary[100]} !important;
+	border: ${(props) => props.theme.border.default};
 `
 export default Market

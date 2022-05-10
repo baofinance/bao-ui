@@ -17,7 +17,7 @@ import useLockedEarnings from 'hooks/farms/useLockedEarnings'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Container, Row } from 'react-bootstrap'
 import CountUp from 'react-countup'
-import { getDisplayBalance } from 'utils/numberFormat'
+import { getBalanceNumber, getDisplayBalance, truncateNumber } from 'utils/numberFormat'
 
 const PendingRewards: React.FC = () => {
 	const [start, setStart] = useState(0)
@@ -101,20 +101,39 @@ const Balances: React.FC = () => {
 
 	return (
 		<Fragment>
-			<Container>
 				<Row style={{ display: 'flex', flexWrap: 'wrap', marginTop: '2rem' }}>
 					<UserStatsContainer>
 						<UserStatsWrapper>
 							<StatWrapper>
 								<UserStat>
-									<h1>Your BAO Balance</h1>
-									<p>{account ? getDisplayBalance(baoBalance) : '-'} </p>
+									<h1>BAO Balance</h1>
+									<p>
+									{account ? (
+										window.screen.width > 1200 ? (
+											getDisplayBalance(baoBalance)
+										) : (
+											truncateNumber(baoBalance)
+										)
+									) : (
+									'-'
+									)}
+									</p>
 								</UserStat>
 							</StatWrapper>
 							<StatWrapper>
 								<UserStat>
-									<h1>Your Locked BAO</h1>
-									<p>{account ? getDisplayBalance(locks) : '-'} </p>
+									<h1>Locked BAO</h1>
+									<p>
+									{account ? (
+										window.screen.width > 1200 ? (
+											getDisplayBalance(locks)
+										) : (
+											truncateNumber(locks)
+										)
+									) : (
+									'-'
+									)}
+									</p>
 								</UserStat>
 							</StatWrapper>
 							<StatWrapper>
@@ -127,7 +146,11 @@ const Balances: React.FC = () => {
 								<UserStat>
 									<h1>Total BAO Supply</h1>
 									{totalSupply ? (
-										getDisplayBalance(totalSupply)
+										window.screen.width > 1200 ? (
+											getDisplayBalance(totalSupply)
+										) : (
+											truncateNumber(totalSupply)
+										)
 									) : (
 										<SpinnerLoader />
 									)}
@@ -146,7 +169,6 @@ const Balances: React.FC = () => {
 						</UserStatsWrapper>
 					</UserStatsContainer>
 				</Row>
-			</Container>
 		</Fragment>
 	)
 }
