@@ -60,6 +60,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${(props) => props.theme.color.primary[200]};
     color: ${(props) => props.theme.color.text[100]};
     font-weight: ${(props) => props.theme.fontWeight.medium};
+    border: 1px solid ${(props) => props.theme.color.primary[300]};
   }
 
   .tooltip.bs-tooltip-left > .tooltip-arrow::before {

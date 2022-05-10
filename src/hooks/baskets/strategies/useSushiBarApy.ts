@@ -19,14 +19,22 @@ const useSushiBarApy = () => {
 
 export const fetchSushiApy = async (): Promise<BigNumber> => {
   const info = await sushiData.bar.info()
+  // Get last 7 days worth of volume data
   const dayData = await sushiData.exchange.dayData({
     minTimestamp: parseInt(
-      (new Date(new Date().getTime() - 86400000).getTime() / 1000).toFixed(0),
+      // 7 days ago (eth timestamps are in seconds, not ms)
+      (new Date(new Date().getTime() - 86400000 * 7).getTime() / 1000).toFixed(
+        0,
+      ),
     ),
   })
   const derivedETH = await sushiData.sushi.priceETH()
 
-  return new BigNumber(dayData[0].volumeETH)
+  const avgVolumeWeekly = dayData
+    .reduce((prev, cur) => prev.plus(cur.volumeETH), new BigNumber(0))
+    .div(dayData.length)
+
+  return avgVolumeWeekly
     .times(0.05)
     .times(0.01)
     .div(info.totalSupply)

@@ -106,7 +106,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 									))) || (
 								<tr>
 									{[15, 40, 20, 10, 15].map((pct) => (
-										<td width={`${pct}%`}>
+										<td width={`${pct}%`} key={Math.random()}>
 											<SpinnerLoader />
 										</td>
 									))}
