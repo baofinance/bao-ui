@@ -219,8 +219,6 @@ const _getImageURL = (symbol: string) =>
     ? 'YFI'
     : symbol.toLowerCase() === 'ccomp'
     ? 'COMP'
-    : symbol.toLowerCase() === 'xsushi'
-    ? 'SUSHI'
     : symbol.toLowerCase() === 'acrv'
     ? 'CRV'
     : symbol.toLowerCase() === 'arai'
