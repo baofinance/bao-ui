@@ -13,7 +13,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
 		<Container>
 			<StyledPageHeader>
 				<StyledTitle>{title}</StyledTitle>
-				{subtitle}
 			</StyledPageHeader>
 		</Container>
 	)
