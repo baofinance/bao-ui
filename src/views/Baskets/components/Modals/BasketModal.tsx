@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import useBao from '../../../hooks/base/useBao'
-import useTokenBalance from '../../../hooks/base/useTokenBalance'
+import useBao from '../../../../hooks/base/useBao'
+import useTokenBalance from '../../../../hooks/base/useTokenBalance'
 import { Col, Modal, Row } from 'react-bootstrap'
 import {
 	AssetLabel,
@@ -11,22 +11,22 @@ import {
 	LabelStack,
 	MaxLabel,
 	ModalStack,
-} from '../../Markets/components/styles'
+} from '../../../Markets/components/styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button } from '../../../components/Button'
-import { BalanceWrapper } from '../../../components/Balance'
-import { LabelEnd, LabelStart } from '../../../components/Label'
-import { BalanceInput } from '../../../components/Input'
-import { ActiveSupportedBasket } from '../../../bao/lib/types'
+import { Button } from '../../../../components/Button'
+import { BalanceWrapper } from '../../../../components/Balance'
+import { LabelEnd, LabelStart } from '../../../../components/Label'
+import { BalanceInput } from '../../../../components/Input'
+import { ActiveSupportedBasket } from '../../../../bao/lib/types'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
 import {
 	decimate,
 	exponentiate,
 	getDisplayBalance,
-} from '../../../utils/numberFormat'
-import useTransactionHandler from '../../../hooks/base/useTransactionHandler'
-import useBasketRates from '../../../hooks/baskets/useNestRate'
+} from '../../../../utils/numberFormat'
+import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
+import useBasketRates from '../../../../hooks/baskets/useNestRate'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
