@@ -30,6 +30,9 @@ const HrContainer = styled.div`
 				to right,
 				transparent,
 				${(props) => props.theme.color.text[100]},
+				transparent,
+				transparent,
+				${(props) => props.theme.color.text[100]},
 				transparent
 			);
 			position: absolute;
@@ -49,7 +52,6 @@ const HrContainer = styled.div`
 			padding: 0 0.5em;
 			line-height: 1em;
 			color: ${(props) => props.theme.color.text[100]};
-			background-color: ${(props) => props.theme.color.background[100]};
 		}
 	}
 `
