@@ -17,8 +17,8 @@ const toApy = (rate: number) =>
   (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100
 
 export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
-  const { account, library } = useWeb3React()
   const bao = useBao()
+  const { library } = useWeb3React()
   const { transactions } = useTransactionProvider()
   const [markets, setMarkets] = useState<ActiveSupportedMarket[] | undefined>()
 
@@ -159,12 +159,12 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
     markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
     setMarkets(markets)
-  }, [bao, account, transactions])
+  }, [bao, library, transactions])
 
   useEffect(() => {
-    if (!(bao && account)) return
+    if (!(bao && library)) return
     fetchMarkets()
-  }, [bao, account, transactions])
+  }, [bao, library,  transactions])
 
   return markets
 }
