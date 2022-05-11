@@ -7,7 +7,7 @@ import React from 'react'
 import { Alert, Container } from 'react-bootstrap'
 import { Route, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
-import { MarketList } from './components/MarketList'
+import { MarketList, OfflineMarketList } from './components/MarketList'
 import { Overview } from './components/Overview'
 import Market from './Market'
 
@@ -54,7 +54,11 @@ const Markets: React.FC = () => {
 						</StyledAlert>
 					)}
 					{account && <Overview />}
-					<MarketList markets={markets} />
+					{account ? (
+						<MarketList markets={markets} />
+					) : (
+						<OfflineMarketList markets={markets} />
+					)}
 				</Container>
 			</Route>
 			<Route path={`${path}/:marketId`}>
