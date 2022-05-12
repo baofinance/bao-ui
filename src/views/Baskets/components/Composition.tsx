@@ -1,20 +1,20 @@
-import React, { useMemo, useState } from 'react'
-import { StyledTable } from '../../../components/Table'
-import Tooltipped from '../../../components/Tooltipped'
-import { getDisplayBalance } from '../../../utils/numberFormat'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ParentSize } from '@visx/responsive'
 import { BigNumber } from 'bignumber.js'
+import { AssetBadge, CompositionBadge } from 'components/Badge/Badge'
+import { PrefButtons } from 'components/Button/Button'
+import { TableContainer } from 'components/Table'
+import _ from 'lodash'
+import React, { useMemo, useState } from 'react'
+import { Button as BootButton, Col, Row } from 'react-bootstrap'
+import styled from 'styled-components'
+import DonutGraph from '../../../components/Graphs/PieGraph'
 import { SpinnerLoader } from '../../../components/Loader'
 import { Progress } from '../../../components/ProgressBar'
-import _ from 'lodash'
+import { StyledTable } from '../../../components/Table'
+import Tooltipped from '../../../components/Tooltipped'
 import { BasketComponent } from '../../../hooks/baskets/useComposition'
-import { ParentSize } from '@visx/responsive'
-import DonutGraph from '../../../components/Graphs/PieGraph'
-import styled from 'styled-components'
-import { Col, Row } from 'react-bootstrap'
-import { Button } from '../../../components/Button'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { TableContainer } from 'components/Table'
-import { AssetBadge, CompositionBadge } from 'components/Badge/Badge'
+import { getDisplayBalance } from '../../../utils/numberFormat'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -33,19 +33,39 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 
 	return (
 		<div style={{ padding: '0 0.75rem' }}>
-			<Row style={{ marginBottom: '1em' }}>
-				<Col lg={1}>
-					<Button onClick={() => setDisplayType('TABLE')}>
-						<FontAwesomeIcon icon="table" />
-					</Button>
+			<Row md="auto" className="md-start" style={{ marginBottom: '8px' }}>
+				<Col>
+					<BasketHeader style={{ float: 'left' }}>
+						Allocation Breakdown
+					</BasketHeader>
 				</Col>
-				<Col lg={1}>
-					<Button onClick={() => setDisplayType('PIE')}>
-						<FontAwesomeIcon icon="chart-pie" />
-					</Button>
+				<Col>
+					<PrefButtons>
+						<BootButton
+							variant="outline-primary"
+							onClick={() => setDisplayType('TABLE')}
+							style={{
+								marginTop: '0px',
+								borderColor: 'transparent',
+								padding: '8px',
+							}}
+						>
+							<FontAwesomeIcon icon="table" size="xs" />
+						</BootButton>
+						<BootButton
+							variant="outline-primary"
+							onClick={() => setDisplayType('PIE')}
+							style={{
+								marginTop: '0px',
+								borderColor: 'transparent',
+								padding: '8px',
+							}}
+						>
+							<FontAwesomeIcon icon="chart-pie" size="xs" />
+						</BootButton>
+					</PrefButtons>
 				</Col>
 			</Row>
-
 			{displayType === 'TABLE' ? (
 				<TableContainer>
 					<StyledTable bordered hover>
@@ -93,7 +113,10 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 											<td className="apy" width="10%">
 												<CompositionBadge>
 													{component.apy
-														? `${component.apy.div(1e18).times(100).toFixed(2)}%`
+														? `${component.apy
+																.div(1e18)
+																.times(100)
+																.toFixed(2)}%`
 														: '~'}
 												</CompositionBadge>
 											</td>
@@ -105,11 +128,13 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 										</tr>
 									))) || (
 								<tr>
-									{[15, 40, 20, 10, 15].map((pct) => (
-										<td width={`${pct}%`} key={Math.random()}>
-											<SpinnerLoader />
-										</td>
-									))}
+									{['name', 'perc', 'price', 'apy', 'strategy'].map(
+										(tdClass) => (
+											<td key={Math.random()} className={tdClass}>
+												<SpinnerLoader />
+											</td>
+										),
+									)}
 								</tr>
 							)}
 						</tbody>
@@ -155,6 +180,37 @@ const GraphContainer = styled.div`
 	border-radius: 8px;
 	background-color: ${(props) => props.theme.color.primary[100]};
 	border: ${(props) => props.theme.border.default};
+`
+
+export const BasketHeader = styled.div`
+	font-family: 'Rubik', sans-serif;
+	color: ${(props) => props.theme.color.text[100]};
+	margin: auto;
+	font-size: 1.5rem;
+
+	p {
+		margin: 0;
+	}
+
+	span.badge {
+		font-size: 1.25rem;
+		margin-bottom: ${(props) => props.theme.spacing[3]}px;
+	}
+
+	span.smalltext {
+		float: right;
+		font-size: 1rem;
+		margin-top: ${(props) => props.theme.spacing[3]}px;
+		margin-left: ${(props) => props.theme.spacing[2]}px;
+	}
+
+	img {
+		text-align: center;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		font-size: 1.5rem;
+	}
 `
 
 export default Composition

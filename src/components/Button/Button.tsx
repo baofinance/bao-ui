@@ -438,9 +438,7 @@ export const CornerButtons = styled.div`
   top: ${(props) => props.theme.spacing[3]}px;
   right: ${(props) => props.theme.spacing[4]}px;
   font-size: 1.5rem;
-  position: absolute;
   color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
 
   &:hover {
     cursor: pointer;
@@ -458,7 +456,6 @@ export const CornerButton = styled.a`
   font-size: 1.5rem;
   vertical-align: middle;
   color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
 
   &:hover {
     cursor: pointer;

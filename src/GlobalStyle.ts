@@ -248,6 +248,10 @@ svg.menuIcon {
     --bs-gutter-y: 0;  
   }
 }
+
+.table {
+  margin-bottom: 0px;
+}
 `
 
 export default GlobalStyle

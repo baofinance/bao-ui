@@ -24,6 +24,9 @@ export default {
     DEAD: '0x000000000000000000000000000000000000dead',
     //Synths
     baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
+    //Baskets
+    bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
+    bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
   },
   contracts: {
     bao: {
@@ -173,7 +176,7 @@ export default {
       ovenAddress: '0x30DE1e1e4a42557f31F038E3B77672Afd4eAF7DF',
       symbol: 'bDEFI',
       name: 'bDEFI',
-      icon: '/ndefi.svg',
+      icon: '/bDEFI.png',
       cgIds: {
         '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B': 'convex-finance',
         '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'maker',
@@ -190,18 +193,18 @@ export default {
         '0xba100000625a3754423978a60c9317c58a424e3D': 'balancer',
       },
       pieColors: {
-        'aYFI': '#006AE3',
-        'MKR': '#63C3B2',
-        'CVX': '#3A3A3A',
-        'AAVE': '#926BA8',
-        'LDO': '#00A3FF',
-        'LQTY': '#1442CC',
-        'UNI': '#FF047CFF',
-        'FXS': '#393835',
-        'cCOMP': '#00D395',
-        'xSUSHI': '#ea3fb4',
-        'BAL': '#1E1E1E',
-        'aCRV': '#F7E103'
+        aYFI: '#006AE3',
+        MKR: '#63C3B2',
+        CVX: '#3A3A3A',
+        AAVE: '#926BA8',
+        LDO: '#00A3FF',
+        LQTY: '#1442CC',
+        UNI: '#FF047CFF',
+        FXS: '#393835',
+        cCOMP: '#00D395',
+        xSUSHI: '#ea3fb4',
+        BAL: '#1E1E1E',
+        aCRV: '#F7E103',
       },
     },
     {
@@ -213,7 +216,7 @@ export default {
       ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
       symbol: 'bSTBL',
       name: 'bSTBL',
-      icon: '/nstbl.svg',
+      icon: '/bSTBL.png',
       cgIds: {
         '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': 'rai',
         '0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
@@ -221,10 +224,10 @@ export default {
         '0x853d955acef822db058eb8505911ed77f175b99e': 'frax',
       },
       pieColors: {
-        'aRAI': '#1FC9A8',
-        'cDAI': '#F5AC37',
-        'aFRAX': '#000',
-        'aFEI': '#22996E',
+        aRAI: '#1FC9A8',
+        cDAI: '#F5AC37',
+        aFRAX: '#000',
+        aFEI: '#22996E',
       },
     },
   ],

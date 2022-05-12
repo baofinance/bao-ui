@@ -1,20 +1,24 @@
-import React, { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
-import useBaskets from '../../hooks/baskets/useBaskets'
-import useBasketRates from '../../hooks/baskets/useNestRate'
-import useComposition from '../../hooks/baskets/useComposition'
-import useBasketInfo from '../../hooks/baskets/useBasketInfo'
-import PageHeader from '../../components/PageHeader'
-import Page from 'components/Page'
-import { Container } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { getDisplayBalance } from '../../utils/numberFormat'
-import { SpinnerLoader } from '../../components/Loader'
 import { StyledBadge } from 'components/Badge'
-import Composition from './components/Composition'
+import { CornerButton, CornerButtons } from 'components/Button/Button'
+import { Icon } from 'components/Icon'
+import Page from 'components/Page'
+import Tooltipped from 'components/Tooltipped'
+import React, { useMemo, useState } from 'react'
+import { Container } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
+import { SpinnerLoader } from '../../components/Loader'
+import useBasketInfo from '../../hooks/baskets/useBasketInfo'
+import useBaskets from '../../hooks/baskets/useBaskets'
+import useComposition from '../../hooks/baskets/useComposition'
+import useBasketRates from '../../hooks/baskets/useNestRate'
+import usePairPrice from '../../hooks/baskets/usePairPrice'
+import { getDisplayBalance } from '../../utils/numberFormat'
 import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
-import usePairPrice from '../../hooks/baskets/usePairPrice'
+import Composition from './components/Composition'
+import Description from './components/Description'
 
 const Basket: React.FC = () => {
 	const { id } = useParams()
@@ -29,12 +33,37 @@ const Basket: React.FC = () => {
 	const info = useBasketInfo(basket)
 	const pairPrice = usePairPrice(basket)
 
+	const [analyticsOpen, setAnalyticsOpen] = useState(true)
+
 	return (
 		<Page>
-			<PageHeader
-				title={basket && basket.name}
-				subtitle={
+			<Container>
+				<CornerButtons>
+					<Tooltipped content={`${analyticsOpen ? 'Hide' : 'View'} Analytics`}>
+						<CornerButton
+							onClick={() => setAnalyticsOpen(!analyticsOpen)}
+							aria-controls="analytics-collapse"
+							aria-expanded={analyticsOpen}
+						>
+							<FontAwesomeIcon icon="chart-line" />
+						</CornerButton>
+					</Tooltipped>
+					<Tooltipped content="View Contract">
+						<CornerButton
+							href={`https://polygonscan.com/address/${
+								basket && basket.basketAddresses[1]
+							}`}
+							target="_blank"
+						>
+							<FontAwesomeIcon icon="file-contract" />
+						</CornerButton>
+					</Tooltipped>
+				</CornerButtons>
+				<StyledPageHeader>
+					<Icon src={basket && basket.icon} alt={basket && basket.symbol} />
+					<br />
 					<StyledBadge>
+						1 {basket && basket.symbol} ={' '}
 						{rates ? (
 							<>
 								<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
@@ -46,8 +75,8 @@ const Basket: React.FC = () => {
 							<SpinnerLoader />
 						)}
 					</StyledBadge>
-				}
-			/>
+				</StyledPageHeader>
+			</Container>
 			<Container>
 				<BasketStats
 					basket={basket}
@@ -58,9 +87,18 @@ const Basket: React.FC = () => {
 				/>
 				<BasketButtons basket={basket} />
 				<Composition composition={composition} />
+				<Description basketAddress={basket && basket.basketAddresses[1]} />
 			</Container>
 		</Page>
 	)
 }
 
 export default Basket
+
+const StyledPageHeader = styled.div`
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	margin: ${(props) => props.theme.spacing[6]}px auto 0;
+`
