@@ -187,7 +187,7 @@ const WalletBalanceImage = styled.div`
 	min-width: 48px;
 	min-height: 48px;
 	border-radius: 40px;
-	background-color: ${(props) => props.theme.color.primary[200]};
+	background-color: ${(props) => props.theme.color.primary[400]};
 	border: none;
 
 	img {
@@ -253,13 +253,13 @@ const StatText = styled.div`
 const ClearButton = styled.button`
 	float: right;
 	vertical-align: middle;
-	background-color: ${(props) => props.theme.color.primary[400]} !important;
+	background-color: ${(props) => props.theme.color.primary[300]} !important;
 	border-radius: 8px;
 	border: none;
 	color: ${(props) => props.theme.color.text[100]};
 
 	&:hover {
-		background-color: ${(props) => props.theme.color.primary[500]} !important;
+		background-color: ${(props) => props.theme.color.primary[400]} !important;
 	}
 `
 
