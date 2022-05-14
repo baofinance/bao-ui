@@ -19,10 +19,7 @@ import { BalanceInput } from '../../../../components/Input'
 import { ActiveSupportedBasket } from '../../../../bao/lib/types'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
-import {
-	decimate,
-	getDisplayBalance,
-} from '../../../../utils/numberFormat'
+import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
 import useOvenInfo from '../../../../hooks/baskets/useOvenInfo'
 import { StatBlock } from '../../../../components/Stats'
 

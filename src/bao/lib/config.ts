@@ -196,7 +196,7 @@ export default {
         aYFI: '#006AE3',
         MKR: '#63C3B2',
         CVX: '#3A3A3A',
-        AAVE: '#926BA8',
+        cAAVE: '#926BA8',
         LDO: '#00A3FF',
         LQTY: '#1442CC',
         UNI: '#FF047CFF',

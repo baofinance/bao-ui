@@ -229,6 +229,8 @@ const _getImageURL = (symbol: string) =>
     ? 'FEI'
     : symbol.toLowerCase() === 'cdai'
     ? 'DAI'
+    : symbol.toLowerCase() === 'caave'
+    ? 'AAVE'
     : symbol
 
 export default useComposition

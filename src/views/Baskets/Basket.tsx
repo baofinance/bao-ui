@@ -33,24 +33,13 @@ const Basket: React.FC = () => {
 	const info = useBasketInfo(basket)
 	const pairPrice = usePairPrice(basket)
 
-	const [analyticsOpen, setAnalyticsOpen] = useState(true)
-
 	return (
 		<Page>
 			<Container>
 				<CornerButtons>
-					<Tooltipped content={`${analyticsOpen ? 'Hide' : 'View'} Analytics`}>
+					<Tooltipped content="View Contract on Etherscan">
 						<CornerButton
-							onClick={() => setAnalyticsOpen(!analyticsOpen)}
-							aria-controls="analytics-collapse"
-							aria-expanded={analyticsOpen}
-						>
-							<FontAwesomeIcon icon="chart-line" />
-						</CornerButton>
-					</Tooltipped>
-					<Tooltipped content="View Contract">
-						<CornerButton
-							href={`https://polygonscan.com/address/${
+							href={`https://etherscan.io/address/${
 								basket && basket.basketAddresses[1]
 							}`}
 							target="_blank"

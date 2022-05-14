@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import useBao from '../../../../hooks/base/useBao'
 import useTokenBalance from '../../../../hooks/base/useTokenBalance'
-import { Col, Modal, Row } from 'react-bootstrap'
+import { Badge, Col, Modal, Row } from 'react-bootstrap'
 import {
 	AssetLabel,
 	AssetStack,
@@ -27,6 +27,7 @@ import {
 } from '../../../../utils/numberFormat'
 import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
 import useBasketRates from '../../../../hooks/baskets/useNestRate'
+import { StyledBadge } from '../../../../components/Badge'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -42,6 +43,7 @@ const BasketModal: React.FC<ModalProps> = ({
 	hideModal,
 }) => {
 	const [value, setValue] = useState<string | undefined>()
+	const [secondaryValue, setSecondaryValue] = useState<string | undefined>()
 	const [ethBalance, setEthBalance] = useState<BigNumber | undefined>()
 
 	const bao = useBao()
@@ -79,12 +81,12 @@ const BasketModal: React.FC<ModalProps> = ({
 					.getContract('recipe')
 					.methods.toPie(
 						basket.address,
-						exponentiate(new BigNumber(value).div(rates.eth)),
+						exponentiate(secondaryValue).toFixed(0),
 						rates.dexIndexes,
 					)
 					.send({
 						from: account,
-						value,
+						value: exponentiate(value).toFixed(0),
 					})
 
 				handleTx(
@@ -120,10 +122,20 @@ const BasketModal: React.FC<ModalProps> = ({
 		[value],
 	)
 
+	const hide = () => {
+		hideModal()
+		setValue(undefined)
+		setSecondaryValue(undefined)
+	}
+
 	return basket ? (
 		<>
-			<Modal show={show} onHide={hideModal} centered>
-				<CloseButton onClick={hideModal}>
+			<Modal
+				show={show}
+				onHide={hide}
+				centered
+			>
+				<CloseButton onClick={hide}>
 					<FontAwesomeIcon icon="times" />
 				</CloseButton>
 				<Modal.Header>
@@ -137,6 +149,23 @@ const BasketModal: React.FC<ModalProps> = ({
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
+					{operation === 'MINT' && (
+						<>
+							<div style={{ display: 'flex' }}>
+								<StyledBadge style={{ margin: 'auto' }}>
+									1 {basket.symbol} ={' '}
+									<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
+									{rates && getDisplayBalance(rates.eth)}
+								</StyledBadge>
+							</div>
+							<br />
+							<div style={{ textAlign: 'center' }}>
+								<b style={{ fontWeight: 'bold' }}>NOTE:</b> An extra 5% of the
+								ETH cost will be included to account for slippage. Any unused
+								ETH will be returned in the mint transaction.
+							</div>
+						</>
+					)}
 					<ModalStack>
 						<BalanceWrapper>
 							<Col xs={4}>
@@ -161,6 +190,7 @@ const BasketModal: React.FC<ModalProps> = ({
 									value={value}
 									onChange={(e) => setValue(e.currentTarget.value)}
 									onMaxClick={handleMaxClick}
+									disabled={operation === 'MINT'}
 									label={
 										<AssetStack>
 											<IconFlex>
@@ -177,16 +207,23 @@ const BasketModal: React.FC<ModalProps> = ({
 									<>
 										<br />
 										<BalanceInput
-											value={
-												value && new BigNumber(value).isFinite()
-													? exponentiate(
-															new BigNumber(value).div(rates.eth),
-													  ).toFixed(16)
-													: '0'
-											}
-											disabled
-											onChange={undefined}
-											onMaxClick={undefined}
+											value={secondaryValue}
+											onChange={(e) => {
+												const ethVal = decimate(rates.eth)
+													.times(e.currentTarget.value)
+													.times(1.05)
+												setSecondaryValue(e.currentTarget.value)
+												setValue(
+													ethVal.isFinite() ? ethVal.toString() : '0', // Pad an extra 5% ETH. It will be returned to the user if it is not used.
+												)
+											}}
+											onMaxClick={() => {
+												// Seek to mint 95% of total ETH value (use remaining 5% as slippage protection)
+
+												const ethVal = ethBalance.times(0.95)
+												setSecondaryValue(ethVal.div(decimate(rates.eth)).toFixed(8))
+												setValue(ethBalance.toString())
+											}}
 											label={
 												<AssetStack>
 													<IconFlex>
@@ -208,8 +245,8 @@ const BasketModal: React.FC<ModalProps> = ({
 							: isDisabled
 							? 'Invalid Input'
 							: operation === 'MINT'
-							? `Mint ${value || 0} ${basket.symbol}`
-							: `Redeem ${value || 0} ${basket.symbol}`}
+							? `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`
+							: `Redeem ${getDisplayBalance(value, 0) || 0} ${basket.symbol}`}
 					</Button>
 				</Modal.Footer>
 			</Modal>

@@ -111,14 +111,25 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 												)}
 											</td>
 											<td className="apy" width="10%">
-												<CompositionBadge>
-													{component.apy
-														? `${component.apy
-																.div(1e18)
-																.times(100)
-																.toFixed(2)}%`
-														: '~'}
-												</CompositionBadge>
+												<Tooltipped
+													content={
+														component.apy
+															? `${component.apy
+																	.div(1e18)
+																	.times(100)
+																	.toFixed(18)}%`
+															: '~'
+													}
+												>
+													<CompositionBadge>
+														{component.apy
+															? `${component.apy
+																	.div(1e18)
+																	.times(100)
+																	.toFixed(2)}%`
+															: '~'}
+													</CompositionBadge>
+												</Tooltipped>
 											</td>
 											<td className="strategy" width="15%">
 												<CompositionBadge>
