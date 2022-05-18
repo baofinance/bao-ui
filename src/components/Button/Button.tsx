@@ -125,7 +125,6 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	outline: none;
 	padding-left: ${(props) => props.padding}px;
 	padding-right: ${(props) => props.padding}px;
-	pointer-events: ${(props) => (!props.disabled ? undefined : 'none')};
 	width: ${(props) => (props.width ? props.width : '100%')};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
@@ -144,13 +143,18 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 			${(props) => -props.theme.spacing[3]}px;
 	}
 
+	&:hover {
+		background: ${(props) => props.theme.color.primary[300]};
+		cursor: pointer;
+	}
+
 	&:hover,
+	&:focus,
 	&:active {
-		background-color: ${(props) => props.theme.color.primary[300]};
-		color: ${(props) => props.theme.color.text[100]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
+
 `
 
 const StyledLink = styled(Link)`
