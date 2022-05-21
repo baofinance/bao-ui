@@ -40,13 +40,17 @@ export const Overview = () => {
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
 		: 0
 
-	// TODO: Better health factor color spectrum
-	const healthFactorColor = (healthFactor: BigNumber) =>
-		healthFactor.lte(1.25)
-			? '#e32222'
-			: healthFactor.lt(1.55)
-			? '#ffdf19'
-			: '#45be31'
+	let healthFactorColor
+
+	if (accountLiquidity && accountLiquidity.usdSupply <= 0) {
+		healthFactorColor = `${(props) => props.theme.color.text[100]}`
+	} else if (borrowLimit <= 25) {
+		healthFactorColor = 'green'
+	} else if (borrowLimit <= 75) {
+		healthFactorColor = 'yellow'
+	} else if (borrowLimit > 75) {
+		healthFactorColor = 'red'
+	}
 
 	return bao && account && accountLiquidity ? (
 		<>
@@ -87,7 +91,7 @@ export const Overview = () => {
 							strokeWidth={10}
 							styles={buildStyles({
 								strokeLinecap: 'butt',
-								pathColor: '#ce6509',
+								pathColor: `${healthFactorColor}`,
 							})}
 						>
 							<div
@@ -141,15 +145,16 @@ export const Overview = () => {
 							</h1>
 							<p
 								style={{
-									color: `${healthFactor && healthFactorColor(healthFactor)}`,
+									color: `${healthFactor && healthFactorColor}`,
 								}}
 							>
-								{healthFactor &&
-									(healthFactor.isFinite() ? (
-										healthFactor.toFixed(2)
-									) : (
-										<FontAwesomeIcon icon="infinity" />
-									))}
+								{accountLiquidity.usdSupply <= 0 ? (
+									healthFactor && '-'
+								) : healthFactor.isFinite() ? (
+									healthFactor.toFixed(2)
+								) : (
+									<FontAwesomeIcon icon="infinity" />
+								)}
 							</p>
 						</UserStat>
 					</StatWrapper>

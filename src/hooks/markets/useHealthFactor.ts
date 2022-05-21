@@ -10,11 +10,14 @@ const useHealthFactor = () => {
 
   const fetchHealthFactor = useCallback(async () => {
     const { usdSupply, usdBorrow } = accountLiquidity
+    const _markets = markets.filter((market) => !market.isSynth)
+
     const avgCollateralFactor =
-      markets.reduce(
+      _markets.reduce(
         (cfTotal, market) => cfTotal + market.collateralFactor,
         0,
-      ) / markets.length
+      ) / _markets.length
+      
     const _healthFactor = new BigNumber(
       (usdSupply * avgCollateralFactor) / usdBorrow,
     )
