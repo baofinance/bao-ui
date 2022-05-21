@@ -42,8 +42,9 @@ export const Overview = () => {
 
 	let healthFactorColor
 
-	if (accountLiquidity && accountLiquidity.usdSupply <= 0) {
-		healthFactorColor = `${(props) => props.theme.color.text[100]}`
+	if (accountLiquidity && accountLiquidity.usdBorrow <= 0) {
+		healthFactorColor = `${(props: { theme: { color: { text: any[] } } }) =>
+			props.theme.color.text[100]}`
 	} else if (borrowLimit <= 25) {
 		healthFactorColor = 'green'
 	} else if (borrowLimit <= 75) {
@@ -148,13 +149,15 @@ export const Overview = () => {
 									color: `${healthFactor && healthFactorColor}`,
 								}}
 							>
-								{accountLiquidity.usdSupply <= 0 ? (
-									healthFactor && '-'
-								) : healthFactor.isFinite() ? (
-									healthFactor.toFixed(2)
-								) : (
-									<FontAwesomeIcon icon="infinity" />
-								)}
+								{healthFactor &&
+									(healthFactor.isFinite() ? (
+										healthFactor.toFixed(2)
+									) : (
+										<FontAwesomeIcon
+											color={`${healthFactorColor}`}
+											icon="infinity"
+										/>
+									))}
 							</p>
 						</UserStat>
 					</StatWrapper>
