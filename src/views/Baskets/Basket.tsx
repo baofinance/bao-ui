@@ -3,6 +3,7 @@ import { StyledBadge } from 'components/Badge'
 import { CornerButton, CornerButtons } from 'components/Button/Button'
 import { Icon } from 'components/Icon'
 import Page from 'components/Page'
+import PageHeader from 'components/PageHeader'
 import Tooltipped from 'components/Tooltipped'
 import React, { useMemo, useState } from 'react'
 import { Container } from 'react-bootstrap'
@@ -49,7 +50,11 @@ const Basket: React.FC = () => {
 					</Tooltipped>
 				</CornerButtons>
 				<StyledPageHeader>
-					<Icon src={basket && basket.icon} alt={basket && basket.symbol} />
+					<PageHeader
+						icon={basket && basket.icon}
+						title={basket && basket.symbol}
+						subtitle="Mint synthethic assets with multiple types of collateral!"
+					/>
 					<br />
 					<StyledBadge>
 						1 {basket && basket.symbol} ={' '}

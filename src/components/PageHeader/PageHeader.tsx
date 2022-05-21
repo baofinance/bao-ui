@@ -1,3 +1,4 @@
+import { Icon } from 'components/Icon'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -12,6 +13,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
 	return (
 		<Container>
 			<StyledPageHeader>
+				<Icon src={icon} />
 				<StyledTitle>{title}</StyledTitle>
 			</StyledPageHeader>
 		</Container>

@@ -17,7 +17,7 @@ export interface IconProps {
 }
 
 export const Icon = styled.img`
-	height: 200px;
+	max-height: 200px;
 	margin-bottom: ${(props) => props.theme.spacing[4]}px;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
