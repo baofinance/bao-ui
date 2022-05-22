@@ -147,13 +147,18 @@ export const Overview = () => {
 									color: `${healthFactor && healthFactorColor(healthFactor)}`,
 								}}
 							>
-								{accountLiquidity.usdSupply <= 0 ? (
-									'-'
-								) : healthFactor.isFinite() ? (
-									healthFactor.toFixed(2)
-								) : (
-									<FontAwesomeIcon icon="infinity" />
-								)}
+								{healthFactor &&
+									(healthFactor.isFinite() ? (
+										healthFactor.isLessThanOrEqualTo(0) ? (
+											<p style={{ color: 'green' }}>-</p>
+										) : healthFactor.gt(10000) ? (
+											'> 10000'
+										) : (
+											healthFactor.toFixed(2)
+										)
+									) : (
+										<FontAwesomeIcon icon="infinity" />
+									))}
 							</p>
 						</UserStat>
 					</StatWrapper>
