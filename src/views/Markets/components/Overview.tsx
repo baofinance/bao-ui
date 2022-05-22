@@ -150,7 +150,7 @@ export const Overview = () => {
 								{healthFactor &&
 									(healthFactor.isFinite() ? (
 										healthFactor.isLessThanOrEqualTo(0) ? (
-											<p style={{ color: 'green' }}>-</p>
+											'-'
 										) : healthFactor.gt(10000) ? (
 											'> 10000'
 										) : (
