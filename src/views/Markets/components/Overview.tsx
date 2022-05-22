@@ -40,17 +40,14 @@ export const Overview = () => {
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
 		: 0
 
-	let healthFactorColor
-
-	if (accountLiquidity && accountLiquidity.usdSupply <= 0) {
-		healthFactorColor = `${(props) => props.theme.color.text[100]}`
-	} else if (borrowLimit <= 25) {
-		healthFactorColor = 'green'
-	} else if (borrowLimit <= 75) {
-		healthFactorColor = 'yellow'
-	} else if (borrowLimit > 75) {
-		healthFactorColor = 'red'
-	}
+	const healthFactorColor = (healthFactor: BigNumber) =>
+		healthFactor.eq(0)
+			? `${(props: any) => props.theme.color.text[100]}`
+			: healthFactor.lte(1.25)
+			? '#e32222'
+			: healthFactor.lt(1.55)
+			? '#ffdf19'
+			: '#45be31'
 
 	return bao && account && accountLiquidity ? (
 		<>
@@ -91,7 +88,9 @@ export const Overview = () => {
 							strokeWidth={10}
 							styles={buildStyles({
 								strokeLinecap: 'butt',
-								pathColor: `${healthFactorColor}`,
+								pathColor: `${
+									healthFactor ? healthFactorColor(healthFactor) : '#fff'
+								}`,
 							})}
 						>
 							<div
@@ -141,15 +140,15 @@ export const Overview = () => {
 						<UserStat>
 							<h1>
 								Health Factor{' '}
-								<Tooltipped content="Your account health factor is calculated as follows: (USD supplied * average collateral factor) / USD borrowed. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
+								<Tooltipped content="Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
 							</h1>
 							<p
 								style={{
-									color: `${healthFactor && healthFactorColor}`,
+									color: `${healthFactor && healthFactorColor(healthFactor)}`,
 								}}
 							>
 								{accountLiquidity.usdSupply <= 0 ? (
-									healthFactor && '-'
+									'-'
 								) : healthFactor.isFinite() ? (
 									healthFactor.toFixed(2)
 								) : (
