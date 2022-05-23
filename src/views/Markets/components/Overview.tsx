@@ -139,7 +139,7 @@ export const Overview = () => {
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>
-								Health Factor
+								Health Factor{' '}
 								<Tooltipped content="Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
 							</h1>
 							<p
