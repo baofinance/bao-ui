@@ -211,7 +211,14 @@ const _getStrategy = (symbol: string) =>
 // Special cases for image URLS, i.e. wrapped assets
 // This sucks. Should do this more dynamically.
 const _getImageURL = (symbol: string) =>
-  symbol.toLowerCase() === 'wmatic'
+  symbol.toLowerCase() === 'arai'
+    ? 'RAI'
+    : symbol.toLowerCase() === 'ausdc'
+    ? 'USDC'
+    : symbol.toLowerCase() === 'adai'
+    ? 'DAI'
+    : symbol
+/* symbol.toLowerCase() === 'wmatic'
     ? 'MATIC'
     : symbol.toLowerCase() === 'sklima'
     ? 'KLIMA'
@@ -221,16 +228,13 @@ const _getImageURL = (symbol: string) =>
     ? 'COMP'
     : symbol.toLowerCase() === 'acrv'
     ? 'CRV'
-    : symbol.toLowerCase() === 'arai'
-    ? 'RAI'
+    : // ...
     : symbol.toLowerCase() === 'afrax'
     ? 'FRAX'
     : symbol.toLowerCase() === 'afei'
     ? 'FEI'
-    : symbol.toLowerCase() === 'cdai'
-    ? 'DAI'
     : symbol.toLowerCase() === 'caave'
     ? 'AAVE'
-    : symbol
+    : symbol */
 
 export default useComposition

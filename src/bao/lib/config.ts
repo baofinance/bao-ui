@@ -27,6 +27,9 @@ export default {
     // NFTs
     baoElder: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
     baoSwap: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
+    //Baskets
+    bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
+    bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
   },
   contracts: {
     bao: {
@@ -167,7 +170,7 @@ export default {
     },
   ],
   baskets: [
-    {
+    /*{
       nid: 1,
       basketAddresses: {
         1: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
@@ -206,9 +209,9 @@ export default {
         BAL: '#1E1E1E',
         aCRV: '#F7E103',
       },
-    },
+    },*/
     {
-      nid: 2,
+      nid: 1,
       basketAddresses: {
         1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
       },
@@ -220,14 +223,12 @@ export default {
       cgIds: {
         '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': 'rai',
         '0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
-        '0x956f47f50a910163d8bf957cf5846d573e7f87ca': 'fei-usd',
-        '0x853d955acef822db058eb8505911ed77f175b99e': 'frax',
+        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 'usd-coin',
       },
       pieColors: {
         aRAI: '#1FC9A8',
-        cDAI: '#F5AC37',
-        aFRAX: '#000',
-        aFEI: '#22996E',
+        aDAI: '#F5AC37',
+        aUSDC: '#2775CA',
       },
     },
   ],
