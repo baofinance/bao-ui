@@ -6,7 +6,6 @@ import {
   getWethContract,
 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import useBlock from 'hooks/base/useBlock'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { getContract } from 'utils/erc20'
@@ -29,7 +28,6 @@ const useAllStakedValue = (): StakedValue[] => {
   const masterChefContract = getMasterChefContract(bao)
   const wethContract = getWethContract(bao)
   const { transactions } = useTransactionProvider()
-  const block = useBlock()
 
   const fetchAllStakedValue = useCallback(async () => {
     const balances: Array<StakedValue> = await Promise.all(
@@ -52,7 +50,7 @@ const useAllStakedValue = (): StakedValue[] => {
     if (account && masterChefContract && bao) {
       fetchAllStakedValue()
     }
-  }, [account, transactions, masterChefContract, setBalance, bao, block])
+  }, [account, transactions, masterChefContract, setBalance, bao])
 
   return balances
 }

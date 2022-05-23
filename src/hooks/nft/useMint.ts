@@ -5,7 +5,6 @@ import {
   getNFTWhitelistClaimed,
 } from 'bao/utils'
 import useBao from 'hooks/base/useBao'
-import useBlock from 'hooks/base/useBlock'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -13,7 +12,6 @@ export const useElderClaimedCheck = () => {
   const [isClaimed, setIsClaimed] = useState<any | undefined>()
   const { account } = useWeb3React()
   const bao = useBao()
-  const block = useBlock()
   const { transactions } = useTransactionProvider()
 
   const fetchWhitelistClaimed = useCallback(async () => {
@@ -28,7 +26,7 @@ export const useElderClaimedCheck = () => {
     if (account && bao) {
       fetchWhitelistClaimed()
     }
-  }, [bao, account, block, transactions])
+  }, [bao, account, transactions])
 
   return isClaimed
 }
@@ -37,7 +35,6 @@ export const useBaoSwapClaimedCheck = () => {
   const [isClaimed, setIsClaimed] = useState<any | undefined>()
   const { account } = useWeb3React()
   const bao = useBao()
-  const block = useBlock()
   const { transactions } = useTransactionProvider()
 
   const fetchWhitelistClaimed = useCallback(async () => {
@@ -52,7 +49,7 @@ export const useBaoSwapClaimedCheck = () => {
     if (account && bao) {
       fetchWhitelistClaimed()
     }
-  }, [bao, account, block, transactions])
+  }, [bao, account, transactions])
 
   return isClaimed
 }
