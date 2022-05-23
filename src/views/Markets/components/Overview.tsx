@@ -40,9 +40,10 @@ export const Overview = () => {
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
 		: 0
 
-	// TODO: Better health factor color spectrum
 	const healthFactorColor = (healthFactor: BigNumber) =>
-		healthFactor.lte(1.25)
+		healthFactor.eq(0)
+			? `${(props: any) => props.theme.color.text[100]}`
+			: healthFactor.lte(1.25)
 			? '#e32222'
 			: healthFactor.lt(1.55)
 			? '#ffdf19'
@@ -87,7 +88,9 @@ export const Overview = () => {
 							strokeWidth={10}
 							styles={buildStyles({
 								strokeLinecap: 'butt',
-								pathColor: '#ce6509',
+								pathColor: `${
+									healthFactor ? healthFactorColor(healthFactor) : '#fff'
+								}`,
 							})}
 						>
 							<div
@@ -136,8 +139,8 @@ export const Overview = () => {
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>
-								Health Factor{' '}
-								<Tooltipped content="Your account health factor is calculated as follows: (USD supplied * average collateral factor) / USD borrowed. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
+								Health Factor
+								<Tooltipped content="Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
 							</h1>
 							<p
 								style={{
@@ -146,7 +149,16 @@ export const Overview = () => {
 							>
 								{healthFactor &&
 									(healthFactor.isFinite() ? (
-										healthFactor.toFixed(2)
+										healthFactor.lte(0) ? (
+											'-'
+										) : healthFactor.gt(10000) ? (
+											<p>
+												{'>'} 10000 {' '}
+												<Tooltipped content={`Your health factor is ${healthFactor}.`} />
+											</p>
+										) : (
+											healthFactor.toFixed(2)
+										)
 									) : (
 										<FontAwesomeIcon icon="infinity" />
 									))}
