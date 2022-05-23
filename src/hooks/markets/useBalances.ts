@@ -6,6 +6,7 @@ import { Contract } from 'web3-eth-contract'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useWeb3React } from '@web3-react/core'
+import useBlock from 'hooks/base/useBlock'
 
 export type Balance = {
   address: string
@@ -17,6 +18,7 @@ export const useAccountBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
   const { account, library } = useWeb3React()
+  const block = useBlock()
   const tokens = Config.markets.map(
     (market) => market.underlyingAddresses[Config.networkId],
   )
@@ -71,7 +73,7 @@ export const useAccountBalances = (): Balance[] => {
     if (!(bao && account)) return
 
     fetchBalances()
-  }, [transactions, bao, account])
+  }, [transactions, bao, account, block])
 
   return balances
 }

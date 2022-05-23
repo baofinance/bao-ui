@@ -4,7 +4,7 @@ export default {
   networkId: 1,
   defaultRpc: {
     chainId: '0x1',
-    rpcUrls: ['https://mainnet.infura.io/v3/caf20378e5d149b88d43b9eacb902689'],
+    rpcUrls: ['https://rpc.ankr.com/eth'],
     blockExplorerUrls: ['https://etherscan.io'],
     chainName: 'Ethereum Mainnet',
     nativeCurrency: {
@@ -24,9 +24,9 @@ export default {
     DEAD: '0x000000000000000000000000000000000000dead',
     //Synths
     baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
-    //Baskets
-    bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
-    bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+    // NFTs
+    baoElder: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
+    baoSwap: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
   },
   contracts: {
     bao: {

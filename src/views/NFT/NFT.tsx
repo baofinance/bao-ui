@@ -9,7 +9,7 @@ import {
 	mintBaoSwap,
 	mintElder,
 } from 'bao/utils'
-import { SubmitButton } from 'components/Button/Button'
+import { Button, SubmitButton } from 'components/Button/Button'
 import Label from 'components/Label'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
@@ -22,7 +22,7 @@ import { Card, Col, Container, Row } from 'react-bootstrap'
 import { Route, useRouteMatch } from 'react-router-dom'
 import { addresses as elderAddresses } from './components/baoElderWL.json'
 import { addresses as baoSwapAddresses } from './components/baoSwapWL.json'
-import { StyledInfo, StyledWrapper } from './components/styles'
+import { StyledInfo } from './components/styles'
 
 const NFT: React.FC = () => {
 	const { account } = useWeb3React()
@@ -117,6 +117,14 @@ const NFT: React.FC = () => {
 												Checking Eligibility...
 											</SubmitButton>
 										)}
+										{isElderClaimed ? (
+											<Button
+												href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoElder`}
+												text="View on OpenSea"
+											/>
+										) : (
+											<Button disabled={true} text="View on OpenSea" />
+										)}
 									</>
 								</Card.Footer>
 							</Card>
@@ -180,6 +188,14 @@ const NFT: React.FC = () => {
 											<SubmitButton disabled={true}>
 												Checking Eligibility...
 											</SubmitButton>
+										)}
+										{isElderClaimed ? (
+											<Button
+												href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoGnosis`}
+												text="View on OpenSea"
+											/>
+										) : (
+											<Button disabled={true} text="View on OpenSea" />
 										)}
 									</>
 								</Card.Footer>

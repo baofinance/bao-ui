@@ -139,7 +139,6 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({
 		return _markets.filter((market) => market.isSynth)
 	}, [bao, _markets])
 
-	console.log(synthMarkets)
 	return (
 		<>
 			{collateralMarkets && synthMarkets ? (

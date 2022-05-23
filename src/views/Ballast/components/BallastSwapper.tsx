@@ -8,7 +8,6 @@ import { BalanceInput } from 'components/Input'
 import { SpinnerLoader } from 'components/Loader'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
-import useBlock from 'hooks/base/useBlock'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -24,7 +23,6 @@ const BallastSwapper: React.FC = () => {
 	const { transactions } = useTransactionProvider()
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
 	const [inputVal, setInputVal] = useState('')
-	const block = useBlock()
 
 	const [reserves, setReserves] = useState<BigNumber | undefined>()
 	const [supplyCap, setSupplyCap] = useState<BigNumber | undefined>()
@@ -72,7 +70,7 @@ const BallastSwapper: React.FC = () => {
 		if (!bao) return
 
 		fetchBallastInfo()
-	}, [bao, transactions, block])
+	}, [bao, transactions])
 
 	const daiInput = (
 		<>
