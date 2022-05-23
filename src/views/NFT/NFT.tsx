@@ -119,7 +119,7 @@ const NFT: React.FC = () => {
 										)}
 										{isElderClaimed ? (
 											<Button
-												href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoElder}`}
+												href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoElder`}
 												text="View on OpenSea"
 											/>
 										) : (
@@ -191,7 +191,7 @@ const NFT: React.FC = () => {
 										)}
 										{isElderClaimed ? (
 											<Button
-												href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoGnosis}`}
+												href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoGnosis`}
 												text="View on OpenSea"
 											/>
 										) : (
