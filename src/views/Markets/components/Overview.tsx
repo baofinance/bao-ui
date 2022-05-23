@@ -139,7 +139,7 @@ export const Overview = () => {
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>
-								Health Factor{' '}
+								Health Factor
 								<Tooltipped content="Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
 							</h1>
 							<p
@@ -149,10 +149,13 @@ export const Overview = () => {
 							>
 								{healthFactor &&
 									(healthFactor.isFinite() ? (
-										healthFactor.isLessThanOrEqualTo(0) ? (
+										healthFactor.lte(0) ? (
 											'-'
 										) : healthFactor.gt(10000) ? (
-											'> 10000'
+											<p>
+												{'>'} 10000 {' '}
+												<Tooltipped content={`Your health factor is ${healthFactor}.`} />
+											</p>
 										) : (
 											healthFactor.toFixed(2)
 										)
