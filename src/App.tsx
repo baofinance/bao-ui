@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
 import React, { useCallback, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
 import Market from 'views/Markets/Market'
@@ -61,23 +61,13 @@ const App: React.FC = () => {
 					onPresentMobileMenu={handlePresentMobileMenu}
 				/>
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
-				<Switch>
-					<Route path="/" exact>
-						<Markets />
-					</Route>
-					<Route path="/markets/:marketId">
-						<Market />
-					</Route>
-					<Route path="/ballast">
-						<Ballast />
-					</Route>
-					<Route path="/farms">
-						<Farms />
-					</Route>
-					<Route path="/NFT">
-						<NFT />
-					</Route>
-				</Switch>
+				<Routes>
+					<Route path='/' element={<Markets />} />
+					<Route path="/markets/:marketId" element={<Market />} />
+					<Route path="/ballast" element={<Ballast />} />
+					<Route path="/farms" element={<Farms />} />
+					<Route path="/NFT" element={<NFT />} />
+				</Routes>
 			</Router>
 		</Providers>
 	)

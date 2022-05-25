@@ -9,8 +9,8 @@ import { Bao } from './Bao'
 import Config from './lib/config'
 import { MerkleTree } from 'merkletreejs'
 import keccak256 from 'keccak256'
-import baoElderWL from 'views/NFT/components/baoElderWL.json'
-import baoSwapWL from 'views/NFT/components/baoSwapWL.json'
+import baoElderWL from 'views/NFT/components/baoElderWL'
+import baoSwapWL from 'views/NFT/components/baoSwapWL'
 
 BigNumber.config({
   EXPONENTIAL_AT: 1000,
@@ -413,7 +413,7 @@ export const mintElder = async (
   nftContract: Contract,
   account: string,
 ): Promise<string> => {
-  const leafNodes = baoElderWL.addresses.map((address: string) =>
+  const leafNodes = baoElderWL.map((address: string) =>
     keccak256(address),
   )
   const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
@@ -432,7 +432,7 @@ export const mintBaoSwap = async (
   nftContract: Contract,
   account: string,
 ): Promise<string> => {
-  const leafNodes = baoSwapWL.addresses.map((address: string) =>
+  const leafNodes = baoSwapWL.map((address: string) =>
     keccak256(address),
   )
   const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })

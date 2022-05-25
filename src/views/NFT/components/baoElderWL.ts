@@ -1,5 +1,4 @@
-{
-  "addresses": [
+const baoElderWL = [
     "0x000000000000000000000000000000000000dead",
     "0x000000000000006f6502b7f2bbac8c30a3f67e9a",
     "0x000000000000084e91743124a982076c59f10084",
@@ -36510,4 +36509,5 @@
     "0xfffdf5a66f3594c9382bed2196885610506ee789",
     "0xfffe997674c0003d4c1ab3fc881dcf3537eabb5d"
   ]
-}
+
+  export default baoElderWL

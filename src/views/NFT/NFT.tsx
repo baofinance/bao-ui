@@ -19,9 +19,9 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useBaoSwapClaimedCheck, useElderClaimedCheck } from 'hooks/nft/useMint'
 import React from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
-import { Route, useRouteMatch } from 'react-router-dom'
-import { addresses as elderAddresses } from './components/baoElderWL.json'
-import { addresses as baoSwapAddresses } from './components/baoSwapWL.json'
+import { Route } from 'react-router-dom'
+import baoElderWL from './components/baoElderWL'
+import baoSwapWL from './components/baoSwapWL'
 import { StyledInfo } from './components/styles'
 
 const NFT: React.FC = () => {
@@ -32,7 +32,6 @@ const NFT: React.FC = () => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const elderContract = getElderContract(bao)
 	const baoSwapContract = getBaoSwapContract(bao)
-	const { path } = useRouteMatch()
 
 	return (
 		<Page>
@@ -41,7 +40,7 @@ const NFT: React.FC = () => {
 				title="BaoNFT"
 				subtitle="Check your eligibility and claim your BaoNFT here!"
 			/>
-			<Route exact path={path}>
+			<Route path="/NFT">
 				<Container>
 					<StyledInfo>
 						<div
@@ -90,7 +89,7 @@ const NFT: React.FC = () => {
 										) : !account ? (
 											<SubmitButton disabled={true}>Claim</SubmitButton>
 										) : typeof account === 'string' ? (
-											elderAddresses.includes(account.toLowerCase()) ? (
+											baoElderWL.includes(account.toLowerCase()) ? (
 												!isElderClaimed ? (
 													<SubmitButton
 														onClick={async () => {
@@ -162,7 +161,7 @@ const NFT: React.FC = () => {
 										) : !account ? (
 											<SubmitButton disabled={true}>Claim</SubmitButton>
 										) : typeof account === 'string' ? (
-											baoSwapAddresses.includes(account.toLowerCase()) ? (
+											baoSwapWL.includes(account.toLowerCase()) ? (
 												!isBaoSwapClaimed ? (
 													<SubmitButton
 														onClick={async () => {

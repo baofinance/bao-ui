@@ -5,7 +5,7 @@ import PageHeader from 'components/PageHeader'
 import { useMarkets } from 'hooks/markets/useMarkets'
 import React from 'react'
 import { Alert, Container } from 'react-bootstrap'
-import { Route, useRouteMatch } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import styled from 'styled-components'
 import { MarketList, OfflineMarketList } from './components/MarketList'
 import { Overview } from './components/Overview'
@@ -13,7 +13,6 @@ import Market from './Market'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
-	const { path } = useRouteMatch()
 	const { account, library } = useWeb3React()
 
 	return (
@@ -23,7 +22,7 @@ const Markets: React.FC = () => {
 				title="Markets"
 				subtitle="Mint synthethic assets with multiple types of collateral!"
 			/>
-			<Route exact path={path}>
+			<Route path="/markets">
 				<Container>
 					{account && (
 						<StyledAlert variant="danger">
@@ -61,7 +60,7 @@ const Markets: React.FC = () => {
 					)}
 				</Container>
 			</Route>
-			<Route path={`${path}/:marketId`}>
+			<Route path=":marketId">
 				<Market />
 			</Route>
 		</Page>
