@@ -39,7 +39,6 @@ import { MarketDetails, StatBlock } from './Stats'
 export const MarketList: React.FC<MarketListProps> = ({
 	markets: _markets,
 }: MarketListProps) => {
-	const { account } = useWeb3React()
 	const bao = useBao()
 	const accountBalances = useAccountBalances()
 	const accountMarkets = useAccountMarkets()
@@ -397,7 +396,6 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	borrowBalances,
 	exchangeRates,
 }: MarketListItemProps) => {
-	const { account } = useWeb3React()
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 
 	const borrowed = useMemo(
@@ -623,18 +621,6 @@ const MarketListHeaderCol = styled(Col)`
 
 	&:last-child {
 		margin-right: 46px;
-	}
-`
-
-const OfflineListHeaderCol = styled(Col)`
-	text-align: right;
-
-	&:first-child {
-		text-align: left;
-	}
-
-	&:last-child {
-		margin-right: 20px;
 	}
 `
 

@@ -413,9 +413,7 @@ export const mintElder = async (
   nftContract: Contract,
   account: string,
 ): Promise<string> => {
-  const leafNodes = baoElderWL.map((address: string) =>
-    keccak256(address),
-  )
+  const leafNodes = baoElderWL.map((address: string) => keccak256(address))
   const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
   const leaf = keccak256(account)
   const hexProof = merkleTree.getHexProof(leaf)
@@ -432,9 +430,7 @@ export const mintBaoSwap = async (
   nftContract: Contract,
   account: string,
 ): Promise<string> => {
-  const leafNodes = baoSwapWL.map((address: string) =>
-    keccak256(address),
-  )
+  const leafNodes = baoSwapWL.map((address: string) => keccak256(address))
   const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
   const leaf = keccak256(account)
   const hexProof = merkleTree.getHexProof(leaf)

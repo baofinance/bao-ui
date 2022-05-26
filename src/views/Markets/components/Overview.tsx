@@ -1,11 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
+import {
+	StatWrapper,
+	UserStat,
+	UserStatsContainer,
+	UserStatsWrapper,
+} from 'components/Stats'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import useHealthFactor from 'hooks/markets/useHealthFactor'
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
 import {
 	buildStyles,
 	CircularProgressbarWithChildren,
@@ -13,13 +20,6 @@ import {
 import 'react-circular-progressbar/dist/styles.css'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
-import { useWeb3React } from '@web3-react/core'
-import {
-	StatWrapper,
-	UserStat,
-	UserStatsContainer,
-	UserStatsWrapper,
-} from 'components/Stats'
 
 export const Overview = () => {
 	const bao = useBao()
@@ -153,8 +153,10 @@ export const Overview = () => {
 											'-'
 										) : healthFactor.gt(10000) ? (
 											<p>
-												{'>'} 10000 {' '}
-												<Tooltipped content={`Your health factor is ${healthFactor}.`} />
+												{'>'} 10000{' '}
+												<Tooltipped
+													content={`Your health factor is ${healthFactor}.`}
+												/>
 											</p>
 										) : (
 											healthFactor.toFixed(2)

@@ -8,7 +8,7 @@ interface PageHeaderProps {
 	title?: string
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ icon, subtitle, title }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
 	return (
 		<Container>
 			<StyledPageHeader>

@@ -12,7 +12,6 @@ import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import { useMarkets } from 'hooks/markets/useMarkets'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
-import { propTypes } from 'react-bootstrap/esm/Image'
 import { NavLink, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { formatAddress } from 'utils'
@@ -87,7 +86,7 @@ const Market: React.FC = () => {
 				<Container>
 					<MarketHeader>
 						<p style={{ fontSize: '1.25rem' }}>
-							<StyledLink exact activeClassName="active" to={{ pathname: '/' }}>
+							<StyledLink end to={{ pathname: '/' }}>
 								<FontAwesomeIcon icon="arrow-left" />{' '}
 								<BackButtonText>Back to Markets</BackButtonText>
 							</StyledLink>

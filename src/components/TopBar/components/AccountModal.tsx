@@ -7,8 +7,6 @@ import { BigNumber } from 'bignumber.js'
 import { CloseButton } from 'components/Button/Button'
 import { MaxLabel } from 'components/Label'
 import { SpinnerLoader } from 'components/Loader'
-import { StatWrapper } from 'components/Stats'
-import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import _ from 'lodash'
@@ -16,7 +14,6 @@ import React, { useCallback } from 'react'
 import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
-import { HeaderWrapper } from 'views/Markets/components/styles'
 import { Button } from '../../Button'
 import Spacer from '../../Spacer'
 
@@ -24,12 +21,11 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 	const { account, deactivate } = useWeb3React()
 
 	const handleSignOutClick = useCallback(() => {
-		onHide!()
+		onHide()
 		deactivate()
 	}, [onHide, deactivate])
 
 	const { transactions } = useTransactionProvider()
-	const bao = useBao()
 	const baoBalance = useTokenBalance(Config.addressMap.BAO)
 	const wethBalance = useTokenBalance('ETH')
 

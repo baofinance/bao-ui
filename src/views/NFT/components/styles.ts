@@ -128,7 +128,7 @@ export const StyledWrapper = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  
+
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}px) {
     width: 100%;
     flex-flow: column nowrap;

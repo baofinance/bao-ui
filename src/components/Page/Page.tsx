@@ -1,8 +1,13 @@
 import React from 'react'
+import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 import Footer from '../Footer'
 
-const Page: React.FC = ({ children }) => (
+interface PageProps {
+	children: any
+}
+
+const Page: React.FC<PropsWithChildren<PageProps>> = ({ children }) => (
 	<StyledPageContainer>
 		<StyledPageWrapper>
 			<StyledMain>{children}</StyledMain>

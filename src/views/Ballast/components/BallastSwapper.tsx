@@ -88,7 +88,9 @@ const BallastSwapper: React.FC = () => {
 			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
-				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
+				onChange={(e: {
+					currentTarget: { value: React.SetStateAction<string> }
+				}) => setInputVal(e.currentTarget.value)}
 				value={
 					swapDirection && fees && !new BigNumber(inputVal).isNaN()
 						? new BigNumber(inputVal)
@@ -126,7 +128,9 @@ const BallastSwapper: React.FC = () => {
 			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(baoUSDBalance).toString())}
-				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
+				onChange={(e: {
+					currentTarget: { value: React.SetStateAction<string> }
+				}) => setInputVal(e.currentTarget.value)}
 				value={
 					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
 						? new BigNumber(inputVal)

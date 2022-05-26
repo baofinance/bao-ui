@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import Web3 from 'web3'
-import { provider } from 'web3-core'
 // import debounce from 'debounce'
 
 const useBlock = () => {

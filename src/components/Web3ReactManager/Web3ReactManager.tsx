@@ -1,15 +1,20 @@
 import { useWeb3React } from '@web3-react/core'
 import { network } from 'bao/lib/connectors'
 import { useEagerConnect, useInactiveListener } from 'bao/lib/hooks'
-import React, { FC, useEffect } from 'react'
+import React, { FC, PropsWithChildren, useEffect } from 'react'
 
-export const Web3ReactManager: FC = ({ children }) => {
+interface Web3ReactManagerProps {
+	children: any
+}
+
+export const Web3ReactManager: FC<PropsWithChildren<Web3ReactManagerProps>> = ({
+	children,
+}) => {
 	const { active } = useWeb3React()
 	const {
 		active: networkActive,
 		error: networkError,
 		activate: activateNetwork,
-		chainId,
 	} = useWeb3React()
 
 	const triedEager = useEagerConnect()

@@ -26,7 +26,6 @@ import TokenInput from 'components/TokenInput'
 import { PoolType } from 'contexts/Farms/types'
 import { ethers } from 'ethers'
 import useAllowance from 'hooks/base/useAllowance'
-import useApprove from 'hooks/base/useApprove'
 import useBao from 'hooks/base/useBao'
 import useBlockDiff from 'hooks/base/useBlockDiff'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
@@ -35,7 +34,7 @@ import useFees from 'hooks/farms/useFees'
 import useStakedBalance from 'hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import { default as React, useCallback, useMemo, useState } from 'react'
-import { Col, Modal, Row, Spinner } from 'react-bootstrap'
+import { Col, Modal, Row } from 'react-bootstrap'
 import {
 	exponentiate,
 	getDisplayBalance,
@@ -60,12 +59,10 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({
 	lpContract,
-	lpTokenAddress,
 	pid,
 	poolType,
 	max,
 	tokenName = '',
-	ref = '',
 	pairUrl = '',
 	onHide,
 }) => {
@@ -97,8 +94,6 @@ export const Stake: React.FC<StakeProps> = ({
 				.toString(),
 		)
 	}, [fullBalance, setVal])
-
-	const [requestedApproval, setRequestedApproval] = useState(false)
 
 	const allowance = useAllowance(lpContract)
 
@@ -161,7 +156,6 @@ export const Stake: React.FC<StakeProps> = ({
 								</SubmitButton>
 							) : (
 								<SubmitButton
-									disabled={requestedApproval}
 									onClick={async () => {
 										handleTx(
 											approvev2(lpContract, masterChefContract, account),
@@ -183,6 +177,7 @@ export const Stake: React.FC<StakeProps> = ({
 												<a
 													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 													target="_blank"
+													rel="noreferrer"
 												>
 													Pending Transaction{' '}
 													<FontAwesomeIcon icon="external-link-alt" />
@@ -200,9 +195,7 @@ export const Stake: React.FC<StakeProps> = ({
 												parseFloat(val) > max.toNumber()
 											}
 											onClick={async () => {
-												let stakeTx
-
-												stakeTx = masterChefContract.methods
+												const stakeTx = masterChefContract.methods
 													.deposit(
 														pid,
 														ethers.utils.parseUnits(val.toString(), 18),
@@ -225,9 +218,7 @@ export const Stake: React.FC<StakeProps> = ({
 								<SubmitButton
 									disabled={true}
 									onClick={async () => {
-										let stakeTx
-
-										stakeTx = masterChefContract.methods
+										const stakeTx = masterChefContract.methods
 											.deposit(
 												pid,
 												ethers.utils.parseUnits(val.toString(), 18),
@@ -264,13 +255,10 @@ interface UnstakeProps {
 }
 
 export const Unstake: React.FC<UnstakeProps> = ({
-	farm,
 	max,
 	tokenName = '',
 	pid = null,
-	ref = '',
 	pairUrl = '',
-	lpTokenAddress = '',
 	onHide,
 }) => {
 	const bao = useBao()
@@ -378,6 +366,7 @@ export const Unstake: React.FC<UnstakeProps> = ({
 									<a
 										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 										target="_blank"
+										rel="noreferrer"
 									>
 										Pending Transaction{' '}
 										<FontAwesomeIcon icon="external-link-alt" />
@@ -396,14 +385,12 @@ export const Unstake: React.FC<UnstakeProps> = ({
 									stakedBalance.eq(new BigNumber(0))
 								}
 								onClick={async () => {
-									let unstakeTx
-
 									const amount =
 										val && isNaN(val as any)
 											? exponentiate(val, 18)
 											: new BigNumber(0).toFixed(4)
 
-									unstakeTx = masterChefContract.methods
+									const unstakeTx = masterChefContract.methods
 										.withdraw(
 											pid,
 											ethers.utils.parseUnits(val, 18),
@@ -466,6 +453,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 									<a
 										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 										target="_blank"
+										rel="noreferrer"
 									>
 										Pending Transaction{' '}
 										<FontAwesomeIcon icon="external-link-alt" />
@@ -478,9 +466,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							<SubmitButton
 								disabled={!earnings.toNumber()}
 								onClick={async () => {
-									let harvestTx
-
-									harvestTx = masterChefContract.methods
+									const harvestTx = masterChefContract.methods
 										.claimReward(pid)
 										.send({ from: account })
 

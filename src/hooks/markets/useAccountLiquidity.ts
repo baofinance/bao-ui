@@ -142,4 +142,3 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
   return accountLiquidity
 }
-

@@ -13,7 +13,7 @@ import AccountModal from './AccountModal'
 
 interface AccountButtonProps {}
 
-const AccountButton: React.FC<AccountButtonProps> = (props) => {
+const AccountButton: React.FC<AccountButtonProps> = () => {
 	const [showAccountModal, setShowAccountModal] = useState(false)
 
 	const [showWalletProviderModal, setShowWalletProviderModal] = useState(false)

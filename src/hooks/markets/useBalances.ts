@@ -17,7 +17,7 @@ export type Balance = {
 export const useAccountBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const block = useBlock()
   const tokens = Config.markets.map(
     (market) => market.underlyingAddresses[Config.networkId],
@@ -81,7 +81,7 @@ export const useAccountBalances = (): Balance[] => {
 export const useSupplyBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.marketAddresses[Config.networkId],
   )
@@ -134,7 +134,7 @@ export const useSupplyBalances = (): Balance[] => {
 export const useBorrowBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.marketAddresses[Config.networkId],
   )
@@ -183,4 +183,3 @@ export const useBorrowBalances = (): Balance[] => {
 
   return balances
 }
-

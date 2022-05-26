@@ -45,9 +45,7 @@ const useHealthFactor = () => {
       0,
     )
 
-    const _healthFactor = new BigNumber(
-      collateralSummation / usdBorrow,
-    )
+    const _healthFactor = new BigNumber(collateralSummation / usdBorrow)
     setHealthFactor(_healthFactor.isNaN() ? new BigNumber(0) : _healthFactor)
   }, [markets, accountLiquidity, bao, account, prices])
 

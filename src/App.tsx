@@ -2,16 +2,20 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import fetcher from 'bao/lib/fetcher'
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
 import React, { useCallback, useEffect, useState } from 'react'
+import { ReactNode } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
 import Market from 'views/Markets/Market'
+import Web3 from 'web3'
+import { provider } from 'web3-core'
 import MobileMenu from './components/MobileMenu'
 import TopBar from './components/TopBar'
 import BaoProvider from './contexts/BaoProvider'
@@ -26,6 +30,12 @@ import Markets from './views/Markets'
 import NFT from './views/NFT'
 
 library.add(fas, fab)
+
+function getLibrary(provider: provider) {
+	return new Web3(provider)
+}
+
+const Web3ReactNetworkProvider = createWeb3ReactRoot('network')
 
 const App: React.FC = () => {
 	const [mobileMenu, setMobileMenu] = useState(false)
@@ -62,7 +72,7 @@ const App: React.FC = () => {
 				/>
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
 				<Routes>
-					<Route path='/' element={<Markets />} />
+					<Route path="/" element={<Markets />} />
 					<Route path="/markets/:marketId" element={<Market />} />
 					<Route path="/ballast" element={<Ballast />} />
 					<Route path="/farms" element={<Farms />} />
@@ -80,30 +90,34 @@ const Providers: React.FC<ProvidersProps> = ({
 	return (
 		<ThemeProvider theme={theme(isDarkMode)}>
 			<GlobalStyle />
-			<Web3ReactManager>
-				<BaoProvider>
-					<MarketsProvider>
-						<FarmsProvider>
-							<TransactionProvider>
-								<SWRConfig
-									value={{
-										fetcher,
-										refreshInterval: 300000,
-									}}
-								>
-									<ModalsProvider>{children}</ModalsProvider>
-								</SWRConfig>
-							</TransactionProvider>
-						</FarmsProvider>
-					</MarketsProvider>
-				</BaoProvider>
-			</Web3ReactManager>
+			<Web3ReactProvider getLibrary={getLibrary}>
+				<Web3ReactNetworkProvider getLibrary={getLibrary}>
+					<Web3ReactManager>
+						<BaoProvider>
+							<MarketsProvider>
+								<FarmsProvider>
+									<TransactionProvider>
+										<SWRConfig
+											value={{
+												fetcher,
+												refreshInterval: 300000,
+											}}
+										>
+											<ModalsProvider>{children}</ModalsProvider>
+										</SWRConfig>
+									</TransactionProvider>
+								</FarmsProvider>
+							</MarketsProvider>
+						</BaoProvider>
+					</Web3ReactManager>
+				</Web3ReactNetworkProvider>
+			</Web3ReactProvider>
 		</ThemeProvider>
 	)
 }
 
 type ProvidersProps = {
-	children: any
+	children: ReactNode
 	isDarkMode: boolean
 }
 
