@@ -3,7 +3,6 @@ import { Col, Row } from 'react-bootstrap'
 import { Button } from '../../../components/Button'
 import BasketModal from './Modals/BasketModal'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
-import OvenModal from './Modals/OvenModal'
 
 type ModalOperation = 'MINT' | 'REDEEM'
 
@@ -13,7 +12,6 @@ type BasketButtonsProps = {
 
 const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 	const [showBasketModal, setShowBasketModal] = useState(false)
-	const [showOvenModal, setShowOvenModal] = useState(false)
 	const [modalOperation, setModalOperation] = useState<ModalOperation>('MINT')
 
 	const handleClick = (op: ModalOperation) => {
@@ -29,12 +27,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 				show={showBasketModal}
 				hideModal={() => setShowBasketModal(false)}
 			/>
-			<OvenModal
-				basket={basket}
-				show={showOvenModal}
-				hideModal={() => setShowOvenModal(false)}
-			/>
-			<Row lg={4} style={{ padding: '0 0.75rem', marginBottom: '25px' }}>
+			<Row lg={3} style={{ padding: '0 0.75rem', marginBottom: '25px' }}>
 				<Col>
 					<Button onClick={() => handleClick('MINT')}>Mint</Button>
 				</Col>
@@ -42,9 +35,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 					<Button onClick={() => handleClick('REDEEM')}>Redeem</Button>
 				</Col>
 				<Col>
-					<Button onClick={() => setShowOvenModal(true)}>Oven</Button>
-				</Col>
-				<Col>
+					{/* TODO - Link to DEX with Basket LP */}
 					<Button>Swap</Button>
 				</Col>
 			</Row>

@@ -91,8 +91,8 @@ export default {
     // Baskets
     recipe: {
       1: {
-        address: '0x6C9c5fd51B95c7BF365955867268ce2EC25Deb5B',
-        abi: 'recipe.json',
+        address: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
+        abi: 'simpleUniRecipe.json',
       },
     },
     lendingRegistry: {

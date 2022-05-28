@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import useBao from 'hooks/base/useBao'
 import useGeckoPrices from './useGeckoPrices'
-import useBasketRates from './useNestRate'
 import MultiCall from 'utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
@@ -31,7 +30,6 @@ const useComposition = (
     Array<BasketComponent> | undefined
   >()
   const prices = useGeckoPrices()
-  const rates = useBasketRates(basket)
   const bao = useBao()
 
   const fetchComposition = useCallback(async () => {
@@ -176,7 +174,7 @@ const useComposition = (
     }
 
     setComposition(_comp)
-  }, [bao, basket, rates, prices])
+  }, [bao, basket, prices])
 
   useEffect(() => {
     if (
@@ -185,7 +183,6 @@ const useComposition = (
         basket &&
         basket.basketContract &&
         basket.pieColors &&
-        rates &&
         prices &&
         Object.keys(prices).length > 0
       )
@@ -193,7 +190,7 @@ const useComposition = (
       return
 
     fetchComposition()
-  }, [bao, basket, rates, prices])
+  }, [bao, basket, prices])
 
   return composition
 }
@@ -218,23 +215,5 @@ const _getImageURL = (symbol: string) =>
     : symbol.toLowerCase() === 'adai'
     ? 'DAI'
     : symbol
-/* symbol.toLowerCase() === 'wmatic'
-    ? 'MATIC'
-    : symbol.toLowerCase() === 'sklima'
-    ? 'KLIMA'
-    : symbol.toLowerCase() === 'ayfi'
-    ? 'YFI'
-    : symbol.toLowerCase() === 'ccomp'
-    ? 'COMP'
-    : symbol.toLowerCase() === 'acrv'
-    ? 'CRV'
-    : // ...
-    : symbol.toLowerCase() === 'afrax'
-    ? 'FRAX'
-    : symbol.toLowerCase() === 'afei'
-    ? 'FEI'
-    : symbol.toLowerCase() === 'caave'
-    ? 'AAVE'
-    : symbol */
 
 export default useComposition

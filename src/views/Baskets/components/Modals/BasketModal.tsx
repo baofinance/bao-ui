@@ -1,7 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { BigNumber } from 'bignumber.js'
+import Config from '../../../../bao/lib/config'
 import useBao from '../../../../hooks/base/useBao'
 import useTokenBalance from '../../../../hooks/base/useTokenBalance'
-import { Badge, Col, Modal, Row } from 'react-bootstrap'
+import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
+import useBasketRates from '../../../../hooks/baskets/useNestRate'
+import useAllowancev2 from '../../../../hooks/base/useAllowancev2'
+import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
+import {
+	decimate,
+	exponentiate,
+	getDisplayBalance,
+} from '../../../../utils/numberFormat'
+import { Col, Modal, Row } from 'react-bootstrap'
 import {
 	AssetLabel,
 	AssetStack,
@@ -17,17 +29,11 @@ import { Button } from '../../../../components/Button'
 import { BalanceWrapper } from '../../../../components/Balance'
 import { LabelEnd, LabelStart } from '../../../../components/Label'
 import { BalanceInput } from '../../../../components/Input'
-import { ActiveSupportedBasket } from '../../../../bao/lib/types'
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
-import {
-	decimate,
-	exponentiate,
-	getDisplayBalance,
-} from '../../../../utils/numberFormat'
-import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
-import useBasketRates from '../../../../hooks/baskets/useNestRate'
 import { StyledBadge } from '../../../../components/Badge'
+import Spacer from '../../../../components/Spacer'
+import Tooltipped from '../../../../components/Tooltipped'
+import { ActiveSupportedBasket } from '../../../../bao/lib/types'
+import { ExternalLink } from '../../../../components/Link'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -36,6 +42,12 @@ type ModalProps = {
 	hideModal: () => void
 }
 
+enum MintOption {
+	DAI,
+	ETH,
+}
+
+// TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
 const BasketModal: React.FC<ModalProps> = ({
 	basket,
 	operation,
@@ -44,61 +56,76 @@ const BasketModal: React.FC<ModalProps> = ({
 }) => {
 	const [value, setValue] = useState<string | undefined>()
 	const [secondaryValue, setSecondaryValue] = useState<string | undefined>()
-	const [ethBalance, setEthBalance] = useState<BigNumber | undefined>()
+	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
 	const bao = useBao()
-	const { handleTx } = useTransactionHandler()
+	const { handleTx, pendingTx } = useTransactionHandler()
 	const { account } = useWeb3React()
-	const basketBalance = useTokenBalance(basket && basket.address)
 	const rates = useBasketRates(basket)
 
-	useEffect(() => {
-		if (!(bao && account)) return
+	// Get DAI approval
+	const daiAllowance = useAllowancev2(
+		Config.addressMap.DAI,
+		bao && bao.getContract('recipe').options.address,
+	)
 
-		bao.web3.eth
-			.getBalance(account)
-			.then((balance) => setEthBalance(decimate(balance)))
-	}, [bao, account])
-
-	const handleMaxClick = () => {
-		switch (operation) {
-			case 'MINT':
-				setValue(ethBalance.toString())
-				break
-			case 'REDEEM':
-				setValue(basketBalance.toString())
-				break
-			default:
-				break
-		}
-	}
+	// Get Basket & DAI balances
+	const basketBalance = useTokenBalance(basket && basket.address)
+	const daiBalance = useTokenBalance(Config.addressMap.DAI)
+	const ethBalance = useTokenBalance('ETH')
 
 	const handleOperation = () => {
 		let tx
 		switch (operation) {
 			case 'MINT':
-				tx = bao
-					.getContract('recipe')
-					.methods.toPie(
-						basket.address,
-						exponentiate(secondaryValue).toFixed(0),
-						rates.dexIndexes,
-					)
-					.send({
-						from: account,
-						value: exponentiate(value).toFixed(0),
-					})
+				const recipe = bao.getContract('recipe')
+
+				if (mintOption === MintOption.DAI) {
+					// If DAI allowance is zero or insufficient, send an Approval TX
+					if (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) {
+						tx = bao
+							.getNewContract('erc20.json', Config.addressMap.DAI)
+							.methods.approve(
+								recipe.options.address,
+								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							)
+							.send({ from: account })
+
+						handleTx(tx, 'Approve DAI for Baskets Recipe')
+						break
+					}
+
+					tx = recipe.methods
+						.bake(
+							basket.address,
+							exponentiate(value).toFixed(0),
+							exponentiate(secondaryValue).toFixed(0),
+						)
+						.send({
+							from: account,
+						})
+				} else {
+					// Else, use ETH to mint
+					tx = recipe.methods
+						.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0))
+						.send({
+							from: account,
+							value: exponentiate(value).toFixed(0),
+						})
+				}
 
 				handleTx(
 					tx,
 					`Mint ${getDisplayBalance(
-						new BigNumber(value).div(rates.eth),
+						new BigNumber(value).div(
+							mintOption === MintOption.DAI ? rates.eth : rates.dai,
+						),
 						-18,
 					)} ${basket.symbol}`,
 				)
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.methods.exitPool(value).send({
+				tx = basket.basketContract.methods.exitPool(exponentiate(value)).send({
 					from: account,
 				})
 
@@ -111,15 +138,34 @@ const BasketModal: React.FC<ModalProps> = ({
 		}
 	}
 
-	const isDisabled = useMemo(
+	const isButtonDisabled = useMemo(
 		() =>
-			!value ||
-			!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
-			new BigNumber(value).lte(0) ||
-			new BigNumber(value).gt(
-				operation === 'MINT' ? ethBalance : basketBalance,
-			),
-		[value],
+			pendingTx !== false /* can be string | boolean */ ||
+			(!(
+				// First, check if we are minting, the mintOption is DAI, and the account has
+				// inadequate approval. If so, the button needs to be enabled for the account
+				// to approve DAI.
+				(
+					operation === 'MINT' &&
+					mintOption === MintOption.DAI &&
+					daiAllowance &&
+					(daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value)))
+				)
+			) &&
+				// Else, check that the input value is valid.
+				(!value ||
+					!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
+					new BigNumber(value).lte(0) ||
+					new BigNumber(value).gt(
+						decimate(
+							operation === 'MINT'
+								? mintOption === MintOption.DAI
+									? daiBalance
+									: ethBalance
+								: basketBalance,
+						),
+					))),
+		[value, daiAllowance, operation, mintOption, pendingTx],
 	)
 
 	const hide = () => {
@@ -130,11 +176,7 @@ const BasketModal: React.FC<ModalProps> = ({
 
 	return basket ? (
 		<>
-			<Modal
-				show={show}
-				onHide={hide}
-				centered
-			>
+			<Modal show={show} onHide={hide} centered>
 				<CloseButton onClick={hide}>
 					<FontAwesomeIcon icon="times" />
 				</CloseButton>
@@ -156,13 +198,15 @@ const BasketModal: React.FC<ModalProps> = ({
 									1 {basket.symbol} ={' '}
 									<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
 									{rates && getDisplayBalance(rates.eth)}
+									{' = '}
+									{rates && getDisplayBalance(rates.dai)} DAI
 								</StyledBadge>
 							</div>
 							<br />
 							<div style={{ textAlign: 'center' }}>
 								<b style={{ fontWeight: 'bold' }}>NOTE:</b> An extra 5% of the
-								ETH cost will be included to account for slippage. Any unused
-								ETH will be returned in the mint transaction.
+								mint cost will be included to account for slippage. Any unused
+								input tokens will be returned in the mint transaction.
 							</div>
 						</>
 					)}
@@ -177,8 +221,16 @@ const BasketModal: React.FC<ModalProps> = ({
 										<MaxLabel>{`Available:`}</MaxLabel>
 										<AssetLabel>
 											{operation === 'MINT'
-												? `${ethBalance && ethBalance.toFixed(4)} ETH`
-												: `${basketBalance.toFixed(4)} ${basket.symbol}`}
+												? mintOption === MintOption.DAI
+													? `${
+															daiBalance && decimate(daiBalance).toFixed(4)
+													  } DAI`
+													: `${
+															ethBalance && decimate(ethBalance).toFixed(4)
+													  } ETH`
+												: `${
+														basketBalance && decimate(basketBalance).toFixed(4)
+												  } ${basket.symbol}`}
 										</AssetLabel>
 									</LabelStack>
 								</LabelEnd>
@@ -189,13 +241,45 @@ const BasketModal: React.FC<ModalProps> = ({
 								<BalanceInput
 									value={value}
 									onChange={(e) => setValue(e.currentTarget.value)}
-									onMaxClick={handleMaxClick}
+									onMaxClick={() =>
+										setValue(decimate(basketBalance).toFixed(18))
+									}
 									disabled={operation === 'MINT'}
 									label={
 										<AssetStack>
+											{operation === 'MINT' && (
+												<>
+													<FontAwesomeIcon icon="sync" />
+													<Spacer size="sm" />
+												</>
+											)}
 											<IconFlex>
 												{operation === 'MINT' ? (
-													<FontAwesomeIcon icon={['fab', 'ethereum']} />
+													<Tooltipped
+														content={`Swap input currency to ${
+															mintOption === MintOption.DAI ? 'ETH' : 'DAI'
+														}`}
+													>
+														<a
+															onClick={() => {
+																// Clear input values
+																setValue('')
+																setSecondaryValue('')
+																// Swap mint option
+																setMintOption(
+																	mintOption === MintOption.DAI
+																		? MintOption.ETH
+																		: MintOption.DAI,
+																)
+															}}
+														>
+															<img
+																src={`/${
+																	mintOption === MintOption.DAI ? 'DAI' : 'WETH'
+																}.png`}
+															/>
+														</a>
+													</Tooltipped>
 												) : (
 													<img src={basket.icon} />
 												)}
@@ -209,20 +293,36 @@ const BasketModal: React.FC<ModalProps> = ({
 										<BalanceInput
 											value={secondaryValue}
 											onChange={(e) => {
-												const ethVal = decimate(rates.eth)
+												const inputVal = decimate(
+													mintOption === MintOption.DAI ? rates.dai : rates.eth,
+												)
 													.times(e.currentTarget.value)
 													.times(1.05)
 												setSecondaryValue(e.currentTarget.value)
 												setValue(
-													ethVal.isFinite() ? ethVal.toString() : '0', // Pad an extra 5% ETH. It will be returned to the user if it is not used.
+													inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 5% ETH. It will be returned to the user if it is not used.
 												)
 											}}
 											onMaxClick={() => {
-												// Seek to mint 95% of total ETH value (use remaining 5% as slippage protection)
+												// Seek to mint 95% of total value (use remaining 5% as slippage protection)
+												let usedBal
+												let usedRate
+												switch (mintOption) {
+													case MintOption.DAI:
+														usedBal = decimate(daiBalance)
+														usedRate = rates.dai
+														break
+													case MintOption.ETH:
+														usedBal = decimate(ethBalance)
+														usedRate = rates.eth
+														break
+												}
 
-												const ethVal = ethBalance.times(0.95)
-												setSecondaryValue(ethVal.div(decimate(rates.eth)).toFixed(8))
-												setValue(ethBalance.toString())
+												const maxVal = usedBal.times(0.95)
+												setSecondaryValue(
+													maxVal.div(decimate(usedRate)).toFixed(18),
+												)
+												setValue(usedBal.toString())
 											}}
 											label={
 												<AssetStack>
@@ -239,14 +339,35 @@ const BasketModal: React.FC<ModalProps> = ({
 					</ModalStack>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button disabled={isDisabled} onClick={handleOperation}>
-						{!value
-							? 'Enter a Value'
-							: isDisabled
-							? 'Invalid Input'
-							: operation === 'MINT'
-							? `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`
-							: `Redeem ${getDisplayBalance(value, 0) || 0} ${basket.symbol}`}
+					<Button disabled={isButtonDisabled} onClick={handleOperation}>
+						{pendingTx ? (
+							typeof pendingTx === 'string' ? (
+								<ExternalLink
+									href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`}
+									target="_blank"
+								>
+									Pending Transaction{' '}
+									<FontAwesomeIcon icon="external-link-alt" />
+								</ExternalLink>
+							) : (
+								'Pending Transaction'
+							)
+						) : operation === 'MINT' &&
+						  mintOption === MintOption.DAI &&
+						  daiAllowance &&
+						  (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) ? (
+							'Approve DAI'
+						) : !value ? (
+							'Enter a Value'
+						) : isButtonDisabled ? (
+							'Invalid Input'
+						) : operation === 'MINT' ? (
+							`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${
+								basket.symbol
+							}`
+						) : (
+							`Redeem ${getDisplayBalance(value, 0) || 0} ${basket.symbol}`
+						)}
 					</Button>
 				</Modal.Footer>
 			</Modal>

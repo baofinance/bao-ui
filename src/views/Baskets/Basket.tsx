@@ -1,11 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { StyledBadge } from 'components/Badge'
 import { CornerButton, CornerButtons } from 'components/Button/Button'
-import { Icon } from 'components/Icon'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import Tooltipped from 'components/Tooltipped'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Container } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -62,6 +61,9 @@ const Basket: React.FC = () => {
 							<>
 								<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
 								{getDisplayBalance(rates.eth)}{' '}
+								<FontAwesomeIcon icon="angle-double-right" />{' '}
+								{getDisplayBalance(rates.dai)}
+								{' DAI '}
 								<FontAwesomeIcon icon="angle-double-right" />{' '}
 								{`$${getDisplayBalance(rates.usd)}`}
 							</>
