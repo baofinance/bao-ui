@@ -17,7 +17,7 @@ export interface IconProps {
 }
 
 export const Icon = styled.img`
-	height: 200px;
+	max-height: 200px;
 	margin-bottom: ${(props) => props.theme.spacing[4]}px;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
@@ -60,7 +60,7 @@ export const StyledIcon = styled(IconImage)`
   transition: 200ms;
   user-select: none;
   -webkit-user-drag: none;
-  margin-left: -${(props) => props.theme.spacing[3]}px;
+  margin-left: -${(props) => props.theme.spacing[4]}px;
 
   &:first-child {
     margin-left: 0;

@@ -35,7 +35,7 @@ export default function DonutGraph({
 	const assetsBalance: AssetAllocationAmount[] = composition.map(
 		(component) => ({
 			label: `
-			${component.percentage}%
+			${component.percentage.toFixed(4)}%
 			${getDisplayBalance(component.balance, component.balanceDecimals)} ${
 				component.symbol
 			}
@@ -79,7 +79,7 @@ export default function DonutGraph({
 					pieValue={frequency}
 					pieSortValues={() => -1}
 					outerRadius={radius}
-					innerRadius={radius - 100}
+					innerRadius={radius - 125}
 				>
 					{(pie) => (
 						<AnimatedPie<AssetAllocationAmount>

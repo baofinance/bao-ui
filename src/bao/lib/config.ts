@@ -27,6 +27,9 @@ export default {
     // NFTs
     baoElder: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
     baoSwap: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
+    //Baskets
+    bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
+    bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
   },
   contracts: {
     bao: {
@@ -45,6 +48,12 @@ export default {
       1: {
         address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
         abi: 'weth.json',
+      },
+    },
+    wethPrice: {
+      1: {
+        address: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+        abi: 'chainoracle.json',
       },
     },
     // Hard Synths
@@ -66,6 +75,7 @@ export default {
         abi: 'stabilizer.json',
       },
     },
+    // NFT
     nft: {
       1: {
         address: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
@@ -76,6 +86,19 @@ export default {
       1: {
         address: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
         abi: 'nft.json',
+      },
+    },
+    // Baskets
+    recipe: {
+      1: {
+        address: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
+        abi: 'simpleUniRecipe.json',
+      },
+    },
+    lendingRegistry: {
+      1: {
+        address: '0x08a2b7D713e388123dc6678168656659d297d397',
+        abi: 'lendingRegistry.json',
       },
     },
   },
@@ -146,7 +169,69 @@ export default {
       underlyingDecimals: 6,
     },
   ],
-  baskets: [],
+  baskets: [
+    /*{
+      nid: 1,
+      basketAddresses: {
+        1: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
+      },
+      lpAddress: '0x84e5bf858Ee50bE323143dF88f2089827834b9cE',
+      ovenAddress: '0x30DE1e1e4a42557f31F038E3B77672Afd4eAF7DF',
+      symbol: 'bDEFI',
+      name: 'bDEFI',
+      icon: '/bDEFI.png',
+      cgIds: {
+        '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B': 'convex-finance',
+        '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'maker',
+        '0xd533a949740bb3306d119cc777fa900ba034cd52': 'curve-dao-token',
+        '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': 'aave',
+        '0x5a98fcbea516cf06857215779fd812ca3bef1b32': 'lido-dao',
+        '0xc00e94cb662c3520282e6f5717214004a7f26888':
+          'compound-governance-token',
+        '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2': 'sushi',
+        '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e': 'yearn-finance',
+        '0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D': 'liquity',
+        '0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0': 'frax-share',
+        '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': 'uniswap',
+        '0xba100000625a3754423978a60c9317c58a424e3D': 'balancer',
+      },
+      pieColors: {
+        aYFI: '#006AE3',
+        MKR: '#63C3B2',
+        CVX: '#3A3A3A',
+        cAAVE: '#926BA8',
+        LDO: '#00A3FF',
+        LQTY: '#1442CC',
+        UNI: '#FF047CFF',
+        FXS: '#393835',
+        cCOMP: '#00D395',
+        xSUSHI: '#ea3fb4',
+        BAL: '#1E1E1E',
+        aCRV: '#F7E103',
+      },
+    },*/
+    {
+      nid: 1,
+      basketAddresses: {
+        1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+      },
+      lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
+      ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
+      symbol: 'bSTBL',
+      name: 'bSTBL',
+      icon: '/bSTBL.png',
+      cgIds: {
+        '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': 'rai',
+        '0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
+        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 'usd-coin',
+      },
+      pieColors: {
+        aRAI: '#1FC9A8',
+        aDAI: '#F5AC37',
+        aUSDC: '#2775CA',
+      },
+    },
+  ],
   farms: [
     // Active pools
     {

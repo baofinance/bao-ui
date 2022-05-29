@@ -3,11 +3,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_weth",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_lendingRegistry",
         "type": "address"
       },
@@ -18,12 +13,12 @@
       },
       {
         "internalType": "address",
-        "name": "_bentoBox",
+        "name": "_uniV3Router",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_masterContract",
+        "name": "_uniOracle",
         "type": "address"
       }
     ],
@@ -53,7 +48,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_outputToken",
+        "name": "_basket",
         "type": "address"
       },
       {
@@ -65,11 +60,6 @@
         "internalType": "uint256",
         "name": "_mintAmount",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint16[]",
-        "name": "_dexIndex",
-        "type": "uint16[]"
       }
     ],
     "name": "bake",
@@ -92,27 +82,23 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_assetIn",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_assetOut",
+        "name": "_basket",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_amountOut",
+        "name": "_amount",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_dexIndex",
-        "type": "uint16"
       }
     ],
-    "name": "dexSwap",
-    "outputs": [],
+    "name": "getPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -120,26 +106,21 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_pie",
+        "name": "_basket",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_pieAmount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
-    "name": "getPricePie",
+    "name": "getPriceEth",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "mintPrice",
+        "name": "_price",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint16[]",
-        "name": "dexIndex",
-        "type": "uint16[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -168,100 +149,29 @@
   {
     "inputs": [
       {
-        "internalType": "address payable",
-        "name": "_to",
+        "internalType": "address",
+        "name": "_basket",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_mintAmount",
         "type": "uint256"
       }
     ],
-    "name": "saveEth",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+    "name": "toBasket",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "inputAmountUsed",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "outputAmount",
         "type": "uint256"
       }
     ],
-    "name": "saveToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_inputAsset",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_pool",
-        "type": "bytes32"
-      }
-    ],
-    "name": "setBalancerPoolMapping",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_outputAsset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_Fee",
-        "type": "uint16"
-      }
-    ],
-    "name": "setUniPoolMapping",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_pie",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_outputAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint16[]",
-        "name": "_dexIndex",
-        "type": "uint16[]"
-      }
-    ],
-    "name": "toPie",
-    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -274,6 +184,37 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newOracle",
+        "type": "address"
+      }
+    ],
+    "name": "updateUniOracle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newRouter",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_oracle",
+        "type": "address"
+      }
+    ],
+    "name": "updateUniRouter",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
