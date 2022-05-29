@@ -65,11 +65,11 @@ const theme = (dark = false) => ({
   backgroundGradient: dark
     ? {
         default:
-          'radial-gradient(circle at center, #210e0e, #210e0e 50%) fixed',
+          'radial-gradient(circle at center, #391818, #210e0e 50%) fixed',
       }
     : {
         default:
-          'radial-gradient(circle at center, #fff8ee, #fff8ee 50%) fixed',
+          'radial-gradient(circle at center, #efeae7, #fff8ee 50%) fixed',
       },
   backgroundOverlay: dark
     ? {
