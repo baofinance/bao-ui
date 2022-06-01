@@ -183,6 +183,7 @@ export const Stake: React.FC<StakeProps> = ({
 												<a
 													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 													target="_blank"
+													style={{ fontSize: '1rem' }}
 												>
 													Pending Transaction{' '}
 													<FontAwesomeIcon icon="external-link-alt" />
@@ -378,6 +379,7 @@ export const Unstake: React.FC<UnstakeProps> = ({
 									<a
 										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 										target="_blank"
+										style={{ fontSize: '1rem' }}
 									>
 										Pending Transaction{' '}
 										<FontAwesomeIcon icon="external-link-alt" />
@@ -466,6 +468,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 									<a
 										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 										target="_blank"
+										style={{ fontSize: '1rem' }}
 									>
 										Pending Transaction{' '}
 										<FontAwesomeIcon icon="external-link-alt" />
