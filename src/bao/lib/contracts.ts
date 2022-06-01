@@ -50,9 +50,8 @@ export class Contracts {
       networkId === Config.networkId
         ? Config.baskets.map((basket) =>
             Object.assign(basket, {
-              address: basket.basketAddresses[networkId],
+              basketAddress: basket.basketAddresses[networkId],
               basketContract: this.getNewContract(ExperipieAbi),
-              ovenContract: this.getNewContract('oven.json')
             }),
           )
         : undefined
@@ -102,10 +101,9 @@ export class Contracts {
         )
       }
       if (this.baskets) {
-        this.baskets.forEach(({ address, basketContract, ovenAddress, ovenContract }) => {
-          setProvider(basketContract, address)
-          setProvider(ovenContract, ovenAddress)
-        })
+        this.baskets.forEach(({ basketAddress, basketContract }) =>
+          setProvider(basketContract, basketAddress),
+        )
       }
       if (this.markets) {
         this.markets.forEach(

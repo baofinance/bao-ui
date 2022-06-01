@@ -47,18 +47,18 @@ export const ListItem = styled.button`
 `
 
 export const ListItemHeader = styled.div`
-		background: ${(props) => props.theme.color.primary[100]};
+		background: ${(props) => props.theme.color.transparent[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
-		border: ${(props) => props.theme.border.default};
+		border: none;
 		border-radius: 8px;
 
 		&:hover,
 		&:focus,
 		&:active {
-			background: ${(props) => props.theme.color.primary[200]};
+			background: ${(props) => props.theme.color.transparent[200]};
 			color: ${(props) => props.theme.color.text[100]};
-			border: ${(props) => props.theme.border.default};
+			border: none;
 			box-shadow: none;
 		}
 		

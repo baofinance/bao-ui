@@ -157,15 +157,14 @@ export const StatsRow = styled(Row)`
 
   @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
     width: 100%;
-    background: ${(props) => props.theme.color.primary[100]};
+    background: ${(props) => props.theme.color.transparent[100]};
     border-radius: ${(props) => props.theme.borderRadius}px;
     margin: ${(props) => props.theme.spacing[4]}px auto;
-	border: ${(props) => props.theme.border.default};
   }
 `
 
 export const StatCard = styled.div`
-  background: ${(props) => props.theme.color.primary[100]};
+  background: ${(props) => props.theme.color.transparent[100]};
   width: 100%;
   margin: 0 auto;
   padding: ${(props) => props.theme.spacing[3]}px;
@@ -173,7 +172,6 @@ export const StatCard = styled.div`
   font-weight: ${(props) => props.theme.fontWeight.medium};
   text-align: center;
   color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
 
   @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
     padding: ${(props) => props.theme.spacing[2]}px;

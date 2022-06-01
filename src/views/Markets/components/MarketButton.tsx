@@ -91,7 +91,7 @@ export const MarketButton = ({
 									const { underlyingContract } = asset
 									handleTx(
 										approvev2(underlyingContract, marketContract, account),
-										`Approve ${asset.underlyingSymbol} for Markets`,
+										`Approve ${asset.underlyingSymbol}`,
 									)
 								}}
 							>
@@ -179,7 +179,7 @@ export const MarketButton = ({
 									const { underlyingContract } = asset
 									handleTx(
 										approvev2(underlyingContract, marketContract, account),
-										`Approve ${asset.underlyingSymbol} for Markets`,
+										`Approve ${asset.underlyingSymbol}`,
 									)
 								}}
 							>

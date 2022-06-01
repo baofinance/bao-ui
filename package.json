@@ -13,7 +13,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@reach/portal": "^0.16.0",
-    "@sushiswap/sushi-data": "^1.0.26",
     "@types/jest": "^26.0.9",
     "@types/node": "^14.0.27",
     "@types/react": "^16.9.46",

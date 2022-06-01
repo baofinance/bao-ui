@@ -22,19 +22,17 @@ export interface SupportedPool {
 
 export interface SupportedBasket {
   nid: number
-  basketAddresses?: {
+  basketAddresses: {
     [network: number]: string
   }
-  lpAddress: string
+  inputToken: string
+  outputToken: string
   symbol: string
   name: string
   icon: string
-  cgIds: { [address: string]: string }
-  pieColors: { [asset: string]: string }
-  address?: string
-  basketContract?: Contract
-  ovenAddress: string
-  ovenContract?: Contract
+  pieColors: {
+    [asset: string]: string
+  }
 }
 
 export interface SupportedMarket {
@@ -76,9 +74,8 @@ export interface FarmableSupportedPool extends SupportedPool {
 }
 
 export interface ActiveSupportedBasket extends SupportedBasket {
-  address: string
+  basketAddress: string
   basketContract: Contract
-  ovenContract: Contract
 }
 
 export interface ActiveSupportedMarket extends SupportedMarket {
