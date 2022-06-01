@@ -80,7 +80,7 @@ const App: React.FC = () => {
 					<Route path="/NFT">
 						<NFT />
 					</Route>
-					<Route path="/baskets">
+					<Route path="/baskets" exact>
 						<Baskets />
 					</Route>
 					<Route path="/baskets/:id">
