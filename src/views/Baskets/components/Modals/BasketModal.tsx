@@ -122,6 +122,7 @@ const BasketModal: React.FC<ModalProps> = ({
 						),
 						-18,
 					)} ${basket.symbol}`,
+					() => hide(),
 				)
 				break
 			case 'REDEEM':
@@ -134,6 +135,7 @@ const BasketModal: React.FC<ModalProps> = ({
 					`Redeem ${getDisplayBalance(new BigNumber(value), 0)} ${
 						basket.symbol
 					}`,
+					() => hide(),
 				)
 		}
 	}
@@ -345,6 +347,7 @@ const BasketModal: React.FC<ModalProps> = ({
 								<ExternalLink
 									href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`}
 									target="_blank"
+									style={{ fontSize: '1rem' }}
 								>
 									Pending Transaction{' '}
 									<FontAwesomeIcon icon="external-link-alt" />
