@@ -52,9 +52,9 @@ const BDEFI: React.FC = () => (
 			striving to provide core coverage of the key building blocks for the
 			future of finance. With bDEFI you’ll have exposure to infrastructure,
 			lending markets, decentralized exchanges, synthetics, and yield
-			aggregators. The unique weighting formula allows the nest to invest in
+			aggregators. The unique weighting formula allows the basket to invest in
 			projects gaining traction earlier and with a greater weighting than market
-			cap weighted nests.
+			cap weighted baskets.
 		</p>
 		<p>
 			The Bao DeFi Basket will provide the crypto industry's first automated
@@ -65,7 +65,7 @@ const BDEFI: React.FC = () => (
 		<BasketHeader>Criteria</BasketHeader>
 		<p>
 			For a project to be included in the Bao Defi Basket, it must fit the below
-			criteria in order to reduce the risk of the nest and fit the desires of
+			criteria in order to reduce the risk of the basket and fit the desires of
 			the community.
 		</p>
 		<BasketSubHeader>Characteristics</BasketSubHeader>
@@ -81,7 +81,7 @@ const BDEFI: React.FC = () => (
 			</li>
 			<li>
 				The protocol must be running for 3 months before qualifying to be
-				included in the nest.
+				included in the basket.
 			</li>
 			<li>
 				In the event of a safety incident, the team must have addressed the
@@ -96,7 +96,7 @@ const BDEFI: React.FC = () => (
 		<BasketHeader>Strategy</BasketHeader>
 		<p>
 			It is possible for the underlying tokens to utilize strategies that will
-			earn yield, maximising value for nest holders, who benefit from this
+			earn yield, maximising value for basket holders, who benefit from this
 			productivity without having to perform any actions themselves. These
 			strategies will be changed over time to take advantage of new
 			opportunities or to maximise the yield earned.
@@ -111,7 +111,7 @@ const BDEFI: React.FC = () => (
 			The determination phase takes place during the final 2 weeks of the
 			quarter. During this phase the changes needed for the next reconstitution
 			are determined. The TVL and FDV of each project are recorded, including
-			new projects that qualify for the nest and meet the criteria.
+			new projects that qualify for the basket and meet the criteria.
 		</p>
 		<p>
 			Proposed changes will be published on the governance forum for 1 week then
@@ -121,7 +121,7 @@ const BDEFI: React.FC = () => (
 			<BasketSubHeader>Reconstitution Phase</BasketSubHeader>
 		</p>
 		<p>
-			In the two weeks following a successful vote, the nest components will be
+			In the two weeks following a successful vote, the basket components will be
 			adjusted as per the instructions published during the final 2 weeks of the
 			quarter.
 		</p>
@@ -145,9 +145,9 @@ const BSTBL: React.FC = () => (
 		</p>
 		<p>
 			By spreading risk over a number of coins, you reduce the impact of
-			problems any single tokens face. Since the nest does not automatically
+			problems any single tokens face. Since the basket does not automatically
 			rebalance, one stable losing its peg would not affect the other tokens in
-			the nest.
+			the basket.
 		</p>
 		<p>
 			By focusing on decentralized stables, you also reduce exposure to
@@ -155,15 +155,15 @@ const BSTBL: React.FC = () => (
 			they should.
 		</p>
 		<p>
-			The nest will start with a mixture of centrally issued and decentralized
+			The basket will start with a mixture of centrally issued and decentralized
 			stable coins and deposit them in a variety of protocols to earn yield on
 			them, swapping strategies regularly to maximize the yield earned.
 		</p>
 		<Spacer />
 		<BasketHeader>Criteria</BasketHeader>
 		<p>
-			For a project to be included in the Bao Stable nest, it must fit the below
-			criteria in order to reduce the risk of the nest and fit the desires of
+			For a project to be included in the Bao Stable basket, it must fit the below
+			criteria in order to reduce the risk of the basket and fit the desires of
 			the community.
 		</p>
 		<BasketSubHeader>Characteristics</BasketSubHeader>
@@ -174,7 +174,7 @@ const BSTBL: React.FC = () => (
 			</li>
 			<li>
 				The protocol must be running for 6 months before qulaifying to be
-				included in the nest.
+				included in the basket.
 			</li>
 			<li>
 				In the event of a safety incident, the team must have addressed the
@@ -184,7 +184,7 @@ const BSTBL: React.FC = () => (
 			</li>
 			<li>
 				The protocol must be running for 3 months before qualifying to be
-				included in the nest.
+				included in the basket.
 			</li>
 			<li>
 				In the event of a safety incident, the team must have addressed the
@@ -198,7 +198,7 @@ const BSTBL: React.FC = () => (
 		<BasketHeader>Strategy</BasketHeader>
 		<p>
 			It is possible for the underlying tokens to utilize strategies that will
-			earn yield, maximising value for nest holders, who benefit from this
+			earn yield, maximising value for basket holders, who benefit from this
 			productivity without having to perform any actions themselves. These
 			strategies will be changed over time to take advantage of new
 			opportunities or to maximise the yield earned.
@@ -219,16 +219,16 @@ const BSTBL: React.FC = () => (
 		</p>
 		<BasketSubHeader>Reconstitution Phase</BasketSubHeader>
 		<p>
-			In the two weeks following a successful vote, the nest components will be
+			In the two weeks following a successful vote, the basket components will be
 			adjusted as per the instructions published during the final 2 weeks of the
 			quarter.
 		</p>
 		<BasketSubHeader>Emergency Maintenance</BasketSubHeader>
 		<p>
-			The multisig holders are authorized by the community to re-balance nests
+			The multisig holders are authorized by the community to re-balance baskets
 			outside the usual schedule during moments that they collectively deem to
 			be critical emergencies. This clause will allow for quick re-balancing in
-			the event of a protocol or nest being in danger of failing.
+			the event of a protocol or basket being in danger of failing.
 		</p>
 		<p>
 			An example of when this would be utilized would be if a stable coin begins
