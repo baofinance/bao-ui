@@ -36,11 +36,7 @@ const NFT: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader
-				icon=""
-				title="BaoNFT"
-				subtitle="Check your eligibility and claim your BaoNFT here!"
-			/>
+			<PageHeader icon="" title="NFT" />
 			<Route exact path={path}>
 				<Container>
 					<StyledInfo>
