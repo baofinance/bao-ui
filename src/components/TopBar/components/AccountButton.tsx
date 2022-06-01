@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
+import { ethers } from 'ethers'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
 import { Button } from '../../Button'
@@ -15,12 +16,23 @@ interface AccountButtonProps {}
 
 const AccountButton: React.FC<AccountButtonProps> = (props) => {
 	const [showAccountModal, setShowAccountModal] = useState(false)
-
 	const [showWalletProviderModal, setShowWalletProviderModal] = useState(false)
+	const [ens, setEns] = useState<string | undefined>()
 
 	const { transactions } = useTransactionProvider()
 	const { account } = useWeb3React()
 	const wethBalance = useTokenBalance('ETH')
+
+	const ensResolver = new ethers.providers.JsonRpcProvider(
+		'https://rpc.ankr.com/eth',
+	)
+	useEffect(() => {
+		if (!account) return
+
+		ensResolver.lookupAddress(account).then((_ens) => {
+			if (_ens) setEns(_ens)
+		})
+	}, [account])
 
 	const pendingTxs = useMemo(
 		() =>
@@ -56,8 +68,14 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 						size="sm"
 						text={
 							<>
-								{account.slice(0, 6)}...
-								{account.slice(account.length - 4, account.length)}{' '}
+								{ens ? (
+									ens
+								) : (
+									<>
+										{account.slice(0, 6)}...
+										{account.slice(account.length - 4, account.length)}{' '}
+									</>
+								)}
 								<FontAwesomeIcon
 									icon="angle-double-right"
 									style={{
