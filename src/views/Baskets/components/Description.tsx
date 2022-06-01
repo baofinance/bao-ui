@@ -121,9 +121,9 @@ const BDEFI: React.FC = () => (
 			<BasketSubHeader>Reconstitution Phase</BasketSubHeader>
 		</p>
 		<p>
-			In the two weeks following a successful vote, the basket components will be
-			adjusted as per the instructions published during the final 2 weeks of the
-			quarter.
+			In the two weeks following a successful vote, the basket components will
+			be adjusted as per the instructions published during the final 2 weeks of
+			the quarter.
 		</p>
 	</>
 )
@@ -133,7 +133,7 @@ const BSTBL: React.FC = () => (
 		<BasketHeader>Description</BasketHeader>
 		<p>
 			The Bao Stable Basket provides a way to diversify counterparty risk on
-			stable assets while the underlying assets put to work earning yield on
+			stable assets while the underlying assets are put to work earning yield on
 			various trusted yield farming protocols. Decentralized and non pegged
 			stables will be used where yield is available.
 		</p>
@@ -162,9 +162,9 @@ const BSTBL: React.FC = () => (
 		<Spacer />
 		<BasketHeader>Criteria</BasketHeader>
 		<p>
-			For a project to be included in the Bao Stable basket, it must fit the below
-			criteria in order to reduce the risk of the basket and fit the desires of
-			the community.
+			For a project to be included in the Bao Stable basket, it must fit the
+			below criteria in order to reduce the risk of the basket and fit the
+			desires of the community.
 		</p>
 		<BasketSubHeader>Characteristics</BasketSubHeader>
 		<BasketList>
@@ -219,9 +219,9 @@ const BSTBL: React.FC = () => (
 		</p>
 		<BasketSubHeader>Reconstitution Phase</BasketSubHeader>
 		<p>
-			In the two weeks following a successful vote, the basket components will be
-			adjusted as per the instructions published during the final 2 weeks of the
-			quarter.
+			In the two weeks following a successful vote, the basket components will
+			be adjusted as per the instructions published during the final 2 weeks of
+			the quarter.
 		</p>
 		<BasketSubHeader>Emergency Maintenance</BasketSubHeader>
 		<p>
