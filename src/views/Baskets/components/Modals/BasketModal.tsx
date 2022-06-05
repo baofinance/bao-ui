@@ -126,9 +126,11 @@ const BasketModal: React.FC<ModalProps> = ({
 				)
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.methods.exitPool(exponentiate(value)).send({
-					from: account,
-				})
+				tx = basket.basketContract.methods
+					.exitPool(exponentiate(value).toFixed(0))
+					.send({
+						from: account,
+					})
 
 				handleTx(
 					tx,
