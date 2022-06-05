@@ -31,7 +31,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const baoBalance = useTokenBalance(Config.addressMap.BAO)
-	const wethBalance = useTokenBalance('ETH')
+	const ethBalance = useTokenBalance('ETH')
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -52,14 +52,14 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={wethIcon} alt="wETH" />
+										<img src={wethIcon} alt="ETH" />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
-											{new BigNumber(getDisplayBalance(wethBalance)).toFixed(4)}
+											{new BigNumber(getDisplayBalance(ethBalance)).toFixed(4)}
 										</WalletBalanceValue>
-										<WalletBalanceTicker>wETH Balance</WalletBalanceTicker>
+										<WalletBalanceTicker>ETH Balance</WalletBalanceTicker>
 									</WalletBalanceText>
 								</InnerInnerWalletBalance>
 							</InnerWalletBalance>
