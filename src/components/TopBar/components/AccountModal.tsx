@@ -52,7 +52,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={wethIcon} alt="wETH" />
+										<img src={wethIcon} alt="ETH" />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
