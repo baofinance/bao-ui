@@ -36,14 +36,14 @@ export default function DonutGraph({
 		(component) => ({
 			label: `
 			${component.percentage.toFixed(4)}%
-			${getDisplayBalance(component.balance, component.balanceDecimals)} ${
+			${getDisplayBalance(component.balance, component.decimals)} ${
 				component.symbol
 			}
 			${
 				component.price
 					? `$${getDisplayBalance(
 							component.price.times(
-								getBalanceNumber(component.balance, component.balanceDecimals),
+								getBalanceNumber(component.balance, component.decimals),
 							),
 							0,
 					  )}`
