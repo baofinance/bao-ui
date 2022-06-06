@@ -12,7 +12,7 @@ const Baskets: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader icon="" title="Baskets" />
+			<PageHeader icon="" title="Bao Baskets" />
 			<Container>
 				<StyledInfo>
 					<div

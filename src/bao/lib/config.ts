@@ -230,6 +230,7 @@ export default {
         aDAI: '#F5AC37',
         aUSDC: '#2775CA',
       },
+      desc: 'Low risk stablecoin basket',
     },
   ],
   farms: [

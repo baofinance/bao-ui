@@ -9,6 +9,7 @@ import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import Tooltipped from '../../../components/Tooltipped'
 import { getDisplayBalance } from '../../../utils/numberFormat'
 import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -35,8 +36,13 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 					<Col>
 						<IconContainer>
 							<StyledIcon src={basket.icon} alt={basket.symbol} />
+							<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+								<p style={{ margin: '0', lineHeight: '1rem' }}>
+									{basket.symbol}
+								</p>
+								<SubText>{basket.desc}</SubText>
+							</span>
 						</IconContainer>
-						{basket.symbol}
 					</Col>
 					<Col>
 						{composition ? (
@@ -67,3 +73,10 @@ type BasketListItemProps = {
 }
 
 export default BasketList
+
+const SubText = styled.p`
+	color: ${(props) => props.theme.color.text[200]};
+	font-size: 0.875rem;
+	margin: 0;
+	line-height: 1rem;
+`

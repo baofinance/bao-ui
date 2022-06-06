@@ -56,7 +56,6 @@ export const IconImage = styled.img`
 
 export const StyledIcon = styled(IconImage)`
   height: 40px;
-  vertical-align: super;
   transition: 200ms;
   user-select: none;
   -webkit-user-drag: none;
@@ -80,7 +79,6 @@ export const IconContainer = styled.div`
   align-items: center;
   margin: 0 auto;
   display: inline-block;
-  vertical-align: middle;
   color: ${(props) => props.theme.color.text[100]};
 
   @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {

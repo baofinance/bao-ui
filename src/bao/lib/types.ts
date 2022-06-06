@@ -31,6 +31,7 @@ export interface SupportedBasket {
   icon: string
   cgIds: { [address: string]: string }
   pieColors: { [asset: string]: string }
+  desc: string
   address?: string
   basketContract?: Contract
   ovenAddress: string

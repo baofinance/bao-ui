@@ -86,7 +86,6 @@ export const ListItemHeader = styled.div`
 		img {
 			height: 32px;
 			margin-right: 0.75rem;
-			vertical-align: middle;
 		}
 	}
 `
