@@ -25,7 +25,7 @@ export const ExternalLink: FC<ExternalLinkProps> = ({
 export const StyledLink = styled(NavLink)`
 	box-sizing: border-box;
 	color: ${(props) => props.theme.color.text[100]};
-	font-size: 1.25rem;
+	font-size: 1rem;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	padding: ${(props) => props.theme.spacing[3]}px
 		${(props) => props.theme.spacing[4]}px;
@@ -43,7 +43,7 @@ export const StyledLink = styled(NavLink)`
 export const StyledExternalLink = styled.a`
 	box-sizing: border-box;
 	color: ${(props) => props.theme.color.text[100]};
-	font-size: 1.25rem;
+	font-size: 1rem;
 	font-weight: ${(props) => props.theme.fontWeight.strong};
 	padding: ${(props) => props.theme.spacing[3]}px
 		${(props) => props.theme.spacing[4]}px;
