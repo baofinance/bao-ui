@@ -43,9 +43,11 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 				<Col>
 					{/* TODO - Link to DEX with Basket LP */}
 					<OverlayTrigger
+						placement="bottom"
 						overlay={
 							<Tooltip id="tooltip-disabled">
-								There is currently insufficient liquidity on bSTBL pairs.
+								There is currently insufficient liquidity on bSTBL pairs. Please
+								redeem to exit position.
 							</Tooltip>
 						}
 					>
