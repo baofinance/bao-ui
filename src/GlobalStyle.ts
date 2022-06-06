@@ -154,13 +154,61 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .btn {
-    border: ${(props) => props.theme.border.default};
     outline: none !important;
+    align-items: center;
+    background: ${(props) => props.theme.color.primary[200]};
+    border-radius: ${(props) => props.theme.borderRadius}px;
+    border: ${(props) => props.theme.border.default};
+    padding: ${(props) => -props.theme.spacing[3]}px;
+    color: ${(props) => props.theme.color.text[100]};
+    display: ${(props) => (props.inline ? 'inline-block' : 'flex')};
+    font-size: ${(props) => props.fontSize};
+    font-weight: ${(props) => props.theme.fontWeight.strong};
+    height: 50px;
+    justify-content: center;
+    outline: none;
+    padding-left: ${(props) => props.padding}px;
+    padding-right: ${(props) => props.padding}px;
+    width: ${(props) => (props.width ? props.width : '100%')};
+    opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+    position: relative;
+    overflow: hidden;
+    transition: 200ms;
+  
+    @media (max-width: 960px) {
+      /* margin: 0 0.5rem 0 0.5rem; */
+      text-align: center;
+      padding: ${(props) => -props.theme.spacing[1]}px
+        ${(props) => -props.theme.spacing[3]}px;
+    }
+
+    @media (max-width: 640px) {
+      width: 100%;
+      padding: ${(props) => -props.theme.spacing[3]}px
+        ${(props) => -props.theme.spacing[3]}px;
+    }
+  
+    &:hover {
+      background: ${(props) => props.theme.color.primary[300]};
+      cursor: pointer;
+    }
+  
+    &:hover,
+    &:focus,
+    &:active {
+      cursor: ${(props) =>
+        props.disabled ? 'not-allowed' : 'pointer'} !important;
+    }  
   }
 
   .btn:active {
     border: ${(props) => props.theme.border.default};
     outline: none !important;
+  }
+
+  .btn:disabled {
+    background: ${(props) => props.theme.color.primary[200]};
+    border: ${(props) => props.theme.border.default};
   }
 
   .btn-close {

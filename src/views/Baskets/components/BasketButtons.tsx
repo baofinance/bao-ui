@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import {
+	Col,
+	OverlayTrigger,
+	Row,
+	Tooltip,
+	Button as TempButton,
+} from 'react-bootstrap'
 import { Button } from '../../../components/Button'
 import BasketModal from './Modals/BasketModal'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
@@ -36,7 +42,19 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 				</Col>
 				<Col>
 					{/* TODO - Link to DEX with Basket LP */}
-					<Button>Swap</Button>
+					<OverlayTrigger
+						overlay={
+							<Tooltip id="tooltip-disabled">
+								There is currently insufficient liquidity on bSTBL pairs.
+							</Tooltip>
+						}
+					>
+						<span>
+							<TempButton disabled style={{ pointerEvents: 'none' }}>
+								Swap
+							</TempButton>
+						</span>
+					</OverlayTrigger>
 				</Col>
 			</Row>
 		</>
