@@ -14,6 +14,9 @@ const Nav: React.FC = () => {
 			<StyledLink exact activeClassName="active" to={{ pathname: '/farms' }}>
 				Farms
 			</StyledLink>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/baskets' }}>
+				Baskets
+			</StyledLink>
 			<StyledLink exact activeClassName="active" to={{ pathname: '/NFT' }}>
 				NFT
 			</StyledLink>

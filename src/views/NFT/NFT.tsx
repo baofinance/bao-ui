@@ -36,11 +36,7 @@ const NFT: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader
-				icon=""
-				title="BaoNFT"
-				subtitle="Check your eligibility and claim your BaoNFT here!"
-			/>
+			<PageHeader icon="" title="NFT" />
 			<Route exact path={path}>
 				<Container>
 					<StyledInfo>
@@ -79,7 +75,7 @@ const NFT: React.FC = () => {
 													<a
 														href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 														target="_blank"
-													>
+														>
 														Pending Transaction
 														<FontAwesomeIcon icon="external-link-alt" />
 													</a>
@@ -151,7 +147,7 @@ const NFT: React.FC = () => {
 													<a
 														href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 														target="_blank"
-													>
+														>
 														Pending Transaction
 														<FontAwesomeIcon icon="external-link-alt" />
 													</a>

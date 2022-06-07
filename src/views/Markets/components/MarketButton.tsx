@@ -44,7 +44,7 @@ export const MarketButton = ({
 						<ExternalLink
 							href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 							target="_blank"
-						>
+							>
 							Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
 						</ExternalLink>
 					) : (
@@ -91,7 +91,7 @@ export const MarketButton = ({
 									const { underlyingContract } = asset
 									handleTx(
 										approvev2(underlyingContract, marketContract, account),
-										`Approve ${asset.underlyingSymbol}`,
+										`Approve ${asset.underlyingSymbol} for Markets`,
 									)
 								}}
 							>
@@ -179,7 +179,7 @@ export const MarketButton = ({
 									const { underlyingContract } = asset
 									handleTx(
 										approvev2(underlyingContract, marketContract, account),
-										`Approve ${asset.underlyingSymbol}`,
+										`Approve ${asset.underlyingSymbol} for Markets`,
 									)
 								}}
 							>
