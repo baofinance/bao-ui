@@ -71,7 +71,9 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						<br />
 						NAV{' '}
 						<Tooltipped
-							content={`The Net Asset Value is the value of one ${basket && basket.symbol} token if you were to own each underlying asset with identical weighting to the basket.`}
+							content={`The Net Asset Value is the value of one ${
+								basket && basket.symbol
+							} token if you were to own each underlying asset with identical weighting to the basket.`}
 						/>
 					</span>
 					<Spacer size={'sm'} />
@@ -88,24 +90,22 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						<br />
 						Premium{' '}
 						<Tooltipped
-							content={`Percent difference between the price on DEX ($${
-								pairPrice && pairPrice.toFixed(2)
-							}) and the price to mint ($${
-								rates && getDisplayBalance(rates.usd)
-							})`}
+							content={`Percent difference between the price on exchange 
+							and the price to mint`}
 						/>
 					</span>
 					<Spacer size={'sm'} />
 					<StatBadge bg="secondary">
 						{pairPrice && rates ? (
-							`${getDisplayBalance(
-								pairPrice
-									.minus(decimate(rates.usd))
-									.abs()
-									.div(decimate(rates.usd))
-									.times(100),
-								0,
-							)}%`
+							// `${getDisplayBalance(
+							// 	pairPrice
+							// 		.minus(decimate(rates.usd))
+							// 		.abs()
+							// 		.div(decimate(rates.usd))
+							// 		.times(100),
+							// 	0,
+							// )}%`
+							'-'
 						) : (
 							<SpinnerLoader />
 						)}
