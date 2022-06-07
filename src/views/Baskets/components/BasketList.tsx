@@ -10,6 +10,7 @@ import Tooltipped from '../../../components/Tooltipped'
 import { getDisplayBalance } from '../../../utils/numberFormat'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { FeeBadge } from 'components/Badge'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -36,7 +37,9 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 					<Col>
 						<IconContainer>
 							<StyledIcon src={basket.icon} alt={basket.symbol} />
-							<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+							<span
+								style={{ display: 'inline-block', verticalAlign: 'middle' }}
+							>
 								<p style={{ margin: '0', lineHeight: '1rem' }}>
 									{basket.symbol}
 								</p>
@@ -57,7 +60,14 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<SpinnerLoader />
 						)}
 					</Col>
-					<Col>${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}</Col>
+					<Col>
+						<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+							<p style={{ margin: '0', lineHeight: '1rem' }}>
+								${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}
+							</p>
+							<FeeBadge>0% Fee</FeeBadge>
+						</span>
+					</Col>
 				</Row>
 			</ListItemHeader>
 		</ListItem>
