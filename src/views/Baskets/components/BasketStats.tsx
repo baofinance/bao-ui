@@ -88,7 +88,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						<br />
 						Premium{' '}
 						<Tooltipped
-							content={`Percent difference between the price on SushiSwap ($${
+							content={`Percent difference between the price on DEX ($${
 								pairPrice && pairPrice.toFixed(2)
 							}) and the price to mint ($${
 								rates && getDisplayBalance(rates.usd)
