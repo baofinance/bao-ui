@@ -84,7 +84,6 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 				<a
 					href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 					target="_blank"
-					rel="noreferrer"
 				>
 					Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
 				</a>

@@ -151,5 +151,5 @@ export const StyledInfo = styled.h3`
   font-size: 1rem;
   font-weight: ${(props) => props.theme.fontWeight.regular};
   margin: 0;
-  padding: 0;
+  padding: 12px;
 `

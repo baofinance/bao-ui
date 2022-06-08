@@ -17,7 +17,7 @@ export interface IconProps {
 }
 
 export const Icon = styled.img`
-	height: 200px;
+	max-height: 200px;
 	margin-bottom: ${(props) => props.theme.spacing[4]}px;
 
 	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
@@ -56,11 +56,10 @@ export const IconImage = styled.img`
 
 export const StyledIcon = styled(IconImage)`
 	height: 40px;
-	vertical-align: super;
 	transition: 200ms;
 	user-select: none;
 	-webkit-user-drag: none;
-	margin-left: -${(props) => props.theme.spacing[3]}px;
+	margin-left: -${(props) => props.theme.spacing[4]}px;
 
 	&:first-child {
 		margin-left: 0;
@@ -80,7 +79,6 @@ export const IconContainer = styled.div`
 	align-items: center;
 	margin: 0 auto;
 	display: inline-block;
-	vertical-align: middle;
 	color: ${(props) => props.theme.color.text[100]};
 
 	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {

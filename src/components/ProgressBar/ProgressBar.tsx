@@ -37,7 +37,9 @@ export const ProgressBar = styled.div.attrs((props: ProgressBarProps) => ({}))`
 	background-color: ${(props: ProgressBarProps) => props.assetColor};
 	border-radius: 5px;
 	width: ${(props: ProgressBarProps) => props.width}%;
+	color: #fff8ee;
 	height: 100%;
 	display: inline-block;
 	float: left;
+	padding: 2px 10px;
 `

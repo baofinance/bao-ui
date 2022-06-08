@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
-	CoinbaseWallet: coinbaseWallet,
+	'Coinbase Wallet': coinbaseWallet,
 	WalletConnect: walletConnect,
 }
 
