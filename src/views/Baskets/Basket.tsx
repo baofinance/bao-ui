@@ -21,11 +21,12 @@ import Composition from './components/Composition'
 import Description from './components/Description'
 
 const Basket: React.FC = () => {
-	const { id } = useParams()
+	const { basketId } = useParams()
 	const baskets = useBaskets()
 
 	const basket = useMemo(
-		() => baskets && baskets.find((basket) => basket.nid.toString() === id),
+		() =>
+			baskets && baskets.find((basket) => basket.nid.toString() === basketId),
 		[baskets],
 	)
 	const composition = useComposition(basket)

@@ -7,7 +7,7 @@ import {
 	getBaoSwapContract,
 	getElderContract,
 	mintBaoSwap,
-	mintElder
+	mintElder,
 } from 'bao/utils'
 import { Button, SubmitButton } from 'components/Button/Button'
 import Label from 'components/Label'

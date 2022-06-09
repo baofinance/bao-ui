@@ -11,7 +11,10 @@ export type OvenInfo = {
   cap: BigNumber
 }
 
-const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo => {
+const useOvenInfo = (
+  basket: ActiveSupportedBasket,
+  account: string,
+): OvenInfo => {
   const [info, setInfo] = useState<OvenInfo | undefined>()
   const bao = useBao()
 
@@ -29,13 +32,15 @@ const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo =
         ],
       },
     ])
-    const { [basket.ovenAddress]: res } = Multicall.parseCallResults(await bao.multicall.call(query))
+    const { [basket.ovenAddress]: res } = Multicall.parseCallResults(
+      await bao.multicall.call(query),
+    )
 
     setInfo({
       balance: new BigNumber(balance),
       userBalance: new BigNumber(res[0].values[0].hex),
       userOutputBalance: new BigNumber(res[1].values[0].hex),
-      cap: new BigNumber(res[2].values[0].hex)
+      cap: new BigNumber(res[2].values[0].hex),
     })
   }, [basket, account, bao])
 

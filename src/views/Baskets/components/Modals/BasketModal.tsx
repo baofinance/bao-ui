@@ -76,10 +76,10 @@ const BasketModal: React.FC<ModalProps> = ({
 
 	const handleOperation = () => {
 		let tx
+		const recipe = bao.getContract('recipe')
+
 		switch (operation) {
 			case 'MINT':
-				const recipe = bao.getContract('recipe')
-
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) {

@@ -1,16 +1,16 @@
+import { FeeBadge } from 'components/Badge'
+import { IconContainer, StyledIcon } from 'components/Icon'
 import React from 'react'
+import { Col, Row } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import { ActiveSupportedBasket } from '../../../bao/lib/types'
+import { ListHeader, ListItem, ListItemHeader } from '../../../components/List'
+import { SpinnerLoader } from '../../../components/Loader'
+import Tooltipped from '../../../components/Tooltipped'
 import useComposition from '../../../hooks/baskets/useComposition'
 import useBasketRates from '../../../hooks/baskets/useNestRate'
-import { Col, Row } from 'react-bootstrap'
-import { ListHeader, ListItem, ListItemHeader } from '../../../components/List'
-import { IconContainer, StyledIcon } from 'components/Icon'
-import { SpinnerLoader } from '../../../components/Loader'
-import { ActiveSupportedBasket } from '../../../bao/lib/types'
-import Tooltipped from '../../../components/Tooltipped'
 import { getDisplayBalance } from '../../../utils/numberFormat'
-import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
-import { FeeBadge } from 'components/Badge'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -18,7 +18,10 @@ const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 			<ListHeader
 				headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']}
 			/>
-			{baskets && baskets.map((basket) => <BasketListItem basket={basket} />)}
+			{baskets &&
+				baskets.map((basket) => (
+					<BasketListItem basket={basket} key={basket.address} />
+				))}
 		</>
 	)
 }
@@ -27,8 +30,8 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 
-	const history = useHistory()
-	const handleClick = () => history.push(`/baskets/${basket.nid}`)
+	const navigate = useNavigate()
+	const handleClick = () => navigate(`/baskets/${basket.nid}`)
 
 	return (
 		<ListItem onClick={handleClick}>

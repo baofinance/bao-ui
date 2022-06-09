@@ -156,7 +156,7 @@ const useComposition = (
       })
     }
 
-    let marketCap = _comp.reduce(
+    const marketCap = _comp.reduce(
       (prev, comp) =>
         prev.plus(decimate(comp.balance, comp.decimals).times(comp.price)),
       new BigNumber(0),

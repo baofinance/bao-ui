@@ -41,7 +41,7 @@ export const MarketButton = ({
 						<ExternalLink
 							href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 							target="_blank"
-							>
+						>
 							Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
 						</ExternalLink>
 					) : (
