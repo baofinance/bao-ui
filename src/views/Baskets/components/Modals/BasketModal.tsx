@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
@@ -72,6 +73,8 @@ const BasketModal: React.FC<ModalProps> = ({
 	const basketBalance = useTokenBalance(basket && basket.address)
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const ethBalance = useTokenBalance('ETH')
+
+	const swapLink = basket && basket.swap
 
 	const handleOperation = () => {
 		let tx
@@ -194,7 +197,7 @@ const BasketModal: React.FC<ModalProps> = ({
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{operation === 'MINT' && (
+					{operation === 'MINT' ? (
 						<>
 							<div style={{ display: 'flex' }}>
 								<StyledBadge style={{ margin: 'auto' }}>
@@ -212,6 +215,20 @@ const BasketModal: React.FC<ModalProps> = ({
 								input tokens will be returned in the mint transaction.
 							</div>
 						</>
+					) : (
+						<div style={{ textAlign: 'center' }}>
+							<b style={{ fontWeight: 'bold' }}>NOTE:</b> When you redeem{' '}
+							{basket.name}, you will receive the underlying tokens. Otherwise,
+							you can swap {basket.name}{' '}
+							<a
+								href={`${swapLink}`}
+								target="blank"
+								style={{ fontWeight: 700 }}
+							>
+								here
+							</a>
+							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may apply on swaps)
+						</div>
 					)}
 					<ModalStack>
 						<BalanceWrapper>
