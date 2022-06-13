@@ -81,7 +81,7 @@ const Basket: React.FC = () => {
 					info={info}
 					pairPrice={pairPrice}
 				/>
-				<BasketButtons basket={basket} />
+				<BasketButtons basket={basket} swapLink={basket && basket.swap} />
 				<Composition composition={composition} />
 				<Description basketAddress={basket && basket.basketAddresses[1]} />
 			</Container>

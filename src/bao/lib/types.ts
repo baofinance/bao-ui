@@ -32,6 +32,7 @@ export interface SupportedBasket {
   cgIds: { [address: string]: string }
   pieColors: { [asset: string]: string }
   desc: string
+  swap?: string
   address?: string
   basketContract?: Contract
   ovenAddress: string

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import { Button } from '../../../components/Button'
@@ -8,9 +8,10 @@ type ModalOperation = 'MINT' | 'REDEEM'
 
 type BasketButtonsProps = {
 	basket: ActiveSupportedBasket
+	swapLink: string
 }
 
-const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
+const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 	const [showBasketModal, setShowBasketModal] = useState(false)
 	const [modalOperation, setModalOperation] = useState<ModalOperation>('MINT')
 
@@ -18,6 +19,8 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 		setModalOperation(op)
 		setShowBasketModal(true)
 	}
+
+	console.log(swapLink)
 
 	return (
 		<>
@@ -35,7 +38,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 					<Button onClick={() => handleClick('REDEEM')}>Redeem</Button>
 				</Col>
 				<Col>
-					<Button href="https://curve.fi/factory-crypto/61" target="_blank" text="Swap" />
+					<Button href={`${swapLink}`} target="_blank" text="Swap" />
 				</Col>
 			</Row>
 		</>
