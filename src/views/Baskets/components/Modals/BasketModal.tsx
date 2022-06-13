@@ -1,19 +1,28 @@
-import React, { useMemo, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
+import { ethers } from 'ethers'
+import React, { useMemo, useState } from 'react'
+import { Col, Modal, Row } from 'react-bootstrap'
 import Config from '../../../../bao/lib/config'
+import { ActiveSupportedBasket } from '../../../../bao/lib/types'
+import { StyledBadge } from '../../../../components/Badge'
+import { BalanceWrapper } from '../../../../components/Balance'
+import { Button, MaxButton } from '../../../../components/Button'
+import { BalanceInput } from '../../../../components/Input'
+import { LabelEnd, LabelStart } from '../../../../components/Label'
+import { ExternalLink } from '../../../../components/Link'
+import Tooltipped from '../../../../components/Tooltipped'
+import useAllowancev2 from '../../../../hooks/base/useAllowancev2'
 import useBao from '../../../../hooks/base/useBao'
 import useTokenBalance from '../../../../hooks/base/useTokenBalance'
 import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
 import useBasketRates from '../../../../hooks/baskets/useNestRate'
-import useAllowancev2 from '../../../../hooks/base/useAllowancev2'
-import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
 import {
 	decimate,
 	exponentiate,
 	getDisplayBalance,
 } from '../../../../utils/numberFormat'
-import { Col, Modal, Row } from 'react-bootstrap'
 import {
 	AssetLabel,
 	AssetStack,
@@ -24,16 +33,6 @@ import {
 	MaxLabel,
 	ModalStack,
 } from '../../../Markets/components/styles'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button } from '../../../../components/Button'
-import { BalanceWrapper } from '../../../../components/Balance'
-import { LabelEnd, LabelStart } from '../../../../components/Label'
-import { BalanceInput } from '../../../../components/Input'
-import { StyledBadge } from '../../../../components/Badge'
-import Spacer from '../../../../components/Spacer'
-import Tooltipped from '../../../../components/Tooltipped'
-import { ActiveSupportedBasket } from '../../../../bao/lib/types'
-import { ExternalLink } from '../../../../components/Link'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -253,18 +252,12 @@ const BasketModal: React.FC<ModalProps> = ({
 										<AssetStack>
 											{operation === 'MINT' && (
 												<>
-													<FontAwesomeIcon icon="sync" />
-													<Spacer size="sm" />
-												</>
-											)}
-											<IconFlex>
-												{operation === 'MINT' ? (
 													<Tooltipped
 														content={`Swap input currency to ${
 															mintOption === MintOption.DAI ? 'ETH' : 'DAI'
 														}`}
 													>
-														<a
+														<MaxButton
 															onClick={() => {
 																// Clear input values
 																setValue('')
@@ -277,13 +270,18 @@ const BasketModal: React.FC<ModalProps> = ({
 																)
 															}}
 														>
-															<img
-																src={`/${
-																	mintOption === MintOption.DAI ? 'DAI' : 'WETH'
-																}.png`}
-															/>
-														</a>
+															<FontAwesomeIcon icon="sync" />
+														</MaxButton>
 													</Tooltipped>
+												</>
+											)}
+											<IconFlex>
+												{operation === 'MINT' ? (
+													<img
+														src={`/${
+															mintOption === MintOption.DAI ? 'DAI' : 'WETH'
+														}.png`}
+													/>
 												) : (
 													<img src={basket.icon} />
 												)}
