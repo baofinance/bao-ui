@@ -35,11 +35,9 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 		<div style={{ padding: '0 0.75rem' }}>
 			<Row md="auto" className="md-start" style={{ marginBottom: '8px' }}>
 				<Col>
-					<BasketHeader style={{ float: 'left' }}>
+					<BasketHeader style={{ float: 'left', marginRight: '8px' }}>
 						Allocation Breakdown
 					</BasketHeader>
-				</Col>
-				<Col>
 					<PrefButtons>
 						<BootButton
 							variant="outline-primary"
@@ -48,6 +46,8 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 								marginTop: '0px',
 								borderColor: 'transparent',
 								padding: '8px',
+								height: '36px',
+								width: '36px',
 							}}
 						>
 							<FontAwesomeIcon icon="table" size="xs" />
@@ -59,6 +59,8 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 								marginTop: '0px',
 								borderColor: 'transparent',
 								padding: '8px',
+								height: '36px',
+								width: '36px',
 							}}
 						>
 							<FontAwesomeIcon icon="chart-pie" size="xs" />
@@ -198,6 +200,7 @@ export const BasketHeader = styled.div`
 	color: ${(props) => props.theme.color.text[100]};
 	margin: auto;
 	font-size: 1.5rem;
+	vertical-align: middle;
 
 	p {
 		margin: 0;

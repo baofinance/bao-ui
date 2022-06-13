@@ -469,6 +469,7 @@ export const CornerButton = styled.a`
 
 export const PrefButtons = styled.div`
   margin: auto;
+  display: inline-block;
 
   > button {
     float: left;
