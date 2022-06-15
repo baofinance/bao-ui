@@ -118,12 +118,7 @@ const BasketModal: React.FC<ModalProps> = ({
 
 				handleTx(
 					tx,
-					`Mint ${getDisplayBalance(
-						new BigNumber(value).div(
-							mintOption === MintOption.DAI ? rates.eth : rates.dai,
-						),
-						-18,
-					)} ${basket.symbol}`,
+					`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`,
 					() => hide(),
 				)
 				break
