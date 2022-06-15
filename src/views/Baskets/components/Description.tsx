@@ -137,11 +137,19 @@ const BSTBL: React.FC = () => (
 			various trusted yield farming protocols. Decentralized and non pegged
 			stables will be used where yield is available.
 		</p>
+		<BasketSubHeader>Fees</BasketSubHeader>
+		<BasketList>
+			<li>Entry Fee: 0%</li>
+			<li>Streaming Fee: 0%</li>
+			<li>Redemption Fee: 0%</li>
+		</BasketList>
+
 		<Spacer />
 		<BasketHeader>Objective</BasketHeader>
 		<p>
-			To provide exposure to a diversified basket of stable coins with a focus
-			on yield and decentralization.
+			The objective of the Bao Stable Basket is to provide exposure to a
+			diversified basket of stable coins with a focus on yield and
+			decentralization.
 		</p>
 		<p>
 			By spreading risk over a number of coins, you reduce the impact of
@@ -174,16 +182,6 @@ const BSTBL: React.FC = () => (
 			</li>
 			<li>
 				The protocol must be running for 6 months before qulaifying to be
-				included in the basket.
-			</li>
-			<li>
-				In the event of a safety incident, the team must have addressed the
-				problem responsibly and promptly, providing users of the protocol a
-				reliable solution and document a detailed, transparent breakdown of the
-				incident.
-			</li>
-			<li>
-				The protocol must be running for 3 months before qualifying to be
 				included in the basket.
 			</li>
 			<li>
@@ -232,7 +230,7 @@ const BSTBL: React.FC = () => (
 		</p>
 		<p>
 			An example of when this would be utilized would be if a stable coin begins
-			losing its peg/ becoming insolvent, or a protocol suffers an exploit that
+			losing its peg/becoming insolvent, or a protocol suffers an exploit that
 			is not dealt with sufficiently. These scenarios may be time sensitive and
 			require immediate resolution. Thus the team may decide to act without
 			warning and explain their actions in a governance forum post afterwards,
