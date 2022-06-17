@@ -1,22 +1,17 @@
-import React, { useState } from 'react'
-import {
-	Col,
-	OverlayTrigger,
-	Row,
-	Tooltip,
-	Button as TempButton,
-} from 'react-bootstrap'
+import React, { useMemo, useState } from 'react'
+import { Col, Row } from 'react-bootstrap'
+import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import { Button } from '../../../components/Button'
 import BasketModal from './Modals/BasketModal'
-import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 type ModalOperation = 'MINT' | 'REDEEM'
 
 type BasketButtonsProps = {
 	basket: ActiveSupportedBasket
+	swapLink: string
 }
 
-const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
+const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 	const [showBasketModal, setShowBasketModal] = useState(false)
 	const [modalOperation, setModalOperation] = useState<ModalOperation>('MINT')
 
@@ -24,6 +19,8 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 		setModalOperation(op)
 		setShowBasketModal(true)
 	}
+
+	console.log(swapLink)
 
 	return (
 		<>
@@ -41,22 +38,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket }) => {
 					<Button onClick={() => handleClick('REDEEM')}>Redeem</Button>
 				</Col>
 				<Col>
-					{/* TODO - Link to DEX with Basket LP */}
-					<OverlayTrigger
-						placement="bottom"
-						overlay={
-							<Tooltip id="tooltip-disabled">
-								There is currently insufficient liquidity on bSTBL pairs. Please
-								redeem to exit position.
-							</Tooltip>
-						}
-					>
-						<span>
-							<TempButton disabled style={{ pointerEvents: 'none' }}>
-								Swap
-							</TempButton>
-						</span>
-					</OverlayTrigger>
+					<Button href={`${swapLink}`} target="_blank" text="Swap" />
 				</Col>
 			</Row>
 		</>

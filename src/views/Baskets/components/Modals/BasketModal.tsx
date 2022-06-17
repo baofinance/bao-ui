@@ -1,19 +1,29 @@
-import React, { useMemo, useState } from 'react'
+import { NetworkStatus } from '@apollo/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
+import { ethers } from 'ethers'
+import React, { useMemo, useState } from 'react'
+import { Col, Modal, Row } from 'react-bootstrap'
 import Config from '../../../../bao/lib/config'
+import { ActiveSupportedBasket } from '../../../../bao/lib/types'
+import { StyledBadge } from '../../../../components/Badge'
+import { BalanceWrapper } from '../../../../components/Balance'
+import { Button, MaxButton } from '../../../../components/Button'
+import { BalanceInput } from '../../../../components/Input'
+import { LabelEnd, LabelStart } from '../../../../components/Label'
+import { ExternalLink } from '../../../../components/Link'
+import Tooltipped from '../../../../components/Tooltipped'
+import useAllowancev2 from '../../../../hooks/base/useAllowancev2'
 import useBao from '../../../../hooks/base/useBao'
 import useTokenBalance from '../../../../hooks/base/useTokenBalance'
 import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
 import useBasketRates from '../../../../hooks/baskets/useNestRate'
-import useAllowancev2 from '../../../../hooks/base/useAllowancev2'
-import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
 import {
 	decimate,
 	exponentiate,
 	getDisplayBalance,
 } from '../../../../utils/numberFormat'
-import { Col, Modal, Row } from 'react-bootstrap'
 import {
 	AssetLabel,
 	AssetStack,
@@ -24,16 +34,6 @@ import {
 	MaxLabel,
 	ModalStack,
 } from '../../../Markets/components/styles'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button } from '../../../../components/Button'
-import { BalanceWrapper } from '../../../../components/Balance'
-import { LabelEnd, LabelStart } from '../../../../components/Label'
-import { BalanceInput } from '../../../../components/Input'
-import { StyledBadge } from '../../../../components/Badge'
-import Spacer from '../../../../components/Spacer'
-import Tooltipped from '../../../../components/Tooltipped'
-import { ActiveSupportedBasket } from '../../../../bao/lib/types'
-import { ExternalLink } from '../../../../components/Link'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -73,6 +73,8 @@ const BasketModal: React.FC<ModalProps> = ({
 	const basketBalance = useTokenBalance(basket && basket.address)
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const ethBalance = useTokenBalance('ETH')
+
+	const swapLink = basket && basket.swap
 
 	const handleOperation = () => {
 		let tx
@@ -116,12 +118,7 @@ const BasketModal: React.FC<ModalProps> = ({
 
 				handleTx(
 					tx,
-					`Mint ${getDisplayBalance(
-						new BigNumber(value).div(
-							mintOption === MintOption.DAI ? rates.eth : rates.dai,
-						),
-						-18,
-					)} ${basket.symbol}`,
+					`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`,
 					() => hide(),
 				)
 				break
@@ -195,7 +192,7 @@ const BasketModal: React.FC<ModalProps> = ({
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{operation === 'MINT' && (
+					{operation === 'MINT' ? (
 						<>
 							<div style={{ display: 'flex' }}>
 								<StyledBadge style={{ margin: 'auto' }}>
@@ -208,11 +205,25 @@ const BasketModal: React.FC<ModalProps> = ({
 							</div>
 							<br />
 							<div style={{ textAlign: 'center' }}>
-								<b style={{ fontWeight: 'bold' }}>NOTE:</b> An extra 5% of the
+								<b style={{ fontWeight: 'bold' }}>NOTE:</b> An extra 2% of the
 								mint cost will be included to account for slippage. Any unused
 								input tokens will be returned in the mint transaction.
 							</div>
 						</>
+					) : (
+						<div style={{ textAlign: 'center' }}>
+							<b style={{ fontWeight: 'bold' }}>NOTE:</b> When you redeem{' '}
+							{basket.name}, you will receive the underlying tokens. Otherwise,
+							you can swap {basket.name}{' '}
+							<a
+								href={`${swapLink}`}
+								target="blank"
+								style={{ fontWeight: 700 }}
+							>
+								here
+							</a>
+							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may apply on swaps)
+						</div>
 					)}
 					<ModalStack>
 						<BalanceWrapper>
@@ -253,18 +264,12 @@ const BasketModal: React.FC<ModalProps> = ({
 										<AssetStack>
 											{operation === 'MINT' && (
 												<>
-													<FontAwesomeIcon icon="sync" />
-													<Spacer size="sm" />
-												</>
-											)}
-											<IconFlex>
-												{operation === 'MINT' ? (
 													<Tooltipped
 														content={`Swap input currency to ${
 															mintOption === MintOption.DAI ? 'ETH' : 'DAI'
 														}`}
 													>
-														<a
+														<MaxButton
 															onClick={() => {
 																// Clear input values
 																setValue('')
@@ -277,13 +282,18 @@ const BasketModal: React.FC<ModalProps> = ({
 																)
 															}}
 														>
-															<img
-																src={`/${
-																	mintOption === MintOption.DAI ? 'DAI' : 'WETH'
-																}.png`}
-															/>
-														</a>
+															<FontAwesomeIcon icon="sync" />
+														</MaxButton>
 													</Tooltipped>
+												</>
+											)}
+											<IconFlex>
+												{operation === 'MINT' ? (
+													<img
+														src={`/${
+															mintOption === MintOption.DAI ? 'DAI' : 'WETH'
+														}.png`}
+													/>
 												) : (
 													<img src={basket.icon} />
 												)}
@@ -301,14 +311,14 @@ const BasketModal: React.FC<ModalProps> = ({
 													mintOption === MintOption.DAI ? rates.dai : rates.eth,
 												)
 													.times(e.currentTarget.value)
-													.times(1.05)
+													.times(1.02)
 												setSecondaryValue(e.currentTarget.value)
 												setValue(
-													inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 5% ETH. It will be returned to the user if it is not used.
+													inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
 												)
 											}}
 											onMaxClick={() => {
-												// Seek to mint 95% of total value (use remaining 5% as slippage protection)
+												// Seek to mint 98% of total value (use remaining 2% as slippage protection)
 												let usedBal
 												let usedRate
 												switch (mintOption) {
@@ -322,7 +332,7 @@ const BasketModal: React.FC<ModalProps> = ({
 														break
 												}
 
-												const maxVal = usedBal.times(0.95)
+												const maxVal = usedBal.times(0.98)
 												setSecondaryValue(
 													maxVal.div(decimate(usedRate)).toFixed(18),
 												)

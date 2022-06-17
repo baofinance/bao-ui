@@ -231,6 +231,7 @@ export default {
         aUSDC: '#2775CA',
       },
       desc: 'Low risk stablecoin basket',
+      swap: 'https://curve.fi/factory-crypto/61',
     },
   ],
   farms: [
