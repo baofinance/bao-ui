@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
-import { useMarkets } from 'hooks/markets/useMarkets'
+import { useAllMarkets, useMarkets } from 'hooks/markets/useMarkets'
 import React from 'react'
 import { Alert, Container } from 'react-bootstrap'
 import { Route, useRouteMatch } from 'react-router-dom'
@@ -13,8 +13,11 @@ import Market from './Market'
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
+	const allMarkets  = useAllMarkets()
 	const { path } = useRouteMatch()
 	const { account, library } = useWeb3React()
+
+	console.log(allMarkets)
 
 	return (
 		<Page>

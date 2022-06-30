@@ -40,3 +40,34 @@ export const useAccountMarkets = (): ActiveSupportedMarket[] | undefined => {
 
   return accountMarkets
 }
+
+export const useAllMarkets = (): ActiveSupportedMarket[] | undefined => {
+  const { transactions } = useTransactionProvider()
+  const bao = useBao()
+  const markets = useMarkets()
+  const { account } = useWeb3React()
+  const [allMarkets, setAllMarkets] = useState<
+    ActiveSupportedMarket[] | undefined
+  >()
+
+  const fetchAllMarkets = useCallback(async () => {
+    const comptroller = bao.getContract('comptroller')
+    const _allMarkets = await comptroller.methods
+      .getAllMarkets()
+      .call()
+
+      setAllMarkets(
+        _allMarkets.map((address: string) =>
+        markets.find(({ marketAddress }) => marketAddress === address),
+      ),
+    )
+  }, [transactions, bao, markets, account])
+
+  useEffect(() => {
+    if (!(bao && markets && account)) return
+
+    fetchAllMarkets()
+  }, [transactions, bao, markets, account])
+
+  return allMarkets
+}
