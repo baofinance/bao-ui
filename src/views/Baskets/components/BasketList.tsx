@@ -18,7 +18,10 @@ const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 			<ListHeader
 				headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']}
 			/>
-			{baskets && baskets.map((basket) => <BasketListItem basket={basket} key={basket.nid} />)}
+			{baskets &&
+				baskets.map((basket) => (
+					<BasketListItem basket={basket} key={basket.nid} />
+				))}
 		</>
 	)
 }
