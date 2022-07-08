@@ -21,7 +21,20 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ onDismiss, visible }) => {
 					<StyledLink end to="/ballast" onClick={onDismiss}>
 						Ballast
 					</StyledLink>
-					<StyledLink end to="/farms" onClick={onDismiss}>
+					<StyledLink
+						exact
+						activeClassName="active"
+						to="/baskets"
+						onClick={onDismiss}
+					>
+						Baskets
+					</StyledLink>
+					<StyledLink
+						exact
+						activeClassName="active"
+						to="/farms"
+						onClick={onDismiss}
+					>
 						Farms
 					</StyledLink>
 					<StyledLink end to="/NFT" onClick={onDismiss}>

@@ -11,13 +11,13 @@ const Nav: React.FC = () => {
 			<StyledLink end to={{ pathname: '/ballast' }}>
 				Ballast
 			</StyledLink>
-			<StyledLink end to={{ pathname: '/farms' }}>
-				Farms
-			</StyledLink>
-			<StyledLink end to={{ pathname: '/baskets' }}>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/baskets' }}>
 				Baskets
 			</StyledLink>
-			<StyledLink end to={{ pathname: '/NFT' }}>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/farms' }}>
+				Farms
+			</StyledLink>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/NFT' }}>
 				NFT
 			</StyledLink>
 			<StyledAbsoluteLink

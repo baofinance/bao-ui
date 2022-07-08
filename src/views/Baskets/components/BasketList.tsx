@@ -18,10 +18,7 @@ const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 			<ListHeader
 				headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']}
 			/>
-			{baskets &&
-				baskets.map((basket) => (
-					<BasketListItem basket={basket} key={basket.address} />
-				))}
+			{baskets && baskets.map((basket) => <BasketListItem basket={basket} key={basket.nid} />)}
 		</>
 	)
 }
@@ -43,7 +40,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<span
 								style={{ display: 'inline-block', verticalAlign: 'middle' }}
 							>
-								<p style={{ margin: '0', lineHeight: '1rem' }}>
+								<p style={{ margin: '0', lineHeight: '1.2rem' }}>
 									{basket.symbol}
 								</p>
 								<SubText>{basket.desc}</SubText>
@@ -65,7 +62,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 					</Col>
 					<Col>
 						<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-							<p style={{ margin: '0', lineHeight: '1rem' }}>
+							<p style={{ margin: '0', lineHeight: '1.2rem' }}>
 								${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}
 							</p>
 							<FeeBadge>0% Fee</FeeBadge>
