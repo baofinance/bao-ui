@@ -1,11 +1,19 @@
-import { Bao } from 'bao'
-import React, { createContext, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
+import { Bao } from 'bao'
 import Config from 'bao/lib/config'
+import React, {
+	createContext,
+	PropsWithChildren,
+	useEffect,
+	useState,
+} from 'react'
 
 export interface BaoContext {
 	bao?: typeof Bao
+}
+
+interface BaoProviderProps {
+	children: any
 }
 
 export const Context = createContext<BaoContext>({
@@ -20,9 +28,11 @@ declare global {
 	}
 }
 
-const BaoProvider: React.FC = ({ children }) => {
+const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({
+	children,
+}) => {
 	const wallet = useWeb3React()
-	const { library, activate }: any = wallet
+	const { library }: any = wallet
 	const [bao, setBao] = useState<any>()
 
 	// if (library) library.on('chainChanged', () => window.location.reload())

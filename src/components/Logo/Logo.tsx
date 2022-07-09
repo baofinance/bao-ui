@@ -2,16 +2,13 @@ import baoLogo from 'assets/img/logo.svg'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import Tooltipped from '../Tooltipped'
 
 const Logo: React.FC = () => {
 	return (
 		<StyledLogo to="/">
 			<img src={baoLogo} height="32" style={{ verticalAlign: 'middle' }} />
 			<StyledText>
-				<TitleText>
-					Bao Finance
-				</TitleText>
+				<TitleText>Bao Finance</TitleText>
 			</StyledText>
 		</StyledLogo>
 	)

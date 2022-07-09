@@ -17,6 +17,7 @@ const Tooltipped: React.FC<TooltippedProps> = ({
 }) => (
 	<>
 		<OverlayTrigger
+			key={placement}
 			overlay={<Tooltip id={Math.random().toString()}>{content}</Tooltip>}
 			placement={placement || 'bottom'}
 		>

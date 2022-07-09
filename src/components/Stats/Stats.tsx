@@ -150,35 +150,35 @@ export const UserStat = styled.div`
 `
 
 export const StatsRow = styled(Row)`
-  width: 100%;
-  margin: ${(props) => props.theme.spacing[6]}px auto;
-  display: flex;
-  flex-direction: row;
+	width: 100%;
+	margin: ${(props) => props.theme.spacing[6]}px auto;
+	display: flex;
+	flex-direction: row;
 
-  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-    width: 100%;
-    background: ${(props) => props.theme.color.primary[100]};
-    border-radius: ${(props) => props.theme.borderRadius}px;
-    margin: ${(props) => props.theme.spacing[4]}px auto;
-	border: ${(props) => props.theme.border.default};
-  }
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		width: 100%;
+		background: ${(props) => props.theme.color.primary[100]};
+		border-radius: ${(props) => props.theme.borderRadius}px;
+		margin: ${(props) => props.theme.spacing[4]}px auto;
+		border: ${(props) => props.theme.border.default};
+	}
 `
 
 export const StatCard = styled.div`
-  background: ${(props) => props.theme.color.primary[100]};
-  width: 100%;
-  margin: 0 auto;
-  padding: ${(props) => props.theme.spacing[3]}px;
-  border-radius: ${(props) => props.theme.borderRadius}px;
-  font-weight: ${(props) => props.theme.fontWeight.medium};
-  text-align: center;
-  color: ${(props) => props.theme.color.text[100]};
-  border: ${(props) => props.theme.border.default};
+	background: ${(props) => props.theme.color.primary[100]};
+	width: 100%;
+	margin: 0 auto;
+	padding: ${(props) => props.theme.spacing[3]}px;
+	border-radius: ${(props) => props.theme.borderRadius}px;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	text-align: center;
+	color: ${(props) => props.theme.color.text[100]};
+	border: ${(props) => props.theme.border.default};
 
-  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-    padding: ${(props) => props.theme.spacing[2]}px;
-    background: transparent;
-  }
+	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+		padding: ${(props) => props.theme.spacing[2]}px;
+		background: transparent;
+	}
 `
 
 export const FeeWrapper = styled(Col)`

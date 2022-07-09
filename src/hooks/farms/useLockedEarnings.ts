@@ -6,7 +6,7 @@ import useBao from '../base/useBao'
 
 const useLockedEarnings = () => {
   const [balance, setBalance] = useState(new BigNumber(0))
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const bao = useBao()
   const baoContract = getBaoContract(bao)
 

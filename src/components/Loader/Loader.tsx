@@ -1,6 +1,6 @@
 import React from 'react'
 import { Spinner } from 'react-bootstrap'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 
 interface LoaderProps {
 	text?: string

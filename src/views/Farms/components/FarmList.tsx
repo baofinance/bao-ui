@@ -42,7 +42,6 @@ export const FarmList: React.FC = () => {
 	const BLOCKS_PER_YEAR = new BigNumber(2336000)
 
 	const [archived, showArchived] = useState(false)
-	const [staked, showStaked] = useState(false)
 
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async (wethPrice) => {
@@ -214,8 +213,6 @@ interface FarmListItemProps {
 }
 
 const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
-	const operations = ['Stake', 'Unstake']
-	const [operation, setOperation] = useState(operations[0])
 	const { account } = useWeb3React()
 
 	const [showFarmModal, setShowFarmModal] = useState(false)
@@ -259,7 +256,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 									: truncateNumber(farm.stakedUSD, 0)}
 							</Col>
 						)}
-						{(account && window.screen.width > 320) && (
+						{account && window.screen.width > 320 && (
 							<Col>
 								$
 								{window.screen.width > 1200

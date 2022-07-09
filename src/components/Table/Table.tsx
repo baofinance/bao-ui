@@ -50,7 +50,8 @@ export const StyledTable = styled(Table)`
 	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
 		width: 100%;
 
-		th.strategy, td.strategy {
+		th.strategy,
+		td.strategy {
 			display: none;
 		}
 	}

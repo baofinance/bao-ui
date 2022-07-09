@@ -1,8 +1,14 @@
 import React from 'react'
+import { PropsWithChildren } from 'react'
 import Context from './context'
 import { useMarketsContext } from './context-hooks/useMarketsContext'
 
-const MarketsProvider: React.FC = ({ children }) => {
+interface MarketsProviderProps {
+	children: any
+}
+const MarketsProvider: React.FC<PropsWithChildren<MarketsProviderProps>> = ({
+	children,
+}) => {
 	const markets = useMarketsContext()
 
 	return (

@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useState } from 'react'
+import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
 interface ModalsContext {
@@ -13,7 +14,11 @@ export const Context = createContext<ModalsContext>({
 	onDismiss: () => {},
 })
 
-const Modals: React.FC = ({ children }) => {
+interface ModalsProps {
+	children: any
+}
+
+const Modals: React.FC<PropsWithChildren<ModalsProps>> = ({ children }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [content, setContent] = useState<React.ReactNode>()
 	const [modalKey, setModalKey] = useState<string>()

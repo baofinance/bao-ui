@@ -6,11 +6,9 @@ import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import { ButtonStack, SubmitButton } from 'components/Button/Button'
 import { ExternalLink } from 'components/Link'
-import useBao from 'hooks/base/useBao'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useApprovals } from 'hooks/markets/useApprovals'
 import React from 'react'
-import styled from 'styled-components'
 import { decimate } from 'utils/numberFormat'
 import { MarketOperations } from './Modals'
 
@@ -30,7 +28,6 @@ export const MarketButton = ({
 	onHide,
 }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const bao = useBao()
 	const { account } = useWeb3React()
 	const { approvals } = useApprovals(pendingTx)
 
@@ -44,7 +41,7 @@ export const MarketButton = ({
 						<ExternalLink
 							href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 							target="_blank"
-							>
+						>
 							Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
 						</ExternalLink>
 					) : (

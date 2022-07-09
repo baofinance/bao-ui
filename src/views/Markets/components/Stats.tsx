@@ -291,7 +291,8 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 }
 
 export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
-	const parsedAmount = amount && !isNaN(amount as any) ? parseFloat(amount) : 0
+	const parsedAmount =
+		amount && !isNaN(amount as unknown as number) ? parseFloat(amount) : 0
 	switch (operation) {
 		case MarketOperations.supply:
 			return (

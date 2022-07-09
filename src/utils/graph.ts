@@ -149,11 +149,7 @@ const getBaoBurned = async (): Promise<any> => {
 }
 
 const getBaoSupply = async (): Promise<number> => {
-  const data: any = await _querySubgraph(
-    _getBaoSupplyQuery(),
-    'baoBurn',
-    137,
-  )
+  const data: any = await _querySubgraph(_getBaoSupplyQuery(), 'baoBurn', 137)
   return data.tokenStats.supply
 }
 

@@ -1,16 +1,15 @@
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
-import _ from 'lodash'
-import { Contract } from 'web3-eth-contract'
 import { Farm } from 'contexts/Farms'
+import { ethers } from 'ethers'
+import keccak256 from 'keccak256'
+import _ from 'lodash'
+import { MerkleTree } from 'merkletreejs'
 import Multicall from 'utils/multicall'
 import { decimate, exponentiate } from 'utils/numberFormat'
+import baoElderWL from 'views/NFT/components/baoElderWL'
+import baoSwapWL from 'views/NFT/components/baoSwapWL'
+import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
-import Config from './lib/config'
-import { MerkleTree } from 'merkletreejs'
-import keccak256 from 'keccak256'
-import baoElderWL from 'views/NFT/components/baoElderWL.json'
-import baoSwapWL from 'views/NFT/components/baoSwapWL.json'
 import { ActiveSupportedBasket } from './lib/types'
 
 BigNumber.config({
@@ -391,9 +390,7 @@ export const mintElder = async (
   nftContract: Contract,
   account: string,
 ): Promise<string> => {
-  const leafNodes = baoElderWL.addresses.map((address: string) =>
-    keccak256(address),
-  )
+  const leafNodes = baoElderWL.map((address: string) => keccak256(address))
   const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
   const leaf = keccak256(account)
   const hexProof = merkleTree.getHexProof(leaf)
@@ -410,9 +407,7 @@ export const mintBaoSwap = async (
   nftContract: Contract,
   account: string,
 ): Promise<string> => {
-  const leafNodes = baoSwapWL.addresses.map((address: string) =>
-    keccak256(address),
-  )
+  const leafNodes = baoSwapWL.map((address: string) => keccak256(address))
   const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
   const leaf = keccak256(account)
   const hexProof = merkleTree.getHexProof(leaf)

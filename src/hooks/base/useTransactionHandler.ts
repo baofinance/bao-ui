@@ -7,8 +7,6 @@ const useTransactionHandler = () => {
   const [pendingTx, setPendingTx] = useState<string | boolean>(false)
   const [txSuccess, setTxSuccess] = useState<boolean>(false)
 
-  const handleSuccess = (receipt: TransactionReceipt) => {}
-
   const clearPendingTx = () => {
     setPendingTx(false)
   }
@@ -46,7 +44,6 @@ const useTransactionHandler = () => {
   return {
     pendingTx,
     handleTx,
-    handleSuccess,
     txSuccess,
   }
 }

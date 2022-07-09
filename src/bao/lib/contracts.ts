@@ -52,7 +52,7 @@ export class Contracts {
             Object.assign(basket, {
               address: basket.basketAddresses[networkId],
               basketContract: this.getNewContract(ExperipieAbi),
-              ovenContract: this.getNewContract('oven.json')
+              ovenContract: this.getNewContract('oven.json'),
             }),
           )
         : undefined
@@ -102,10 +102,12 @@ export class Contracts {
         )
       }
       if (this.baskets) {
-        this.baskets.forEach(({ address, basketContract, ovenAddress, ovenContract }) => {
-          setProvider(basketContract, address)
-          setProvider(ovenContract, ovenAddress)
-        })
+        this.baskets.forEach(
+          ({ address, basketContract, ovenAddress, ovenContract }) => {
+            setProvider(basketContract, address)
+            setProvider(ovenContract, ovenAddress)
+          },
+        )
       }
       if (this.markets) {
         this.markets.forEach(

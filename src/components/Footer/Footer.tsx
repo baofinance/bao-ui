@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import Branding from './components/Branding'
 import Nav from './components/Nav'
 
 const Footer: React.FC = () => (

@@ -17,7 +17,7 @@ export const red = '#d00000'
 export const green = '#008000'
 export const blue = '#0000f0'
 
-export const background ={
+export const background = {
   100: '#fff8ee', //light mode
   200: '#50251c', //dark mode
 }

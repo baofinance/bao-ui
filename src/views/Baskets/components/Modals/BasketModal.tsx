@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
@@ -78,10 +77,10 @@ const BasketModal: React.FC<ModalProps> = ({
 
 	const handleOperation = () => {
 		let tx
+		const recipe = bao.getContract('recipe')
+
 		switch (operation) {
 			case 'MINT':
-				const recipe = bao.getContract('recipe')
-
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) {
@@ -222,7 +221,8 @@ const BasketModal: React.FC<ModalProps> = ({
 							>
 								here
 							</a>
-							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may apply on swaps)
+							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may
+							apply on swaps)
 						</div>
 					)}
 					<ModalStack>
