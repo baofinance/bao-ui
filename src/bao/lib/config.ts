@@ -168,6 +168,20 @@ export default {
       coingeckoId: 'usd-coin',
       underlyingDecimals: 6,
     },
+    {
+      mid: 5,
+      symbol: 'bdSTBL',
+      archived: true,
+      marketAddresses: {
+        1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
+      },
+      underlyingAddresses: {
+        1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+      },
+      icon: '/bSTBL.png',
+      coingeckoId: 'dai',
+      underlyingDecimals: 18,
+    },
   ],
   baskets: [
     /*{
