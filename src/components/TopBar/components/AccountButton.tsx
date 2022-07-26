@@ -1,12 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { getDisplayBalance } from 'utils/numberFormat'
+import { getBalanceNumber } from 'utils/numberFormat'
 import { Button } from '../../Button'
 import { SpinnerLoader } from '../../Loader'
 import WalletProviderModal from '../../WalletProviderModal'
@@ -21,7 +20,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	const { transactions } = useTransactionProvider()
 	const { account } = useWeb3React()
-	const wethBalance = useTokenBalance('ETH')
+	const ethBalance = useTokenBalance('ETH')
 
 	const ensResolver = new ethers.providers.JsonRpcProvider(
 		'https://rpc.ankr.com/eth',
@@ -83,7 +82,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 										color: '#b07a6e',
 									}}
 								/>{' '}
-								{new BigNumber(getDisplayBalance(wethBalance)).toFixed(4)}
+								{getBalanceNumber(ethBalance).toFixed(4)}
 								<FontAwesomeIcon
 									icon={['fab', 'ethereum']}
 									style={{

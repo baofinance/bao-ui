@@ -13,7 +13,7 @@ import _ from 'lodash'
 import React, { useCallback } from 'react'
 import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { getDisplayBalance } from 'utils/numberFormat'
+import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 import { Button } from '../../Button'
 import Spacer from '../../Spacer'
 
@@ -53,7 +53,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
-											{new BigNumber(getDisplayBalance(ethBalance)).toFixed(4)}
+											{getBalanceNumber(ethBalance).toFixed(4)}
 										</WalletBalanceValue>
 										<WalletBalanceTicker>ETH Balance</WalletBalanceTicker>
 									</WalletBalanceText>
