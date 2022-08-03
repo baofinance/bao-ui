@@ -64,8 +64,15 @@ const MarketModal = ({
 						asset.marketAddress.toLowerCase(),
 			  ).balance * decimate(exchangeRates[asset.marketAddress]).toNumber()
 			: 0
+
+	const _imfFactor = accountLiquidity
+		? 1.1 / (1 + asset.imfFactor * Math.sqrt(supply))
+		: 0
+
 	const withdrawable = accountLiquidity
-		? accountLiquidity.usdBorrowable / (asset.collateralFactor * asset.price)
+		? _imfFactor > asset.collateralFactor
+			? accountLiquidity.usdBorrowable / (asset.collateralFactor * asset.price)
+			: accountLiquidity.usdBorrowable / (_imfFactor * asset.price)
 		: 0
 
 	const max = () => {
