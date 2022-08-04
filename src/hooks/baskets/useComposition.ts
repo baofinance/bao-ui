@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import useBao from 'hooks/base/useBao'
-import useGeckoPrices from './useGeckoPrices'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import { useCallback, useEffect, useState } from 'react'
 import MultiCall from 'utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
+import useGeckoPrices from './useGeckoPrices'
 
 export type BasketComponent = {
   address: string
@@ -31,6 +32,7 @@ const useComposition = (
   >()
   const prices = useGeckoPrices()
   const bao = useBao()
+  const { transactions } = useTransactionProvider()
 
   const fetchComposition = useCallback(async () => {
     const tokenComposition: string[] = await basket.basketContract.methods
@@ -190,7 +192,7 @@ const useComposition = (
       return
 
     fetchComposition()
-  }, [bao, basket, prices])
+  }, [bao, basket, prices, transactions])
 
   return composition
 }
