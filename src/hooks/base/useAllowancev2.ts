@@ -6,31 +6,27 @@ import useBao from './useBao'
 import useTransactionProvider from './useTransactionProvider'
 
 const useAllowancev2 = (tokenAddress: string, spenderAddress: string) => {
-  const { account } = useWeb3React()
-  const bao = useBao()
-  const { transactions } = useTransactionProvider()
+	const { account } = useWeb3React()
+	const bao = useBao()
+	const { transactions } = useTransactionProvider()
 
-  const [allowance, setAllowance] = useState<BigNumber | undefined>()
+	const [allowance, setAllowance] = useState<BigNumber | undefined>()
 
-  const _getAllowance: any = useCallback(async () => {
-    try {
-      const tokenContract = bao.getNewContract('erc20.json', tokenAddress)
-      const _allowance = await getAllowance(
-        tokenContract,
-        account,
-        spenderAddress,
-      )
-      setAllowance(new BigNumber(_allowance))
-    } catch (e) {
-      setAllowance(new BigNumber(0))
-    }
-  }, [bao, account, tokenAddress, spenderAddress, transactions])
+	const _getAllowance: any = useCallback(async () => {
+		try {
+			const tokenContract = bao.getNewContract('erc20.json', tokenAddress)
+			const _allowance = await getAllowance(tokenContract, account, spenderAddress)
+			setAllowance(new BigNumber(_allowance))
+		} catch (e) {
+			setAllowance(new BigNumber(0))
+		}
+	}, [bao, account, tokenAddress, spenderAddress, transactions])
 
-  useEffect(() => {
-    _getAllowance()
-  }, [bao, account, tokenAddress, spenderAddress, transactions])
+	useEffect(() => {
+		_getAllowance()
+	}, [bao, account, tokenAddress, spenderAddress, transactions])
 
-  return allowance
+	return allowance
 }
 
 export default useAllowancev2

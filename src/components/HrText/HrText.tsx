@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export const HrText = ({ content }: HrTextProps) => {
 	return (
 		<HrContainer>
-			<hr className="hr-text" data-content={content} />
+			<hr className='hr-text' data-content={content} />
 		</HrContainer>
 	)
 }
@@ -29,10 +29,10 @@ const HrContainer = styled.div`
 			background: linear-gradient(
 				to right,
 				transparent,
-				${(props) => props.theme.color.text[100]},
+				${props => props.theme.color.text[100]},
 				transparent,
 				transparent,
-				${(props) => props.theme.color.text[100]},
+				${props => props.theme.color.text[100]},
 				transparent
 			);
 			position: absolute;
@@ -51,7 +51,7 @@ const HrContainer = styled.div`
 
 			padding: 0 0.5em;
 			line-height: 1em;
-			color: ${(props) => props.theme.color.text[100]};
+			color: ${props => props.theme.color.text[100]};
 		}
 	}
 `

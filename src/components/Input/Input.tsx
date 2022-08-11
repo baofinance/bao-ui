@@ -10,21 +10,11 @@ export interface InputProps {
 	value: string
 }
 
-const Input: React.FC<InputProps> = ({
-	endAdornment,
-	onChange,
-	placeholder,
-	startAdornment,
-	value,
-}) => {
+const Input: React.FC<InputProps> = ({ endAdornment, onChange, placeholder, startAdornment, value }) => {
 	return (
 		<StyledInputWrapper>
 			{!!startAdornment && startAdornment}
-			<StyledInput
-				placeholder={placeholder}
-				value={value}
-				onChange={onChange}
-			/>
+			<StyledInput placeholder={placeholder} value={value} onChange={onChange} />
 			{!!endAdornment && endAdornment}
 		</StyledInputWrapper>
 	)
@@ -32,11 +22,11 @@ const Input: React.FC<InputProps> = ({
 
 const StyledInputWrapper = styled.div`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[400]};
-	border-radius: ${(props) => props.theme.borderRadius}px;
+	background: ${props => props.theme.color.primary[400]};
+	border-radius: ${props => props.theme.borderRadius}px;
 	display: flex;
 	height: 50px;
-	padding: 0 ${(props) => props.theme.spacing[3]}px;
+	padding: 0 ${props => props.theme.spacing[3]}px;
 `
 
 const StyledInput = styled.input`
@@ -50,23 +40,23 @@ const StyledInput = styled.input`
 	font-size: 1rem;
 	height: 50px;
 	text-align: start;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
+	font-weight: ${props => props.theme.fontWeight.medium};
 	padding-right: 0.5rem;
 	outline: transparent solid 2px;
 	border-radius: 8px;
 	border-style: solid;
 	border-image: initial;
 	border-color: inherit;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 	background: none;
 	background-color: transparent;
 	border-width: 0px;
 
 	&:disabled {
-		color: ${(props) => props.theme.color.text[200]};
+		color: ${props => props.theme.color.text[200]};
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		font-size: 0.875rem;
 	}
 `
@@ -79,21 +69,10 @@ export interface BalanceInputProps extends InputProps {
 	disabled?: boolean
 }
 
-export const BalanceInput = ({
-	value,
-	label,
-	onChange,
-	onMaxClick,
-	disabled,
-}: BalanceInputProps) => (
+export const BalanceInput = ({ value, label, onChange, onMaxClick, disabled }: BalanceInputProps) => (
 	<BalanceInputContainer>
 		<BalanceInputWrapper>
-			<StyledBalanceInput
-				value={value}
-				onChange={onChange}
-				placeholder="0"
-				disabled={disabled}
-			/>
+			<StyledBalanceInput value={value} onChange={onChange} placeholder='0' disabled={disabled} />
 			{!disabled && <MaxButton onClick={onMaxClick}>MAX</MaxButton>}
 		</BalanceInputWrapper>
 		{typeof label === 'string' ? <p>{label}</p> : label}
@@ -113,23 +92,23 @@ const StyledBalanceInput = styled.input`
 	padding-inline-end: 1rem;
 	height: 50px;
 	text-align: start;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
+	font-weight: ${props => props.theme.fontWeight.medium};
 	padding-right: 0.5rem;
 	outline: transparent solid 2px;
 	border-radius: 8px;
 	border-style: solid;
 	border-image: initial;
 	border-color: inherit;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 	background: none;
 	background-color: transparent;
 	border-width: 0px;
 
 	&:disabled {
-		color: ${(props) => props.theme.color.text[200]};
+		color: ${props => props.theme.color.text[200]};
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		font-size: 0.875rem;
 	}
 `
@@ -138,7 +117,7 @@ const BalanceInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[400]};
+	background-color: ${props => props.theme.color.primary[400]};
 	border-radius: 8px;
 	height: 50px;
 	border: none;

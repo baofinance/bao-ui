@@ -22,24 +22,16 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const { account } = useWeb3React()
 	const ethBalance = useTokenBalance('ETH')
 
-	const ensResolver = new ethers.providers.JsonRpcProvider(
-		'https://rpc.ankr.com/eth',
-	)
+	const ensResolver = new ethers.providers.JsonRpcProvider('https://rpc.ankr.com/eth')
 	useEffect(() => {
 		if (!account) return
 
-		ensResolver.lookupAddress(account).then((_ens) => {
+		ensResolver.lookupAddress(account).then(_ens => {
 			if (_ens) setEns(_ens)
 		})
 	}, [account])
 
-	const pendingTxs = useMemo(
-		() =>
-			Object.keys(transactions).filter(
-				(txHash) => !transactions[txHash].receipt,
-			).length,
-		[transactions],
-	)
+	const pendingTxs = useMemo(() => Object.keys(transactions).filter(txHash => !transactions[txHash].receipt).length, [transactions])
 
 	return (
 		<>
@@ -47,12 +39,12 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				{!account ? (
 					<Button
 						onClick={() => setShowWalletProviderModal(true)}
-						size="sm"
+						size='sm'
 						text={
 							<>
 								Connect{' '}
 								<FontAwesomeIcon
-									icon="link"
+									icon='link'
 									style={{
 										marginLeft: '4px',
 									}}
@@ -64,7 +56,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				) : (
 					<Button
 						onClick={() => setShowAccountModal(true)}
-						size="sm"
+						size='sm'
 						text={
 							<>
 								{ens ? (
@@ -76,7 +68,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 									</>
 								)}
 								<FontAwesomeIcon
-									icon="angle-double-right"
+									icon='angle-double-right'
 									style={{
 										margin: '0 4px',
 										color: '#b07a6e',
@@ -93,7 +85,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 									<>
 										{' '}
 										<FontAwesomeIcon
-											icon="angle-double-right"
+											icon='angle-double-right'
 											style={{
 												margin: '0 4px',
 												color: '#b07a6e',
@@ -114,12 +106,12 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				{!account ? (
 					<Button
 						onClick={() => setShowWalletProviderModal(true)}
-						size="sm"
+						size='sm'
 						text={
 							<>
 								Connect{' '}
 								<FontAwesomeIcon
-									icon="link"
+									icon='link'
 									style={{
 										marginLeft: '4px',
 									}}
@@ -131,7 +123,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				) : (
 					<Button
 						onClick={() => setShowAccountModal(true)}
-						size="sm"
+						size='sm'
 						text={
 							<>
 								{account.slice(0, 6)}...
@@ -143,27 +135,21 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				)}
 			</MobileAccountButton>
 
-			<AccountModal
-				show={showAccountModal}
-				onHide={() => setShowAccountModal(false)}
-			/>
+			<AccountModal show={showAccountModal} onHide={() => setShowAccountModal(false)} />
 
-			<WalletProviderModal
-				show={showWalletProviderModal}
-				onHide={() => setShowWalletProviderModal(false)}
-			/>
+			<WalletProviderModal show={showWalletProviderModal} onHide={() => setShowWalletProviderModal(false)} />
 		</>
 	)
 }
 
 const StyledAccountButton = styled.div`
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `
 
 const MobileAccountButton = styled.div`
-	@media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (min-width: ${props => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `

@@ -5,13 +5,13 @@ import { provider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
 
 const useApprovev2 = (tokenContract: Contract, spenderContract: Contract) => {
-  const { account } = useWeb3React()
+	const { account } = useWeb3React()
 
-  const handleApprove = useCallback(() => {
-    return approvev2(tokenContract, spenderContract, account)
-  }, [account, tokenContract, spenderContract])
+	const handleApprove = useCallback(() => {
+		return approvev2(tokenContract, spenderContract, account)
+	}, [account, tokenContract, spenderContract])
 
-  return { onApprove: handleApprove }
+	return { onApprove: handleApprove }
 }
 
 export default useApprovev2

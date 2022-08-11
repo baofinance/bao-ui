@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import baoUSDIcon from 'assets/img/assets/bUSD.png'
-import daiIcon from 'assets/img/assets/DAI.png'
+import baoUSDIcon from 'assets/img/tokens/bUSD.png'
+import daiIcon from 'assets/img/tokens/DAI.png'
 import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
 import { IconFlex } from 'components/Icon'
@@ -38,24 +38,15 @@ const BallastSwapper: React.FC = () => {
 			{
 				ref: 'Ballast',
 				contract: ballastContract,
-				calls: [
-					{ method: 'supplyCap' },
-					{ method: 'buyFee' },
-					{ method: 'sellFee' },
-					{ method: 'FEE_DENOMINATOR' },
-				],
+				calls: [{ method: 'supplyCap' }, { method: 'buyFee' }, { method: 'sellFee' }, { method: 'FEE_DENOMINATOR' }],
 			},
 			{
 				ref: 'DAI',
 				contract: bao.getNewContract('erc20.json', Config.addressMap.DAI),
-				calls: [
-					{ method: 'balanceOf', params: [ballastContract.options.address] },
-				],
+				calls: [{ method: 'balanceOf', params: [ballastContract.options.address] }],
 			},
 		])
-		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(
-			await bao.multicall.call(ballastQueries),
-		)
+		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
 
 		setSupplyCap(new BigNumber(ballastRes[0].values[0].hex))
 		setFees({
@@ -75,29 +66,15 @@ const BallastSwapper: React.FC = () => {
 	const daiInput = (
 		<>
 			<BallastLabel>
-				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
-				{getDisplayBalance(daiBalance).toString()} DAI
-				<span>
-					Reserves:{' '}
-					{reserves ? (
-						getDisplayBalance(reserves).toString()
-					) : (
-						<SpinnerLoader />
-					)}{' '}
-				</span>
+				<FontAwesomeIcon icon='long-arrow-alt-right' /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
+				<span>Reserves: {reserves ? getDisplayBalance(reserves).toString() : <SpinnerLoader />} </span>
 			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
-				onChange={(e: {
-					currentTarget: { value: React.SetStateAction<string> }
-				}) => setInputVal(e.currentTarget.value)}
+				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
 					swapDirection && fees && !new BigNumber(inputVal).isNaN()
-						? new BigNumber(inputVal)
-								.times(
-									new BigNumber(1).minus(fees['sell'].div(fees['denominator'])),
-								)
-								.toString()
+						? new BigNumber(inputVal).times(new BigNumber(1).minus(fees['sell'].div(fees['denominator']))).toString()
 						: inputVal
 				}
 				disabled={swapDirection}
@@ -115,29 +92,15 @@ const BallastSwapper: React.FC = () => {
 	const baoUSDInput = (
 		<>
 			<BallastLabel>
-				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
-				{getDisplayBalance(baoUSDBalance).toString()} BaoUSD
-				<span>
-					Mint Limit:{' '}
-					{supplyCap ? (
-						getDisplayBalance(supplyCap).toString()
-					) : (
-						<SpinnerLoader />
-					)}{' '}
-				</span>
+				<FontAwesomeIcon icon='long-arrow-alt-right' /> Balance: {getDisplayBalance(baoUSDBalance).toString()} BaoUSD
+				<span>Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <SpinnerLoader />} </span>
 			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(baoUSDBalance).toString())}
-				onChange={(e: {
-					currentTarget: { value: React.SetStateAction<string> }
-				}) => setInputVal(e.currentTarget.value)}
+				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
 					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
-						? new BigNumber(inputVal)
-								.times(
-									new BigNumber(1).minus(fees['buy'].div(fees['denominator'])),
-								)
-								.toString()
+						? new BigNumber(inputVal).times(new BigNumber(1).minus(fees['buy'].div(fees['denominator']))).toString()
 						: inputVal
 				}
 				disabled={!swapDirection}
@@ -155,29 +118,18 @@ const BallastSwapper: React.FC = () => {
 	return (
 		<BallastSwapCard>
 			<h2 style={{ textAlign: 'center' }}>
-				<Tooltipped content="The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).">
+				<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
 					<a>
-						<FontAwesomeIcon icon="ship" />
+						<FontAwesomeIcon icon='ship' />
 					</a>
 				</Tooltipped>
 			</h2>
 			{swapDirection ? baoUSDInput : daiInput}
 			<SwapDirection>
-				<SwapDirectionBadge
-					pill
-					onClick={() => setSwapDirection(!swapDirection)}
-				>
-					<FontAwesomeIcon icon="sync" />
+				<SwapDirectionBadge pill onClick={() => setSwapDirection(!swapDirection)}>
+					<FontAwesomeIcon icon='sync' />
 					{' - '}
-					Fee:{' '}
-					{fees ? (
-						`${fees[swapDirection ? 'sell' : 'buy']
-							.div(fees['denominator'])
-							.times(100)
-							.toString()}%`
-					) : (
-						<SpinnerLoader />
-					)}
+					Fee: {fees ? `${fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']).times(100).toString()}%` : <SpinnerLoader />}
 				</SwapDirectionBadge>
 			</SwapDirection>
 			{swapDirection ? daiInput : baoUSDInput}
@@ -197,17 +149,17 @@ const BallastSwapCard = styled(Card)`
 	width: 720px;
 	padding: 25px;
 	margin: auto;
-	background-color: ${(props) => props.theme.color.primary[100]};
-	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: ${(props) => props.theme.border.default};
+	background-color: ${props => props.theme.color.primary[100]};
+	border-radius: ${props => props.theme.borderRadius}px;
+	border: ${props => props.theme.border.default};
 
 	label > span {
 		float: right;
 		margin-bottom: 0.25rem;
-		color: ${(props) => props.theme.color.text[200]};
+		color: ${props => props.theme.color.text[200]};
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		width: 100%;
 	}
 `
@@ -216,7 +168,7 @@ const SwapDirection = styled.a`
 	text-align: center;
 	display: block;
 	margin-top: 1em;
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 	user-select: none;
 	transition: 200ms;
 
@@ -226,16 +178,16 @@ const SwapDirection = styled.a`
 `
 
 const SwapDirectionBadge = styled(Badge)`
-	background-color: ${(props) => props.theme.color.primary[300]} !important;
-	color: ${(props) => props.theme.color.text[100]};
+	background-color: ${props => props.theme.color.primary[300]} !important;
+	color: ${props => props.theme.color.text[100]};
 	border: none;
 	margin-bottom: 0.5rem;
 
 	&:hover {
-		background-color: ${(props) => props.theme.color.primary[400]} !important;
+		background-color: ${props => props.theme.color.primary[400]} !important;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		font-size: 0.875rem !important;
 	}
 `
@@ -243,11 +195,11 @@ const SwapDirectionBadge = styled(Badge)`
 const BallastLabel = styled.label`
 	font-size: 1rem;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		font-size: 0.875rem !important;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		font-size: 0.75rem !important;
 	}
 `

@@ -1,16 +1,12 @@
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import BigNumber from 'bignumber.js'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
-import {
-	useAccountBalances,
-	useBorrowBalances,
-	useSupplyBalances,
-} from 'hooks/markets/useBalances'
+import { useAccountBalances, useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
 import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { MarketOperations } from './Modals'
+import { MarketOperations } from './Modals/Modals'
 
 type Stat = {
 	label: string
@@ -58,48 +54,33 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalance = useMemo(
 		() =>
 			supplyBalances &&
-			supplyBalances.find(
-				(balance) =>
-					balance.address.toLowerCase() === asset.marketAddress.toLowerCase(),
-			) &&
+			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()) &&
 			exchangeRates &&
 			exchangeRates[asset.marketAddress]
-				? supplyBalances.find(
-						(balance) =>
-							balance.address.toLowerCase() ===
-							asset.marketAddress.toLowerCase(),
-				  ).balance * decimate(exchangeRates[asset.marketAddress]).toNumber()
+				? supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance *
+				  decimate(exchangeRates[asset.marketAddress]).toNumber()
 				: 0,
 		[supplyBalances, exchangeRates],
 	)
 	const walletBalance = useMemo(
 		() =>
-			balances &&
-			balances.find((_balance) => _balance.address === asset.underlyingAddress)
-				? balances.find(
-						(_balance) => _balance.address === asset.underlyingAddress,
-				  ).balance
+			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
+				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
 				: 0,
 		[balances],
 	)
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return
-		return getDisplayBalance(
-			new BigNumber(asset.price).times(supplyBalance).toFixed(2),
-			0,
-		)
+		return getDisplayBalance(new BigNumber(asset.price).times(supplyBalance).toFixed(2), 0)
 	}, [supplyBalance])
 	const walletBalanceUsd = useMemo(() => {
 		if (!walletBalance) return
-		return getDisplayBalance(
-			new BigNumber(asset.price).times(walletBalance).toFixed(2),
-			0,
-		)
+		return getDisplayBalance(new BigNumber(asset.price).times(walletBalance).toFixed(2), 0)
 	}, [walletBalance])
 
 	return (
 		<StatBlock
-			label="Supply Stats"
+			label='Supply Stats'
 			stats={[
 				{
 					label: 'Supply APY',
@@ -107,15 +88,11 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Supply Balance',
-					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
-						supplyBalanceUsd || '~'
-					}`,
+					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol} | $${supplyBalanceUsd || '~'}`,
 				},
 				{
 					label: 'Wallet Balance',
-					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
-						walletBalanceUsd || '~'
-					}`,
+					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol} | $${walletBalanceUsd || '~'}`,
 				},
 			]}
 		/>
@@ -123,12 +100,8 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 }
 
 export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
-	const totalReservesUsd = asset.totalReserves
-		? `$${getDisplayBalance(asset.totalReserves * asset.price, 0)}`
-		: '-'
-	const reserveFactor = asset.reserveFactor
-		? `${asset.reserveFactor * 100}%`
-		: '-'
+	const totalReservesUsd = asset.totalReserves ? `$${getDisplayBalance(asset.totalReserves * asset.price, 0)}` : '-'
+	const reserveFactor = asset.reserveFactor ? `${asset.reserveFactor * 100}%` : '-'
 
 	return (
 		<StatBlock
@@ -161,37 +134,26 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 
 	const borrowBalance = useMemo(
 		() =>
-			borrowBalances &&
-			borrowBalances.find(
-				(_borrowBalance) => _borrowBalance.address === asset.marketAddress,
-			)
-				? borrowBalances.find(
-						(_borrowBalance) => _borrowBalance.address === asset.marketAddress,
-				  ).balance
+			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress)
+				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress).balance
 				: 0,
 		[borrowBalances],
 	)
 	const walletBalance = useMemo(
 		() =>
-			balances &&
-			balances.find((_balance) => _balance.address === asset.underlyingAddress)
-				? balances.find(
-						(_balance) => _balance.address === asset.underlyingAddress,
-				  ).balance
+			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
+				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
 				: 0,
 		[balances],
 	)
 	const price = useMemo(() => {
 		if (!borrowBalance) return
-		return getDisplayBalance(
-			new BigNumber(asset.price).times(borrowBalance).toFixed(2),
-			0,
-		)
+		return getDisplayBalance(new BigNumber(asset.price).times(borrowBalance).toFixed(2), 0)
 	}, [borrowBalance])
 
 	return (
 		<StatBlock
-			label="Mint Info"
+			label='Mint Info'
 			stats={[
 				{
 					label: 'APR',
@@ -199,9 +161,7 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Debt Balance',
-					value: `${borrowBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
-						price || '~'
-					}`,
+					value: `${borrowBalance.toFixed(4)} ${asset.underlyingSymbol} | $${price || '~'}`,
 				},
 				{
 					label: 'Wallet Balance',
@@ -216,31 +176,22 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
 
 	const change = amount ? asset.collateralFactor * amount * asset.price : 0
-	const borrowable = accountLiquidity
-		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
-		: 0
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable : 0
 	const newBorrowable = borrowable + change
 
 	return (
 		<StatBlock
-			label="Debt Limit Stats"
+			label='Debt Limit Stats'
 			stats={[
 				{
 					label: 'Debt Limit',
-					value: `$${getDisplayBalance(
-						borrowable.toFixed(2),
-						0,
-					)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
+					value: `$${getDisplayBalance(borrowable.toFixed(2), 0)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
 				},
 				{
 					label: 'Debt Limit Used',
-					value: `${(accountLiquidity && borrowable !== 0
-						? (accountLiquidity.usdBorrow / borrowable) * 100
-						: 0
-					).toFixed(2)}% ➜ ${(accountLiquidity && newBorrowable !== 0
-						? (accountLiquidity.usdBorrow / newBorrowable) * 100
-						: 0
-					).toFixed(2)}%`,
+					value: `${(accountLiquidity && borrowable !== 0 ? (accountLiquidity.usdBorrow / borrowable) * 100 : 0).toFixed(
+						2,
+					)}% ➜ ${(accountLiquidity && newBorrowable !== 0 ? (accountLiquidity.usdBorrow / newBorrowable) * 100 : 0).toFixed(2)}%`,
 				},
 			]}
 		/>
@@ -255,32 +206,24 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 
 	const newBorrow = borrow ? borrow - (change > 0 ? change : 0) : 0
 
-	const borrowable = accountLiquidity
-		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
-		: 0
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable : 0
 
 	const newBorrowable = borrowable ? borrowable + (change < 0 ? change : 0) : 0
 
 	return (
 		<StatBlock
-			label="Debt Limit Stats"
+			label='Debt Limit Stats'
 			stats={[
 				{
 					label: 'Debt Limit Remaining',
-					value: `$${getDisplayBalance(
-						accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0,
-						0,
-					)} ➜ $${getDisplayBalance(
+					value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0, 0)} ➜ $${getDisplayBalance(
 						accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
 						0,
 					)}`,
 				},
 				{
 					label: 'Debt Limit Used',
-					value: `${(borrowable !== 0
-						? (borrow / borrowable) * 100
-						: 0
-					).toFixed(2)}% ➜ ${(newBorrowable !== 0
+					value: `${(borrowable !== 0 ? (borrow / borrowable) * 100 : 0).toFixed(2)}% ➜ ${(newBorrowable !== 0
 						? (newBorrow / newBorrowable) * 100
 						: 0
 					).toFixed(2)}%`,
@@ -291,8 +234,7 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 }
 
 export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
-	const parsedAmount =
-		amount && !isNaN(amount as unknown as number) ? parseFloat(amount) : 0
+	const parsedAmount = amount && !isNaN(amount as unknown as number) ? parseFloat(amount) : 0
 	switch (operation) {
 		case MarketOperations.supply:
 			return (
@@ -331,17 +273,17 @@ const StatWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	padding-top: ${(props) => props.theme.spacing[2]};
+	padding-top: ${props => props.theme.spacing[2]};
 	margin-inline: 0px;
 	margin-bottom: 0px;
-	background: ${(props) => props.theme.color.primary[100]};
+	background: ${props => props.theme.color.primary[100]};
 	border-radius: 8px;
 `
 
 const StatHeader = styled.div`
-	color: ${(props) => props.theme.color.text[100]};
-	font-size: ${(props) => props.theme.fontSize.default};
-	font-weight: ${(props) => props.theme.fontWeight.strong};
+	color: ${props => props.theme.color.text[100]};
+	font-size: ${props => props.theme.fontSize.default};
+	font-weight: ${props => props.theme.fontWeight.strong};
 	text-align: center;
 	margin-top: 0.5rem;
 	margin-bottom: 0.5rem;
@@ -361,18 +303,18 @@ const StatText = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	font-size: ${(props) => props.theme.fontSize.default};
-	padding-top: ${(props) => props.theme.spacing[1]}px;
-	padding-bottom: ${(props) => props.theme.spacing[1]}px;
-	padding-left: ${(props) => props.theme.spacing[2]}px;
-	padding-right: ${(props) => props.theme.spacing[2]}px;
+	font-weight: ${props => props.theme.fontWeight.medium};
+	font-size: ${props => props.theme.fontSize.default};
+	padding-top: ${props => props.theme.spacing[1]}px;
+	padding-bottom: ${props => props.theme.spacing[1]}px;
+	padding-left: ${props => props.theme.spacing[2]}px;
+	padding-right: ${props => props.theme.spacing[2]}px;
 	border-radius: 8px;
 
 	p {
-		color: ${(props) => props.theme.color.text[100]};
-		font-size: ${(props) => props.theme.fontSize.default};
-		font-weight: ${(props) => props.theme.fontWeight.medium};
+		color: ${props => props.theme.color.text[100]};
+		font-size: ${props => props.theme.fontSize.default};
+		font-weight: ${props => props.theme.fontWeight.medium};
 		display: block;
 		margin-block-start: 1em;
 		margin-block-end: 1em;
@@ -383,6 +325,6 @@ const StatText = styled.div`
 	}
 
 	&:nth-child(odd) {
-		background-color: ${(props) => props.theme.color.primary[200]};
+		background-color: ${props => props.theme.color.primary[200]};
 	}
 `

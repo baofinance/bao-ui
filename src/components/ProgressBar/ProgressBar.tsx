@@ -7,21 +7,11 @@ export interface ProgressBarProps {
 	label?: string
 }
 
-export const Progress: React.FC<ProgressBarProps> = ({
-	assetColor,
-	width,
-	label,
-}) => {
+export const Progress: React.FC<ProgressBarProps> = ({ assetColor, width, label }) => {
 	return (
 		<>
 			<ProgressBar assetColor={assetColor} width={width}>
-				{
-					width > 20 ? (
-						label
-					) : (
-						<span style={{ opacity: '0' }}>x</span>
-					) /* janky, but have to do it to make the bar show */
-				}
+				{width > 20 ? label : <span style={{ opacity: '0' }}>x</span> /* janky, but have to do it to make the bar show */}
 			</ProgressBar>
 			{width <= 20 && <OutsideLabel>{label}</OutsideLabel>}
 		</>
@@ -30,7 +20,7 @@ export const Progress: React.FC<ProgressBarProps> = ({
 
 export const OutsideLabel = styled.span`
 	float: left;
-	margin-left: ${(props) => props.theme.spacing[2]}px;
+	margin-left: ${props => props.theme.spacing[2]}px;
 `
 
 export const ProgressBar = styled.div.attrs((props: ProgressBarProps) => ({}))`

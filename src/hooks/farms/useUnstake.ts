@@ -4,26 +4,20 @@ import { useWeb3React } from '@web3-react/core'
 import useBao from '../base/useBao'
 
 const useUnstake = (pid: number) => {
-  const { account } = useWeb3React()
-  const bao = useBao()
-  const masterChefContract = getMasterChefContract(bao)
+	const { account } = useWeb3React()
+	const bao = useBao()
+	const masterChefContract = getMasterChefContract(bao)
 
-  const handleUnstake = useCallback(
-    async (amount: string) => {
-      console.log(getRefUrl())
-      const txHash = await unstake(
-        masterChefContract,
-        pid,
-        amount,
-        account,
-        getRefUrl(),
-      )
-      console.log(txHash)
-    },
-    [account, pid, bao],
-  )
+	const handleUnstake = useCallback(
+		async (amount: string) => {
+			console.log(getRefUrl())
+			const txHash = await unstake(masterChefContract, pid, amount, account, getRefUrl())
+			console.log(txHash)
+		},
+		[account, pid, bao],
+	)
 
-  return { onUnstake: handleUnstake }
+	return { onUnstake: handleUnstake }
 }
 
 export default useUnstake

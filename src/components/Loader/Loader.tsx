@@ -23,7 +23,7 @@ const StyledLoader = styled.div`
 `
 
 const StyledText = styled.div`
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 `
 
 interface SpinnerProps {
@@ -41,7 +41,7 @@ export const SpinnerLoader: React.FC<SpinnerProps> = ({ block }) => {
 			margin: 'auto',
 		}
 
-	return <Spinner animation="grow" size="sm" style={style} />
+	return <Spinner animation='grow' size='sm' style={style} />
 }
 
 export const PageLoader: React.FC<SpinnerProps> = ({ block }) => {
@@ -57,7 +57,7 @@ export const PageLoader: React.FC<SpinnerProps> = ({ block }) => {
 
 	return (
 		<StyledLoadingWrapper>
-			<Spinner animation="grow" size="sm" style={style} />
+			<Spinner animation='grow' size='sm' style={style} />
 		</StyledLoadingWrapper>
 	)
 }
@@ -66,7 +66,7 @@ export const StyledLoadingWrapper = styled.div`
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 `
 
 export default Loader

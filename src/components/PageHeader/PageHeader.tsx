@@ -25,8 +25,8 @@ const StyledPageHeader = styled.div`
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
-	padding-bottom: ${(props) => props.theme.spacing[2]}px;
-	margin: ${(props) => props.theme.spacing[6]}px auto 0;
+	padding-bottom: ${props => props.theme.spacing[2]}px;
+	margin: ${props => props.theme.spacing[6]}px auto 0;
 `
 
 export const StyledTitle = styled.h1`
@@ -34,8 +34,8 @@ export const StyledTitle = styled.h1`
 	font-size: 4rem !important;
 	letter-spacing: -0.1rem;
 	text-align: center;
-	font-weight: ${(props) => props.theme.fontWeight.strong} !important;
-	color: ${(props) => props.theme.color.text[100]};
+	font-weight: ${props => props.theme.fontWeight.strong} !important;
+	color: ${props => props.theme.color.text[100]};
 
 	@keyframes bounce {
 		to {

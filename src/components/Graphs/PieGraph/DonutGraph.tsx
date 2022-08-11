@@ -21,37 +21,18 @@ export type DonutProps = {
 	animate?: boolean
 }
 
-export default function DonutGraph({
-	width,
-	height,
-	composition,
-	margin = defaultMargin,
-	animate = true,
-}: DonutProps) {
-	const [selectedAssetAmount, setSelectedAssetAmount] = useState<string | null>(
-		null,
-	)
+export default function DonutGraph({ width, height, composition, margin = defaultMargin, animate = true }: DonutProps) {
+	const [selectedAssetAmount, setSelectedAssetAmount] = useState<string | null>(null)
 
-	const assetsBalance: AssetAllocationAmount[] = composition.map(
-		(component) => ({
-			label: `
+	const assetsBalance: AssetAllocationAmount[] = composition.map(component => ({
+		label: `
 			${component.percentage.toFixed(4)}%
 			${getDisplayBalance(component.balance, component.decimals)} ${component.symbol}
-			${
-				component.price
-					? `$${getDisplayBalance(
-							component.price.times(
-								getBalanceNumber(component.balance, component.decimals),
-							),
-							0,
-					  )}`
-					: ''
-			}
+			${component.price ? `$${getDisplayBalance(component.price.times(getBalanceNumber(component.balance, component.decimals)), 0)}` : ''}
 		`,
-			frequency: component.percentage,
-			color: component.color,
-		}),
-	)
+		frequency: component.percentage,
+		color: component.color,
+	}))
 
 	const frequency = (d: AssetAllocationAmount) => d.frequency
 
@@ -67,30 +48,19 @@ export default function DonutGraph({
 		<svg width={width} height={height}>
 			<Group top={centerY + margin.top} left={centerX + margin.left}>
 				<Pie
-					data={
-						selectedAssetAmount
-							? assetsBalance.filter(
-									({ label }) => label === selectedAssetAmount,
-							  )
-							: assetsBalance
-					}
+					data={selectedAssetAmount ? assetsBalance.filter(({ label }) => label === selectedAssetAmount) : assetsBalance}
 					pieValue={frequency}
 					pieSortValues={() => -1}
 					outerRadius={radius}
 					innerRadius={radius - 125}
 				>
-					{(pie) => (
+					{pie => (
 						<AnimatedPie<AssetAllocationAmount>
 							{...pie}
 							animate={animate}
 							getKey={({ data: { label } }) => label}
 							onClickDatum={({ data: { label } }) =>
-								animate &&
-								setSelectedAssetAmount(
-									selectedAssetAmount && selectedAssetAmount === label
-										? null
-										: label,
-								)
+								animate && setSelectedAssetAmount(selectedAssetAmount && selectedAssetAmount === label ? null : label)
 							}
 							getColor={({ data: { color } }) => color}
 						/>
@@ -124,14 +94,7 @@ type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
 	delay?: number
 }
 
-function AnimatedPie<Datum>({
-	animate,
-	arcs,
-	path,
-	getKey,
-	getColor,
-	onClickDatum,
-}: AnimatedPieProps<Datum>) {
+function AnimatedPie<Datum>({ animate, arcs, path, getKey, getColor, onClickDatum }: AnimatedPieProps<Datum>) {
 	const transitions = useTransition<PieArcDatum<Datum>, AnimatedStyles>(arcs, {
 		from: animate ? fromLeaveTransition : enterUpdateTransition,
 		enter: enterUpdateTransition,
@@ -148,14 +111,12 @@ function AnimatedPie<Datum>({
 			<g key={key}>
 				<animated.path
 					// compute interpolated path d attribute from intermediate angle values
-					d={interpolate(
-						[props.startAngle, props.endAngle],
-						(startAngle, endAngle) =>
-							path({
-								...arc,
-								startAngle,
-								endAngle,
-							}),
+					d={interpolate([props.startAngle, props.endAngle], (startAngle, endAngle) =>
+						path({
+							...arc,
+							startAngle,
+							endAngle,
+						}),
 					)}
 					fill={getColor(arc)}
 					onClick={() => onClickDatum(arc)}
@@ -164,19 +125,19 @@ function AnimatedPie<Datum>({
 				{hasSpaceForLabel && (
 					<animated.g style={{ opacity: props.opacity }}>
 						{_.map(
-							_.filter(getKey(arc).split('\n'), (line) => line.length > 0),
-							(line) => {
+							_.filter(getKey(arc).split('\n'), line => line.length > 0),
+							line => {
 								return (
 									<>
 										<text
-											fill="white"
+											fill='white'
 											x={centroidX}
 											y={centroidY + index++ * 12}
-											dy=".33em"
+											dy='.33em'
 											fontSize={12}
-											fontWeight="bold"
-											textAnchor="middle"
-											pointerEvents="none"
+											fontWeight='bold'
+											textAnchor='middle'
+											pointerEvents='none'
 										>
 											{line}
 										</text>

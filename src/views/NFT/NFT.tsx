@@ -3,12 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import baoElder from 'assets/img/nft/baoelder.png'
 import baoSwap from 'assets/img/nft/baoswap.png'
 import Config from 'bao/lib/config'
-import {
-	getBaoSwapContract,
-	getElderContract,
-	mintBaoSwap,
-	mintElder,
-} from 'bao/utils'
+import { getBaoSwapContract, getElderContract, mintBaoSwap, mintElder } from 'bao/utils'
 import { Button, SubmitButton } from 'components/Button/Button'
 import Label from 'components/Label'
 import Page from 'components/Page'
@@ -34,11 +29,7 @@ const NFT: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader
-				icon=""
-				title="BaoNFT"
-				subtitle="Check your eligibility and claim your BaoNFT here!"
-			/>
+			<PageHeader icon='' title='BaoNFT' subtitle='Check your eligibility and claim your BaoNFT here!' />
 			<Container>
 				<StyledInfo>
 					<div
@@ -52,34 +43,24 @@ const NFT: React.FC = () => {
 						Check your eligibility and claim your BaoNFT here!
 					</div>
 				</StyledInfo>
-				<Spacer size="md" />
-				<Row md="auto" className="justify-content-md-center">
+				<Spacer size='md' />
+				<Row md='auto' className='justify-content-md-center'>
 					<Col style={{ marginBottom: '12px' }}>
 						<Card>
 							<Card.Header>
-								<Label text="BaoElder NFT" />
+								<Label text='BaoElder NFT' />
 							</Card.Header>
 							<Card.Body>
-								<img
-									src={baoElder}
-									width={320}
-									height={300}
-									alt=""
-									style={{ borderRadius: '8px' }}
-								/>
+								<img src={baoElder} width={320} height={300} alt='' style={{ borderRadius: '8px' }} />
 							</Card.Body>
 							<Card.Footer>
 								<>
 									{pendingTx ? (
 										<SubmitButton disabled={true}>
 											{typeof pendingTx === 'string' ? (
-												<a
-													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-													target="_blank"
-													rel="noreferrer"
-												>
+												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
 													Pending Transaction
-													<FontAwesomeIcon icon="external-link-alt" />
+													<FontAwesomeIcon icon='external-link-alt' />
 												</a>
 											) : (
 												'Pending Transaction'
@@ -92,34 +73,27 @@ const NFT: React.FC = () => {
 											!isElderClaimed ? (
 												<SubmitButton
 													onClick={async () => {
-														handleTx(
-															mintElder(elderContract, account),
-															`Claim Bao Elder NFT`,
-														)
+														handleTx(mintElder(elderContract, account), `Claim Bao Elder NFT`)
 													}}
 												>
 													Claim
 												</SubmitButton>
 											) : (
-												<SubmitButton disabled={true}>
-													Already Claimed
-												</SubmitButton>
+												<SubmitButton disabled={true}>Already Claimed</SubmitButton>
 											)
 										) : (
 											<SubmitButton disabled={true}>Not Eligible</SubmitButton>
 										)
 									) : (
-										<SubmitButton disabled={true}>
-											Checking Eligibility...
-										</SubmitButton>
+										<SubmitButton disabled={true}>Checking Eligibility...</SubmitButton>
 									)}
 									{isElderClaimed ? (
 										<Button
 											href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoElder`}
-											text="View on OpenSea"
+											text='View on OpenSea'
 										/>
 									) : (
-										<Button disabled={true} text="View on OpenSea" />
+										<Button disabled={true} text='View on OpenSea' />
 									)}
 								</>
 							</Card.Footer>
@@ -128,29 +102,19 @@ const NFT: React.FC = () => {
 					<Col>
 						<Card>
 							<Card.Header>
-								<Label text="BaoSwap NFT" />
+								<Label text='BaoSwap NFT' />
 							</Card.Header>
 							<Card.Body>
-								<img
-									src={baoSwap}
-									width={320}
-									height={300}
-									alt=""
-									style={{ borderRadius: '8px' }}
-								/>
+								<img src={baoSwap} width={320} height={300} alt='' style={{ borderRadius: '8px' }} />
 							</Card.Body>
 							<Card.Footer>
 								<>
 									{pendingTx ? (
 										<SubmitButton disabled={true}>
 											{typeof pendingTx === 'string' ? (
-												<a
-													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-													target="_blank"
-													rel="noreferrer"
-												>
+												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
 													Pending Transaction
-													<FontAwesomeIcon icon="external-link-alt" />
+													<FontAwesomeIcon icon='external-link-alt' />
 												</a>
 											) : (
 												'Pending Transaction'
@@ -163,34 +127,27 @@ const NFT: React.FC = () => {
 											!isBaoSwapClaimed ? (
 												<SubmitButton
 													onClick={async () => {
-														handleTx(
-															mintBaoSwap(baoSwapContract, account),
-															`Claim BaoSwap NFT`,
-														)
+														handleTx(mintBaoSwap(baoSwapContract, account), `Claim BaoSwap NFT`)
 													}}
 												>
 													Claim
 												</SubmitButton>
 											) : (
-												<SubmitButton disabled={true}>
-													Already Claimed
-												</SubmitButton>
+												<SubmitButton disabled={true}>Already Claimed</SubmitButton>
 											)
 										) : (
 											<SubmitButton disabled={true}>Not Eligible</SubmitButton>
 										)
 									) : (
-										<SubmitButton disabled={true}>
-											Checking Eligibility...
-										</SubmitButton>
+										<SubmitButton disabled={true}>Checking Eligibility...</SubmitButton>
 									)}
 									{isElderClaimed ? (
 										<Button
 											href={`https://opensea.io/${account}?search[sortBy]=LISTING_DATE&search[query]=BaoGnosis`}
-											text="View on OpenSea"
+											text='View on OpenSea'
 										/>
 									) : (
-										<Button disabled={true} text="View on OpenSea" />
+										<Button disabled={true} text='View on OpenSea' />
 									)}
 								</>
 							</Card.Footer>

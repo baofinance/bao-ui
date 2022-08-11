@@ -16,8 +16,7 @@ const connectorsByName: { [name: string]: AbstractConnector } = {
 }
 
 const WalletProviderModal = ({ onHide, show }: ModalProps) => {
-	const { connector, chainId, account, activate, active, error } =
-		useWeb3React()
+	const { connector, chainId, account, activate, active, error } = useWeb3React()
 
 	useEffect(() => {
 		if (account && chainId === Config.networkId) {
@@ -47,10 +46,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		onHide()
 	}, [onHide])
 
-	if (
-		window.ethereum &&
-		window.ethereum.chainId !== Config.defaultRpc.chainId
-	) {
+	if (window.ethereum && window.ethereum.chainId !== Config.defaultRpc.chainId) {
 		try {
 			window.ethereum.request({
 				method: 'wallet_switchEthereumChain',
@@ -73,12 +69,11 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 				<Modal.Title>Select a wallet provider.</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				{Object.keys(connectorsByName).map((name) => {
+				{Object.keys(connectorsByName).map(name => {
 					const currentConnector = connectorsByName[name]
 					const activating = currentConnector === activatingConnector
 					const connected = currentConnector === connector
-					const disabled =
-						!triedEager || !!activatingConnector || connected || !!error
+					const disabled = !triedEager || !!activatingConnector || connected || !!error
 
 					return (
 						<WalletButton
@@ -86,7 +81,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 							key={name}
 							onClick={() => {
 								setActivatingConnector(currentConnector)
-								activate(connectorsByName[name], (error) => {
+								activate(connectorsByName[name], error => {
 									if (error) {
 										setActivatingConnector(undefined)
 									}
@@ -114,7 +109,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 			</Modal.Body>
 
 			<Modal.Footer>
-				<Button text="Cancel" variant="secondary" onClick={onHide} />
+				<Button text='Cancel' variant='secondary' onClick={onHide} />
 			</Modal.Footer>
 		</Modal>
 	)
@@ -126,7 +121,7 @@ export const ConnectorIconContainer = styled.div`
 	margin: 0 auto;
 	display: inline-block;
 	vertical-align: middle;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 `
 
 export default WalletProviderModal

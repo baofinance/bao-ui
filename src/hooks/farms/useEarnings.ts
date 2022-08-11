@@ -6,24 +6,24 @@ import useBao from '../base/useBao'
 import useBlock from '../base/useBlock'
 
 const useEarnings = (pid: number) => {
-  const [balance, setBalance] = useState(new BigNumber(0))
-  const { account } = useWeb3React()
-  const bao = useBao()
-  const masterChefContract = getMasterChefContract(bao)
-  const block = useBlock()
+	const [balance, setBalance] = useState(new BigNumber(0))
+	const { account } = useWeb3React()
+	const bao = useBao()
+	const masterChefContract = getMasterChefContract(bao)
+	const block = useBlock()
 
-  const fetchBalance = useCallback(async () => {
-    const balance = await getEarned(masterChefContract, pid, account)
-    setBalance(new BigNumber(balance))
-  }, [account, masterChefContract, bao])
+	const fetchBalance = useCallback(async () => {
+		const balance = await getEarned(masterChefContract, pid, account)
+		setBalance(new BigNumber(balance))
+	}, [account, masterChefContract, bao])
 
-  useEffect(() => {
-    if (account && masterChefContract && bao) {
-      fetchBalance()
-    }
-  }, [account, block, masterChefContract, setBalance, bao])
+	useEffect(() => {
+		if (account && masterChefContract && bao) {
+			fetchBalance()
+		}
+	}, [account, block, masterChefContract, setBalance, bao])
 
-  return balance
+	return balance
 }
 
 export default useEarnings

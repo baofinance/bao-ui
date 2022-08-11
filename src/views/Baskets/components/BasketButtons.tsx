@@ -24,12 +24,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 
 	return (
 		<>
-			<BasketModal
-				basket={basket}
-				operation={modalOperation}
-				show={showBasketModal}
-				hideModal={() => setShowBasketModal(false)}
-			/>
+			<BasketModal basket={basket} operation={modalOperation} show={showBasketModal} hideModal={() => setShowBasketModal(false)} />
 			<Row lg={3} style={{ padding: '0 0.75rem', marginBottom: '25px' }}>
 				<Col>
 					<Button onClick={() => handleClick('MINT')}>Mint</Button>
@@ -38,7 +33,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 					<Button onClick={() => handleClick('REDEEM')}>Redeem</Button>
 				</Col>
 				<Col>
-					<Button href={`${swapLink}`} target="_blank" text="Swap" />
+					<Button href={`${swapLink}`} target='_blank' text='Swap' />
 				</Col>
 			</Row>
 		</>

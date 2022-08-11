@@ -15,13 +15,8 @@ import { getDisplayBalance } from '../../../utils/numberFormat'
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
 		<>
-			<ListHeader
-				headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']}
-			/>
-			{baskets &&
-				baskets.map((basket) => (
-					<BasketListItem basket={basket} key={basket.nid} />
-				))}
+			<ListHeader headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']} />
+			{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}
 		</>
 	)
 }
@@ -39,13 +34,9 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 				<Row lg={3} style={{ width: '100%' }}>
 					<Col>
 						<IconContainer>
-							<StyledIcon src={basket.icon} alt={basket.symbol} />
-							<span
-								style={{ display: 'inline-block', verticalAlign: 'middle' }}
-							>
-								<p style={{ margin: '0', lineHeight: '1.2rem' }}>
-									{basket.symbol}
-								</p>
+							<StyledIcon src={require(`assets/img/tokens/${basket.symbol}.png`).default} alt={basket.symbol} />
+							<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+								<p style={{ margin: '0', lineHeight: '1.2rem' }}>{basket.symbol}</p>
 								<SubText>{basket.desc}</SubText>
 							</span>
 						</IconContainer>
@@ -65,9 +56,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 					</Col>
 					<Col>
 						<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-							<p style={{ margin: '0', lineHeight: '1.2rem' }}>
-								${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}
-							</p>
+							<p style={{ margin: '0', lineHeight: '1.2rem' }}>${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}</p>
 							<FeeBadge>0% Fee</FeeBadge>
 						</span>
 					</Col>
@@ -88,7 +77,7 @@ type BasketListItemProps = {
 export default BasketList
 
 const SubText = styled.p`
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 	font-size: 0.875rem;
 	margin: 0;
 	line-height: 1rem;

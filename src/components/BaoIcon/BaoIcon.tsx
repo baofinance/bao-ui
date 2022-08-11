@@ -1,4 +1,4 @@
-import baoIcon from 'assets/img/logo.svg'
+import baoIcon from 'assets/img/tokens/BAO.png'
 import React from 'react'
 
 interface BaoIconProps {
@@ -10,13 +10,13 @@ interface BaoIconProps {
 
 const BaoIcon: React.FC<BaoIconProps> = ({ size = 36, v1, v2, v3 }) => (
 	<span
-		role="img"
+		role='img'
 		style={{
 			fontSize: size,
 			filter: v1 ? 'saturate(0.5)' : undefined,
 		}}
 	>
-		<img src={baoIcon} width={50} height={50} alt="" />
+		<img src={baoIcon} width={50} height={50} alt='' />
 	</span>
 )
 

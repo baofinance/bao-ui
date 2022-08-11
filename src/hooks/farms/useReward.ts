@@ -4,17 +4,17 @@ import { useWeb3React } from '@web3-react/core'
 import useBao from '../base/useBao'
 
 const useReward = (pid: number) => {
-  const { account } = useWeb3React()
-  const bao = useBao()
-  const masterChefContract = getMasterChefContract(bao)
+	const { account } = useWeb3React()
+	const bao = useBao()
+	const masterChefContract = getMasterChefContract(bao)
 
-  const handleReward = useCallback(async () => {
-    const txHash = await harvest(masterChefContract, pid, account)
-    console.log(txHash)
-    return txHash
-  }, [account, pid, bao])
+	const handleReward = useCallback(async () => {
+		const txHash = await harvest(masterChefContract, pid, account)
+		console.log(txHash)
+		return txHash
+	}, [account, pid, bao])
 
-  return { onReward: handleReward }
+	return { onReward: handleReward }
 }
 
 export default useReward

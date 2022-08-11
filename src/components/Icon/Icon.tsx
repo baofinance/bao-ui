@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 export const MenuIcon: React.FC<IconProps> = ({ size = 24 }) => {
 	return (
-		<svg height={size} viewBox="0 0 24 24" width={size} className="menuIcon">
-			<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+		<svg height={size} viewBox='0 0 24 24' width={size} className='menuIcon'>
+			<path d='M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z' />
 		</svg>
 	)
 }
@@ -18,9 +18,9 @@ export interface IconProps {
 
 export const Icon = styled.img`
 	max-height: 200px;
-	margin-bottom: ${(props) => props.theme.spacing[4]}px;
+	margin-bottom: ${props => props.theme.spacing[4]}px;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		margin-left: 0px;
 	}
 `
@@ -39,18 +39,18 @@ export const IconFlex = styled.div`
 
 export const IconImage = styled.img`
 	height: 50px;
-	margin-right: ${(props) => props.theme.spacing[3]}px;
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	margin-right: ${props => props.theme.spacing[3]}px;
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		height: 40px;
-		margin-right: ${(props) => props.theme.spacing[3]}px;
+		margin-right: ${props => props.theme.spacing[3]}px;
 	}
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		height: 35px;
-		margin-right: ${(props) => props.theme.spacing[3]}px;
+		margin-right: ${props => props.theme.spacing[3]}px;
 	}
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		height: 50px;
-		margin-right: ${(props) => props.theme.spacing[3]}px;
+		margin-right: ${props => props.theme.spacing[3]}px;
 	}
 `
 
@@ -59,17 +59,17 @@ export const StyledIcon = styled(IconImage)`
 	transition: 200ms;
 	user-select: none;
 	-webkit-user-drag: none;
-	margin-left: -${(props) => props.theme.spacing[4]}px;
+	margin-left: -${props => props.theme.spacing[4]}px;
 
 	&:first-child {
 		margin-left: 0;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		height: 30px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		height: 25px;
 	}
 `
@@ -79,19 +79,19 @@ export const IconContainer = styled.div`
 	align-items: center;
 	margin: 0 auto;
 	display: inline-block;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `
 
 export const QuestionIcon = styled(FontAwesomeIcon)`
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[100]};
+		color: ${props => props.theme.color.text[100]};
 		animation: 200ms;
 		cursor: pointer;
 	}

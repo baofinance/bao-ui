@@ -1,13 +1,18 @@
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import fetcher from 'bao/lib/fetcher'
+// Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { SpinnerLoader } from 'components/Loader'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
-import React, { useCallback, useEffect, useState } from 'react'
-import { ReactNode } from 'react'
+import React, { ReactNode, Suspense, useCallback, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
-import Market from 'views/Markets/Market'
 import Web3 from 'web3'
 import { provider } from 'web3-core'
 import MobileMenu from './components/MobileMenu'
@@ -18,20 +23,6 @@ import MarketsProvider from './contexts/Markets'
 import ModalsProvider from './contexts/Modals'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
-import Ballast from './views/Ballast'
-import Farms from './views/Farms'
-import Markets from './views/Markets'
-import NFT from './views/NFT'
-import Baskets from 'views/Baskets'
-import Basket from 'views/Baskets/Basket'
-
-// FontAwesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 library.add(fas, fab)
 
@@ -40,6 +31,14 @@ function getLibrary(provider: provider) {
 }
 
 const Web3ReactNetworkProvider = createWeb3ReactRoot('network')
+
+const Markets = React.lazy(() => import('views/Markets'))
+const Market = React.lazy(() => import('views/Markets/Market'))
+const Ballast = React.lazy(() => import('views/Ballast'))
+const Baskets = React.lazy(() => import('views/Baskets'))
+const Basket = React.lazy(() => import('views/Baskets/Basket'))
+const Farms = React.lazy(() => import('views/Farms'))
+const NFT = React.lazy(() => import('views/NFT'))
 
 const App: React.FC = () => {
 	const [mobileMenu, setMobileMenu] = useState(false)
@@ -60,8 +59,7 @@ const App: React.FC = () => {
 
 	// Remember darkmode prefs
 	useEffect(() => {
-		if (localStorage.getItem('darkMode') === null)
-			localStorage.setItem('darkMode', 'false')
+		if (localStorage.getItem('darkMode') === null) localStorage.setItem('darkMode', 'false')
 		const isDarkMode = localStorage.getItem('darkMode') === 'true'
 		setIsDarkMode(isDarkMode)
 	}, [])
@@ -69,30 +67,25 @@ const App: React.FC = () => {
 	return (
 		<Providers isDarkMode={isDarkMode}>
 			<Router>
-				<TopBar
-					isDarkMode={isDarkMode}
-					toggleTheme={toggleTheme}
-					onPresentMobileMenu={handlePresentMobileMenu}
-				/>
+				<TopBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
-				<Routes>
-					<Route path="/" element={<Markets />} />
-					<Route path="/markets/:marketId" element={<Market />} />
-					<Route path="/ballast" element={<Ballast />} />
-					<Route path="/farms" element={<Farms />} />
-					<Route path="/baskets" element={<Baskets />} />
-					<Route path="/baskets/:basketId" element={<Basket />} />
-					<Route path="/NFT" element={<NFT />} />
-				</Routes>
+				<Suspense fallback={<SpinnerLoader />}>
+					<Routes>
+						<Route path='/' element={<Markets />} />
+						<Route path='/markets/:marketId' element={<Market />} />
+						<Route path='/ballast' element={<Ballast />} />
+						<Route path='/farms' element={<Farms />} />
+						<Route path='/baskets' element={<Baskets />} />
+						<Route path='/baskets/:basketId' element={<Basket />} />
+						<Route path='/NFT' element={<NFT />} />
+					</Routes>
+				</Suspense>
 			</Router>
 		</Providers>
 	)
 }
 
-const Providers: React.FC<ProvidersProps> = ({
-	children,
-	isDarkMode,
-}: ProvidersProps) => {
+const Providers: React.FC<ProvidersProps> = ({ children, isDarkMode }: ProvidersProps) => {
 	return (
 		<ThemeProvider theme={theme(isDarkMode)}>
 			<GlobalStyle />

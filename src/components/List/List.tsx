@@ -6,9 +6,7 @@ type ListHeaderProps = {
 	headers: string[]
 }
 
-export const ListHeader: React.FC<ListHeaderProps> = ({
-	headers,
-}: ListHeaderProps) => {
+export const ListHeader: React.FC<ListHeaderProps> = ({ headers }: ListHeaderProps) => {
 	return (
 		<Container fluid>
 			<Row style={{ padding: '0.5rem 12px' }}>
@@ -24,7 +22,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
 
 export const ListCol = styled(Col)`
 	font-family: 'Rubik', sans-serif;
-	font-weight: ${(props) => props.theme.fontWeight.strong};
+	font-weight: ${props => props.theme.fontWeight.strong};
 	text-align: right;
 
 	&:first-child {
@@ -47,18 +45,18 @@ export const ListItem = styled.button`
 `
 
 export const ListItemHeader = styled.div`
-		background: ${(props) => props.theme.color.primary[100]};
-		color: ${(props) => props.theme.color.text[100]};
+		background: ${props => props.theme.color.primary[100]};
+		color: ${props => props.theme.color.text[100]};
 		padding: 1.25rem;
-		border: ${(props) => props.theme.border.default};
+		border: ${props => props.theme.border.default};
 		border-radius: 8px;
 
 		&:hover,
 		&:focus,
 		&:active {
-			background: ${(props) => props.theme.color.primary[200]};
-			color: ${(props) => props.theme.color.text[100]};
-			border: ${(props) => props.theme.border.default};
+			background: ${props => props.theme.color.primary[200]};
+			color: ${props => props.theme.color.text[100]};
+			border: ${props => props.theme.border.default};
 			box-shadow: none;
 		}
 		

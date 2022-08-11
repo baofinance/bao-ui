@@ -18,11 +18,7 @@ import useBao from '../../../../hooks/base/useBao'
 import useTokenBalance from '../../../../hooks/base/useTokenBalance'
 import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
 import useBasketRates from '../../../../hooks/baskets/useNestRate'
-import {
-	decimate,
-	exponentiate,
-	getDisplayBalance,
-} from '../../../../utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '../../../../utils/numberFormat'
 import {
 	AssetLabel,
 	AssetStack,
@@ -47,12 +43,7 @@ enum MintOption {
 }
 
 // TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
-const BasketModal: React.FC<ModalProps> = ({
-	basket,
-	operation,
-	show,
-	hideModal,
-}) => {
+const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal }) => {
 	const [value, setValue] = useState<string | undefined>()
 	const [secondaryValue, setSecondaryValue] = useState<string | undefined>()
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
@@ -63,10 +54,7 @@ const BasketModal: React.FC<ModalProps> = ({
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
-	const daiAllowance = useAllowancev2(
-		Config.addressMap.DAI,
-		bao && bao.getContract('recipe').options.address,
-	)
+	const daiAllowance = useAllowancev2(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -96,45 +84,25 @@ const BasketModal: React.FC<ModalProps> = ({
 						break
 					}
 
-					tx = recipe.methods
-						.bake(
-							basket.address,
-							exponentiate(value).toFixed(0),
-							exponentiate(secondaryValue).toFixed(0),
-						)
-						.send({
-							from: account,
-						})
-				} else {
-					// Else, use ETH to mint
-					tx = recipe.methods
-						.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0))
-						.send({
-							from: account,
-							value: exponentiate(value).toFixed(0),
-						})
-				}
-
-				handleTx(
-					tx,
-					`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`,
-					() => hide(),
-				)
-				break
-			case 'REDEEM':
-				tx = basket.basketContract.methods
-					.exitPool(exponentiate(value).toFixed(0))
-					.send({
+					tx = recipe.methods.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0)).send({
 						from: account,
 					})
+				} else {
+					// Else, use ETH to mint
+					tx = recipe.methods.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0)).send({
+						from: account,
+						value: exponentiate(value).toFixed(0),
+					})
+				}
 
-				handleTx(
-					tx,
-					`Redeem ${getDisplayBalance(new BigNumber(value), 0)} ${
-						basket.symbol
-					}`,
-					() => hide(),
-				)
+				handleTx(tx, `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
+				break
+			case 'REDEEM':
+				tx = basket.basketContract.methods.exitPool(exponentiate(value).toFixed(0)).send({
+					from: account,
+				})
+
+				handleTx(tx, `Redeem ${getDisplayBalance(new BigNumber(value), 0)} ${basket.symbol}`, () => hide())
 		}
 	}
 
@@ -157,13 +125,7 @@ const BasketModal: React.FC<ModalProps> = ({
 					!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
 					new BigNumber(value).lte(0) ||
 					new BigNumber(value).gt(
-						decimate(
-							operation === 'MINT'
-								? mintOption === MintOption.DAI
-									? daiBalance
-									: ethBalance
-								: basketBalance,
-						),
+						decimate(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
 					))),
 		[value, daiAllowance, operation, mintOption, pendingTx],
 	)
@@ -178,15 +140,15 @@ const BasketModal: React.FC<ModalProps> = ({
 		<>
 			<Modal show={show} onHide={hide} centered>
 				<CloseButton onClick={hide}>
-					<FontAwesomeIcon icon="times" />
+					<FontAwesomeIcon icon='times' />
 				</CloseButton>
 				<Modal.Header>
-					<Modal.Title id="contained-modal-title-vcenter">
+					<Modal.Title id='contained-modal-title-vcenter'>
 						<HeaderWrapper>
 							<p>
 								{operation === 'MINT' ? 'Mint' : 'Redeem'} {basket.symbol}
 							</p>
-							<img src={basket.icon} />
+							<img src={require(`assets/img/tokens/${basket.symbol}.png`).default} />
 						</HeaderWrapper>
 					</Modal.Title>
 				</Modal.Header>
@@ -195,34 +157,25 @@ const BasketModal: React.FC<ModalProps> = ({
 						<>
 							<div style={{ display: 'flex' }}>
 								<StyledBadge style={{ margin: 'auto' }}>
-									1 {basket.symbol} ={' '}
-									<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
-									{rates && getDisplayBalance(rates.eth)}
+									1 {basket.symbol} = <FontAwesomeIcon icon={['fab', 'ethereum']} /> {rates && getDisplayBalance(rates.eth)}
 									{' = '}
 									{rates && getDisplayBalance(rates.dai)} DAI
 								</StyledBadge>
 							</div>
 							<br />
 							<div style={{ textAlign: 'center' }}>
-								<b style={{ fontWeight: 'bold' }}>NOTE:</b> An extra 2% of the
-								mint cost will be included to account for slippage. Any unused
-								input tokens will be returned in the mint transaction.
+								<b style={{ fontWeight: 'bold' }}>NOTE:</b> An extra 2% of the mint cost will be included to account for slippage. Any
+								unused input tokens will be returned in the mint transaction.
 							</div>
 						</>
 					) : (
 						<div style={{ textAlign: 'center' }}>
-							<b style={{ fontWeight: 'bold' }}>NOTE:</b> When you redeem{' '}
-							{basket.name}, you will receive the underlying tokens. Otherwise,
+							<b style={{ fontWeight: 'bold' }}>NOTE:</b> When you redeem {basket.name}, you will receive the underlying tokens. Otherwise,
 							you can swap {basket.name}{' '}
-							<a
-								href={`${swapLink}`}
-								target="blank"
-								style={{ fontWeight: 700 }}
-							>
+							<a href={`${swapLink}`} target='blank' style={{ fontWeight: 700 }}>
 								here
 							</a>
-							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may
-							apply on swaps)
+							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may apply on swaps)
 						</div>
 					)}
 					<ModalStack>
@@ -237,15 +190,9 @@ const BasketModal: React.FC<ModalProps> = ({
 										<AssetLabel>
 											{operation === 'MINT'
 												? mintOption === MintOption.DAI
-													? `${
-															daiBalance && decimate(daiBalance).toFixed(4)
-													  } DAI`
-													: `${
-															ethBalance && decimate(ethBalance).toFixed(4)
-													  } ETH`
-												: `${
-														basketBalance && decimate(basketBalance).toFixed(4)
-												  } ${basket.symbol}`}
+													? `${daiBalance && decimate(daiBalance).toFixed(4)} DAI`
+													: `${ethBalance && decimate(ethBalance).toFixed(4)} ETH`
+												: `${basketBalance && decimate(basketBalance).toFixed(4)} ${basket.symbol}`}
 										</AssetLabel>
 									</LabelStack>
 								</LabelEnd>
@@ -255,47 +202,33 @@ const BasketModal: React.FC<ModalProps> = ({
 							<Col xs={12}>
 								<BalanceInput
 									value={value}
-									onChange={(e) => setValue(e.currentTarget.value)}
-									onMaxClick={() =>
-										setValue(decimate(basketBalance).toFixed(18))
-									}
+									onChange={e => setValue(e.currentTarget.value)}
+									onMaxClick={() => setValue(decimate(basketBalance).toFixed(18))}
 									disabled={operation === 'MINT'}
 									label={
 										<AssetStack>
 											{operation === 'MINT' && (
 												<>
-													<Tooltipped
-														content={`Swap input currency to ${
-															mintOption === MintOption.DAI ? 'ETH' : 'DAI'
-														}`}
-													>
+													<Tooltipped content={`Swap input currency to ${mintOption === MintOption.DAI ? 'ETH' : 'DAI'}`}>
 														<MaxButton
 															onClick={() => {
 																// Clear input values
 																setValue('')
 																setSecondaryValue('')
 																// Swap mint option
-																setMintOption(
-																	mintOption === MintOption.DAI
-																		? MintOption.ETH
-																		: MintOption.DAI,
-																)
+																setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
 															}}
 														>
-															<FontAwesomeIcon icon="sync" />
+															<FontAwesomeIcon icon='sync' />
 														</MaxButton>
 													</Tooltipped>
 												</>
 											)}
 											<IconFlex>
 												{operation === 'MINT' ? (
-													<img
-														src={`/${
-															mintOption === MintOption.DAI ? 'DAI' : 'WETH'
-														}.png`}
-													/>
+													<img src={require(`assets/img/tokens/${mintOption === MintOption.DAI ? 'DAI' : 'ETH'}.png`).default} />
 												) : (
-													<img src={basket.icon} />
+													<img src={require(`assets/img/tokens/${basket.symbol}.png`).default} />
 												)}
 											</IconFlex>
 										</AssetStack>
@@ -306,10 +239,8 @@ const BasketModal: React.FC<ModalProps> = ({
 										<br />
 										<BalanceInput
 											value={secondaryValue}
-											onChange={(e) => {
-												const inputVal = decimate(
-													mintOption === MintOption.DAI ? rates.dai : rates.eth,
-												)
+											onChange={e => {
+												const inputVal = decimate(mintOption === MintOption.DAI ? rates.dai : rates.eth)
 													.times(e.currentTarget.value)
 													.times(1.02)
 												setSecondaryValue(e.currentTarget.value)
@@ -333,15 +264,13 @@ const BasketModal: React.FC<ModalProps> = ({
 												}
 
 												const maxVal = usedBal.times(0.98)
-												setSecondaryValue(
-													maxVal.div(decimate(usedRate)).toFixed(18),
-												)
+												setSecondaryValue(maxVal.div(decimate(usedRate)).toFixed(18))
 												setValue(usedBal.toString())
 											}}
 											label={
 												<AssetStack>
 													<IconFlex>
-														<img src={basket.icon} />
+														<img src={require(`assets/img/tokens/${basket.symbol}.png`).default} />
 													</IconFlex>
 												</AssetStack>
 											}
@@ -356,12 +285,8 @@ const BasketModal: React.FC<ModalProps> = ({
 					<Button disabled={isButtonDisabled} onClick={handleOperation}>
 						{pendingTx ? (
 							typeof pendingTx === 'string' ? (
-								<ExternalLink
-									href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`}
-									target="_blank"
-								>
-									Pending Transaction{' '}
-									<FontAwesomeIcon icon="external-link-alt" />
+								<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
+									Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
 								</ExternalLink>
 							) : (
 								'Pending Transaction'
@@ -376,9 +301,7 @@ const BasketModal: React.FC<ModalProps> = ({
 						) : isButtonDisabled ? (
 							'Invalid Input'
 						) : operation === 'MINT' ? (
-							`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${
-								basket.symbol
-							}`
+							`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`
 						) : (
 							`Redeem ${getDisplayBalance(value, 0) || 0} ${basket.symbol}`
 						)}

@@ -4,15 +4,15 @@ import { useWeb3React } from '@web3-react/core'
 import { Contract } from 'web3-eth-contract'
 
 const useRedeem = (masterChefContract: Contract) => {
-  const { account } = useWeb3React()
+	const { account } = useWeb3React()
 
-  const handleRedeem = useCallback(async () => {
-    const txHash = await redeem(masterChefContract, account)
-    console.log(txHash)
-    return txHash
-  }, [account, masterChefContract])
+	const handleRedeem = useCallback(async () => {
+		const txHash = await redeem(masterChefContract, account)
+		console.log(txHash)
+		return txHash
+	}, [account, masterChefContract])
 
-  return { onRedeem: handleRedeem }
+	return { onRedeem: handleRedeem }
 }
 
 export default useRedeem

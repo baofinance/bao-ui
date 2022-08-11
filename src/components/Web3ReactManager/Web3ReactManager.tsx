@@ -7,15 +7,9 @@ interface Web3ReactManagerProps {
 	children: any
 }
 
-export const Web3ReactManager: FC<PropsWithChildren<Web3ReactManagerProps>> = ({
-	children,
-}) => {
+export const Web3ReactManager: FC<PropsWithChildren<Web3ReactManagerProps>> = ({ children }) => {
 	const { active } = useWeb3React()
-	const {
-		active: networkActive,
-		error: networkError,
-		activate: activateNetwork,
-	} = useWeb3React()
+	const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React()
 
 	const triedEager = useEagerConnect()
 

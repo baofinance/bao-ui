@@ -1,4 +1,4 @@
-import baoIcon from 'assets/img/logo.svg'
+import baoIcon from 'assets/img/tokens/BAO.png'
 import { CloseButton, NavButtons } from 'components/Button'
 import { IconContainer, StyledIcon } from 'components/Icon'
 import { SpinnerLoader } from 'components/Loader'
@@ -41,16 +41,16 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 	}, [onHide])
 
 	return (
-		<Modal show={show} onHide={hideModal} centered dialogClassName="modal-50h">
+		<Modal show={show} onHide={hideModal} centered dialogClassName='modal-50h'>
 			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
-				<Modal.Title id="contained-modal-title-vcenter">
+				<Modal.Title id='contained-modal-title-vcenter'>
 					{operation}{' '}
 					{operation !== 'Rewards' ? (
 						<>
 							<IconContainer style={{ marginLeft: '10px' }}>
-								<StyledIcon src={farm.iconA} />
-								{farm.iconB !== null && <StyledIcon src={farm.iconB} />}
+								<StyledIcon src={require(`assets/img/tokens/${farm.iconA}`).default} />
+								{farm.iconB !== null && <StyledIcon src={require(`assets/img/tokens/${farm.iconB}`).default} />}
 							</IconContainer>
 						</>
 					) : (
@@ -60,11 +60,7 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 					)}
 				</Modal.Title>
 			</Modal.Header>
-			<NavButtons
-				options={operations}
-				active={operation}
-				onClick={setOperation}
-			/>
+			<NavButtons options={operations} active={operation} onClick={setOperation} />
 			{operation === 'Stake' && (
 				<Stake
 					lpContract={lpContract}
@@ -103,9 +99,7 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 	const userInfo = useUserFarmInfo(pid)
 	const blockDiff = useBlockDiff(userInfo)
 	const fees = useFees(blockDiff)
-	const lastInteraction =
-		blockDiff &&
-		new Date(new Date().getTime() - 1000 * (blockDiff * 3)).toLocaleString()
+	const lastInteraction = blockDiff && new Date(new Date().getTime() - 1000 * (blockDiff * 3)).toLocaleString()
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -115,28 +109,26 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 		<Modal show={show} onHide={hideModal} centered>
 			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
-				<Modal.Title id="contained-modal-title-vcenter">
+				<Modal.Title id='contained-modal-title-vcenter'>
 					<p style={{ fontWeight: 700 }}>Fee Details</p>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body style={{ paddingTop: '0' }}>
 				<p style={{ textAlign: 'center' }}>
-					<span role="img" aria-label="important">
+					<span role='img' aria-label='important'>
 						❗
 					</span>
 					BE AWARE OF WITHDRAWAL FEES
-					<span role="img" aria-label="important">
+					<span role='img' aria-label='important'>
 						❗
 					</span>
 				</p>
 				<FeeBlock
-					label=""
+					label=''
 					stats={[
 						{
 							label: 'Current Fee:',
-							value: `${
-								fees ? `${(fees * 100).toFixed(2)}%` : <SpinnerLoader />
-							}`,
+							value: `${fees ? `${(fees * 100).toFixed(2)}%` : <SpinnerLoader />}`,
 						},
 						{
 							label: 'Last interaction:',
@@ -151,34 +143,18 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 						{
 							label: 'Last withdraw block:',
 							value: `
-						${
-							userInfo ? (
-								userInfo.lastWithdrawBlock === '0' ? (
-									'Never Withdrawn'
-								) : (
-									userInfo.lastWithdrawBlock
-								)
-							) : (
-								<SpinnerLoader />
-							)
-						}
+						${userInfo ? userInfo.lastWithdrawBlock === '0' ? 'Never Withdrawn' : userInfo.lastWithdrawBlock : <SpinnerLoader />}
 						`,
 						},
 					]}
 				/>
 				<Row>
 					<p style={{ textAlign: 'center', padding: '16px' }}>
-						Your first deposit activates and each withdraw resets the timer for
-						penalities and fees, this is pool based. Be sure to read the{' '}
-						<a
-							href="https://docs.bao.finance/"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
+						Your first deposit activates and each withdraw resets the timer for penalities and fees, this is pool based. Be sure to read the{' '}
+						<a href='https://docs.bao.finance/' target='_blank' rel='noopener noreferrer'>
 							docs
 						</a>{' '}
-						before using the farms so you are familiar with protocol risks and
-						fees!
+						before using the farms so you are familiar with protocol risks and fees!
 					</p>
 				</Row>
 			</Modal.Body>

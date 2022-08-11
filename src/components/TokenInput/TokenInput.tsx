@@ -10,12 +10,7 @@ interface TokenInputProps extends InputProps {
 	onSelectHalf?: () => void
 }
 
-const TokenInput: React.FC<TokenInputProps> = ({
-	onChange,
-	onSelectMax,
-	onSelectHalf,
-	value,
-}) => {
+const TokenInput: React.FC<TokenInputProps> = ({ onChange, onSelectMax, onSelectHalf, value }) => {
 	return (
 		<Input
 			endAdornment={
@@ -25,7 +20,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
 				</StyledTokenAdornmentWrapper>
 			}
 			onChange={onChange}
-			placeholder="0"
+			placeholder='0'
 			value={value}
 		/>
 	)

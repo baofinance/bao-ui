@@ -6,9 +6,7 @@ import { useMarketsContext } from './context-hooks/useMarketsContext'
 interface MarketsProviderProps {
 	children: any
 }
-const MarketsProvider: React.FC<PropsWithChildren<MarketsProviderProps>> = ({
-	children,
-}) => {
+const MarketsProvider: React.FC<PropsWithChildren<MarketsProviderProps>> = ({ children }) => {
 	const markets = useMarketsContext()
 
 	return (

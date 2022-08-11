@@ -44,11 +44,8 @@ export const FarmList: React.FC = () => {
 	const [archived, showArchived] = useState(false)
 
 	useEffect(() => {
-		GraphUtil.getPrice(Config.addressMap.WETH).then(async (wethPrice) => {
-			const baoPrice = await GraphUtil.getPriceFromPair(
-				wethPrice,
-				Config.contracts.bao[Config.networkId].address,
-			)
+		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
+			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.bao[Config.networkId].address)
 			setBaoPrice(baoPrice)
 		})
 
@@ -89,29 +86,19 @@ export const FarmList: React.FC = () => {
 
 				for (let i = 0; i < farms.length; i++) {
 					const farm = farms[i]
-					const tvlInfo = farmsTVL.tvls.find(
-						(fTVL: any) =>
-							fTVL.lpAddress.toLowerCase() ===
-							farm.lpTokenAddress.toLowerCase(),
-					)
+					const tvlInfo = farmsTVL.tvls.find((fTVL: any) => fTVL.lpAddress.toLowerCase() === farm.lpTokenAddress.toLowerCase())
 					const farmWithStakedValue = {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
-						stakedUSD: decimate(
-							result.masterChef[farms.length + i].values[0].hex,
-						)
+						stakedUSD: decimate(result.masterChef[farms.length + i].values[0].hex)
 							.div(decimate(tvlInfo.lpStaked))
 							.times(tvlInfo.tvl),
 						apy:
 							baoPrice && farmsTVL
 								? baoPrice
 										.times(BLOCKS_PER_YEAR)
-										.times(
-											new BigNumber(result.masterChef[i].values[0].hex).div(
-												10 ** 18,
-											),
-										)
+										.times(new BigNumber(result.masterChef[i].values[0].hex).div(10 ** 18))
 										.div(tvlInfo.tvl)
 								: null,
 					}
@@ -124,7 +111,7 @@ export const FarmList: React.FC = () => {
 
 	return (
 		<>
-			<Spacer size="md" />
+			<Spacer size='md' />
 			<Container style={{ textAlign: 'right', fontSize: '0.875rem' }}>
 				{/* <Form.Check
 					inline
@@ -136,15 +123,15 @@ export const FarmList: React.FC = () => {
 				/> */}
 				<Form.Check
 					inline
-					type="switch"
-					id="show-archived"
-					label="Show Archived Farms"
+					type='switch'
+					id='show-archived'
+					label='Show Archived Farms'
 					checked={archived}
-					onChange={(e) => showArchived(e.currentTarget.checked)}
+					onChange={e => showArchived(e.currentTarget.checked)}
 					disabled={true}
 				/>
 			</Container>
-			<Row className="farmRow">
+			<Row className='farmRow'>
 				<Col>
 					{!account ? (
 						<FarmListHeader headers={['Pool', 'APR', 'TVL']} />
@@ -192,9 +179,7 @@ type FarmListHeaderProps = {
 	headers: string[]
 }
 
-const FarmListHeader: React.FC<FarmListHeaderProps> = ({
-	headers,
-}: FarmListHeaderProps) => {
+const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHeaderProps) => {
 	return (
 		<Container fluid>
 			<Row style={{ padding: '0.5rem 12px' }}>
@@ -219,28 +204,20 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 
 	return (
 		<>
-			<StyledAccordionItem
-				style={{ padding: '12px' }}
-				onClick={() => setShowFarmModal(true)}
-				disabled={!account}
-			>
+			<StyledAccordionItem style={{ padding: '12px' }} onClick={() => setShowFarmModal(true)} disabled={!account}>
 				<StyledAccordionHeader>
-					<Row lg={7} style={{ width: '100%' }} className="farmRow">
+					<Row lg={7} style={{ width: '100%' }} className='farmRow'>
 						<Col>
 							<FarmIconContainer>
-								<FarmIcon src={farm.iconA} />
-								<FarmIcon src={farm.iconB} />
+								<FarmIcon src={require(`assets/img/tokens/${farm.iconA}`).default} />
+								<FarmIcon src={require(`assets/img/tokens/${farm.iconB}`).default} />
 							</FarmIconContainer>
 							{farm.name}
 						</Col>
 						<Col>
 							{farm.apy ? (
 								farm.apy.gt(0) ? (
-									`${farm.apy
-										.times(new BigNumber(100))
-										.toNumber()
-										.toLocaleString('en-US')
-										.slice(0, -1)}%`
+									`${farm.apy.times(new BigNumber(100)).toNumber().toLocaleString('en-US').slice(0, -1)}%`
 								) : (
 									'N/A'
 								)
@@ -248,59 +225,36 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 								<SpinnerLoader />
 							)}
 						</Col>
-						{account && (
-							<Col>
-								$
-								{window.screen.width > 1200
-									? getDisplayBalance(farm.stakedUSD, 0)
-									: truncateNumber(farm.stakedUSD, 0)}
-							</Col>
-						)}
+						{account && <Col>${window.screen.width > 1200 ? getDisplayBalance(farm.stakedUSD, 0) : truncateNumber(farm.stakedUSD, 0)}</Col>}
 						{account && window.screen.width > 320 && (
-							<Col>
-								$
-								{window.screen.width > 1200
-									? getDisplayBalance(farm.tvl, 0)
-									: truncateNumber(farm.tvl, 0)}
-							</Col>
+							<Col>${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}</Col>
 						)}
-						{!account && (
-							<Col>
-								$
-								{window.screen.width > 1200
-									? getDisplayBalance(farm.tvl, 0)
-									: truncateNumber(farm.tvl, 0)}
-							</Col>
-						)}
+						{!account && <Col>${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}</Col>}
 					</Row>
 				</StyledAccordionHeader>
 			</StyledAccordionItem>
-			<FarmModal
-				farm={farm}
-				show={showFarmModal}
-				onHide={() => setShowFarmModal(false)}
-			/>
+			<FarmModal farm={farm} show={showFarmModal} onHide={() => setShowFarmModal(false)} />
 		</>
 	)
 }
 
 export const FarmImage = styled.img`
 	height: 50px;
-	margin-right: ${(props) => props.theme.spacing[3]}px;
+	margin-right: ${props => props.theme.spacing[3]}px;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		height: 40px;
-		margin-right: ${(props) => props.theme.spacing[3]}px;
+		margin-right: ${props => props.theme.spacing[3]}px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		height: 35px;
-		margin-right: ${(props) => props.theme.spacing[3]}px;
+		margin-right: ${props => props.theme.spacing[3]}px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		height: 50px;
-		margin-right: ${(props) => props.theme.spacing[3]}px;
+		margin-right: ${props => props.theme.spacing[3]}px;
 	}
 `
 
@@ -310,9 +264,9 @@ export const FarmIconContainer = styled.div`
 	margin: 0 auto;
 	display: inline-block;
 	vertical-align: middle;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		display: none;
 	}
 `
@@ -323,24 +277,24 @@ export const FarmIcon = styled(FarmImage)`
 	transition: 200ms;
 	user-select: none;
 	-webkit-user-drag: none;
-	margin-left: -${(props) => props.theme.spacing[3]}px;
+	margin-left: -${props => props.theme.spacing[3]}px;
 
 	&:first-child {
 		margin-left: 0;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		height: 30px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		height: 25px;
 	}
 `
 
 const FarmListHeaderCol = styled(Col)`
 	font-family: 'Rubik', sans-serif;
-	font-weight: ${(props) => props.theme.fontWeight.strong};
+	font-weight: ${props => props.theme.fontWeight.strong};
 	text-align: right;
 
 	&:first-child {
@@ -359,17 +313,17 @@ const StyledAccordionItem = styled.button`
 `
 
 const StyledAccordionHeader = styled.div`
-		background: ${(props) => props.theme.color.primary[100]};
-		color: ${(props) => props.theme.color.text[100]};
+		background: ${props => props.theme.color.primary[100]};
+		color: ${props => props.theme.color.text[100]};
 		padding: 1.25rem;
-		border: ${(props) => props.theme.border.default};
+		border: ${props => props.theme.border.default};
 		border-radius: 8px;
 
 		&:hover,
 		&:focus,
 		&:active {
-			background: ${(props) => props.theme.color.primary[200]};
-			color: ${(props) => props.theme.color.text[100]};
+			background: ${props => props.theme.color.primary[200]};
+			color: ${props => props.theme.color.text[100]};
 			box-shadow: none;
 		}
 		

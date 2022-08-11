@@ -7,7 +7,7 @@ import BallastSwapper from './components/BallastSwapper'
 const Ballast: React.FC = () => {
 	return (
 		<Page>
-			<PageHeader icon="" title="Ballast" />
+			<PageHeader icon='' title='Ballast' />
 			<Container>
 				<BallastSwapper />
 			</Container>

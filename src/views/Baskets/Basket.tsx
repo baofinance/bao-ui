@@ -24,49 +24,37 @@ const Basket: React.FC = () => {
 	const { basketId } = useParams()
 	const baskets = useBaskets()
 
-	const basket = useMemo(
-		() =>
-			baskets && baskets.find((basket) => basket.nid.toString() === basketId),
-		[baskets],
-	)
+	const basket = useMemo(() => baskets && baskets.find(basket => basket.nid.toString() === basketId), [baskets])
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 	const info = useBasketInfo(basket)
 	const pairPrice = usePairPrice(basket)
 
-	return (
+	return basket ? (
 		<Page>
 			<Container>
 				<CornerButtons>
-					<Tooltipped content="View Contract on Etherscan">
-						<CornerButton
-							href={`https://etherscan.io/address/${
-								basket && basket.basketAddresses[1]
-							}`}
-							target="_blank"
-						>
-							<FontAwesomeIcon icon="file-contract" />
+					<Tooltipped content='View Contract on Etherscan'>
+						<CornerButton href={`https://etherscan.io/address/${basket && basket.basketAddresses[1]}`} target='_blank'>
+							<FontAwesomeIcon icon='file-contract' />
 						</CornerButton>
 					</Tooltipped>
 				</CornerButtons>
 				<StyledPageHeader>
 					<PageHeader
-						icon={basket && basket.icon}
-						title={basket && basket.symbol}
-						subtitle="Mint synthethic assets with multiple types of collateral!"
+						icon={require(`assets/img/tokens/${basket.symbol}.png`).default}
+						title={basket.symbol}
+						subtitle='Mint synthethic assets with multiple types of collateral!'
 					/>
 					<br />
 					<StyledBadge>
 						1 {basket && basket.symbol} ={' '}
 						{rates ? (
 							<>
-								<FontAwesomeIcon icon={['fab', 'ethereum']} />{' '}
-								{getDisplayBalance(rates.eth)}{' '}
-								<FontAwesomeIcon icon="angle-double-right" />{' '}
+								<FontAwesomeIcon icon={['fab', 'ethereum']} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon='angle-double-right' />{' '}
 								{getDisplayBalance(rates.dai)}
 								{' DAI '}
-								<FontAwesomeIcon icon="angle-double-right" />{' '}
-								{`$${getDisplayBalance(rates.usd)}`}
+								<FontAwesomeIcon icon='angle-double-right' /> {`$${getDisplayBalance(rates.usd)}`}
 							</>
 						) : (
 							<SpinnerLoader />
@@ -75,18 +63,14 @@ const Basket: React.FC = () => {
 				</StyledPageHeader>
 			</Container>
 			<Container>
-				<BasketStats
-					basket={basket}
-					composition={composition}
-					rates={rates}
-					info={info}
-					pairPrice={pairPrice}
-				/>
+				<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
 				<BasketButtons basket={basket} swapLink={basket && basket.swap} />
 				<Composition composition={composition} />
 				<Description basketAddress={basket && basket.basketAddresses[1]} />
 			</Container>
 		</Page>
+	) : (
+		<SpinnerLoader />
 	)
 }
 
@@ -97,5 +81,5 @@ const StyledPageHeader = styled.div`
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
-	margin: ${(props) => props.theme.spacing[6]}px auto 0;
+	margin: ${props => props.theme.spacing[6]}px auto 0;
 `

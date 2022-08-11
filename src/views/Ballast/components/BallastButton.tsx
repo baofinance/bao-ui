@@ -11,25 +11,13 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import React, { useMemo } from 'react'
 import { decimate, exponentiate } from 'utils/numberFormat'
 
-const BallastButton: React.FC<BallastButtonProps> = ({
-	swapDirection,
-	inputVal,
-	maxValues,
-	supplyCap,
-	reserves,
-}: BallastButtonProps) => {
+const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
-	const inputAApproval = useAllowancev2(
-		Config.addressMap.DAI,
-		Config.contracts.stabilizer[Config.networkId].address,
-	)
-	const inputBApproval = useAllowancev2(
-		Config.addressMap.baoUSD,
-		Config.contracts.stabilizer[Config.networkId].address,
-	)
+	const inputAApproval = useAllowancev2(Config.addressMap.DAI, Config.contracts.stabilizer[Config.networkId].address)
+	const inputBApproval = useAllowancev2(Config.addressMap.baoUSD, Config.contracts.stabilizer[Config.networkId].address)
 
 	const handleClick = async () => {
 		if (!bao) return
@@ -38,41 +26,19 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 		if (swapDirection) {
 			// BaoUSD->DAI
 			if (!inputBApproval.gt(0)) {
-				const tokenContract = bao.getNewContract(
-					'erc20.json',
-					Config.addressMap.baoUSD,
-				)
-				return handleTx(
-					approvev2(tokenContract, ballastContract, account),
-					'Ballast: Approve BaoUSD',
-				)
+				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.baoUSD)
+				return handleTx(approvev2(tokenContract, ballastContract, account), 'Ballast: Approve BaoUSD')
 			}
 
-			handleTx(
-				ballastContract.methods
-					.sell(exponentiate(inputVal).toString())
-					.send({ from: account }),
-				'Ballast: Swap BaoUSD to DAI',
-			)
+			handleTx(ballastContract.methods.sell(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap BaoUSD to DAI')
 		} else {
 			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
-				const tokenContract = bao.getNewContract(
-					'erc20.json',
-					Config.addressMap.DAI,
-				)
-				return handleTx(
-					approvev2(tokenContract, ballastContract, account),
-					'Ballast: Approve DAI',
-				)
+				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.DAI)
+				return handleTx(approvev2(tokenContract, ballastContract, account), 'Ballast: Approve DAI')
 			}
 
-			handleTx(
-				ballastContract.methods
-					.buy(exponentiate(inputVal).toString())
-					.send({ from: account }),
-				'Ballast: Swap DAI to BaoUSD',
-			)
+			handleTx(ballastContract.methods.buy(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap DAI to BaoUSD')
 		}
 	}
 
@@ -81,12 +47,8 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 		if (pendingTx) {
 			return typeof pendingTx === 'string' ? (
-				<a
-					href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-					target="_blank"
-					rel="noreferrer"
-				>
-					Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
+				<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
+					Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
 				</a>
 			) : (
 				'Pending Transaction'

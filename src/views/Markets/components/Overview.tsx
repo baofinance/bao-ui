@@ -1,22 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
-import {
-	StatWrapper,
-	UserStat,
-	UserStatsContainer,
-	UserStatsWrapper,
-} from 'components/Stats'
+import { StatWrapper, UserStat, UserStatsContainer, UserStatsWrapper } from 'components/Stats'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import useHealthFactor from 'hooks/markets/useHealthFactor'
 import React from 'react'
 import { Col } from 'react-bootstrap'
-import {
-	buildStyles,
-	CircularProgressbarWithChildren,
-} from 'react-circular-progressbar'
+import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
@@ -29,16 +21,10 @@ export const Overview = () => {
 
 	const borrowLimit =
 		accountLiquidity && accountLiquidity.usdBorrow !== 0
-			? Math.floor(
-					(accountLiquidity.usdBorrow /
-						(accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) *
-						100,
-			  )
+			? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
 			: 0
 
-	const borrowable = accountLiquidity
-		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
-		: 0
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable : 0
 
 	const healthFactorColor = (healthFactor: BigNumber) =>
 		healthFactor.eq(0)
@@ -56,27 +42,13 @@ export const Overview = () => {
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>Net APY</h1>
-							<p>
-								{`${
-									bao && account && accountLiquidity
-										? accountLiquidity.netApy.toFixed(2)
-										: 0
-								}`}
-								%
-							</p>
+							<p>{`${bao && account && accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
 						</UserStat>
 					</StatWrapper>
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>Your Collateral</h1>
-							<p>
-								$
-								{`${
-									bao && account && accountLiquidity
-										? getDisplayBalance(accountLiquidity.usdSupply, 0, 2)
-										: 0
-								}`}
-							</p>
+							<p>${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply, 0, 2) : 0}`}</p>
 						</UserStat>
 					</StatWrapper>
 				</UserStatsWrapper>
@@ -88,9 +60,7 @@ export const Overview = () => {
 							strokeWidth={10}
 							styles={buildStyles({
 								strokeLinecap: 'butt',
-								pathColor: `${
-									healthFactor ? healthFactorColor(healthFactor) : '#fff'
-								}`,
+								pathColor: `${healthFactor ? healthFactorColor(healthFactor) : '#fff'}`,
 							})}
 						>
 							<div
@@ -105,12 +75,7 @@ export const Overview = () => {
 										<p>
 											{`${
 												bao && account && accountLiquidity.usdBorrowable > 0
-													? Math.floor(
-															(accountLiquidity.usdBorrow /
-																(accountLiquidity.usdBorrowable +
-																	accountLiquidity.usdBorrow)) *
-																100,
-													  )
+													? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
 													: 0
 											}`}
 											%
@@ -126,21 +91,14 @@ export const Overview = () => {
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>Total Debt</h1>
-							<p>
-								$
-								{`${
-									bao && account && accountLiquidity
-										? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2)
-										: 0
-								}`}
-							</p>
+							<p>${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2) : 0}`}</p>
 						</UserStat>
 					</StatWrapper>
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>
 								Health Factor{' '}
-								<Tooltipped content="Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
+								<Tooltipped content='Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated.' />
 							</h1>
 							<p
 								style={{
@@ -153,16 +111,13 @@ export const Overview = () => {
 											'-'
 										) : healthFactor.gt(10000) ? (
 											<p>
-												{'>'} 10000{' '}
-												<Tooltipped
-													content={`Your health factor is ${healthFactor}.`}
-												/>
+												{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
 											</p>
 										) : (
 											healthFactor.toFixed(2)
 										)
 									) : (
-										<FontAwesomeIcon icon="infinity" />
+										<FontAwesomeIcon icon='infinity' />
 									))}
 							</p>
 						</UserStat>
@@ -194,12 +149,7 @@ export const Overview = () => {
 								>
 									{`${
 										bao && account && accountLiquidity.usdBorrowable > 0
-											? Math.floor(
-													(accountLiquidity.usdBorrow /
-														(accountLiquidity.usdBorrowable +
-															accountLiquidity.usdBorrow)) *
-														100,
-											  )
+											? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
 											: 0
 									}%`}{' '}
 								</p>
@@ -222,6 +172,8 @@ export const Overview = () => {
 	)
 }
 
+export default Overview
+
 //Circular Progress Bar
 
 const BorrowLimitContainer = styled.div`
@@ -230,12 +182,12 @@ const BorrowLimitContainer = styled.div`
 	box-sizing: unset;
 	margin: auto;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
 		width: 135px;
 		height: 135px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		display: none;
 	}
 `
@@ -246,21 +198,21 @@ export const CircularProgressbarWrapper = styled.div`
 	position: relative;
 	left: 50%;
 	transform: translateX(-50%);
-	background-color: ${(props) => props.theme.color.primary[100]};
+	background-color: ${props => props.theme.color.primary[100]};
 	border-radius: 50%;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
 		height: 110px;
 		width: 110px;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		display: none;
 	}
 `
 
 const BorrowLimitWrapper = styled(Col)`
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		display: none;
 	}
 `
@@ -285,7 +237,7 @@ export const BorrowLimit = styled.div`
 
 	h1 {
 		font-size: 0.875rem;
-		color: ${(props) => props.theme.color.text[200]};
+		color: ${props => props.theme.color.text[200]};
 		margin: 0px;
 	}
 `
@@ -296,7 +248,7 @@ const DebtLimitContainer = styled.div`
 	width: 100%;
 	display: none;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
 		display: flex;
 	}
 `
@@ -305,7 +257,7 @@ const DebtLimitWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[100]};
+	background-color: ${props => props.theme.color.primary[100]};
 	border-radius: 8px;
 	margin-top: 1rem;
 	padding: 1rem;
@@ -332,7 +284,7 @@ const ProgressBar = styled.div`
 	display: flex;
 	height: 100%;
 	border-radius: 8px;
-	background-color: ${(props) => props.theme.color.text[100]};
+	background-color: ${props => props.theme.color.text[100]};
 `
 
 const ProgressBarWrapper = styled.div`
@@ -340,7 +292,7 @@ const ProgressBarWrapper = styled.div`
 	width: 100%;
 	height: 0.25rem;
 	border-radius: 8px;
-	background-color: ${(props) => props.theme.color.primary[400]};
+	background-color: ${props => props.theme.color.primary[400]};
 	margin-inline-start: 0.5rem;
 `
 

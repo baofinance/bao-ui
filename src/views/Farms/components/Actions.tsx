@@ -1,26 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import baoIcon from 'assets/img/logo.svg'
+import baoIcon from 'assets/img/tokens/BAO.png'
 import Config from 'bao/lib/config'
 import { approvev2, getMasterChefContract, getRefUrl } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import {
-	BalanceContent,
-	BalanceImage,
-	BalanceSpacer,
-	BalanceText,
-	BalanceValue,
-	BalanceWrapper,
-} from 'components/Balance'
+import { BalanceContent, BalanceImage, BalanceSpacer, BalanceText, BalanceValue, BalanceWrapper } from 'components/Balance'
 import { ButtonStack, SubmitButton } from 'components/Button'
 import { QuestionIcon } from 'components/Icon'
-import {
-	AssetLabel,
-	LabelEnd,
-	LabelStack,
-	LabelStart,
-	MaxLabel,
-} from 'components/Label'
+import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from 'components/Label'
 import { SpinnerLoader } from 'components/Loader'
 import TokenInput from 'components/TokenInput'
 import { PoolType } from 'contexts/Farms/types'
@@ -35,11 +22,7 @@ import useStakedBalance from 'hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import {
-	exponentiate,
-	getDisplayBalance,
-	getFullDisplayBalance,
-} from 'utils/numberFormat'
+import { exponentiate, getDisplayBalance, getFullDisplayBalance } from 'utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
@@ -57,15 +40,7 @@ interface StakeProps {
 	onHide?: () => void
 }
 
-export const Stake: React.FC<StakeProps> = ({
-	lpContract,
-	pid,
-	poolType,
-	max,
-	tokenName = '',
-	pairUrl = '',
-	onHide,
-}) => {
+export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -120,13 +95,9 @@ export const Stake: React.FC<StakeProps> = ({
 								<MaxLabel>Balance:</MaxLabel>
 								<AssetLabel>
 									{fullBalance}{' '}
-									<a href={pairUrl} target="_blank" rel="noopener noreferrer">
+									<a href={pairUrl} target='_blank' rel='noopener noreferrer'>
 										{' '}
-										{tokenName}{' '}
-										<FontAwesomeIcon
-											icon="external-link-alt"
-											style={{ height: '.75rem' }}
-										/>
+										{tokenName} <FontAwesomeIcon icon='external-link-alt' style={{ height: '.75rem' }} />
 									</a>
 								</AssetLabel>
 							</LabelStack>
@@ -151,16 +122,11 @@ export const Stake: React.FC<StakeProps> = ({
 					{!allowance.toNumber() ? (
 						<>
 							{pendingTx ? (
-								<SubmitButton disabled={true}>
-									Approving {tokenName}
-								</SubmitButton>
+								<SubmitButton disabled={true}>Approving {tokenName}</SubmitButton>
 							) : (
 								<SubmitButton
 									onClick={async () => {
-										handleTx(
-											approvev2(lpContract, masterChefContract, account),
-											`Approve ${tokenName}`,
-										)
+										handleTx(approvev2(lpContract, masterChefContract, account), `Approve ${tokenName}`)
 									}}
 								>
 									Approve {tokenName}
@@ -174,13 +140,8 @@ export const Stake: React.FC<StakeProps> = ({
 									{pendingTx ? (
 										<SubmitButton disabled={true}>
 											{typeof pendingTx === 'string' ? (
-												<a
-													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-													target="_blank"
-													rel="noreferrer"
-												>
-													Pending Transaction{' '}
-													<FontAwesomeIcon icon="external-link-alt" />
+												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
+													Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
 												</a>
 											) : (
 												'Pending Transaction'
@@ -188,26 +149,13 @@ export const Stake: React.FC<StakeProps> = ({
 										</SubmitButton>
 									) : (
 										<SubmitButton
-											disabled={
-												!val ||
-												!bao ||
-												isNaN(val as any) ||
-												parseFloat(val) > max.toNumber()
-											}
+											disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 											onClick={async () => {
 												const stakeTx = masterChefContract.methods
-													.deposit(
-														pid,
-														ethers.utils.parseUnits(val.toString(), 18),
-														getRefUrl(),
-													)
+													.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), getRefUrl())
 													.send({ from: account })
 
-												handleTx(
-													stakeTx,
-													`Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`,
-													() => hideModal(),
-												)
+												handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 											}}
 										>
 											Deposit {tokenName}
@@ -219,17 +167,9 @@ export const Stake: React.FC<StakeProps> = ({
 									disabled={true}
 									onClick={async () => {
 										const stakeTx = masterChefContract.methods
-											.deposit(
-												pid,
-												ethers.utils.parseUnits(val.toString(), 18),
-												getRefUrl(),
-											)
+											.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), getRefUrl())
 											.send({ from: account })
-										handleTx(
-											stakeTx,
-											`Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`,
-											() => hideModal(),
-										)
+										handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 									}}
 								>
 									Pool Archived
@@ -254,13 +194,7 @@ interface UnstakeProps {
 	onHide?: () => void
 }
 
-export const Unstake: React.FC<UnstakeProps> = ({
-	max,
-	tokenName = '',
-	pid = null,
-	pairUrl = '',
-	onHide,
-}) => {
+export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = null, pairUrl = '', onHide }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -316,10 +250,7 @@ export const Unstake: React.FC<UnstakeProps> = ({
 								<AssetLabel>
 									{fees ? `${(fees * 100).toFixed(2)}%` : <SpinnerLoader />}{' '}
 									<span>
-										<QuestionIcon
-											icon="question-circle"
-											onClick={() => setShowFeeModal(true)}
-										/>
+										<QuestionIcon icon='question-circle' onClick={() => setShowFeeModal(true)} />
 									</span>
 								</AssetLabel>
 							</LabelStack>
@@ -331,13 +262,9 @@ export const Unstake: React.FC<UnstakeProps> = ({
 								<MaxLabel>Balance:</MaxLabel>
 								<AssetLabel>
 									{fullBalance}{' '}
-									<a href={pairUrl} rel="noopener noreferrer">
+									<a href={pairUrl} rel='noopener noreferrer'>
 										{' '}
-										{tokenName}{' '}
-										<FontAwesomeIcon
-											icon="external-link-alt"
-											style={{ height: '.75rem' }}
-										/>
+										{tokenName} <FontAwesomeIcon icon='external-link-alt' style={{ height: '.75rem' }} />
 									</a>
 								</AssetLabel>
 							</LabelStack>
@@ -363,13 +290,8 @@ export const Unstake: React.FC<UnstakeProps> = ({
 						{pendingTx ? (
 							<SubmitButton disabled={true}>
 								{typeof pendingTx === 'string' ? (
-									<a
-										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-										target="_blank"
-										rel="noreferrer"
-									>
-										Pending Transaction{' '}
-										<FontAwesomeIcon icon="external-link-alt" />
+									<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
+										Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
 									</a>
 								) : (
 									'Pending Transaction'
@@ -378,29 +300,16 @@ export const Unstake: React.FC<UnstakeProps> = ({
 						) : (
 							<SubmitButton
 								disabled={
-									!val ||
-									!bao ||
-									isNaN(val as any) ||
-									parseFloat(val) > parseFloat(fullBalance) ||
-									stakedBalance.eq(new BigNumber(0))
+									!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(new BigNumber(0))
 								}
 								onClick={async () => {
-									const amount =
-										val && isNaN(val as any)
-											? exponentiate(val, 18)
-											: new BigNumber(0).toFixed(4)
+									const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
 									const unstakeTx = masterChefContract.methods
-										.withdraw(
-											pid,
-											ethers.utils.parseUnits(val, 18),
-											getRefUrl(),
-										)
+										.withdraw(pid, ethers.utils.parseUnits(val, 18), getRefUrl())
 										.send({ from: account })
 
-									handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () =>
-										hideModal(),
-									)
+									handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 								}}
 							>
 								Withdraw {tokenName}
@@ -409,11 +318,7 @@ export const Unstake: React.FC<UnstakeProps> = ({
 					</>
 				</ButtonStack>
 			</Modal.Footer>
-			<FeeModal
-				pid={pid}
-				show={showFeeModal}
-				onHide={() => setShowFeeModal(false)}
-			/>
+			<FeeModal pid={pid} show={showFeeModal} onHide={() => setShowFeeModal(false)} />
 		</>
 	)
 }
@@ -450,13 +355,8 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 						{pendingTx ? (
 							<SubmitButton disabled={true}>
 								{typeof pendingTx === 'string' ? (
-									<a
-										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-										target="_blank"
-										rel="noreferrer"
-									>
-										Pending Transaction{' '}
-										<FontAwesomeIcon icon="external-link-alt" />
+									<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
+										Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
 									</a>
 								) : (
 									'Pending Transaction'
@@ -466,14 +366,9 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							<SubmitButton
 								disabled={!earnings.toNumber()}
 								onClick={async () => {
-									const harvestTx = masterChefContract.methods
-										.claimReward(pid)
-										.send({ from: account })
+									const harvestTx = masterChefContract.methods.claimReward(pid).send({ from: account })
 
-									handleTx(
-										harvestTx,
-										`Harvest ${getDisplayBalance(earnings)} BAO`,
-									)
+									handleTx(harvestTx, `Harvest ${getDisplayBalance(earnings)} BAO`)
 								}}
 							>
 								Harvest BAO

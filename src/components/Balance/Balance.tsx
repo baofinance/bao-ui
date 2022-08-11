@@ -18,7 +18,7 @@ export const BalanceImage = styled.div`
 	min-width: 48px;
 	min-height: 48px;
 	border-radius: 40px;
-	background-color: ${(props) => props.theme.color.primary[400]};
+	background-color: ${props => props.theme.color.primary[400]};
 
 	img {
 		height: 34px;

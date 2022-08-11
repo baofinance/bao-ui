@@ -17,19 +17,19 @@ const Page: React.FC<PropsWithChildren<PageProps>> = ({ children }) => (
 )
 
 const StyledPageContainer = styled.div`
-	background-image: ${(props) => props.theme.backgroundOverlay.default};
+	background-image: ${props => props.theme.backgroundOverlay.default};
 	display: table;
 	position: absolute;
-	top: ${(props) => props.theme.topBarSize}px;
+	top: ${props => props.theme.topBarSize}px;
 	left: 0;
-	height: calc(100vh - ${(props) => props.theme.topBarSize}px);
+	height: calc(100vh - ${props => props.theme.topBarSize}px);
 	width: 100%; ;
 `
 
 const StyledPageWrapper = styled.div`
 	display: table-cell;
 	vertical-align: middle;
-	min-height: calc(100vh - ${(props) => props.theme.topBarSize}px);
+	min-height: calc(100vh - ${props => props.theme.topBarSize}px);
 	background-size: cover;
 	background-repeat: no-repeat;
 	top: 0;

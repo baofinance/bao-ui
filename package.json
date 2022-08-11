@@ -12,12 +12,9 @@
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@loadable/component": "^5.15.2",
     "@reach/portal": "^0.17.0",
     "@sushiswap/sushi-data": "^1.0.26",
-    "@types/jest": "^27.5.1",
-    "@types/node": "^17.0.35",
-    "@types/react": "^18.0.9",
-    "@types/react-vertical-timeline-component": "^3.3.1",
     "@visx/curve": "^2.1.0",
     "@visx/responsive": "^2.10.0",
     "@visx/scale": "^2.1.0",
@@ -57,7 +54,7 @@
     "react-feather": "^2.0.9",
     "react-popper": "^2.2.5",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "4.0.3",
     "react-spring": "^9.2.4",
     "react-tabs": "^5.1.0",
     "react-vertical-timeline-component": "3.5.2",
@@ -71,9 +68,9 @@
     "web3-utils": "^1.7.3"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "start": "react-scripts start",
+    "build": "react-scripts --max_old_space_size=4096 build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "yarn build && cp ./build/index.html ./build/200.html",
     "lint": "npx eslint .",
@@ -97,8 +94,12 @@
   "devDependencies": {
     "@types/bignumber.js": "^5.0.0",
     "@types/d3-array": "^3.0.1",
+    "@types/jest": "^27.5.1",
     "@types/lodash": "^4.14.171",
+    "@types/node": "^17.0.35",
     "@types/react-dom": "^18.0.5",
+    "@types/react": "^18.0.9",
+    "@types/react-vertical-timeline-component": "^3.3.1",
     "@types/react-lottie": "^1.2.6",
     "@types/react-router-dom": "^5.1.5",
     "@types/styled-components": "^5.1.2",
@@ -110,12 +111,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.21.5",
     "prettier": "^2.2.1",
-    "prettier-eslint": "^15.0.0",
-    "react-app-rewired": "^2.2.1"
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "semi": false,
-    "singleQuote": true
+    "prettier-eslint": "^15.0.0"
   }
 }

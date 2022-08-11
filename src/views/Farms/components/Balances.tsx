@@ -2,12 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { getBaoSupply } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import { SpinnerLoader } from 'components/Loader'
-import {
-	StatWrapper,
-	UserStat,
-	UserStatsContainer,
-	UserStatsWrapper,
-} from 'components/Stats'
+import { StatWrapper, UserStat, UserStatsContainer, UserStatsWrapper } from 'components/Stats'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useAllEarnings from 'hooks/farms/useAllEarnings'
@@ -25,9 +20,7 @@ const PendingRewards: React.FC = () => {
 	const allEarnings = useAllEarnings()
 	let sumEarning = 0
 	for (const earning of allEarnings) {
-		sumEarning += new BigNumber(earning)
-			.div(new BigNumber(10).pow(18))
-			.toNumber()
+		sumEarning += new BigNumber(earning).div(new BigNumber(10).pow(18)).toNumber()
 	}
 
 	// Currently Unused
@@ -65,7 +58,7 @@ const PendingRewards: React.FC = () => {
 					setScale(1.25)
 					setTimeout(() => setScale(1), 600)
 				}}
-				separator=","
+				separator=','
 			/>
 		</span>
 	)
@@ -74,9 +67,7 @@ const PendingRewards: React.FC = () => {
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
 	const bao = useBao()
-	const baoBalance = useTokenBalance(
-		bao && bao.getContract('bao').options.address,
-	)
+	const baoBalance = useTokenBalance(bao && bao.getContract('bao').options.address)
 	const { account } = useWeb3React()
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const locks = useLockedEarnings()
@@ -92,9 +83,7 @@ const Balances: React.FC = () => {
 
 	useEffect(() => {
 		if (!bao) return
-		fetch(
-			'https://api.coingecko.com/api/v3/simple/price?ids=bao-finance&vs_currencies=usd',
-		).then(async (res) => {
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=bao-finance&vs_currencies=usd').then(async res => {
 			setBaoPrice(new BigNumber((await res.json())['bao-finance'].usd))
 		})
 	}, [bao, setBaoPrice])
@@ -107,25 +96,13 @@ const Balances: React.FC = () => {
 						<StatWrapper>
 							<UserStat>
 								<h1>BAO Balance</h1>
-								<p>
-									{account
-										? window.screen.width > 1200
-											? getDisplayBalance(baoBalance)
-											: truncateNumber(baoBalance)
-										: '-'}
-								</p>
+								<p>{account ? (window.screen.width > 1200 ? getDisplayBalance(baoBalance) : truncateNumber(baoBalance)) : '-'}</p>
 							</UserStat>
 						</StatWrapper>
 						<StatWrapper>
 							<UserStat>
 								<h1>Locked BAO</h1>
-								<p>
-									{account
-										? window.screen.width > 1200
-											? getDisplayBalance(locks)
-											: truncateNumber(locks)
-										: '-'}
-								</p>
+								<p>{account ? (window.screen.width > 1200 ? getDisplayBalance(locks) : truncateNumber(locks)) : '-'}</p>
 							</UserStat>
 						</StatWrapper>
 						<StatWrapper>
@@ -151,11 +128,7 @@ const Balances: React.FC = () => {
 						<StatWrapper>
 							<UserStat>
 								<h1>BAO Price</h1>
-								{baoPrice ? (
-									`$${getDisplayBalance(baoPrice, 0)}`
-								) : (
-									<SpinnerLoader />
-								)}
+								{baoPrice ? `$${getDisplayBalance(baoPrice, 0)}` : <SpinnerLoader />}
 							</UserStat>
 						</StatWrapper>
 					</UserStatsWrapper>

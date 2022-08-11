@@ -1,12 +1,15 @@
 import { useWeb3React } from '@web3-react/core'
+import { SpinnerLoader } from 'components/Loader'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import { useMarkets } from 'hooks/markets/useMarkets'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Alert, Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { MarketList, OfflineMarketList } from './components/MarketList'
-import { Overview } from './components/Overview'
+
+const MarketList = React.lazy(() => import('./components/MarketList'))
+const OfflineMarketList = React.lazy(() => import('./components/OfflineMarketList'))
+const Overview = React.lazy(() => import('./components/Overview'))
 
 const Markets: React.FC = () => {
 	const markets = useMarkets()
@@ -14,11 +17,7 @@ const Markets: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader
-				icon=""
-				title="Markets"
-				subtitle="Mint synthethic assets with multiple types of collateral!"
-			/>
+			<PageHeader icon='' title='Markets' subtitle='Mint synthethic assets with multiple types of collateral!' />
 			<Container>
 				{account ? (
 					<>
@@ -47,11 +46,15 @@ const Markets: React.FC = () => {
 							</a>
 							.
 						</StyledAlert> */}
-						<Overview />
-						<MarketList markets={markets} />
+						<Suspense fallback={<SpinnerLoader />}>
+							<Overview />
+							<MarketList markets={markets} />
+						</Suspense>
 					</>
 				) : (
-					<OfflineMarketList markets={markets} />
+					<Suspense fallback={<SpinnerLoader />}>
+						<OfflineMarketList markets={markets} />
+					</Suspense>
 				)}
 			</Container>
 		</Page>
@@ -72,7 +75,7 @@ const StyledAlert = styled(Alert)`
 		font-weight: bold;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		font-size: 0.875rem;
 	}
 `

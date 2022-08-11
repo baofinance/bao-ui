@@ -3,26 +3,16 @@ import React, { useCallback, useEffect, useReducer } from 'react'
 import { PropsWithChildren } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import Context from './context'
-import reducer, {
-	addTransaction,
-	initialState,
-	receiveTxReceipt,
-	setTransactions,
-} from './reducer'
+import reducer, { addTransaction, initialState, receiveTxReceipt, setTransactions } from './reducer'
 import { Transaction, TransactionsMap } from './types'
 
 interface TransactionsProviderProps {
 	children: any
 }
 
-const TransactionsProvider: React.FC<
-	PropsWithChildren<TransactionsProviderProps>
-> = ({ children }) => {
+const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps>> = ({ children }) => {
 	const bao = useBao()
-	const [{ initialized, transactions }, dispatch] = useReducer(
-		reducer,
-		initialState,
-	)
+	const [{ initialized, transactions }, dispatch] = useReducer(reducer, initialState)
 
 	const handleAddTransaction = useCallback(
 		(tx: Transaction) => {

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Branding: React.FC = () => {
 	return (
-		<StyledLink target="_blank" href="https://bao.finance">
+		<StyledLink target='_blank' href='https://bao.finance'>
 			<StyledText>
 				<TitleText>
 					<span>by Bao.Finance</span>
@@ -16,12 +16,12 @@ const Branding: React.FC = () => {
 const TitleText = styled.div`
 	width: fit-content;
 	white-space: nowrap;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 	font-family: 'Kaushan Script', sans-serif;
 	font-size: 1.5rem;
 	letter-spacing: 0.03rem;
-	margin-left: ${(props) => props.theme.spacing[2]}px;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
+	margin-left: ${props => props.theme.spacing[2]}px;
+	font-weight: ${props => props.theme.fontWeight.medium};
 `
 
 const StyledLink = styled.a`
@@ -34,16 +34,16 @@ const StyledLink = styled.a`
 	text-decoration: none;
 
 	&:hover {
-		color: ${(props) => props.theme.color.text[300]};
+		color: ${props => props.theme.color.text[300]};
 	}
 `
 
 const StyledText = styled.span`
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 	font-family: 'Rubik', sans-serif;
 	font-size: 1.5rem;
 	letter-spacing: 0.03em;
-	margin-left: ${(props) => props.theme.spacing[2]}px;
+	margin-left: ${props => props.theme.spacing[2]}px;
 `
 
 export default Branding
