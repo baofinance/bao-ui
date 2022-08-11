@@ -171,7 +171,6 @@ export default {
     {
       mid: 5,
       symbol: 'bdSTBL',
-      archived: true,
       marketAddresses: {
         1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
       },
