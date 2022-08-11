@@ -92,7 +92,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 								<Col>
 									<ConnectorIconContainer>
 										<img
-											src={`${name}.png`}
+											src={require(`assets/img/wallets/${name}.png`).default}
 											style={{
 												height: '24px',
 												marginRight: '0.75rem',

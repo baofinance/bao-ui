@@ -72,7 +72,8 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 				<OfflineAccordionHeader>
 					<Row style={{ width: '100%' }}>
 						<Col>
-							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
+							<img src={require(`assets/img/tokens/${market.underlyingSymbol}.png`).default} alt={market.symbol} />
+							{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
 						</Col>
 						<Col>{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}</Col>
 					</Row>
@@ -89,7 +90,8 @@ const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketL
 				<OfflineAccordionHeader>
 					<Row style={{ width: '100%' }}>
 						<Col>
-							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
+							<img src={require(`assets/img/tokens/${market.underlyingSymbol}.png`).default} alt={market.symbol} />
+							{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
 						</Col>
 						<Col>{market.borrowApy.toFixed(2)}%</Col>
 						<Col>{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}</Col>
