@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
@@ -21,37 +20,36 @@ const Markets: React.FC = () => {
 				subtitle="Mint synthethic assets with multiple types of collateral!"
 			/>
 			<Container>
-				{account && (
-					<StyledAlert variant="danger">
-						<img src="/siren.gif" style={{ width: '2rem' }} /> <br />
-						Bao Markets is currently in a soft launch. Collateral Factors for
-						synths are set low intentionally, and they will be adjusted as the
-						protocol sees usage over the coming weeks. Please be prudent,{' '}
-						<a href="https://docs.bao.finance">
-							<FontAwesomeIcon icon="file-alt" /> read the docs
-						</a>
-						, and{' '}
-						<a href="https://discord.gg/WPjtXXWnnU">
-							<FontAwesomeIcon icon={['fab', 'discord']} /> ask questions
-						</a>{' '}
-						before interacting with the protocol at this time.
-						<br />
-						<br />
-						Please report any UI bugs on the{' '}
-						<a href="https://github.com/baofinance/bao-ui/issues">
-							<FontAwesomeIcon icon={['fab', 'github']} /> UI's Github
-							Repository
-						</a>{' '}
-						(preferred) or on our{' '}
-						<a href="https://discord.gg/WPjtXXWnnU">
-							<FontAwesomeIcon icon={['fab', 'discord']} /> Discord
-						</a>
-						.
-					</StyledAlert>
-				)}
-				{account && <Overview />}
 				{account ? (
-					<MarketList markets={markets} />
+					<>
+						{/* <StyledAlert variant="danger">
+							Bao Markets is currently in a soft launch. Collateral Factors for
+							synths are set low intentionally, and they will be adjusted as the
+							protocol sees usage over the coming weeks. Please be prudent,{' '}
+							<a href="https://docs.bao.finance">
+								<FontAwesomeIcon icon="file-alt" /> read the docs
+							</a>
+							, and{' '}
+							<a href="https://discord.gg/WPjtXXWnnU">
+								<FontAwesomeIcon icon={['fab', 'discord']} /> ask questions
+							</a>{' '}
+							before interacting with the protocol at this time.
+							<br />
+							<br />
+							Please report any UI bugs on the{' '}
+							<a href="https://github.com/baofinance/bao-ui/issues">
+								<FontAwesomeIcon icon={['fab', 'github']} /> UI's Github
+								Repository
+							</a>{' '}
+							(preferred) or on our{' '}
+							<a href="https://discord.gg/WPjtXXWnnU">
+								<FontAwesomeIcon icon={['fab', 'discord']} /> Discord
+							</a>
+							.
+						</StyledAlert> */}
+						<Overview />
+						<MarketList markets={markets} />
+					</>
 				) : (
 					<OfflineMarketList markets={markets} />
 				)}
