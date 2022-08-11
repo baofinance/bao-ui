@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import CountUp from 'react-countup'
 import styled from 'styled-components'
 
 interface ValueProps {
@@ -7,30 +6,11 @@ interface ValueProps {
 	decimals?: number
 }
 
-const Value: React.FC<ValueProps> = ({ value, decimals }) => {
-	const [start, updateStart] = useState(0)
-	const [end, updateEnd] = useState(0)
-
-	useEffect(() => {
-		if (typeof value === 'number') {
-			updateStart(end)
-			updateEnd(value)
-		}
-	}, [value])
+const Value: React.FC<ValueProps> = ({ value }) => {
 
 	return (
 		<StyledValue>
-			{typeof value == 'string' ? (
-				value
-			) : (
-				<CountUp
-					start={start}
-					end={end}
-					decimals={decimals !== undefined ? decimals : end < 0 ? 4 : end > 1e5 ? 0 : 3}
-					duration={1}
-					separator=','
-				/>
-			)}
+			{value}
 		</StyledValue>
 	)
 }
