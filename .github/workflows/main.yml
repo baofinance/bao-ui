@@ -2,10 +2,10 @@ name: Lint Code Base
 on: 
   push:
     branches: 
-      - main
+      - master
   pull_request:
     branches: 
-      - main
+      - master
 jobs:
   linting:
     name: Lint
