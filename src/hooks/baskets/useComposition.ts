@@ -153,7 +153,8 @@ const useComposition = (
 
       _comp.push({
         ..._c,
-        image: require(`assets/img/assets/${_getImageURL(_c.symbol)}.png`),
+        image: require(`assets/img/assets/${_getImageURL(_c.symbol)}.png`)
+          .default,
         color: basket.pieColors[_c.symbol],
       })
     }
