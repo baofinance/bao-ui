@@ -138,6 +138,8 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		[accountMarkets],
 	)
 
+	const [isChecked, setIsChecked] = useState(!!isInMarket)
+
 	return (
 		<>
 			<Accordion>
@@ -190,7 +192,10 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 											<FormCheck
 												type='switch'
 												id='custom-switch'
-												checked={!!isInMarket}
+												checked={isChecked}
+												onChange={e => {
+													e.target.value
+												}}
 												disabled={
 													(isInMarket && borrowed > 0) ||
 													supplyBalances.find(balance => balance.address === market.marketAddress).balance === 0
@@ -229,7 +234,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 								<SubmitButton onClick={() => setShowSupplyModal(true)}>Supply / Withdraw</SubmitButton>
 							</Col>
 							<Col>
-								<Button to={`/markets/${market.mid}`} text='Details' />
+								<Button to={`/markets/${market.underlyingSymbol}`} text='Details' />
 							</Col>
 						</Row>
 						<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
@@ -299,7 +304,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								<SubmitButton onClick={() => setShowBorrowModal(true)}>Mint / Repay</SubmitButton>
 							</Col>
 							<Col>
-								<Button to={`/markets/${market.mid}`} text='Details' />
+								<Button to={`/markets/${market.underlyingSymbol}`} text='Details' />
 							</Col>
 						</Row>
 						<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => setShowBorrowModal(false)} />

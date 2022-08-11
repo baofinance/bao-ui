@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   body {
-    background: ${(props: any) => props.theme.backgroundGradient.default};
+    background: ${props => props.theme.backgroundOverlay.default}, ${props => props.theme.backgroundGradient.default};
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
@@ -10,6 +10,13 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     color: ${(props: any) => props.theme.color.text[100]};
     transition: 200ms;
+  }
+
+  .backgroundWrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: block;
   }
 
   html {
@@ -85,19 +92,19 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .buttonActive {
-    color: ${(props: any) => props.theme.color.text[100]};
-    background-color: ${(props: any) => props.theme.color.primary[200]};
+    color: ${props => props.theme.color.text[100]};
+    background-color: ${props => props.theme.color.primary[200]};
     border: ${props => props.theme.border.default};
   }
 
   .buttonActive:hover {
-    color: ${(props: any) => props.theme.color.text[100]};
-    background-color: ${(props: any) => props.theme.color.primary[200]};
+    color: ${props => props.theme.color.text[100]};
+    background-color: ${props => props.theme.color.primary[200]};
   }
 
   .buttonInactive {
-    color: ${(props: any) => props.theme.color.text[100]};
-    background-color: ${(props: any) => props.theme.color.primary[300]};
+    color: ${props => props.theme.color.text[100]};
+    background-color: ${props => props.theme.color.primary[300]};
     border: ${props => props.theme.border.default};
   }
 
@@ -106,7 +113,7 @@ const GlobalStyle = createGlobalStyle`
   }
   
   .modal-content {
-    background-color: ${(props: any) => props.theme.color.primary[100]} !important;
+    background-color: ${props => props.theme.color.primary[100]} !important;
     border-radius: 8px;
     border: ${props => props.theme.border.default};
     box-shadow: ${props => props.theme.boxShadow.default};
@@ -224,14 +231,14 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .form-check-input:checked {
-    background-color: ${(props: any) => props.theme.color.text[400]};
-    border-color: ${(props: any) => props.theme.color.text[400]};
+    background-color: ${props => props.theme.color.text[400]};
+    border-color: ${props => props.theme.color.text[400]};
     cursor: pointer;
   }
 
   .form-check-input {
-    background-color: ${(props: any) => props.theme.color.text[200]};
-    border: 1px solid ${(props: any) => props.theme.color.text[200]};
+    background-color: ${props => props.theme.color.text[200]};
+    border: 1px solid ${props => props.theme.color.text[200]};
     cursor: pointer;
   }
 

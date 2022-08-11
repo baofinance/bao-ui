@@ -17,7 +17,6 @@ const Page: React.FC<PropsWithChildren<PageProps>> = ({ children }) => (
 )
 
 const StyledPageContainer = styled.div`
-	background-image: ${props => props.theme.backgroundOverlay.default};
 	display: table;
 	position: absolute;
 	top: ${props => props.theme.topBarSize}px;

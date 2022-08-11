@@ -4,7 +4,7 @@ import { CornerButton, CornerButtons } from 'components/Button/Button'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import Tooltipped from 'components/Tooltipped'
-import React, { useMemo } from 'react'
+import React, { Suspense, useMemo } from 'react'
 import { Container } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -24,7 +24,7 @@ const Basket: React.FC = () => {
 	const { basketId } = useParams()
 	const baskets = useBaskets()
 
-	const basket = useMemo(() => baskets && baskets.find(basket => basket.nid.toString() === basketId), [baskets])
+	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [baskets])
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 	const info = useBasketInfo(basket)
@@ -35,7 +35,7 @@ const Basket: React.FC = () => {
 			<Container>
 				<CornerButtons>
 					<Tooltipped content='View Contract on Etherscan'>
-						<CornerButton href={`https://etherscan.io/address/${basket && basket.basketAddresses[1]}`} target='_blank'>
+						<CornerButton href={`https://etherscan.io/address/${basket.basketAddresses[1]}`} target='_blank'>
 							<FontAwesomeIcon icon='file-contract' />
 						</CornerButton>
 					</Tooltipped>
@@ -48,7 +48,7 @@ const Basket: React.FC = () => {
 					/>
 					<br />
 					<StyledBadge>
-						1 {basket && basket.symbol} ={' '}
+						1 {basket.symbol} ={' '}
 						{rates ? (
 							<>
 								<FontAwesomeIcon icon={['fab', 'ethereum']} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon='angle-double-right' />{' '}
@@ -64,9 +64,9 @@ const Basket: React.FC = () => {
 			</Container>
 			<Container>
 				<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
-				<BasketButtons basket={basket} swapLink={basket && basket.swap} />
+				<BasketButtons basket={basket} swapLink={basket.swap} />
 				<Composition composition={composition} />
-				<Description basketAddress={basket && basket.basketAddresses[1]} />
+				<Description basketAddress={basket.basketAddresses[1]} />
 			</Container>
 		</Page>
 	) : (

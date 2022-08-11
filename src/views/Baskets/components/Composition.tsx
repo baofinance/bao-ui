@@ -3,6 +3,7 @@ import { ParentSize } from '@visx/responsive'
 import { BigNumber } from 'bignumber.js'
 import { AssetBadge, CompositionBadge } from 'components/Badge/Badge'
 import { PrefButtons } from 'components/Button/Button'
+import Separator from 'components/Separator'
 import { TableContainer } from 'components/Table'
 import _ from 'lodash'
 import React, { useMemo, useState } from 'react'
@@ -67,20 +68,20 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 				</Col>
 			</Row>
 			{displayType === 'TABLE' ? (
-				<TableContainer>
-					<StyledTable bordered hover>
-						<thead>
-							<tr>
-								<th>Token</th>
-								<th>Allocation</th>
-								<th className='price'>Price</th>
-								<th className='apy'>APY</th>
-								<th className='strategy'>Strategy</th>
-							</tr>
-						</thead>
-						<tbody>
-							{(composition &&
-								composition
+				composition ? (
+					<TableContainer>
+						<StyledTable bordered hover>
+							<thead>
+								<tr>
+									<th>Token</th>
+									<th>Allocation</th>
+									<th className='price'>Price</th>
+									<th className='apy'>APY</th>
+									<th className='strategy'>Strategy</th>
+								</tr>
+							</thead>
+							<tbody>
+								{composition
 									.sort((a, b) => (a.percentage < b.percentage ? 1 : -1))
 									.map((component: any) => (
 										<tr key={component.symbol}>
@@ -108,34 +109,58 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 												<CompositionBadge>{component.strategy || 'None'}</CompositionBadge>
 											</td>
 										</tr>
-									))) || (
-								<tr>
-									{['name', 'perc', 'price', 'apy', 'strategy'].map(tdClass => (
-										<td key={Math.random()} className={tdClass}>
-											<SpinnerLoader />
-										</td>
-									))}
-								</tr>
-							)}
-						</tbody>
-					</StyledTable>
-				</TableContainer>
+									)) || (
+									<tr>
+										{['name', 'perc', 'price', 'apy', 'strategy'].map(tdClass => (
+											<td key={Math.random()} className={tdClass}>
+												<SpinnerLoader />
+											</td>
+										))}
+									</tr>
+								)}
+							</tbody>
+						</StyledTable>
+					</TableContainer>
+				) : (
+					<>
+						<TableContainer>
+							<StyledTable bordered hover>
+								<thead>
+									<tr>
+										<th>Token</th>
+										<th>Allocation</th>
+										<th className='price'>Price</th>
+										<th className='apy'>APY</th>
+										<th className='strategy'>Strategy</th>
+									</tr>
+								</thead>
+							</StyledTable>
+							<div
+								style={{
+									margin: 'auto',
+									textAlign: 'center',
+									verticalAlign: 'middle',
+									padding: '24px',
+								}}
+							>
+								<SpinnerLoader />
+							</div>
+						</TableContainer>
+					</>
+				)
 			) : (
 				<GraphContainer>
 					<Row style={{ height: '100%' }}>
 						<Col lg={8}>
-							{composition && (
-								<ParentSize>{parent => <DonutGraph width={parent.width} height={parent.height} composition={composition} />}</ParentSize>
-							)}
+							<ParentSize>{parent => <DonutGraph width={parent.width} height={parent.height} composition={composition} />}</ParentSize>
 						</Col>
 						<Col lg={4} style={{ margin: 'auto' }}>
 							<Row lg={2}>
-								{composition &&
-									composition.map(component => (
-										<Col key={component.symbol}>
-											<AssetBadge color={component.color}>{component.symbol}</AssetBadge>
-										</Col>
-									))}
+								{composition.map(component => (
+									<Col key={component.symbol}>
+										<AssetBadge color={component.color}>{component.symbol}</AssetBadge>
+									</Col>
+								))}
 							</Row>
 						</Col>
 					</Row>

@@ -1,12 +1,12 @@
 import { FeeBadge } from 'components/Badge'
 import { IconContainer, StyledIcon } from 'components/Icon'
+import { SpinnerLoader } from 'components/Loader'
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import { ListHeader, ListItem, ListItemHeader } from '../../../components/List'
-import { SpinnerLoader } from '../../../components/Loader'
 import Tooltipped from '../../../components/Tooltipped'
 import useComposition from '../../../hooks/baskets/useComposition'
 import useBasketRates from '../../../hooks/baskets/useNestRate'
@@ -26,7 +26,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const rates = useBasketRates(basket)
 
 	const navigate = useNavigate()
-	const handleClick = () => navigate(`/baskets/${basket.nid}`)
+	const handleClick = () => navigate(`/baskets/${basket.symbol}`)
 
 	return (
 		<ListItem onClick={handleClick}>
@@ -56,8 +56,14 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 					</Col>
 					<Col>
 						<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-							<p style={{ margin: '0', lineHeight: '1.2rem' }}>${rates ? getDisplayBalance(rates.usd) : <SpinnerLoader />}</p>
-							<FeeBadge>0% Fee</FeeBadge>
+							{rates ? (
+								<>
+									<p style={{ margin: '0', lineHeight: '1.2rem' }}>${getDisplayBalance(rates.usd)}</p>
+									<FeeBadge>0% Fee</FeeBadge>
+								</>
+							) : (
+								<SpinnerLoader />
+							)}
 						</span>
 					</Col>
 				</Row>

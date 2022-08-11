@@ -4,6 +4,7 @@ import { ActiveSupportedMarket } from 'bao/lib/types'
 import { SubmitButton } from 'components/Button/Button'
 import { SpinnerLoader } from 'components/Loader'
 import Page from 'components/Page'
+import PageHeader from 'components/PageHeader'
 import Spacer from 'components/Spacer'
 import Tooltipped from 'components/Tooltipped'
 import useBao from 'hooks/base/useBao'
@@ -34,7 +35,7 @@ const Market: React.FC = () => {
 
 	const activeMarket = useMemo(() => {
 		if (!markets) return undefined
-		return markets.find(market => market.mid === parseFloat(marketId))
+		return markets.find(market => market.underlyingSymbol === marketId)
 	}, [markets])
 
 	// TODO- Use subgraph info for other stats
@@ -79,20 +80,20 @@ const Market: React.FC = () => {
 				<Container>
 					<MarketHeader>
 						<p style={{ fontSize: '1.25rem' }}>
-							<StyledLink end to={{ pathname: '/' }}>
-								<FontAwesomeIcon icon='arrow-left' /> <BackButtonText>Back to Markets</BackButtonText>
-							</StyledLink>
 							<span style={{ float: 'right', fontSize: '1.25rem' }}>
-								<img
-									src={require(`assets/img/tokens/${activeMarket.underlyingSymbol}.png`).default}
-									alt={activeMarket.underlyingSymbol}
-									style={{ height: '1.75rem', verticalAlign: 'middle' }}
-								/>{' '}
-								<HorizontalSpacer />
 								<MarketTypeBadge isSynth={activeMarket.isSynth} />
 							</span>
 						</p>
 					</MarketHeader>
+					<PageHeader
+						icon={require(`assets/img/tokens/${activeMarket.underlyingSymbol}.png`).default}
+						title={`${activeMarket.underlyingSymbol} Market`}
+					/>
+					<p style={{ fontSize: '1.25rem' }}>
+						<StyledLink end to={{ pathname: '/' }}>
+							<FontAwesomeIcon icon='arrow-left' /> <BackButtonText>Back to Markets</BackButtonText>
+						</StyledLink>
+					</p>
 					<Row lg={3} md={6}>
 						<InfoCol
 							title={`Total ${activeMarket.underlyingSymbol} Supplied`}
@@ -204,8 +205,8 @@ const InfoCol = ({ title, content }: InfoColParams) => {
 	return (
 		<Col md={6} lg={3}>
 			<InfoContainer>
-				<span>{title}</span>
-				<p>{content}</p>
+				<p>{title}</p>
+				<span>{content}</span>
 			</InfoContainer>
 		</Col>
 	)
@@ -240,10 +241,14 @@ const InfoContainer = styled.div`
 	padding: 25px 50px;
 	margin-bottom: 1rem;
 
-	> p {
+	> span {
 		color: ${props => props.theme.color.text[100]};
 		display: block;
 		font-size: ${props => props.theme.fontSize.default};
+		margin-bottom: 0;
+	}
+
+	> p {
 		margin-bottom: 0;
 	}
 
@@ -292,7 +297,7 @@ export const MarketHeader = styled.div`
 
 const BackButtonText = styled.span`
 	@media (max-width: ${props => props.theme.breakpoints.md}px) {
-		display: none;
+		font-size: 1rem;
 	}
 `
 

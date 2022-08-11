@@ -38,8 +38,8 @@ export const StatBlock = ({ label, stats }: StatBlockProps) => (
 		<StatWrapper>
 			{stats.map(({ label, value }) => (
 				<StatText key={label}>
-					<p>{label}</p>
-					<p style={{ textAlign: 'end' }}>{value}</p>
+					<span>{label}</span>
+					<span style={{ textAlign: 'end' }}>{value}</span>
 				</StatText>
 			))}
 		</StatWrapper>
@@ -311,7 +311,7 @@ const StatText = styled.div`
 	padding-right: ${props => props.theme.spacing[2]}px;
 	border-radius: 8px;
 
-	p {
+	span {
 		color: ${props => props.theme.color.text[100]};
 		font-size: ${props => props.theme.fontSize.default};
 		font-weight: ${props => props.theme.fontWeight.medium};
