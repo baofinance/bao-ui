@@ -1,23 +1,16 @@
-import {
-	faAngleDoubleDown,
-	faAngleDoubleUp,
-	faCoins,
-	faHandHoldingUsd,
-	faMoneyBill1Wave,
-	faMoneyBillWave,
-} from '@fortawesome/free-solid-svg-icons'
+import { StatBadge } from '@/components/Badge/Badge'
+import { SpinnerLoader } from '@/components/Loader'
+import Spacer from '@/components/Spacer'
+import { StatCard, StatsRow } from '@/components/Stats'
+import Tooltipped from '@/components/Tooltipped'
+import useNav from '@/hooks/baskets/useNav'
+import { getDisplayBalance } from '@/utils/numberFormat'
+import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'bignumber.js'
-import { StatBadge } from 'components/Badge/Badge'
 import React from 'react'
 import { Col } from 'react-bootstrap'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
-import { SpinnerLoader } from '../../../components/Loader'
-import Spacer from '../../../components/Spacer'
-import { StatCard, StatsRow } from '../../../components/Stats'
-import Tooltipped from '../../../components/Tooltipped'
-import useNav from '../../../hooks/baskets/useNav'
-import { getDisplayBalance } from '../../../utils/numberFormat'
 
 type BasketStatsProps = {
 	basket: ActiveSupportedBasket

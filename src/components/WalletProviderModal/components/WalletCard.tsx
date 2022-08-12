@@ -1,7 +1,7 @@
 import { faWifi } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import Config from 'bao/lib/config'
+import Config from '@/bao/lib/config'
 import React, { useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 import styled from 'styled-components'

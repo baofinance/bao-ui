@@ -1,13 +1,14 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useWeb3React } from '@web3-react/core'
-import Config from 'bao/lib/config'
-import { coinbaseWallet, injected, walletConnect } from 'bao/lib/connectors'
-import { useEagerConnect, useInactiveListener } from 'bao/lib/hooks'
-import { Button, CloseButton } from 'components/Button'
-import { WalletButton } from 'components/Button/Button'
+import Config from '@/bao/lib/config'
+import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
+import { Button, CloseButton } from '@/components/Button'
+import { WalletButton } from '@/components/Button/Button'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import Image from 'next/image'
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
@@ -91,10 +92,12 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 							<Row>
 								<Col>
 									<ConnectorIconContainer>
-										<img
-											src={require(`assets/img/wallets/${name}.png`).default}
+										<Image
+											src={`/images/wallets/${name}.png`}
+											alt={name}
+											height={24}
+											width={24}
 											style={{
-												height: '24px',
 												marginRight: '0.75rem',
 												verticalAlign: 'middle',
 											}}

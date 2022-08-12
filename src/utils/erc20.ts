@@ -1,7 +1,7 @@
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
-import CreamABI from 'bao/lib/abi/creamLending.json'
-import ERC20ABI from 'bao/lib/abi/erc20.json'
+import CreamABI from '@/bao/lib/abi/creamLending.json'
+import ERC20ABI from '@/bao/lib/abi/erc20.json'
 import { Bao } from 'bao'
 
 export const getContract = (bao: Bao, address: string) => {

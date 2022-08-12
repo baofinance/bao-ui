@@ -2,21 +2,22 @@ import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ParentSize } from '@visx/responsive'
 import { BigNumber } from 'bignumber.js'
-import { AssetBadge, CompositionBadge } from 'components/Badge/Badge'
-import { PrefButtons } from 'components/Button/Button'
-import Separator from 'components/Separator'
-import { TableContainer } from 'components/Table'
+import { AssetBadge, CompositionBadge } from '@/components/Badge/Badge'
+import { PrefButtons } from '@/components/Button/Button'
+import Separator from '@/components/Separator'
+import { TableContainer } from '@/components/Table'
 import _ from 'lodash'
 import React, { useMemo, useState } from 'react'
 import { Button as BootButton, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import DonutGraph from '../../../components/Graphs/PieGraph'
-import { SpinnerLoader } from '../../../components/Loader'
-import { Progress } from '../../../components/ProgressBar'
-import { StyledTable } from '../../../components/Table'
-import Tooltipped from '../../../components/Tooltipped'
-import { BasketComponent } from '../../../hooks/baskets/useComposition'
-import { getDisplayBalance } from '../../../utils/numberFormat'
+import DonutGraph from '@/components/Graphs/PieGraph'
+import { SpinnerLoader } from '@/components/Loader'
+import { Progress } from '@/components/ProgressBar'
+import { StyledTable } from '@/components/Table'
+import Tooltipped from '@/components/Tooltipped'
+import { BasketComponent } from '@/hooks/baskets/useComposition'
+import { getDisplayBalance } from '@/utils/numberFormat'
+import Image from 'next/image'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -88,7 +89,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 										<tr key={component.symbol}>
 											<td width='15%'>
 												<Tooltipped content={component.symbol}>
-													<img src={component.image} style={{ height: '32px' }} alt='component' />
+												<Image src={component.image} width={32} height={32} alt={component.symbol} />
 												</Tooltipped>
 											</td>
 											<td width='40%'>

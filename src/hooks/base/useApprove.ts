@@ -1,4 +1,4 @@
-import { approve, getMasterChefContract } from 'bao/utils'
+import { approve, getMasterChefContract } from '@/bao/utils'
 import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { provider } from 'web3-core'

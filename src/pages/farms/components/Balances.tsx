@@ -1,15 +1,15 @@
 import { useWeb3React } from '@web3-react/core'
-import { getBaoSupply } from 'bao/utils'
+import { getBaoSupply } from '@/bao/utils'
 import BigNumber from 'bignumber.js'
-import { SpinnerLoader } from 'components/Loader'
-import { StatWrapper, UserStat, UserStatsContainer, UserStatsWrapper } from 'components/Stats'
-import useBao from 'hooks/base/useBao'
-import useTokenBalance from 'hooks/base/useTokenBalance'
-import useAllEarnings from 'hooks/farms/useAllEarnings'
-import useLockedEarnings from 'hooks/farms/useLockedEarnings'
+import { SpinnerLoader } from '@/components/Loader'
+import { StatWrapper, UserStat, UserStatsContainer, UserStatsWrapper } from '@/components/Stats'
+import useBao from '@/hooks/base/useBao'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useAllEarnings from '@/hooks/farms/useAllEarnings'
+import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Row } from 'react-bootstrap'
-import { getDisplayBalance, truncateNumber } from 'utils/numberFormat'
+import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 
 const PendingRewards: React.FC = () => {
 	const allEarnings = useAllEarnings()

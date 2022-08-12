@@ -1,4 +1,4 @@
-import { getEarned, getMasterChefContract } from 'bao/utils'
+import { getEarned, getMasterChefContract } from '@/bao/utils'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'

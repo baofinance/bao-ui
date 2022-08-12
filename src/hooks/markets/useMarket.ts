@@ -1,5 +1,5 @@
-import { SupportedMarket } from 'bao/lib/types'
-import { Context as MarketsContext } from 'contexts/Markets'
+import { SupportedMarket } from '@/bao/lib/types'
+import { Context as MarketsContext } from '@/contexts/Markets'
 import { useContext } from 'react'
 
 const useMarket = (id: string): SupportedMarket => {

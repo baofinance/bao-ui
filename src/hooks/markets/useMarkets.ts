@@ -1,5 +1,5 @@
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import { Context, MarketsContext } from 'contexts/Markets'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { Context, MarketsContext } from '@/contexts/Markets'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'

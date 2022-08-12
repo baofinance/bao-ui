@@ -1,23 +1,24 @@
+import Config from '@/bao/lib/config'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { getComptrollerContract } from '@/bao/utils'
+import { Button } from '@/components/Button'
+import { SubmitButton } from '@/components/Button/Button'
+import HrText from '@/components/HrText'
+import { SpinnerLoader } from '@/components/Loader'
+import Tooltipped from '@/components/Tooltipped'
+import useBao from '@/hooks/base/useBao'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import { AccountLiquidity, useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
+import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
+import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
+import { useAccountMarkets } from '@/hooks/markets/useMarkets'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
-import Config from 'bao/lib/config'
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import { getComptrollerContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { Button } from 'components/Button'
-import { SubmitButton } from 'components/Button/Button'
-import HrText from 'components/HrText'
-import { SpinnerLoader } from 'components/Loader'
-import Tooltipped from 'components/Tooltipped'
-import useBao from 'hooks/base/useBao'
-import useTransactionHandler from 'hooks/base/useTransactionHandler'
-import { AccountLiquidity, useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
-import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
-import { useExchangeRates } from 'hooks/markets/useExchangeRates'
-import { useAccountMarkets } from 'hooks/markets/useMarkets'
+import Image from 'next/image'
 import React, { useMemo, useState } from 'react'
 import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import { MarketDetails, StatBlock } from './Stats'
 
 const MarketSupplyModal = React.lazy(() => import('./Modals/SupplyModal'))
@@ -147,7 +148,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 					<StyledAccordionHeader>
 						<Row style={{ width: '100%' }}>
 							<Col>
-								<img src={require(`assets/img/tokens/${market.underlyingSymbol}.png`).default} alt={market.symbol} />
+								<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
 								{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
 							</Col>
 							<Col>{account ? accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4) : '-'}</Col>
@@ -266,7 +267,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					<StyledAccordionHeader>
 						<Row style={{ width: '100%' }}>
 							<Col>
-								<img src={require(`assets/img/tokens/${market.underlyingSymbol}.png`).default} alt={market.symbol} />
+								<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
 								{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
 							</Col>
 							<Col>{market.borrowApy.toFixed(2)}%</Col>

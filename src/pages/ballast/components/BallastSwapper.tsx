@@ -1,23 +1,24 @@
+import Config from '@/bao/lib/config'
+import { IconFlex } from '@/components/Icon'
+import { BalanceInput } from '@/components/Input'
+import { SpinnerLoader } from '@/components/Loader'
+import Tooltipped from '@/components/Tooltipped'
+import useBao from '@/hooks/base/useBao'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import { AssetStack } from '@/pages/markets/components/styles'
+import Multicall from '@/utils/multicall'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faLongArrowAltRight, faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import baoUSDIcon from 'assets/img/tokens/bUSD.png'
-import daiIcon from 'assets/img/tokens/DAI.png'
-import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
-import { IconFlex } from 'components/Icon'
-import { BalanceInput } from 'components/Input'
-import { SpinnerLoader } from 'components/Loader'
-import Tooltipped from 'components/Tooltipped'
-import useBao from 'hooks/base/useBao'
-import useTokenBalance from 'hooks/base/useTokenBalance'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Badge, Card } from 'react-bootstrap'
 import styled from 'styled-components'
-import Multicall from 'utils/multicall'
-import { decimate, getDisplayBalance } from 'utils/numberFormat'
-import { AssetStack } from 'pages/Markets/components/styles'
 import BallastButton from './BallastButton'
+import baoUSDIcon from '/images/tokens/bUSD.png'
+import daiIcon from '/images/tokens/DAI.png'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
@@ -82,7 +83,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<AssetStack>
 						<IconFlex>
-							<img src={daiIcon} />
+							<Image src={daiIcon} alt='DAI' />
 						</IconFlex>
 					</AssetStack>
 				}
@@ -108,7 +109,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<AssetStack>
 						<IconFlex>
-							<img src={baoUSDIcon} />
+							<Image src={baoUSDIcon} alt='baoUSD' />
 						</IconFlex>
 					</AssetStack>
 				}

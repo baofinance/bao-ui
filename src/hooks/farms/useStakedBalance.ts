@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
-import { getMasterChefContract, getStaked } from 'bao/utils'
+import { getMasterChefContract, getStaked } from '@/bao/utils'
 import { BigNumber } from 'bignumber.js'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 

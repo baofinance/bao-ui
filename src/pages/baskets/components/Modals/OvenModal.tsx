@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import useBao from '../../../../hooks/base/useBao'
-import { Col, Modal, Row } from 'react-bootstrap'
+import { ActiveSupportedBasket } from '@/bao/lib/types'
+import { BalanceWrapper } from '@/components/Balance'
+import { Button } from '@/components/Button'
+import { BalanceInput } from '@/components/Input'
+import { LabelEnd, LabelStart } from '@/components/Label'
+import { StatBlock } from '@/components/Stats'
+import useBao from '@/hooks/base/useBao'
+import useOvenInfo from '@/hooks/baskets/useOvenInfo'
 import {
 	AssetLabel,
 	AssetStack,
@@ -10,20 +15,16 @@ import {
 	LabelStack,
 	MaxLabel,
 	ModalStack,
-} from '../../../markets/components/styles'
+} from '@/pages/markets/components/styles'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button } from '../../../../components/Button'
-import { BalanceWrapper } from '../../../../components/Balance'
-import { LabelEnd, LabelStart } from '../../../../components/Label'
-import { BalanceInput } from '../../../../components/Input'
-import { ActiveSupportedBasket } from '../../../../bao/lib/types'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
-import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
-import useOvenInfo from '../../../../hooks/baskets/useOvenInfo'
-import { StatBlock } from '../../../../components/Stats'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import { Col, Modal, Row } from 'react-bootstrap'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -42,7 +43,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	useEffect(() => {
 		if (!(bao && account)) return
 
-		bao.web3.eth.getBalance(account).then(balance => setEthBalance(decimate(balance)))
+		bao.web3.eth.getBalance(account).then((balance: any) => setEthBalance(decimate(balance)))
 	}, [bao, account])
 
 	return basket ? (
@@ -55,7 +56,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 					<Modal.Title id='contained-modal-title-vcenter'>
 						<HeaderWrapper>
 							<p>{basket.symbol} Oven</p>
-							<img src={basket.icon} />
+							<Image src={basket.icon} />
 						</HeaderWrapper>
 					</Modal.Title>
 				</Modal.Header>

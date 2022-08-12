@@ -1,18 +1,19 @@
+import Config from '@/bao/lib/config'
+import { getBaoSwapContract, getElderContract, mintBaoSwap, mintElder } from '@/bao/utils'
+import { Button, SubmitButton } from '@/components/Button/Button'
+import Label from '@/components/Label'
+import Page from '@/components/Page'
+import PageHeader from '@/components/PageHeader'
+import Spacer from '@/components/Spacer'
+import useBao from '@/hooks/base/useBao'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import { useBaoSwapClaimedCheck, useElderClaimedCheck } from '@/hooks/nft/useMint'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import baoElder from 'assets/img/nft/baoelder.png'
 import baoSwap from 'assets/img/nft/baoswap.png'
-import Config from 'bao/lib/config'
-import { getBaoSwapContract, getElderContract, mintBaoSwap, mintElder } from 'bao/utils'
-import { Button, SubmitButton } from 'components/Button/Button'
-import Label from 'components/Label'
-import Page from 'components/Page'
-import PageHeader from 'components/PageHeader'
-import Spacer from 'components/Spacer'
-import useBao from 'hooks/base/useBao'
-import useTransactionHandler from 'hooks/base/useTransactionHandler'
-import { useBaoSwapClaimedCheck, useElderClaimedCheck } from 'hooks/nft/useMint'
+import Image from 'next/image'
 import React from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { Helmet } from 'react-helmet'
@@ -57,7 +58,7 @@ const NFT: React.FC = () => {
 								<Label text='BaoElder NFT' />
 							</Card.Header>
 							<Card.Body>
-								<img src={baoElder} width={320} height={300} alt='' style={{ borderRadius: '8px' }} />
+								<Image src={baoElder} width={320} height={300} alt='' style={{ borderRadius: '8px' }} />
 							</Card.Body>
 							<Card.Footer>
 								<>
@@ -111,7 +112,7 @@ const NFT: React.FC = () => {
 								<Label text='BaoSwap NFT' />
 							</Card.Header>
 							<Card.Body>
-								<img src={baoSwap} width={320} height={300} alt='' style={{ borderRadius: '8px' }} />
+								<Image src={baoSwap} width={320} height={300} alt='' style={{ borderRadius: '8px' }} />
 							</Card.Body>
 							<Card.Footer>
 								<>

@@ -1,85 +1,54 @@
+import NavLink from '@/components/NavLink'
+import Link from 'next/link'
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import styled from 'styled-components'
 
 const Nav: React.FC = () => {
+	const navigation = [
+		{ name: 'Markets', href: '/markets' },
+		{ name: 'Ballast', href: '/ballast' },
+		{ name: 'Baskets', href: '/baskets' },
+		{ name: 'Farms', href: '/farms' },
+		{ name: 'NFT', href: '/nft' },
+	]
+
+	const externalLinks = [
+		{ name: 'Vote', href: 'https://snapshot.page/#/baovotes.eth' },
+		{ name: 'Forum', href: 'https://gov.bao.finance' },
+		{ name: 'Docs', href: 'https://docs.bao.finance' },
+	]
+
 	return (
-		<StyledNav>
-			<StyledLink end to={{ pathname: '/' }}>
-				Markets
-			</StyledLink>
-			<StyledLink end to={{ pathname: '/ballast' }}>
-				Ballast
-			</StyledLink>
-			<StyledLink end to={{ pathname: '/baskets' }}>
-				Baskets
-			</StyledLink>
-			<StyledLink end to={{ pathname: '/farms' }}>
-				Farms
-			</StyledLink>
-			<StyledLink end to={{ pathname: '/NFT' }}>
-				NFT
-			</StyledLink>
-			<StyledAbsoluteLink href='https://snapshot.page/#/baovotes.eth' target='_blank'>
-				Vote
-			</StyledAbsoluteLink>
-			<StyledAbsoluteLink href='https://gov.bao.finance' target='_blank'>
-				Forum
-			</StyledAbsoluteLink>
-			<StyledAbsoluteLink href='https://docs.bao.finance' target='_blank'>
-				Docs
-			</StyledAbsoluteLink>
-		</StyledNav>
+		<nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' aria-label='Top'>
+			<div className='w-full py-6 flex items-center justify-between border-b border-indigo-500 lg:border-none'>
+				<div className='flex items-center'>
+					<div className='hidden ml-10 space-x-8 lg:block'>
+						{navigation.map(link => (
+							<NavLink href={link.href} key={link.name}>
+								{link.name}
+							</NavLink>
+						))}
+						{externalLinks.map(link => (
+							<Link href={link.href} key={link.name} target='_blank' rel='noreferrer'>
+								<a className='text-rubik font-medium text-text-100 hover:text-text-400 antialiased'>{link.name}</a>
+							</Link>
+						))}
+					</div>
+				</div>
+			</div>
+			<div className='py-4 flex flex-wrap justify-center space-x-6 lg:hidden'>
+				{navigation.map(link => (
+					<NavLink href={link.href} key={link.name}>
+						{link.name}
+					</NavLink>
+				))}
+				{externalLinks.map(link => (
+					<Link href={link.href} key={link.name} target='_blank' rel='noreferrer'>
+						<a className='text-rubik font-medium text-text-100 hover:text-text-300 antialiased'>{link.name}</a>
+					</Link>
+				))}
+			</div>
+		</nav>
 	)
 }
-
-const StyledNav = styled.nav`
-	align-items: center;
-	display: flex;
-`
-
-const StyledLink = styled(NavLink)`
-	transition-property: all;
-	transition-duration: 200ms;
-	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-	font-family: 'Rubik', sans-serif;
-	color: ${props => props.theme.color.text[100]};
-	font-weight: ${props => props.theme.fontWeight.medium};
-	padding-left: ${props => props.theme.spacing[3]}px;
-	padding-right: ${props => props.theme.spacing[3]}px;
-	text-decoration: none;
-	&:hover {
-		color: ${props => props.theme.color.text[300]};
-	}
-	&.active {
-		color: ${props => props.theme.color.text[400]};
-	}
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		padding-left: ${props => props.theme.spacing[2]}px;
-		padding-right: ${props => props.theme.spacing[2]}px;
-	}
-`
-
-const StyledAbsoluteLink = styled.a`
-	transition-property: all;
-	transition-duration: 200ms;
-	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-	font-family: 'Rubik', sans-serif;
-	color: ${props => props.theme.color.text[100]};
-	font-weight: ${props => props.theme.fontWeight.medium};
-	padding-left: ${props => props.theme.spacing[3]}px;
-	padding-right: ${props => props.theme.spacing[3]}px;
-	text-decoration: none;
-	&:hover {
-		color: ${props => props.theme.color.text[300]};
-	}
-	&.active {
-		color: ${props => props.theme.color.text[400]};
-	}
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		padding-left: ${props => props.theme.spacing[2]}px;
-		padding-right: ${props => props.theme.spacing[2]}px;
-	}
-`
 
 export default Nav

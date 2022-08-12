@@ -1,5 +1,5 @@
-import { getFarms } from 'bao/utils'
-import useBao from 'hooks/base/useBao'
+import { getFarms } from '@/bao/utils'
+import useBao from '@/hooks/base/useBao'
 import React, { PropsWithChildren } from 'react'
 import Context from './context'
 

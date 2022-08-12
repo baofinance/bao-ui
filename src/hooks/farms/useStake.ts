@@ -1,4 +1,4 @@
-import { getMasterChefContract, getRefUrl, stake } from 'bao/utils'
+import { getMasterChefContract, getRefUrl, stake } from '@/bao/utils'
 import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import useBao from '../base/useBao'

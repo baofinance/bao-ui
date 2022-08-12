@@ -1,22 +1,19 @@
+import Page from '@/components/Page'
+import PageHeader from '@/components/PageHeader'
+import Spacer from '@/components/Spacer'
+import { NextSeo } from 'next-seo'
+import { StyledInfo } from '@/pages/nft/components/styles'
 import React from 'react'
-import useBaskets from '../../hooks/baskets/useBaskets'
-import Page from 'components/Page'
-import PageHeader from 'components/PageHeader'
-import BasketList from './components/BasketList'
 import { Container } from 'react-bootstrap'
-import { StyledInfo } from 'pages/NFT/components/styles'
-import Spacer from 'components/Spacer'
-import { Helmet } from 'react-helmet'
+import useBaskets from '@/hooks/baskets/useBaskets'
+import BasketList from './components/BasketList'
 
 const Baskets: React.FC = () => {
 	const baskets = useBaskets()
 
 	return (
 		<Page>
-			<Helmet>
-				<title>Bao | Baskets</title>
-				<meta name='description' content='Diversified exposure to crypto with automated yield strategies.' />
-			</Helmet>
+			<NextSeo title={`Baskets`} description={`Get diversified exposure to crypto assets with Bao Baskets!`} />
 			<PageHeader icon='' title='Bao Baskets' />
 			<Container>
 				<StyledInfo>

@@ -1,4 +1,4 @@
-import { approvev2 } from 'bao/utils'
+import { approvev2 } from '@/bao/utils'
 import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { provider } from 'web3-core'

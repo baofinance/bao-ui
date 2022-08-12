@@ -1,4 +1,4 @@
-import useBao from 'hooks/base/useBao'
+import useBao from '@/hooks/base/useBao'
 import React, { useCallback, useEffect, useReducer } from 'react'
 import { PropsWithChildren } from 'react'
 import { TransactionReceipt } from 'web3-core'

@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
-import { getBaoSwapContract, getElderContract, getNFTWhitelistClaimed } from 'bao/utils'
-import useBao from 'hooks/base/useBao'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import { getBaoSwapContract, getElderContract, getNFTWhitelistClaimed } from '@/bao/utils'
+import useBao from '@/hooks/base/useBao'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 
 export const useElderClaimedCheck = () => {

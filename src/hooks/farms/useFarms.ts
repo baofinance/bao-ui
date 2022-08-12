@@ -1,4 +1,4 @@
-import { Context as FarmsContext } from 'contexts/Farms'
+import { Context as FarmsContext } from '@/contexts/Farms'
 import { useContext } from 'react'
 
 const useFarms = () => {

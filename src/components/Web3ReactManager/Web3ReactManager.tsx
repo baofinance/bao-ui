@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { network } from 'bao/lib/connectors'
-import { useEagerConnect, useInactiveListener } from 'bao/lib/hooks'
+import { network } from '@/bao/lib/connectors'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 import React, { FC, PropsWithChildren, useEffect } from 'react'
 
 interface Web3ReactManagerProps {

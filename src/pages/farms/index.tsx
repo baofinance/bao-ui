@@ -1,5 +1,5 @@
-import Page from 'components/Page'
-import PageHeader from 'components/PageHeader'
+import Page from '@/components/Page'
+import PageHeader from '@/components/PageHeader'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import { Helmet } from 'react-helmet'

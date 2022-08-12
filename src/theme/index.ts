@@ -1,7 +1,5 @@
 import * as DarkColors from './darkColors'
 import * as LightColors from './lightColors'
-import lightOverlay from 'assets/img/background_overlay_light.png'
-import darkOverlay from 'assets/img/background_overlay_dark.png'
 
 const theme = (dark = false) => ({
 	borderRadius: 8,
@@ -69,10 +67,10 @@ const theme = (dark = false) => ({
 		  },
 	backgroundOverlay: dark
 		? {
-				default: `url(${darkOverlay})`,
+				default: 'url(/images/background_overlay_dark.png)',
 		  }
 		: {
-				default: `url(${lightOverlay})`,
+				default: 'url(/images/background_overlay_light.png)',
 		  },
 })
 

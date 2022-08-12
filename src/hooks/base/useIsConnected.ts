@@ -1,4 +1,4 @@
-import Config from 'bao/lib/config'
+import Config from '@/bao/lib/config'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from './useBao'
 

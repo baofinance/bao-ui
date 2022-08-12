@@ -93,7 +93,7 @@ function App({ Component, pageProps }: AppProps) {
 					content='Lend and borrow synthetics with Bao Markets and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
 				/>
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />{' '}
-			</Head>
+				</Head>
 			<Providers isDarkMode={isDarkMode}>
 				<TopBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
 				<DefaultSeo {...SEO} />

@@ -1,33 +1,34 @@
+import Config from '@/bao/lib/config'
+import { approvev2, getMasterChefContract } from '@/bao/utils'
+import { BalanceContent, BalanceImage, BalanceSpacer, BalanceText, BalanceValue, BalanceWrapper } from '@/components/Balance'
+import { ButtonStack, SubmitButton } from '@/components/Button'
+import { QuestionIcon } from '@/components/Icon'
+import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from '@/components/Label'
+import { SpinnerLoader } from '@/components/Loader'
+import TokenInput from '@/components/TokenInput'
+import { PoolType } from '@/contexts/Farms/types'
+import useAllowance from '@/hooks/base/useAllowance'
+import useBao from '@/hooks/base/useBao'
+import useBlockDiff from '@/hooks/base/useBlockDiff'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useEarnings from '@/hooks/farms/useEarnings'
+import useFees from '@/hooks/farms/useFees'
+import useStakedBalance from '@/hooks/farms/useStakedBalance'
+import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
+import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import baoIcon from 'assets/img/tokens/BAO.png'
-import Config from 'bao/lib/config'
-import { approvev2, getMasterChefContract, getRefUrl } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { BalanceContent, BalanceImage, BalanceSpacer, BalanceText, BalanceValue, BalanceWrapper } from 'components/Balance'
-import { ButtonStack, SubmitButton } from 'components/Button'
-import { QuestionIcon } from 'components/Icon'
-import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from 'components/Label'
-import { SpinnerLoader } from 'components/Loader'
-import TokenInput from 'components/TokenInput'
-import { PoolType } from 'contexts/Farms/types'
 import { ethers } from 'ethers'
-import useAllowance from 'hooks/base/useAllowance'
-import useBao from 'hooks/base/useBao'
-import useBlockDiff from 'hooks/base/useBlockDiff'
-import useTransactionHandler from 'hooks/base/useTransactionHandler'
-import useEarnings from 'hooks/farms/useEarnings'
-import useFees from 'hooks/farms/useFees'
-import useStakedBalance from 'hooks/farms/useStakedBalance'
-import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
+import Image from 'next/image'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { exponentiate, getDisplayBalance, getFullDisplayBalance } from 'utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 import { EarningsWrapper, FarmModalBody } from './styles'
+import baoIcon from '/images/tokens/BAO.png'
 
 interface StakeProps {
 	lpContract: Contract
@@ -153,7 +154,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 											disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 											onClick={async () => {
 												const stakeTx = masterChefContract.methods
-													.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), getRefUrl())
+													.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
 													.send({ from: account })
 
 												handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
@@ -168,7 +169,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 									disabled={true}
 									onClick={async () => {
 										const stakeTx = masterChefContract.methods
-											.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), getRefUrl())
+											.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
 											.send({ from: account })
 										handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 									}}
@@ -307,7 +308,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = nul
 									const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
 									const unstakeTx = masterChefContract.methods
-										.withdraw(pid, ethers.utils.parseUnits(val, 18), getRefUrl())
+										.withdraw(pid, ethers.utils.parseUnits(val, 18))
 										.send({ from: account })
 
 									handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
@@ -341,7 +342,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 				<EarningsWrapper>
 					<BalanceContent>
 						<BalanceImage>
-							<img src={baoIcon} />
+							<Image src={baoIcon} width={32} height={32} alt='BAO' />
 						</BalanceImage>
 						<BalanceSpacer />
 						<BalanceText>

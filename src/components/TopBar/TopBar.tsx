@@ -1,10 +1,10 @@
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { MenuIcon } from 'components/Icon'
-import Logo from 'components/Logo'
+import { MenuIcon } from '@/components/Icon'
+import Logo from '@/components/Logo'
 import React from 'react'
 import styled from 'styled-components'
-import { Button } from '../Button'
+import { Button } from '@/components/Button'
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
 

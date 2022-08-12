@@ -1,16 +1,16 @@
+import Config from '@/bao/lib/config'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { approvev2 } from '@/bao/utils'
+import { ButtonStack, SubmitButton } from '@/components/Button/Button'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import { useApprovals } from '@/hooks/markets/useApprovals'
+import { decimate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import Config from 'bao/lib/config'
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { ButtonStack, SubmitButton } from 'components/Button/Button'
-import { ExternalLink } from 'components/Link'
-import useTransactionHandler from 'hooks/base/useTransactionHandler'
-import { useApprovals } from 'hooks/markets/useApprovals'
+import Link from 'next/link'
 import React from 'react'
-import { decimate } from 'utils/numberFormat'
 import { MarketOperations } from './Modals/Modals'
 
 type MarketButtonProps = {
@@ -33,9 +33,11 @@ export const MarketButton = ({ operation, asset, val, isDisabled, onHide }: Mark
 			<ButtonStack>
 				<SubmitButton disabled={true}>
 					{typeof pendingTx === 'string' ? (
-						<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank'>
-							Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-						</ExternalLink>
+						<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank'>
+							<a>
+								Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+							</a>
+						</Link>
 					) : (
 						'Pending Transaction'
 					)}

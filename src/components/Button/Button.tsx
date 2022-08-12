@@ -1,7 +1,7 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 import React, { useContext, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 
 interface ButtonProps {
@@ -68,7 +68,7 @@ export const Button: React.FC<ButtonProps> = ({
 
 	const ButtonChild = useMemo(() => {
 		if (to != '' && to != null) {
-			return <StyledLink to={to}>{text}</StyledLink>
+			return <StyledLink href={to}>{text}</StyledLink>
 		} else if (href) {
 			return (
 				<ButtonLink href={href} target='__blank'>

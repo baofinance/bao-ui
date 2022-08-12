@@ -1,11 +1,11 @@
-import { ActiveSupportedMarket } from 'bao/lib/types'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
 import BigNumber from 'bignumber.js'
-import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
-import { useAccountBalances, useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
-import { useExchangeRates } from 'hooks/markets/useExchangeRates'
+import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
+import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
+import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { decimate, getDisplayBalance } from 'utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { MarketOperations } from './Modals/Modals'
 
 type Stat = {

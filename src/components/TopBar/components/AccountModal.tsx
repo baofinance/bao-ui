@@ -1,22 +1,20 @@
+import Config from '@/bao/lib/config'
+import { Button } from '@/components/Button'
+import { CloseButton } from '@/components/Button/Button'
+import { MaxLabel } from '@/components/Label'
+import { SpinnerLoader } from '@/components/Loader'
+import Spacer from '@/components/Spacer'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import wethIcon from 'assets/img/tokens/ETH.png'
-import baoIcon from 'assets/img/tokens/BAO.png'
-import Config from 'bao/lib/config'
-import { BigNumber } from 'bignumber.js'
-import { CloseButton } from 'components/Button/Button'
-import { MaxLabel } from 'components/Label'
-import { SpinnerLoader } from 'components/Loader'
-import useTokenBalance from 'hooks/base/useTokenBalance'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import _ from 'lodash'
+import Image from 'next/image'
 import React, { useCallback } from 'react'
 import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
-import { Button } from '../../Button'
-import Spacer from '../../Spacer'
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const AccountModal = ({ onHide, show }: ModalProps) => {
 	const { account, deactivate } = useWeb3React()
@@ -49,7 +47,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={wethIcon} alt='ETH' />
+										<Image src='/images/tokens/ETH.png' alt='ETH' />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
@@ -63,7 +61,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={baoIcon} alt='BAO' />
+										<Image src='/images/tokens/BAO.png' alt='BAO' />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>

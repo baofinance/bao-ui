@@ -1,12 +1,12 @@
-import Config from 'bao/lib/config'
+import Config from '@/bao/lib/config'
 import { useCallback, useEffect, useState } from 'react'
-import MultiCall from 'utils/multicall'
-import { decimate } from 'utils/numberFormat'
+import MultiCall from '@/utils/multicall'
+import { decimate } from '@/utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useWeb3React } from '@web3-react/core'
-import useBlock from 'hooks/base/useBlock'
+import useBlock from '@/hooks/base/useBlock'
 
 export type Balance = {
 	address: string

@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import useBao from '../base/useBao'

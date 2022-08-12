@@ -1,5 +1,5 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import Config from 'bao/lib/config'
+import Config from '@/bao/lib/config'
 import BigNumber from 'bignumber.js'
 
 // TODO- Move Apollo Clients to provider so that the chain can be switched

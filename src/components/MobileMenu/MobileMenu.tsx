@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
-import { CloseButtonLeft } from 'components/Button/Button'
+import { CloseButtonLeft } from '@/components/Button/Button'
 
 interface MobileMenuProps {
 	onDismiss: () => void

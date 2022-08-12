@@ -1,8 +1,8 @@
-import Config from 'bao/lib/config'
+import Config from '@/bao/lib/config'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import Spacer from '../../../components/Spacer'
+import Spacer from '@/components/Spacer'
 
 interface DescriptionProps {
 	basketAddress: string

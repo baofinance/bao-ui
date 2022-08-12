@@ -1,26 +1,16 @@
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
-import { faExternalLinkAlt, faSync, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
-import { ethers } from 'ethers'
-import React, { useMemo, useState } from 'react'
-import { Col, Modal, Row } from 'react-bootstrap'
-import Config from '../../../../bao/lib/config'
-import { ActiveSupportedBasket } from '../../../../bao/lib/types'
-import { StyledBadge } from '../../../../components/Badge'
-import { BalanceWrapper } from '../../../../components/Balance'
-import { Button, MaxButton } from '../../../../components/Button'
-import { BalanceInput } from '../../../../components/Input'
-import { LabelEnd, LabelStart } from '../../../../components/Label'
-import { ExternalLink } from '../../../../components/Link'
-import Tooltipped from '../../../../components/Tooltipped'
-import useAllowancev2 from '../../../../hooks/base/useAllowancev2'
-import useBao from '../../../../hooks/base/useBao'
-import useTokenBalance from '../../../../hooks/base/useTokenBalance'
-import useTransactionHandler from '../../../../hooks/base/useTransactionHandler'
-import useBasketRates from '../../../../hooks/baskets/useNestRate'
-import { decimate, exponentiate, getDisplayBalance } from '../../../../utils/numberFormat'
+import Config from '@/bao/lib/config'
+import { ActiveSupportedBasket } from '@/bao/lib/types'
+import { StyledBadge } from '@/components/Badge'
+import { BalanceWrapper } from '@/components/Balance'
+import { Button, MaxButton } from '@/components/Button'
+import { BalanceInput } from '@/components/Input'
+import { LabelEnd, LabelStart } from '@/components/Label'
+import Tooltipped from '@/components/Tooltipped'
+import useAllowancev2 from '@/hooks/base/useAllowancev2'
+import useBao from '@/hooks/base/useBao'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useBasketRates from '@/hooks/baskets/useNestRate'
 import {
 	AssetLabel,
 	AssetStack,
@@ -29,8 +19,19 @@ import {
 	IconFlex,
 	LabelStack,
 	MaxLabel,
-	ModalStack,
-} from '../../../markets/components/styles'
+	ModalStack
+} from '@/pages/markets/components/styles'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faExternalLinkAlt, faSync, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'bignumber.js'
+import { ethers } from 'ethers'
+import Image from 'next/image'
+import Link from 'next/link'
+import React, { useMemo, useState } from 'react'
+import { Col, Modal, Row } from 'react-bootstrap'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -150,7 +151,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<p>
 								{operation === 'MINT' ? 'Mint' : 'Redeem'} {basket.symbol}
 							</p>
-							<img src={require(`assets/img/tokens/${basket.symbol}.png`).default} />
+							<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 						</HeaderWrapper>
 					</Modal.Title>
 				</Modal.Header>
@@ -228,9 +229,14 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 											)}
 											<IconFlex>
 												{operation === 'MINT' ? (
-													<img src={require(`assets/img/tokens/${mintOption === MintOption.DAI ? 'DAI' : 'ETH'}.png`).default} />
+													<Image
+														src={`/images/tokens/${mintOption === MintOption.DAI ? 'DAI' : 'WETH'}.png`}
+														width={32}
+														height={32}
+														alt={mintOption.toString()}
+													/>
 												) : (
-													<img src={require(`assets/img/tokens/${basket.symbol}.png`).default} />
+													<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 												)}
 											</IconFlex>
 										</AssetStack>
@@ -272,7 +278,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 											label={
 												<AssetStack>
 													<IconFlex>
-														<img src={require(`assets/img/tokens/${basket.symbol}.png`).default} />
+														<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 													</IconFlex>
 												</AssetStack>
 											}
@@ -287,9 +293,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					<Button disabled={isButtonDisabled} onClick={handleOperation}>
 						{pendingTx ? (
 							typeof pendingTx === 'string' ? (
-								<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
-									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-								</ExternalLink>
+								<Link href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
+									<a>
+										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+									</a>
+								</Link>
 							) : (
 								'Pending Transaction'
 							)

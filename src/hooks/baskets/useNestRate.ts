@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
-import Multicall from '../../utils/multicall'
+import Multicall from '@/utils/multicall'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { getWethPriceLink } from '../../bao/utils'

@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useAccountLiquidity } from './useAccountLiquidity'
 import { useAccountMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import Multicall from '../../utils/multicall'
+import Multicall from '@/utils/multicall'
 
 const useHealthFactor = () => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()

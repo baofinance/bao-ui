@@ -1,14 +1,15 @@
-import { ActiveSupportedMarket } from 'bao/lib/types'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import HrText from '@/components/HrText'
+import { SpinnerLoader } from '@/components/Loader'
+import useBao from '@/hooks/base/useBao'
+import { AccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
+import { Balance } from '@/hooks/markets/useBalances'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
-import HrText from 'components/HrText'
-import { SpinnerLoader } from 'components/Loader'
-import useBao from 'hooks/base/useBao'
-import { AccountLiquidity } from 'hooks/markets/useAccountLiquidity'
-import { Balance } from 'hooks/markets/useBalances'
+import Image from 'next/image'
 import React, { useMemo } from 'react'
 import { Accordion, Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { getDisplayBalance } from 'utils/numberFormat'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -72,7 +73,7 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 				<OfflineAccordionHeader>
 					<Row style={{ width: '100%' }}>
 						<Col>
-							<img src={require(`assets/img/tokens/${market.underlyingSymbol}.png`).default} alt={market.symbol} />
+							<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
 							{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
 						</Col>
 						<Col>{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}</Col>
@@ -90,7 +91,7 @@ const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketL
 				<OfflineAccordionHeader>
 					<Row style={{ width: '100%' }}>
 						<Col>
-							<img src={require(`assets/img/tokens/${market.underlyingSymbol}.png`).default} alt={market.symbol} />
+							<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
 							{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
 						</Col>
 						<Col>{market.borrowApy.toFixed(2)}%</Col>

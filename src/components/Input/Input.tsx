@@ -1,4 +1,4 @@
-import { MaxButton } from 'components/Button'
+import { MaxButton } from '@/components/Button'
 import React from 'react'
 import styled from 'styled-components'
 

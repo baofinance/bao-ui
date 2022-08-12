@@ -1,22 +1,23 @@
 import React from 'react'
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
-import Footer from '../Footer'
+import Footer from '@/components/Footer'
 
 interface PageProps {
 	children: any
 }
 
 const Page: React.FC<PropsWithChildren<PageProps>> = ({ children }) => (
-	<StyledPageContainer>
+	<div className="container mx-auto flex absolute top-18 left-0 w-[calc(100vh-theme('topBarSize')px]">
 		<StyledPageWrapper>
 			<StyledMain>{children}</StyledMain>
 			<Footer />
 		</StyledPageWrapper>
-	</StyledPageContainer>
+	</div>
 )
 
 const StyledPageContainer = styled.div`
+	background-image: ${props => props.theme.backgroundOverlay.default};
 	display: table;
 	position: absolute;
 	top: ${props => props.theme.topBarSize}px;

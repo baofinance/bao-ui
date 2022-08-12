@@ -1,16 +1,16 @@
-import { FeeBadge } from 'components/Badge'
-import { IconContainer, StyledIcon } from 'components/Icon'
-import { SpinnerLoader } from 'components/Loader'
+import { FeeBadge } from '@/components/Badge'
+import { IconContainer, StyledIcon } from '@/components/Icon'
+import { SpinnerLoader } from '@/components/Loader'
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
-import { ListHeader, ListItem, ListItemHeader } from '../../../components/List'
-import Tooltipped from '../../../components/Tooltipped'
-import useComposition from '../../../hooks/baskets/useComposition'
-import useBasketRates from '../../../hooks/baskets/useNestRate'
-import { getDisplayBalance } from '../../../utils/numberFormat'
+import { ListHeader, ListItem, ListItemHeader } from '@/components/List'
+import Tooltipped from '@/components/Tooltipped'
+import useComposition from '@/hooks/baskets/useComposition'
+import useBasketRates from '@/hooks/baskets/useNestRate'
+import { getDisplayBalance } from '@/utils/numberFormat'
+import Link from 'next/link'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -25,50 +25,49 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 
-	const navigate = useNavigate()
-	const handleClick = () => navigate(`/baskets/${basket.symbol}`)
-
 	return (
-		<ListItem onClick={handleClick}>
-			<ListItemHeader>
-				<Row lg={3} style={{ width: '100%' }}>
-					<Col>
-						<IconContainer>
-							<StyledIcon src={require(`assets/img/tokens/${basket.symbol}.png`).default} alt={basket.symbol} />
-							<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-								<p style={{ margin: '0', lineHeight: '1.2rem' }}>{basket.symbol}</p>
-								<SubText>{basket.desc}</SubText>
-							</span>
-						</IconContainer>
-					</Col>
-					<Col>
-						{composition ? (
-							composition.map((component: any) => {
-								return (
-									<Tooltipped content={component.symbol} key={component.symbol}>
-										<StyledIcon src={component.image} />
-									</Tooltipped>
-								)
-							})
-						) : (
-							<SpinnerLoader />
-						)}
-					</Col>
-					<Col>
-						<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-							{rates ? (
-								<>
-									<p style={{ margin: '0', lineHeight: '1.2rem' }}>${getDisplayBalance(rates.usd)}</p>
-									<FeeBadge>0% Fee</FeeBadge>
-								</>
+		<Link href={`/baskets/${basket.symbol}`}>
+			<ListItem>
+				<ListItemHeader>
+					<Row lg={3} style={{ width: '100%' }}>
+						<Col>
+							<IconContainer>
+							<StyledIcon src={`/images/tokens/${basket.symbol}.png`} alt={basket.symbol} className='inline' />
+								<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+									<p style={{ margin: '0', lineHeight: '1.2rem' }}>{basket.symbol}</p>
+									<SubText>{basket.desc}</SubText>
+								</span>
+							</IconContainer>
+						</Col>
+						<Col>
+							{composition ? (
+								composition.map((component: any) => {
+									return (
+										<Tooltipped content={component.symbol} key={component.symbol}>
+											<StyledIcon src={component.image} />
+										</Tooltipped>
+									)
+								})
 							) : (
 								<SpinnerLoader />
 							)}
-						</span>
-					</Col>
-				</Row>
-			</ListItemHeader>
-		</ListItem>
+						</Col>
+						<Col>
+							<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+								{rates ? (
+									<>
+										<p style={{ margin: '0', lineHeight: '1.2rem' }}>${getDisplayBalance(rates.usd)}</p>
+										<FeeBadge>0% Fee</FeeBadge>
+									</>
+								) : (
+									<SpinnerLoader />
+								)}
+							</span>
+						</Col>
+					</Row>
+				</ListItemHeader>
+			</ListItem>
+		</Link>
 	)
 }
 

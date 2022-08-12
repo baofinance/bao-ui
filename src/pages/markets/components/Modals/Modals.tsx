@@ -1,18 +1,19 @@
-import { ActiveSupportedMarket } from 'bao/lib/types'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { BalanceWrapper } from '@/components/Balance'
+import { CloseButton, NavButtons } from '@/components/Button'
+import { IconFlex } from '@/components/Icon'
+import { BalanceInput } from '@/components/Input'
+import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from '@/components/Label'
+import useBao from '@/hooks/base/useBao'
+import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
+import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
+import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
+import { useMarketPrices } from '@/hooks/markets/usePrices'
+import { decimate, exponentiate } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
-import { BalanceWrapper } from 'components/Balance'
-import { CloseButton, NavButtons } from 'components/Button'
-import { IconFlex } from 'components/Icon'
-import { BalanceInput } from 'components/Input'
-import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from 'components/Label'
-import useBao from 'hooks/base/useBao'
-import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
-import { useAccountBalances, useBorrowBalances, useSupplyBalances } from 'hooks/markets/useBalances'
-import { useExchangeRates } from 'hooks/markets/useExchangeRates'
-import { useMarketPrices } from 'hooks/markets/usePrices'
+import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
-import { decimate, exponentiate } from 'utils/numberFormat'
 import { MarketButton } from '../MarketButton'
 import { MarketStats } from '../Stats'
 import { AssetStack, HeaderWrapper, ModalStack } from '../styles'
@@ -109,7 +110,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 					<Modal.Title id='contained-modal-title-vcenter'>
 						<HeaderWrapper>
 							<p>{operation}</p>
-							<img src={require(`assets/img/tokens/${asset.underlyingSymbol}.png`).default} />
+							<Image src={`/images/tokens/${asset.icon}`} width={24} height={24} alt={asset.underlyingSymbol} />
 						</HeaderWrapper>
 					</Modal.Title>
 				</Modal.Header>
@@ -140,7 +141,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 									label={
 										<AssetStack>
 											<IconFlex>
-												<img src={require(`assets/img/tokens/${asset.underlyingSymbol}.png`).default} />
+												<Image src={`/images/tokens/${asset.icon}`} width={24} height={24} alt={asset.underlyingSymbol} />
 											</IconFlex>
 										</AssetStack>
 									}

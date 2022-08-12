@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { Bao } from 'bao'
-import Config from 'bao/lib/config'
+import { Bao } from '@/bao/Bao'
+import Config from '@/bao/lib/config'
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
 
 export interface BaoContext {
