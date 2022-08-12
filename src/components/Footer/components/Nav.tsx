@@ -1,3 +1,5 @@
+import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faBolt, faBook, faBug, faComments } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import styled from 'styled-components'
@@ -8,42 +10,42 @@ const Nav: React.FC = () => {
 		<StyledNav>
 			<Tooltipped content='Discord' placement='top'>
 				<StyledLink target='_blank' href='https://discord.gg/BW3P62vJXT'>
-					<FontAwesomeIcon icon={['fab', 'discord']} />
+					<FontAwesomeIcon icon={faDiscord} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Twitter' placement='top'>
 				<StyledLink target='_blank' href='https://twitter.com/BaoCommunity'>
-					<FontAwesomeIcon icon={['fab', 'twitter']} />
+					<FontAwesomeIcon icon={faTwitter} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Medium' placement='top'>
 				<StyledLink target='_blank' href='https://medium.com/baomunity'>
-					<FontAwesomeIcon icon={['fab', 'medium']} />
+					<FontAwesomeIcon icon={faMedium} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Governance Forum' placement='top'>
 				<StyledLink target='_blank' href='https://gov.bao.finance/'>
-					<FontAwesomeIcon icon='comments' />
+					<FontAwesomeIcon icon={faComments} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Snapshot' placement='top'>
 				<StyledLink target='_blank' href='https://snapshot.page/#/baovotes.eth'>
-					<FontAwesomeIcon icon='bolt' />
+					<FontAwesomeIcon icon={faBolt} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Documentation' placement='top'>
 				<StyledLink target='_blank' href='https://docs.bao.finance/'>
-					<FontAwesomeIcon icon='book' />
+					<FontAwesomeIcon icon={faBook} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='GitHub' placement='top'>
 				<StyledLink target='_blank' href='https://github.com/baofinance'>
-					<FontAwesomeIcon icon={['fab', 'github']} />
+					<FontAwesomeIcon icon={faGithub} />
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Bug Bounty Program' placement='top'>
 				<StyledLink target='_blank' href='https://www.immunefi.com/bounty/baofinance'>
-					<FontAwesomeIcon icon='bug' />
+					<FontAwesomeIcon icon={faBug} />
 				</StyledLink>
 			</Tooltipped>
 		</StyledNav>

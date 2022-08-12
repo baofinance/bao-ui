@@ -1,3 +1,4 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
@@ -33,7 +34,7 @@ export const MarketButton = ({ operation, asset, val, isDisabled, onHide }: Mark
 				<SubmitButton disabled={true}>
 					{typeof pendingTx === 'string' ? (
 						<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank'>
-							Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
+							Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 						</ExternalLink>
 					) : (
 						'Pending Transaction'

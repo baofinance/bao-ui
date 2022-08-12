@@ -26,23 +26,23 @@ const Markets: React.FC = () => {
 							synths are set low intentionally, and they will be adjusted as the
 							protocol sees usage over the coming weeks. Please be prudent,{' '}
 							<a href="https://docs.bao.finance">
-								<FontAwesomeIcon icon="file-alt" /> read the docs
+								<FontAwesomeIcon icon={faFileAlt} /> read the docs
 							</a>
 							, and{' '}
 							<a href="https://discord.gg/WPjtXXWnnU">
-								<FontAwesomeIcon icon={['fab', 'discord']} /> ask questions
+								<FontAwesomeIcon icon={faDiscord} /> ask questions
 							</a>{' '}
 							before interacting with the protocol at this time.
 							<br />
 							<br />
 							Please report any UI bugs on the{' '}
 							<a href="https://github.com/baofinance/bao-ui/issues">
-								<FontAwesomeIcon icon={['fab', 'github']} /> UI's Github
+								<FontAwesomeIcon icon={faGithub} /> UI's Github
 								Repository
 							</a>{' '}
 							(preferred) or on our{' '}
 							<a href="https://discord.gg/WPjtXXWnnU">
-								<FontAwesomeIcon icon={['fab', 'discord']} /> Discord
+								<FontAwesomeIcon icon={faDiscord} /> Discord
 							</a>
 							.
 						</StyledAlert> */}

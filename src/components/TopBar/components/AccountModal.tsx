@@ -16,6 +16,7 @@ import styled from 'styled-components'
 import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 import { Button } from '../../Button'
 import Spacer from '../../Spacer'
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const AccountModal = ({ onHide, show }: ModalProps) => {
 	const { account, deactivate } = useWeb3React()
@@ -88,7 +89,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 												window.location.reload()
 											}}
 										>
-											<FontAwesomeIcon icon='times' style={{ verticalAlign: 'middle' }} /> Clear
+											<FontAwesomeIcon icon={faTimes} style={{ verticalAlign: 'middle' }} /> Clear
 										</ClearButton>
 									</span>
 								</small>
@@ -104,7 +105,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 											<MaxLabel>
 												{transactions[txHash].receipt ? (
 													<FontAwesomeIcon
-														icon='check'
+														icon={faCheck}
 														style={{
 															color: 'green',
 														}}

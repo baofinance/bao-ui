@@ -22,6 +22,8 @@ import { BigNumber } from 'bignumber.js'
 import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
 import useOvenInfo from '../../../../hooks/baskets/useOvenInfo'
 import { StatBlock } from '../../../../components/Stats'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -47,7 +49,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 		<>
 			<Modal show={show} onHide={hideModal} centered>
 				<CloseButton onClick={hideModal}>
-					<FontAwesomeIcon icon='times' />
+					<FontAwesomeIcon icon={faTimes} />
 				</CloseButton>
 				<Modal.Header>
 					<Modal.Title id='contained-modal-title-vcenter'>
@@ -66,7 +68,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									label: 'Total ETH Deposited',
 									value: (
 										<span>
-											{getDisplayBalance(ovenInfo.balance)} <FontAwesomeIcon icon={['fab', 'ethereum']} />
+											{getDisplayBalance(ovenInfo.balance)} <FontAwesomeIcon icon={faEthereum} />
 										</span>
 									),
 								},
@@ -74,7 +76,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									label: 'Your Deposit',
 									value: (
 										<span>
-											{getDisplayBalance(ovenInfo.userBalance)} <FontAwesomeIcon icon={['fab', 'ethereum']} />
+											{getDisplayBalance(ovenInfo.userBalance)} <FontAwesomeIcon icon={faEthereum} />
 										</span>
 									),
 								},
@@ -104,7 +106,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									label={
 										<AssetStack>
 											<IconFlex>
-												<FontAwesomeIcon icon={['fab', 'ethereum']} />
+												<FontAwesomeIcon icon={faEthereum} />
 											</IconFlex>
 										</AssetStack>
 									}

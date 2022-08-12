@@ -1,3 +1,5 @@
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faExternalLinkAlt, faSync, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
@@ -140,7 +142,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 		<>
 			<Modal show={show} onHide={hide} centered>
 				<CloseButton onClick={hide}>
-					<FontAwesomeIcon icon='times' />
+					<FontAwesomeIcon icon={faTimes} />
 				</CloseButton>
 				<Modal.Header>
 					<Modal.Title id='contained-modal-title-vcenter'>
@@ -157,7 +159,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						<>
 							<div style={{ display: 'flex' }}>
 								<StyledBadge style={{ margin: 'auto' }}>
-									1 {basket.symbol} = <FontAwesomeIcon icon={['fab', 'ethereum']} /> {rates && getDisplayBalance(rates.eth)}
+									1 {basket.symbol} = <FontAwesomeIcon icon={faEthereum} /> {rates && getDisplayBalance(rates.eth)}
 									{' = '}
 									{rates && getDisplayBalance(rates.dai)} DAI
 								</StyledBadge>
@@ -219,7 +221,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 																setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
 															}}
 														>
-															<FontAwesomeIcon icon='sync' />
+															<FontAwesomeIcon icon={faSync} />
 														</MaxButton>
 													</Tooltipped>
 												</>
@@ -286,7 +288,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						{pendingTx ? (
 							typeof pendingTx === 'string' ? (
 								<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
-									Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
+									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 								</ExternalLink>
 							) : (
 								'Pending Transaction'

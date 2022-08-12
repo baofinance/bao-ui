@@ -1,3 +1,4 @@
+import { faInfinity } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
@@ -117,7 +118,7 @@ export const Overview = () => {
 											healthFactor.toFixed(2)
 										)
 									) : (
-										<FontAwesomeIcon icon='infinity' />
+										<FontAwesomeIcon icon={faInfinity} />
 									))}
 							</p>
 						</UserStat>

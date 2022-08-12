@@ -1,3 +1,4 @@
+import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark, faLevelDownAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
@@ -91,7 +92,7 @@ const Market: React.FC = () => {
 					/>
 					<p style={{ fontSize: '1.25rem' }}>
 						<StyledLink end to={{ pathname: '/' }}>
-							<FontAwesomeIcon icon='arrow-left' /> <BackButtonText>Back to Markets</BackButtonText>
+							<FontAwesomeIcon icon={faArrowLeft} /> <BackButtonText>Back to Markets</BackButtonText>
 						</StyledLink>
 					</p>
 					<Row lg={3} md={6}>
@@ -100,7 +101,7 @@ const Market: React.FC = () => {
 							content={
 								<Tooltipped content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}>
 									<a>
-										<FontAwesomeIcon icon='level-down-alt' /> {getDisplayBalance(activeMarket.supplied, 0)}{' '}
+										<FontAwesomeIcon icon={faLevelDownAlt} /> {getDisplayBalance(activeMarket.supplied, 0)}{' '}
 									</a>
 								</Tooltipped>
 							}
@@ -110,7 +111,7 @@ const Market: React.FC = () => {
 							content={
 								<Tooltipped content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}>
 									<a>
-										<FontAwesomeIcon icon='level-down-alt' /> {getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
+										<FontAwesomeIcon icon={faLevelDownAlt} /> {getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
 									</a>
 								</Tooltipped>
 							}
@@ -124,7 +125,7 @@ const Market: React.FC = () => {
 							content={
 								<Tooltipped content={`$${supplied ? getDisplayBalance(supplied * activeMarket.price, 0) : '0'}`}>
 									<a>
-										<FontAwesomeIcon icon='level-down-alt' /> {supplied ? supplied.toFixed(4) : '0'}{' '}
+										<FontAwesomeIcon icon={faLevelDownAlt} /> {supplied ? supplied.toFixed(4) : '0'}{' '}
 									</a>
 								</Tooltipped>
 							}
@@ -134,7 +135,7 @@ const Market: React.FC = () => {
 							content={
 								<Tooltipped content={`$${borrowed ? getDisplayBalance(borrowed * activeMarket.price, 0) : '0'}`}>
 									<a>
-										<FontAwesomeIcon icon='level-down-alt' /> {borrowed ? borrowed.toFixed(4) : '0'}{' '}
+										<FontAwesomeIcon icon={faLevelDownAlt} /> {borrowed ? borrowed.toFixed(4) : '0'}{' '}
 									</a>
 								</Tooltipped>
 							}
@@ -169,7 +170,7 @@ const Market: React.FC = () => {
 												label: 'Price Oracle',
 												value: (
 													<a href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${bao.getContract('marketOracle').options.address}`}>
-														{oracleAddress} <FontAwesomeIcon icon='external-link-alt' />
+														{oracleAddress} <FontAwesomeIcon icon={faExternalLinkAlt} />
 													</a>
 												),
 											},
@@ -196,7 +197,7 @@ const HorizontalSpacer = () => {
 const MarketTypeBadge = ({ isSynth }: { isSynth: boolean }) => {
 	return (
 		<MarketBadge pill>
-			<FontAwesomeIcon icon={isSynth ? 'chart-line' : 'landmark'} /> {isSynth ? 'Synthetic' : 'Collateral'}
+			<FontAwesomeIcon icon={isSynth ? faChartLine : faLandmark} /> {isSynth ? 'Synthetic' : 'Collateral'}
 		</MarketBadge>
 	)
 }

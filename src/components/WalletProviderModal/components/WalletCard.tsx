@@ -1,3 +1,4 @@
+import { faWifi } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
@@ -31,7 +32,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ icon, onConnect, title }) => {
 					text={
 						buttonText || (
 							<span>
-								<FontAwesomeIcon icon='wifi' /> Wrong Network
+								<FontAwesomeIcon icon={faWifi} /> Wrong Network
 							</span>
 						)
 					}

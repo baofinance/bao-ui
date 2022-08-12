@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Placement } from 'react-bootstrap/types'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface TooltippedProps {
 	content: any
@@ -15,7 +16,7 @@ const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement })
 		<OverlayTrigger key={placement} overlay={<Tooltip id={Math.random().toString()}>{content}</Tooltip>} placement={placement || 'bottom'}>
 			{children || (
 				<span>
-					<QuestionIcon icon='question-circle' />
+					<QuestionIcon icon={faQuestionCircle} />
 				</span>
 			)}
 		</OverlayTrigger>

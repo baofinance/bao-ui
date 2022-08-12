@@ -1,3 +1,4 @@
+import { faLongArrowAltRight, faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import baoUSDIcon from 'assets/img/tokens/bUSD.png'
 import daiIcon from 'assets/img/tokens/DAI.png'
@@ -66,7 +67,7 @@ const BallastSwapper: React.FC = () => {
 	const daiInput = (
 		<>
 			<BallastLabel>
-				<FontAwesomeIcon icon='long-arrow-alt-right' /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
+				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
 				<span>Reserves: {reserves ? getDisplayBalance(reserves).toString() : <SpinnerLoader />} </span>
 			</BallastLabel>
 			<BalanceInput
@@ -92,7 +93,7 @@ const BallastSwapper: React.FC = () => {
 	const baoUSDInput = (
 		<>
 			<BallastLabel>
-				<FontAwesomeIcon icon='long-arrow-alt-right' /> Balance: {getDisplayBalance(baoUSDBalance).toString()} BaoUSD
+				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(baoUSDBalance).toString()} BaoUSD
 				<span>Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <SpinnerLoader />} </span>
 			</BallastLabel>
 			<BalanceInput
@@ -120,14 +121,14 @@ const BallastSwapper: React.FC = () => {
 			<h2 style={{ textAlign: 'center' }}>
 				<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
 					<a>
-						<FontAwesomeIcon icon='ship' />
+						<FontAwesomeIcon icon={faShip} />
 					</a>
 				</Tooltipped>
 			</h2>
 			{swapDirection ? baoUSDInput : daiInput}
 			<SwapDirection>
 				<SwapDirectionBadge pill onClick={() => setSwapDirection(!swapDirection)}>
-					<FontAwesomeIcon icon='sync' />
+					<FontAwesomeIcon icon={faSync} />
 					{' - '}
 					Fee: {fees ? `${fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']).times(100).toString()}%` : <SpinnerLoader />}
 				</SwapDirectionBadge>

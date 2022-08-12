@@ -1,3 +1,4 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
@@ -48,7 +49,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		if (pendingTx) {
 			return typeof pendingTx === 'string' ? (
 				<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
-					Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
+					Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 				</a>
 			) : (
 				'Pending Transaction'

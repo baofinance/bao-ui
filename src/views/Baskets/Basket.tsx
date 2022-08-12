@@ -1,3 +1,5 @@
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faAngleDoubleRight, faFileContract } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { StyledBadge } from 'components/Badge'
 import { CornerButton, CornerButtons } from 'components/Button/Button'
@@ -36,7 +38,7 @@ const Basket: React.FC = () => {
 				<CornerButtons>
 					<Tooltipped content='View Contract on Etherscan'>
 						<CornerButton href={`https://etherscan.io/address/${basket.basketAddresses[1]}`} target='_blank'>
-							<FontAwesomeIcon icon='file-contract' />
+							<FontAwesomeIcon icon={faFileContract} />
 						</CornerButton>
 					</Tooltipped>
 				</CornerButtons>
@@ -51,10 +53,10 @@ const Basket: React.FC = () => {
 						1 {basket.symbol} ={' '}
 						{rates ? (
 							<>
-								<FontAwesomeIcon icon={['fab', 'ethereum']} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon='angle-double-right' />{' '}
+								<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
 								{getDisplayBalance(rates.dai)}
 								{' DAI '}
-								<FontAwesomeIcon icon='angle-double-right' /> {`$${getDisplayBalance(rates.usd)}`}
+								<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}
 							</>
 						) : (
 							<SpinnerLoader />

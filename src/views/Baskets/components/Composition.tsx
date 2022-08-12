@@ -1,3 +1,4 @@
+import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ParentSize } from '@visx/responsive'
 import { BigNumber } from 'bignumber.js'
@@ -49,7 +50,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 								width: '36px',
 							}}
 						>
-							<FontAwesomeIcon icon='table' size='xs' />
+							<FontAwesomeIcon icon={faTable} size='xs' />
 						</BootButton>
 						<BootButton
 							variant='outline-primary'
@@ -62,7 +63,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 								width: '36px',
 							}}
 						>
-							<FontAwesomeIcon icon='chart-pie' size='xs' />
+							<FontAwesomeIcon icon={faChartPie} size='xs' />
 						</BootButton>
 					</PrefButtons>
 				</Col>

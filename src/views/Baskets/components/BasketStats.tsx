@@ -1,3 +1,11 @@
+import {
+	faAngleDoubleDown,
+	faAngleDoubleUp,
+	faCoins,
+	faHandHoldingUsd,
+	faMoneyBill1Wave,
+	faMoneyBillWave,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'bignumber.js'
 import { StatBadge } from 'components/Badge/Badge'
@@ -27,7 +35,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon='hand-holding-usd' />
+						<FontAwesomeIcon icon={faHandHoldingUsd} />
 						<br />
 						Market Cap
 					</span>
@@ -40,7 +48,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon='coins' />
+						<FontAwesomeIcon icon={faCoins} />
 						<br />
 						Supply
 					</span>
@@ -51,7 +59,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon='money-bill-wave' />
+						<FontAwesomeIcon icon={faMoneyBillWave} />
 						<br />
 						NAV{' '}
 						<Tooltipped
@@ -67,8 +75,8 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon='angle-double-up' />
-						<FontAwesomeIcon icon='angle-double-down' />
+						<FontAwesomeIcon icon={faAngleDoubleUp} />
+						<FontAwesomeIcon icon={faAngleDoubleDown} />
 						<br />
 						Premium{' '}
 						<Tooltipped

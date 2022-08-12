@@ -1,3 +1,4 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import baoElder from 'assets/img/nft/baoelder.png'
@@ -60,7 +61,7 @@ const NFT: React.FC = () => {
 											{typeof pendingTx === 'string' ? (
 												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
 													Pending Transaction
-													<FontAwesomeIcon icon='external-link-alt' />
+													<FontAwesomeIcon icon={faExternalLinkAlt} />
 												</a>
 											) : (
 												'Pending Transaction'
@@ -114,7 +115,7 @@ const NFT: React.FC = () => {
 											{typeof pendingTx === 'string' ? (
 												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
 													Pending Transaction
-													<FontAwesomeIcon icon='external-link-alt' />
+													<FontAwesomeIcon icon={faExternalLinkAlt} />
 												</a>
 											) : (
 												'Pending Transaction'

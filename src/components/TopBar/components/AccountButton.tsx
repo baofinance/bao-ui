@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLink, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import useTokenBalance from 'hooks/base/useTokenBalance'
@@ -10,6 +11,7 @@ import { Button } from '../../Button'
 import { SpinnerLoader } from '../../Loader'
 import WalletProviderModal from '../../WalletProviderModal'
 import AccountModal from './AccountModal'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 
 interface AccountButtonProps {}
 
@@ -44,7 +46,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 							<>
 								Connect{' '}
 								<FontAwesomeIcon
-									icon='link'
+									icon={faLink}
 									style={{
 										marginLeft: '4px',
 									}}
@@ -68,7 +70,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 									</>
 								)}
 								<FontAwesomeIcon
-									icon='angle-double-right'
+									icon={faAngleDoubleRight}
 									style={{
 										margin: '0 4px',
 										color: '#b07a6e',
@@ -76,7 +78,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 								/>{' '}
 								{getBalanceNumber(ethBalance).toFixed(4)}
 								<FontAwesomeIcon
-									icon={['fab', 'ethereum']}
+									icon={faEthereum}
 									style={{
 										marginLeft: '4px',
 									}}
@@ -85,7 +87,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 									<>
 										{' '}
 										<FontAwesomeIcon
-											icon='angle-double-right'
+											icon={faAngleDoubleRight}
 											style={{
 												margin: '0 4px',
 												color: '#b07a6e',
@@ -111,7 +113,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 							<>
 								Connect{' '}
 								<FontAwesomeIcon
-									icon='link'
+									icon={faLink}
 									style={{
 										marginLeft: '4px',
 									}}

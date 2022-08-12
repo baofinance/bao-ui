@@ -1,3 +1,4 @@
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -289,13 +290,13 @@ type CloseButtonProps = {
 
 export const CloseButton = ({ onHide }: CloseButtonProps) => (
 	<StyledCloseButton onClick={onHide}>
-		<FontAwesomeIcon icon='times' />
+		<FontAwesomeIcon icon={faTimes} />
 	</StyledCloseButton>
 )
 
 export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
 	<StyledCloseButtonLeft onClick={onHide}>
-		<FontAwesomeIcon icon='times' />
+		<FontAwesomeIcon icon={faTimes} />
 	</StyledCloseButtonLeft>
 )
 

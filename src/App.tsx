@@ -24,8 +24,6 @@ import ModalsProvider from './contexts/Modals'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
 
-library.add(fas, fab)
-
 function getLibrary(provider: provider) {
 	return new Web3(provider)
 }

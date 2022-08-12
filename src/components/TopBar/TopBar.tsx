@@ -1,3 +1,4 @@
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { MenuIcon } from 'components/Icon'
 import Logo from 'components/Logo'
@@ -27,7 +28,7 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu, isDarkMode, toggle
 					<AccountButton />
 					<StyledThemeButton>
 						<Button onClick={toggleTheme}>
-							<FontAwesomeIcon icon={isDarkMode ? 'moon' : 'sun'} />
+							<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} />
 						</Button>
 					</StyledThemeButton>
 					<StyledMenuButton onClick={onPresentMobileMenu}>

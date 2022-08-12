@@ -1,3 +1,4 @@
+import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import baoIcon from 'assets/img/tokens/BAO.png'
@@ -97,7 +98,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 									{fullBalance}{' '}
 									<a href={pairUrl} target='_blank' rel='noopener noreferrer'>
 										{' '}
-										{tokenName} <FontAwesomeIcon icon='external-link-alt' style={{ height: '.75rem' }} />
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
 									</a>
 								</AssetLabel>
 							</LabelStack>
@@ -141,7 +142,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 										<SubmitButton disabled={true}>
 											{typeof pendingTx === 'string' ? (
 												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
-													Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
+													Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 												</a>
 											) : (
 												'Pending Transaction'
@@ -250,7 +251,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = nul
 								<AssetLabel>
 									{fees ? `${(fees * 100).toFixed(2)}%` : <SpinnerLoader />}{' '}
 									<span>
-										<QuestionIcon icon='question-circle' onClick={() => setShowFeeModal(true)} />
+										<QuestionIcon icon={faQuestionCircle} onClick={() => setShowFeeModal(true)} />
 									</span>
 								</AssetLabel>
 							</LabelStack>
@@ -261,10 +262,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = nul
 							<LabelStack>
 								<MaxLabel>Balance:</MaxLabel>
 								<AssetLabel>
-									{fullBalance}{' '}
+									{getDisplayBalance(fullBalance, 0)}{' '}
 									<a href={pairUrl} rel='noopener noreferrer'>
 										{' '}
-										{tokenName} <FontAwesomeIcon icon='external-link-alt' style={{ height: '.75rem' }} />
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
 									</a>
 								</AssetLabel>
 							</LabelStack>
@@ -291,7 +292,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = nul
 							<SubmitButton disabled={true}>
 								{typeof pendingTx === 'string' ? (
 									<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
-										Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
+										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 									</a>
 								) : (
 									'Pending Transaction'
@@ -356,7 +357,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							<SubmitButton disabled={true}>
 								{typeof pendingTx === 'string' ? (
 									<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
-										Pending Transaction <FontAwesomeIcon icon='external-link-alt' />
+										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 									</a>
 								) : (
 									'Pending Transaction'
