@@ -28,13 +28,13 @@ function getLibrary(provider: provider) {
 	return new Web3(provider)
 }
 
-const Web3ReactNetworkProvider = createWeb3ReactRoot('network')
-
-const Markets = React.lazy(() => import('views/Markets'))
-const Market = React.lazy(() => import('views/Markets/Market'))
-const Ballast = React.lazy(() => import('views/Ballast'))
-const Baskets = React.lazy(() => import('views/Baskets'))
-const Basket = React.lazy(() => import('views/Baskets/Basket'))
+const Web3ReactNetworkProvider = createWepages/Marketsnetwork')
+pages/Markets/Market
+const Markets = React.lazy(() => import('pages/Ballast'))
+const Market = React.lazy(() => import('vpages/BasketsMarket'))
+const Ballast = React.lazy(() => import(pages/Baskets/Basket
+const Baskets = React.lazy(() => importpages/Farmskets'))
+const Basket = React.lazy(() => imporpages/NFTBaskets/Basket'))
 const Farms = React.lazy(() => import('views/Farms'))
 const NFT = React.lazy(() => import('views/NFT'))
 

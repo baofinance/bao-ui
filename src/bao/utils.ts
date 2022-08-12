@@ -6,8 +6,8 @@ import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import Multicall from 'utils/multicall'
 import { decimate, exponentiate } from 'utils/numberFormat'
-import baoElderWL from 'views/NFT/components/baoElderWL'
-import baoSwapWL from 'views/NFT/components/baoSwapWL'
+import baoElderWL from 'pages/NFT/components/baoElderWL'
+import baoSwapWL from 'pages/NFT/components/baoSwapWL'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
 import { ActiveSupportedBasket } from './lib/types'
@@ -206,17 +206,6 @@ export const getBaoSupply = async (bao: Bao) => {
 
 export const getReferrals = async (masterChefContract: Contract, account: string): Promise<string> => {
 	return await masterChefContract.methods.getGlobalRefAmount(account).call()
-}
-
-export const getRefUrl = (): string => {
-	let refer = '0x0000000000000000000000000000000000000000'
-	const urlParams = new URLSearchParams(window.location.search)
-	if (urlParams.has('ref')) {
-		refer = urlParams.get('ref')
-	}
-	console.log(refer)
-
-	return refer
 }
 
 export const redeem = async (masterChefContract: Contract, account: string): Promise<string> => {
