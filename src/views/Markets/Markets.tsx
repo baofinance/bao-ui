@@ -5,6 +5,7 @@ import PageHeader from 'components/PageHeader'
 import { useMarkets } from 'hooks/markets/useMarkets'
 import React, { Suspense } from 'react'
 import { Alert, Container } from 'react-bootstrap'
+import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 
 const MarketList = React.lazy(() => import('./components/MarketList'))
@@ -17,7 +18,11 @@ const Markets: React.FC = () => {
 
 	return (
 		<Page>
-			<PageHeader icon='' title='Markets' subtitle='Mint synthethic assets with multiple types of collateral!' />
+			<Helmet>
+				<title>Bao | Markets</title>
+				<meta name='description' content='Mint and borrow synthetic assets with multiple types of collateral.' />
+			</Helmet>
+			<PageHeader icon='' title='Markets' />
 			<Container>
 				{account ? (
 					<>

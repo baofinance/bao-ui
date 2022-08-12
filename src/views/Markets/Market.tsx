@@ -14,6 +14,7 @@ import { useExchangeRates } from 'hooks/markets/useExchangeRates'
 import { useMarkets } from 'hooks/markets/useMarkets'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Badge, Col, Container, Row } from 'react-bootstrap'
+import { Helmet } from 'react-helmet'
 import { NavLink, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { formatAddress } from 'utils'
@@ -78,6 +79,10 @@ const Market: React.FC = () => {
 	return markets && activeMarket ? (
 		<>
 			<Page>
+				<Helmet>
+					<title>Bao | {marketId} Market</title>
+					<meta name='description' content={`${marketId} market details and analytics.`} />
+				</Helmet>
 				<Container>
 					<MarketHeader>
 						<p style={{ fontSize: '1.25rem' }}>

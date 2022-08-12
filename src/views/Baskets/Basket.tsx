@@ -6,8 +6,9 @@ import { CornerButton, CornerButtons } from 'components/Button/Button'
 import Page from 'components/Page'
 import PageHeader from 'components/PageHeader'
 import Tooltipped from 'components/Tooltipped'
-import React, { Suspense, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Container } from 'react-bootstrap'
+import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { SpinnerLoader } from '../../components/Loader'
@@ -34,6 +35,10 @@ const Basket: React.FC = () => {
 
 	return basket ? (
 		<Page>
+			<Helmet>
+				<title>Bao | {basketId} Basket</title>
+				<meta name='description' content={`Mint and redeem ${basketId}.`} />
+			</Helmet>
 			<Container>
 				<CornerButtons>
 					<Tooltipped content='View Contract on Etherscan'>

@@ -27,7 +27,7 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu, isDarkMode, toggle
 				<StyledAccountButtonWrapper>
 					<AccountButton />
 					<StyledThemeButton>
-						<Button onClick={toggleTheme}>
+						<Button onClick={toggleTheme} aria-label='Dark Mode'>
 							<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} />
 						</Button>
 					</StyledThemeButton>

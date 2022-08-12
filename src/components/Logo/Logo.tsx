@@ -6,7 +6,7 @@ import styled from 'styled-components'
 const Logo: React.FC = () => {
 	return (
 		<StyledLogo to='/'>
-			<img src={baoLogo} height='32' style={{ verticalAlign: 'middle' }} />
+			<img src={baoLogo} height={32} width={31} style={{ verticalAlign: 'middle' }} alt='Bao' />
 			<StyledText>
 				<TitleText>Bao Finance</TitleText>
 			</StyledText>

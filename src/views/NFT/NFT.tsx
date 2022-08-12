@@ -15,6 +15,7 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useBaoSwapClaimedCheck, useElderClaimedCheck } from 'hooks/nft/useMint'
 import React from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
+import { Helmet } from 'react-helmet'
 import baoElderWL from './components/baoElderWL'
 import baoSwapWL from './components/baoSwapWL'
 import { StyledInfo } from './components/styles'
@@ -30,6 +31,10 @@ const NFT: React.FC = () => {
 
 	return (
 		<Page>
+			<Helmet>
+				<title>Bao | NFT</title>
+				<meta name='description' content='Check your eligibility and claim your BaoNFT here!' />
+			</Helmet>
 			<PageHeader icon='' title='BaoNFT' subtitle='Check your eligibility and claim your BaoNFT here!' />
 			<Container>
 				<StyledInfo>

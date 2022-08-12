@@ -6,12 +6,17 @@ import BasketList from './components/BasketList'
 import { Container } from 'react-bootstrap'
 import { StyledInfo } from 'views/NFT/components/styles'
 import Spacer from 'components/Spacer'
+import { Helmet } from 'react-helmet'
 
 const Baskets: React.FC = () => {
 	const baskets = useBaskets()
 
 	return (
 		<Page>
+			<Helmet>
+				<title>Bao | Baskets</title>
+				<meta name='description' content='Diversified exposure to crypto with automated yield strategies.' />
+			</Helmet>
 			<PageHeader icon='' title='Bao Baskets' />
 			<Container>
 				<StyledInfo>
