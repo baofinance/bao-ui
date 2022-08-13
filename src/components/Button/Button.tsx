@@ -315,11 +315,10 @@ export const StyledCloseButton = styled.a`
 `
 
 export const StyledCloseButtonLeft = styled.a`
-	float: left;
-	top: ${props => props.theme.spacing[3]}px;
-	left: ${props => props.theme.spacing[4]}px;
-	font-size: 1.5rem;
 	position: absolute;
+	top: 88px;
+	left: 24px;
+	font-size: 1.5rem;
 	color: ${props => props.theme.color.background[200]};
 
 	&:hover {

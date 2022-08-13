@@ -1,4 +1,6 @@
 import fetcher from '@/bao/lib/fetcher'
+import MobileMenu from '@/components/MobileMenu'
+import TopBar from '@/components/TopBar'
 import Web3ReactManager from '@/components/Web3ReactManager'
 import SEO from '@/config/seo'
 import BaoProvider from '@/contexts/BaoProvider'
@@ -10,6 +12,7 @@ import '@/styles/globals.css'
 import GlobalStyle from '@/styles/GlobalStyle'
 import theme from '@/theme/index'
 import { library } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { Web3ReactProvider } from '@web3-react/core'
@@ -23,9 +26,6 @@ import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
 import Web3 from 'web3'
 import { provider } from 'web3-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
-import TopBar from '@/components/TopBar'
-import Nav from '@/components/TopBar/components/Nav'
 
 library.add(fas, fab)
 
@@ -93,9 +93,10 @@ function App({ Component, pageProps }: AppProps) {
 					content='Lend and borrow synthetics with Bao Markets and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
 				/>
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />{' '}
-				</Head>
+			</Head>
 			<Providers isDarkMode={isDarkMode}>
 				<TopBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
+				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
 				<DefaultSeo {...SEO} />
 				<Component {...pageProps} />
 			</Providers>

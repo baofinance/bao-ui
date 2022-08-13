@@ -1,4 +1,4 @@
-const { default: Script } = require('next/script');
+const { default: Script } = require('next/script')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -14,26 +14,26 @@ module.exports = {
 		},
 		colors: {
 			current: 'currentColor',
-			'white': '#ffffff',
-			'black': '#000000',
-			'red': '#d00000',
-			'green': '#008000',
-			'blue': '#0000f0',
-			'primary': {
+			white: '#ffffff',
+			black: '#000000',
+			red: '#d00000',
+			green: '#008000',
+			blue: '#0000f0',
+			primary: {
 				100: '#391818',
 				200: '#481e1e',
 				300: '#562424',
 				400: '#622a2a',
 				500: '#622a2a',
 			},
-			'secondary': {
+			secondary: {
 				100: '#efeae7',
 				200: '#e7dfda',
 				300: '#ded4ce',
 				400: '#d6c9c2',
 				500: '#cebfb6',
 			},
-			'accent': {
+			accent: {
 				100: '#fde9d8',
 				200: '#fcd4b1',
 				300: '#fabe89',
@@ -44,7 +44,7 @@ module.exports = {
 				800: '#b05607',
 				900: '#894306',
 			},
-			'monochrome': {
+			monochrome: {
 				100: '#e5e5e5',
 				200: '#cccccc',
 				300: '#b2b2b2',
@@ -55,13 +55,13 @@ module.exports = {
 				800: '#323232',
 				900: '#191919',
 			},
-			'text': {
+			text: {
 				100: '#fff8ee', //primary
 				200: '#aa9585', //secondary
 				300: '#CC9902', //hover link
 				400: '#FFD84B', //active link
 			},
-			'background': {
+			background: {
 				100: '#fff8ee', //dark mode
 				200: '#50251c', //light mode
 			},
@@ -87,21 +87,35 @@ module.exports = {
 			medium: 500,
 			strong: 700,
 		},
-    boxShadow: {
-      default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
-      invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
-    },
-    border: {
-      light: '1px solid #562424',
-      dark: '1px solid #ded4ce',
-    },
-    topBarSize: 72,
-    fontFamily: {
-      rubik: ['Rubik', 'sans-serif'],
-      poppins: ['Poppins', 'sans-serif'],
-      kaushan: ['Kaushan Script', 'sans-serif'],
-    },
-		extend: {},
+		boxShadow: {
+			default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
+			invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
+		},
+		border: {
+			light: '1px solid #562424',
+			dark: '1px solid #ded4ce',
+		},
+		topBarSize: 72,
+		fontFamily: {
+			rubik: ['Rubik', 'sans-serif'],
+			poppins: ['Poppins', 'sans-serif'],
+			kaushan: ['Kaushan Script', 'sans-serif'],
+		},
+		extend: {
+			keyframes: {
+				slideIn: {
+					'0%': {
+						transform: 'translateX(0)',
+					},
+					'100%': {
+						transform: 'translateX(-100%)',
+					},
+				},
+			},
+			animation: {
+				'slide-in': 'slideIn 0.3s forwards ease-out',
+			},
+		},
 	},
 	plugins: [],
 }
