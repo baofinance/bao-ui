@@ -119,7 +119,7 @@ const BallastSwapper: React.FC = () => {
 		<>
 			<div className='xs:w-full absolute w-[720px] top-[50%] left-[50%] -mt-60 -ml-80'>
 				<h1 className='text-text-dark-100 font-kaushan text-xxxl font-strong tracking-tighter antialiased text-center'>Ballast</h1>
-				<div className='border-1 xs:w-full absolute w-[720px] border-solid bg-primary-100 rounded-lg border-primary-400 p-6'>
+				<div className='xs:w-full absolute w-[720px] bg-primary-100 shadow-2xl rounded-lg !border !border-solid !border-primary-400/50 p-6'>
 					<h2 className='text-center'>
 						<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
 							<a>
