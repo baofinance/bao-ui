@@ -11,12 +11,10 @@ interface DescriptionProps {
 const Description: React.FC<DescriptionProps> = ({ basketAddress = '' }) => {
 	return (
 		<>
-			<Container>
-				<BasketExplanation>
-					{basketAddress === Config.addressMap.bDEFI && <BDEFI />}
-					{basketAddress === Config.addressMap.bSTBL && <BSTBL />}
-				</BasketExplanation>
-			</Container>
+			<BasketExplanation>
+				{basketAddress === Config.addressMap.bDEFI && <BDEFI />}
+				{basketAddress === Config.addressMap.bSTBL && <BSTBL />}
+			</BasketExplanation>
 		</>
 	)
 }

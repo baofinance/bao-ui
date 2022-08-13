@@ -13,17 +13,14 @@ export const BalanceContent = styled.div`
 
 export const BalanceImage = styled.div`
 	display: flex;
-	-webkit-box-pack: center;
 	justify-content: center;
+	align-items: center;
 	min-width: 48px;
 	min-height: 48px;
 	border-radius: 40px;
 	background-color: ${props => props.theme.color.primary[400]};
 
 	img {
-		height: 34px;
-		text-align: center;
-		min-width: 34px;
 		margin: auto;
 	}
 `

@@ -1,5 +1,4 @@
 import NavLink from '@/components/NavLink'
-import Link from 'next/link'
 import React from 'react'
 
 const Nav: React.FC = () => {
@@ -28,9 +27,15 @@ const Nav: React.FC = () => {
 							</NavLink>
 						))}
 						{externalLinks.map(link => (
-							<Link href={link.href} key={link.name} target='_blank' rel='noreferrer'>
-								<a className='text-rubik font-medium text-text-100 hover:text-text-400 antialiased'>{link.name}</a>
-							</Link>
+							<a
+								href={link.href}
+								key={link.name}
+								target='_blank'
+								rel='noreferrer'
+								className='text-rubik font-medium text-text-100 hover:text-text-400 antialiased'
+							>
+								{link.name}
+							</a>
 						))}
 					</div>
 				</div>
@@ -42,9 +47,15 @@ const Nav: React.FC = () => {
 					</NavLink>
 				))}
 				{externalLinks.map(link => (
-					<Link href={link.href} key={link.name} target='_blank' rel='noreferrer'>
-						<a className='text-rubik font-medium text-text-100 hover:text-text-300 antialiased'>{link.name}</a>
-					</Link>
+					<a
+						href={link.href}
+						key={link.name}
+						target='_blank'
+						rel='noreferrer'
+						className='text-rubik font-medium text-text-100 hover:text-text-300 antialiased'
+					>
+						{link.name}
+					</a>
 				))}
 			</div>
 		</nav>

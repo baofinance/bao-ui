@@ -16,13 +16,13 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import MarketBorrowModal from './Modals/BorrowModal'
+import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails, StatBlock } from './Stats'
-
-const MarketSupplyModal = React.lazy(() => import('./Modals/SupplyModal'))
-const MarketBorrowModal = React.lazy(() => import('./Modals/BorrowModal'))
 
 export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -235,7 +235,9 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 								<SubmitButton onClick={() => setShowSupplyModal(true)}>Supply / Withdraw</SubmitButton>
 							</Col>
 							<Col>
-								<Button to={`/markets/${market.underlyingSymbol}`} text='Details' />
+								<Link href={`/markets/${market.underlyingSymbol}`}>
+									<Button text='Details' />
+								</Link>
 							</Col>
 						</Row>
 						<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
@@ -305,7 +307,9 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								<SubmitButton onClick={() => setShowBorrowModal(true)}>Mint / Repay</SubmitButton>
 							</Col>
 							<Col>
-								<Button to={`/markets/${market.underlyingSymbol}`} text='Details' />
+								<Link href={`/markets/${market.underlyingSymbol}`}>
+									<Button text='Details' />
+								</Link>
 							</Col>
 						</Row>
 						<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => setShowBorrowModal(false)} />

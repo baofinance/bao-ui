@@ -209,8 +209,8 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 					<Row lg={7} style={{ width: '100%' }} className='farmRow'>
 						<Col>
 							<FarmIconContainer>
-								<FarmIcon src={require(`assets/img/tokens/${farm.iconA}`).default} />
-								<FarmIcon src={require(`assets/img/tokens/${farm.iconB}`).default} />
+								<FarmIcon src={`/images/tokens/${farm.iconA}`} />
+								<FarmIcon src={`/images/tokens/${farm.iconB}`} />
 							</FarmIconContainer>
 							{farm.name}
 						</Col>
@@ -272,6 +272,7 @@ export const FarmIconContainer = styled.div`
 `
 
 export const FarmIcon = styled(FarmImage)`
+	display: inline;
 	height: 40px;
 	vertical-align: super;
 	transition: 200ms;

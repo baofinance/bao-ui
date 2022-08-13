@@ -55,6 +55,7 @@ export const IconImage = styled.img`
 `
 
 export const StyledIcon = styled(IconImage)`
+	display: inline;
 	height: 40px;
 	transition: 200ms;
 	user-select: none;

@@ -17,8 +17,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Badge, Card } from 'react-bootstrap'
 import styled from 'styled-components'
 import BallastButton from './BallastButton'
-import baoUSDIcon from '/images/tokens/bUSD.png'
-import daiIcon from '/images/tokens/DAI.png'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
@@ -83,7 +81,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<AssetStack>
 						<IconFlex>
-							<Image src={daiIcon} alt='DAI' />
+							<Image src='/images/tokens/DAI.png' height={32} width={32} alt='DAI' />
 						</IconFlex>
 					</AssetStack>
 				}
@@ -109,7 +107,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<AssetStack>
 						<IconFlex>
-							<Image src={baoUSDIcon} alt='baoUSD' />
+							<Image src='/images/tokens/bUSD.png' height={32} width={32} alt='baoUSD' />
 						</IconFlex>
 					</AssetStack>
 				}

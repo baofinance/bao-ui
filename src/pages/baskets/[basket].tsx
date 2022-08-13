@@ -1,6 +1,5 @@
 import { StyledBadge } from '@/components/Badge'
 import { CornerButton, CornerButtons } from '@/components/Button/Button'
-import Page from '@/components/Page'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
@@ -13,6 +12,7 @@ import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faFileContract } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NextSeo } from 'next-seo'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
 import { Container } from 'react-bootstrap'
@@ -35,14 +35,14 @@ const Basket: React.FC = () => {
 	const pairPrice = usePairPrice(basket)
 
 	return basket ? (
-		<Page>
+		<>
 			<NextSeo title={`${basketId} Basket`} description={`Mint or Redeem ${basketId}`} />
-			<Container>
+			<div className='max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8'>
 				<CornerButtons>
 					<Tooltipped content='View Contract on Etherscan'>
-						<CornerButton href={`https://etherscan.io/address/${basket.basketAddresses[1]}`} target='_blank'>
-							<FontAwesomeIcon icon={faFileContract} />
-						</CornerButton>
+							<CornerButton href={`https://etherscan.io/address/${basket.basketAddresses[1]}`} target='_blank' rel='noreferrer'>
+								<FontAwesomeIcon icon={faFileContract} />
+							</CornerButton>
 					</Tooltipped>
 				</CornerButtons>
 				<StyledPageHeader>
@@ -66,14 +66,12 @@ const Basket: React.FC = () => {
 						)}
 					</StyledBadge>
 				</StyledPageHeader>
-			</Container>
-			<Container>
 				<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
 				<BasketButtons basket={basket} swapLink={basket.swap} />
 				<Composition composition={composition} />
 				<Description basketAddress={basket.basketAddresses[1]} />
-			</Container>
-		</Page>
+			</div>
+		</>
 	) : (
 		<SpinnerLoader />
 	)

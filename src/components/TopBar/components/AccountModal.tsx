@@ -47,7 +47,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<Image src='/images/tokens/ETH.png' alt='ETH' />
+										<Image src='/images/tokens/ETH.png' alt='ETH' width={32} height={32} />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
@@ -61,7 +61,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<Image src='/images/tokens/BAO.png' alt='BAO' />
+										<Image src='/images/tokens/BAO.png' alt='BAO' width={32} height={32} />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
@@ -125,7 +125,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 				</>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`} text='View on Explorer' />
+				<Button href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`} text='View on Explorer' target='_blank' />
 				<Button onClick={handleSignOutClick} text='Sign out' />
 			</Modal.Footer>
 		</Modal>
@@ -160,8 +160,8 @@ const InnerInnerWalletBalance = styled.div`
 
 const WalletBalanceImage = styled.div`
 	display: flex;
-	-webkit-box-pack: center;
 	justify-content: center;
+	align-items: center;
 	min-width: 48px;
 	min-height: 48px;
 	border-radius: 40px;
@@ -169,9 +169,6 @@ const WalletBalanceImage = styled.div`
 	border: none;
 
 	img {
-		height: 34px;
-		text-align: center;
-		min-width: 34px;
 		margin: auto;
 	}
 `
@@ -235,6 +232,7 @@ const ClearButton = styled.button`
 	border-radius: 8px;
 	border: none;
 	color: ${props => props.theme.color.text[100]};
+	padding: 0.5rem;
 
 	&:hover {
 		background-color: ${props => props.theme.color.primary[400]} !important;

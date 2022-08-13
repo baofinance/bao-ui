@@ -1,4 +1,3 @@
-import baoIcon from 'assets/img/tokens/BAO.png'
 import { CloseButton, NavButtons } from '@/components/Button'
 import { IconContainer, StyledIcon } from '@/components/Icon'
 import { SpinnerLoader } from '@/components/Loader'
@@ -49,13 +48,13 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 					{operation !== 'Rewards' ? (
 						<>
 							<IconContainer style={{ marginLeft: '10px' }}>
-								<StyledIcon src={require(`assets/img/tokens/${farm.iconA}`).default} />
-								{farm.iconB !== null && <StyledIcon src={require(`assets/img/tokens/${farm.iconB}`).default} />}
+								<StyledIcon src={`/images/tokens/${farm.iconA}`} />
+								{farm.iconB !== null && <StyledIcon src={`/images/tokens/${farm.iconB}`} />}
 							</IconContainer>
 						</>
 					) : (
 						<IconContainer style={{ marginLeft: '10px' }}>
-							<StyledIcon src={baoIcon} />
+							<StyledIcon src='/images/tokens/BAO.png' />
 						</IconContainer>
 					)}
 				</Modal.Title>

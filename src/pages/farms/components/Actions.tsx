@@ -22,13 +22,13 @@ import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import Image from 'next/image'
+import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 import { EarningsWrapper, FarmModalBody } from './styles'
-import baoIcon from '/images/tokens/BAO.png'
 
 interface StakeProps {
 	lpContract: Contract
@@ -96,11 +96,13 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 							<LabelStack>
 								<MaxLabel>Balance:</MaxLabel>
 								<AssetLabel>
-									{fullBalance}{' '}
-									<a href={pairUrl} target='_blank' rel='noopener noreferrer'>
-										{' '}
-										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
-									</a>
+									{fullBalance}
+									<Link href={pairUrl} target='_blank' rel='noopener noreferrer'>
+										<a>
+											{' '}
+											{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
+										</a>
+									</Link>
 								</AssetLabel>
 							</LabelStack>
 						</LabelEnd>
@@ -307,9 +309,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = nul
 								onClick={async () => {
 									const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
-									const unstakeTx = masterChefContract.methods
-										.withdraw(pid, ethers.utils.parseUnits(val, 18))
-										.send({ from: account })
+									const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18)).send({ from: account })
 
 									handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 								}}
@@ -342,7 +342,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 				<EarningsWrapper>
 					<BalanceContent>
 						<BalanceImage>
-							<Image src={baoIcon} width={32} height={32} alt='BAO' />
+							<Image src='/images/tokens/BAO.png' width={32} height={32} alt='BAO' />
 						</BalanceImage>
 						<BalanceSpacer />
 						<BalanceText>

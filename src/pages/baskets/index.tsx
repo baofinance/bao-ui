@@ -1,21 +1,18 @@
-import Page from '@/components/Page'
-import PageHeader from '@/components/PageHeader'
 import Spacer from '@/components/Spacer'
-import { NextSeo } from 'next-seo'
-import { StyledInfo } from '@/pages/nft/components/styles'
-import React from 'react'
-import { Container } from 'react-bootstrap'
 import useBaskets from '@/hooks/baskets/useBaskets'
+import { StyledInfo } from '@/pages/nft/components/styles'
+import { NextSeo } from 'next-seo'
+import React from 'react'
 import BasketList from './components/BasketList'
 
 const Baskets: React.FC = () => {
 	const baskets = useBaskets()
 
 	return (
-		<Page>
+		<>
 			<NextSeo title={`Baskets`} description={`Get diversified exposure to crypto assets with Bao Baskets!`} />
-			<PageHeader icon='' title='Bao Baskets' />
-			<Container>
+			<div className='max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8'>
+				<h1 className='font-kaushan text-xxxl antialiased font-strong text-center tracking-tighter text-text-dark-100'>Bao Baskets</h1>
 				<StyledInfo>
 					<div
 						style={{
@@ -32,8 +29,8 @@ const Baskets: React.FC = () => {
 				</StyledInfo>
 				<Spacer size='md' />
 				<BasketList baskets={baskets} />
-			</Container>
-		</Page>
+			</div>
+		</>
 	)
 }
 
