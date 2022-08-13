@@ -1,16 +1,15 @@
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { approvev2 } from '@/bao/utils'
-import BigNumber from 'bignumber.js'
-import { SubmitButton } from '@/components/Button/Button'
 import { SpinnerLoader } from '@/components/Loader'
 import useAllowancev2 from '@/hooks/base/useAllowancev2'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import React, { useMemo } from 'react'
 import { decimate, exponentiate } from '@/utils/numberFormat'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import React, { useMemo } from 'react'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const bao = useBao()
@@ -75,9 +74,20 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 	)
 
 	return (
-		<SubmitButton onClick={handleClick} disabled={isDisabled}>
+		<button
+			className={`text-default border-1 rounded-lg relative inline-flex h-12 w-full min-w-[2.5rem] select-none appearance-none items-center justify-center whitespace-nowrap border-solid bg-background-200 align-middle font-strong leading-5 text-text-100 outline-none outline-offset-2 transition-all border-primary-300 pr-4 pl-4 ${(props: {
+				disabled: any
+			}) =>
+				props.disabled
+					? 'opacity-50'
+					: 'opacity-100'} duartion-200 overflow-hidden mb-2 hover:cursor-pointer hover:bg-primary-300 hover:text-text-100 focus:outline-none !hover:cursor-${(props: {
+				disabled: any
+			}) => (props.disabled ? 'not-allowed' : 'pointer')}`}
+			onClick={handleClick}
+			disabled={isDisabled}
+		>
 			{buttonText()}
-		</SubmitButton>
+		</button>
 	)
 }
 

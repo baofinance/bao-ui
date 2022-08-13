@@ -70,65 +70,20 @@ export interface BalanceInputProps extends InputProps {
 }
 
 export const BalanceInput = ({ value, label, onChange, onMaxClick, disabled }: BalanceInputProps) => (
-	<BalanceInputContainer>
-		<BalanceInputWrapper>
-			<StyledBalanceInput value={value} onChange={onChange} placeholder='0' disabled={disabled} />
+	<div className='align-center rounded-lg flex h-12 w-full bg-primary-400 border-0'>
+		<div className='align-center relative flex w-full'>
+			<input
+				className='bg-transparent outline-none rounded-lg border-inherit relative h-12 w-full min-w-0 appearance-none border-solid text-default font-strong text-text-100 outline outline-2 outline-offset-2 transition-all duration-200 pl-4 pr-4 text-start disabled:text-text-200 md:text-sm'
+				value={value}
+				onChange={onChange}
+				placeholder='0'
+				disabled={disabled}
+			/>
 			{!disabled && <MaxButton onClick={onMaxClick}>MAX</MaxButton>}
-		</BalanceInputWrapper>
+		</div>
 		{typeof label === 'string' ? <p>{label}</p> : label}
-	</BalanceInputContainer>
+	</div>
 )
-
-const StyledBalanceInput = styled.input`
-	width: 100%;
-	min-width: 0px;
-	outline-offset: 2px;
-	position: relative;
-	appearance: none;
-	transition-property: all;
-	transition-duration: 200ms;
-	font-size: 1rem;
-	padding-inline-start: 1rem;
-	padding-inline-end: 1rem;
-	height: 50px;
-	text-align: start;
-	font-weight: ${props => props.theme.fontWeight.medium};
-	padding-right: 0.5rem;
-	outline: transparent solid 2px;
-	border-radius: 8px;
-	border-style: solid;
-	border-image: initial;
-	border-color: inherit;
-	color: ${props => props.theme.color.text[100]};
-	background: none;
-	background-color: transparent;
-	border-width: 0px;
-
-	&:disabled {
-		color: ${props => props.theme.color.text[200]};
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.md}px) {
-		font-size: 0.875rem;
-	}
-`
-
-const BalanceInputContainer = styled.div`
-	display: flex;
-	align-items: center;
-	width: 100%;
-	background-color: ${props => props.theme.color.primary[400]};
-	border-radius: 8px;
-	height: 50px;
-	border: none;
-`
-
-const BalanceInputWrapper = styled.div`
-	display: flex;
-	align-items: center;
-	width: 100%;
-	position: relative;
-`
 
 export const InputStack = styled.div`
 	display: flex;

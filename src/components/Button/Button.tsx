@@ -289,43 +289,16 @@ type CloseButtonProps = {
 }
 
 export const CloseButton = ({ onHide }: CloseButtonProps) => (
-	<StyledCloseButton onClick={onHide}>
+	<a className='absolute top-24 right-8 text-2xl text-background-200 hover:cursor-pointer hover:text-text-300' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
-	</StyledCloseButton>
+	</a>
 )
 
 export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
-	<StyledCloseButtonLeft onClick={onHide}>
+	<a className='absolute top-24 left-8 text-2xl text-background-200 hover:cursor-pointer hover:text-text-100' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
-	</StyledCloseButtonLeft>
+	</a>
 )
-
-export const StyledCloseButton = styled.a`
-	float: right;
-	top: ${props => props.theme.spacing[3]}px;
-	right: ${props => props.theme.spacing[4]}px;
-	font-size: 1.5rem;
-	position: absolute;
-	color: ${props => props.theme.color.background[200]};
-
-	&:hover {
-		cursor: pointer;
-		color: ${props => props.theme.color.text[300]};
-	}
-`
-
-export const StyledCloseButtonLeft = styled.a`
-	position: absolute;
-	top: 88px;
-	left: 24px;
-	font-size: 1.5rem;
-	color: ${props => props.theme.color.background[200]};
-
-	&:hover {
-		cursor: pointer;
-		color: ${props => props.theme.color.text[100]};
-	}
-`
 
 export const SubmitButton = styled.button`
 	display: inline-flex;

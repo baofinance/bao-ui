@@ -1,17 +1,14 @@
 const { default: Script } = require('next/script')
+const vanillaRTL = require('tailwindcss-vanilla-rtl')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
 		backgroundImage: () => ({
-			darkOverlay: "url('/images/background_overlay_dark.png')",
-			lightOverlay: "url('/images/background_overlay_light.png')",
+			darkOverlay: "url('/images/background_overlay_dark.png'), radial-gradient(circle at center, #391818, #210e0e 50%) fixed",
+			lightOverlay: "url('/images/background_overlay_light.png'), radial-gradient(circle at center, #efeae7, #fff8ee 50%) fixed",
 		}),
-		backgroundGradient: {
-			darkGradient: 'radial-gradient(circle at center, #391818, #210e0e 50%) fixed',
-			lightGradient: 'radial-gradient(circle at center, #efeae7, #fff8ee 50%) fixed',
-		},
 		colors: {
 			current: 'currentColor',
 			white: '#ffffff',
@@ -70,7 +67,6 @@ module.exports = {
 				200: 'rgba(256, 256, 256, 0.1)', //light
 			},
 		},
-		borderRadius: '8px',
 		fontSize: {
 			xs: '.75rem',
 			sm: '.875rem',
@@ -87,15 +83,6 @@ module.exports = {
 			medium: 500,
 			strong: 700,
 		},
-		boxShadow: {
-			default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
-			invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
-		},
-		border: {
-			light: '1px solid #562424',
-			dark: '1px solid #ded4ce',
-		},
-		topBarSize: 72,
 		fontFamily: {
 			rubik: ['Rubik', 'sans-serif'],
 			poppins: ['Poppins', 'sans-serif'],
@@ -117,5 +104,10 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [vanillaRTL],
+	corePlugins: {
+		float: false,
+		clear: false,
+		...vanillaRTL.disabledCorePlugins,
+	},
 }
