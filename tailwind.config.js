@@ -1,5 +1,4 @@
 const { default: Script } = require('next/script')
-const vanillaRTL = require('tailwindcss-vanilla-rtl')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -104,10 +103,6 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [vanillaRTL],
-	corePlugins: {
-		float: false,
-		clear: false,
-		...vanillaRTL.disabledCorePlugins,
-	},
+	plugins: [],
+	corePlugins: {},
 }

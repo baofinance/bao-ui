@@ -61,11 +61,11 @@ const BallastSwapper: React.FC = () => {
 
 	const daiInput = (
 		<>
-			<label className='!md:text-sm !sm:text-xs text-default'>
+			<label className='!sm:text-sm !xs:text-xs text-default'>
 				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
-				<span className='float-right text-text-200 mb-1'>
-					Reserves: {reserves ? getDisplayBalance(reserves).toString() : <SpinnerLoader />}{' '}
-				</span>
+			</label>
+			<label className='float-right mb-1 text-text-200'>
+				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <SpinnerLoader />}{' '}
 			</label>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
@@ -78,8 +78,8 @@ const BallastSwapper: React.FC = () => {
 				disabled={swapDirection}
 				label={
 					<div className='align-center flex flex-row pl-2 pr-4'>
-						<div className='flex w-6 justify-center'>
-							<Image src='/images/tokens/DAI.png' height={32} width={32} alt='DAI' className='block h-6 w-6 align-middle' />
+						<div className='flex justify-center'>
+							<Image src='/images/tokens/DAI.png' height={36} width={36} alt='DAI' className='block object-none align-middle' />
 						</div>
 					</div>
 				}
@@ -91,9 +91,9 @@ const BallastSwapper: React.FC = () => {
 		<>
 			<label className='!md:text-sm !sm:text-xs text-default'>
 				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(baoUSDBalance).toString()} BaoUSD
-				<span className='float-right text-text-200 mb-1'>
-					Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <SpinnerLoader />}{' '}
-				</span>
+			</label>
+			<label className='float-right mb-1 text-text-200'>
+				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <SpinnerLoader />}{' '}
 			</label>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(baoUSDBalance).toString())}
@@ -106,8 +106,8 @@ const BallastSwapper: React.FC = () => {
 				disabled={!swapDirection}
 				label={
 					<div className='align-center flex flex-row pl-2 pr-4'>
-						<div className='flex w-6 justify-center'>
-							<Image src='/images/tokens/bUSD.png' height={32} width={32} alt='baoUSD' className='block h-6 w-6 align-middle' />
+						<div className='flex justify-center'>
+							<Image src='/images/tokens/bUSD.png' height={36} width={36} alt='baoUSD' className='block object-none align-middle' />
 						</div>
 					</div>
 				}
@@ -117,9 +117,9 @@ const BallastSwapper: React.FC = () => {
 
 	return (
 		<>
-			<div className='xs:w-full absolute w-[720px] top-[50%] left-[50%] -mt-60 -ml-80'>
-				<h1 className='text-text-dark-100 font-kaushan text-xxxl font-strong tracking-tighter antialiased text-center'>Ballast</h1>
-				<div className='xs:w-full absolute w-[720px] bg-primary-100 shadow-2xl rounded-lg !border !border-solid !border-primary-400/50 p-6'>
+			<div className='absolute top-[50%] sm:w-full sm:pl-4 sm:pr-4 md:left-[50%] md:-mt-60 md:-ml-[360px] md:w-[720px]'>
+				<h1 className='text-text-dark-100 text-center font-kaushan text-xxxl font-strong tracking-tighter antialiased'>Ballast</h1>
+				<div className='rounded-lg !border !border-solid !border-primary-400/50 bg-primary-100 p-6 shadow-2xl sm:w-full md:absolute md:w-[720px]'>
 					<h2 className='text-center'>
 						<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
 							<a>
@@ -128,9 +128,9 @@ const BallastSwapper: React.FC = () => {
 						</Tooltipped>
 					</h2>
 					{swapDirection ? baoUSDInput : daiInput}
-					<a className='block select-none text-text-200 duration-200 mt-4 text-center hover:cursor-pointer'>
+					<a className='mt-4 block select-none text-center text-text-200 duration-200 hover:cursor-pointer'>
 						<span
-							className='border-none bg-primary-300 text-text-100 mb-2 rounded-full p-2 hover:bg-primary-400 md:text-sm'
+							className='mb-2 rounded-full border-none bg-primary-300 p-2 text-text-100 hover:bg-primary-400 md:text-sm'
 							onClick={() => setSwapDirection(!swapDirection)}
 						>
 							<FontAwesomeIcon icon={faSync} className='text-md hover:animate-spin' />

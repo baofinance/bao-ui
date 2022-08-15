@@ -188,31 +188,22 @@ const ButtonLink = styled.a`
 	}
 `
 
-export const MaxButton = styled.a`
-	padding: ${props => props.theme.spacing[2]}px;
-	color: ${props => props.theme.color.text[100]};
-	background: ${props => props.theme.color.primary[200]};
-	border-radius: ${props => props.theme.borderRadius}px;
-	vertical-align: middle;
-	margin-right: ${props => props.theme.spacing[2]}px;
-	transition: 200ms;
-	user-select: none;
-	font-weight: ${props => props.theme.fontWeight.medium};
-	text-decoration: none;
-	border: ${props => props.theme.border.default};
-	font-weight: ${props => props.theme.fontWeight.strong};
-	font-size: ${props => props.theme.fontSize.sm};
+export const MaxButton = ({ onClick }: MaxButtonProps) => {
+	return (
+		<button
+			className='m-auto mr-2 h-[80%] select-none rounded-lg !border !border-solid !border-primary-400/50 bg-primary-200
+			p-2 align-middle text-sm font-strong text-text-100 no-underline duration-200 hover:cursor-pointer
+			hover:bg-primary-300 hover:text-text-100 md:text-xs'
+			onClick={onClick}
+		>
+			MAX
+		</button>
+	)
+}
 
-	&:hover {
-		background: ${props => props.theme.color.primary[300]};
-		color: ${props => props.theme.color.text[100]};
-		cursor: pointer;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.md}px) {
-		font-size: 0.75rem;
-	}
-`
+type MaxButtonProps = {
+	onClick: (e: any) => void
+}
 
 export const StyledBorderButton = styled(StyledButton)`
 	&:hover {
@@ -289,13 +280,13 @@ type CloseButtonProps = {
 }
 
 export const CloseButton = ({ onHide }: CloseButtonProps) => (
-	<a className='absolute top-24 right-8 text-2xl text-background-200 hover:cursor-pointer hover:text-text-300' onClick={onHide}>
+	<a className='text-2xl absolute top-24 right-8 text-background-200 hover:cursor-pointer hover:text-text-300' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
 	</a>
 )
 
 export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
-	<a className='absolute top-24 left-8 text-2xl text-background-200 hover:cursor-pointer hover:text-text-100' onClick={onHide}>
+	<a className='text-2xl absolute top-24 left-8 text-background-200 hover:cursor-pointer hover:text-text-100' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
 	</a>
 )

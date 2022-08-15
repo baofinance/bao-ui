@@ -70,10 +70,10 @@ export interface BalanceInputProps extends InputProps {
 }
 
 export const BalanceInput = ({ value, label, onChange, onMaxClick, disabled }: BalanceInputProps) => (
-	<div className='align-center rounded-lg flex h-12 w-full bg-primary-400 border-0'>
+	<div className='align-center flex h-12 w-full rounded-lg border-0 bg-primary-400'>
 		<div className='align-center relative flex w-full'>
 			<input
-				className='bg-transparent outline-none rounded-lg border-inherit relative h-12 w-full min-w-0 appearance-none border-solid text-default font-strong text-text-100 outline outline-2 outline-offset-2 transition-all duration-200 pl-4 pr-4 text-start disabled:text-text-200 md:text-sm'
+				className='bg-transparent border-inherit relative h-12 w-full min-w-0 appearance-none rounded-lg border-solid pl-4 pr-4 text-start text-default font-strong text-text-100 outline-none outline outline-2 outline-offset-2 transition-all duration-200 disabled:text-text-200 md:text-sm'
 				value={value}
 				onChange={onChange}
 				placeholder='0'

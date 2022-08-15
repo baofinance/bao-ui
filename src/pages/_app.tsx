@@ -72,9 +72,9 @@ function App({ Component, pageProps }: AppProps) {
 				<meta name='theme-color' content='#fff8ee' />
 				<meta charSet='utf-8' />
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
-				<meta http-equiv='cache-control' content='no-cache' />
-				<meta http-equiv='expires' content='0' />
-				<meta http-equiv='pragma' content='no-cache' />
+				<meta httpEquiv='cache-control' content='no-cache' />
+				<meta httpEquiv='expires' content='0' />
+				<meta httpEquiv='pragma' content='no-cache' />
 				<meta name='twitter:card' content='summary_large_image' />
 				<meta name='twitter:image' content='%PUBLIC_URL%/twitterCard.png' />
 				<meta name='twitter:title' content='Bao Finance - Deliciously wrapped finance!' />
