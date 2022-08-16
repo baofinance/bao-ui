@@ -75,12 +75,12 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 
 	return (
 		<button
-			className={`text-default border-1 rounded-lg relative inline-flex h-12 w-full min-w-[2.5rem] select-none appearance-none items-center justify-center whitespace-nowrap border-solid bg-background-200 align-middle font-strong leading-5 text-text-100 outline-none outline-offset-2 transition-all border-primary-300 pr-4 pl-4 ${(props: {
+			className={`border-1 relative inline-flex h-12 w-full min-w-[2.5rem] select-none appearance-none items-center justify-center whitespace-nowrap rounded-lg border-solid border-primary-300 bg-background-200 pr-4 pl-4 align-middle text-default font-strong leading-5 text-text-100 outline-none outline-offset-2 transition-all ${(props: {
 				disabled: any
 			}) =>
 				props.disabled
 					? 'opacity-50'
-					: 'opacity-100'} duartion-200 overflow-hidden mb-2 hover:cursor-pointer hover:bg-primary-300 hover:text-text-100 focus:outline-none !hover:cursor-${(props: {
+					: 'opacity-100'} duartion-200 mb-2 overflow-hidden hover:cursor-pointer hover:bg-primary-300 hover:text-text-100 focus:outline-none !hover:cursor-${(props: {
 				disabled: any
 			}) => (props.disabled ? 'not-allowed' : 'pointer')}`}
 			onClick={handleClick}

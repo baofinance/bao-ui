@@ -192,8 +192,8 @@ export const MaxButton = ({ onClick }: MaxButtonProps) => {
 	return (
 		<button
 			className='m-auto mr-2 h-[80%] select-none rounded-lg !border !border-solid !border-primary-400/50 bg-primary-200
-			p-2 align-middle text-sm font-strong text-text-100 no-underline duration-200 hover:cursor-pointer
-			hover:bg-primary-300 hover:text-text-100 md:text-xs'
+			p-2 align-middle text-default font-strong text-text-100 no-underline duration-200 hover:cursor-pointer
+			hover:bg-primary-300 hover:text-text-100 md:text-sm'
 			onClick={onClick}
 		>
 			MAX

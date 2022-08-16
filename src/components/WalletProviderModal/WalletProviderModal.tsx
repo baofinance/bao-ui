@@ -23,7 +23,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		if (account && chainId === Config.networkId) {
 			onHide()
 		}
-	}, [account, onHide])
+	}, [account, chainId, onHide])
 
 	const [activatingConnector, setActivatingConnector] = useState<any>()
 
@@ -41,7 +41,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		if (account && active) {
 			onHide()
 		}
-	}, [account, onHide])
+	}, [account, active, onHide])
 
 	const hideModal = useCallback(() => {
 		onHide()

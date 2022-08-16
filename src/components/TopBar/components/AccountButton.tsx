@@ -24,7 +24,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const { account } = useWeb3React()
 	const ethBalance = useTokenBalance('ETH')
 
-	const ensResolver = new ethers.providers.JsonRpcProvider('https://rpc.ankr.com/eth')
+	const ensResolver = new ethers.providers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/UZ88g_fys9oP-NhI2S-O47r6isdCIGHI')
 	useEffect(() => {
 		if (!account) return
 
