@@ -11,10 +11,7 @@ import TransactionProvider from '@/contexts/Transactions'
 import '@/styles/globals.css'
 import GlobalStyle from '@/styles/GlobalStyle'
 import theme from '@/theme/index'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 import { Web3ReactProvider } from '@web3-react/core'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { DefaultSeo } from 'next-seo'
@@ -26,8 +23,6 @@ import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
 import Web3 from 'web3'
 import { provider } from 'web3-core'
-
-library.add(fas, fab)
 
 function getLibrary(provider: provider) {
 	return new Web3(provider)
