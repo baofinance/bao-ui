@@ -1,4 +1,3 @@
-import baoElderWL from '@/pages/nft/components/baoElderWL'
 import { Config } from './types'
 
 export default {
@@ -312,23 +311,25 @@ export default {
 	nfts: [
 		{
 			nid: 1,
-			contract: {
+			address: {
 				1: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
 			},
 			name: 'Bao Elder NFT',
 			image: '/images/nft/baoelder.png',
-			whitelist: '/images/nft/baoElderWL',
+			whitelist: 'baoElderWL.ts',
 			opensea: 'BaoElder',
+			description: 'OG Bao Farmers',
 		},
 		{
-			nid: 1,
-			contract: {
+			nid: 2,
+			address: {
 				1: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
 			},
 			name: 'BaoSwap NFT',
 			image: '/images/nft/baoswap.png',
-			whitelist: '/images/nft/baoSwapWL',
+			whitelist: 'baoSwapWL.ts',
 			opensea: 'BaoGnosis',
+			description: 'Users of Bao on Gnosis Chain',
 		},
 	],
 } as unknown as Config

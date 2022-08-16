@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, ActiveSupportedNFT, BaoNFT } from './lib/types'
+import { ActiveSupportedBasket, ActiveSupportedNFT, SupportedNFT } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -47,17 +47,12 @@ export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
 	return bao && bao.contracts.baskets
 }
 
-export const getNFTs = (bao: Bao): BaoNFT[] => {
-	return bao
-		? bao.contracts.nfts.map(({ nid, contract, name, image, whitelist, opensea }) => ({
-				nid,
-				contract,
-				name,
-				image,
-				whitelist,
-				opensea,
-		  }))
-		: []
+export const getNFTs = (bao: Bao): ActiveSupportedNFT[] => {
+	return bao && bao.contracts.nfts
+}
+
+export const getNFTContract = (bao: Bao, nid: number): Contract | undefined => {
+	if (bao && bao.contracts && bao.contracts.nfts) return _.find(bao.contracts.nfts, { nid }).nftContract
 }
 
 export const getFarms = (bao: Bao): Farm[] => {

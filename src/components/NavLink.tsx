@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 interface NavLinkProps {
-	children: React.ReactNode
+	children: ReactNode
 	href: string
 	className?: string
 	exact?: boolean

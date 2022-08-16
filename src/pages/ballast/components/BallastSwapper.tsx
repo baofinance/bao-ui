@@ -1,4 +1,6 @@
 import Config from '@/bao/lib/config'
+import Card from '@/components/Card'
+import { AbsoluteContainer } from '@/components/Container'
 import { BalanceInput } from '@/components/Input'
 import { SpinnerLoader } from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
@@ -118,20 +120,22 @@ const BallastSwapper: React.FC = () => {
 
 	return (
 		<>
-			<div className='absolute top-[50%] -mt-80 w-full pl-4 pr-4 md:left-[50%] md:-ml-96 md:w-[720px]'>
-				<PageHeader title='Ballast' />
-				<div className='w-full rounded-lg !border !border-solid !border-primary-400/50 bg-primary-100 p-6 shadow-2xl shadow-primary-100 md:absolute'>
-					<h2 className='text-center'>
+			<PageHeader title='Ballast' />
+			<Card>
+				<Card.Header
+					header={
 						<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
 							<a>
-								<FontAwesomeIcon icon={faShip} />
+								<FontAwesomeIcon className='text-4xl' icon={faShip} />
 							</a>
 						</Tooltipped>
-					</h2>
+					}
+				/>
+				<Card.Body>
 					{swapDirection ? baoUSDInput : daiInput}
 					<div className='mt-4 block select-none text-center'>
 						<span
-							className='text-lg mb-2 rounded-full border-none bg-primary-300 p-2 text-text-100 hover:cursor-pointer hover:bg-primary-400'
+							className='mb-2 rounded-full border-none bg-primary-300 p-2 text-lg text-text-100 hover:cursor-pointer hover:bg-primary-400'
 							onClick={() => setSwapDirection(!swapDirection)}
 						>
 							<FontAwesomeIcon icon={faSync} className='m-auto' />
@@ -140,7 +144,9 @@ const BallastSwapper: React.FC = () => {
 						</span>
 					</div>
 					{swapDirection ? daiInput : baoUSDInput}
-					<br />
+					<div className='h-4' />
+				</Card.Body>
+				<Card.Actions>
 					<BallastButton
 						swapDirection={swapDirection}
 						inputVal={inputVal}
@@ -148,8 +154,8 @@ const BallastSwapper: React.FC = () => {
 						supplyCap={supplyCap}
 						reserves={reserves}
 					/>
-				</div>
-			</div>
+				</Card.Actions>
+			</Card>
 		</>
 	)
 }

@@ -1,3 +1,4 @@
+import { AbsoluteContainer } from '@/components/Container'
 import Page from '@/components/Page'
 import { NextSeo } from 'next-seo'
 import React from 'react'
@@ -8,7 +9,9 @@ const Ballast: React.FC = () => {
 		<>
 			<NextSeo title={`Ballast`} description={`Buy and sell baoUSD for DAI.`} />
 			<Page>
-				<BallastSwapper />
+				<AbsoluteContainer>
+					<BallastSwapper />
+				</AbsoluteContainer>
 			</Page>
 		</>
 	)

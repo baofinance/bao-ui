@@ -72,7 +72,7 @@ export class Contracts {
 			networkId === Config.networkId
 				? Config.nfts.map(nft =>
 						Object.assign(nft, {
-							nftAddress: nft.contract[networkId],
+							nftAddress: nft.address[networkId],
 							nftContract: this.getNewContract('nft.json'),
 						}),
 				  )

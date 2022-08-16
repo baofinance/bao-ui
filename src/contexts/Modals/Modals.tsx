@@ -3,9 +3,9 @@ import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
 interface ModalsContext {
-	content?: React.ReactNode
+	content?: ReactNode
 	isOpen?: boolean
-	onPresent: (content: React.ReactNode, key?: string) => void
+	onPresent: (content: ReactNode, key?: string) => void
 	onDismiss: () => void
 }
 
@@ -20,11 +20,11 @@ interface ModalsProps {
 
 const Modals: React.FC<PropsWithChildren<ModalsProps>> = ({ children }) => {
 	const [isOpen, setIsOpen] = useState(false)
-	const [content, setContent] = useState<React.ReactNode>()
+	const [content, setContent] = useState<ReactNode>()
 	const [modalKey, setModalKey] = useState<string>()
 
 	const handlePresent = useCallback(
-		(modalContent: React.ReactNode, key?: string) => {
+		(modalContent: ReactNode, key?: string) => {
 			setModalKey(key)
 			setContent(modalContent)
 			setIsOpen(true)

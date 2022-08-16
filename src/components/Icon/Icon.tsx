@@ -12,7 +12,7 @@ export const MenuIcon: React.FC<IconProps> = ({ size = 24 }) => {
 
 export interface IconProps {
 	color?: string
-	children?: React.ReactNode
+	children?: ReactNode
 	size?: number
 }
 

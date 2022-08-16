@@ -70,15 +70,16 @@ export interface SupportedMarket {
 	price?: number
 }
 
-export interface BaoNFT {
+export interface SupportedNFT {
 	nid: number
-	contract: {
+	address: {
 		[network: number]: string
 	}
 	name: string
 	image: string
 	whitelist: string[]
 	opensea: string
+	description: string
 }
 
 export interface FarmableSupportedPool extends SupportedPool {
@@ -101,7 +102,7 @@ export interface ActiveSupportedMarket extends SupportedMarket {
 	underlyingContract: Contract
 }
 
-export interface ActiveSupportedNFT extends BaoNFT {
+export interface ActiveSupportedNFT extends SupportedNFT {
 	nftAddress: string
 	nftContract: Contract
 }
@@ -147,7 +148,7 @@ export interface Config {
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
 	markets: SupportedMarket[]
-	nfts: BaoNFT[]
+	nfts: SupportedNFT[]
 }
 
 export type SWR = {

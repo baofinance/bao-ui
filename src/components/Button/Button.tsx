@@ -3,7 +3,7 @@
 import Config from '@/bao/lib/config'
 import { faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { classNames } from 'src/functions/styling'
 import styled from 'styled-components'
 import { SpinnerLoader } from '../Loader'
@@ -18,7 +18,7 @@ const Size = {
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	children?: React.ReactNode
+	children?: ReactNode
 	size?: ButtonSize
 	fullWidth?: boolean
 	pendingTx?: string
@@ -72,7 +72,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					'relative items-center justify-center gap-1 overflow-hidden !border !border-solid !border-primary-300 bg-primary-200 font-strong text-text-100 outline-0 duration-200 hover:bg-primary-300',
+					'font-strong relative items-center justify-center gap-1 overflow-hidden !border !border-solid !border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
 					className,
 				)}
 			>
@@ -92,8 +92,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 export const MaxButton = ({ onClick }: MaxButtonProps) => {
 	return (
 		<button
-			className='m-auto mr-2 h-[80%] select-none rounded-lg !border !border-solid !border-primary-400/50 bg-primary-200
-			p-2 align-middle text-default font-strong text-text-100 no-underline duration-200 hover:cursor-pointer
+			className='text-default font-strong m-auto mr-2 h-[80%] select-none rounded-lg !border !border-solid
+			!border-primary-400/50 bg-primary-200 p-2 align-middle text-text-100 no-underline duration-200 hover:cursor-pointer
 			hover:bg-primary-300 hover:text-text-100 md:text-sm'
 			onClick={onClick}
 		>
@@ -175,13 +175,13 @@ type CloseButtonProps = {
 }
 
 export const CloseButton = ({ onHide }: CloseButtonProps) => (
-	<a className='text-2xl absolute top-24 right-8 text-text-100 hover:cursor-pointer hover:text-text-400' onClick={onHide}>
+	<a className='absolute top-24 right-8 text-2xl text-text-100 hover:cursor-pointer hover:text-text-400' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
 	</a>
 )
 
 export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
-	<a className='text-2xl absolute top-24 left-8 text-text-100 hover:cursor-pointer hover:text-text-400' onClick={onHide}>
+	<a className='absolute top-24 left-8 text-2xl text-text-100 hover:cursor-pointer hover:text-text-400' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
 	</a>
 )

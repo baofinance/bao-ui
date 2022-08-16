@@ -9,7 +9,7 @@ import { Button } from '../../Button'
 import WalletModalCard from '../../WalletModalCard'
 
 interface WalletCardProps {
-	icon: React.ReactNode
+	icon: ReactNode
 	onConnect: () => void
 	title: string
 }
