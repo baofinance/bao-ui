@@ -1,13 +1,13 @@
 import React, { FC, ReactNode } from 'react'
-import { classNames } from 'src/functions/styling'
+import { classNames } from '@/functions/styling'
 
 export interface ModalBodyProps {
+	children: ReactNode
 	className?: string
-	children?: ReactNode
 }
 
 const ModalBody: FC<ModalBodyProps> = ({ className = '', children }) => {
-	return <div className={classNames('mb-2 w-full flex-1', className)}>{children}</div>
+	return <div className={classNames('lg:min-w-lg flex h-full flex-col gap-4 lg:max-w-lg', className)}>{children}</div>
 }
 
 export default ModalBody

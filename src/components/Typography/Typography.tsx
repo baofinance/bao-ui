@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
 import React, { FC, forwardRef } from 'react'
-import { classNames } from 'src/functions/styling'
+import { classNames } from '@/functions/styling'
 
 export type TypographyWeight = 400 | 500 | 700
 

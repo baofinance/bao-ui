@@ -4,7 +4,7 @@ import Config from '@/bao/lib/config'
 import { faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactNode, useMemo } from 'react'
-import { classNames } from 'src/functions/styling'
+import { classNames } from '@/functions/styling'
 import styled from 'styled-components'
 import { SpinnerLoader } from '../Loader'
 
@@ -28,7 +28,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 	disabled?: boolean
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	({ children, className = '', size = 'md', fullWidth = false, pendingTx, inline, text, href, disabled, ...rest }, ref) => {
 		const ButtonChild = useMemo(() => {
 			if (href) {
@@ -88,6 +88,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		)
 	},
 )
+
+export default Button
 
 export const MaxButton = ({ onClick }: MaxButtonProps) => {
 	return (

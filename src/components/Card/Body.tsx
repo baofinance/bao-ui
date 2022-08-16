@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react'
-import { classNames } from 'src/functions/styling'
+import { classNames } from '@/functions/styling'
 
 export interface CardBodyProps {
 	className?: string

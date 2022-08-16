@@ -3,6 +3,7 @@ import { Button } from '@/components/Button'
 import { CloseButton } from '@/components/Button/Button'
 import { MaxLabel } from '@/components/Label'
 import { SpinnerLoader } from '@/components/Loader'
+import Modal from '@/components/Modal'
 import Spacer from '@/components/Spacer'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
@@ -13,7 +14,6 @@ import { useWeb3React } from '@web3-react/core'
 import _ from 'lodash'
 import Image from 'next/image'
 import React, { useCallback } from 'react'
-import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 const AccountModal = ({ onHide, show }: ModalProps) => {
@@ -34,12 +34,8 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<Modal.Header>
-				<CloseButton onHide={hideModal} onClick={onHide} />
-				<Modal.Title id='contained-modal-title-vcenter'>
-					<p>My Account</p>
-				</Modal.Title>
-			</Modal.Header>
+			<Modal.Header header={'My Account'} />
+			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Body>
 				<WalletBalances>
 					<WalletBalancesInner>
@@ -124,10 +120,10 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 					</TransactionWrapper>
 				</>
 			</Modal.Body>
-			<Modal.Footer>
+			<Modal.Actions>
 				<Button fullWidth href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`} text='View on Explorer' />
 				<Button fullWidth onClick={handleSignOutClick} text='Sign out' />
-			</Modal.Footer>
+			</Modal.Actions>
 		</Modal>
 	)
 }
