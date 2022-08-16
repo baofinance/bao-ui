@@ -58,8 +58,8 @@ module.exports = {
 				400: '#FFD84B', //active link
 			},
 			background: {
-				100: '#fff8ee', //dark mode
-				200: '#50251c', //light mode
+				100: '#210e0e', //dark mode
+				200: '#fff8ee', //dark mode
 			},
 			transparent: {
 				100: 'rgba(0, 0, 0, 0.1)', //dark

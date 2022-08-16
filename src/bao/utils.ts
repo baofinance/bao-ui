@@ -1,16 +1,14 @@
-import BigNumber from 'bignumber.js'
 import { Farm } from '@/contexts/Farms'
+import Multicall from '@/utils/multicall'
+import { decimate, exponentiate } from '@/utils/numberFormat'
+import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import keccak256 from 'keccak256'
 import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
-import Multicall from '@/utils/multicall'
-import { decimate, exponentiate } from '@/utils/numberFormat'
-import baoElderWL from '@/pages/nft/components/baoElderWL'
-import baoSwapWL from '@/pages/nft/components/baoSwapWL'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
-import { ActiveSupportedBasket } from './lib/types'
+import { ActiveSupportedBasket, ActiveSupportedNFT, BaoNFT } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -37,14 +35,6 @@ export const getBaoContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('bao')
 }
 
-export const getElderContract = (bao: Bao): Contract => {
-	return bao && bao.contracts && bao.getContract('nft')
-}
-
-export const getBaoSwapContract = (bao: Bao): Contract => {
-	return bao && bao.contracts && bao.getContract('nft2')
-}
-
 export const getBasketContract = (bao: Bao, nid: number): Contract | undefined => {
 	if (bao && bao.contracts && bao.contracts.baskets) return _.find(bao.contracts.baskets, { nid }).basketContract
 }
@@ -55,6 +45,19 @@ export const getRecipeContract = (bao: Bao) => {
 
 export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
 	return bao && bao.contracts.baskets
+}
+
+export const getNFTs = (bao: Bao): BaoNFT[] => {
+	return bao
+		? bao.contracts.nfts.map(({ nid, contract, name, image, whitelist, opensea }) => ({
+				nid,
+				contract,
+				name,
+				image,
+				whitelist,
+				opensea,
+		  }))
+		: []
 }
 
 export const getFarms = (bao: Bao): Farm[] => {
@@ -284,26 +287,11 @@ export const getUserInfoChef = async (masterChefContract: Contract, pid: number,
 export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) =>
 	await comptrollerContract.methods.getAccountLiquidity(account).call()
 
-export const mintElder = async (nftContract: Contract, account: string): Promise<string> => {
-	const leafNodes = baoElderWL.map((address: string) => keccak256(address))
-	const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-	const leaf = keccak256(account)
-	const hexProof = merkleTree.getHexProof(leaf)
-
-	console.log('account\n', account.toString())
-	console.log('Whitelist proof\n', hexProof.toString())
-
-	return nftContract.methods.mintBaoGWithSignature(hexProof).send({ from: account })
-}
-
-export const mintBaoSwap = async (nftContract: Contract, account: string): Promise<string> => {
-	const leafNodes = baoSwapWL.map((address: string) => keccak256(address))
+export const mintNFT = async (whitelist: string[], nftContract: Contract, account: string): Promise<string> => {
+	const leafNodes = whitelist.map((address: string) => keccak256(address))
 	const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
 	const leaf = keccak256(account)
 	const hexProof = merkleTree.getHexProof(leaf)
 
 	return nftContract.methods.mintBaoGWithSignature(hexProof).send({ from: account })
 }
-
-export const getNFTWhitelistClaimed = async (nftContract: Contract, account: string) =>
-	await nftContract.methods.whitelistClaimed(account).call()

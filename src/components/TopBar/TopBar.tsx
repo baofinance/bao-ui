@@ -1,10 +1,10 @@
-import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button } from '@/components/Button'
 import { MenuIcon } from '@/components/Icon'
 import Logo from '@/components/Logo'
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import styled from 'styled-components'
-import { Button } from '@/components/Button'
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
 
@@ -16,100 +16,26 @@ interface TopBarProps {
 
 const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu, isDarkMode, toggleTheme }) => {
 	return (
-		<StyledTopBar>
-			<StyledTopBarInner>
-				<StyledLogoWrapper>
+		<div className='fixed z-50 m-auto w-full border-b border-primary-300 bg-background-100'>
+			<div className='z-50 m-auto flex h-20 w-full items-center justify-between p-4'>
+				<div className='w-auto'>
 					<Logo />
-				</StyledLogoWrapper>
-				<StyledNavWrapper>
+				</div>
+				<div className='hidden flex-1 justify-center xl:flex'>
 					<Nav />
-				</StyledNavWrapper>
-				<StyledAccountButtonWrapper>
+				</div>
+				<div className='flex w-[200px] items-center justify-end sm:w-auto sm:justify-center'>
 					<AccountButton />
-					<StyledThemeButton>
-						<Button onClick={toggleTheme} aria-label='Dark Mode'>
-							<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} />
-						</Button>
-					</StyledThemeButton>
-					<StyledMenuButton onClick={onPresentMobileMenu}>
+					<Button onClick={toggleTheme} size='sm' aria-label='Dark Mode' className='ml-4'>
+						<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} />
+					</Button>
+					<Button size='sm' className='ml-4 rounded-lg border-0 bg-primary-200 outline-0 xl:hidden' onClick={onPresentMobileMenu}>
 						<MenuIcon />
-					</StyledMenuButton>
-				</StyledAccountButtonWrapper>
-			</StyledTopBarInner>
-		</StyledTopBar>
+					</Button>
+				</div>
+			</div>
+		</div>
 	)
 }
-
-const StyledLogoWrapper = styled.div`
-	width: 200px;
-	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
-		width: auto;
-	}
-`
-const StyledTopBar = styled.div`
-	margin: auto;
-	border-bottom: ${props => props.theme.border.default};
-	width: 100%;
-	position: fixed;
-	z-index: 999999;
-	background: ${props => props.theme.color.background[100]};
-`
-
-const StyledNavWrapper = styled.div`
-	display: flex;
-	flex: 1;
-	justify-content: center;
-	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
-		display: none;
-	}
-`
-
-const StyledTopBarInner = styled.div`
-	background: ${props => props.theme.color.background[100]};
-	margin: auto;
-	align-items: center;
-	display: flex;
-	height: ${props => props.theme.topBarSize}px;
-	justify-content: space-between;
-	width: 98%;
-	z-index: 999999;
-`
-
-const StyledAccountButtonWrapper = styled.div`
-	align-items: center;
-	display: flex;
-	justify-content: flex-end;
-	width: 200px;
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		justify-content: center;
-		width: auto;
-	}
-`
-
-const StyledMenuButton = styled.button`
-	background: none;
-	border: 0;
-	margin: 0;
-	outline: 0;
-	padding: 0;
-	display: none;
-
-	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
-		align-items: center;
-		display: flex;
-		height: 44px;
-		justify-content: center;
-		width: 44px;
-		margin-left: ${props => props.theme.spacing[2]}px;
-	}
-`
-
-const StyledThemeButton = styled.div`
-	> button {
-		height: 40px;
-		width: 40px;
-		margin-left: 1rem;
-	}
-`
 
 export default TopBar

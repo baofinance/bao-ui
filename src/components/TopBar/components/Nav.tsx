@@ -17,10 +17,10 @@ const Nav: React.FC = () => {
 	]
 
 	return (
-		<nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' aria-label='Top'>
-			<div className='w-full py-6 flex items-center justify-between border-b border-indigo-500 lg:border-none'>
+		<nav className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8' aria-label='Top'>
+			<div className='border-indigo-500 flex w-full items-center justify-between border-b py-6 lg:border-none'>
 				<div className='flex items-center'>
-					<div className='hidden ml-10 space-x-8 lg:block'>
+					<div className='ml-10 hidden space-x-8 lg:block'>
 						{navigation.map(link => (
 							<NavLink href={link.href} key={link.name}>
 								{link.name}
@@ -32,7 +32,7 @@ const Nav: React.FC = () => {
 								key={link.name}
 								target='_blank'
 								rel='noreferrer'
-								className='text-rubik font-medium text-text-100 hover:text-text-400 antialiased'
+								className='text-rubik font-medium text-text-100 antialiased hover:text-text-400'
 							>
 								{link.name}
 							</a>
@@ -40,7 +40,7 @@ const Nav: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className='py-4 flex flex-wrap justify-center space-x-6 lg:hidden'>
+			<div className='flex flex-wrap justify-center space-x-6 py-4 lg:hidden'>
 				{navigation.map(link => (
 					<NavLink href={link.href} key={link.name}>
 						{link.name}
@@ -52,7 +52,7 @@ const Nav: React.FC = () => {
 						key={link.name}
 						target='_blank'
 						rel='noreferrer'
-						className='text-rubik font-medium text-text-100 hover:text-text-300 antialiased'
+						className='text-rubik font-medium text-text-100 antialiased hover:text-text-300'
 					>
 						{link.name}
 					</a>

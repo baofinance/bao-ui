@@ -1,6 +1,7 @@
 import Config from '@/bao/lib/config'
 import { BalanceInput } from '@/components/Input'
 import { SpinnerLoader } from '@/components/Loader'
+import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
@@ -51,13 +52,13 @@ const BallastSwapper: React.FC = () => {
 			denominator: new BigNumber(ballastRes[3].values[0].hex),
 		})
 		setReserves(new BigNumber(daiRes[0].values[0].hex))
-	}, [bao, transactions])
+	}, [bao])
 
 	useEffect(() => {
 		if (!bao) return
 
 		fetchBallastInfo()
-	}, [bao, transactions])
+	}, [bao, fetchBallastInfo, transactions])
 
 	const daiInput = (
 		<>
@@ -117,9 +118,9 @@ const BallastSwapper: React.FC = () => {
 
 	return (
 		<>
-			<div className='absolute top-[50%] sm:w-full sm:pl-4 sm:pr-4 md:left-[50%] md:-mt-60 md:-ml-[360px] md:w-[720px]'>
-				<h1 className='text-text-dark-100 text-center font-kaushan text-xxxl font-strong tracking-tighter antialiased'>Ballast</h1>
-				<div className='rounded-lg !border !border-solid !border-primary-400/50 bg-primary-100 p-6 shadow-2xl sm:w-full md:absolute md:w-[720px]'>
+			<div className='absolute top-[50%] -mt-80 w-full pl-4 pr-4 md:left-[50%] md:-ml-96 md:w-[720px]'>
+				<PageHeader title='Ballast' />
+				<div className='w-full rounded-lg !border !border-solid !border-primary-400/50 bg-primary-100 p-6 shadow-2xl shadow-primary-100 md:absolute'>
 					<h2 className='text-center'>
 						<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
 							<a>
@@ -128,16 +129,16 @@ const BallastSwapper: React.FC = () => {
 						</Tooltipped>
 					</h2>
 					{swapDirection ? baoUSDInput : daiInput}
-					<a className='mt-4 block select-none text-center text-text-200 duration-200 hover:cursor-pointer'>
+					<div className='mt-4 block select-none text-center'>
 						<span
-							className='mb-2 rounded-full border-none bg-primary-300 p-2 text-text-100 hover:bg-primary-400 md:text-sm'
+							className='text-lg mb-2 rounded-full border-none bg-primary-300 p-2 text-text-100 hover:cursor-pointer hover:bg-primary-400'
 							onClick={() => setSwapDirection(!swapDirection)}
 						>
-							<FontAwesomeIcon icon={faSync} className='text-md hover:animate-spin' />
+							<FontAwesomeIcon icon={faSync} className='m-auto' />
 							{/* {' - '}
     Fee: {fees ? `${fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']).times(100).toString()}%` : <SpinnerLoader />} */}
 						</span>
-					</a>
+					</div>
 					{swapDirection ? daiInput : baoUSDInput}
 					<br />
 					<BallastButton

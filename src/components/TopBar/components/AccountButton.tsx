@@ -24,8 +24,9 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const { account } = useWeb3React()
 	const ethBalance = useTokenBalance('ETH')
 
-	const ensResolver = new ethers.providers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/UZ88g_fys9oP-NhI2S-O47r6isdCIGHI')
 	useEffect(() => {
+		const ensResolver = new ethers.providers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/UZ88g_fys9oP-NhI2S-O47r6isdCIGHI')
+
 		if (!account) return
 
 		ensResolver.lookupAddress(account).then(_ens => {
@@ -39,101 +40,84 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 		<>
 			<StyledAccountButton>
 				{!account ? (
-					<Button
-						onClick={() => setShowWalletProviderModal(true)}
-						size='sm'
-						text={
-							<>
-								Connect{' '}
-								<FontAwesomeIcon
-									icon={faLink}
-									style={{
-										marginLeft: '4px',
-									}}
-								/>
-							</>
-						}
-						border={true}
-					/>
+					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
+						<>
+							Connect{' '}
+							<FontAwesomeIcon
+								icon={faLink}
+								style={{
+									marginLeft: '4px',
+								}}
+							/>
+						</>
+					</Button>
 				) : (
-					<Button
-						onClick={() => setShowAccountModal(true)}
-						size='sm'
-						text={
-							<>
-								{ens ? (
-									ens
-								) : (
-									<>
-										{account.slice(0, 6)}...
-										{account.slice(account.length - 4, account.length)}{' '}
-									</>
-								)}
-								<FontAwesomeIcon
-									icon={faAngleDoubleRight}
-									style={{
-										margin: '0 4px',
-										color: '#b07a6e',
-									}}
-								/>{' '}
-								{getBalanceNumber(ethBalance).toFixed(4)}
-								<FontAwesomeIcon
-									icon={faEthereum}
-									style={{
-										marginLeft: '4px',
-									}}
-								/>
-								{pendingTxs > 0 && (
-									<>
-										{' '}
-										<FontAwesomeIcon
-											icon={faAngleDoubleRight}
-											style={{
-												margin: '0 4px',
-												color: '#b07a6e',
-											}}
-										/>{' '}
-										<SpinnerLoader />
-										<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
-									</>
-								)}
-							</>
-						}
-						border={true}
-					/>
+					<Button onClick={() => setShowAccountModal(true)} size='sm'>
+						{' '}
+						<>
+							{ens ? (
+								ens
+							) : (
+								<>
+									{account.slice(0, 6)}...
+									{account.slice(account.length - 4, account.length)}{' '}
+								</>
+							)}
+							<FontAwesomeIcon
+								icon={faAngleDoubleRight}
+								style={{
+									margin: '0 4px',
+									color: '#b07a6e',
+								}}
+							/>{' '}
+							{getBalanceNumber(ethBalance).toFixed(4)}
+							<FontAwesomeIcon
+								icon={faEthereum}
+								style={{
+									marginLeft: '4px',
+								}}
+							/>
+							{pendingTxs > 0 && (
+								<>
+									{' '}
+									<FontAwesomeIcon
+										icon={faAngleDoubleRight}
+										style={{
+											margin: '0 4px',
+											color: '#b07a6e',
+										}}
+									/>{' '}
+									<SpinnerLoader />
+									<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
+								</>
+							)}
+						</>
+					</Button>
 				)}
 			</StyledAccountButton>
 
 			<MobileAccountButton>
 				{!account ? (
-					<Button
-						onClick={() => setShowWalletProviderModal(true)}
-						size='sm'
-						text={
-							<>
-								Connect{' '}
-								<FontAwesomeIcon
-									icon={faLink}
-									style={{
-										marginLeft: '4px',
-									}}
-								/>
-							</>
-						}
-						border={true}
-					/>
+					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
+						{' '}
+						<>
+							Connect{' '}
+							<FontAwesomeIcon
+								icon={faLink}
+								style={{
+									marginLeft: '4px',
+								}}
+							/>
+						</>
+					</Button>
 				) : (
-					<Button
-						onClick={() => setShowAccountModal(true)}
-						size='sm'
-						text={
-							<>
-								{account.slice(0, 6)}...
-								{account.slice(account.length - 4, account.length)}
-							</>
-						}
-						border={true}
-					/>
+					<Button onClick={() => setShowAccountModal(true)} size='sm'>
+						{' '}
+						<>
+							{account.slice(0, 6)}...
+							{account.slice(account.length - 4, account.length)}
+						</>
+					</Button>
 				)}
 			</MobileAccountButton>
 

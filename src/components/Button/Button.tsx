@@ -1,192 +1,93 @@
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable react/display-name */
+import Config from '@/bao/lib/config'
+import { faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Link from 'next/link'
-import React, { useContext, useMemo } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useMemo } from 'react'
+import { classNames } from 'src/functions/styling'
+import styled from 'styled-components'
+import { SpinnerLoader } from '../Loader'
 
-interface ButtonProps {
+export type ButtonSize = 'xs' | 'sm' | 'lg' | 'default' | 'none'
+
+const Size = {
+	xs: 'text-xs rounded-lg px-2 h-[32px] !border',
+	sm: 'text-sm rounded-lg px-3 h-[40px]',
+	md: 'text-default rounded-lg px-4 h-[56px]',
+	lg: 'text-lg rounded-lg px-6 h-[64px]',
+}
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children?: React.ReactNode
-	disabled?: boolean
-	href?: string
-	onClick?: () => void
-	size?: 'sm' | 'md' | 'lg'
-	text?: any
-	to?: string
-	variant?: 'default' | 'secondary' | 'tertiary'
+	size?: ButtonSize
+	fullWidth?: boolean
+	pendingTx?: string
 	inline?: boolean
-	width?: string
-	target?: string
-	border?: boolean
-}
-
-export const Button: React.FC<ButtonProps> = ({
-	children,
-	disabled,
-	href,
-	onClick,
-	size,
-	text,
-	to,
-	variant,
-	inline,
-	width,
-	target,
-	border,
-}) => {
-	const { spacing } = useContext(ThemeContext)
-
-	let buttonColor: string
-	switch (variant) {
-		case 'secondary':
-			buttonColor = '#a29b91'
-			break
-		case 'default':
-		default:
-			buttonColor = '#50251c'
-	}
-
-	let buttonSize: number
-	let buttonPadding: number
-	let fontSize: string
-	switch (size) {
-		case 'sm':
-			buttonPadding = spacing[4]
-			buttonSize = 40
-			fontSize = '0.75rem'
-			break
-		case 'lg':
-			buttonPadding = spacing[4]
-			buttonSize = 72
-			fontSize = '1rem'
-			break
-		case 'md':
-		default:
-			buttonPadding = spacing[4]
-			buttonSize = 50
-			fontSize = '1rem'
-	}
-
-	const ButtonChild = useMemo(() => {
-		if (to != '' && to != null) {
-			return <StyledLink href={to}>{text}</StyledLink>
-		} else if (href) {
-			return (
-				<ButtonLink href={href} target='__blank'>
-					{text}
-				</ButtonLink>
-			)
-		} else {
-			return text
-		}
-	}, [href, text, to])
-
-	const ButtonComp = !border ? StyledButton : StyledBorderButton
-	return (
-		<ButtonComp
-			color={buttonColor}
-			disabled={disabled}
-			fontSize={fontSize}
-			onClick={onClick}
-			padding={buttonPadding}
-			size={buttonSize}
-			inline={inline}
-			width={width}
-			target={target}
-		>
-			{children}
-			{ButtonChild}
-		</ButtonComp>
-	)
-}
-
-interface StyledButtonProps {
+	href?: string
+	text?: any
 	disabled?: boolean
-	fontSize: string
-	padding: number
-	size: number
-	inline: boolean
-	width: string
-	target?: string
 }
 
-const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
-	target: attrs.target || '',
-}))<StyledButtonProps>`
-	align-items: center;
-	background: ${props => props.theme.color.primary[200]};
-	border-radius: ${props => props.theme.borderRadius}px;
-	border: ${props => props.theme.border.default};
-	padding: ${props => -props.theme.spacing[3]}px;
-	color: ${props => props.theme.color.text[100]};
-	display: ${props => (props.inline ? 'inline-block' : 'flex')};
-	font-size: ${props => props.fontSize};
-	font-weight: ${props => props.theme.fontWeight.strong};
-	height: ${props => props.size}px;
-	justify-content: center;
-	outline: none;
-	padding-left: ${props => props.padding}px;
-	padding-right: ${props => props.padding}px;
-	width: ${props => (props.width ? props.width : '100%')};
-	opacity: ${props => (props.disabled ? 0.5 : 1)};
-	position: relative;
-	overflow: hidden;
-	transition: 200ms;
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+	({ children, className = '', size = 'md', fullWidth = false, pendingTx, inline, text, href, disabled, ...rest }, ref) => {
+		const ButtonChild = useMemo(() => {
+			if (href) {
+				return (
+					<a href={href} target='_blank' rel='noreferrer' className='hover:text-text-100 focus:text-text-100'>
+						{text}
+					</a>
+				)
+			} else {
+				return text
+			}
+		}, [href, text])
 
-	@media (max-width: 960px) {
-		/* margin: 0 0.5rem 0 0.5rem; */
-		text-align: center;
-		padding: ${props => -props.theme.spacing[1]}px ${props => -props.theme.spacing[3]}px;
-	}
-	@media (max-width: 640px) {
-		width: 100%;
-		padding: ${props => -props.theme.spacing[3]}px ${props => -props.theme.spacing[3]}px;
-	}
+		const isDisabled = useMemo(() => typeof pendingTx === 'string' || pendingTx || disabled === true, [disabled, pendingTx])
 
-	&:hover {
-		background: ${props => props.theme.color.primary[300]};
-		cursor: pointer;
-	}
+		const buttonText = pendingTx ? (
+			typeof pendingTx === 'string' ? (
+				<a
+					href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
+					target='_blank'
+					rel='noreferrer'
+					className='hover:text-text-100 focus:text-text-100'
+				>
+					Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+				</a>
+			) : (
+				'Pending Transaction'
+			)
+		) : (
+			children
+		)
 
-	&:hover,
-	&:focus,
-	&:active {
-		cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')} !important;
-	}
-`
-
-const StyledLink = styled(Link)`
-	align-items: center;
-	color: inherit;
-	display: flex;
-	flex: 1;
-	height: 50px;
-	justify-content: center;
-	margin: 0 ${props => -props.theme.spacing[4]}px;
-	padding: 0 ${props => props.theme.spacing[4]}px;
-	text-decoration: none;
-
-	&:hover,
-	&:focus {
-		color: ${props => props.theme.color.text[100]};
-	}
-`
-
-const ButtonLink = styled.a`
-	align-items: center;
-	color: inherit;
-	display: flex;
-	flex: 1;
-	height: 50px;
-	justify-content: center;
-	margin: 0 ${props => -props.theme.spacing[4]}px;
-	padding: 0 ${props => props.theme.spacing[4]}px;
-	text-decoration: none;
-
-	&:hover,
-	&:focus {
-		color: ${props => props.theme.color.text[100]};
-	}
-`
+		return (
+			<button
+				{...rest}
+				ref={ref}
+				disabled={isDisabled}
+				className={classNames(
+					// @ts-ignore TYPE NEEDS FIXING
+					Size[size],
+					inline ? 'inline-block' : 'flex',
+					fullWidth ? 'w-full' : '',
+					disabled ? 'cursor-not-allowed opacity-50' : '',
+					'relative items-center justify-center gap-1 overflow-hidden !border !border-solid !border-primary-300 bg-primary-200 font-strong text-text-100 outline-0 duration-200 hover:bg-primary-300',
+					className,
+				)}
+			>
+				{pendingTx ? (
+					<SpinnerLoader />
+				) : (
+					<>
+						{ButtonChild}
+						{buttonText}
+					</>
+				)}
+			</button>
+		)
+	},
+)
 
 export const MaxButton = ({ onClick }: MaxButtonProps) => {
 	return (
@@ -204,12 +105,6 @@ export const MaxButton = ({ onClick }: MaxButtonProps) => {
 type MaxButtonProps = {
 	onClick: (e: any) => void
 }
-
-export const StyledBorderButton = styled(StyledButton)`
-	&:hover {
-		color: ${props => props.theme.color.text[100]};
-	}
-`
 
 type NavButtonProps = {
 	onClick: (s: any) => void
@@ -280,13 +175,13 @@ type CloseButtonProps = {
 }
 
 export const CloseButton = ({ onHide }: CloseButtonProps) => (
-	<a className='text-2xl absolute top-24 right-8 text-background-200 hover:cursor-pointer hover:text-text-300' onClick={onHide}>
+	<a className='text-2xl absolute top-24 right-8 text-text-100 hover:cursor-pointer hover:text-text-400' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
 	</a>
 )
 
 export const CloseButtonLeft = ({ onHide }: CloseButtonProps) => (
-	<a className='text-2xl absolute top-24 left-8 text-background-200 hover:cursor-pointer hover:text-text-100' onClick={onHide}>
+	<a className='text-2xl absolute top-24 left-8 text-text-100 hover:cursor-pointer hover:text-text-400' onClick={onHide}>
 		<FontAwesomeIcon icon={faTimes} />
 	</a>
 )

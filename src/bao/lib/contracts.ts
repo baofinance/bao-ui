@@ -19,6 +19,7 @@ export class Contracts {
 	pools: Types.FarmableSupportedPool[]
 	baskets: Types.ActiveSupportedBasket[]
 	markets: Types.ActiveSupportedMarket[]
+	nfts: Types.ActiveSupportedNFT[]
 	blockGasLimit: any
 	notifier: any
 
@@ -63,6 +64,16 @@ export class Contracts {
 							underlyingAddress: market.underlyingAddresses[networkId],
 							marketContract: this.getNewContract(market.underlyingAddresses[Config.networkId] === 'ETH' ? CEtherAbi : CTokenAbi),
 							underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi),
+						}),
+				  )
+				: undefined
+
+		this.nfts =
+			networkId === Config.networkId
+				? Config.nfts.map(nft =>
+						Object.assign(nft, {
+							nftAddress: nft.contract[networkId],
+							nftContract: this.getNewContract('nft.json'),
 						}),
 				  )
 				: undefined

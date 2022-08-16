@@ -1,3 +1,4 @@
+import baoElderWL from '@/pages/nft/components/baoElderWL'
 import { Config } from './types'
 
 export default {
@@ -306,6 +307,28 @@ export default {
 			iconB: 'USDC.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
 			pairUrl: '#',
+		},
+	],
+	nfts: [
+		{
+			nid: 1,
+			contract: {
+				1: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
+			},
+			name: 'Bao Elder NFT',
+			image: '/images/nft/baoelder.png',
+			whitelist: '/images/nft/baoElderWL',
+			opensea: 'BaoElder',
+		},
+		{
+			nid: 1,
+			contract: {
+				1: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
+			},
+			name: 'BaoSwap NFT',
+			image: '/images/nft/baoswap.png',
+			whitelist: '/images/nft/baoSwapWL',
+			opensea: 'BaoGnosis',
 		},
 	],
 } as unknown as Config

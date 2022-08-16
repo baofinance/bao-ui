@@ -34,8 +34,8 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
+				<CloseButton onHide={hideModal} onClick={onHide} />
 				<Modal.Title id='contained-modal-title-vcenter'>
 					<p>My Account</p>
 				</Modal.Title>
@@ -125,8 +125,8 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 				</>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`} text='View on Explorer' target='_blank' />
-				<Button onClick={handleSignOutClick} text='Sign out' />
+				<Button fullWidth href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`} text='View on Explorer' />
+				<Button fullWidth onClick={handleSignOutClick} text='Sign out' />
 			</Modal.Footer>
 		</Modal>
 	)
@@ -241,7 +241,6 @@ const ClearButton = styled.button`
 
 export const TransactionWrapper = styled(Col)`
 	background-color: ${props => props.theme.color.primary[200]};
-	margin: 0.5rem 0.5rem;
 	border-radius: 8px;
 	position: relative;
 	flex: 1 1 0%;
