@@ -1,6 +1,6 @@
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import HrText from '@/components/HrText'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
 import useBao from '@/hooks/base/useBao'
 import { AccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { Balance } from '@/hooks/markets/useBalances'
@@ -46,7 +46,7 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets
 					</Col>
 				</Row>
 			) : (
-				<SpinnerLoader block />
+				<Loader block />
 			)}
 		</>
 	)

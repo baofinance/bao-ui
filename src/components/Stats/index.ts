@@ -9,4 +9,5 @@ export {
 	StatText,
 	StatHeader,
 	FeeBlock,
+	StatCards,
 } from './Stats'

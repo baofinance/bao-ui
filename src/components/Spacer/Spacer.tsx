@@ -1,36 +1,34 @@
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { classNames } from '@/functions/styling'
+import React, { AllHTMLAttributes, FC, forwardRef, ReactHTML } from 'react'
 
-interface SpacerProps {
-	size?: 'sm' | 'md' | 'lg'
+type SpacerVariant = 'sm' | 'md' | 'lg'
+
+const SIZE = {
+	sm: 'h-2 w-2',
+	md: 'h-4 w-4',
+	lg: 'h-6 w-g',
 }
 
-const Spacer: React.FC<SpacerProps> = ({ size = 'md' }) => {
-	const { spacing } = useContext(ThemeContext)
-
-	let s: number
-	switch (size) {
-		case 'lg':
-			s = spacing[6]
-			break
-		case 'sm':
-			s = spacing[2]
-			break
-		case 'md':
-		default:
-			s = spacing[4]
-	}
-
-	return <StyledSpacer size={s} />
+interface SpacerProps extends AllHTMLAttributes<ReactHTML> {
+	variant?: SpacerVariant
+	component?: keyof ReactHTML
+	className?: string
 }
 
-interface StyledSpacerProps {
-	size: number
-}
-
-const StyledSpacer = styled.div<StyledSpacerProps>`
-	height: ${props => props.size}px;
-	width: ${props => props.size}px;
-`
+const Spacer: FC<SpacerProps> = forwardRef(({ variant = 'md', component = 'div', className = '', children = [], ...rest }, ref) => {
+	return React.createElement(
+		component,
+		{
+			className: classNames(
+				SIZE[variant],
+				// @ts-ignore TYPE NEEDS FIXING
+				className,
+			),
+			...rest,
+			ref,
+		},
+		children,
+	)
+})
 
 export default Spacer

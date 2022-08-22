@@ -3,12 +3,13 @@ import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
 import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
-import { Button, CloseButton } from '@/components/Button'
+import Button from '@/components/Button'
 import { WalletButton } from '@/components/Button/Button'
-import React, { useCallback, useEffect, useState } from 'react'
-import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
+import Modal from '../Modal'
+import Typography from '../Typography'
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
@@ -16,7 +17,12 @@ const connectorsByName: { [name: string]: AbstractConnector } = {
 	WalletConnect: walletConnect,
 }
 
-const WalletProviderModal = ({ onHide, show }: ModalProps) => {
+interface WalletProviderModalProps {
+	show: boolean
+	onHide: () => void
+}
+
+const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => {
 	const { connector, chainId, account, activate, active, error } = useWeb3React()
 
 	useEffect(() => {
@@ -64,12 +70,9 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 	}
 
 	return (
-		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide} onHide={hideModal} />
-			<Modal.Header>
-				<Modal.Title>Select a wallet provider.</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
+		<Modal isOpen={show} onDismiss={onHide}>
+			<Modal.Header header='Select a wallet provider' onClose={onHide} />
+			<Modal.Actions>
 				{Object.keys(connectorsByName).map(name => {
 					const currentConnector = connectorsByName[name]
 					const activating = currentConnector === activatingConnector
@@ -77,7 +80,9 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 					const disabled = !triedEager || !!activatingConnector || connected || !!error
 
 					return (
-						<WalletButton
+						<Button
+							fullWidth
+							size='md'
 							disabled={disabled}
 							key={name}
 							onClick={() => {
@@ -89,38 +94,20 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 								})
 							}}
 						>
-							<Row>
-								<Col>
-									<ConnectorIconContainer>
-										<Image
-											src={`/images/wallets/${name}.png`}
-											alt={name}
-											height={24}
-											width={24}
-											style={{
-												marginRight: '0.75rem',
-												verticalAlign: 'middle',
-											}}
-										/>
-									</ConnectorIconContainer>
-									{activating ? 'Connecting...' : `${name}`}
-								</Col>
-							</Row>
-						</WalletButton>
+							<div className='flex h-full items-center justify-center align-middle text-text-100'>
+								<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={`/images/wallets/${name}.png`} alt={name} />
+								<Typography className='ml-2 inline-block font-semibold'>{activating ? 'Connecting...' : `${name}`}</Typography>
+							</div>
+						</Button>
 					)
 				})}
-			</Modal.Body>
-
-			<Modal.Footer>
-				<Button text='Cancel' variant='secondary' onClick={onHide} />
-			</Modal.Footer>
+			</Modal.Actions>
 		</Modal>
 	)
 }
 
 export const ConnectorIconContainer = styled.div`
 	height: 100%;
-	align-items: center;
 	margin: 0 auto;
 	display: inline-block;
 	vertical-align: middle;

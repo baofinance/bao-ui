@@ -1,6 +1,7 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import Typography from '../Typography'
 
 type Stat = {
 	label: string
@@ -8,39 +9,61 @@ type Stat = {
 }
 
 type StatBlockProps = {
-	label: string
+	label?: string
 	stats: Stat[]
 }
 
 export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<>
-		<StatHeader>
-			<p>{label}</p>
-		</StatHeader>
-		<StatWrapper>
+		<div className='text-center'>
+			<Typography variant='base' className='font-bold text-text-100'>{label}</Typography>
+		</div>
+		<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded-lg bg-primary-100'>
 			{stats.map(({ label, value }) => (
-				<StatText key={label}>
-					<p>{label}</p>
-					<p style={{ textAlign: 'end' }}>{value}</p>
-				</StatText>
+				<div className='break-words grid grid-cols-2 odd:bg-primary-200 px-2 py-2 rounded-lg' key={label}>
+					<Typography variant='base' className='font-semibold text-text-100'>
+						{label}
+					</Typography>
+					<Typography variant='base' className='text-end text-text-100'>{value}</Typography>
+				</div>
 			))}
-		</StatWrapper>
+		</div>
+	</>
+)
+
+export const StatCards = ({ label, stats }: StatBlockProps) => (
+	<>
+		<div className='text-center'>
+			<Typography>{label}</Typography>
+		</div>
+		{stats.map(({ label, value }) => (
+			<div className='realtive flex min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='break-words text-center' key={label}>
+					<Typography variant='sm' className='text-text-200'>
+						{label}
+					</Typography>
+					<Typography variant='base' className='font-medium' >{value}</Typography>
+				</div>
+			</div>
+		))}
 	</>
 )
 
 export const FeeBlock = ({ label, stats }: StatBlockProps) => (
 	<>
-		<StatHeader>
-			<p>{label}</p>
-		</StatHeader>
-		<FeeWrapper>
+		<div className='text-center'>
+			<Typography variant='base' className='font-bold text-text-100'>{label}</Typography>
+		</div>
+		<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded-lg bg-primary-100'>
 			{stats.map(({ label, value }) => (
-				<StatText key={label}>
-					<p>{label}</p>
-					<p style={{ textAlign: 'end' }}>{value}</p>
-				</StatText>
+				<div className='break-words grid grid-cols-2 odd:bg-primary-200 px-2 py-2 rounded-lg' key={label}>
+					<Typography variant='base' className='font-semibold text-text-100'>
+						{label}
+					</Typography>
+					<Typography variant='base' className='text-end text-text-100'>{value}</Typography>
+				</div>
 			))}
-		</FeeWrapper>
+		</div>
 	</>
 )
 

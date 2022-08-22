@@ -5,7 +5,6 @@ const GlobalStyle = createGlobalStyle`
     background: ${props => props.theme.backgroundOverlay.default}, ${(props: any) => props.theme.backgroundGradient.default};
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: ${(props: any) => props.theme.color.text[100]};
@@ -13,7 +12,9 @@ const GlobalStyle = createGlobalStyle`
   }
 
   html {
-    overflow-y: scroll;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    font-size: 16px;
   }
 
   code {
@@ -78,23 +79,6 @@ const GlobalStyle = createGlobalStyle`
     color: #fff;
   }
 
-  .buttonActive {
-    color: ${(props: any) => props.theme.color.text[100]};
-    background-color: ${(props: any) => props.theme.color.primary[200]};
-    border: ${props => props.theme.border.default};
-  }
-
-  .buttonActive:hover {
-    color: ${(props: any) => props.theme.color.text[100]};
-    background-color: ${(props: any) => props.theme.color.primary[200]};
-  }
-
-  .buttonInactive {
-    color: ${(props: any) => props.theme.color.text[100]};
-    background-color: ${(props: any) => props.theme.color.primary[300]};
-    border: ${props => props.theme.border.default};
-  }
-
   .modal {
     backdrop-filter: blur(6px);
   }
@@ -144,77 +128,6 @@ const GlobalStyle = createGlobalStyle`
 
   .modal-open {
     padding-right: 0px !important;
-  }
-
-  .btn {
-    outline: none !important;
-    align-items: center;
-    background: ${props => props.theme.color.primary[200]};
-    border-radius: ${props => props.theme.borderRadius}px;
-    border: ${props => props.theme.border.default};
-    padding: ${props => -props.theme.spacing[3]}px;
-    color: ${props => props.theme.color.text[100]};
-    display: ${props => (props.inline ? 'inline-block' : 'flex')};
-    font-size: ${props => props.fontSize};
-    font-weight: ${props => props.theme.fontWeight.strong};
-    height: 50px;
-    justify-content: center;
-    outline: none;
-    padding-left: ${props => props.padding}px;
-    padding-right: ${props => props.padding}px;
-    width: ${props => (props.width ? props.width : '100%')};
-    opacity: ${props => (props.disabled ? 0.5 : 1)};
-    position: relative;
-    overflow: hidden;
-    transition: 200ms;
-  
-    @media (max-width: 960px) {
-      /* margin: 0 0.5rem 0 0.5rem; */
-      text-align: center;
-      padding: ${props => -props.theme.spacing[1]}px
-        ${props => -props.theme.spacing[3]}px;
-    }
-
-    @media (max-width: 640px) {
-      width: 100%;
-      padding: ${props => -props.theme.spacing[3]}px
-        ${props => -props.theme.spacing[3]}px;
-    }
-  
-    &:hover {
-      background: ${props => props.theme.color.primary[300]};
-      cursor: pointer;
-    }
-  
-    &:hover,
-    &:focus,
-    &:active {
-      cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')} !important;
-    }  
-  }
-
-  .btn:active {
-    border: ${props => props.theme.border.default};
-    outline: none !important;
-  }
-
-  .btn:disabled {
-    background: ${props => props.theme.color.primary[200]};
-    border: ${props => props.theme.border.default};
-  }
-
-  .btn-close {
-    float: right;
-    top: ${props => props.theme.spacing[3]}px;
-    right: ${props => props.theme.spacing[3]}px;
-    font-size: 1rem;
-    position: absolute;
-    color: ${props => props.theme.color.text[200]};
-    transition: 200ms;
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 
   .form-check-input:checked {
@@ -291,6 +204,25 @@ svg.menuIcon {
 
 .table {
   margin-bottom: 0px;
+}
+
+/* Scrollbar Styling */
+/* Width */
+::-webkit-scrollbar {
+  width: 14px;
+  border-radius: 100%;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #391818;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #622a2a;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #562424;
 }
 `
 

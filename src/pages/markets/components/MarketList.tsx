@@ -1,10 +1,11 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { getComptrollerContract } from '@/bao/utils'
-import { Button } from '@/components/Button'
+import Button from '@/components/Button'
 import { SubmitButton } from '@/components/Button/Button'
 import HrText from '@/components/HrText'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
+import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -22,7 +23,7 @@ import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstra
 import styled from 'styled-components'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
-import { MarketDetails, StatBlock } from './Stats'
+import { MarketDetails } from './Stats'
 
 export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -89,7 +90,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 					</Col>
 				</Row>
 			) : (
-				<SpinnerLoader block />
+				<Loader block />
 			)}
 		</>
 	)

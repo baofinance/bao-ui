@@ -1,7 +1,7 @@
 import Config from '@/bao/lib/config'
 import { approvev2 } from '@/bao/utils'
-import { Button } from '@/components/Button'
-import { SpinnerLoader } from '@/components/Loader'
+import Button from '@/components/Button'
+import Loader from '@/components/Loader'
 import useAllowancev2 from '@/hooks/base/useAllowancev2'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -42,7 +42,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 	}
 
 	const buttonText = () => {
-		if (!(inputAApproval && inputBApproval)) return <SpinnerLoader />
+		if (!(inputAApproval && inputBApproval)) return <Loader />
 
 		if (swapDirection) {
 			return inputBApproval.gt(0) ? 'Swap BaoUSD for DAI' : 'Approve BaoUSD'

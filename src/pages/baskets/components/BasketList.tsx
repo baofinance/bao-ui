@@ -1,6 +1,6 @@
 import { FeeBadge } from '@/components/Badge'
 import { IconContainer, StyledIcon } from '@/components/Icon'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -49,7 +49,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 									)
 								})
 							) : (
-								<SpinnerLoader />
+								<Loader />
 							)}
 						</Col>
 						<Col>
@@ -60,7 +60,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 										<FeeBadge>0% Fee</FeeBadge>
 									</>
 								) : (
-									<SpinnerLoader />
+									<Loader />
 								)}
 							</span>
 						</Col>

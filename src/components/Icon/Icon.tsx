@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
 export const MenuIcon: React.FC<IconProps> = ({ size = 24 }) => {

@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
 import Config from '@/bao/lib/config'
+import { classNames } from '@/functions/styling'
 import { faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactNode, useMemo } from 'react'
-import { classNames } from '@/functions/styling'
 import styled from 'styled-components'
-import { SpinnerLoader } from '../Loader'
+import Loader from '../Loader'
+import Typography from '../Typography'
 
-export type ButtonSize = 'xs' | 'sm' | 'lg' | 'default' | 'none'
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const Size = {
-	xs: 'text-xs rounded-lg px-2 h-[32px] !border',
-	sm: 'text-sm rounded-lg px-3 h-[40px]',
-	md: 'text-default rounded-lg px-4 h-[56px]',
-	lg: 'text-lg rounded-lg px-6 h-[64px]',
+	xs: 'text-sm rounded-lg px-2 h-8',
+	sm: 'text-base rounded-lg px-3 h-10',
+	md: 'text-lg rounded-lg px-4 h-12',
+	lg: 'text-xl rounded-lg px-6 h-16',
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -72,16 +73,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					'font-strong relative items-center justify-center gap-1 overflow-hidden !border !border-solid !border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
+					'font-bold relative items-center justify-center gap-1 overflow-hidden border border-solid border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
 					className,
 				)}
 			>
 				{pendingTx ? (
-					<SpinnerLoader />
+					<Loader />
 				) : (
 					<>
-						{ButtonChild}
-						{buttonText}
+							{ButtonChild}
+							{buttonText}
 					</>
 				)}
 			</button>
@@ -115,61 +116,14 @@ type NavButtonProps = {
 }
 
 export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
-	<NavButtonWrapper>
+	<div className='flex w-full cursor-pointer mt-2 gap-2'>
 		{options.map((option: string) => (
-			<NavButton key={option} className={option === active ? 'buttonActive' : 'buttonInactive'} onClick={() => onClick(option)}>
+			<Button size='md' key={option} className={`w-full ${option === active ? 'bg-primary-300' : 'bg-primary-200'}`} onClick={() => onClick(option)}>
 				{option}
-			</NavButton>
+			</Button>
 		))}
-	</NavButtonWrapper>
+	</div>
 )
-
-const NavButtonWrapper = styled.div`
-	display: flex;
-	width: 100%;
-	cursor: pointer;
-	padding: 12px;
-`
-
-const NavButton = styled.button`
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	padding: 0.5rem;
-	margin: 0.25rem;
-	font-weight: ${props => props.theme.fontWeight.strong};
-	font-size: ${props => props.theme.fontSize.default};
-	transition: 200ms;
-	height: 50px;
-	align-items: center;
-	vertical-align: middle;
-	line-height: 1.2;
-	transition-property: all;
-	min-width: 2.5rem;
-	padding-inline-start: 1rem;
-	padding-inline-end: 1rem;
-	border-radius: 8px;
-	overflow: hidden;
-	border: ${props => props.theme.border.default};
-	background: ${props => props.theme.color.primary[200]};
-
-	&:focus {
-		outline: 0;
-	}
-
-	&:hover {
-		background: ${props => props.theme.color.primary[300]};
-		cursor: pointer;
-		color: ${props => props.theme.color.text[100]};
-	}
-
-	&:hover,
-	&:focus,
-	&:active {
-		cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')} !important;
-		color: ${props => props.theme.color.text[100]};
-	}
-`
 
 type CloseButtonProps = {
 	onClick: (s: any) => void

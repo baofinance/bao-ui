@@ -1,5 +1,5 @@
-import { MaxButton } from '@/components/Button'
-import React from 'react'
+import Button, { MaxButton } from '@/components/Button'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
 export interface InputProps {
@@ -8,15 +8,55 @@ export interface InputProps {
 	placeholder?: string
 	startAdornment?: ReactNode
 	value: string
+	label?: ReactNode
+	disabled?: boolean
+	max?: number | string
+	symbol?: string
+	onSelectMax?: () => void
+	onSelectHalf?: () => void
 }
 
-const Input: React.FC<InputProps> = ({ endAdornment, onChange, placeholder, startAdornment, value }) => {
+const Input: React.FC<InputProps> = ({
+	label,
+	disabled,
+	onSelectMax,
+	onSelectHalf,
+	endAdornment,
+	onChange,
+	placeholder,
+	startAdornment,
+	value,
+}) => {
 	return (
-		<StyledInputWrapper>
-			{!!startAdornment && startAdornment}
-			<StyledInput placeholder={placeholder} value={value} onChange={onChange} />
-			{!!endAdornment && endAdornment}
-		</StyledInputWrapper>
+		<div className='align-center flex h-12 w-full rounded-lg border-0 bg-primary-400'>
+			<div className='align-center relative flex w-full justify-center align-middle'>
+				{!!startAdornment && startAdornment}
+				<input
+					type='number'
+					placeholder={placeholder}
+					value={value}
+					onChange={onChange}
+					className='bg-transparent text-default font-strong relative h-12 w-full min-w-0 
+				appearance-none rounded-lg border-solid border-inherit pl-4 pr-4 text-start align-middle 
+				text-text-100 outline-none outline outline-2 outline-offset-2 transition-all
+				 duration-200 disabled:text-text-200 md:text-sm'
+				/>
+				{!disabled && (
+					<>
+						<div className='flex h-full items-center justify-center'>
+							<Button size='xs' onClick={onSelectHalf} className='mr-1'>
+								½
+							</Button>
+							<Button size='xs' onClick={onSelectMax} className='mr-1'>
+								MAX
+							</Button>
+						</div>
+					</>
+				)}
+				{!!endAdornment && endAdornment}
+			</div>
+			{typeof label === 'string' ? <p>{label}</p> : label}
+		</div>
 	)
 }
 
@@ -72,16 +112,7 @@ export interface BalanceInputProps extends InputProps {
 export const BalanceInput = ({ value, label, onChange, onMaxClick, disabled }: BalanceInputProps) => (
 	<div className='align-center flex h-12 w-full rounded-lg border-0 bg-primary-400'>
 		<div className='align-center relative flex w-full'>
-			<input
-				className='bg-transparent text-default font-strong relative h-12 w-full min-w-0 
-				appearance-none rounded-lg border-solid border-inherit pl-4 pr-4 text-start text-text-100 
-				outline-none outline outline-2 outline-offset-2 transition-all duration-200
-				 disabled:text-text-200 md:text-sm'
-				value={value}
-				onChange={onChange}
-				placeholder='0'
-				disabled={disabled}
-			/>
+			<Input value={value} onChange={onChange} placeholder='0' disabled={disabled} />
 			{!disabled && <MaxButton onClick={onMaxClick} />}
 		</div>
 		{typeof label === 'string' ? <p>{label}</p> : label}

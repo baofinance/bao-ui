@@ -1,6 +1,6 @@
 import { ActiveSupportedNFT } from '@/bao/lib/types'
 import { mintNFT } from '@/bao/utils'
-import { Button } from '@/components/Button/Button'
+import Button from '@/components/Button/Button'
 import Card from '@/components/Card'
 import Container from '@/components/Container'
 import Page from '@/components/Page'

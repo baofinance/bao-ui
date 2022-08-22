@@ -1,7 +1,7 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { SubmitButton } from '@/components/Button/Button'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
 import NavLink from '@/components/NavLink'
 import PageHeader from '@/components/PageHeader'
 import Spacer from '@/components/Spacer'
@@ -139,8 +139,8 @@ const Market: React.FC = () => {
 							</Tooltipped>
 						}
 					/>
-					<InfoCol title='Number of Suppliers' content={marketInfo ? marketInfo.numberOfSuppliers : <SpinnerLoader />} />
-					<InfoCol title='Number of Borrowers' content={marketInfo ? marketInfo.numberOfBorrowers : <SpinnerLoader />} />
+					<InfoCol title='Number of Suppliers' content={marketInfo ? marketInfo.numberOfSuppliers : <Loader />} />
+					<InfoCol title='Number of Borrowers' content={marketInfo ? marketInfo.numberOfBorrowers : <Loader />} />
 				</Row>
 				<>
 					<MarketDetailsContainer>
@@ -184,7 +184,7 @@ const Market: React.FC = () => {
 			</div>
 		</>
 	) : (
-		<SpinnerLoader block />
+		<Loader block />
 	)
 }
 

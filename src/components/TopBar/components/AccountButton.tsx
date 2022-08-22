@@ -7,8 +7,8 @@ import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { getBalanceNumber } from '@/utils/numberFormat'
-import { Button } from '../../Button'
-import { SpinnerLoader } from '../../Loader'
+import Button from '../../Button'
+import Loader from '../../Loader'
 import WalletProviderModal from '../../WalletProviderModal'
 import AccountModal from './AccountModal'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
@@ -53,7 +53,6 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 					</Button>
 				) : (
 					<Button onClick={() => setShowAccountModal(true)} size='sm'>
-						{' '}
 						<>
 							{ens ? (
 								ens
@@ -65,29 +64,20 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 							)}
 							<FontAwesomeIcon
 								icon={faAngleDoubleRight}
-								style={{
-									margin: '0 4px',
-									color: '#b07a6e',
-								}}
-							/>{' '}
+								className='text-text-200 mx-2 my-0 -mt-1'
+							/>
 							{getBalanceNumber(ethBalance).toFixed(4)}
 							<FontAwesomeIcon
 								icon={faEthereum}
-								style={{
-									marginLeft: '4px',
-								}}
+								className='mx-1 text-text-200'
 							/>
 							{pendingTxs > 0 && (
 								<>
-									{' '}
 									<FontAwesomeIcon
 										icon={faAngleDoubleRight}
-										style={{
-											margin: '0 4px',
-											color: '#b07a6e',
-										}}
-									/>{' '}
-									<SpinnerLoader />
+										className='mx-0 my-1 text-text-200'
+									/>
+									<Loader />
 									<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
 								</>
 							)}
@@ -112,7 +102,6 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 					</Button>
 				) : (
 					<Button onClick={() => setShowAccountModal(true)} size='sm'>
-						{' '}
 						<>
 							{account.slice(0, 6)}...
 							{account.slice(account.length - 4, account.length)}

@@ -5,11 +5,7 @@ interface LabelProps {
 	text?: string
 }
 
-const Label: React.FC<LabelProps> = ({ text }) => <StyledLabel>{text}</StyledLabel>
-
-const StyledLabel = styled.div`
-	color: ${props => props.theme.color.text[100]};
-`
+const Label: React.FC<LabelProps> = ({ text }) => <div className='text-text-200 text-sm font-medium'>{text}</div>
 
 export const MaxLabel = styled.span`
 	color: ${props => props.theme.color.text[200]};

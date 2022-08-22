@@ -2,7 +2,7 @@ import Config from '@/bao/lib/config'
 import Card from '@/components/Card'
 import { AbsoluteContainer } from '@/components/Container'
 import { BalanceInput } from '@/components/Input'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBao from '@/hooks/base/useBao'
@@ -68,7 +68,7 @@ const BallastSwapper: React.FC = () => {
 				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
 			</label>
 			<label className='float-right mb-1 text-text-200'>
-				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <SpinnerLoader />}{' '}
+				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />}{' '}
 			</label>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
@@ -96,7 +96,7 @@ const BallastSwapper: React.FC = () => {
 				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(baoUSDBalance).toString()} BaoUSD
 			</label>
 			<label className='float-right mb-1 text-text-200'>
-				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <SpinnerLoader />}{' '}
+				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <Loader />}{' '}
 			</label>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(baoUSDBalance).toString())}
@@ -140,7 +140,7 @@ const BallastSwapper: React.FC = () => {
 						>
 							<FontAwesomeIcon icon={faSync} className='m-auto' />
 							{/* {' - '}
-    Fee: {fees ? `${fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']).times(100).toString()}%` : <SpinnerLoader />} */}
+    Fee: {fees ? `${fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']).times(100).toString()}%` : <Loader />} */}
 						</span>
 					</div>
 					{swapDirection ? daiInput : baoUSDInput}

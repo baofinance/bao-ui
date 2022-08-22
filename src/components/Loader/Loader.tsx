@@ -1,5 +1,6 @@
 import React from 'react'
 import { Spinner } from 'react-bootstrap'
+import { PulseLoader } from 'react-spinners'
 import styled from 'styled-components'
 
 interface LoaderProps {
@@ -8,10 +9,10 @@ interface LoaderProps {
 
 const Loader: React.FC<LoaderProps> = ({ text }) => {
 	return (
-		<StyledLoader>
-			<SpinnerLoader />
-			{!!text && <StyledText>{text}</StyledText>}
-		</StyledLoader>
+		<div className='items-center justify-center inline'>
+			<PulseLoader size={6} color='#fff8ee' />
+			{!!text && <div className='text-text-200'>{text}</div>}
+		</div>
 	)
 }
 

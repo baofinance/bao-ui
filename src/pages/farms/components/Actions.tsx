@@ -1,11 +1,11 @@
 import Config from '@/bao/lib/config'
 import { approvev2, getMasterChefContract } from '@/bao/utils'
-import { BalanceContent, BalanceImage, BalanceSpacer, BalanceText, BalanceValue, BalanceWrapper } from '@/components/Balance'
-import { ButtonStack, SubmitButton } from '@/components/Button'
+import Button from '@/components/Button'
 import { QuestionIcon } from '@/components/Icon'
-import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from '@/components/Label'
-import { SpinnerLoader } from '@/components/Loader'
-import TokenInput from '@/components/TokenInput'
+import Input from '@/components/Input'
+import Loader from '@/components/Loader'
+import Modal from '@/components/Modal'
+import Typography from '@/components/Typography'
 import { PoolType } from '@/contexts/Farms/types'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
@@ -16,7 +16,7 @@ import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
@@ -24,11 +24,9 @@ import { ethers } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
-import { Col, Modal, Row } from 'react-bootstrap'
 import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
-import { EarningsWrapper, FarmModalBody } from './styles'
 
 interface StakeProps {
 	lpContract: Contract
@@ -39,7 +37,7 @@ interface StakeProps {
 	poolType: PoolType
 	ref?: string
 	pairUrl: string
-	onHide?: () => void
+	onHide: () => void
 }
 
 export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
@@ -83,34 +81,32 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 
 	return (
 		<>
-			<FarmModalBody>
-				<BalanceWrapper>
-					<Col xs={4}>
-						<LabelStart>
-							<MaxLabel>Fee:</MaxLabel>
-							<AssetLabel>0.75%</AssetLabel>
-						</LabelStart>
-					</Col>
-					<Col xs={8}>
-						<LabelEnd>
-							<LabelStack>
-								<MaxLabel>Balance:</MaxLabel>
-								<AssetLabel>
-									{fullBalance}
+			<>
+				<Modal.Body className='h-[120px]'>
+					<div className='flex h-full flex-col items-center justify-center'>
+						<div className='flex w-full flex-row'>
+							<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+								<FontAwesomeIcon icon={faLongArrowAltRight} />
+								<Typography variant='sm' className='text-text-200'>
+									Fee:
+								</Typography>
+								<Typography variant='sm'>0.75%</Typography>
+							</div>
+							<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
+								<Typography variant='sm' className='text-text-200'>
+									Balance:
+								</Typography>
+								<Typography variant='sm'>
+									{fullBalance}{' '}
 									<Link href={pairUrl} target='_blank' rel='noopener noreferrer'>
 										<a>
-											{' '}
 											{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
 										</a>
 									</Link>
-								</AssetLabel>
-							</LabelStack>
-						</LabelEnd>
-					</Col>
-				</BalanceWrapper>
-				<Row>
-					<Col xs={12}>
-						<TokenInput
+								</Typography>
+							</div>
+						</div>
+						<Input
 							onSelectMax={handleSelectMax}
 							onSelectHalf={handleSelectHalf}
 							onChange={handleChange}
@@ -118,71 +114,74 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 							max={fullBalance}
 							symbol={tokenName}
 						/>
-					</Col>
-				</Row>
-			</FarmModalBody>
-			<Modal.Footer>
-				<ButtonStack>
-					{!allowance.toNumber() ? (
-						<>
-							{pendingTx ? (
-								<SubmitButton disabled={true}>Approving {tokenName}</SubmitButton>
-							) : (
-								<SubmitButton
-									onClick={async () => {
-										handleTx(approvev2(lpContract, masterChefContract, account), `Approve ${tokenName}`)
-									}}
-								>
-									Approve {tokenName}
-								</SubmitButton>
-							)}
-						</>
-					) : (
-						<>
-							{poolType !== PoolType.ARCHIVED ? (
-								<>
-									{pendingTx ? (
-										<SubmitButton disabled={true}>
-											{typeof pendingTx === 'string' ? (
-												<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
-													Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-												</a>
-											) : (
-												'Pending Transaction'
-											)}
-										</SubmitButton>
-									) : (
-										<SubmitButton
-											disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
-											onClick={async () => {
-												const stakeTx = masterChefContract.methods
-													.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
-													.send({ from: account })
+					</div>
+				</Modal.Body>
+			</>
+			<Modal.Actions>
+				{!allowance.toNumber() ? (
+					<>
+						{pendingTx ? (
+							<Button fullWidth disabled={true}>
+								Approving {tokenName}
+							</Button>
+						) : (
+							<Button
+								fullWidth
+								onClick={async () => {
+									handleTx(approvev2(lpContract, masterChefContract, account), `Approve ${tokenName}`)
+								}}
+							>
+								Approve {tokenName}
+							</Button>
+						)}
+					</>
+				) : (
+					<>
+						{poolType !== PoolType.ARCHIVED ? (
+							<>
+								{pendingTx ? (
+									<Button fullWidth disabled={true}>
+										{typeof pendingTx === 'string' ? (
+											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+												Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+											</Link>
+										) : (
+											'Pending Transaction'
+										)}
+									</Button>
+								) : (
+									<Button
+										fullWidth
+										disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
+										onClick={async () => {
+											const stakeTx = masterChefContract.methods
+												.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+												.send({ from: account })
 
-												handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
-											}}
-										>
-											Deposit {tokenName}
-										</SubmitButton>
-									)}
-								</>
-							) : (
-								<SubmitButton
-									disabled={true}
-									onClick={async () => {
-										const stakeTx = masterChefContract.methods
-											.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
-											.send({ from: account })
-										handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
-									}}
-								>
-									Pool Archived
-								</SubmitButton>
-							)}
-						</>
-					)}
-				</ButtonStack>
-			</Modal.Footer>
+											handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
+										}}
+									>
+										Deposit {tokenName}
+									</Button>
+								)}
+							</>
+						) : (
+							<Button
+								fullWidth
+								disabled={true}
+								onClick={async () => {
+									const stakeTx = masterChefContract.methods
+										.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+										.send({ from: account })
+									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
+								}}
+							>
+								Pool Archived
+							</Button>
+						)}
+					</>
+				)}
+			</Modal.Actions>
 		</>
 	)
 }
@@ -195,10 +194,10 @@ interface UnstakeProps {
 	ref?: string
 	pairUrl: string
 	lpTokenAddress: string
-	onHide?: () => void
+	onHide: () => void
 }
 
-export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = null, pairUrl = '', onHide }) => {
+export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pairUrl = '', onHide }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -245,81 +244,76 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid = nul
 
 	return (
 		<>
-			<FarmModalBody>
-				<BalanceWrapper>
-					<Col xs={4}>
-						<LabelStart>
-							<LabelStack>
-								<MaxLabel>Fee:</MaxLabel>{' '}
-								<AssetLabel>
-									{fees ? `${(fees * 100).toFixed(2)}%` : <SpinnerLoader />}{' '}
-									<span>
-										<QuestionIcon icon={faQuestionCircle} onClick={() => setShowFeeModal(true)} />
-									</span>
-								</AssetLabel>
-							</LabelStack>
-						</LabelStart>
-					</Col>
-					<Col xs={8}>
-						<LabelEnd>
-							<LabelStack>
-								<MaxLabel>Balance:</MaxLabel>
-								<AssetLabel>
-									{getDisplayBalance(fullBalance, 0)}{' '}
-									<a href={pairUrl} rel='noopener noreferrer'>
-										{' '}
+			<Modal.Body className='h-[120px]'>
+				<div className='flex h-full flex-col items-center justify-center'>
+					<div className='flex w-full flex-row'>
+						<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+							<FontAwesomeIcon icon={faLongArrowAltRight} />
+							<Typography variant='sm' className='text-text-200'>
+								Fee:{' '}
+							</Typography>
+							<Typography variant='sm'>
+								{' '}
+								{fees ? `${(fees * 100).toFixed(2)}%` : <Loader />}{' '}
+								<QuestionIcon icon={faQuestionCircle} onClick={() => setShowFeeModal(true)} />
+							</Typography>
+						</div>
+						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
+							<Typography variant='sm' className='text-text-200'>
+								Balance:
+							</Typography>
+							<Typography variant='sm'>
+								{getDisplayBalance(fullBalance, 0)}{' '}
+								<Link href={pairUrl} target='_blank' rel='noopener noreferrer'>
+									<a>
 										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
 									</a>
-								</AssetLabel>
-							</LabelStack>
-						</LabelEnd>
-					</Col>
-				</BalanceWrapper>
-				<Row>
-					<Col xs={12}>
-						<TokenInput
-							onSelectMax={handleSelectMax}
-							onSelectHalf={handleSelectHalf}
-							onChange={handleChange}
-							value={val}
-							max={fullBalance}
-							symbol={tokenName}
-						/>
-					</Col>
-				</Row>
-			</FarmModalBody>
-			<Modal.Footer>
-				<ButtonStack>
-					<>
-						{pendingTx ? (
-							<SubmitButton disabled={true}>
-								{typeof pendingTx === 'string' ? (
-									<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
+								</Link>
+							</Typography>
+						</div>
+					</div>
+					<Input
+						onSelectMax={handleSelectMax}
+						onSelectHalf={handleSelectHalf}
+						onChange={handleChange}
+						value={val}
+						max={fullBalance}
+						symbol={tokenName}
+					/>
+				</div>
+			</Modal.Body>
+			<Modal.Actions>
+				<>
+					{pendingTx ? (
+						<Button disabled={true}>
+							{typeof pendingTx === 'string' ? (
+								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+									<a>
 										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 									</a>
-								) : (
-									'Pending Transaction'
-								)}
-							</SubmitButton>
-						) : (
-							<SubmitButton
-								disabled={
-									!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(new BigNumber(0))
-								}
-								onClick={async () => {
-									const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
+								</Link>
+							) : (
+								'Pending Transaction'
+							)}
+						</Button>
+					) : (
+						<Button
+							disabled={
+								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(new BigNumber(0))
+							}
+							onClick={async () => {
+								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
-									const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18)).send({ from: account })
+								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18)).send({ from: account })
 
-									handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
-								}}
-							>
-								Withdraw {tokenName}
-							</SubmitButton>
-						)}
-					</>
-				</ButtonStack>
-			</Modal.Footer>
+								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
+							}}
+						>
+							Withdraw {tokenName}
+						</Button>
+					)}
+				</>
+			</Modal.Actions>
 			<FeeModal pid={pid} show={showFeeModal} onHide={() => setShowFeeModal(false)} />
 		</>
 	)
@@ -338,47 +332,49 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 
 	return (
 		<>
-			<FarmModalBody>
-				<EarningsWrapper>
-					<BalanceContent>
-						<BalanceImage>
-							<Image src='/images/tokens/BAO.png' width={32} height={32} alt='BAO' />
-						</BalanceImage>
-						<BalanceSpacer />
-						<BalanceText>
-							<BalanceValue>{getDisplayBalance(earnings)}</BalanceValue>
-						</BalanceText>
-					</BalanceContent>
-				</EarningsWrapper>
-			</FarmModalBody>
-			<Modal.Footer>
-				<ButtonStack>
-					<>
-						{pendingTx ? (
-							<SubmitButton disabled={true}>
-								{typeof pendingTx === 'string' ? (
-									<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer'>
+			<Modal.Body className='h-[120px]'>
+				<div className='flex h-full flex-col items-center justify-center'>
+					<div className='flex items-center justify-center'>
+						<div className='flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border-0 bg-primary-300'>
+							<Image src='/images/tokens/BAO.png' alt='ETH' width={32} height={32} className='m-auto' />
+						</div>
+						<div className='ml-2'>
+							<Typography variant='xl' className='font-medium'>
+								{getDisplayBalance(earnings)}
+							</Typography>
+						</div>
+					</div>
+				</div>
+			</Modal.Body>
+			<Modal.Actions>
+				<>
+					{pendingTx ? (
+						<Button fullWidth disabled={true}>
+							{typeof pendingTx === 'string' ? (
+								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+									<a>
 										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 									</a>
-								) : (
-									'Pending Transaction'
-								)}
-							</SubmitButton>
-						) : (
-							<SubmitButton
-								disabled={!earnings.toNumber()}
-								onClick={async () => {
-									const harvestTx = masterChefContract.methods.claimReward(pid).send({ from: account })
+								</Link>
+							) : (
+								'Pending Transaction'
+							)}
+						</Button>
+					) : (
+						<Button
+							fullWidth
+							disabled={!earnings.toNumber()}
+							onClick={async () => {
+								const harvestTx = masterChefContract.methods.claimReward(pid).send({ from: account })
 
-									handleTx(harvestTx, `Harvest ${getDisplayBalance(earnings)} BAO`)
-								}}
-							>
-								Harvest BAO
-							</SubmitButton>
-						)}
-					</>
-				</ButtonStack>
-			</Modal.Footer>
+								handleTx(harvestTx, `Harvest ${getDisplayBalance(earnings)} BAO`)
+							}}
+						>
+							Harvest BAO
+						</Button>
+					)}
+				</>
+			</Modal.Actions>
 		</>
 	)
 }

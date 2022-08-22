@@ -1,10 +1,9 @@
-import { Button } from '@/components/Button'
+import Button from '@/components/Button'
 import { MenuIcon } from '@/components/Icon'
 import Logo from '@/components/Logo'
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
-import styled from 'styled-components'
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
 
@@ -26,9 +25,7 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu, isDarkMode, toggle
 				</div>
 				<div className='flex w-[200px] items-center justify-end sm:w-auto sm:justify-center'>
 					<AccountButton />
-					<Button onClick={toggleTheme} size='sm' aria-label='Dark Mode' className='ml-4'>
-						<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} />
-					</Button>
+					<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} onClick={toggleTheme} className='ml-4 hover:cursor-pointer' aria-label='Dark Mode' />
 					<Button size='sm' className='ml-4 rounded-lg border-0 bg-primary-200 outline-0 xl:hidden' onClick={onPresentMobileMenu}>
 						<MenuIcon />
 					</Button>

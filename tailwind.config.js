@@ -4,6 +4,10 @@ const { default: Script } = require('next/script')
 module.exports = {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
+		fontFamily: {
+			poppins: ['Poppins', 'sans-serif'],
+			kaushan: ['Kaushan Script', 'sans-serif'],
+		},
 		extend: {
 			backgroundImage: () => ({
 				darkOverlay: "url('/images/background_overlay_dark.png'), radial-gradient(circle at center, #391818, #210e0e 50%) fixed",
@@ -66,37 +70,32 @@ module.exports = {
 					100: 'rgba(0, 0, 0, 0.1)', //dark
 					200: 'rgba(256, 256, 256, 0.1)', //light
 				},
-				fontSize: {
-					hero: [
-						'48px',
-						{
-							letterSpacing: '-0.02em;',
-							lineHeight: '96px',
-							fontWeight: 700,
-						},
-					],
-				},
-				fontFamily: {
-					rubik: ['Rubik', 'sans-serif'],
-					poppins: ['Poppins', 'sans-serif'],
-					kaushan: ['Kaushan Script', 'sans-serif'],
-				},
-				keyframes: {
-					slideIn: {
-						'0%': {
-							transform: 'translateX(0)',
-						},
-						'100%': {
-							transform: 'translateX(-100%)',
-						},
+			},
+			fontSize: {
+				hero: [
+					'48px',
+					{
+						letterSpacing: '-0.02em;',
+						lineHeight: '96px',
+						fontWeight: 700,
+					},
+				],
+			},
+			keyframes: {
+				slideIn: {
+					'0%': {
+						transform: 'translateX(0)',
+					},
+					'100%': {
+						transform: 'translateX(-100%)',
 					},
 				},
-				animation: {
-					'slide-in': 'slideIn 0.3s forwards ease-out',
-				},
-				screens: {
-					'3xl': '1600px',
-				},
+			},
+			animation: {
+				'slide-in': 'slideIn 0.3s forwards ease-out',
+			},
+			screens: {
+				'3xl': '1600px',
 			},
 		},
 		plugins: [],

@@ -11,7 +11,7 @@ import React, { useMemo, useState } from 'react'
 import { Button as BootButton, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import DonutGraph from '@/components/Graphs/PieGraph'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
 import { Progress } from '@/components/ProgressBar'
 import { StyledTable } from '@/components/Table'
 import Tooltipped from '@/components/Tooltipped'
@@ -115,7 +115,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 									<tr>
 										{['name', 'perc', 'price', 'apy', 'strategy'].map(tdClass => (
 											<td key={Math.random()} className={tdClass}>
-												<SpinnerLoader />
+												<Loader />
 											</td>
 										))}
 									</tr>
@@ -145,7 +145,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 									padding: '24px',
 								}}
 							>
-								<SpinnerLoader />
+								<Loader />
 							</div>
 						</TableContainer>
 					</>

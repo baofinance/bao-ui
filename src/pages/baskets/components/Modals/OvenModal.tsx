@@ -1,6 +1,6 @@
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import { BalanceWrapper } from '@/components/Balance'
-import { Button } from '@/components/Button'
+import Button from '@/components/Button'
 import { BalanceInput } from '@/components/Input'
 import { LabelEnd, LabelStart } from '@/components/Label'
 import { StatBlock } from '@/components/Stats'

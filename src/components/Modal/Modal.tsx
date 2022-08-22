@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Dialog, Transition } from '@headlessui/react'
-import React, { cloneElement, FC, Fragment, isValidElement, ReactNode, useCallback, useMemo, useState } from 'react'
-
-import ModalAction, { ModalActionProps } from '@/components/Modal/Action'
 import ModalActions, { ModalActionsProps } from '@/components/Modal/Actions'
 import ModalBody, { ModalBodyProps } from '@/components/Modal/Body'
-import ModalContent, { BorderedModalContent, ModalContentBorderedProps, ModalContentProps } from '@/components/Modal/Content'
-import ModalError, { ModalActionErrorProps } from '@/components/Modal/Error'
 import ModalHeader, { ModalHeaderProps } from '@/components/Modal/Header'
-import SubmittedModalContent, { SubmittedModalContentProps } from '@/components/Modal/SubmittedModalContent'
 import { classNames } from '@/functions/styling'
 import useDesktopMediaQuery from '@/hooks/base/useDesktopMediaQuery'
+import { Dialog, Transition } from '@headlessui/react'
+import React, { cloneElement, FC, Fragment, isValidElement, ReactNode, useCallback, useMemo, useState } from 'react'
+import ModalOptions, { ModalOptionsProps } from './Options'
 
 const MAX_WIDTH_CLASS_MAPPING = {
 	sm: 'lg:max-w-sm',
@@ -21,67 +17,14 @@ const MAX_WIDTH_CLASS_MAPPING = {
 	'3xl': 'lg:max-w-3xl',
 }
 
-interface TriggerProps {
-	show: boolean
-	setShow: (x: boolean) => void
-	onClick: () => void
-}
-
-interface Props {
-	children?: ReactNode | FC
-	trigger?: (({ show, onClick, setShow }: TriggerProps) => ReactNode) | ReactNode
-}
-
 type ModalType<P> = FC<P> & {
-	Controlled: FC<ControlledModalProps>
 	Body: FC<ModalBodyProps>
 	Actions: FC<ModalActionsProps>
-	Content: FC<ModalContentProps>
-	BorderedContent: FC<ModalContentBorderedProps>
 	Header: FC<ModalHeaderProps>
-	Action: FC<ModalActionProps>
-	SubmittedModalContent: FC<SubmittedModalContentProps>
-	Error: FC<ModalActionErrorProps>
+	Options: FC<ModalOptionsProps>
 }
 
-const Modal: ModalType<Props> = ({ children: childrenProp, trigger: triggerProp }) => {
-	const [show, setShow] = useState(false)
-
-	const onClick = useCallback(() => {
-		setShow(true)
-	}, [])
-
-	// If trigger is a function, render props
-	// Else (default), check if element is valid and pass click handler
-	const trigger = useMemo(
-		() =>
-			typeof triggerProp === 'function'
-				? triggerProp({ onClick, show, setShow })
-				: isValidElement(triggerProp)
-				? cloneElement(triggerProp, { onClick })
-				: null,
-		[onClick, show, triggerProp],
-	)
-
-	// If children is a function, render props
-	// Else just render normally
-	// @ts-ignore TYPE NEEDS FIXING
-	const children = useMemo(
-		() => (typeof childrenProp === 'function' ? childrenProp({ onClick, show, setShow }) : children),
-		[onClick, show, childrenProp],
-	)
-
-	return (
-		<>
-			{trigger && trigger}
-			<ModalControlled isOpen={show} onDismiss={() => setShow(false)}>
-				{children}
-			</ModalControlled>
-		</>
-	)
-}
-
-interface ControlledModalProps {
+export interface ModalProps {
 	isOpen: boolean
 	onDismiss: () => void
 	afterLeave?: () => void
@@ -91,7 +34,7 @@ interface ControlledModalProps {
 	unmount?: boolean
 }
 
-const ModalControlled: FC<ControlledModalProps> = ({
+const Modal: ModalType<ModalProps> = ({
 	isOpen,
 	onDismiss,
 	afterLeave,
@@ -104,7 +47,7 @@ const ModalControlled: FC<ControlledModalProps> = ({
 	return (
 		<Transition appear show={isOpen} as={Fragment} afterLeave={afterLeave} unmount={unmount}>
 			<Dialog as='div' className='fixed inset-0 z-50' onClose={onDismiss} unmount={unmount}>
-				<div className='relative block flex min-h-screen items-center justify-center text-center'>
+				<div className='relative flex min-h-screen items-center justify-center text-center'>
 					<Transition.Child
 						unmount={false}
 						as={Fragment}
@@ -140,7 +83,7 @@ const ModalControlled: FC<ControlledModalProps> = ({
 					>
 						<div
 							className={classNames(
-								transparent ? '' : 'bg-dark-900 border-dark-800 border',
+								transparent ? '' : 'bg-background-100 !border-primary-100 !border !border-solid',
 								isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : '',
 								isDesktop ? `w-full` : 'mx-auto max-h-[85vh] w-[85vw] overflow-y-auto',
 								'inline-block transform overflow-hidden rounded-xl p-4 text-left align-bottom',
@@ -155,14 +98,9 @@ const ModalControlled: FC<ControlledModalProps> = ({
 	)
 }
 
-Modal.Controlled = ModalControlled
 Modal.Header = ModalHeader
+Modal.Options = ModalOptions
 Modal.Body = ModalBody
-Modal.Content = ModalContent
-Modal.BorderedContent = BorderedModalContent
 Modal.Actions = ModalActions
-Modal.Action = ModalAction
-Modal.Error = ModalError
-Modal.SubmittedModalContent = SubmittedModalContent
 
 export default Modal

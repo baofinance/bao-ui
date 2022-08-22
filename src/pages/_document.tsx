@@ -15,6 +15,7 @@ export default function Document() {
 				<link rel='apple-touch-icon' sizes='192x192' href='/icons/icon-192.png' />
 				<link rel='apple-touch-icon' sizes='384x384' href='/icons/icon-384.png' />
 				<link rel='apple-touch-icon' sizes='512x512' href='/icons/icon-512.png' />
+				<link rel='stylesheet' href='https://use.typekit.net/kfv8uis.css' />
 				<noscript>You need to enable JavaScript to view Bao.Finance</noscript>
 				<div id='root'></div>
 				<Main />

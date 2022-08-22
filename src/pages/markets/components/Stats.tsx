@@ -1,22 +1,12 @@
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import BigNumber from 'bignumber.js'
+import { StatBlock } from '@/components/Stats'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
-import React, { useMemo } from 'react'
-import styled from 'styled-components'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import BigNumber from 'bignumber.js'
+import React, { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
-
-type Stat = {
-	label: string
-	value: any
-}
-
-type StatBlockProps = {
-	label: string
-	stats: Stat[]
-}
 
 type MarketStatBlockProps = {
 	title?: string
@@ -29,22 +19,6 @@ type MarketStatProps = {
 	amount: string
 	operation: MarketOperations
 }
-
-export const StatBlock = ({ label, stats }: StatBlockProps) => (
-	<>
-		<StatHeader>
-			<p>{label}</p>
-		</StatHeader>
-		<StatWrapper>
-			{stats.map(({ label, value }) => (
-				<StatText key={label}>
-					<span>{label}</span>
-					<span style={{ textAlign: 'end' }}>{value}</span>
-				</StatText>
-			))}
-		</StatWrapper>
-	</>
-)
 
 const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	const supplyBalances = useSupplyBalances()
@@ -265,66 +239,4 @@ export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 				</>
 			)
 	}
-
-	return <></>
 }
-
-const StatWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	padding-top: ${props => props.theme.spacing[2]};
-	margin-inline: 0px;
-	margin-bottom: 0px;
-	background: ${props => props.theme.color.primary[100]};
-	border-radius: 8px;
-`
-
-const StatHeader = styled.div`
-	color: ${props => props.theme.color.text[100]};
-	font-size: ${props => props.theme.fontSize.default};
-	font-weight: ${props => props.theme.fontWeight.strong};
-	text-align: center;
-	margin-top: 0.5rem;
-	margin-bottom: 0.5rem;
-
-	p {
-		margin-top: 0.25rem;
-		margin-inline: 0px;
-		margin-bottom: 0px;
-	}
-`
-
-const StatText = styled.div`
-	transition-property: all;
-	transition-duration: 200ms;
-	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	width: 100%;
-	font-weight: ${props => props.theme.fontWeight.medium};
-	font-size: ${props => props.theme.fontSize.default};
-	padding-top: ${props => props.theme.spacing[1]}px;
-	padding-bottom: ${props => props.theme.spacing[1]}px;
-	padding-left: ${props => props.theme.spacing[2]}px;
-	padding-right: ${props => props.theme.spacing[2]}px;
-	border-radius: 8px;
-
-	span {
-		color: ${props => props.theme.color.text[100]};
-		font-size: ${props => props.theme.fontSize.default};
-		font-weight: ${props => props.theme.fontWeight.medium};
-		display: block;
-		margin-block-start: 1em;
-		margin-block-end: 1em;
-		margin: 0px;
-		margin-top: 0px;
-		margin-inline: 0.5rem 0px;
-		margin-bottom: 0px;
-	}
-
-	&:nth-child(odd) {
-		background-color: ${props => props.theme.color.primary[200]};
-	}
-`

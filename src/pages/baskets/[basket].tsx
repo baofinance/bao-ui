@@ -17,7 +17,7 @@ import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { SpinnerLoader } from '../../components/Loader'
+import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
 import Composition from './components/Composition'
@@ -62,7 +62,7 @@ const Basket: React.FC = () => {
 								<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}
 							</>
 						) : (
-							<SpinnerLoader />
+							<Loader />
 						)}
 					</StyledBadge>
 				</StyledPageHeader>
@@ -73,7 +73,7 @@ const Basket: React.FC = () => {
 			</div>
 		</>
 	) : (
-		<SpinnerLoader />
+		<Loader />
 	)
 }
 

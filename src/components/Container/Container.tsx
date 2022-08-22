@@ -4,7 +4,7 @@ interface ContainerProps {
 	children: ReactNode
 }
 
-const Container = ({ children }: ContainerProps) => <div className='w-full pl-4 pr-4'>{children}</div>
+const Container = ({ children }: ContainerProps) => <div className='container mx-auto sm:px-6 lg:px-8'>{children}</div>
 
 export default Container
 

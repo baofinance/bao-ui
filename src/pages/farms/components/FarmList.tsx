@@ -1,29 +1,24 @@
-import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
-import BigNumber from 'bignumber.js'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader, { SpinnerLoader } from '@/components/Loader'
 import { StyledLoadingWrapper } from '@/components/Loader/Loader'
 import Spacer from '@/components/Spacer'
-import { Farm } from '@/contexts/Farms'
-import { PoolType } from '@/contexts/Farms/types'
+import Typography from '@/components/Typography'
+import { Farm, PoolType } from '@/contexts/Farms/types'
+import { classNames } from '@/functions/styling'
 import useBao from '@/hooks/base/useBao'
 import useAllFarmTVL from '@/hooks/farms/useAllFarmTVL'
 import useFarms from '@/hooks/farms/useFarms'
-import React, { useEffect, useState } from 'react'
-import { Col, Container, Form, Row } from 'react-bootstrap'
-import styled from 'styled-components'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { Switch } from '@headlessui/react'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import React, { useEffect, useState } from 'react'
 import { FarmModal } from './Modals'
 
-export interface FarmWithStakedValue extends Farm {
-	apy: BigNumber
-	stakedUSD: BigNumber
-}
-
-export const FarmList: React.FC = () => {
+const FarmList: React.FC = () => {
 	const bao = useBao()
 	const [farms] = useFarms()
 	const farmsTVL = useAllFarmTVL(bao, bao && bao.multicall)
@@ -111,9 +106,8 @@ export const FarmList: React.FC = () => {
 
 	return (
 		<>
-			<Spacer size='md' />
-			<Container style={{ textAlign: 'right', fontSize: '0.875rem' }}>
-				{/* <Form.Check
+			<Spacer />
+			{/* <Form.Check
 					inline
 					type="switch"
 					id="show-archived"
@@ -121,25 +115,33 @@ export const FarmList: React.FC = () => {
 					checked={staked}
 					onChange={(e) => showStaked(e.currentTarget.checked)}
 				/> */}
-				<Form.Check
-					inline
-					type='switch'
-					id='show-archived'
-					label='Show Archived Farms'
-					checked={archived}
-					onChange={e => showArchived(e.currentTarget.checked)}
-					disabled={true}
-				/>
-			</Container>
-			<Row className='farmRow'>
-				<Col>
-					{!account ? (
-						<FarmListHeader headers={['Pool', 'APR', 'TVL']} />
-					) : window.screen.width > 320 ? (
-						<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
-					) : (
-						<FarmListHeader headers={['Pool', 'APR', 'LP Staked']} />
-					)}
+			<div className='container flex justify-end opacity-50'>
+				<Switch.Group as='div' className='flex items-center'>
+					<Switch
+						disabled={true}
+						checked={archived}
+						onChange={showArchived}
+						className={classNames(
+							archived ? 'bg-text-100' : 'bg-text-100',
+							'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
+						)}
+					>
+						<span
+							aria-hidden='true'
+							className={classNames(
+								archived ? 'translate-x-[14px]' : 'translate-x-0',
+								'pointer-events-none inline-block h-[10px] w-[10px] transform rounded-full bg-text-300 shadow ring-0 transition duration-200 ease-in-out',
+							)}
+						/>
+					</Switch>
+					<Switch.Label as='span' className='ml-3'>
+						<Typography variant='sm'>Show Archived Farms</Typography>
+					</Switch.Label>
+				</Switch.Group>
+			</div>
+			<div className='flex w-full flex-row'>
+				<div className='flex w-full flex-col'>
+					<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
 					{!archived ? (
 						<>
 							{pools[PoolType.ACTIVE].length ? (
@@ -150,7 +152,7 @@ export const FarmList: React.FC = () => {
 								))
 							) : (
 								<StyledLoadingWrapper>
-									<SpinnerLoader block />
+									<Loader />
 								</StyledLoadingWrapper>
 							)}
 						</>
@@ -164,13 +166,13 @@ export const FarmList: React.FC = () => {
 								))
 							) : (
 								<StyledLoadingWrapper>
-									<SpinnerLoader block />
+									<Loader />
 								</StyledLoadingWrapper>
 							)}
 						</>
 					)}
-				</Col>
-			</Row>
+				</div>
+			</div>
 		</>
 	)
 }
@@ -181,16 +183,21 @@ type FarmListHeaderProps = {
 
 const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHeaderProps) => {
 	return (
-		<Container fluid>
-			<Row style={{ padding: '0.5rem 12px' }}>
+		<div className='container'>
+			<div className='flex flex-row px-2 py-3'>
 				{headers.map((header: string) => (
-					<FarmListHeaderCol style={{ paddingBottom: '0px' }} key={header}>
+					<div className='flex w-full basis-1/4 flex-col pb-0 text-right font-bold first:text-left' key={header}>
 						{header}
-					</FarmListHeaderCol>
+					</div>
 				))}
-			</Row>
-		</Container>
+			</div>
+		</div>
 	)
+}
+
+export interface FarmWithStakedValue extends Farm {
+	apy: BigNumber
+	stakedUSD: BigNumber
 }
 
 interface FarmListItemProps {
@@ -204,17 +211,17 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 
 	return (
 		<>
-			<StyledAccordionItem style={{ padding: '12px' }} onClick={() => setShowFarmModal(true)} disabled={!account}>
-				<StyledAccordionHeader>
-					<Row lg={7} style={{ width: '100%' }} className='farmRow'>
-						<Col>
-							<FarmIconContainer>
-								<FarmIcon src={`/images/tokens/${farm.iconA}`} />
-								<FarmIcon src={`/images/tokens/${farm.iconB}`} />
-							</FarmIconContainer>
-							{farm.name}
-						</Col>
-						<Col>
+			<button className='w-full py-2' onClick={() => setShowFarmModal(true)} disabled={!account}>
+				<div className='rounded-lg border border-primary-300 bg-primary-100 p-4 text-text-100 hover:bg-primary-200'>
+					<div className='flex w-full flex-row'>
+						<div className='mx-auto my-0 flex basis-1/4 flex-col text-left'>
+							<div className='mx-0 my-auto inline-block h-full items-center align-middle text-text-100'>
+								<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={farm.iconA} />
+								<img className='z-20 -ml-2 inline-block h-8 w-8 select-none duration-200' src={farm.iconB} />
+								<Typography className='ml-2 inline-block font-semibold'>{farm.name}</Typography>
+							</div>
+						</div>
+						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							{farm.apy ? (
 								farm.apy.gt(0) ? (
 									`${farm.apy.times(new BigNumber(100)).toNumber().toLocaleString('en-US').slice(0, -1)}%`
@@ -224,130 +231,19 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 							) : (
 								<SpinnerLoader />
 							)}
-						</Col>
-						{account && <Col>${window.screen.width > 1200 ? getDisplayBalance(farm.stakedUSD, 0) : truncateNumber(farm.stakedUSD, 0)}</Col>}
-						{account && window.screen.width > 320 && (
-							<Col>${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}</Col>
-						)}
-						{!account && <Col>${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}</Col>}
-					</Row>
-				</StyledAccordionHeader>
-			</StyledAccordionItem>
+						</div>
+						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
+							{account ? `$${window.screen.width > 1200 ? getDisplayBalance(farm.stakedUSD, 0) : truncateNumber(farm.stakedUSD, 0)}` : '-'}
+						</div>
+						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
+							${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}
+						</div>
+					</div>
+				</div>
+			</button>
 			<FarmModal farm={farm} show={showFarmModal} onHide={() => setShowFarmModal(false)} />
 		</>
 	)
 }
 
-export const FarmImage = styled.img`
-	height: 50px;
-	margin-right: ${props => props.theme.spacing[3]}px;
-
-	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
-		height: 40px;
-		margin-right: ${props => props.theme.spacing[3]}px;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.md}px) {
-		height: 35px;
-		margin-right: ${props => props.theme.spacing[3]}px;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		height: 50px;
-		margin-right: ${props => props.theme.spacing[3]}px;
-	}
-`
-
-export const FarmIconContainer = styled.div`
-	height: 100%;
-	align-items: center;
-	margin: 0 auto;
-	display: inline-block;
-	vertical-align: middle;
-	color: ${props => props.theme.color.text[100]};
-
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		display: none;
-	}
-`
-
-export const FarmIcon = styled(FarmImage)`
-	display: inline;
-	height: 40px;
-	vertical-align: super;
-	transition: 200ms;
-	user-select: none;
-	-webkit-user-drag: none;
-	margin-left: -${props => props.theme.spacing[3]}px;
-
-	&:first-child {
-		margin-left: 0;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
-		height: 30px;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.md}px) {
-		height: 25px;
-	}
-`
-
-const FarmListHeaderCol = styled(Col)`
-	font-family: 'Rubik', sans-serif;
-	font-weight: ${props => props.theme.fontWeight.strong};
-	text-align: right;
-
-	&:first-child {
-		text-align: left;
-	}
-
-	&:last-child {
-		margin-right: 20px;
-	}
-`
-
-const StyledAccordionItem = styled.button`
-	background-color: transparent;
-	border-color: transparent;
-	width: 100%;
-`
-
-const StyledAccordionHeader = styled.div`
-		background: ${props => props.theme.color.primary[100]};
-		color: ${props => props.theme.color.text[100]};
-		padding: 1.25rem;
-		border: ${props => props.theme.border.default};
-		border-radius: 8px;
-
-		&:hover,
-		&:focus,
-		&:active {
-			background: ${props => props.theme.color.primary[200]};
-			color: ${props => props.theme.color.text[100]};
-			box-shadow: none;
-		}
-		
-		.row > .col {
-			margin: auto 0;
-			text-align: right;
-
-			&:first-child {
-				text-align: left;
-			}
-
-			&:last-child {
-			}
-		}
-		
-		&:active {
-			border-radius: 8px 8px 0px 0px;
-		}
-	
-		img {
-			height: 32px;
-			margin-right: 0.75rem;
-			vertical-align: middle;
-		}
-	}
-`
+export default FarmList

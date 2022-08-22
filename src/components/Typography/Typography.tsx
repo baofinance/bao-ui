@@ -3,20 +3,14 @@
 import React, { FC, forwardRef } from 'react'
 import { classNames } from '@/functions/styling'
 
-export type TypographyWeight = 400 | 500 | 700
-
-const WEIGHTS = {
-	400: 'font-medium',
-	700: 'font-bold',
-}
-
-export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'lg' | 'base' | 'sm' | 'xs' | 'xxs'
+export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'sm' | 'xs' | 'xxs'
 
 const VARIANTS = {
-	hero: 'text-hero leading-[4rem]',
+	hero: 'font-kaushan text-hero leading-[4rem]',
 	h1: 'text-4xl leading-[46px]',
 	h2: 'text-3xl tracking-[-0.02em]',
 	h3: 'text-2xl leading-7 tracking-[-0.01em]',
+	xl: 'text-xl leading-6',
 	lg: 'text-lg leading-6',
 	base: 'text-base leading-5',
 	sm: 'text-sm leading-5',
@@ -26,7 +20,6 @@ const VARIANTS = {
 
 export interface TypographyProps extends React.AllHTMLAttributes<React.ReactHTML> {
 	variant?: TypographyVariant
-	weight?: TypographyWeight
 	component?: keyof React.ReactHTML
 	className?: string
 	clickable?: boolean
@@ -36,9 +29,8 @@ const Typography: FC<TypographyProps> = forwardRef(
 	(
 		{
 			variant = 'base',
-			weight = 400,
 			component = 'div',
-			className = 'currentColor',
+			className = 'text-text-100',
 			clickable = false,
 			children = [],
 			onClick = undefined,
@@ -52,7 +44,6 @@ const Typography: FC<TypographyProps> = forwardRef(
 				className: classNames(
 					VARIANTS[variant],
 					// @ts-ignore TYPE NEEDS FIXING
-					WEIGHTS[weight],
 					onClick ? 'cursor-pointer select-none' : '',
 					className,
 				),

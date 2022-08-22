@@ -1,5 +1,5 @@
 import { StatBadge } from '@/components/Badge/Badge'
-import { SpinnerLoader } from '@/components/Loader'
+import Loader from '@/components/Loader'
 import Spacer from '@/components/Spacer'
 import { StatCard, StatsRow } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
@@ -34,7 +34,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 					</span>
 					<Spacer size={'sm'} />
 					<StatBadge bg='secondary'>
-						{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <SpinnerLoader />}
+						{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}
 					</StatBadge>
 				</StatCard>
 			</Col>
@@ -46,7 +46,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						Supply
 					</span>
 					<Spacer size={'sm'} />
-					<StatBadge bg='secondary'>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <SpinnerLoader />}</StatBadge>
+					<StatBadge bg='secondary'>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <Loader />}</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
@@ -62,7 +62,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StatBadge bg='secondary'>{nav ? `$${getDisplayBalance(nav, 0)}` : <SpinnerLoader />}</StatBadge>
+					<StatBadge bg='secondary'>{nav ? `$${getDisplayBalance(nav, 0)}` : <Loader />}</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
@@ -90,7 +90,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							// )}%`
 							'-'
 						) : (
-							<SpinnerLoader />
+							<Loader />
 						)}
 					</StatBadge>
 				</StatCard>

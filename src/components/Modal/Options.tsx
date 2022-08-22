@@ -5,7 +5,7 @@ export interface ModalOptionsProps {
 }
 
 const ModalOptions: FC<ModalOptionsProps> = ({ children }) => {
-	return <div className='flex items-center justify-end gap-4'>{children}</div>
+	return <div className='flex items-center justify-end mb-4'>{children}</div>
 }
 
 export default ModalOptions

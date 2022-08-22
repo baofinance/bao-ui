@@ -6,7 +6,6 @@ import SEO from '@/config/seo'
 import BaoProvider from '@/contexts/BaoProvider'
 import FarmsProvider from '@/contexts/Farms'
 import MarketsProvider from '@/contexts/Markets'
-import ModalsProvider from '@/contexts/Modals'
 import TransactionProvider from '@/contexts/Transactions'
 import '@/styles/globals.css'
 import GlobalStyle from '@/styles/GlobalStyle'
@@ -116,7 +115,7 @@ const Providers: React.FC<ProvidersProps> = ({ children, isDarkMode }: Providers
 												refreshInterval: 300000,
 											}}
 										>
-											<ModalsProvider>{children}</ModalsProvider>
+											{children}
 										</SWRConfig>
 									</TransactionProvider>
 								</FarmsProvider>

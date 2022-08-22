@@ -22,8 +22,8 @@ export interface Farm {
 	tokenSymbol: string
 	refUrl: string
 	pairUrl: string
-	poolType?: PoolType
-	tvl?: BigNumber
+	poolType: PoolType
+	tvl: BigNumber
 }
 
 export interface FarmsContext {
