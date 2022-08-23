@@ -11,6 +11,8 @@ import useComposition from '@/hooks/baskets/useComposition'
 import useBasketRates from '@/hooks/baskets/useNestRate'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import Link from 'next/link'
+import Typography from '@/components/Typography'
+import Image from 'next/image'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -27,46 +29,50 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`}>
-			<ListItem>
-				<ListItemHeader>
-					<Row lg={3} style={{ width: '100%' }}>
-						<Col>
-							<IconContainer>
-							<StyledIcon src={`/images/tokens/${basket.symbol}.png`} alt={basket.symbol} className='inline' />
-								<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-									<p style={{ margin: '0', lineHeight: '1.2rem' }}>{basket.symbol}</p>
-									<SubText>{basket.desc}</SubText>
-								</span>
-							</IconContainer>
-						</Col>
-						<Col>
-							{composition ? (
-								composition.map((component: any) => {
-									return (
-										<Tooltipped content={component.symbol} key={component.symbol}>
-											<StyledIcon src={component.image} />
-										</Tooltipped>
-									)
-								})
+			<button className='w-full rounded-lg border border-primary-300 bg-primary-100 p-4 py-2 text-text-100 hover:bg-primary-200'>
+				<div className='flex w-full flex-row'>
+					<div className='mx-auto my-0 flex w-full flex-col items-start align-middle'>
+						<div className='mx-0 my-auto inline-block text-text-100'>
+							<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={`/images/tokens/${basket.symbol}.png`} />
+							<span className='inline-block align-middle text-left'>
+								<Typography className='ml-2 leading-5 font-semibold'>{basket.symbol}</Typography>
+								<Typography variant='sm' className='ml-2 text-text-200 leading-4'>
+									{basket.desc}
+								</Typography>
+							</span>
+						</div>
+					</div>
+					<div className='mx-auto my-0 flex w-full items-center justify-center'>
+						{composition ? (
+							composition.map((component: any) => {
+								return (
+									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
+										<img
+											className='-ml-2 inline-block h-8 w-8 select-none duration-200 first:ml-0'
+											src={component.image}
+											alt={component.symbol}
+										/>
+									</Tooltipped>
+								)
+							})
+						) : (
+							<Loader />
+						)}
+					</div>
+					<div className='mx-auto my-0 flex w-full flex-col items-end'>
+						<span className='inline-block align-middle'>
+							{rates ? (
+								<>
+									<p className='m-0 leading-5'>${getDisplayBalance(rates.usd)}</p>
+									<FeeBadge>0% Fee</FeeBadge>
+								</>
 							) : (
 								<Loader />
 							)}
-						</Col>
-						<Col>
-							<span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-								{rates ? (
-									<>
-										<p style={{ margin: '0', lineHeight: '1.2rem' }}>${getDisplayBalance(rates.usd)}</p>
-										<FeeBadge>0% Fee</FeeBadge>
-									</>
-								) : (
-									<Loader />
-								)}
-							</span>
-						</Col>
-					</Row>
-				</ListItemHeader>
-			</ListItem>
+						</span>
+					</div>
+				</div>
+			</button>
 		</Link>
 	)
 }
@@ -80,10 +86,3 @@ type BasketListItemProps = {
 }
 
 export default BasketList
-
-const SubText = styled.p`
-	color: ${props => props.theme.color.text[200]};
-	font-size: 0.875rem;
-	margin: 0;
-	line-height: 1rem;
-`

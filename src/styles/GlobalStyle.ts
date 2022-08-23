@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
   }
 
   html {
-    overflow-y: auto !important;
     padding: 0 !important;
     font-size: 16px;
   }
@@ -45,33 +44,6 @@ const GlobalStyle = createGlobalStyle`
 
   .outline-primary {
     border: none !important;
-  }
-
-  .tooltip {
-    border: none;
-  }
-
-  .tooltip > .tooltip-inner {
-    background-color: ${props => props.theme.color.primary[200]};
-    color: ${props => props.theme.color.text[100]};
-    font-weight: ${props => props.theme.fontWeight.medium};
-    border: 1px solid ${props => props.theme.color.primary[300]};
-  }
-
-  .tooltip.bs-tooltip-left > .tooltip-arrow::before {
-    border-left-color: ${props => props.theme.color.primary[300]};
-  }
-
-  .tooltip.bs-tooltip-right > .tooltip-arrow::before {
-    border-right-color: ${props => props.theme.color.primary[300]};
-  }
-
-  .tooltip.bs-tooltip-top > .tooltip-arrow::before {
-    border-top-color: ${props => props.theme.color.primary[300]};
-  }
-
-  .tooltip.bs-tooltip-bottom > .tooltip-arrow::before {
-    border-bottom-color: ${props => props.theme.color.primary[300]};
   }
 
   ::selection {
@@ -204,25 +176,6 @@ svg.menuIcon {
 
 .table {
   margin-bottom: 0px;
-}
-
-/* Scrollbar Styling */
-/* Width */
-::-webkit-scrollbar {
-  width: 14px;
-  border-radius: 100%;
-}
-/* Track */
-::-webkit-scrollbar-track {
-  background: #391818;
-}
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #622a2a;
-}
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #562424;
 }
 `
 

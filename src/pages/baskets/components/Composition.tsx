@@ -1,23 +1,21 @@
+import { AssetBadge, CompositionBadge, StyledBadge } from '@/components/Badge/Badge'
+import Button from '@/components/Button/Button'
+import DonutGraph from '@/components/Graphs/PieGraph'
+import Loader from '@/components/Loader'
+import { Progress } from '@/components/ProgressBar'
+import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
+import { BasketComponent } from '@/hooks/baskets/useComposition'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ParentSize } from '@visx/responsive'
 import { BigNumber } from 'bignumber.js'
-import { AssetBadge, CompositionBadge } from '@/components/Badge/Badge'
-import { PrefButtons } from '@/components/Button/Button'
-import Separator from '@/components/Separator'
-import { TableContainer } from '@/components/Table'
 import _ from 'lodash'
-import React, { useMemo, useState } from 'react'
-import { Button as BootButton, Col, Row } from 'react-bootstrap'
-import styled from 'styled-components'
-import DonutGraph from '@/components/Graphs/PieGraph'
-import Loader from '@/components/Loader'
-import { Progress } from '@/components/ProgressBar'
-import { StyledTable } from '@/components/Table'
-import Tooltipped from '@/components/Tooltipped'
-import { BasketComponent } from '@/hooks/baskets/useComposition'
-import { getDisplayBalance } from '@/utils/numberFormat'
 import Image from 'next/image'
+import React, { useMemo, useState } from 'react'
+import { Col, Row } from 'react-bootstrap'
+import styled from 'styled-components'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -35,80 +33,60 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 	}, [composition])
 
 	return (
-		<div style={{ padding: '0 0.75rem' }}>
-			<Row md='auto' className='md-start' style={{ marginBottom: '8px' }}>
-				<Col>
-					<BasketHeader style={{ float: 'left', marginRight: '8px' }}>Allocation Breakdown</BasketHeader>
-					<PrefButtons>
-						<BootButton
-							variant='outline-primary'
-							onClick={() => setDisplayType('TABLE')}
-							style={{
-								marginTop: '0px',
-								borderColor: 'transparent',
-								padding: '8px',
-								height: '36px',
-								width: '36px',
-							}}
-						>
+		<>
+			<div className='mb-2 flex flex-row'>
+				<div className='flex flex-row items-center justify-center'>
+					<Typography variant='h3' className='font-strong float-left mr-2 inline'>
+						Allocation Breakdown
+					</Typography>
+					<div className='m-auto flex gap-2'>
+						<Button size='xs' onClick={() => setDisplayType('TABLE')}>
 							<FontAwesomeIcon icon={faTable} size='xs' />
-						</BootButton>
-						<BootButton
-							variant='outline-primary'
-							onClick={() => setDisplayType('PIE')}
-							style={{
-								marginTop: '0px',
-								borderColor: 'transparent',
-								padding: '8px',
-								height: '36px',
-								width: '36px',
-							}}
-						>
+						</Button>
+						<Button size='xs' onClick={() => setDisplayType('PIE')}>
 							<FontAwesomeIcon icon={faChartPie} size='xs' />
-						</BootButton>
-					</PrefButtons>
-				</Col>
-			</Row>
+						</Button>
+					</div>
+				</div>
+			</div>
 			{displayType === 'TABLE' ? (
 				composition ? (
-					<TableContainer>
-						<StyledTable bordered hover>
+					<div className='w-full rounded-lg border border-primary-300 bg-primary-100'>
+						<table className='rounded-fl border-transparent w-full table-auto bg-primary-100 text-text-100'>
 							<thead>
 								<tr>
-									<th>Token</th>
-									<th>Allocation</th>
-									<th className='price'>Price</th>
-									<th className='apy'>APY</th>
-									<th className='strategy'>Strategy</th>
+									<th className='w-[10%] p-2 text-center'>Token</th>
+									<th className='w-[40%] p-2 text-start'>Allocation</th>
+									<th className='w-[20%] p-2 text-center'>Price</th>
+									<th className='w-[10%] p-2 text-center'>APY</th>
+									<th className='w-[15%] p-2 px-4 text-center'>Strategy</th>
 								</tr>
 							</thead>
 							<tbody>
 								{composition
 									.sort((a, b) => (a.percentage < b.percentage ? 1 : -1))
 									.map((component: any) => (
-										<tr key={component.symbol}>
-											<td width='15%'>
+										<tr key={component.symbol} className='odd:bg-primary-200 hover:bg-primary-300 odd:hover:bg-primary-400'>
+											<td className='p-2 text-center'>
 												<Tooltipped content={component.symbol}>
-												<Image src={component.image} width={32} height={32} alt={component.symbol} />
+													<Image src={component.image} width={32} height={32} alt={component.symbol} />
 												</Tooltipped>
 											</td>
-											<td width='40%'>
+											<td className='p-2'>
 												<Progress
 													width={(component.percentage / maxPercentage) * 100}
 													label={`${getDisplayBalance(new BigNumber(component.percentage), 0)}%`}
 													assetColor={component.color}
 												/>
 											</td>
-											<td className='price' width='20%'>
-												${getDisplayBalance(component.basePrice || component.price, 0)}
-											</td>
-											<td className='apy' width='10%'>
-												<Tooltipped content={component.apy ? `${component.apy.div(1e18).times(100).toFixed(18)}%` : '~'}>
-													<CompositionBadge>{component.apy ? `${component.apy.div(1e18).times(100).toFixed(2)}%` : '~'}</CompositionBadge>
+											<td className='p-2 text-center'>${getDisplayBalance(component.basePrice || component.price, 0)}</td>
+											<td className='p-2 text-center'>
+												<Tooltipped content={component.apy ? `${component.apy.div(1e18).times(100).toFixed(18)}%` : '-'}>
+													{component.apy ? `${component.apy.div(1e18).times(100).toFixed(2)}%` : '-'}
 												</Tooltipped>
 											</td>
-											<td className='strategy' width='15%'>
-												<CompositionBadge>{component.strategy || 'None'}</CompositionBadge>
+											<td className='p-2 text-center'>
+												{component.strategy || 'None'}
 											</td>
 										</tr>
 									)) || (
@@ -121,94 +99,48 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 									</tr>
 								)}
 							</tbody>
-						</StyledTable>
-					</TableContainer>
+						</table>
+					</div>
 				) : (
 					<>
-						<TableContainer>
-							<StyledTable bordered hover>
+						<div className='w-full rounded-lg border border-primary-300 bg-primary-100'>
+							<table className='rounded-fl border-transparent w-full table-auto bg-primary-100 text-text-100'>
 								<thead>
 									<tr>
-										<th>Token</th>
-										<th>Allocation</th>
-										<th className='price'>Price</th>
-										<th className='apy'>APY</th>
-										<th className='strategy'>Strategy</th>
+										<th className='w-[10%] p-2 text-center'>Token</th>
+										<th className='w-[40%] p-2 text-start'>Allocation</th>
+										<th className='w-[20%] p-2 text-center'>Price</th>
+										<th className='w-[10%] p-2 text-center'>APY</th>
+										<th className='w-[15%] p-2 px-4 text-center'>Strategy</th>
 									</tr>
 								</thead>
-							</StyledTable>
-							<div
-								style={{
-									margin: 'auto',
-									textAlign: 'center',
-									verticalAlign: 'middle',
-									padding: '24px',
-								}}
-							>
+							</table>
+							<div className='m-auto p-6 text-center align-middle'>
 								<Loader />
 							</div>
-						</TableContainer>
+						</div>
 					</>
 				)
 			) : (
-				<GraphContainer>
-					<Row style={{ height: '100%' }}>
-						<Col lg={8}>
+				<div className='h-[500px] rounded-lg border border-primary-300 bg-primary-100'>
+					<div className='flex h-full flex-row'>
+						<div className='flex flex-col h-full'>
 							<ParentSize>{parent => <DonutGraph width={parent.width} height={parent.height} composition={composition} />}</ParentSize>
-						</Col>
-						<Col lg={4} style={{ margin: 'auto' }}>
-							<Row lg={2}>
+						</div>
+						<div className='m-auto flex flex-col'>
+							<div className='flex flex-row'>
 								{composition.map(component => (
-									<Col key={component.symbol}>
-										<AssetBadge color={component.color}>{component.symbol}</AssetBadge>
-									</Col>
+									<div className='flex flex-col' key={component.symbol}>
+										<StyledBadge color={component.color}>{component.symbol}</StyledBadge>
+									</div>
 								))}
-							</Row>
-						</Col>
-					</Row>
-				</GraphContainer>
+							</div>
+						</div>
+					</div>
+				</div>
 			)}
-		</div>
+		</>
 	)
 }
-
-const GraphContainer = styled.div`
-	height: 500px;
-	border-radius: 8px;
-	background-color: ${props => props.theme.color.primary[100]};
-	border: ${props => props.theme.border.default};
-`
-
-export const BasketHeader = styled.div`
-	font-family: 'Rubik', sans-serif;
-	color: ${props => props.theme.color.text[100]};
-	margin: auto;
-	font-size: 1.5rem;
-	vertical-align: middle;
-
-	p {
-		margin: 0;
-	}
-
-	span.badge {
-		font-size: 1.25rem;
-		margin-bottom: ${props => props.theme.spacing[3]}px;
-	}
-
-	span.smalltext {
-		float: right;
-		font-size: 1rem;
-		margin-top: ${props => props.theme.spacing[3]}px;
-		margin-left: ${props => props.theme.spacing[2]}px;
-	}
-
-	img {
-		text-align: center;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		font-size: 1.5rem;
-	}
-`
 
 export default Composition

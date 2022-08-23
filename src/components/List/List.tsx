@@ -8,15 +8,15 @@ type ListHeaderProps = {
 
 export const ListHeader: React.FC<ListHeaderProps> = ({ headers }: ListHeaderProps) => {
 	return (
-		<Container fluid>
-			<Row style={{ padding: '0.5rem 12px' }}>
+		<div className='container'>
+			<div className='flex flex-row px-2 py-3'>
 				{headers.map((header: string) => (
-					<ListCol style={{ paddingBottom: '0px' }} key={header}>
+					<div className='flex w-full flex-col pb-0 text-center font-bold first:items-start last:items-end' key={header}>
 						{header}
-					</ListCol>
+					</div>
 				))}
-			</Row>
-		</Container>
+			</div>
+		</div>
 	)
 }
 

@@ -1,5 +1,6 @@
 import { StyledBadge } from '@/components/Badge'
 import { CornerButton, CornerButtons } from '@/components/Button/Button'
+import Page from '@/components/Page'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
@@ -37,19 +38,23 @@ const Basket: React.FC = () => {
 	return basket ? (
 		<>
 			<NextSeo title={`${basketId} Basket`} description={`Mint or Redeem ${basketId}`} />
-			<div className='max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8'>
-				<CornerButtons>
-					<Tooltipped content='View Contract on Etherscan'>
-							<CornerButton href={`https://etherscan.io/address/${basket.basketAddresses[1]}`} target='_blank' rel='noreferrer'>
-								<FontAwesomeIcon icon={faFileContract} />
-							</CornerButton>
+			<Page>
+				<div className='float-right top-4 mt-4 right-4 text-2xl text-text-100 hover:cursor-pointer'>
+					<Tooltipped content='View Contract on Etherscan' placement='bottom'>
+						<a
+							className='float-right mt-2 mr-3 align-middle text-xl text-text-100 hover:cursor-pointer'
+							href={`https://etherscan.io/address/${basket.basketAddresses[1]}`}
+							target='_blank'
+							rel='noreferrer'
+						>
+							<FontAwesomeIcon icon={faFileContract} />
+						</a>
 					</Tooltipped>
-				</CornerButtons>
-				<StyledPageHeader>
+				</div>
+				<div className='items-center box-border flex flex-col mt-6 mx-auto mb-0'>
 					<PageHeader
 						icon={`/images/tokens/${basket.icon}`}
 						title={basket.symbol}
-						subtitle='Mint synthethic assets with multiple types of collateral!'
 					/>
 					<br />
 					<StyledBadge>
@@ -65,12 +70,12 @@ const Basket: React.FC = () => {
 							<Loader />
 						)}
 					</StyledBadge>
-				</StyledPageHeader>
+				</div>
 				<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
 				<BasketButtons basket={basket} swapLink={basket.swap} />
 				<Composition composition={composition} />
 				<Description basketAddress={basket.basketAddresses[1]} />
-			</div>
+			</Page>
 		</>
 	) : (
 		<Loader />

@@ -12,3 +12,22 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
+
+/* Scrollbar Styling */
+/* Width */
+::-webkit-scrollbar {
+  width: 14px;
+  border-radius: 100%;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #391818;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #622a2a;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #562424;
+}

@@ -1,6 +1,24 @@
 import { Table } from 'react-bootstrap'
 import styled from 'styled-components'
 
+type TableHeaderProps = {
+	headers: string[]
+}
+
+export const TableHeader: React.FC<TableHeaderProps> = ({ headers }: TableHeaderProps) => {
+	return (
+		<thead>
+			<tr>
+				{headers.map((header: string) => (
+					<th className='p-2 text-right first:text-left' key={header}>
+						{header}
+					</th>
+				))}
+			</tr>
+		</thead>
+	)
+}
+
 export const StyledTable = styled(Table)`
 	width: 100%;
 	background: ${props => props.theme.color.primary[100]};

@@ -106,7 +106,6 @@ const FarmList: React.FC = () => {
 
 	return (
 		<>
-			<Spacer />
 			{/* <Form.Check
 					inline
 					type="switch"
