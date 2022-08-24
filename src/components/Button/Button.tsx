@@ -12,10 +12,10 @@ import Typography from '../Typography'
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const Size = {
-	xs: 'text-sm rounded-lg px-2 h-8',
-	sm: 'text-base rounded-lg px-3 h-10',
-	md: 'text-lg rounded-lg px-4 h-12',
-	lg: 'text-xl rounded-lg px-6 h-16',
+	xs: 'text-xs rounded-lg px-2 h-8',
+	sm: 'text-sm rounded-lg px-3 h-10',
+	md: 'text-base rounded-lg px-4 h-12',
+	lg: 'text-lg rounded-lg px-6 h-16',
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

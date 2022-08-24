@@ -18,6 +18,13 @@ const nextConfig = {
 	compiler: {
 		styledComponents: true,
 	},
+	experimental: {
+		newNextLinkBehavior: true,
+		scrollRestoration: true,
+		images: {
+			allowFutureImage: true,
+		},
+	},
 	async redirects() {
 		return [
 			{

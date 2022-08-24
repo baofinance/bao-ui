@@ -2,8 +2,6 @@ import { ActiveSupportedNFT } from '@/bao/lib/types'
 import { mintNFT } from '@/bao/utils'
 import Button from '@/components/Button/Button'
 import Card from '@/components/Card'
-import Container from '@/components/Container'
-import Page from '@/components/Page'
 import PageHeader from '@/components/PageHeader'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useClaimedCheck } from '@/hooks/nft/useClaimedCheck'
@@ -19,12 +17,8 @@ const NFT: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={'NFT'} description={'Check your eligibility and claim your NFT here!'} />
-			<Page>
-				<Container>
-					<PageHeader title='NFT' description='Check your eligibility and claim your NFT here!' />
-					<div className='flex flex-row justify-center align-middle'>{nfts && nfts.map(nft => <NFTItem nft={nft} key={nft.nid} />)}</div>
-				</Container>
-			</Page>
+			<PageHeader title='NFT' description='Check your eligibility and claim your NFT here!' />
+			<div className='flex flex-row justify-center align-middle'>{nfts && nfts.map(nft => <NFTItem nft={nft} key={nft.nid} />)}</div>
 		</>
 	)
 }

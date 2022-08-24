@@ -39,7 +39,7 @@ const Input: React.FC<InputProps> = ({
 					onChange={onChange}
 					className='bg-transparent text-default font-strong relative h-12 w-full min-w-0 
 				appearance-none rounded-lg border-solid border-inherit pl-4 pr-4 text-start align-middle 
-				text-text-100 outline-none outline outline-2 outline-offset-2 transition-all
+				text-text-100 outline-none outline outline-2 outline-offset-2 transition-all bg-primary-400
 				 duration-200 disabled:text-text-200 md:text-sm'
 				/>
 				{!disabled && (

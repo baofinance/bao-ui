@@ -1,6 +1,4 @@
 import { StyledBadge } from '@/components/Badge'
-import { CornerButton, CornerButtons } from '@/components/Button/Button'
-import Page from '@/components/Page'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
@@ -13,10 +11,8 @@ import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faFileContract } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NextSeo } from 'next-seo'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
-import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
@@ -38,43 +34,38 @@ const Basket: React.FC = () => {
 	return basket ? (
 		<>
 			<NextSeo title={`${basketId} Basket`} description={`Mint or Redeem ${basketId}`} />
-			<Page>
-				<div className='float-right top-4 mt-4 right-4 text-2xl text-text-100 hover:cursor-pointer'>
-					<Tooltipped content='View Contract on Etherscan' placement='bottom'>
-						<a
-							className='float-right mt-2 mr-3 align-middle text-xl text-text-100 hover:cursor-pointer'
-							href={`https://etherscan.io/address/${basket.basketAddresses[1]}`}
-							target='_blank'
-							rel='noreferrer'
-						>
-							<FontAwesomeIcon icon={faFileContract} />
-						</a>
-					</Tooltipped>
-				</div>
-				<div className='items-center box-border flex flex-col mt-6 mx-auto mb-0'>
-					<PageHeader
-						icon={`/images/tokens/${basket.icon}`}
-						title={basket.symbol}
-					/>
-					<StyledBadge>
-						1 {basket.symbol} ={' '}
-						{rates ? (
-							<>
-								<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
-								{getDisplayBalance(rates.dai)}
-								{' DAI '}
-								<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}
-							</>
-						) : (
-							<Loader />
-						)}
-					</StyledBadge>
-				</div>
-				<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
-				<BasketButtons basket={basket} swapLink={basket.swap} />
-				<Composition composition={composition} />
-				<Description basketAddress={basket.basketAddresses[1]} />
-			</Page>
+			<div className='top-4 right-4 float-right mt-4 text-2xl text-text-100 hover:cursor-pointer'>
+				<Tooltipped content='View Contract on Etherscan' placement='bottom'>
+					<a
+						className='float-right mt-2 mr-3 align-middle text-xl text-text-100 hover:cursor-pointer'
+						href={`https://etherscan.io/address/${basket.basketAddresses[1]}`}
+						target='_blank'
+						rel='noreferrer'
+					>
+						<FontAwesomeIcon icon={faFileContract} />
+					</a>
+				</Tooltipped>
+			</div>
+			<div className='mx-auto mt-6 mb-0 box-border flex flex-col items-center'>
+				<PageHeader icon={`/images/tokens/${basket.icon}`} title={basket.symbol} />
+				<StyledBadge>
+					1 {basket.symbol} ={' '}
+					{rates ? (
+						<>
+							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
+							{getDisplayBalance(rates.dai)}
+							{' DAI '}
+							<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}
+						</>
+					) : (
+						<Loader />
+					)}
+				</StyledBadge>
+			</div>
+			<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
+			<BasketButtons basket={basket} swapLink={basket.swap} />
+			<Composition composition={composition} />
+			<Description basketAddress={basket.basketAddresses[1]} />
 		</>
 	) : (
 		<Loader />

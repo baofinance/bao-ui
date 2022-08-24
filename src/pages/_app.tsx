@@ -1,7 +1,6 @@
 import fetcher from '@/bao/lib/fetcher'
+import Container from '@/components/Container'
 import Header from '@/components/Header'
-import MobileMenu from '@/components/MobileMenu'
-import TopBar from '@/components/TopBar'
 import Web3ReactManager from '@/components/Web3ReactManager'
 import SEO from '@/config/seo'
 import BaoProvider from '@/contexts/BaoProvider'
@@ -9,7 +8,6 @@ import FarmsProvider from '@/contexts/Farms'
 import MarketsProvider from '@/contexts/Markets'
 import TransactionProvider from '@/contexts/Transactions'
 import '@/styles/globals.css'
-import GlobalStyle from '@/styles/GlobalStyle'
 import theme from '@/theme/index'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { Web3ReactProvider } from '@web3-react/core'
@@ -90,9 +88,12 @@ function App({ Component, pageProps }: AppProps) {
 			</Head>
 			<Providers isDarkMode={isDarkMode}>
 				<Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
-				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
-				<DefaultSeo {...SEO} />
-				<Component {...pageProps} />
+				<main>
+					<DefaultSeo {...SEO} />
+					<Container>
+						<Component {...pageProps} />
+					</Container>
+				</main>
 			</Providers>
 		</>
 	)
@@ -101,7 +102,6 @@ function App({ Component, pageProps }: AppProps) {
 const Providers: React.FC<ProvidersProps> = ({ children, isDarkMode }: ProvidersProps) => {
 	return (
 		<ThemeProvider theme={theme(isDarkMode)}>
-			<GlobalStyle />
 			<Web3ReactProvider getLibrary={getLibrary}>
 				<Web3ReactNetworkProvider getLibrary={getLibrary}>
 					<Web3ReactManager>

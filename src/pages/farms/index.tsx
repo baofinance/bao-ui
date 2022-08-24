@@ -1,5 +1,4 @@
-import Page from '@/components/Page'
-import Typography from '@/components/Typography'
+import PageHeader from '@/components/PageHeader'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import Balances from './components/Balances'
@@ -9,11 +8,9 @@ const Farms: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={'Farms'} description={'Stake LP tokens to earn BAO.'} />
-			<Page>
-				<Typography variant='hero' className='font-strong text-text-100 text-center tracking-tighter antialiased'>Farms</Typography>
-				<Balances />
-				<FarmList />
-			</Page>
+			<PageHeader title='Farms' />
+			<Balances />
+			<FarmList />
 		</>
 	)
 }

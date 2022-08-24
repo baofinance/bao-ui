@@ -1,17 +1,17 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLink, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons'
-import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import React, { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { getBalanceNumber } from '@/utils/numberFormat'
-import Button from '../../Button'
-import Loader from '../../Loader'
-import WalletProviderModal from '../../WalletProviderModal'
-import AccountModal from './AccountModal'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faAngleDoubleRight, faLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
+import React, { useEffect, useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
+import AccountModal from '../AccountModal'
+import Button from '../Button'
+import Loader from '../Loader'
+import WalletProviderModal from '../WalletProviderModal'
 
 interface AccountButtonProps {}
 
@@ -38,8 +38,8 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	return (
 		<>
-			<StyledAccountButton>
-				{!account ? (
+			{isDesktop &&
+				(!account ? (
 					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
 						<>
 							Connect{' '}
@@ -62,32 +62,22 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 									{account.slice(account.length - 4, account.length)}{' '}
 								</>
 							)}
-							<FontAwesomeIcon
-								icon={faAngleDoubleRight}
-								className='text-text-200 mx-2 my-0 -mt-1'
-							/>
+							<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 -mt-1 text-text-200' />
 							{getBalanceNumber(ethBalance).toFixed(4)}
-							<FontAwesomeIcon
-								icon={faEthereum}
-								className='mx-1 text-text-200'
-							/>
+							<FontAwesomeIcon icon={faEthereum} className='mx-1 text-text-200' />
 							{pendingTxs > 0 && (
 								<>
-									<FontAwesomeIcon
-										icon={faAngleDoubleRight}
-										className='mx-0 my-1 text-text-200'
-									/>
+									<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-0 my-1 text-text-200' />
 									<Loader />
 									<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
 								</>
 							)}
 						</>
 					</Button>
-				)}
-			</StyledAccountButton>
+				))}
 
-			<MobileAccountButton>
-				{!account ? (
+			{!isDesktop &&
+				(!account ? (
 					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
 						{' '}
 						<>
@@ -107,8 +97,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 							{account.slice(account.length - 4, account.length)}
 						</>
 					</Button>
-				)}
-			</MobileAccountButton>
+				))}
 
 			<AccountModal show={showAccountModal} onHide={() => setShowAccountModal(false)} />
 
@@ -116,17 +105,5 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 		</>
 	)
 }
-
-const StyledAccountButton = styled.div`
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		display: none;
-	}
-`
-
-const MobileAccountButton = styled.div`
-	@media (min-width: ${props => props.theme.breakpoints.sm}px) {
-		display: none;
-	}
-`
 
 export default AccountButton
