@@ -9,6 +9,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     color: ${(props: any) => props.theme.color.text[100]};
     transition: 200ms;
+    overflow-y: scroll;
   }
 
   html {

@@ -1,3 +1,4 @@
+import { classNames } from '@/functions/styling'
 import { Chip } from '@material-tailwind/react'
 import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -5,10 +6,17 @@ import styled from 'styled-components'
 interface BadgeProps {
 	children: any
 	color?: string
+	className?: string
 }
 
-export const StyledBadge: React.FC<BadgeProps> = ({ children, color }) => {
-	return <Chip className={`mt-2 px-2 py-1 text-base font-medium bg-primary-200`} style={{ backgroundColor: `${color} !important` }} value={children} />
+export const StyledBadge: React.FC<BadgeProps> = ({ children, className = '', color }) => {
+	return (
+		<Chip
+			className={classNames('bg-primary-200 px-2 py-1 text-base font-medium', className)}
+			style={{ backgroundColor: `${color} !important` }}
+			value={children}
+		/>
+	)
 }
 
 export const PriceBadge = styled(Badge)`

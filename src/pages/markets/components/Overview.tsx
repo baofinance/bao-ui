@@ -1,18 +1,17 @@
+import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
+import useBao from '@/hooks/base/useBao'
+import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
+import useHealthFactor from '@/hooks/markets/useHealthFactor'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { faInfinity } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
-import { StatWrapper, UserStat, UserStatsContainer, UserStatsWrapper } from '@/components/Stats'
-import Tooltipped from '@/components/Tooltipped'
-import useBao from '@/hooks/base/useBao'
-import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import useHealthFactor from '@/hooks/markets/useHealthFactor'
 import React from 'react'
-import { Col } from 'react-bootstrap'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
-import styled from 'styled-components'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { isDesktop } from 'react-device-detect'
 
 export const Overview = () => {
 	const bao = useBao()
@@ -38,135 +37,131 @@ export const Overview = () => {
 
 	return bao && account && accountLiquidity ? (
 		<>
-			<UserStatsContainer md={3}>
-				<UserStatsWrapper md={5}>
-					<StatWrapper xs={6}>
-						<UserStat>
-							<h1>Net APY</h1>
-							<p>{`${bao && account && accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%</p>
-						</UserStat>
-					</StatWrapper>
-					<StatWrapper xs={6}>
-						<UserStat>
-							<h1>Your Collateral</h1>
-							<p>${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply, 0, 2) : 0}`}</p>
-						</UserStat>
-					</StatWrapper>
-				</UserStatsWrapper>
+			<div className='mx-auto my-4 flex flex-row items-center justify-evenly gap-4'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+					<div className='break-words text-center'>
+						<Typography variant='sm' className='text-text-200'>
+							Net APY
+						</Typography>
+						<Typography variant='base' className='font-medium'>
+							{`${bao && account && accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%
+						</Typography>
+					</div>
+				</div>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+					<div className='break-words text-center'>
+						<Typography variant='sm' className='text-text-200'>
+							Your Collateral
+						</Typography>
+						<Typography variant='base' className='font-medium'>
+							${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply, 0, 2) : 0}`}{' '}
+						</Typography>
+					</div>
+				</div>
 
-				<BorrowLimitWrapper md={2}>
-					<BorrowLimitContainer>
-						<CircularProgressbarWithChildren
-							value={borrowLimit}
-							strokeWidth={10}
-							styles={buildStyles({
-								strokeLinecap: 'butt',
-								pathColor: `${healthFactor ? healthFactorColor(healthFactor) : '#fff'}`,
-							})}
-						>
-							<div
-								style={{
-									flexBasis: '16.6666666667%',
-									maxWidth: '16.6666666667%',
-								}}
+				{isDesktop && (
+					<div className='flex flex-col'>
+						<div className='m-auto w-[150px]'>
+							<CircularProgressbarWithChildren
+								value={borrowLimit}
+								strokeWidth={10}
+								styles={buildStyles({
+									strokeLinecap: 'butt',
+									pathColor: `${healthFactor ? healthFactorColor(healthFactor) : '#fff'}`,
+								})}
 							>
-								<CircularProgressbarWrapper>
-									<BorrowLimit style={{ marginTop: '15px' }}>
-										<h1>Debt Limit</h1>
-										<p>
-											{`${
-												bao && account && accountLiquidity.usdBorrowable > 0
-													? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
-													: 0
-											}`}
-											%
-										</p>
-									</BorrowLimit>
-								</CircularProgressbarWrapper>
-							</div>
-						</CircularProgressbarWithChildren>
-					</BorrowLimitContainer>
-				</BorrowLimitWrapper>
-
-				<UserStatsWrapper md={5}>
-					<StatWrapper xs={6}>
-						<UserStat>
-							<h1>Total Debt</h1>
-							<p>${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2) : 0}`}</p>
-						</UserStat>
-					</StatWrapper>
-					<StatWrapper xs={6}>
-						<UserStat>
-							<h1>
-								Health Factor{' '}
-								<Tooltipped content='Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated.' />
-							</h1>
-							<p
-								style={{
-									color: `${healthFactor && healthFactorColor(healthFactor)}`,
-								}}
-							>
-								{healthFactor &&
-									(healthFactor.isFinite() ? (
-										healthFactor.lte(0) ? (
-											'-'
-										) : healthFactor.gt(10000) ? (
-											<p>
-												{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
-											</p>
-										) : (
-											healthFactor.toFixed(2)
-										)
-									) : (
-										<FontAwesomeIcon icon={faInfinity} />
-									))}
-							</p>
-						</UserStat>
-					</StatWrapper>
-				</UserStatsWrapper>
-
-				<DebtLimitContainer>
-					<DebtLimitWrapper>
-						<DebtLimit>
-							<DebtLimitLabel>
-								<div
-									style={{
-										display: 'flex',
-										whiteSpace: 'nowrap',
-										color: `${(props: any) => props.theme.color.text[200]}`,
-										fontSize: '0.875rem',
-										fontWeight: '500',
-									}}
-								>
-									Debt Limit
+								<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
+									<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full bg-primary-100'>
+										<div
+											className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
+											style={{ marginTop: '15px' }}
+										>
+											<Typography variant='sm' className='text-text-200'>
+												Debt Limit
+											</Typography>
+											<Typography>
+												{`${
+													bao && account && accountLiquidity.usdBorrowable > 0
+														? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
+														: 0
+												}`}
+												%
+											</Typography>
+										</div>
+									</div>
 								</div>
-								<p
-									style={{
-										marginTop: '0',
-										marginInlineEnd: '0',
-										marginBottom: '0',
-										marginInlineStart: '0.5rem',
-									}}
-								>
+							</CircularProgressbarWithChildren>
+						</div>
+					</div>
+				)}
+
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+					<div className='break-words text-center'>
+						<Typography variant='sm' className='text-text-200'>
+							Total Debt
+						</Typography>
+						<Typography variant='base' className='font-medium'>
+							${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2) : 0}`}
+						</Typography>
+					</div>
+				</div>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+					<div className='break-words text-center'>
+						<Typography variant='sm' className='text-text-200'>
+							Health Factor{' '}
+							<Tooltipped content='Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated.' />
+						</Typography>
+						<Typography variant='base' className='font-medium'>
+							{' '}
+							{healthFactor &&
+								(healthFactor.isFinite() ? (
+									healthFactor.lte(0) ? (
+										'-'
+									) : healthFactor.gt(10000) ? (
+										<p>
+											{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
+										</p>
+									) : (
+										healthFactor.toFixed(2)
+									)
+								) : (
+									<FontAwesomeIcon icon={faInfinity} />
+								))}
+						</Typography>
+					</div>
+				</div>
+			</div>
+
+			{!isDesktop && (
+				<div className='w-full'>
+					<div className='mt-4 flex w-full justify-center rounded-lg border-0 bg-primary-100 p-4'>
+						<div className='flex w-full flex-row items-center justify-center text-sm font-medium'>
+							<div className='flex flex-row items-center gap-2'>
+								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-text-200'>
+									Debt Limit
+								</Typography>
+								<Typography variant='sm' className='m-0 ml-2'>
 									{`${
 										bao && account && accountLiquidity.usdBorrowable > 0
 											? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
 											: 0
 									}%`}{' '}
-								</p>
-							</DebtLimitLabel>
+								</Typography>
+							</div>
 
-							<ProgressBarWrapper>
-								<ProgressBar style={{ width: `${borrowLimit}%` }} />
-							</ProgressBarWrapper>
+							<div className='ml-2 flex h-1 w-full rounded-lg bg-primary-400'>
+								<div className='flex rounded-lg bg-text-100' style={{ width: `${borrowLimit}%` }} />
+							</div>
 
-							<BorrowableLabel>
-								<p>${`${getDisplayBalance(borrowable, 0)}`}</p>
-							</BorrowableLabel>
-						</DebtLimit>
-					</DebtLimitWrapper>
-				</DebtLimitContainer>
-			</UserStatsContainer>
+							<div className='flex flex-row items-center'>
+								<Typography variant='sm' className='m-0 mx-2'>
+									${`${getDisplayBalance(borrowable, 0)}`}
+								</Typography>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</>
 	) : (
 		<></>
@@ -174,139 +169,3 @@ export const Overview = () => {
 }
 
 export default Overview
-
-//Circular Progress Bar
-
-const BorrowLimitContainer = styled.div`
-	width: 150px;
-	height: 150px;
-	box-sizing: unset;
-	margin: auto;
-
-	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
-		width: 135px;
-		height: 135px;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
-		display: none;
-	}
-`
-
-export const CircularProgressbarWrapper = styled.div`
-	height: 130px;
-	width: 130px;
-	position: relative;
-	left: 50%;
-	transform: translateX(-50%);
-	background-color: ${props => props.theme.color.primary[100]};
-	border-radius: 50%;
-
-	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
-		height: 110px;
-		width: 110px;
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
-		display: none;
-	}
-`
-
-const BorrowLimitWrapper = styled(Col)`
-	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
-		display: none;
-	}
-`
-
-export const BorrowLimit = styled.div`
-	display: flex;
-	flex-direction: column;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border-radius: 50%;
-	align-items: center;
-	justify-content: center;
-	padding: 0.25rem;
-
-	p {
-		font-size: 1.5rem;
-		margin: 0px;
-	}
-
-	h1 {
-		font-size: 0.875rem;
-		color: ${props => props.theme.color.text[200]};
-		margin: 0px;
-	}
-`
-
-// Horizontal Progress Bar
-
-const DebtLimitContainer = styled.div`
-	width: 100%;
-	display: none;
-
-	@media (max-width: ${props => props.theme.breakpoints.lg}px) {
-		display: flex;
-	}
-`
-
-const DebtLimitWrapper = styled.div`
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	background-color: ${props => props.theme.color.primary[100]};
-	border-radius: 8px;
-	margin-top: 1rem;
-	padding: 1rem;
-	border: none;
-`
-
-const DebtLimit = styled.div`
-	flex-direction: row;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	font-size: 0.875rem;
-	font-weight: 600;
-`
-
-const DebtLimitLabel = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-`
-
-const ProgressBar = styled.div`
-	display: flex;
-	height: 100%;
-	border-radius: 8px;
-	background-color: ${props => props.theme.color.text[100]};
-`
-
-const ProgressBarWrapper = styled.div`
-	display: flex;
-	width: 100%;
-	height: 0.25rem;
-	border-radius: 8px;
-	background-color: ${props => props.theme.color.primary[400]};
-	margin-inline-start: 0.5rem;
-`
-
-const BorrowableLabel = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	margin-inline-start: 0.5rem;
-
-	p {
-		margin-block-start: 1em;
-		margin-block-end: 1em;
-		margin-inline-start: 0px;
-		margin-inline-end: 0px;
-	}
-`

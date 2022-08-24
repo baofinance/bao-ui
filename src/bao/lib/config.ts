@@ -126,7 +126,7 @@ export default {
 			isSynth: true,
 			icon: 'bUSD.png',
 			coingeckoId: 'dai',
-			underlyingSymbol: 'bUSD',
+			underlyingSymbol: 'baoUSD',
 			underlyingDecimals: 18,
 		},
 		{

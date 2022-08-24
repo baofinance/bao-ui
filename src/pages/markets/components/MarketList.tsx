@@ -1,12 +1,14 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { getComptrollerContract } from '@/bao/utils'
+import { StyledBadge } from '@/components/Badge'
 import Button from '@/components/Button'
-import { SubmitButton } from '@/components/Button/Button'
-import HrText from '@/components/HrText'
+import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
+import { classNames } from '@/functions/styling'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { AccountLiquidity, useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
@@ -14,13 +16,13 @@ import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } fro
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useAccountMarkets } from '@/hooks/markets/useMarkets'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { Switch } from '@headlessui/react'
+import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
-import { Accordion, Badge, Col, Container, FormCheck, Row } from 'react-bootstrap'
-import styled from 'styled-components'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
@@ -58,10 +60,10 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 			supplyBalances &&
 			borrowBalances &&
 			exchangeRates ? (
-				<Row>
-					<Col lg={12} xl={6}>
-						<HrText content='Collateral' />
-						<MarketListHeader headers={['Asset', 'Wallet', 'Liquidity']} />
+				<div className='flex flex-row gap-12'>
+					<div className='flex w-full flex-col'>
+						<Typography variant='h3'>Collateral</Typography>
+						<ListHeader headers={['Asset', 'Wallet', 'Liquidity']} />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
 								market={market}
@@ -73,10 +75,10 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 								key={market.marketAddress}
 							/>
 						))}
-					</Col>
-					<Col lg={12} xl={6}>
-						<HrText content='Synthetics' />
-						<MarketListHeader headers={['Asset', 'APR', 'Wallet']} />
+					</div>
+					<div className='flex w-full flex-col'>
+						<Typography variant='h3'>Synthetics</Typography>
+						<ListHeader headers={['Asset', 'APR', 'Wallet']} />
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
@@ -87,26 +89,12 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 								key={market.marketAddress}
 							/>
 						))}
-					</Col>
-				</Row>
+					</div>
+				</div>
 			) : (
-				<Loader block />
+				<Loader />
 			)}
 		</>
-	)
-}
-
-const MarketListHeader: React.FC<MarketListHeaderProps> = ({ headers }: MarketListHeaderProps) => {
-	return (
-		<Container fluid>
-			<Row style={{ padding: '0.5rem 12px' }}>
-				{headers.map((header: string) => (
-					<MarketListHeaderCol style={{ paddingBottom: '0px' }} key={header}>
-						<b>{header}</b>
-					</MarketListHeaderCol>
-				))}
-			</Row>
-		</Container>
 	)
 }
 
@@ -122,6 +110,12 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const { handleTx } = useTransactionHandler()
 	const bao = useBao()
 	const { account } = useWeb3React()
+
+	const [open, setOpen] = useState(0)
+
+	const handleOpen = value => {
+		setOpen(open === value ? 0 : value)
+	}
 
 	const suppliedUnderlying = useMemo(
 		() =>
@@ -144,107 +138,131 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 
 	return (
 		<>
-			<Accordion>
-				<StyledAccordionItem eventKey='0' style={{ padding: '12px' }}>
-					<StyledAccordionHeader>
-						<Row style={{ width: '100%' }}>
-							<Col>
-								<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
-								{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
-							</Col>
-							<Col>{account ? accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4) : '-'}</Col>
-							<Col>{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}</Col>
-						</Row>
-					</StyledAccordionHeader>
-					<StyledAccordionBody>
-						<StatBlock
-							label='Supply Details'
-							stats={[
-								{
-									label: 'Total Supplied',
-									value: `${market.supplied.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(
-										market.supplied * market.price,
-										0,
-									)}`,
-								},
-								{
-									label: 'Your Supply',
-									value: `${suppliedUnderlying.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(
-										suppliedUnderlying * market.price,
-										0,
-									)}`,
-								},
-								{
-									label: 'Collateral',
-									value: (
-										<Tooltipped
-											content={
-												<>
-													{isInMarket ? 'Exit' : 'Enter'} Market w/ Supplied Collateral.
-													<br />
-													<br />
-													<Badge bg='danger' style={{ color: 'white' }}>
-														WARNING
-													</Badge>
-													<br />
+			<Accordion open={open === 1} onClick={() => handleOpen(1)} className='my-2 rounded-lg border border-primary-300'>
+				<AccordionHeader className='rounded-lg bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+					<div className='flex w-full flex-row items-center justify-center'>
+						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
+							<Image
+								src={`/images/tokens/${market.icon}`}
+								alt={`${market.underlyingSymbol}`}
+								width={32}
+								height={32}
+								className='inline-block select-none'
+							/>
+							<span className='inline-block text-left align-middle'>
+								<Typography className='ml-2 font-medium leading-5'>{market.underlyingSymbol}</Typography>
+							</span>
+						</div>
+						<div className='mx-auto my-0 flex w-full items-center justify-center'>
+							<Typography className='ml-2 font-medium leading-5'>
+								{account ? accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4) : '-'}
+							</Typography>
+						</div>
+						<div className='mx-auto my-0 flex w-full flex-col items-end'>
+							<Typography className='ml-2 font-medium leading-5'>
+								<span className='inline-block align-middle'>
+									{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}
+								</span>
+							</Typography>
+						</div>
+					</div>
+				</AccordionHeader>
+				<AccordionBody className='rounded-b-lg bg-primary-100 p-3'>
+					<StatBlock
+						label='Supply Details'
+						stats={[
+							{
+								label: 'Total Supplied',
+								value: `${market.supplied.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(
+									market.supplied * market.price,
+									0,
+								)}`,
+							},
+							{
+								label: 'Your Supply',
+								value: `${suppliedUnderlying.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(
+									suppliedUnderlying * market.price,
+									0,
+								)}`,
+							},
+							{
+								label: 'Collateral',
+								value: (
+									<Tooltipped
+										content={
+											<>
+												<Typography variant='sm' className='font-semibold'>
+													{isInMarket ? 'Exit' : 'Enter'} Market w/ Supplied Collateral
+												</Typography>
+												<StyledBadge className='m-2 bg-red font-semibold'>WARNING</StyledBadge>
+												<Typography variant='sm'>
 													Any supplied assets that are flagged as collateral can be seized if you are liquidated.
-												</>
+												</Typography>
+											</>
+										}
+									>
+										<Switch
+											checked={isChecked}
+											disabled={
+												(isInMarket && borrowed > 0) ||
+												supplyBalances.find(balance => balance.address === market.marketAddress).balance === 0
 											}
-										>
-											<FormCheck
-												type='switch'
-												id='custom-switch'
-												checked={isChecked}
-												onChange={e => {
-													e.target.value
-												}}
-												disabled={
-													(isInMarket && borrowed > 0) ||
-													supplyBalances.find(balance => balance.address === market.marketAddress).balance === 0
+											onChange={setIsChecked}
+											onClick={event => {
+												event.stopPropagation()
+												const contract = getComptrollerContract(bao)
+												if (isInMarket) {
+													handleTx(
+														contract.methods.exitMarket(market.marketAddress).send({ from: account }),
+														`Exit Market (${market.underlyingSymbol})`,
+													)
+												} else {
+													handleTx(
+														contract.methods.enterMarkets([market.marketAddress], Config.addressMap.DEAD).send({ from: account }), // Use dead as a placeholder param for `address borrower`, it will be unused
+														`Enter Market (${market.underlyingSymbol})`,
+													)
 												}
-												onClick={event => {
-													event.stopPropagation()
-													const contract = getComptrollerContract(bao)
-													if (isInMarket) {
-														handleTx(
-															contract.methods.exitMarket(market.marketAddress).send({ from: account }),
-															`Exit Market (${market.underlyingSymbol})`,
-														)
-													} else {
-														handleTx(
-															contract.methods.enterMarkets([market.marketAddress], Config.addressMap.DEAD).send({ from: account }), // Use dead as a placeholder param for `address borrower`, it will be unused
-															`Enter Market (${market.underlyingSymbol})`,
-														)
-													}
-												}}
+											}}
+											className={classNames(
+												!isInMarket && borrowed === 0 ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
+												'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
+											)}
+										>
+											<span
+												aria-hidden='true'
+												className={classNames(
+													isInMarket ? 'translate-x-[14px]' : 'translate-x-0',
+													'pointer-events-none inline-block h-[10px] w-[10px] transform rounded-full bg-text-300 shadow ring-0 transition duration-200 ease-in-out',
+												)}
 											/>
-										</Tooltipped>
-									),
-								},
-								{
-									label: 'Wallet Balance',
-									value: `${accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4)} ${
-										market.underlyingSymbol
-									}`,
-								},
-							]}
-						/>
-						<MarketDetails asset={market} title='Market Details' />
-						<br />
-						<Row>
-							<Col>
-								<SubmitButton onClick={() => setShowSupplyModal(true)}>Supply / Withdraw</SubmitButton>
-							</Col>
-							<Col>
-								<Link href={`/markets/${market.underlyingSymbol}`}>
-									<Button text='Details' />
-								</Link>
-							</Col>
-						</Row>
-						<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
-					</StyledAccordionBody>
-				</StyledAccordionItem>
+										</Switch>
+									</Tooltipped>
+								),
+							},
+							{
+								label: 'Wallet Balance',
+								value: `${accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4)} ${
+									market.underlyingSymbol
+								}`,
+							},
+						]}
+					/>
+					<MarketDetails asset={market} title='Market Details' />
+					<div className='mt-4 flex flex-row gap-4'>
+						<div className='flex w-full flex-col'>
+							<Button fullWidth onClick={() => setShowSupplyModal(true)}>
+								Supply / Withdraw
+							</Button>
+						</div>
+						<div className='flex w-full flex-col'>
+							<Link href={`/markets/${market.underlyingSymbol}`}>
+								<Button fullWidth text='Details' />
+							</Link>
+						</div>
+					</div>
+				</AccordionBody>
 			</Accordion>
+			<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
 		</>
 	)
 }
@@ -257,66 +275,86 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	exchangeRates,
 }: MarketListItemProps) => {
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
 
 	const borrowed = useMemo(
 		() => borrowBalances.find(balance => balance.address === market.marketAddress).balance,
 		[borrowBalances, exchangeRates],
 	)
 
+	const handleOpen = () => {
+		!isOpen ? setIsOpen(true) : setIsOpen(false)
+	}
+
 	return (
 		<>
-			<Accordion>
-				<StyledAccordionItem eventKey='0' style={{ padding: '12px' }}>
-					<StyledAccordionHeader>
-						<Row style={{ width: '100%' }}>
-							<Col>
-								<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
-								{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
-							</Col>
-							<Col>{market.borrowApy.toFixed(2)}%</Col>
-							<Col>{accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4)}</Col>
-						</Row>
-					</StyledAccordionHeader>
-					<StyledAccordionBody>
-						<StatBlock
-							label='Debt Information'
-							stats={[
-								{
-									label: 'Total Debt',
-									value: `$${getDisplayBalance(market.totalBorrows * market.price, 0)}`,
-								},
-								{
-									label: 'Your Debt',
-									value: `${borrowed.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(borrowed * market.price, 0)}`,
-								},
-								{
-									label: 'Debt Limit Remaining',
-									value: `$${getDisplayBalance(accountLiquidity.usdBorrowable, 0)}`,
-								},
-								{
-									label: '% of Your Debt',
-									value: `${Math.floor(
-										accountLiquidity.usdBorrow > 0 ? ((borrowed * market.price) / accountLiquidity.usdBorrow) * 100 : 0,
-									)}%`,
-								},
-							]}
-						/>
-						<MarketDetails asset={market} title='Market Details' />
-						<br />
-						<Row>
-							<Col>
-								<SubmitButton onClick={() => setShowBorrowModal(true)}>Mint / Repay</SubmitButton>
-							</Col>
-							<Col>
-								<Link href={`/markets/${market.underlyingSymbol}`}>
-									<Button text='Details' />
-								</Link>
-							</Col>
-						</Row>
-						<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => setShowBorrowModal(false)} />
-					</StyledAccordionBody>
-				</StyledAccordionItem>
+			<Accordion open={isOpen} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
+				<AccordionHeader className='bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+					<div className='flex w-full flex-row items-center justify-center'>
+						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
+							<Image
+								src={`/images/tokens/${market.icon}`}
+								alt={`${market.underlyingSymbol}`}
+								width={32}
+								height={32}
+								className='inline-block select-none'
+							/>
+							<span className='inline-block text-left align-middle'>
+								<Typography className='ml-2 font-medium leading-5'>{market.underlyingSymbol}</Typography>
+							</span>
+						</div>
+						<div className='mx-auto my-0 flex w-full items-center justify-center'>
+							<Typography className='ml-2 font-medium leading-5'>{market.borrowApy.toFixed(2)}% </Typography>
+						</div>
+						<div className='mx-auto my-0 flex w-full flex-col items-end'>
+							<Typography className='ml-2 font-medium leading-5'>
+								<span className='inline-block align-middle'>
+									{accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4)}{' '}
+								</span>
+							</Typography>
+						</div>
+					</div>
+				</AccordionHeader>
+				<AccordionBody className='bg-primary-100 p-3'>
+					<StatBlock
+						label='Debt Information'
+						stats={[
+							{
+								label: 'Total Debt',
+								value: `$${getDisplayBalance(market.totalBorrows * market.price, 0)}`,
+							},
+							{
+								label: 'Your Debt',
+								value: `${borrowed.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(borrowed * market.price, 0)}`,
+							},
+							{
+								label: 'Debt Limit Remaining',
+								value: `$${getDisplayBalance(accountLiquidity.usdBorrowable, 0)}`,
+							},
+							{
+								label: '% of Your Debt',
+								value: `${Math.floor(
+									accountLiquidity.usdBorrow > 0 ? ((borrowed * market.price) / accountLiquidity.usdBorrow) * 100 : 0,
+								)}%`,
+							},
+						]}
+					/>
+					<MarketDetails asset={market} title='Market Details' />
+					<div className='mt-4 flex flex-row gap-4'>
+						<div className='flex w-full flex-col'>
+							<Button fullWidth onClick={() => setShowBorrowModal(true)}>
+								Mint / Repay
+							</Button>
+						</div>
+						<div className='flex w-full flex-col'>
+							<Link href={`/markets/${market.underlyingSymbol}`}>
+								<Button fullWidth text='Details' />
+							</Link>
+						</div>
+					</div>
+				</AccordionBody>
 			</Accordion>
+			<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => setShowBorrowModal(false)} />
 		</>
 	)
 }
@@ -325,10 +363,6 @@ export default MarketList
 
 type MarketListProps = {
 	markets: ActiveSupportedMarket[]
-}
-
-type MarketListHeaderProps = {
-	headers: string[]
 }
 
 type MarketListItemProps = {
@@ -340,93 +374,3 @@ type MarketListItemProps = {
 	borrowBalances?: Balance[]
 	exchangeRates?: { [key: string]: BigNumber }
 }
-
-const StyledAccordionHeader = styled(Accordion.Header)`
-	&:active {
-		border-radius: 8px 8px 0px 0px;
-	}
-
-	img {
-		height: 32px;
-		margin-right: 0.75rem;
-		vertical-align: middle;
-	}
-
-	> button {
-		background-color: ${props => props.theme.color.primary[100]};
-		color: ${props => props.theme.color.text[100]};
-		padding: 1.25rem;
-		border: ${props => props.theme.border.default};
-		border-radius: 8px;
-
-		&:hover,
-		&:focus,
-		&:active,
-		&:not(.collapsed) {
-			background-color: ${props => props.theme.color.primary[200]};
-			color: ${props => props.theme.color.text[100]};
-			border: ${props => props.theme.border.default};
-			box-shadow: none;
-			border-radius: 8px 8px 0px 0px;
-		}
-
-		&:not(.collapsed) {
-			transition: none;
-
-			::after {
-				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${props =>
-					props.theme.color.text[100].replace(
-						'#',
-						'%23',
-					)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-			}
-		}
-
-		::after {
-			// don't turn arrow blue
-			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${props =>
-				props.theme.color.text[100].replace(
-					'#',
-					'%23',
-				)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-		}
-
-		.row > .col {
-			margin: auto 0;
-			text-align: right;
-
-			&:first-child {
-				text-align: left;
-			}
-
-			&:last-child {
-				margin-right: 25px;
-			}
-		}
-	}
-`
-
-const StyledAccordionItem = styled(Accordion.Item)`
-	background-color: transparent;
-	border-color: transparent;
-`
-
-const StyledAccordionBody = styled(Accordion.Body)`
-	background-color: ${props => props.theme.color.primary[100]};
-	border-bottom-left-radius: 8px;
-	border-bottom-right-radius: 8px;
-	border: ${props => props.theme.border.default};
-	border-top: none;
-`
-
-const MarketListHeaderCol = styled(Col)`
-	text-align: right;
-
-	&:first-child {
-		text-align: left;
-	}
-
-	&:last-child {
-		margin-right: 46px;
-	}
-`

@@ -7,7 +7,7 @@ export interface InputProps {
 	onChange: (e: React.FormEvent<HTMLInputElement>) => void
 	placeholder?: string
 	startAdornment?: ReactNode
-	value: string
+	value: string | undefined
 	label?: ReactNode
 	disabled?: boolean
 	max?: number | string
@@ -32,6 +32,7 @@ const Input: React.FC<InputProps> = ({
 			<div className='align-center relative flex w-full justify-center align-middle'>
 				{!!startAdornment && startAdornment}
 				<input
+					disabled={disabled}
 					type='number'
 					placeholder={placeholder}
 					value={value}
@@ -44,9 +45,11 @@ const Input: React.FC<InputProps> = ({
 				{!disabled && (
 					<>
 						<div className='flex h-full items-center justify-center'>
-							<Button size='xs' onClick={onSelectHalf} className='mr-1'>
-								½
-							</Button>
+							{onSelectHalf && (
+								<Button size='xs' onClick={onSelectHalf} className='mr-1'>
+									½
+								</Button>
+							)}
 							<Button size='xs' onClick={onSelectMax} className='mr-1'>
 								MAX
 							</Button>

@@ -10,12 +10,12 @@ interface PageHeaderProps {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ title, icon, description }) => {
 	return (
-		<div className='mx-auto mt-6 box-border flex flex-col items-center pb-2'>
+		<div className='mx-auto mb-4 mt-6 box-border flex flex-col items-center'>
 			<Icon src={icon} />
 			<Typography variant='hero' className='antialiased'>
 				{title}
 			</Typography>
-			<Typography className='flex flex-1 items-center justify-center'>{description}</Typography>
+			{description && <Typography className='flex flex-1 items-center justify-center'>{description}</Typography>}
 		</div>
 	)
 }

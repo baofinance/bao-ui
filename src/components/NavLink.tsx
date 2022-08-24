@@ -1,24 +1,27 @@
-import Link from 'next/link'
+import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
+import { FC, ReactNode } from 'react'
 
-interface NavLinkProps {
+interface NavLinkProps extends LinkProps {
 	children: ReactNode
 	href: string
 	className?: string
 	exact?: boolean
 }
 
-const NavLink: React.FC<NavLinkProps> = ({ href, exact, children, ...props }) => {
+const NavLink: FC<NavLinkProps> = ({ href, exact, children, className, ...props }) => {
 	const { pathname } = useRouter()
 	const isActive = exact ? pathname === href : pathname.startsWith(href)
 
 	if (isActive) {
-		props.className += 'active'
+		className += 'active'
 	}
 
 	return (
 		<Link href={href}>
-			<a {...props} className={`text-rubik font-medium text-text-100 hover:text-text-400 antialiased ${props.className}`}>{children}</a>
+			<a {...props} className={`text-rubik font-medium text-text-100 antialiased hover:text-text-400 ${className}`}>
+				{children}
+			</a>
 		</Link>
 	)
 }

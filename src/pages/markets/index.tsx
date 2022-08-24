@@ -1,3 +1,5 @@
+import Page from '@/components/Page'
+import Typography from '@/components/Typography'
 import { useMarkets } from '@/hooks/markets/useMarkets'
 import { useWeb3React } from '@web3-react/core'
 import { NextSeo } from 'next-seo'
@@ -13,8 +15,10 @@ const Markets: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={'Markets'} description={'Provide different collateral types to mint synthetics like baoUSD.'} />
-			<div className='max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8'>
-				<h1 className='font-kaushan text-xxxl antialiased font-strong text-center tracking-tighter text-text-dark-100'>Markets</h1>
+			<Page>
+				<Typography variant='hero' className='font-strong text-center tracking-tighter text-text-100 antialiased'>
+					Markets
+				</Typography>
 				{account ? (
 					<>
 						<Overview />
@@ -23,7 +27,7 @@ const Markets: React.FC = () => {
 				) : (
 					<OfflineMarketList markets={markets} />
 				)}
-			</div>
+			</Page>
 		</>
 	)
 }

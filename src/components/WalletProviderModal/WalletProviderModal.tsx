@@ -1,13 +1,11 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
 import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 import Button from '@/components/Button'
-import { WalletButton } from '@/components/Button/Button'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { useWeb3React } from '@web3-react/core'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Image from 'next/image'
 import Modal from '../Modal'
 import Typography from '../Typography'
 
@@ -71,7 +69,10 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 
 	return (
 		<Modal isOpen={show} onDismiss={onHide}>
-			<Modal.Header header='Select a wallet provider' onClose={onHide} />
+			<Modal.Header
+				header='Select a wallet provider'
+				onClose={onHide}
+			/>
 			<Modal.Actions>
 				{Object.keys(connectorsByName).map(name => {
 					const currentConnector = connectorsByName[name]
@@ -94,8 +95,8 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 								})
 							}}
 						>
-							<div className='flex h-full items-center justify-center align-middle text-text-100'>
-								<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={`/images/wallets/${name}.png`} alt={name} />
+							<div className='flex h-full items-center'>
+								<img className='inline-block' src={`/images/wallets/${name}.png`} alt={name} />
 								<Typography className='ml-2 inline-block font-semibold'>{activating ? 'Connecting...' : `${name}`}</Typography>
 							</div>
 						</Button>
@@ -105,13 +106,5 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 		</Modal>
 	)
 }
-
-export const ConnectorIconContainer = styled.div`
-	height: 100%;
-	margin: 0 auto;
-	display: inline-block;
-	vertical-align: middle;
-	color: ${props => props.theme.color.text[100]};
-`
 
 export default WalletProviderModal

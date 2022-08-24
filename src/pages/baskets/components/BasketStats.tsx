@@ -22,7 +22,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 	const nav = useNav(composition, info && info.totalSupply)
 
 	return (
-		<div className='grid w-full grid-flow-col gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+		<div className='grid w-full grid-flow-col gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-4'>
 			<div className='flex flex-col'>
 				<Card>
 					<Card.Body className='items-center justify-center text-center'>

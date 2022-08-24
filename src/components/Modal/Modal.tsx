@@ -85,8 +85,8 @@ const Modal: ModalType<ModalProps> = ({
 							className={classNames(
 								transparent ? '' : 'bg-background-100 !border-primary-100 !border !border-solid',
 								isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : '',
-								isDesktop ? `w-full` : 'mx-auto max-h-[85vh] w-[85vw] overflow-y-auto',
-								'inline-block transform overflow-hidden rounded-xl p-4 text-left align-bottom',
+								isDesktop ? `w-full` : 'mx-auto max-h-[85vh] w-[85vw]',
+								'inline-block transform rounded-xl p-4 text-left align-bottom',
 							)}
 						>
 							{children}

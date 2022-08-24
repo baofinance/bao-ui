@@ -4,6 +4,7 @@ import Logo from '@/components/Logo'
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
+import Container from '../Container'
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
 
@@ -15,23 +16,30 @@ interface TopBarProps {
 
 const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu, isDarkMode, toggleTheme }) => {
 	return (
-		<div className='fixed z-50 m-auto w-full border-b border-primary-300 bg-background-100'>
-			<div className='z-50 m-auto flex h-20 w-full items-center justify-between p-4'>
-				<div className='w-auto'>
+		<header className='relative z-50 pb-11 lg:pt-11'>
+			<Container className='flex flex-wrap items-center justify-center sm:justify-between lg:flex-nowrap'>
+				<div className='mt-10 lg:mt-0 lg:grow lg:basis-0'>
 					<Logo />
 				</div>
-				<div className='hidden flex-1 justify-center xl:flex'>
-					<Nav />
+				<div className='order-first -mx-4 flex flex-auto basis-full overflow-x-auto whitespace-nowrap border-b border-primary-300 py-4 text-sm sm:-mx-6 lg:order-none lg:mx-0 lg:basis-auto lg:border-0 lg:py-0'>
+					<div className='mx-auto flex items-center gap-4 px-4'>
+						<Nav />
+					</div>
 				</div>
-				<div className='flex w-[200px] items-center justify-end sm:w-auto sm:justify-center'>
+				<div className='hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end'>
 					<AccountButton />
-					<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} onClick={toggleTheme} className='ml-4 hover:cursor-pointer' aria-label='Dark Mode' />
+					<FontAwesomeIcon
+						icon={isDarkMode ? faMoon : faSun}
+						onClick={toggleTheme}
+						className='ml-4 hover:cursor-pointer'
+						aria-label='Dark Mode'
+					/>
 					<Button size='sm' className='ml-4 rounded-lg border-0 bg-primary-200 outline-0 xl:hidden' onClick={onPresentMobileMenu}>
 						<MenuIcon />
 					</Button>
 				</div>
-			</div>
-		</div>
+			</Container>
+		</header>
 	)
 }
 

@@ -154,21 +154,23 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const newBorrowable = borrowable + change
 
 	return (
-		<StatBlock
-			label='Debt Limit Stats'
-			stats={[
-				{
-					label: 'Debt Limit',
-					value: `$${getDisplayBalance(borrowable.toFixed(2), 0)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
-				},
-				{
-					label: 'Debt Limit Used',
-					value: `${(accountLiquidity && borrowable !== 0 ? (accountLiquidity.usdBorrow / borrowable) * 100 : 0).toFixed(
-						2,
-					)}% ➜ ${(accountLiquidity && newBorrowable !== 0 ? (accountLiquidity.usdBorrow / newBorrowable) * 100 : 0).toFixed(2)}%`,
-				},
-			]}
-		/>
+		<div className='mt-4'>
+			<StatBlock
+				label='Debt Limit Stats'
+				stats={[
+					{
+						label: 'Debt Limit',
+						value: `$${getDisplayBalance(borrowable.toFixed(2), 0)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
+					},
+					{
+						label: 'Debt Limit Used',
+						value: `${(accountLiquidity && borrowable !== 0 ? (accountLiquidity.usdBorrow / borrowable) * 100 : 0).toFixed(
+							2,
+						)}% ➜ ${(accountLiquidity && newBorrowable !== 0 ? (accountLiquidity.usdBorrow / newBorrowable) * 100 : 0).toFixed(2)}%`,
+					},
+				]}
+			/>
+		</div>
 	)
 }
 
@@ -185,25 +187,27 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const newBorrowable = borrowable ? borrowable + (change < 0 ? change : 0) : 0
 
 	return (
-		<StatBlock
-			label='Debt Limit Stats'
-			stats={[
-				{
-					label: 'Debt Limit Remaining',
-					value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0, 0)} ➜ $${getDisplayBalance(
-						accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
-						0,
-					)}`,
-				},
-				{
-					label: 'Debt Limit Used',
-					value: `${(borrowable !== 0 ? (borrow / borrowable) * 100 : 0).toFixed(2)}% ➜ ${(newBorrowable !== 0
-						? (newBorrow / newBorrowable) * 100
-						: 0
-					).toFixed(2)}%`,
-				},
-			]}
-		/>
+		<div className='mt-4'>
+			<StatBlock
+				label='Debt Limit Stats'
+				stats={[
+					{
+						label: 'Debt Limit Remaining',
+						value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0, 0)} ➜ $${getDisplayBalance(
+							accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
+							0,
+						)}`,
+					},
+					{
+						label: 'Debt Limit Used',
+						value: `${(borrowable !== 0 ? (borrow / borrowable) * 100 : 0).toFixed(2)}% ➜ ${(newBorrowable !== 0
+							? (newBorrow / newBorrowable) * 100
+							: 0
+						).toFixed(2)}%`,
+					},
+				]}
+			/>
+		</div>
 	)
 }
 

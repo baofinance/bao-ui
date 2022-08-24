@@ -73,7 +73,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					'font-bold relative items-center justify-center gap-1 overflow-hidden border border-solid border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
+					'relative items-center justify-center gap-1 overflow-hidden border border-solid font-medium',
+					'border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
 					className,
 				)}
 			>
@@ -81,8 +82,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					<Loader />
 				) : (
 					<>
-							{ButtonChild}
-							{buttonText}
+						{ButtonChild}
+						{buttonText}
 					</>
 				)}
 			</button>
@@ -116,9 +117,14 @@ type NavButtonProps = {
 }
 
 export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
-	<div className='flex w-full cursor-pointer mt-2 gap-2'>
+	<div className='mt-2 flex w-full cursor-pointer gap-2'>
 		{options.map((option: string) => (
-			<Button size='md' key={option} className={`w-full ${option === active ? 'bg-primary-300' : 'bg-primary-200'}`} onClick={() => onClick(option)}>
+			<Button
+				size='md'
+				key={option}
+				className={`w-full ${option === active ? 'bg-primary-300' : 'bg-primary-200'}`}
+				onClick={() => onClick(option)}
+			>
 				{option}
 			</Button>
 		))}

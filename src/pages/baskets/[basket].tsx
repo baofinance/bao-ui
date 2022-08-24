@@ -56,7 +56,6 @@ const Basket: React.FC = () => {
 						icon={`/images/tokens/${basket.icon}`}
 						title={basket.symbol}
 					/>
-					<br />
 					<StyledBadge>
 						1 {basket.symbol} ={' '}
 						{rates ? (

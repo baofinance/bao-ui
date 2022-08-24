@@ -1,10 +1,14 @@
+import { classNames } from '@/functions/styling'
 import React, { ReactNode } from 'react'
 
 interface ContainerProps {
 	children: ReactNode
+	className?: string
 }
 
-const Container = ({ children }: ContainerProps) => <div className='container mx-auto sm:px-6 lg:px-8'>{children}</div>
+const Container = ({ children, className }: ContainerProps) => (
+	<div className={classNames('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8', className)}>{children}</div>
+)
 
 export default Container
 

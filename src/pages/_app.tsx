@@ -1,4 +1,5 @@
 import fetcher from '@/bao/lib/fetcher'
+import Header from '@/components/Header'
 import MobileMenu from '@/components/MobileMenu'
 import TopBar from '@/components/TopBar'
 import Web3ReactManager from '@/components/Web3ReactManager'
@@ -12,7 +13,6 @@ import GlobalStyle from '@/styles/GlobalStyle'
 import theme from '@/theme/index'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { Web3ReactProvider } from '@web3-react/core'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { DefaultSeo } from 'next-seo'
 import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
@@ -27,7 +27,7 @@ function getLibrary(provider: provider) {
 	return new Web3(provider)
 }
 
-const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3ReactNetworkProvider'), { ssr: false })
+const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
 
 function App({ Component, pageProps }: AppProps) {
 	const [mobileMenu, setMobileMenu] = useState(false)
@@ -89,7 +89,7 @@ function App({ Component, pageProps }: AppProps) {
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />{' '}
 			</Head>
 			<Providers isDarkMode={isDarkMode}>
-				<TopBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
+				<Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
 				<DefaultSeo {...SEO} />
 				<Component {...pageProps} />

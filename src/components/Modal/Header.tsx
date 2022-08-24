@@ -16,7 +16,7 @@ const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack
 		<>
 			<div className='flex justify-between mb-4 h-8 items-center'>
 				<div className='flex flex-col justify-center gap-1'>
-					<Typography variant='lg' className='font-semibold'>
+					<Typography variant='xl' className='font-semibold'>
 						{onBack && (
 							<FontAwesomeIcon icon={faArrowLeft} onClick={onBack} width={24} height={24} className='cursor-pointer hover:text-text-400' />
 						)}

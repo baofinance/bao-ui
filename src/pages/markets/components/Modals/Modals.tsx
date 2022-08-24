@@ -1,9 +1,8 @@
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { BalanceWrapper } from '@/components/Balance'
-import { CloseButton, NavButtons } from '@/components/Button'
-import { IconFlex } from '@/components/Icon'
-import { BalanceInput } from '@/components/Input'
-import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from '@/components/Label'
+import { NavButtons } from '@/components/Button'
+import Input from '@/components/Input'
+import Modal from '@/components/Modal'
+import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
@@ -13,10 +12,8 @@ import { decimate, exponentiate } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
-import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import { MarketButton } from '../MarketButton'
 import { MarketStats } from '../Stats'
-import { AssetStack, HeaderWrapper, ModalStack } from '../styles'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -25,7 +22,7 @@ export enum MarketOperations {
 	repay = 'Repay',
 }
 
-export type MarketModalProps = ModalProps & {
+export type MarketModalProps = {
 	asset: ActiveSupportedMarket
 	show: boolean
 	onHide: () => void
@@ -104,54 +101,50 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 
 	return (
 		<>
-			<Modal show={show} onHide={hideModal} centered>
-				<CloseButton onHide={hideModal} onClick={onHide} />
-				<Modal.Header>
-					<Modal.Title id='contained-modal-title-vcenter'>
-						<HeaderWrapper>
-							<p>{operation}</p>
-							<Image src={`/images/tokens/${asset.icon}`} width={24} height={24} alt={asset.underlyingSymbol} />
-						</HeaderWrapper>
-					</Modal.Title>
+			<Modal isOpen={show} onDismiss={hideModal}>
+				<Modal.Header onClose={hideModal}>
+					<div className='mx-0 my-auto flex h-full items-center text-text-100'>
+						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
+							{operation}
+						</Typography>
+						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} />
+					</div>
 				</Modal.Header>
-				<Modal.Body>
+				<Modal.Options>
 					<NavButtons options={operations} active={operation} onClick={setOperation} />
-					<ModalStack>
-						<BalanceWrapper>
-							<Col xs={4}>
-								<LabelStart></LabelStart>
-							</Col>
-							<Col xs={8}>
-								<LabelEnd>
-									<LabelStack>
-										<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
-										<AssetLabel>{`${max().toFixed(4)} ${asset.underlyingSymbol}`}</AssetLabel>
-									</LabelStack>
-								</LabelEnd>
-							</Col>
-						</BalanceWrapper>
-						<Row>
-							<Col xs={12}>
-								<BalanceInput
-									value={val}
-									onChange={handleChange}
-									onMaxClick={() =>
-										setVal((Math.floor(max() * 10 ** asset.underlyingDecimals) / 10 ** asset.underlyingDecimals).toString())
-									}
-									label={
-										<AssetStack>
-											<IconFlex>
-												<Image src={`/images/tokens/${asset.icon}`} width={24} height={24} alt={asset.underlyingSymbol} />
-											</IconFlex>
-										</AssetStack>
-									}
-								/>
-							</Col>
-						</Row>
-						<MarketStats operation={operation} asset={asset} amount={val} />
-					</ModalStack>
+				</Modal.Options>
+				<Modal.Body>
+					<div className='flex h-full flex-col items-center justify-center mb-4'>
+						<div className='flex w-full flex-row'>
+							<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
+								<Typography variant='sm' className='text-text-200'>
+									{`${maxLabel()}:`}
+								</Typography>
+								<Typography variant='sm'>{`${max().toFixed(4)} ${asset.underlyingSymbol}`}</Typography>
+							</div>
+						</div>
+						<Input
+							value={val}
+							onChange={handleChange}
+							onSelectMax={() => setVal((Math.floor(max() * 10 ** asset.underlyingDecimals) / 10 ** asset.underlyingDecimals).toString())}
+							label={
+								<div className='flex flex-row items-center pl-2 pr-4'>
+									<div className='flex w-6 justify-center'>
+										<Image
+											src={`/images/tokens/${asset.icon}`}
+											width={32}
+											height={32}
+											alt={asset.symbol}
+											className='block h-6 w-6 align-middle'
+										/>
+									</div>
+								</div>
+							}
+						/>
+					</div>
+					<MarketStats operation={operation} asset={asset} amount={val} />
 				</Modal.Body>
-				<Modal.Footer>
+				<Modal.Actions>
 					<MarketButton
 						operation={operation}
 						asset={asset}
@@ -159,7 +152,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 						isDisabled={!val || !bao || isNaN(val as any as number) || parseFloat(val) > max()}
 						onHide={hideModal}
 					/>
-				</Modal.Footer>
+				</Modal.Actions>
 			</Modal>
 		</>
 	)
