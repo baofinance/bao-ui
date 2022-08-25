@@ -9,7 +9,7 @@ html {
 body {
 	background: url(/images/background_overlay_dark.png), radial-gradient(circle at center, #391818, #210e0e 50%) fixed;
 	margin: 0;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Rubik', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: #fff8ee;

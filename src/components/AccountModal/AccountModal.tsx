@@ -43,7 +43,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 		<Modal isOpen={show} onDismiss={onHide}>
 			<Modal.Header header={'My Account'} onClose={onHide} />
 			<Modal.Body>
-				<div className={`grid grid-flow-col ${isDesktop ? 'grid-cols-2' : 'grid-rows-2'} gap-4 px-4 pt-4`}>
+				<div className={`grid grid-flow-col ${isDesktop ? 'grid-cols-2' : 'grid-rows-2 mb-8'} gap-4 px-4 pt-4`}>
 					<div className='flex items-center justify-center'>
 						<div className='flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border-0 bg-primary-300'>
 							<Image src='/images/tokens/ETH.png' alt='ETH' width={32} height={32} className='m-auto' />
@@ -112,9 +112,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 									))}
 							</>
 						) : (
-							<div className='flex w-full items-center px-3 py-1 font-semibold'>
+							<div className='flex w-full items-center px-3 py-1'>
 								<Typography variant='sm' className='text-end font-normal text-text-200'>
-									Your completed transactions will show here...
+									Completed transactions will show here...
 								</Typography>
 							</div>
 						)}

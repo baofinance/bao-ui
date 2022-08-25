@@ -4,19 +4,20 @@ import React, { FC, forwardRef } from 'react'
 import { classNames } from '@/functions/styling'
 import { isDesktop } from 'react-device-detect'
 
-export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'sm' | 'xs' | 'xxs'
+export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'p' | 'sm' | 'xs' | 'xxs'
 
 const VARIANTS = {
-	hero: 'text-hero leading-[4rem] font-semibold',
+	hero: 'text-hero leading-[4rem] font-black',
 	h1: 'text-4xl leading-[46px] font-semibold',
 	h2: 'text-3xl tracking-[-0.02em] font-semibold',
 	h3: 'text-2xl leading-7 tracking-[-0.01em] font-semibold',
-	xl: 'text-xl leading-6 font-semibold',
-	lg: 'text-lg leading-6 font-medium',
-	base: 'text-base leading-5 font-light',
-	sm: 'text-sm leading-5 font-light',
-	xs: 'text-xs leading-4 font-light',
-	xxs: 'text-[0.625rem] leading-[1.2] font-light',
+	xl: 'text-xl leading-6 font-medium',
+	lg: 'text-lg leading-6',
+	base: 'text-base leading-5',
+	p: 'text-base leading-5 my-2 font-light',
+	sm: 'text-sm leading-5',
+	xs: 'text-xs leading-4',
+	xxs: 'text-[0.625rem] leading-[1.2]',
 }
 
 export interface TypographyProps extends React.AllHTMLAttributes<React.ReactHTML> {

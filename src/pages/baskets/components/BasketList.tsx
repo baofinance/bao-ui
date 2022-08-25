@@ -9,6 +9,7 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import Link from 'next/link'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
+import Image from 'next/future/image'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
@@ -30,12 +31,14 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 				<div className='flex w-full flex-row'>
 					<div className='flex w-full'>
 						<div className='my-auto'>
-							<img src={`/images/tokens/${basket.symbol}.png`} className={`inline-block ${isDesktop ? 'h-8 w-8' : 'h-6 w-6'}`} />
+							<Image src={`/images/tokens/${basket.symbol}.png`} className={`inline-block`} height={32} width={32} />
 							<span className='inline-block text-left align-middle'>
-								<Typography className='ml-2 font-semibold'>{basket.symbol}</Typography>
-								<Typography variant='sm' className={`ml-2 text-text-200 ${!isDesktop && 'hidden'}`}>
-									{basket.desc}
-								</Typography>
+								<Typography className='ml-2 font-bold'>{basket.symbol}</Typography>
+								{isDesktop && (
+									<Typography variant='sm' className={`ml-2 font-light text-text-200`}>
+										{basket.desc}
+									</Typography>
+								)}
 							</span>
 						</div>
 					</div>
@@ -44,11 +47,9 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							composition.map((component: any) => {
 								return (
 									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
-										<img
-											className={`-ml-2 inline-block select-none duration-200 first:ml-0 ${isDesktop ? 'h-8 w-8' : 'h-6 w-6'}`}
-											src={component.image}
-											alt={component.symbol}
-										/>
+										<a className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
+											<Image src={component.image} alt={component.symbol} height={32} width={32} />
+										</a>
 									</Tooltipped>
 								)
 							})
@@ -60,10 +61,10 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 						<span className='inline-block align-middle'>
 							{rates ? (
 								<>
-									<Typography variant='sm' className='m-0 font-medium leading-5'>
+									<Typography variant='sm' className='m-0 font-semibold leading-5'>
 										${getDisplayBalance(rates.usd)}
 									</Typography>
-									<Badge className='bg-green text-xs'>0% Fee</Badge>
+									<Badge className='bg-green text-xs font-medium'>0% Fee</Badge>
 								</>
 							) : (
 								<Loader />

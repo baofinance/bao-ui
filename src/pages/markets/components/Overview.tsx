@@ -43,7 +43,7 @@ export const Overview = () => {
 						<Typography variant='sm' className='text-text-200'>
 							Net APY
 						</Typography>
-						<Typography variant='base' className='font-medium'>
+						<Typography variant='base' className='font-semibold'>
 							{`${bao && account && accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%
 						</Typography>
 					</div>

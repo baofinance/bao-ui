@@ -73,8 +73,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					'relative items-center justify-center gap-1 overflow-hidden border border-solid font-semibold',
-					'border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
+					'relative items-center justify-center gap-1 overflow-hidden !border font-bold',
+					'!border-primary-300 bg-primary-200 duration-200 hover:bg-primary-300',
 					className,
 				)}
 			>
@@ -92,23 +92,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 
 export default Button
-
-export const MaxButton = ({ onClick }: MaxButtonProps) => {
-	return (
-		<button
-			className='text-default font-strong m-auto mr-2 h-[80%] select-none rounded-lg !border !border-solid
-			!border-primary-400/50 bg-primary-200 p-2 align-middle text-text-100 no-underline duration-200 hover:cursor-pointer
-			hover:bg-primary-300 hover:text-text-100 md:text-sm'
-			onClick={onClick}
-		>
-			MAX
-		</button>
-	)
-}
-
-type MaxButtonProps = {
-	onClick: (e: any) => void
-}
 
 type NavButtonProps = {
 	onClick: (s: any) => void
