@@ -23,7 +23,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 	const nav = useNav(composition, info && info.totalSupply)
 
 	return (
-		<div className={`mt-4 grid w-full grid-flow-col gap-4 ${isDesktop ? 'grid-rows-1' : 'grid-rows-2'}`}>
+		<div className={`mt-4 grid w-full grid-flow-col ${isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-2 gap-2'}`}>
 			<Card>
 				<Card.Body className='items-center justify-center text-center'>
 					<div className='text-center'>
@@ -31,7 +31,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						<br />
 						Market Cap
 					</div>
-					<Badge>{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}</Badge>
+					<Badge className='font-semibold'>{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}</Badge>
 				</Card.Body>
 			</Card>
 			<Card>
@@ -41,7 +41,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						<br />
 						Supply
 					</div>
-					<Badge>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <Loader />}</Badge>
+					<Badge className='font-semibold'>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <Loader />}</Badge>
 				</Card.Body>
 			</Card>
 			<Card>
@@ -57,7 +57,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							placement='top'
 						/>
 					</div>
-					<Badge>{nav ? `$${getDisplayBalance(nav, 0)}` : <Loader />}</Badge>
+					<Badge className='font-semibold'>{nav ? `$${getDisplayBalance(nav, 0)}` : <Loader />}</Badge>
 				</Card.Body>
 			</Card>
 			<Card>
@@ -72,7 +72,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							and the price to mint`}
 						/>
 					</div>
-					<Badge>
+					<Badge className='font-semibold'>
 						{pairPrice && rates ? (
 							// `${getDisplayBalance(
 							// 	pairPrice

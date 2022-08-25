@@ -164,7 +164,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									here
 								</a>
 								.{' '}
-								<Badge className='text-xs text-center mt-2 bg-red'>
+								<Badge className='text-xs text-center mt-2 bg-red/50'>
 									<b className='font-medium'>CAUTION:</b> Slippage may apply on swaps!
 								</Badge>
 							</Typography>

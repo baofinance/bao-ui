@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ParentSize } from '@visx/responsive'
 import { BigNumber } from 'bignumber.js'
 import _ from 'lodash'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 
@@ -53,12 +53,12 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 					<div className='rounded-lg border border-primary-300 bg-primary-200'>
 						<table className='w-full'>
 							<thead>
-								<tr className='bg-primary-100'>
-									<th className='w-[10%] p-2 text-center'>Token</th>
-									<th className='w-[40%] p-2 text-start'>Allocation</th>
-									<th className='w-[20%] p-2 text-center'>Price</th>
-									<th className='w-[10%] p-2 text-center'>APY</th>
-									{isDesktop && <th className='w-[15%] p-2 px-4 text-center'>Strategy</th>}
+								<tr className='rounded-t-lg bg-primary-100'>
+									<th className='w-[10%] rounded-tl-lg p-2 text-center font-bold'>Token</th>
+									<th className='w-[40%] p-2 text-start font-bold'>Allocation</th>
+									<th className='w-[20%] p-2 text-center font-bold'>Price</th>
+									<th className='w-[10%] p-2 text-center font-bold'>APY</th>
+									{isDesktop && <th className='w-[15%] rounded-tr-lg p-2 px-4 text-center font-bold'>Strategy</th>}
 								</tr>
 							</thead>
 							{composition && (
@@ -68,8 +68,10 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 										.map((component: any) => (
 											<tr key={component.symbol} className='even:bg-primary-100'>
 												<td className='p-2 text-center'>
-													<Tooltipped content={component.symbol}>
-														<Image src={component.image} width={32} height={32} alt={component.symbol} />
+													<Tooltipped content={component.symbol} placement='left'>
+														<a>
+															<Image src={component.image} width={32} height={32} alt={component.symbol} className='inline' />
+														</a>
 													</Tooltipped>
 												</td>
 												<td className='p-2'>
@@ -80,18 +82,22 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 													/>
 												</td>
 												<td className='p-2 text-center'>
-													<Badge className='bg-primary-300'>${getDisplayBalance(component.basePrice || component.price, 0)}</Badge>
+													<Badge className='bg-primary-300 font-semibold'>
+														${getDisplayBalance(component.basePrice || component.price, 0)}
+													</Badge>
 												</td>
 												<td className='p-2 text-center'>
 													<Tooltipped content={component.apy ? `${component.apy.div(1e18).times(100).toFixed(18)}%` : '-'}>
-														<Badge className='bg-primary-300'>
-															{component.apy ? `${component.apy.div(1e18).times(100).toFixed(2)}%` : '-'}
-														</Badge>
+														<a>
+															<Badge className='bg-primary-300 font-semibold'>
+																{component.apy ? `${component.apy.div(1e18).times(100).toFixed(2)}%` : '-'}
+															</Badge>
+														</a>
 													</Tooltipped>
 												</td>
 												{isDesktop && (
 													<td className='p-2 text-center'>
-														<Badge className='bg-primary-300'>{component.strategy || 'None'}</Badge>
+														<Badge className='bg-primary-300 font-semibold'>{component.strategy || 'None'}</Badge>
 													</td>
 												)}
 											</tr>

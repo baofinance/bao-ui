@@ -1,3 +1,4 @@
+import { classNames } from '@/functions/styling'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Tooltip } from '@material-tailwind/react'
@@ -7,16 +8,17 @@ interface TooltippedProps {
 	content: any
 	children?: any
 	placement?: any
+	className?: any
 }
 
-const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement }) => (
+const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement, className }) => (
 	<>
 		<Tooltip
 			id={Math.random().toString()}
 			content={content}
 			placement={placement}
 			offset={10}
-			className='max-w-xs border border-primary-300 bg-primary-100 p-2 text-center text-text-100'
+			className={classNames('max-w-xs border border-primary-300 bg-primary-100 p-2 text-center text-text-100', className)}
 		>
 			{children || (
 				<span>
