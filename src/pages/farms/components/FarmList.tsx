@@ -1,8 +1,6 @@
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
 import Loader, { SpinnerLoader } from '@/components/Loader'
-import { StyledLoadingWrapper } from '@/components/Loader/Loader'
-import Spacer from '@/components/Spacer'
 import Typography from '@/components/Typography'
 import { Farm, PoolType } from '@/contexts/Farms/types'
 import { classNames } from '@/functions/styling'
@@ -114,7 +112,7 @@ const FarmList: React.FC = () => {
 					checked={staked}
 					onChange={(e) => showStaked(e.currentTarget.checked)}
 				/> */}
-			<div className='container flex justify-end opacity-50'>
+			<div className='flex justify-end opacity-50'>
 				<Switch.Group as='div' className='flex items-center'>
 					<Switch
 						disabled={true}
@@ -150,9 +148,7 @@ const FarmList: React.FC = () => {
 									</React.Fragment>
 								))
 							) : (
-								<StyledLoadingWrapper>
-									<Loader />
-								</StyledLoadingWrapper>
+								<Loader />
 							)}
 						</>
 					) : (
@@ -164,9 +160,7 @@ const FarmList: React.FC = () => {
 									</React.Fragment>
 								))
 							) : (
-								<StyledLoadingWrapper>
-									<Loader />
-								</StyledLoadingWrapper>
+								<Loader />
 							)}
 						</>
 					)}

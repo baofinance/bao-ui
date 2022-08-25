@@ -1,6 +1,7 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import Badge from '@/components/Badge'import Button from '@/components/Button/Button'
+import Badge from '@/components/Badge'
+import Button from '@/components/Button/Button'
 import Loader from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
 import { StatBlock, StatCards } from '@/components/Stats'
@@ -20,6 +21,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { MarketDetails } from './components/Stats'
+import Image from 'next/future/image'
+import { isDesktop } from 'react-device-detect'
 
 const MarketSupplyModal = React.lazy(() => import('./components/Modals/SupplyModal'))
 const MarketBorrowModal = React.lazy(() => import('./components/Modals/BorrowModal'))
@@ -79,28 +82,30 @@ const Market: React.FC = () => {
 	return markets && activeMarket ? (
 		<>
 			<NextSeo title={`${marketId} Market`} description={`Supply or withdraw ${activeMarket.underlyingSymbol} collateral.`} />
-			<div className='block flex-1'>
-				<Typography variant='lg' className='block flex-1'>
-					<span className='float-right mt-4 text-lg'>
-						<Badge className='rounded-full'>
-							<FontAwesomeIcon icon={activeMarket.isSynth ? faChartLine : faLandmark} />
-							{activeMarket.isSynth ? 'Synthetic' : 'Collateral'}
+			<div className='mt-6 flex items-center'>
+				<Typography variant='lg' className='float-left items-center'>
+					<Link href='/markets'>
+						<a>
+							<FontAwesomeIcon className='mr-1' icon={faArrowLeft} size='sm' />
+							<Typography variant='lg' className='inline-block'>
+								Back to Markets
+							</Typography>
+						</a>
+					</Link>
+				</Typography>
+				<Typography variant='lg' className='block flex-1 items-center'>
+					<span className='float-right items-center'>
+						<Image src={`/images/tokens/${activeMarket.underlyingSymbol}.png`} height={32} width={32} className='inline' />
+						<Badge className='ml-2 rounded-full text-base'>
+							<div className='p-1'>
+								<FontAwesomeIcon icon={activeMarket.isSynth ? faChartLine : faLandmark} className='mr-2' />
+								{activeMarket.isSynth ? 'Synthetic' : 'Collateral'}
+							</div>
 						</Badge>
 					</span>
 				</Typography>
 			</div>
-			<PageHeader icon={`/images/tokens/${activeMarket.underlyingSymbol}.png`} title={`${activeMarket.underlyingSymbol} Market`} />
-			<Typography variant='lg'>
-				<Link href='/markets'>
-					<a>
-						<FontAwesomeIcon className='mr-1 align-middle' icon={faArrowLeft} />
-						<Typography variant='lg' className='inline-block'>
-							Back to Markets
-						</Typography>
-					</a>
-				</Link>
-			</Typography>
-			<div className='my-4 grid grid-cols-4 gap-4'>
+			<div className={`my-4 grid ${isDesktop ? 'grid-cols-4' : 'grid-cols-2'} gap-4`}>
 				<StatCards
 					stats={[
 						{

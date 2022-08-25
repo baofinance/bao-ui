@@ -2,12 +2,11 @@
 /* eslint-disable react/display-name */
 import Config from '@/bao/lib/config'
 import { classNames } from '@/functions/styling'
-import { faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactNode, useMemo } from 'react'
-import styled from 'styled-components'
+import { isDesktop } from 'react-device-detect'
 import Loader from '../Loader'
-import Typography from '../Typography'
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
@@ -73,8 +72,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					'relative items-center justify-center gap-1 overflow-hidden !border font-bold',
-					'!border-primary-300 bg-primary-200 duration-200 hover:bg-primary-300',
+					`relative items-center justify-center gap-1 overflow-hidden border font-semibold`,
+					'border-primary-300 bg-primary-200 duration-200 hover:bg-primary-300',
 					className,
 				)}
 			>
@@ -97,19 +96,22 @@ type NavButtonProps = {
 	onClick: (s: any) => void
 	active: string
 	options: string[]
+	className?: string
 }
 
-export const NavButtons = ({ options, active, onClick }: NavButtonProps) => (
-	<div className='mt-2 flex w-full cursor-pointer gap-2'>
-		{options.map((option: string) => (
-			<Button
-				size='md'
-				key={option}
-				className={`w-full ${option === active ? 'bg-primary-300' : 'bg-primary-200'}`}
-				onClick={() => onClick(option)}
-			>
-				{option}
-			</Button>
-		))}
-	</div>
-)
+export const NavButtons = ({ options, active, onClick, className }: NavButtonProps) => {
+	return (
+		<div className='mt-2 flex w-full cursor-pointer gap-2'>
+			{options.map((option: string) => (
+				<Button
+					size='md'
+					key={option}
+					className={classNames(`${option === active && '!bg-primary-300'} w-full`, className)}
+					onClick={() => onClick(option)}
+				>
+					{option}
+				</Button>
+			))}
+		</div>
+	)
+}

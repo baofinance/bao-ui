@@ -1,7 +1,6 @@
 import Config from '@/bao/lib/config'
 import Card from '@/components/Card'
-import { AbsoluteContainer } from '@/components/Container'
-import { BalanceInput } from '@/components/Input'
+import Input, { BalanceInput } from '@/components/Input'
 import Loader from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
@@ -13,7 +12,7 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faLongArrowAltRight, faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import BallastButton from './BallastButton'
 
@@ -64,14 +63,12 @@ const BallastSwapper: React.FC = () => {
 
 	const daiInput = (
 		<>
-			<label className='!sm:text-sm !xs:text-xs text-default'>
+			<label className='float-left mb-1'>
 				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
 			</label>
-			<label className='float-right mb-1 text-text-200'>
-				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />}{' '}
-			</label>
-			<BalanceInput
-				onMaxClick={() => setInputVal(decimate(daiBalance).toString())}
+			<label className='float-right mb-1 text-text-200'>Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />} </label>
+			<Input
+				onSelectMax={() => setInputVal(decimate(daiBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
 					swapDirection && fees && !new BigNumber(inputVal).isNaN()
@@ -82,7 +79,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<div className='align-center flex flex-row pl-2 pr-4'>
 						<div className='flex justify-center'>
-							<Image src='/images/tokens/DAI.png' height={36} width={36} alt='DAI' className='block object-none align-middle' />
+							<Image src='/images/tokens/DAI.png' height={32} width={32} alt='DAI' className='block object-none align-middle' />
 						</div>
 					</div>
 				}
@@ -92,14 +89,14 @@ const BallastSwapper: React.FC = () => {
 
 	const baoUSDInput = (
 		<>
-			<label className='!md:text-sm !sm:text-xs text-default'>
-				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(baoUSDBalance).toString()} BaoUSD
+			<label className='float-left mb-1'>
+				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(baoUSDBalance).toString()} baoUSD
 			</label>
 			<label className='float-right mb-1 text-text-200'>
 				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <Loader />}{' '}
 			</label>
-			<BalanceInput
-				onMaxClick={() => setInputVal(decimate(baoUSDBalance).toString())}
+			<Input
+				onSelectMax={() => setInputVal(decimate(baoUSDBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
 					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
@@ -110,7 +107,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<div className='align-center flex flex-row pl-2 pr-4'>
 						<div className='flex justify-center'>
-							<Image src='/images/tokens/bUSD.png' height={36} width={36} alt='baoUSD' className='block object-none align-middle' />
+							<Image src='/images/tokens/bUSD.png' height={32} width={32} alt='baoUSD' className='block object-none align-middle' />
 						</div>
 					</div>
 				}

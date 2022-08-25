@@ -1,4 +1,5 @@
 import React from 'react'
+import { isDesktop } from 'react-device-detect'
 import Typography from '../Typography'
 
 type Stat = {
@@ -13,21 +14,20 @@ type StatBlockProps = {
 
 export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<>
-		<div className='text-center'>
-			<Typography variant='base' className='font-bold text-text-100 mb-3'>
-				{label}
-			</Typography>
-		</div>
+		{label && (
+			<div className='text-center'>
+				<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bold text-text-100'>
+					{label}
+				</Typography>
+			</div>
+		)}
 		<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded-lg bg-primary-100'>
 			{stats.map(({ label, value }) => (
-				<div
-					className='grid grid-cols-2 break-words rounded-lg px-2 py-2 odd:bg-primary-200'
-					key={label}
-				>
-					<Typography variant='sm' className='font-medium text-text-100'>
+				<div className='grid grid-cols-2 break-words rounded-lg px-2 py-2 odd:bg-primary-200' key={label}>
+					<Typography variant={`${isDesktop ? 'sm' : 'xs'}`} className='font-medium text-text-100'>
 						{label}
 					</Typography>
-					<Typography variant='sm' className='text-end font-medium text-text-100'>
+					<Typography variant={`${isDesktop ? 'sm' : 'xs'}`} className='text-end font-medium text-text-100'>
 						{value}
 					</Typography>
 				</div>

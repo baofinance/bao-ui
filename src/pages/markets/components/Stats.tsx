@@ -201,7 +201,9 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 					{
 						label: 'Debt Limit Used',
 						value: `${(borrowable !== 0 ? (borrow / borrowable) * 100 : 0).toFixed(2)}% ➜ ${(newBorrowable !== 0
-							? (newBorrow / newBorrowable) * 100
+							? borrow < 0.01
+								? (change / borrowable) * -100
+								: (newBorrow / newBorrowable) * 100
 							: 0
 						).toFixed(2)}%`,
 					},

@@ -8,6 +8,15 @@ module.exports = {
 			poppins: ['Poppins', 'sans-serif'],
 			kaushan: ['Kaushan Script', 'sans-serif'],
 		},
+		accordion: {
+			styles: {
+			  base: {
+				header: {
+				  icon: "hidden",
+				},
+			  },
+			},
+		  },
 		extend: {
 			backgroundImage: () => ({
 				darkOverlay: "url('/images/background_overlay_dark.png'), radial-gradient(circle at center, #391818, #210e0e 50%) fixed",

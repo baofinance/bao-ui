@@ -1,5 +1,6 @@
 import { classNames } from '@/functions/styling'
 import React, { ReactNode } from 'react'
+import { isDesktop } from 'react-device-detect'
 
 interface ContainerProps {
 	children: ReactNode
@@ -7,7 +8,7 @@ interface ContainerProps {
 }
 
 const Container = ({ children, className }: ContainerProps) => (
-	<div className={classNames('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8', className)}>{children}</div>
+	<div className={classNames(`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${isDesktop && 'min-w-[80%]'}`, className)}>{children}</div>
 )
 
 export default Container

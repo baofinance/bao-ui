@@ -23,6 +23,7 @@ import BigNumber from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
@@ -60,9 +61,11 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 			supplyBalances &&
 			borrowBalances &&
 			exchangeRates ? (
-				<div className='flex flex-row gap-12'>
+				<div className={`flex ${isDesktop ? 'flex-row gap-12' : 'mt-4 flex-col gap-4'}`}>
 					<div className='flex w-full flex-col'>
-						<Typography variant='h3'>Collateral</Typography>
+						<Typography variant='xl' className='text-center'>
+							Collateral
+						</Typography>
 						<ListHeader headers={['Asset', 'Wallet', 'Liquidity']} />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
@@ -77,7 +80,9 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 						))}
 					</div>
 					<div className='flex w-full flex-col'>
-						<Typography variant='h3'>Synthetics</Typography>
+						<Typography variant='xl' className='text-center'>
+							Synthetics
+						</Typography>
 						<ListHeader headers={['Asset', 'APR', 'Wallet']} />
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemSynth
@@ -111,12 +116,6 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const bao = useBao()
 	const { account } = useWeb3React()
 
-	const [open, setOpen] = useState(0)
-
-	const handleOpen = value => {
-		setOpen(open === value ? 0 : value)
-	}
-
 	const suppliedUnderlying = useMemo(
 		() =>
 			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
@@ -135,11 +134,22 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	)
 
 	const [isChecked, setIsChecked] = useState(!!isInMarket)
+	const [isOpen, setIsOpen] = useState(false)
+
+	const handleOpen = () => {
+		!isOpen ? setIsOpen(true) : setIsOpen(false)
+		showSupplyModal && setIsOpen(true)
+	}
 
 	return (
 		<>
-			<Accordion open={open === 1} onClick={() => handleOpen(1)} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className='rounded-lg bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+			<Accordion open={isOpen || showSupplyModal} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
+				<AccordionHeader
+					className={`rounded-lg border-0 bg-primary-100 p-3 text-text-100 hover:bg-primary-200 ${
+						isOpen && 'rounded-b-none bg-primary-200'
+					}`}
+				>
+					{' '}
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
@@ -248,7 +258,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						]}
 					/>
 					<MarketDetails asset={market} title='Market Details' />
-					<div className='mt-4 flex flex-row gap-4'>
+					<div className={`mt-4 flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-2'}`}>
 						<div className='flex w-full flex-col'>
 							<Button fullWidth onClick={() => setShowSupplyModal(true)}>
 								Supply / Withdraw
@@ -262,7 +272,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 					</div>
 				</AccordionBody>
 			</Accordion>
-			<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
+			<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => [setShowSupplyModal(false), setIsOpen(true)]} />
 		</>
 	)
 }
@@ -284,12 +294,17 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 
 	const handleOpen = () => {
 		!isOpen ? setIsOpen(true) : setIsOpen(false)
+		showBorrowModal && setIsOpen(true)
 	}
 
 	return (
 		<>
-			<Accordion open={isOpen} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className={`bg-primary-100 p-3 text-text-100 hover:bg-primary-200 rounded-lg border-0 ${isOpen && 'bg-primary-200 rounded-b-none'}`}>
+			<Accordion open={isOpen || showBorrowModal} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
+				<AccordionHeader
+					className={`rounded-lg border-0 bg-primary-100 p-3 text-text-100 hover:bg-primary-200 ${
+						isOpen && 'rounded-b-none bg-primary-200'
+					}`}
+				>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
@@ -340,7 +355,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						]}
 					/>
 					<MarketDetails asset={market} title='Market Details' />
-					<div className='mt-4 flex flex-row gap-4'>
+					<div className={`mt-4 flex ${isDesktop ? 'flex-row' : 'flex-col'} gap-4`}>
 						<div className='flex w-full flex-col'>
 							<Button fullWidth onClick={() => setShowBorrowModal(true)}>
 								Mint / Repay
@@ -354,7 +369,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					</div>
 				</AccordionBody>
 			</Accordion>
-			<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => setShowBorrowModal(false)} />
+			<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => [setShowBorrowModal(false), setIsOpen(true)]} />
 		</>
 	)
 }

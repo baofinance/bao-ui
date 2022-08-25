@@ -114,7 +114,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 					<NavButtons options={operations} active={operation} onClick={setOperation} />
 				</Modal.Options>
 				<Modal.Body>
-					<div className='flex h-full flex-col items-center justify-center mb-4'>
+					<div className='mb-4 flex h-full flex-col items-center justify-center'>
 						<div className='flex w-full flex-row'>
 							<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
 								<Typography variant='sm' className='text-text-200'>

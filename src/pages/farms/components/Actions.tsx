@@ -1,7 +1,6 @@
 import Config from '@/bao/lib/config'
 import { approvev2, getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
-import { QuestionIcon } from '@/components/Icon'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
@@ -255,7 +254,11 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							<Typography variant='sm'>
 								{' '}
 								{fees ? `${(fees * 100).toFixed(2)}%` : <Loader />}{' '}
-								<QuestionIcon icon={faQuestionCircle} onClick={() => setShowFeeModal(true)} />
+								<FontAwesomeIcon
+									icon={faQuestionCircle}
+									onClick={() => setShowFeeModal(true)}
+									className='text-text-200 hover:cursor-pointer hover:text-text-100 hover:duration-200'
+								/>
 							</Typography>
 						</div>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>

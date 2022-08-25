@@ -2,7 +2,7 @@ import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { getBalanceNumber } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
-import { faAngleDoubleRight, faLink } from '@fortawesome/free-solid-svg-icons'
+import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -57,14 +57,15 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 										{account.slice(account.length - 4, account.length)}{' '}
 									</>
 								)}
-								<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 -mt-1 text-text-200' />
+								<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 text-text-200' />
 								{getBalanceNumber(ethBalance).toFixed(4)}
-								<FontAwesomeIcon icon={faEthereum} className='mx-1 text-text-100' />
+								<FontAwesomeIcon icon={faEthereum} className='mx-1' />
 								{pendingTxs > 0 && (
 									<>
-										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-0 my-1 text-text-200' />
+										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 -mt-1 text-text-200' />
 										<Loader />
-										<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
+										<span className='ml-2'>{pendingTxs}</span>
+										<FontAwesomeIcon icon={faReceipt} className='mx-2 my-0 -mt-1 text-text-200' />
 									</>
 								)}
 							</div>
