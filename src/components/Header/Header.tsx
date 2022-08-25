@@ -6,8 +6,14 @@ import Link from 'next/link'
 import { FC, ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
 import AccountButton from '../AccountButton'
-import { IconProps } from '../Icon'
 import Nav from '../Nav'
+
+export interface IconProps {
+	color?: string
+	children?: ReactNode
+	size?: number
+	className?: string
+}
 
 const MenuIcon: FC<IconProps> = ({ size = 24, ...props }) => {
 	return (

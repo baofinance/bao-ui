@@ -1,4 +1,3 @@
-import { Icon } from '@/components/Icon'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
 import Typography from '../Typography'
