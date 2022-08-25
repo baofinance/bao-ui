@@ -42,36 +42,32 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				(!account ? (
 					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
 						<>
-							Connect{' '}
-							<FontAwesomeIcon
-								icon={faLink}
-								style={{
-									marginLeft: '4px',
-								}}
-							/>
+							Connect <FontAwesomeIcon icon={faLink} className='ml-1' />
 						</>
 					</Button>
 				) : (
 					<Button onClick={() => setShowAccountModal(true)} size='sm'>
 						<>
-							{ens ? (
-								ens
-							) : (
-								<>
-									{account.slice(0, 6)}...
-									{account.slice(account.length - 4, account.length)}{' '}
-								</>
-							)}
-							<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 -mt-1 text-text-200' />
-							{getBalanceNumber(ethBalance).toFixed(4)}
-							<FontAwesomeIcon icon={faEthereum} className='mx-1 text-text-200' />
-							{pendingTxs > 0 && (
-								<>
-									<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-0 my-1 text-text-200' />
-									<Loader />
-									<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
-								</>
-							)}
+							<div className='items-center'>
+								{ens ? (
+									ens
+								) : (
+									<>
+										{account.slice(0, 6)}...
+										{account.slice(account.length - 4, account.length)}{' '}
+									</>
+								)}
+								<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 -mt-1 text-text-200' />
+								{getBalanceNumber(ethBalance).toFixed(4)}
+								<FontAwesomeIcon icon={faEthereum} className='mx-1 text-text-100' />
+								{pendingTxs > 0 && (
+									<>
+										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-0 my-1 text-text-200' />
+										<Loader />
+										<span style={{ marginLeft: '5px' }}>{pendingTxs}</span>
+									</>
+								)}
+							</div>
 						</>
 					</Button>
 				))}

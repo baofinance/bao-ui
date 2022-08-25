@@ -10,7 +10,7 @@ import { faCheck, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import _ from 'lodash'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
 interface AccountModalProps {

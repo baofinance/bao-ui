@@ -47,7 +47,7 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ onPresentMobileMenu, isDarkMode, toggleTheme }) => {
 	return (
-		<header className='bg-background-100 border-b border-b-primary-300'>
+		<header className='bg-background-100 border-b border-b-primary-300 fixed w-full top-0 z-50'>
 			<nav>
 				<Container className='relative z-50 flex justify-between py-4 max-w-full'>
 					<div className='relative z-10 flex items-center gap-8'>

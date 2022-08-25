@@ -14,14 +14,14 @@ type StatBlockProps = {
 export const StatBlock = ({ label, stats }: StatBlockProps) => (
 	<>
 		<div className='text-center'>
-			<Typography variant='base' className='font-bold text-text-100'>
+			<Typography variant='base' className='font-bold text-text-100 mb-3'>
 				{label}
 			</Typography>
 		</div>
 		<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded-lg bg-primary-100'>
 			{stats.map(({ label, value }) => (
 				<div
-					className='grid grid-cols-2 break-words rounded-lg px-2 py-2 first:rounded-b-none last:rounded-t-none odd:bg-primary-200'
+					className='grid grid-cols-2 break-words rounded-lg px-2 py-2 odd:bg-primary-200'
 					key={label}
 				>
 					<Typography variant='sm' className='font-medium text-text-100'>

@@ -1,6 +1,8 @@
 import { Icon } from '@/components/Icon'
 import React from 'react'
+import { isDesktop } from 'react-device-detect'
 import Typography from '../Typography'
+import Image from 'next/future/image'
 
 interface PageHeaderProps {
 	icon?: any
@@ -11,8 +13,8 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title, icon, description }) => {
 	return (
 		<div className='mx-auto mb-4 mt-6 box-border flex flex-col items-center'>
-			<Icon src={icon} />
-			<Typography variant='hero' className='antialiased'>
+			<Image src={icon} height={`${isDesktop ? 128 : 64}`} width={`${isDesktop ? 128 : 64}`} />
+			<Typography variant={`${isDesktop ? 'hero' : 'h1'}`} className='font-kaushan antialiased'>
 				{title}
 			</Typography>
 			{description && <Typography className='flex flex-1 items-center justify-center'>{description}</Typography>}

@@ -1,7 +1,7 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { getComptrollerContract } from '@/bao/utils'
-import { StyledBadge } from '@/components/Badge'
+import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
@@ -20,7 +20,7 @@ import { Switch } from '@headlessui/react'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 import MarketBorrowModal from './Modals/BorrowModal'
@@ -194,7 +194,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 												<Typography variant='sm' className='font-semibold'>
 													{isInMarket ? 'Exit' : 'Enter'} Market w/ Supplied Collateral
 												</Typography>
-												<StyledBadge className='m-2 bg-red font-semibold'>WARNING</StyledBadge>
+												<Badge className='m-2 bg-red font-semibold'>WARNING</Badge>
 												<Typography variant='sm'>
 													Any supplied assets that are flagged as collateral can be seized if you are liquidated.
 												</Typography>
@@ -289,7 +289,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	return (
 		<>
 			<Accordion open={isOpen} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className='bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+				<AccordionHeader className={`bg-primary-100 p-3 text-text-100 hover:bg-primary-200 rounded-lg border-0 ${isOpen && 'bg-primary-200 rounded-b-none'}`}>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image

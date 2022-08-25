@@ -11,7 +11,7 @@ import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 
 type ModalProps = {

@@ -1,4 +1,4 @@
-import { StyledBadge } from '@/components/Badge'
+import Badge from '@/components/Badge'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
@@ -13,7 +13,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
@@ -48,7 +47,7 @@ const Basket: React.FC = () => {
 			</div>
 			<div className='mx-auto mt-6 mb-0 box-border flex flex-col items-center'>
 				<PageHeader icon={`/images/tokens/${basket.icon}`} title={basket.symbol} />
-				<StyledBadge>
+				<Badge>
 					1 {basket.symbol} ={' '}
 					{rates ? (
 						<>
@@ -60,7 +59,7 @@ const Basket: React.FC = () => {
 					) : (
 						<Loader />
 					)}
-				</StyledBadge>
+				</Badge>
 			</div>
 			<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
 			<BasketButtons basket={basket} swapLink={basket.swap} />
@@ -73,11 +72,3 @@ const Basket: React.FC = () => {
 }
 
 export default Basket
-
-const StyledPageHeader = styled.div`
-	align-items: center;
-	box-sizing: border-box;
-	display: flex;
-	flex-direction: column;
-	margin: ${props => props.theme.spacing[6]}px auto 0;
-`

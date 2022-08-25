@@ -2,11 +2,12 @@ import IconLink from '@/components/IconLink'
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faComments } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
+import { isDesktop } from 'react-device-detect'
 import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {
 	return (
-		<div className='flex items-center text-xl'>
+		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm' }`}>
 			<Tooltipped content='Discord' placement='top'>
 				<IconLink href='https://discord.gg/BW3P62vJXT' label='Discord' icon={faDiscord} />
 			</Tooltipped>

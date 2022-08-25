@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import Button from '@/components/Button'
+import React, { useState } from 'react'
+import { ActiveSupportedBasket } from '../../../bao/lib/types'
 import BasketModal from './Modals/BasketModal'
 
 type ModalOperation = 'MINT' | 'REDEEM'
@@ -25,7 +24,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 	return (
 		<>
 			<BasketModal basket={basket} operation={modalOperation} show={showBasketModal} hideModal={() => setShowBasketModal(false)} />
-			<div className='grid grid-cols-3 gap-8 mt-4'>
+			<div className='mt-4 grid grid-cols-3 gap-8'>
 				<div>
 					<Button fullWidth onClick={() => handleClick('MINT')}>
 						Mint

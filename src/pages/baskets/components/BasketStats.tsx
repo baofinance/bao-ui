@@ -1,4 +1,4 @@
-import { StyledBadge } from '@/components/Badge/Badge'
+import Badge from '@/components/Badge'
 import Card from '@/components/Card'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
@@ -22,7 +22,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 	const nav = useNav(composition, info && info.totalSupply)
 
 	return (
-		<div className='grid w-full grid-flow-col gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-4'>
+		<div className='mt-4 grid w-full grid-flow-col gap-4 sm:grid-cols-2 lg:grid-cols-4'>
 			<div className='flex flex-col'>
 				<Card>
 					<Card.Body className='items-center justify-center text-center'>
@@ -31,7 +31,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							<br />
 							Market Cap
 						</div>
-						<StyledBadge>{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}</StyledBadge>
+						<Badge>{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}</Badge>
 					</Card.Body>
 				</Card>
 			</div>
@@ -43,7 +43,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							<br />
 							Supply
 						</div>
-						<StyledBadge>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <Loader />}</StyledBadge>
+						<Badge>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <Loader />}</Badge>
 					</Card.Body>
 				</Card>
 			</div>
@@ -61,7 +61,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 								placement='top'
 							/>
 						</div>
-						<StyledBadge>{nav ? `$${getDisplayBalance(nav, 0)}` : <Loader />}</StyledBadge>
+						<Badge>{nav ? `$${getDisplayBalance(nav, 0)}` : <Loader />}</Badge>
 					</Card.Body>
 				</Card>
 			</div>
@@ -78,7 +78,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							and the price to mint`}
 							/>
 						</div>
-						<StyledBadge>
+						<Badge>
 							{pairPrice && rates ? (
 								// `${getDisplayBalance(
 								// 	pairPrice
@@ -92,7 +92,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							) : (
 								<Loader />
 							)}
-						</StyledBadge>
+						</Badge>
 					</Card.Body>
 				</Card>
 			</div>

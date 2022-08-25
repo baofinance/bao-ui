@@ -1,18 +1,15 @@
-import { FeeBadge } from '@/components/Badge'
-import { IconContainer, StyledIcon } from '@/components/Icon'
+import Badge from '@/components/Badge'
+import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
-import React from 'react'
-import { Col, Row } from 'react-bootstrap'
-import styled from 'styled-components'
-import { ActiveSupportedBasket } from '../../../bao/lib/types'
-import { ListHeader, ListItem, ListItemHeader } from '@/components/List'
 import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
 import useComposition from '@/hooks/baskets/useComposition'
 import useBasketRates from '@/hooks/baskets/useNestRate'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import Link from 'next/link'
-import Typography from '@/components/Typography'
-import Image from 'next/image'
+import React from 'react'
+import { isDesktop } from 'react-device-detect'
+import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
@@ -28,15 +25,15 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const rates = useBasketRates(basket)
 
 	return (
-		<Link href={`/baskets/${basket.symbol}`}>
-			<button className='w-full rounded-lg border border-primary-300 bg-primary-100 p-4 py-2 text-text-100 hover:bg-primary-200'>
+		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
+			<button className='w-full rounded-lg border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200'>
 				<div className='flex w-full flex-row'>
-					<div className='mx-auto my-0 flex w-full flex-col items-start align-middle'>
-						<div className='mx-0 my-auto inline-block text-text-100'>
-							<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={`/images/tokens/${basket.symbol}.png`} />
-							<span className='inline-block align-middle text-left'>
-								<Typography className='ml-2 leading-5 font-semibold'>{basket.symbol}</Typography>
-								<Typography variant='sm' className='ml-2 text-text-200 leading-4'>
+					<div className='flex w-full'>
+						<div className='my-auto'>
+							<img src={`/images/tokens/${basket.symbol}.png`} className={`inline-block ${isDesktop ? 'h-8 w-8' : 'h-6 w-6'}`} />
+							<span className='inline-block text-left align-middle'>
+								<Typography className='ml-2 font-semibold'>{basket.symbol}</Typography>
+								<Typography variant='sm' className={`ml-2 text-text-200 ${!isDesktop && 'hidden'}`}>
 									{basket.desc}
 								</Typography>
 							</span>
@@ -48,7 +45,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 								return (
 									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
 										<img
-											className='-ml-2 inline-block h-8 w-8 select-none duration-200 first:ml-0'
+											className={`-ml-2 inline-block select-none duration-200 first:ml-0 ${isDesktop ? 'h-8 w-8' : 'h-6 w-6'}`}
 											src={component.image}
 											alt={component.symbol}
 										/>
@@ -63,8 +60,10 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 						<span className='inline-block align-middle'>
 							{rates ? (
 								<>
-									<p className='m-0 leading-5'>${getDisplayBalance(rates.usd)}</p>
-									<FeeBadge>0% Fee</FeeBadge>
+									<Typography variant='sm' className='m-0 font-medium leading-5'>
+										${getDisplayBalance(rates.usd)}
+									</Typography>
+									<Badge className='bg-green text-xs'>0% Fee</Badge>
 								</>
 							) : (
 								<Loader />

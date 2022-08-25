@@ -8,7 +8,7 @@ import { useClaimedCheck } from '@/hooks/nft/useClaimedCheck'
 import useNFTs from '@/hooks/nft/useNFTs'
 import { useWeb3React } from '@web3-react/core'
 import { NextSeo } from 'next-seo'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React from 'react'
 
 const NFT: React.FC = () => {

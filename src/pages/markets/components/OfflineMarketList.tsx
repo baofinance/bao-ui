@@ -1,15 +1,12 @@
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import HrText from '@/components/HrText'
+import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
+import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
-import { AccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import { Balance } from '@/hooks/markets/useBalances'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
-import Image from 'next/image'
+import { Accordion, AccordionHeader } from '@material-tailwind/react'
+import Image from 'next/future/image'
 import React, { useMemo } from 'react'
-import { Accordion, Col, Container, Row } from 'react-bootstrap'
-import styled from 'styled-components'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -27,59 +24,57 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets
 	return (
 		<>
 			{collateralMarkets && synthMarkets ? (
-				<Row>
-					<Col lg={12} xl={6}>
-						<HrText content='Collateral' />
-						<>
-							<MarketListHeader headers={['Asset', 'Liquidity']} />
-						</>
+				<div className='flex flex-row gap-12'>
+					<div className='flex w-full flex-col'>
+						<Typography variant='h3'>Collateral</Typography>
+						<ListHeader headers={['Asset', 'Liquidity']} />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<OfflineListItemCollateral market={market} key={market.marketAddress} />
 						))}
-					</Col>
-					<Col lg={12} xl={6}>
-						<HrText content='Synthetics' />
-						<MarketListHeader headers={['Asset', 'APR', 'Liquidity']} />
+					</div>
+					<div className='flex w-full flex-col'>
+						<Typography variant='h3'>Synthetics</Typography>
+						<ListHeader headers={['Asset', 'APR', 'Wallet']} />
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<OfflineListItemSynth market={market} key={market.marketAddress} />
 						))}
-					</Col>
-				</Row>
+					</div>
+				</div>
 			) : (
-				<Loader block />
+				<Loader />
 			)}
 		</>
-	)
-}
-
-const MarketListHeader: React.FC<MarketListHeaderProps> = ({ headers }: MarketListHeaderProps) => {
-	return (
-		<Container fluid>
-			<Row style={{ padding: '0.5rem 12px' }}>
-				{headers.map((header: string) => (
-					<MarketListHeaderCol style={{ paddingBottom: '0px' }} key={header}>
-						<b>{header}</b>
-					</MarketListHeaderCol>
-				))}
-			</Row>
-		</Container>
 	)
 }
 
 const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: MarketListItemProps) => {
 	return (
 		<>
-			<OfflineAccordionItem style={{ padding: '12px' }}>
-				<OfflineAccordionHeader>
-					<Row style={{ width: '100%' }}>
-						<Col>
-							<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
-							{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
-						</Col>
-						<Col>{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}</Col>
-					</Row>
-				</OfflineAccordionHeader>
-			</OfflineAccordionItem>
+			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
+				<AccordionHeader className='rounded-lg bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+					<div className='flex w-full flex-row items-center justify-center'>
+						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
+							<Image
+								src={`/images/tokens/${market.icon}`}
+								alt={`${market.underlyingSymbol}`}
+								width={32}
+								height={32}
+								className='inline-block select-none'
+							/>
+							<span className='inline-block text-left align-middle'>
+								<Typography className='ml-2 font-medium leading-5'>{market.underlyingSymbol}</Typography>
+							</span>
+						</div>
+						<div className='mx-auto my-0 flex w-full flex-col items-end'>
+							<Typography className='ml-2 font-medium leading-5'>
+								<span className='inline-block align-middle'>
+									{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}
+								</span>
+							</Typography>
+						</div>
+					</div>
+				</AccordionHeader>
+			</Accordion>
 		</>
 	)
 }
@@ -87,18 +82,34 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketListItemProps) => {
 	return (
 		<>
-			<OfflineAccordionItem style={{ padding: '12px' }}>
-				<OfflineAccordionHeader>
-					<Row style={{ width: '100%' }}>
-						<Col>
-							<Image src={`/images/tokens/${market.icon}`} alt={`${market.underlyingSymbol}`} width={32} height={32} className='inline' />
-							{window.screen.width > 1200 && <b>{market.underlyingSymbol}</b>}
-						</Col>
-						<Col>{market.borrowApy.toFixed(2)}%</Col>
-						<Col>{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}</Col>
-					</Row>
-				</OfflineAccordionHeader>
-			</OfflineAccordionItem>
+			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
+				<AccordionHeader className='rounded-lg bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+					<div className='flex w-full flex-row items-center justify-center'>
+						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
+							<Image
+								src={`/images/tokens/${market.icon}`}
+								alt={`${market.underlyingSymbol}`}
+								width={32}
+								height={32}
+								className='inline-block select-none'
+							/>
+							<span className='inline-block text-left align-middle'>
+								<Typography className='ml-2 font-medium leading-5'>{market.underlyingSymbol}</Typography>
+							</span>
+						</div>
+						<div className='mx-auto my-0 flex w-full items-center justify-center'>
+							<Typography className='ml-2 font-medium leading-5'>{market.borrowApy.toFixed(2)}% </Typography>
+						</div>
+						<div className='mx-auto my-0 flex w-full flex-col items-end'>
+							<Typography className='ml-2 font-medium leading-5'>
+								<span className='inline-block align-middle'>
+									{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}
+								</span>
+							</Typography>
+						</div>
+					</div>
+				</AccordionHeader>
+			</Accordion>
 		</>
 	)
 }
@@ -109,134 +120,7 @@ type MarketListProps = {
 	markets: ActiveSupportedMarket[]
 }
 
-type MarketListHeaderProps = {
-	headers: string[]
-}
-
 type MarketListItemProps = {
 	market: ActiveSupportedMarket
-	accountBalances?: Balance[]
 	accountMarkets?: ActiveSupportedMarket[]
-	accountLiquidity?: AccountLiquidity
-	supplyBalances?: Balance[]
-	borrowBalances?: Balance[]
-	exchangeRates?: { [key: string]: BigNumber }
 }
-
-const StyledAccordionHeader = styled(Accordion.Header)`
-	&:active {
-		border-radius: 8px 8px 0px 0px;
-	}
-
-	img {
-		height: 32px;
-		margin-right: 0.75rem;
-		vertical-align: middle;
-	}
-
-	> button {
-		background-color: ${props => props.theme.color.primary[100]};
-		color: ${props => props.theme.color.text[100]};
-		padding: 1.25rem;
-		border: ${props => props.theme.border.default};
-		border-radius: 8px;
-
-		&:hover,
-		&:focus,
-		&:active,
-		&:not(.collapsed) {
-			background-color: ${props => props.theme.color.primary[200]};
-			color: ${props => props.theme.color.text[100]};
-			border: ${props => props.theme.border.default};
-			box-shadow: none;
-			border-radius: 8px 8px 0px 0px;
-		}
-
-		&:not(.collapsed) {
-			transition: none;
-
-			::after {
-				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${props =>
-					props.theme.color.text[100].replace(
-						'#',
-						'%23',
-					)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-			}
-		}
-
-		::after {
-			// don't turn arrow blue
-			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${props =>
-				props.theme.color.text[100].replace(
-					'#',
-					'%23',
-				)}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-		}
-
-		.row > .col {
-			margin: auto 0;
-			text-align: right;
-
-			&:first-child {
-				text-align: left;
-			}
-
-			&:last-child {
-				margin-right: 25px;
-			}
-		}
-	}
-`
-
-const MarketListHeaderCol = styled(Col)`
-	text-align: right;
-
-	&:first-child {
-		text-align: left;
-	}
-
-	&:last-child {
-		margin-right: 46px;
-	}
-`
-
-const OfflineAccordionItem = styled.div`
-	background-color: transparent;
-	border-color: transparent;
-	width: 100%;
-`
-
-const OfflineAccordionHeader = styled.div`
-		background: ${props => props.theme.color.primary[100]};
-		color: ${props => props.theme.color.text[100]};
-		padding: 1.25rem;
-		border: ${props => props.theme.border.default};
-		border-radius: 8px;
-
-		&:hover,
-		&:focus,
-		&:active {
-			background: ${props => props.theme.color.primary[200]};
-			color: ${props => props.theme.color.text[100]};
-			box-shadow: none;
-		}
-		
-		.row > .col {
-			margin: auto 0;
-			text-align: right;
-
-			&:first-child {
-				text-align: left;
-			}
-
-			&:last-child {
-			}
-		}
-			
-		img {
-			height: 32px;
-			margin-right: 0.75rem;
-			vertical-align: middle;
-		}
-	}
-`

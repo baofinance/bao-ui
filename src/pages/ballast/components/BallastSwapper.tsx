@@ -13,7 +13,7 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faLongArrowAltRight, faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import BallastButton from './BallastButton'
 

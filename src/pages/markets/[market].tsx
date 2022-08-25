@@ -1,7 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { StyledBadge } from '@/components/Badge'
-import Button from '@/components/Button/Button'
+import Badge from '@/components/Badge'import Button from '@/components/Button/Button'
 import Loader from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
 import { StatBlock, StatCards } from '@/components/Stats'
@@ -83,10 +82,10 @@ const Market: React.FC = () => {
 			<div className='block flex-1'>
 				<Typography variant='lg' className='block flex-1'>
 					<span className='float-right mt-4 text-lg'>
-						<StyledBadge className='rounded-full'>
+						<Badge className='rounded-full'>
 							<FontAwesomeIcon icon={activeMarket.isSynth ? faChartLine : faLandmark} />
 							{activeMarket.isSynth ? 'Synthetic' : 'Collateral'}
-						</StyledBadge>
+						</Badge>
 					</span>
 				</Typography>
 			</div>

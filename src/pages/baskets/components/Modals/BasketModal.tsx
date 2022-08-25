@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
-import { StyledBadge } from '@/components/Badge'
+import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 
@@ -144,11 +144,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						{operation === 'MINT' ? (
 							<>
 								<div className='mb-2 text-center'>
-									<StyledBadge>
+									<Badge>
 										1 {basket.symbol} = <FontAwesomeIcon icon={faEthereum} /> {rates && getDisplayBalance(rates.eth)}
 										{' = '}
 										{rates && getDisplayBalance(rates.dai)} DAI
-									</StyledBadge>
+									</Badge>
 								</div>
 								<Typography className='text-center'>
 									<b className='font-semibold'>NOTE:</b> An extra 2% of the mint cost will be included to account for slippage. Any unused

@@ -73,7 +73,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					'relative items-center justify-center gap-1 overflow-hidden border border-solid font-medium',
+					'relative items-center justify-center gap-1 overflow-hidden border border-solid font-semibold',
 					'border-primary-300 bg-primary-200 text-text-100 outline-0 duration-200 hover:bg-primary-300',
 					className,
 				)}

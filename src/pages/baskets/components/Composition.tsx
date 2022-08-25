@@ -1,4 +1,4 @@
-import { AssetBadge, CompositionBadge, StyledBadge } from '@/components/Badge/Badge'
+import Badge from '@/components/Badge'
 import Button from '@/components/Button/Button'
 import DonutGraph from '@/components/Graphs/PieGraph'
 import Loader from '@/components/Loader'
@@ -14,8 +14,6 @@ import { BigNumber } from 'bignumber.js'
 import _ from 'lodash'
 import Image from 'next/image'
 import React, { useMemo, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import styled from 'styled-components'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -34,7 +32,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 
 	return (
 		<>
-			<div className='flex flex-row mt-4 mb-2'>
+			<div className='mt-4 mb-2 flex flex-row'>
 				<div className='flex flex-row items-center justify-center'>
 					<Typography variant='h3' className='font-strong float-left mr-2 inline'>
 						Allocation Breakdown
@@ -51,8 +49,8 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 			</div>
 			{displayType === 'TABLE' ? (
 				composition ? (
-					<div className='w-full rounded-lg border border-primary-300 bg-primary-100'>
-						<table className='rounded-fl border-transparent w-full table-auto bg-primary-100 text-text-100'>
+					<div className='rounded-lg border border-primary-300 bg-primary-100'>
+						<table className='rounded-lg w-full'>
 							<thead>
 								<tr>
 									<th className='w-[10%] p-2 text-center'>Token</th>
@@ -66,8 +64,8 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 								{composition
 									.sort((a, b) => (a.percentage < b.percentage ? 1 : -1))
 									.map((component: any) => (
-										<tr key={component.symbol} className='odd:bg-primary-200 hover:bg-primary-300 odd:hover:bg-primary-400'>
-											<td className='p-2 text-center'>
+										<tr key={component.symbol} className='odd:bg-primary-200 hover:bg-primary-300 odd:hover:bg-primary-400 last:rounded-bl-lg'>
+											<td className='p-2 text-center last:rounded-bl-lg'>
 												<Tooltipped content={component.symbol}>
 													<Image src={component.image} width={32} height={32} alt={component.symbol} />
 												</Tooltipped>
@@ -85,9 +83,7 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 													{component.apy ? `${component.apy.div(1e18).times(100).toFixed(2)}%` : '-'}
 												</Tooltipped>
 											</td>
-											<td className='p-2 text-center'>
-												{component.strategy || 'None'}
-											</td>
+											<td className='p-2 text-center'>{component.strategy || 'None'} {console.log(getDisplayBalance(new BigNumber(component.balance) , 18))}</td>
 										</tr>
 									)) || (
 									<tr>
@@ -124,14 +120,14 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 			) : (
 				<div className='h-[500px] rounded-lg border border-primary-300 bg-primary-100'>
 					<div className='flex h-full flex-row'>
-						<div className='flex flex-col h-full'>
+						<div className='flex h-full flex-col'>
 							<ParentSize>{parent => <DonutGraph width={parent.width} height={parent.height} composition={composition} />}</ParentSize>
 						</div>
 						<div className='m-auto flex flex-col'>
 							<div className='flex flex-row'>
 								{composition.map(component => (
 									<div className='flex flex-col' key={component.symbol}>
-										<StyledBadge color={component.color}>{component.symbol}</StyledBadge>
+										<Badge color={component.color}>{component.symbol}</Badge>
 									</div>
 								))}
 							</div>

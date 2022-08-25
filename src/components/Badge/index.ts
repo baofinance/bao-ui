@@ -1,1 +1,1 @@
-export { StyledBadge, PriceBadge, CompositionBadge, AssetBadge, StatBadge, FeeBadge } from './Badge'
+export { default } from './Badge'

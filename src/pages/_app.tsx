@@ -1,6 +1,7 @@
 import fetcher from '@/bao/lib/fetcher'
 import Container from '@/components/Container'
 import Header from '@/components/Header'
+import Page from '@/components/Page'
 import Web3ReactManager from '@/components/Web3ReactManager'
 import SEO from '@/config/seo'
 import BaoProvider from '@/contexts/BaoProvider'
@@ -87,12 +88,12 @@ function App({ Component, pageProps }: AppProps) {
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />{' '}
 			</Head>
 			<Providers isDarkMode={isDarkMode}>
+				<DefaultSeo {...SEO} />
 				<Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
 				<main>
-					<DefaultSeo {...SEO} />
-					<Container>
-						<Component {...pageProps} />
-					</Container>
+						<Page>
+							<Component {...pageProps} />
+						</Page>
 				</main>
 			</Providers>
 		</>

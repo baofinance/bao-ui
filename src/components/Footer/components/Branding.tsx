@@ -6,7 +6,7 @@ const Branding: React.FC = () => {
 		<StyledLink target='_blank' href='https://bao.finance'>
 			<StyledText>
 				<TitleText>
-					<span>by Bao.Finance</span>
+					<span>Bao Finance</span>
 				</TitleText>
 			</StyledText>
 		</StyledLink>
