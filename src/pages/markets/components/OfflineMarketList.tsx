@@ -5,7 +5,7 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Accordion, AccordionHeader } from '@material-tailwind/react'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import React, { useMemo } from 'react'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {

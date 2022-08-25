@@ -24,7 +24,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 	return (
 		<>
 			<BasketModal basket={basket} operation={modalOperation} show={showBasketModal} hideModal={() => setShowBasketModal(false)} />
-			<div className='mt-4 grid grid-cols-3 gap-8'>
+			<div className='mt-4 grid grid-cols-3 gap-4'>
 				<div>
 					<Button fullWidth onClick={() => handleClick('MINT')}>
 						Mint

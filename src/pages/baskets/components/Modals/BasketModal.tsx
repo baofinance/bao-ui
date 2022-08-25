@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 
@@ -131,14 +131,15 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	return basket ? (
 		<>
 			<Modal isOpen={show} onDismiss={hideModal}>
-				<Modal.Header onClose={hideModal}>
-					<div className='mx-0 my-auto flex h-full items-center text-text-100'>
-						<Typography variant='h3' className='mr-2 mb-0'>
+				<Modal.Header
+					header={
+						<div className='mx-0 my-auto flex h-full items-center gap-2 text-text-100'>
 							{operation === 'MINT' ? 'Mint' : 'Redeem'} {basket.symbol}
-						</Typography>
-						<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
-					</div>
-				</Modal.Header>
+							<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
+						</div>
+					}
+					onClose={hideModal}
+				></Modal.Header>
 				<Modal.Body>
 					<div className='mb-4'>
 						{operation === 'MINT' ? (
@@ -150,19 +151,22 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 										{rates && getDisplayBalance(rates.dai)} DAI
 									</Badge>
 								</div>
-								<Typography className='text-center'>
-									<b className='font-semibold'>NOTE:</b> An extra 2% of the mint cost will be included to account for slippage. Any unused
+								<Typography variant='sm' className='text-center'>
+									<b className='font-medium'>NOTE:</b> An extra 2% of the mint cost will be included to account for slippage. Any unused
 									input tokens will be returned in the mint transaction.
 								</Typography>
 							</>
 						) : (
-							<Typography className='text-center'>
-								<b className='font-semibold'>NOTE:</b> When you redeem {basket.name}, you will receive the underlying tokens. Otherwise, you
+							<Typography variant='sm' className='text-center'>
+								<b className='font-medium'>NOTE:</b> When you redeem {basket.name}, you will receive the underlying tokens. Otherwise, you
 								can swap {basket.name}{' '}
-								<a href={`${swapLink}`} target='blank' style={{ fontWeight: 700 }}>
+								<a href={`${swapLink}`} target='blank' className='font-semibold'>
 									here
 								</a>
-								. (<b className='font-semibold'>CAUTION:</b> Slippage may apply on swaps)
+								.{' '}
+								<Badge className='text-xs text-center mt-2 bg-red'>
+									<b className='font-medium'>CAUTION:</b> Slippage may apply on swaps!
+								</Badge>
 							</Typography>
 						)}
 					</div>

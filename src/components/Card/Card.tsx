@@ -1,3 +1,4 @@
+import { classNames } from '@/functions/styling'
 import React, { FC, ReactNode } from 'react'
 import CardActions, { CardActionsProps } from './Actions'
 import CardBody, { CardBodyProps } from './Body'
@@ -20,12 +21,18 @@ type CardType<P> = FC<P> & {
 
 interface CardProps {
 	children?: ReactNode
+	className?: string
 }
 
-const Card: CardType<CardProps> = ({ children }) => {
+const Card: CardType<CardProps> = ({ children, className }) => {
 	return (
 		<div className='flex flex-col justify-center'>
-			<div className='relative flex flex-col items-center break-words rounded-lg !border !border-solid !border-primary-300 bg-primary-100 bg-clip-border p-3 shadow-2xl shadow-primary-300/50'>
+			<div
+				className={classNames(
+					'relative flex flex-col items-center break-words rounded-lg border border-primary-300 bg-primary-100 bg-clip-border p-3 shadow-2xl shadow-primary-300/50',
+					className,
+				)}
+			>
 				{children}
 			</div>
 		</div>

@@ -45,7 +45,7 @@ const Basket: React.FC = () => {
 					</a>
 				</Tooltipped>
 			</div>
-			<div className='mx-auto mt-6 mb-0 box-border flex flex-col items-center'>
+			<div className='mx-auto mt-6 mb-0 box-border flex flex-col items-center ml-6'>
 				<PageHeader icon={`/images/tokens/${basket.icon}`} title={basket.symbol} />
 				<Badge>
 					1 {basket.symbol} ={' '}
