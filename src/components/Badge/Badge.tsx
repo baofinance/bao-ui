@@ -1,4 +1,4 @@
-import { Chip } from '@material-tailwind/react'
+import { Chip } from '@material-tailwind/react/components/Chip'
 
 import { classNames } from '@/bao/lib/styling'
 

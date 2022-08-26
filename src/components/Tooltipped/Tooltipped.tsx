@@ -1,6 +1,6 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Tooltip } from '@material-tailwind/react'
+import { Tooltip } from '@material-tailwind/react/components/Tooltip'
 import React from 'react'
 
 import { classNames } from '@/bao/lib/styling'

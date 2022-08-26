@@ -1,4 +1,4 @@
-import { Accordion, AccordionHeader } from '@material-tailwind/react'
+import { Accordion, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import Image from 'next/image'
 import React, { useMemo } from 'react'
 
