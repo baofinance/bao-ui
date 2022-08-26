@@ -1,7 +1,7 @@
 import { getBalanceNumber } from '@/bao/lib/utils/numberFormat'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import ethers from 'ethers'
+import { ethers } from 'ethers'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

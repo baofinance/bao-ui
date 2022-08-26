@@ -1,13 +1,12 @@
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import { ListHeader } from '@/components/List'
+import { PageLoader } from '@/components/Loader'
+import Typography from '@/components/Typography'
+import useBao from '@/hooks/base/useBao'
 import { Accordion, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import Image from 'next/image'
 import React, { useMemo } from 'react'
-
-import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { ListHeader } from '@/components/List'
-import Loader from '@/components/Loader'
-import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
-import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -42,7 +41,7 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets
 					</div>
 				</div>
 			) : (
-				<Loader />
+				<PageLoader />
 			)}
 		</>
 	)
