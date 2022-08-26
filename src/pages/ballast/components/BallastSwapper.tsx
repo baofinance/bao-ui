@@ -1,19 +1,21 @@
 import Config from '@/bao/lib/config'
 import Card from '@/components/Card'
-import Input, { BalanceInput } from '@/components/Input'
+import Input from '@/components/Input'
 import Loader from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import Multicall from '@/utils/multicall'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faLongArrowAltRight, faShip, faSync } from '@fortawesome/free-solid-svg-icons'
+import { faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import BallastButton from './BallastButton'
 
 const BallastSwapper: React.FC = () => {
@@ -63,10 +65,12 @@ const BallastSwapper: React.FC = () => {
 
 	const daiInput = (
 		<>
-			<label className='float-left mb-1'>
-				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(daiBalance).toString()} DAI
-			</label>
-			<label className='float-right mb-1 text-text-200'>Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />} </label>
+			<Typography variant='sm' className='float-left mb-1'>
+				Balance: {getDisplayBalance(daiBalance).toString()} DAI
+			</Typography>
+			<Typography variant='sm' className='float-right mb-1 text-text-200'>
+				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />}{' '}
+			</Typography>
 			<Input
 				onSelectMax={() => setInputVal(decimate(daiBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
@@ -77,9 +81,9 @@ const BallastSwapper: React.FC = () => {
 				}
 				disabled={swapDirection}
 				label={
-					<div className='align-center flex flex-row pl-2 pr-4'>
-						<div className='flex justify-center'>
-							<Image src='/images/tokens/DAI.png' height={32} width={32} alt='DAI' className='block object-none align-middle' />
+					<div className='flex flex-row items-center pl-2 pr-4'>
+						<div className='flex w-6 justify-center'>
+							<Image src='/images/tokens/DAI.png' height={32} width={32} alt='baoUSD' />
 						</div>
 					</div>
 				}
@@ -89,12 +93,12 @@ const BallastSwapper: React.FC = () => {
 
 	const baoUSDInput = (
 		<>
-			<label className='float-left mb-1'>
-				<FontAwesomeIcon icon={faLongArrowAltRight} /> Balance: {getDisplayBalance(baoUSDBalance).toString()} baoUSD
-			</label>
-			<label className='float-right mb-1 text-text-200'>
+			<Typography variant='sm' className='float-left mb-1'>
+				Balance: {getDisplayBalance(baoUSDBalance).toString()} baoUSD
+			</Typography>
+			<Typography variant='sm' className='float-right mb-1 text-text-200'>
 				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <Loader />}{' '}
-			</label>
+			</Typography>
 			<Input
 				onSelectMax={() => setInputVal(decimate(baoUSDBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
@@ -105,9 +109,9 @@ const BallastSwapper: React.FC = () => {
 				}
 				disabled={!swapDirection}
 				label={
-					<div className='align-center flex flex-row pl-2 pr-4'>
-						<div className='flex justify-center'>
-							<Image src='/images/tokens/bUSD.png' height={32} width={32} alt='baoUSD' className='block object-none align-middle' />
+					<div className='flex flex-row items-center pl-2 pr-4'>
+						<div className='flex w-6 justify-center'>
+							<Image src='/images/tokens/bUSD.png' height={32} width={32} alt='baoUSD' />
 						</div>
 					</div>
 				}
@@ -118,10 +122,10 @@ const BallastSwapper: React.FC = () => {
 	return (
 		<>
 			<PageHeader title='Ballast' />
-			<Card>
+			<Card className={`${isDesktop && 'mx-auto max-w-[80%]'}`}>
 				<Card.Header
 					header={
-						<Tooltipped content='The Ballast is used to mint BaoUSD with DAI or to redeem DAI for BaoUSD at a 1:1 rate (not including fees).'>
+						<Tooltipped content='The Ballast is used to mint baoUSD with DAI or to redeem DAI for baoUSD at a 1:1 rate (not including fees).'>
 							<a>
 								<FontAwesomeIcon className='text-4xl' icon={faShip} />
 							</a>

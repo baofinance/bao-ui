@@ -220,7 +220,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 														width={32}
 														height={32}
 														alt={mintOption.toString()}
-														className='block h-6 w-6 align-middle'
 													/>
 												) : (
 													<Image
@@ -228,7 +227,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 														width={32}
 														height={32}
 														alt={basket.symbol}
-														className='block h-6 w-6 align-middle'
 													/>
 												)}
 											</div>
