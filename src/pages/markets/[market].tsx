@@ -2,7 +2,7 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button/Button'
-import Loader from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import PageHeader from '@/components/PageHeader'
 import { StatBlock, StatCards } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
@@ -202,7 +202,7 @@ const Market: React.FC = () => {
 			<ActionButton market={activeMarket} />
 		</>
 	) : (
-		<Loader />
+		<PageLoader block />
 	)
 }
 

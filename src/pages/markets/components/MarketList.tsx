@@ -4,7 +4,7 @@ import { getComptrollerContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import { ListHeader } from '@/components/List'
-import Loader from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
@@ -97,7 +97,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 					</div>
 				</div>
 			) : (
-				<Loader />
+				<PageLoader block />
 			)}
 		</>
 	)

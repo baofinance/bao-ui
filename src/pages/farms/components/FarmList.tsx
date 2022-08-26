@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
-import Loader, { SpinnerLoader } from '@/components/Loader'
+import { PageLoader, SpinnerLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import { Farm, PoolType } from '@/contexts/Farms/types'
 import { classNames } from '@/functions/styling'
@@ -13,6 +13,7 @@ import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberForma
 import { Switch } from '@headlessui/react'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
+import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 import { FarmModal } from './Modals'
 
@@ -120,7 +121,7 @@ const FarmList: React.FC = () => {
 						onChange={showArchived}
 						className={classNames(
 							archived ? 'bg-text-100' : 'bg-text-100',
-							'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
+							'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 rounded-full border-2 transition-colors duration-200 ease-in-out',
 						)}
 					>
 						<span
@@ -148,7 +149,7 @@ const FarmList: React.FC = () => {
 									</React.Fragment>
 								))
 							) : (
-								<Loader />
+								<PageLoader block />
 							)}
 						</>
 					) : (
@@ -160,7 +161,7 @@ const FarmList: React.FC = () => {
 									</React.Fragment>
 								))
 							) : (
-								<Loader />
+								<PageLoader block />
 							)}
 						</>
 					)}
@@ -179,9 +180,9 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHead
 		<div className='container'>
 			<div className='flex flex-row px-2 py-3'>
 				{headers.map((header: string) => (
-					<div className='flex w-full basis-1/4 flex-col pb-0 text-right font-bold first:text-left' key={header}>
+					<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bold first:text-left' key={header}>
 						{header}
-					</div>
+					</Typography>
 				))}
 			</div>
 		</div>
@@ -205,31 +206,45 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowFarmModal(true)} disabled={!account}>
-				<div className='rounded-lg border border-primary-300 bg-primary-100 p-4 text-text-100 hover:bg-primary-200'>
-					<div className='flex w-full flex-row'>
+				<div className='rounded-lg border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
+					<div className='flex w-full flex-row items-center'>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-left'>
-							<div className='mx-0 my-auto inline-block h-full items-center align-middle text-text-100'>
+							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={farm.iconA} />
 								<img className='z-20 -ml-2 inline-block h-8 w-8 select-none duration-200' src={farm.iconB} />
-								<Typography className='ml-2 inline-block font-semibold'>{farm.name}</Typography>
+								<span className='inline-block text-left align-middle'>
+									<Typography className='ml-2 font-bold'>{farm.name}</Typography>
+									<Typography variant='xs' className={`ml-2 font-light text-text-200`}>
+										{farm.type === 'SushiSwap LP' ? (
+											<Image src='/images/tokens/SUSHI.png' height={12} width={12} alt='SushiSwap' className='inline mr-1' />
+										) : (
+											<Image src='/images/tokens/UNI.png' height={12} width={12} alt='Uniswap' className='inline mr-1' />
+										)}
+										{farm.type}
+									</Typography>
+								</span>
 							</div>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							{farm.apy ? (
-								farm.apy.gt(0) ? (
-									`${farm.apy.times(new BigNumber(100)).toNumber().toLocaleString('en-US').slice(0, -1)}%`
-								) : (
-									'N/A'
-								)
+								<Typography variant='base' className='ml-2 inline-block font-medium'>
+									{farm.apy.gt(0) ? `${farm.apy.times(new BigNumber(100)).toNumber().toLocaleString('en-US').slice(0, -1)}%` : 'N/A'}
+								</Typography>
 							) : (
 								<SpinnerLoader />
 							)}
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							{account ? `$${window.screen.width > 1200 ? getDisplayBalance(farm.stakedUSD, 0) : truncateNumber(farm.stakedUSD, 0)}` : '-'}
+							<Typography variant='base' className='ml-2 inline-block font-medium'>
+								{account
+									? `$${window.screen.width > 1200 ? getDisplayBalance(farm.stakedUSD, 0) : truncateNumber(farm.stakedUSD, 0)}`
+									: '-'}
+							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}
+							<Typography variant='base' className='ml-2 inline-block font-medium'>
+								${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}
+							</Typography>
 						</div>
 					</div>
 				</div>

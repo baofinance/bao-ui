@@ -1,6 +1,6 @@
 import { NavButtons } from '@/components/Button'
 import Loader from '@/components/Loader'
-import Modal, { ModalProps } from '@/components/Modal'
+import Modal from '@/components/Modal'
 import { FeeBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
@@ -10,7 +10,7 @@ import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { getContract } from '@/utils/erc20'
-import Link from 'next/link'
+import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Rewards, Stake, Unstake } from './Actions'
 import { FarmWithStakedValue } from './FarmList'
@@ -42,19 +42,26 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>
-			<Modal.Header onClose={hideModal}>
-				<div className='mx-0 my-auto flex h-full items-center justify-center align-middle text-text-100'>
-					<Typography variant='xl' className='mr-1 inline-block font-semibold'>
-						{operation}
-					</Typography>
-					{operation !== 'Rewards' && (
-						<>
-							<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={farm.iconA} />
-							{farm.iconB !== null && <img className='z-20 -ml-2 inline-block h-8 w-8 select-none duration-200' src={farm.iconB} />}
-						</>
-					)}
-				</div>
-			</Modal.Header>
+			<Modal.Header
+				onClose={hideModal}
+				header={
+					<>
+						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
+							{operation}
+						</Typography>
+						{operation !== 'Rewards' ? (
+							<>
+								<Image className='z-10 inline-block select-none duration-200' src={farm.iconA} width={32} height={32} />
+								{farm.iconB !== null && (
+									<Image className='z-20 -ml-2 inline-block select-none duration-200' width={32} height={32} src={farm.iconB} />
+								)}
+							</>
+						) : (
+							<Image className='z-10 inline-block select-none duration-200' src='/images/tokens/BAO.png' width={32} height={32} />
+						)}
+					</>
+				}
+			/>
 			<Modal.Options>
 				<NavButtons options={operations} active={operation} onClick={setOperation} />
 			</Modal.Options>
@@ -104,13 +111,9 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>
-			<Modal.Header onBack={hideModal}>
-				<Typography variant='xl' className='mr-1 inline-block font-semibold'>
-					Fee Details
-				</Typography>
-			</Modal.Header>
+			<Modal.Header header='Fee Details' onBack={hideModal} />
 			<Modal.Body>
-				<Typography className='text-center mb-2'>
+				<Typography className='mb-2 text-center'>
 					<span role='img' aria-label='important'>
 						❗
 					</span>
@@ -144,13 +147,13 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 						},
 					]}
 				/>
-					<Typography className='mt-2'>
-						Your first deposit activates and each withdraw resets the timer for penalities and fees, this is pool based. Be sure to read the{' '}
-						<Link href='https://docs.bao.finance/' target='_blank' rel='noopener noreferrer'>
-							<a className='font-semibold'>docs</a>
-						</Link>{' '}
-						before using the farms so you are familiar with protocol risks and fees!
-					</Typography>
+				<Typography variant='p' className='mt-2'>
+					Your first deposit activates and each withdraw resets the timer for penalities and fees, this is pool based. Be sure to read the{' '}
+					<a href='https://docs.bao.finance/' target='_blank' rel='noopener noreferrer' className='font-semibold hover:text-text-400'>
+						docs
+					</a>{' '}
+					before using the farms so you are familiar with protocol risks and fees!
+				</Typography>
 			</Modal.Body>
 		</Modal>
 	)

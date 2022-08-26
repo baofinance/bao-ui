@@ -1,17 +1,27 @@
 import React from 'react'
-import { PulseLoader } from 'react-spinners'
+import { PropagateLoader, PulseLoader } from 'react-spinners'
 
 interface LoaderProps {
 	text?: string
+	block?: boolean
 }
 
 const Loader: React.FC<LoaderProps> = ({ text }) => {
 	return (
-		<div className='items-center justify-center inline'>
-			<PulseLoader size={6} speedMultiplier={.8} color='#fff8ee' />
-			{!!text && <div className='text-text-200'>{text}</div>}
+		<div className='inline items-center justify-center'>
+			<PulseLoader size={6} speedMultiplier={0.8} color='#fff8ee' />
+			{text && <div className='text-text-200'>{text}</div>}
 		</div>
 	)
 }
 
 export default Loader
+
+export const PageLoader: React.FC<LoaderProps> = ({ block, text }) => {
+	return (
+		<div className='items-center justify-center text-center mt-16'>
+			<PropagateLoader size={12} speedMultiplier={0.8} color='#fff8ee' className={`${block && 'm-auto block'}`} />
+			{text && <div className='text-text-200'>{text}</div>}
+		</div>
+	)
+}
