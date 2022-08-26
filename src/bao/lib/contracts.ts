@@ -2,7 +2,6 @@ import Web3 from 'web3'
 import { provider } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
-
 import CEtherAbi from './abi/cether.json'
 import CTokenAbi from './abi/ctoken.json'
 import ERC20Abi from './abi/erc20.json'
@@ -17,10 +16,9 @@ export class Contracts {
 	networkId: number
 	web3: Web3
 	contracts: Types.ContractsConfig
-	pools: Types.FarmableSupportedPool[]
-	baskets: Types.ActiveSupportedBasket[]
-	markets: Types.ActiveSupportedMarket[]
-	nfts: Types.ActiveSupportedNFT[]
+	pools: Types.FarmableSupportedPool[] | undefined
+	baskets: Types.ActiveSupportedBasket[] | undefined
+	markets: Types.ActiveSupportedMarket[] | undefined
 	blockGasLimit: any
 	notifier: any
 
@@ -33,42 +31,44 @@ export class Contracts {
 			this.contracts[contractName][networkId].contract = this.getNewContract(this.contracts[contractName][networkId].abi)
 		})
 
-		this.pools = Config.farms.map(pool =>
-			Object.assign(pool, {
-				lpAddress: pool.lpAddresses[networkId],
-				tokenAddress: pool.tokenAddresses[networkId],
-				lpContract: this.getNewContract(UNIV2PairAbi),
-				tokenContract: this.getNewContract(ERC20Abi),
-			}),
-		)
+		this.pools =
+			networkId === Config.networkId
+				? Config.farms.map(pool =>
+						Object.assign(pool, {
+							lpAddress: pool.lpAddresses[networkId],
+							tokenAddress: pool.tokenAddresses[networkId],
+							lpContract: this.getNewContract(UNIV2PairAbi),
+							tokenContract: this.getNewContract(ERC20Abi),
+						}),
+				  )
+				: undefined
 
 		// currently unused
-		this.baskets = Config.baskets.map(basket =>
-			Object.assign(basket, {
-				address: basket.basketAddresses[networkId],
-				basketContract: this.getNewContract(ExperipieAbi),
-				ovenContract: this.getNewContract('oven.json'),
-			}),
-		)
+		this.baskets =
+			networkId === Config.networkId
+				? Config.baskets.map(basket =>
+						Object.assign(basket, {
+							address: basket!.basketAddresses![networkId],
+							basketContract: this.getNewContract(ExperipieAbi),
+							ovenContract: this.getNewContract('oven.json'),
+						}),
+				  )
+				: undefined
 
-		this.markets = Config.markets.map(market =>
-			Object.assign(market, {
-				marketAddress: market.marketAddresses[networkId],
-				underlyingAddress: market.underlyingAddresses[networkId],
-				marketContract: this.getNewContract(market.underlyingAddresses[Config.networkId] === 'ETH' ? CEtherAbi : CTokenAbi),
-				underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi),
-			}),
-		)
-
-		this.nfts = Config.nfts.map(nft =>
-			Object.assign(nft, {
-				nftAddress: nft.address[networkId],
-				nftContract: this.getNewContract('nft.json'),
-			}),
-		)
+		this.markets =
+			networkId === Config.networkId
+				? Config.markets.map(market =>
+						Object.assign(market, {
+							marketAddress: market.marketAddresses[networkId],
+							underlyingAddress: market.underlyingAddresses[networkId],
+							marketContract: this.getNewContract(market.underlyingAddresses[Config.networkId] === 'ETH' ? CEtherAbi : CTokenAbi),
+							underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi),
+						}),
+				  )
+				: undefined
 
 		this.setProvider(provider, networkId)
-		this.setDefaultAccount('0x0000000000000000000000000000000000000000')
+		this.setDefaultAccount(this.web3.eth.defaultAccount)
 	}
 
 	setProvider(provider: provider, networkId: number): void {

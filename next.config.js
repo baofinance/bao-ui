@@ -26,8 +26,8 @@ const nextConfig = {
 		},
 	},
 	images: {
-        deviceSizes: [640, 768, 1024, 1280, 1536, 1600],
-    },
+		deviceSizes: [640, 768, 1024, 1280, 1536, 1600],
+	},
 	async redirects() {
 		return [
 			{

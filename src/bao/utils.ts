@@ -1,16 +1,13 @@
+import Multicall from '@/utils/multicall'
+import { decimate, exponentiate } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import keccak256 from 'keccak256'
 import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import { Contract } from 'web3-eth-contract'
-
-import { Farm } from '@/contexts/Farms'
-import Multicall from '@/utils/multicall'
-import { decimate, exponentiate } from '@/utils/numberFormat'
-
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, ActiveSupportedNFT } from './lib/types'
+import { ActiveSupportedBasket, FarmableSupportedPool } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -37,6 +34,14 @@ export const getBaoContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('bao')
 }
 
+export const getElderContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('nft')
+}
+
+export const getBaoSwapContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('nft2')
+}
+
 export const getBasketContract = (bao: Bao, nid: number): Contract | undefined => {
 	if (bao && bao.contracts && bao.contracts.baskets) return _.find(bao.contracts.baskets, { nid }).basketContract
 }
@@ -49,15 +54,7 @@ export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
 	return bao && bao.contracts.baskets
 }
 
-export const getNFTs = (bao: Bao): ActiveSupportedNFT[] => {
-	return bao && bao.contracts.nfts
-}
-
-export const getNFTContract = (bao: Bao, nid: number): Contract | undefined => {
-	if (bao && bao.contracts && bao.contracts.nfts) return _.find(bao.contracts.nfts, { nid }).nftContract
-}
-
-export const getFarms = (bao: Bao): Farm[] => {
+export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
 	return bao
 		? bao.contracts.pools.map(
 				({
@@ -66,22 +63,29 @@ export const getFarms = (bao: Bao): Farm[] => {
 					symbol,
 					iconA,
 					iconB,
+					tokenAddresses,
 					tokenAddress,
 					tokenDecimals,
 					tokenSymbol,
 					tokenContract,
+					lpAddresses,
 					lpAddress,
 					lpContract,
 					refUrl,
 					pairUrl,
 					type,
+					poolType,
 				}) => ({
 					pid,
+					symbol,
 					id: symbol,
 					name,
 					lpToken: symbol,
 					lpTokenAddress: lpAddress,
+					lpAddresses,
+					lpAddress,
 					lpContract,
+					tokenAddresses,
 					tokenAddress,
 					tokenDecimals,
 					tokenSymbol,
@@ -93,6 +97,7 @@ export const getFarms = (bao: Bao): Farm[] => {
 					refUrl,
 					pairUrl,
 					type,
+					poolType,
 				}),
 		  )
 		: []

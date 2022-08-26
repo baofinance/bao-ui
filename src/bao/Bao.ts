@@ -2,7 +2,6 @@ import { Multicall as MC } from 'ethereum-multicall'
 import Web3 from 'web3'
 import { provider } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
-
 import Config from './lib/config'
 import { Contracts } from './lib/contracts'
 
