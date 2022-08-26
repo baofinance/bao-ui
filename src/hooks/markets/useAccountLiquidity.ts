@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { decimate } from '@/bao/lib/utils/numberFormat'
+import { decimate } from '@/utils/numberFormat'
 
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'

@@ -4,8 +4,8 @@ import { Contract } from 'web3-eth-contract'
 
 import Config from '@/bao/lib/config'
 import useBlock from '@/hooks/base/useBlock'
-import MultiCall from '@/bao/lib/utils/multicall'
-import { decimate } from '@/bao/lib/utils/numberFormat'
+import MultiCall from '@/utils/multicall'
+import { decimate } from '@/utils/numberFormat'
 
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'

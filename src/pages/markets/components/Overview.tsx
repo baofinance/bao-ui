@@ -13,7 +13,7 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 export const Overview = () => {
 	const bao = useBao()

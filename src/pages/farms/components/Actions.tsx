@@ -1,7 +1,5 @@
 import Config from '@/bao/lib/config'
-import { getContract } from '@/bao/lib/utils/erc20'
-import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/bao/lib/utils/numberFormat'
-import { approve, getMasterChefContract } from '@/bao/utils'
+import { approvev2, getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -17,6 +15,8 @@ import useEarnings from '@/hooks/farms/useEarnings'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
+import { getContract } from '@/utils/erc20'
+import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -41,7 +41,7 @@ interface StakeProps {
 	onHide: () => void
 }
 
-export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, lpContract, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
+export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -71,10 +71,9 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, lpContract, pid, p
 		)
 	}, [fullBalance, setVal])
 
-	const masterChefContract = getMasterChefContract(bao)
-	const masterChefAddress = Config.contracts.masterChef[Config.networkId].address
+	const allowance = useAllowance(lpContract)
 
-	const allowance = useAllowance(lpTokenAddress, masterChefAddress)
+	const masterChefContract = getMasterChefContract(bao)
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -128,7 +127,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, lpContract, pid, p
 							<Button
 								fullWidth
 								onClick={async () => {
-									handleTx(approve(lpContract, masterChefContract, account), `Approve ${tokenName}`)
+									handleTx(approvev2(lpContract, masterChefContract, account), `Approve ${tokenName}`)
 								}}
 							>
 								Approve {tokenName}

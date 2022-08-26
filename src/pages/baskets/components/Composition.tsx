@@ -15,7 +15,7 @@ import { Progress } from '@/components/ProgressBar'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
-import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 type CompositionProps = {
 	composition: BasketComponent[]

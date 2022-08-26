@@ -15,8 +15,8 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import Multicall from '@/bao/lib/utils/multicall'
-import { decimate, getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import Multicall from '@/utils/multicall'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 
 import BallastButton from './BallastButton'
 

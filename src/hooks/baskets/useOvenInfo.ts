@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 
-import Multicall from '@/bao/lib/utils/multicall'
+import Multicall from '@/utils/multicall'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import useBao from '../base/useBao'

@@ -10,7 +10,7 @@ import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useComposition from '@/hooks/baskets/useComposition'
 import useBasketRates from '@/hooks/baskets/useNestRate'
-import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 

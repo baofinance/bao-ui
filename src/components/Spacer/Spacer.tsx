@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
-import { classNames } from '@/bao/lib/styling'
+import { classNames } from '@/functions/styling'
 import React, { AllHTMLAttributes, FC, forwardRef, ReactHTML } from 'react'
 
 type SpacerVariant = 'sm' | 'md' | 'lg'

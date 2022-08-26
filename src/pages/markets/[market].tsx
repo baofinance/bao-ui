@@ -19,9 +19,9 @@ import useBao from '@/hooks/base/useBao'
 import { useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarkets } from '@/hooks/markets/useMarkets'
-import GraphUtil from '@/bao/lib/utils/graph'
-import { formatAddress } from '@/bao/lib/utils/index'
-import { decimate, getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import GraphUtil from '@/utils/graph'
+import { formatAddress } from '@/utils/index'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 
 import { MarketDetails } from './components/Stats'
 

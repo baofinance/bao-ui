@@ -6,7 +6,7 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { decimate } from '@/bao/lib/utils/numberFormat'
+import { decimate } from '@/utils/numberFormat'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60

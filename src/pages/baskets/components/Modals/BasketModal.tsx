@@ -1,13 +1,12 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
-import { decimate, exponentiate, getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useAllowance from '@/hooks/base/useAllowance'
+import useAllowancev2 from '@/hooks/base/useAllowancev2'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -21,6 +20,7 @@ import { ethers } from 'ethers'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -46,7 +46,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
+	const daiAllowance = useAllowancev2(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)

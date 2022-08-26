@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 
-import { getBalance } from '@/bao/lib/utils/erc20'
+import { getBalance } from '@/utils/erc20'
 
 import useBao from './useBao'
 import useTransactionProvider from './useTransactionProvider'

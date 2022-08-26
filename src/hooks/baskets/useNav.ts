@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { useEffect, useState } from 'react'
 
-import { decimate } from '@/bao/lib/utils/numberFormat'
+import { decimate } from '@/utils/numberFormat'
 
 import { BasketComponent } from './useComposition'
 

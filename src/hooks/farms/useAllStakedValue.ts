@@ -5,7 +5,7 @@ import { provider } from 'web3-core'
 
 import { getFarms, getMasterChefContract, getTotalLPWethValue, getWethContract } from '@/bao/utils'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getContract } from '@/bao/lib/utils/erc20'
+import { getContract } from '@/utils/erc20'
 
 import useBao from '../base/useBao'
 

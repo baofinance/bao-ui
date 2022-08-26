@@ -6,7 +6,7 @@ import Config from '@/bao/lib/config'
 import fetcher from '@/bao/lib/fetcher'
 import { SWR } from '@/bao/lib/types'
 import useBlock from '@/hooks/base/useBlock'
-import MultiCall from '@/bao/lib/utils/multicall'
+import MultiCall from '@/utils/multicall'
 
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'

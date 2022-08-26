@@ -1,10 +1,10 @@
 import ModalActions, { ModalActionsProps } from '@/components/Modal/Actions'
 import ModalBody, { ModalBodyProps } from '@/components/Modal/Body'
 import ModalHeader, { ModalHeaderProps } from '@/components/Modal/Header'
-import { classNames } from '@/bao/lib/styling'
+import { classNames } from '@/functions/styling'
+import useDesktopMediaQuery from '@/hooks/base/useDesktopMediaQuery'
 import { Dialog, Transition } from '@headlessui/react'
 import React, { FC, Fragment } from 'react'
-import { isDesktop } from 'react-device-detect'
 import ModalOptions, { ModalOptionsProps } from './Options'
 
 const MAX_WIDTH_CLASS_MAPPING = {
@@ -34,6 +34,7 @@ export interface ModalProps {
 }
 
 const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children, transparent = false, maxWidth = 'lg', unmount }) => {
+	const isDesktop = useDesktopMediaQuery()
 	return (
 		<Transition appear show={isOpen} as={Fragment} afterLeave={afterLeave} unmount={unmount}>
 			<Dialog as='div' className='fixed inset-0 z-50' onClose={onDismiss} unmount={unmount}>

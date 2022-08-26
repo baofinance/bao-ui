@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react'
 
-import { classNames } from '@/bao/lib/styling'
+import { classNames } from '@/functions/styling'
 
 export interface ModalBodyProps {
 	children: ReactNode

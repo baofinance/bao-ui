@@ -1,6 +1,6 @@
 import { Chip } from '@material-tailwind/react/components/Chip'
 
-import { classNames } from '@/bao/lib/styling'
+import { classNames } from '@/functions/styling'
 
 interface BadgeProps {
 	children: any

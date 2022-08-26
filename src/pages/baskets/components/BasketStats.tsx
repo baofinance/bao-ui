@@ -9,7 +9,7 @@ import Card from '@/components/Card'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import useNav from '@/hooks/baskets/useNav'
-import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
