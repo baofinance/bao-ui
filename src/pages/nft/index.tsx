@@ -10,6 +10,7 @@ import { useWeb3React } from '@web3-react/core'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image'
 import React from 'react'
+import { isDesktop } from 'react-device-detect'
 
 const NFT: React.FC = () => {
 	const nfts = useNFTs()
@@ -18,7 +19,9 @@ const NFT: React.FC = () => {
 		<>
 			<NextSeo title={'NFT'} description={'Check your eligibility and claim your NFT here!'} />
 			<PageHeader title='NFT' description='Check your eligibility and claim your NFT here!' />
-			<div className='flex flex-row justify-center align-middle'>{nfts && nfts.map(nft => <NFTItem nft={nft} key={nft.nid} />)}</div>
+			<div className={`flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-4'} w-fit m-auto`}>
+				{nfts && nfts.map(nft => <NFTItem nft={nft} key={nft.nid} />)}
+			</div>
 		</>
 	)
 }
@@ -37,7 +40,7 @@ const NFTItem: React.FC<NFTItemProps> = ({ nft }) => {
 		<Card>
 			<Card.Header header={nft.name} subheader={nft.description} />
 			<Card.Body>
-				<Image src={nft.image} width={320} height={300} alt={nft.name} className='rounded-lg !border !border-solid !border-primary-300' />
+				<Image src={nft.image} width={300} height={300} alt={nft.name} className='rounded-lg border border-primary-300' />
 			</Card.Body>
 			<Card.Actions>
 				<>
