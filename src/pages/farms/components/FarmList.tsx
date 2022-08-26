@@ -15,6 +15,7 @@ import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import { FarmModal } from './Modals'
 
 const FarmList: React.FC = () => {
@@ -139,7 +140,11 @@ const FarmList: React.FC = () => {
 			</div>
 			<div className='flex w-full flex-row'>
 				<div className='flex w-full flex-col'>
-					<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
+					{isDesktop ? (
+						<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
+					) : (
+						<FarmListHeader headers={['Pool', 'APR', 'Staked']} />
+					)}
 					{!archived ? (
 						<>
 							{pools[PoolType.ACTIVE].length ? (
@@ -177,7 +182,6 @@ type FarmListHeaderProps = {
 
 const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHeaderProps) => {
 	return (
-		<div className='container'>
 			<div className='flex flex-row px-2 py-3'>
 				{headers.map((header: string) => (
 					<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bold first:text-left' key={header}>
@@ -185,7 +189,6 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHead
 					</Typography>
 				))}
 			</div>
-		</div>
 	)
 }
 
@@ -208,17 +211,19 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 			<button className='w-full py-2' onClick={() => setShowFarmModal(true)} disabled={!account}>
 				<div className='rounded-lg border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
 					<div className='flex w-full flex-row items-center'>
-						<div className='mx-auto my-0 flex basis-1/4 flex-col text-left'>
+						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
-								<img className='z-10 inline-block h-8 w-8 select-none duration-200' src={farm.iconA} />
-								<img className='z-20 -ml-2 inline-block h-8 w-8 select-none duration-200' src={farm.iconB} />
+									<div className='mr-2 inline-block'>
+										<Image className='z-10 inline-block select-none' src={farm.iconA} width={32} height={32} />
+										<Image className='z-20 -ml-2 inline-block select-none' src={farm.iconB} width={32} height={32} />
+									</div>
 								<span className='inline-block text-left align-middle'>
-									<Typography className='ml-2 font-bold'>{farm.name}</Typography>
-									<Typography variant='xs' className={`ml-2 font-light text-text-200`}>
+									<Typography variant='base' className='font-bold'>{farm.name}</Typography>
+									<Typography variant='sm' className={`font-light text-text-200`}>
 										{farm.type === 'SushiSwap LP' ? (
-											<Image src='/images/tokens/SUSHI.png' height={12} width={12} alt='SushiSwap' className='inline mr-1' />
+											<Image src='/images/tokens/SUSHI.png' height={12} width={12} alt='SushiSwap' className='mr-1 inline' />
 										) : (
-											<Image src='/images/tokens/UNI.png' height={12} width={12} alt='Uniswap' className='inline mr-1' />
+											<Image src='/images/tokens/UNI.png' height={12} width={12} alt='Uniswap' className='mr-1 inline' />
 										)}
 										{farm.type}
 									</Typography>
@@ -241,11 +246,13 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 									: '-'}
 							</Typography>
 						</div>
-						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}
-							</Typography>
-						</div>
+						{isDesktop && (
+							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
+								<Typography variant='base' className='ml-2 inline-block font-medium'>
+									${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}
+								</Typography>
+							</div>
+						)}
 					</div>
 				</div>
 			</button>

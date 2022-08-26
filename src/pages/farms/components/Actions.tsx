@@ -97,11 +97,9 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 								</Typography>
 								<Typography variant='sm'>
 									{fullBalance}{' '}
-									<Link href={pairUrl} target='_blank' rel='noopener noreferrer'>
-										<a>
-											{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
-										</a>
-									</Link>
+									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} size='xs' />
+									</a>
 								</Typography>
 							</div>
 						</div>

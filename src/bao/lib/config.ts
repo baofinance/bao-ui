@@ -267,7 +267,7 @@ export default {
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/ETH.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: '#',
+			pairUrl: 'https://app.uniswap.org/#/add/v2/0x374cb8c27130e2c9e04f44303f3c8351b9de61c1/ETH',
 		},
 		{
 			pid: 200,
@@ -286,7 +286,7 @@ export default {
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/ETH.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: '#',
+			pairUrl: 'https://app.sushi.com/legacy/add/ETH/0x374CB8C27130E2c9E04F44303f3c8351B9De61C1?chainId=1',
 		},
 		{
 			pid: 201,
@@ -305,7 +305,7 @@ export default {
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/USDC.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: '#',
+			pairUrl: 'https://app.sushi.com/legacy/add/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x374CB8C27130E2c9E04F44303f3c8351B9De61C1?chainId=1',
 		},
 	],
 	nfts: [
