@@ -10,7 +10,7 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useAllEarnings from '@/hooks/farms/useAllEarnings'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
-import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { getDisplayBalance, truncateNumber } from '@/bao/lib/utils/numberFormat'
 
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()

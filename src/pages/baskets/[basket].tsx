@@ -13,7 +13,7 @@ import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
 import useBasketRates from '@/hooks/baskets/useNestRate'
 import usePairPrice from '@/hooks/baskets/usePairPrice'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'

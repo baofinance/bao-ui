@@ -13,7 +13,7 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
+import { getBalanceNumber, getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 interface AccountModalProps {
 	show: boolean

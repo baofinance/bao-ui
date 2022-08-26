@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react'
 
-import { classNames } from '@/functions/styling'
+import { classNames } from '@/bao/lib/styling'
 
 import CardActions, { CardActionsProps } from './Actions'
 import CardBody, { CardBodyProps } from './Body'

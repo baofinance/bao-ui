@@ -8,7 +8,7 @@ import { isDesktop } from 'react-device-detect'
 
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber } from '@/utils/numberFormat'
+import { getBalanceNumber } from '@/bao/lib/utils/numberFormat'
 
 import AccountModal from '../AccountModal'
 import Button from '../Button'

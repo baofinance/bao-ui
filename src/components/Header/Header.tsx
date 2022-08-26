@@ -1,12 +1,10 @@
+import Container from '@/components/Container'
+import Logo from '@/components/Logo'
 import { Popover } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { FC, ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
-
-import Container from '@/components/Container'
-import Logo from '@/components/Logo'
-
 import AccountButton from '../AccountButton'
 import Nav from '../Nav'
 
@@ -97,7 +95,7 @@ const Header: FC = () => {
 														className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-background-100 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
 													>
 														<div className='space-y-4'>
-															<MobileNavLink href='/markets'>Markets</MobileNavLink>
+															<MobileNavLink href='/'>Markets</MobileNavLink>
 															<MobileNavLink href='/ballast'>Ballast</MobileNavLink>
 															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
 															<MobileNavLink href='/farms'>Farms</MobileNavLink>

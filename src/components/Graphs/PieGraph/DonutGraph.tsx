@@ -4,7 +4,7 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { animated, interpolate, useTransition } from 'react-spring'
 
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
+import { getBalanceNumber, getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 interface AssetAllocationAmount {
 	label: string

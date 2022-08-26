@@ -1,5 +1,5 @@
-import Multicall from '@/utils/multicall'
-import { decimate, exponentiate } from '@/utils/numberFormat'
+import Multicall from '@/bao/lib/utils/multicall'
+import { decimate, exponentiate } from '@/bao/lib/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import keccak256 from 'keccak256'
@@ -167,11 +167,7 @@ export const getTotalLPWethValue = async (
 	}
 }
 
-export const approve = async (lpContract: Contract, masterChefContract: Contract, account: string): Promise<string> => {
-	return lpContract.methods.approve(masterChefContract.options.address, ethers.constants.MaxUint256).send({ from: account })
-}
-
-export const approvev2 = (token: Contract, spender: Contract, account: string) => {
+export const approve = (token: Contract, spender: Contract, account: string) => {
 	return token.methods.approve(spender.options.address, ethers.constants.MaxUint256).send({ from: account })
 }
 

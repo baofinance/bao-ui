@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 
-import Multicall from '@/utils/multicall'
+import Multicall from '@/bao/lib/utils/multicall'
 
 import useBao from '../base/useBao'
 import { useAccountLiquidity } from './useAccountLiquidity'

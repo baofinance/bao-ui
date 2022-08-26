@@ -13,7 +13,7 @@ import { StatBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useOvenInfo from '@/hooks/baskets/useOvenInfo'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket

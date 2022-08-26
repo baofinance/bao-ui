@@ -1,10 +1,10 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { approvev2 } from '@/bao/utils'
+import { approve } from '@/bao/utils'
 import Button from '@/components/Button'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/markets/useApprovals'
-import { decimate } from '@/utils/numberFormat'
+import { decimate } from '@/bao/lib/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -70,7 +70,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approvev2(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
+							handleTx(approve(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
@@ -132,7 +132,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approvev2(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
+							handleTx(approve(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}

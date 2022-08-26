@@ -10,7 +10,7 @@ import BigNumber from 'bignumber.js'
 import { bisector, extent, max, min } from 'd3-array'
 import React, { useCallback, useMemo } from 'react'
 
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 export type TimeseriesData = {
 	close: number

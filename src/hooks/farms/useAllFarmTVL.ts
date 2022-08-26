@@ -7,9 +7,9 @@ import { AbiItem } from 'web3-utils'
 import erc20Abi from '@/bao/lib/abi/erc20.json'
 import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
 import Config from '@/bao/lib/config'
-import GraphUtil from '@/utils/graph'
-import Multicall from '@/utils/multicall'
-import { decimate } from '@/utils/numberFormat'
+import GraphUtil from '@/bao/lib/utils/graph'
+import Multicall from '@/bao/lib/utils/multicall'
+import { decimate } from '@/bao/lib/utils/numberFormat'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 	const results = Multicall.parseCallResults(

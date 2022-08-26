@@ -7,7 +7,7 @@ import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/bao/lib/utils/numberFormat'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()

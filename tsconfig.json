@@ -24,7 +24,7 @@
       "@/contexts/*": ["src/contexts/*"],
       "@/pages/*": ["src/pages/*"],
       "@/styles/*": ["src/styles/*"],
-      "@/utils/*": ["src/utils/*"],
+      "@/utils/*": ["src/bao/lib/utils/*"],
       "@/config/*": ["src/config/*"],
       "@/functions/*": ["src/functions/*"],
     },

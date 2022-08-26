@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from 'react'
 
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import MultiCall from '@/utils/multicall'
-import { decimate } from '@/utils/numberFormat'
+import MultiCall from '@/bao/lib/utils/multicall'
+import { decimate } from '@/bao/lib/utils/numberFormat'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
