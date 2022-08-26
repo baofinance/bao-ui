@@ -12,12 +12,12 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useNestRate'
-import { MaxUint256 } from '@ethersproject/constants'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
+import { ethers } from 'ethers'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
@@ -68,7 +68,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							.getNewContract('erc20.json', Config.addressMap.DAI)
 							.methods.approve(
 								recipe.options.address,
-								MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							)
 							.send({ from: account })
 

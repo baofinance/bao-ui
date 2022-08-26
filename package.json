@@ -35,9 +35,6 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.4.1",
-    "@ethersproject/constants": "^5.7.0",
-    "@ethersproject/providers": "^5.7.0",
-    "@ethersproject/units": "^5.7.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
@@ -77,6 +74,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "ether-swr": "^2.0.1",
+    "ethers": "^5.7.0",
     "ethereum-multicall": "^2.7.1",
     "framer-motion": "^7.2.1",
     "graphql": "^16.5.0",
@@ -122,8 +120,5 @@
     "budget": 3584000,
     "budgetPercentIncreaseRed": 40,
     "showDetails": true
-  },
-  "dependencies": {
-    "ethers": "^5.7.0"
   }
 }

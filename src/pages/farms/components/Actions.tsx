@@ -17,11 +17,11 @@ import useEarnings from '@/hooks/farms/useEarnings'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
-import { parseUnits } from '@ethersproject/units'
 import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
+import { ethers } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -154,7 +154,9 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, lpContract, pid, p
 										fullWidth
 										disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 										onClick={async () => {
-											const stakeTx = masterChefContract.methods.deposit(pid, parseUnits(val.toString(), 18)).send({ from: account })
+											const stakeTx = masterChefContract.methods
+												.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+												.send({ from: account })
 
 											handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 										}}
@@ -168,7 +170,9 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, lpContract, pid, p
 								fullWidth
 								disabled={true}
 								onClick={async () => {
-									const stakeTx = masterChefContract.methods.deposit(pid, parseUnits(val.toString(), 18)).send({ from: account })
+									const stakeTx = masterChefContract.methods
+										.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+										.send({ from: account })
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 								}}
 							>
@@ -304,7 +308,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							onClick={async () => {
 								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
-								const unstakeTx = masterChefContract.methods.withdraw(pid, parseUnits(val, 18)).send({ from: account })
+								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18)).send({ from: account })
 
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}

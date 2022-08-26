@@ -1,14 +1,13 @@
 import Multicall from '@/bao/lib/utils/multicall'
 import { decimate, exponentiate } from '@/bao/lib/utils/numberFormat'
 import BigNumber from 'bignumber.js'
+import { ethers } from 'ethers'
 import keccak256 from 'keccak256'
 import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
 import { ActiveSupportedBasket, ActiveSupportedNFT, FarmableSupportedPool } from './lib/types'
-import { MaxUint256 } from '@ethersproject/constants'
-import { parseUnits } from '@ethersproject/units'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -169,12 +168,12 @@ export const getTotalLPWethValue = async (
 }
 
 export const approve = (token: Contract, spender: Contract, account: string) => {
-	return token.methods.approve(spender.options.address, MaxUint256).send({ from: account })
+	return token.methods.approve(spender.options.address, ethers.constants.MaxUint256).send({ from: account })
 }
 
 export const stake = async (masterChefContract: Contract, pid: number, amount: string, account: string, ref: string): Promise<string> => {
 	return masterChefContract.methods
-		.deposit(pid, parseUnits(amount, 18), ref)
+		.deposit(pid, ethers.utils.parseUnits(amount, 18), ref)
 		.send({ from: account })
 		.on('transactionHash', (tx: { transactionHash: string }) => {
 			console.log(tx)
@@ -184,7 +183,7 @@ export const stake = async (masterChefContract: Contract, pid: number, amount: s
 
 export const unstake = async (masterChefContract: Contract, pid: number, amount: string, account: string, ref: string): Promise<string> => {
 	return masterChefContract.methods
-		.withdraw(pid, parseUnits(amount, 18), ref)
+		.withdraw(pid, ethers.utils.parseUnits(amount, 18), ref)
 		.send({ from: account })
 		.on('transactionHash', (tx: { transactionHash: string }) => {
 			console.log(tx)
