@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "engines": {
-    "node": "16.13.2",
+    "node": "16.14.2",
     "npm": "~8.x"
   },
   "dependencies": {
@@ -60,6 +60,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "npx next lint --fix"
   },
   "eslintConfig": {
