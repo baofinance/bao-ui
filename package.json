@@ -122,5 +122,8 @@
     "budget": 3584000,
     "budgetPercentIncreaseRed": 40,
     "showDetails": true
+  },
+  "dependencies": {
+    "ethers": "^5.7.0"
   }
 }
