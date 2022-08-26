@@ -70,10 +70,7 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 
 	return (
 		<Modal isOpen={show} onDismiss={onHide}>
-			<Modal.Header
-				header='Select a wallet provider'
-				onClose={onHide}
-			/>
+			<Modal.Header header='Select a wallet provider' onClose={onHide} />
 			<Modal.Actions>
 				{Object.keys(connectorsByName).map(name => {
 					const currentConnector = connectorsByName[name]

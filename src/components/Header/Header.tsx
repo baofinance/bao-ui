@@ -49,9 +49,9 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 
 const Header: FC = () => {
 	return (
-		<header className='bg-background-100 border-b border-b-primary-300 fixed w-full top-0 z-50'>
+		<header className='fixed top-0 z-50 w-full border-b border-b-primary-300 bg-background-100'>
 			<nav>
-				<Container className='relative z-50 flex justify-between py-4 max-w-full'>
+				<Container className='relative z-50 flex max-w-full justify-between py-4'>
 					<div className='relative z-10 flex items-center gap-8'>
 						<Link href='/' aria-label='Home'>
 							<Logo />
@@ -68,7 +68,7 @@ const Header: FC = () => {
 								{({ open }) => (
 									<>
 										<Popover.Button
-											className='relative z-10 -mr-2 inline-flex items-center rounded-lg stroke-text-100 p-2 hover:bg-primary-100/50 outline-none [&:not(:focus-visible)]:focus:outline-none'
+											className='relative z-10 -mr-2 inline-flex items-center rounded-lg stroke-text-100 p-2 outline-none hover:bg-primary-100/50 [&:not(:focus-visible)]:focus:outline-none'
 											aria-label='Toggle site navigation'
 										>
 											{({ open }) => (open ? <ChevronUpIcon className='h-6 w-6' /> : <MenuIcon className='h-6 w-6' />)}

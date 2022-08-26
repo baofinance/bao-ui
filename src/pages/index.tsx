@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Dashboard() {
 	return (
-		<div className='py-4 md:py-8 lg:py-12 max-w-7xl mx-auto sm:px-6 lg:px-8'>
+		<div className='mx-auto max-w-7xl py-4 sm:px-6 md:py-8 lg:py-12 lg:px-8'>
 			<Head>
 				<title>Bao | Dashboard</title>
 				<meta name='description' content='Bao' />

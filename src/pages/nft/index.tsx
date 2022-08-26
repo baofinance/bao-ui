@@ -20,7 +20,7 @@ const NFT: React.FC = () => {
 		<>
 			<NextSeo title={'NFT'} description={'Check your eligibility and claim your NFT here!'} />
 			<PageHeader title='NFT' description='Check your eligibility and claim your NFT here!' />
-			<div className={`flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-4'} w-fit m-auto`}>
+			<div className={`flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-4'} m-auto w-fit`}>
 				{nfts && nfts.map(nft => <NFTItem nft={nft} key={nft.nid} />)}
 			</div>
 		</>

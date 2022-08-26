@@ -1,5 +1,1 @@
-export {
-	FeeBlock,
-	StatBlock,
-	StatCards,
-} from './Stats'
+export { FeeBlock, StatBlock, StatCards } from './Stats'

@@ -112,9 +112,7 @@ const BDEFI: React.FC = () => (
 
 const BSTBL: React.FC = () => (
 	<>
-		<Typography variant='h3'>
-			Description
-		</Typography>
+		<Typography variant='h3'>Description</Typography>
 		<Typography variant='p' className='my-4'>
 			The Bao Stable Basket provides a way to diversify counterparty risk on stable assets while the underlying assets are put to work
 			earning yield on various trusted yield farming protocols. Decentralized and non pegged stables will be used where yield is available.
@@ -122,7 +120,7 @@ const BSTBL: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Fees
 		</Typography>
-		<ul className='ml-8 list-disc mb-4'>
+		<ul className='ml-8 mb-4 list-disc'>
 			<li>Entry Fee: 0%</li>
 			<li>Streaming Fee: 0%</li>
 			<li>Redemption Fee: 0%</li>
@@ -146,9 +144,7 @@ const BSTBL: React.FC = () => (
 			The basket will start with a mixture of centrally issued and decentralized stable coins and deposit them in a variety of protocols to
 			earn yield on them, swapping strategies regularly to maximize the yield earned.
 		</Typography>
-		<Typography variant='h3'>
-			Criteria
-		</Typography>
+		<Typography variant='h3'>Criteria</Typography>
 		<Typography variant='p' className='my-4'>
 			For a project to be included in the Bao Stable basket, it must fit the below criteria in order to reduce the risk of the basket and
 			fit the desires of the community.
@@ -156,7 +152,7 @@ const BSTBL: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Characteristics
 		</Typography>
-		<ul className='ml-8 list-disc mb-4'>
+		<ul className='ml-8 mb-4 list-disc'>
 			<li>Be a stable token project available on the Ethereum blockchain.</li>
 			<li>Be in liquid markets and being used in different lending protocols.</li>
 			<li>The protocol must be running for 6 months before qulaifying to be included in the basket.</li>
@@ -166,39 +162,29 @@ const BSTBL: React.FC = () => (
 			</li>
 			<li>Must be sufficiently decentralized and/or collateralized.</li>
 		</ul>
-		<Typography variant='h3'>
-			Strategy
-		</Typography>
+		<Typography variant='h3'>Strategy</Typography>
 		<Typography variant='p' className='my-4'>
 			It is possible for the underlying tokens to utilize strategies that will earn yield, maximising value for basket holders, who benefit
 			from this productivity without having to perform any actions themselves. These strategies will be changed over time to take advantage
 			of new opportunities or to maximise the yield earned.
 		</Typography>
-		<Typography variant='h3'>
-			Management
-		</Typography>
+		<Typography variant='h3'>Management</Typography>
 		<Typography variant='p' className='my-4'>
 			The Basket is maintained quarterly in two phases.
 		</Typography>
-		<Typography variant='xl'>
-			Determination Phase
-		</Typography>
+		<Typography variant='xl'>Determination Phase</Typography>
 		<Typography variant='p' className='my-4'>
 			The determination phase takes place during the final 2 weeks of the quarter. During this phase the changes needed for the next
 			reconstitution are determined. Strategies and allocation % will be revisited in order to reach the balance between decentralization
 			and having the most optimal yet secure yield possible for those stables. Proposed changes will be published on the governance forum
 			for 1 week then a governance vote will run for the community to approve changes.
 		</Typography>
-		<Typography variant='xl'>
-			Reconstitution Phase
-		</Typography>
+		<Typography variant='xl'>Reconstitution Phase</Typography>
 		<Typography variant='p' className='my-4'>
 			In the two weeks following a successful vote, the basket components will be adjusted as per the instructions published during the
 			final 2 weeks of the quarter.
 		</Typography>
-		<Typography variant='xl'>
-			Emergency Maintenance
-		</Typography>
+		<Typography variant='xl'>Emergency Maintenance</Typography>
 		<Typography variant='p' className='my-4'>
 			The multisig holders are authorized by the community to re-balance baskets outside the usual schedule during moments that they
 			collectively deem to be critical emergencies. This clause will allow for quick re-balancing in the event of a protocol or basket being

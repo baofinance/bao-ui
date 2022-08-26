@@ -33,7 +33,9 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						<br />
 						Market Cap
 					</div>
-					<Badge className='font-semibold'>{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}</Badge>
+					<Badge className='font-semibold'>
+						{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}
+					</Badge>
 				</Card.Body>
 			</Card>
 			<Card>

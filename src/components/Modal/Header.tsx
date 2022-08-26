@@ -15,11 +15,11 @@ export interface ModalHeaderProps {
 const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack, onClose }) => {
 	return (
 		<>
-			<div className='flex mb-4 h-8'>
-				<div className='flex flex-col gap-1 items-center'>
+			<div className='mb-4 flex h-8'>
+				<div className='flex flex-col items-center gap-1'>
 					<Typography variant='xl' className='font-semibold'>
 						{onBack && (
-							<FontAwesomeIcon icon={faArrowLeft} onClick={onBack} size='sm' className='cursor-pointer hover:text-text-400 mr-2' />
+							<FontAwesomeIcon icon={faArrowLeft} onClick={onBack} size='sm' className='mr-2 cursor-pointer hover:text-text-400' />
 						)}
 						{header ? header : children}
 					</Typography>

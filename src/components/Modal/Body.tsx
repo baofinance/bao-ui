@@ -8,7 +8,7 @@ export interface ModalBodyProps {
 }
 
 const ModalBody: FC<ModalBodyProps> = ({ className = '', children }) => {
-	return <div className={classNames('relative flex-1 mb-4', className)}>{children}</div>
+	return <div className={classNames('relative mb-4 flex-1', className)}>{children}</div>
 }
 
 export default ModalBody

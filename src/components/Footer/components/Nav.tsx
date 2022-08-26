@@ -9,7 +9,7 @@ import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {
 	return (
-		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm' }`}>
+		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm'}`}>
 			<Tooltipped content='Discord' placement='top'>
 				<IconLink href='https://discord.gg/BW3P62vJXT' label='Discord' icon={faDiscord} />
 			</Tooltipped>

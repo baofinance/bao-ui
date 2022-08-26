@@ -36,15 +36,7 @@ export interface ModalProps {
 	unmount?: boolean
 }
 
-const Modal: ModalType<ModalProps> = ({
-	isOpen,
-	onDismiss,
-	afterLeave,
-	children,
-	transparent = false,
-	maxWidth = 'lg',
-	unmount,
-}) => {
+const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children, transparent = false, maxWidth = 'lg', unmount }) => {
 	const isDesktop = useDesktopMediaQuery()
 	return (
 		<Transition appear show={isOpen} as={Fragment} afterLeave={afterLeave} unmount={unmount}>
@@ -85,7 +77,7 @@ const Modal: ModalType<ModalProps> = ({
 					>
 						<div
 							className={classNames(
-								transparent ? '' : 'bg-background-100 !border-primary-100 !border !border-solid',
+								transparent ? '' : '!border !border-solid !border-primary-100 bg-background-100',
 								isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : '',
 								isDesktop ? `w-full` : 'mx-auto max-h-[85vh] w-[85vw]',
 								'inline-block transform rounded-xl p-4 text-left align-bottom',

@@ -54,7 +54,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Image src='/images/tokens/ETH.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='base' className='font-medium'>{getBalanceNumber(ethBalance).toFixed(4)}</Typography>
+							<Typography variant='base' className='font-medium'>
+								{getBalanceNumber(ethBalance).toFixed(4)}
+							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								ETH Balance
 							</Typography>
@@ -70,7 +72,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='base' className='font-medium'>{getDisplayBalance(baoBalance)}</Typography>
+							<Typography variant='base' className='font-medium'>
+								{getDisplayBalance(baoBalance)}
+							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								BAO Balance
 							</Typography>

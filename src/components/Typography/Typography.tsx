@@ -29,15 +29,7 @@ export interface TypographyProps extends React.AllHTMLAttributes<React.ReactHTML
 
 const Typography: FC<TypographyProps> = forwardRef(
 	(
-		{
-			variant = 'base',
-			component = 'div',
-			className = 'antialiased',
-			clickable = false,
-			children = [],
-			onClick = undefined,
-			...rest
-		},
+		{ variant = 'base', component = 'div', className = 'antialiased', clickable = false, children = [], onClick = undefined, ...rest },
 		ref,
 	) => {
 		return React.createElement(

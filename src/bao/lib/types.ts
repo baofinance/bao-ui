@@ -99,7 +99,7 @@ export interface ActiveSupportedMarket extends SupportedMarket {
 	marketAddress: string
 	marketContract: Contract
 	underlyingAddress: string
-	underlyingContract: Contract
+	underlyingContract: Contract | false
 }
 
 export interface ActiveSupportedNFT extends SupportedNFT {
@@ -128,7 +128,7 @@ export interface ContractsConfig {
 		[networkId: number]: {
 			address: string
 			abi: string
-			contract?: Contract
+			contract: Contract
 		}
 	}
 }

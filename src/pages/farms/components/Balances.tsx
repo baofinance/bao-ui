@@ -36,7 +36,7 @@ const Balances: React.FC = () => {
 			label: 'Total BAO Supply',
 			value: `${totalSupply ? window.screen.width > 1200 ? getDisplayBalance(totalSupply) : truncateNumber(totalSupply) : <Loader />}`,
 		},
-		{ label: 'BAO Price', value: `${baoPrice ? `$${getDisplayBalance(baoPrice, 0)}` : <Loader />}` }
+		{ label: 'BAO Price', value: `${baoPrice ? `$${getDisplayBalance(baoPrice, 0)}` : <Loader />}` },
 	]
 
 	useEffect(() => {
@@ -57,7 +57,7 @@ const Balances: React.FC = () => {
 
 	return (
 		<>
-			<div className={`mx-auto my-4 ${isDesktop ? 'flex flex-flow gap-4' : 'flex flex-col gap-3'} justify-evenly`}>
+			<div className={`mx-auto my-4 ${isDesktop ? 'flex-flow flex gap-4' : 'flex flex-col gap-3'} justify-evenly`}>
 				<StatCards stats={stats} />
 			</div>
 		</>

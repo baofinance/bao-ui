@@ -47,13 +47,13 @@ const Basket: React.FC = () => {
 					</a>
 				</Tooltipped>
 			</div>
-			<div className='mx-auto mt-6 mb-0 box-border flex flex-col items-center ml-7'>
+			<div className='mx-auto mt-6 mb-0 ml-7 box-border flex flex-col items-center'>
 				<PageHeader icon={`/images/tokens/${basket.icon}`} title={basket.symbol} />
 				<Badge>
 					1 {basket.symbol} ={' '}
 					{rates ? (
 						<>
-							<FontAwesomeIcon icon={faEthereum}/> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
+							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
 							{getDisplayBalance(rates.dai)}
 							{' DAI '}
 							<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}

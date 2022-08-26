@@ -136,7 +136,7 @@ export const Overview = () => {
 
 			{!isDesktop && (
 				<div className='w-full'>
-					<div className='mt-4 flex w-full justify-center rounded-lg bg-primary-100 p-4 border border-primary-300'>
+					<div className='mt-4 flex w-full justify-center rounded-lg border border-primary-300 bg-primary-100 p-4'>
 						<div className='flex w-full flex-row items-center justify-center text-sm font-medium'>
 							<div className='flex flex-row items-center gap-2'>
 								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-text-200'>

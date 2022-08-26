@@ -165,7 +165,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									here
 								</a>
 								.{' '}
-								<Badge className='text-xs text-center mt-2 bg-red/50'>
+								<Badge className='mt-2 bg-red/50 text-center text-xs'>
 									<b className='font-medium'>CAUTION:</b> Slippage may apply on swaps!
 								</Badge>
 							</Typography>
@@ -223,12 +223,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 														alt={mintOption.toString()}
 													/>
 												) : (
-													<Image
-														src={`/images/tokens/${basket.icon}`}
-														width={32}
-														height={32}
-														alt={basket.symbol}
-													/>
+													<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 												)}
 											</div>
 										</div>
