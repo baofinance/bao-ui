@@ -1,7 +1,7 @@
 import { getBalanceNumber } from '@/bao/lib/utils/numberFormat'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import providers from '@ethersproject/providers'
+import ethers from 'ethers'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,7 +25,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const ethBalance = useTokenBalance('ETH')
 
 	useEffect(() => {
-		const ensResolver = new providers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/UZ88g_fys9oP-NhI2S-O47r6isdCIGHI')
+		const ensResolver = new ethers.providers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/UZ88g_fys9oP-NhI2S-O47r6isdCIGHI')
 
 		if (!account) return
 
