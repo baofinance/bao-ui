@@ -1,12 +1,10 @@
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-
 import MultiCall from '@/utils/multicall'
-
-import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
+import useBao from '@/hooks/base/useBao'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useMarkets } from './useMarkets'
+import { useWeb3React } from '@web3-react/core'
 
 type Approvals = {
 	approvals: { [key: string]: BigNumber }

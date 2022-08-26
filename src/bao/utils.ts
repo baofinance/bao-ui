@@ -7,7 +7,7 @@ import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, FarmableSupportedPool } from './lib/types'
+import { ActiveSupportedBasket, ActiveSupportedNFT, FarmableSupportedPool } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -101,6 +101,14 @@ export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
 				}),
 		  )
 		: []
+}
+
+export const getNFTs = (bao: Bao): ActiveSupportedNFT[] => {
+	return bao && bao.contracts.nfts
+}
+
+export const getNFTContract = (bao: Bao, nid: number): Contract | undefined => {
+	if (bao && bao.contracts && bao.contracts.nfts) return _.find(bao.contracts.nfts, { nid }).nftContract
 }
 
 export const getPoolWeight = async (masterChefContract: Contract, pid: number): Promise<BigNumber> => {
@@ -211,6 +219,17 @@ export const getBaoSupply = async (bao: Bao) => {
 
 export const getReferrals = async (masterChefContract: Contract, account: string): Promise<string> => {
 	return await masterChefContract.methods.getGlobalRefAmount(account).call()
+}
+
+export const getRefUrl = (): string => {
+	let refer = '0x0000000000000000000000000000000000000000'
+	const urlParams = new URLSearchParams(window.location.search)
+	if (urlParams.has('ref')) {
+		refer = urlParams.get('ref')
+	}
+	console.log(refer)
+
+	return refer
 }
 
 export const redeem = async (masterChefContract: Contract, account: string): Promise<string> => {

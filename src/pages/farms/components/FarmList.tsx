@@ -7,7 +7,7 @@ import { isDesktop } from 'react-device-detect'
 
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
-import { PageLoader, SpinnerLoader } from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import { Farm, PoolType } from '@/contexts/Farms/types'
 import { classNames } from '@/functions/styling'
@@ -83,7 +83,7 @@ const FarmList: React.FC = () => {
 
 				for (let i = 0; i < farms.length; i++) {
 					const farm = farms[i]
-					const tvlInfo = farmsTVL.tvls.find((fTVL: any) => fTVL.lpAddress.toLowerCase() === farm.lpTokenAddress.toLowerCase())
+					const tvlInfo = farmsTVL.tvls.find((fTVL: any) => fTVL.lpAddress.toLowerCase() === farm.lpAddress.toLowerCase())
 					const farmWithStakedValue = {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
@@ -240,7 +240,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 									{farm.apy.gt(0) ? `${farm.apy.times(new BigNumber(100)).toNumber().toLocaleString('en-US').slice(0, -1)}%` : 'N/A'}
 								</Typography>
 							) : (
-								<SpinnerLoader />
+								<Loader />
 							)}
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>

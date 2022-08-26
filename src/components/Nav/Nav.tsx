@@ -1,12 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import Link, { LinkProps } from 'next/link'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 
-interface NavLinkProps extends LinkProps {
-	href: string
-	className: string
-	exact: boolean
+interface NavLinkProps {
+	href?: string
+	className?: string
+	exact?: boolean
 }
 
 const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {

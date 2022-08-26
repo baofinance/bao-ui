@@ -1,4 +1,4 @@
-import { Bao } from 'bao'
+import { Bao } from '@/bao/Bao'
 import BigNumber from 'bignumber.js/bignumber'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'

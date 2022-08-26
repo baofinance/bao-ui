@@ -1,4 +1,4 @@
-import { Bao } from 'bao'
+import { Bao } from '@/bao/Bao'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 

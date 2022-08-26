@@ -1,12 +1,3 @@
-import { Switch } from '@headlessui/react'
-import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import Image from 'next/image'
-import Link from 'next/link'
-import React, { useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
-
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { getComptrollerContract } from '@/bao/utils'
@@ -25,7 +16,14 @@ import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } fro
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useAccountMarkets } from '@/hooks/markets/useMarkets'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-
+import { Switch } from '@headlessui/react'
+import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import Image from 'next/image'
+import Link from 'next/link'
+import React, { useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
@@ -218,7 +216,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 												supplyBalances.find(balance => balance.address === market.marketAddress).balance === 0
 											}
 											onChange={setIsChecked}
-											onClick={event => {
+											onClick={(event: { stopPropagation: () => void }) => {
 												event.stopPropagation()
 												const contract = getComptrollerContract(bao)
 												if (isInMarket) {

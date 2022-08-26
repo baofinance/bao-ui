@@ -1,4 +1,4 @@
-import { Bao } from 'bao'
+import { Bao } from '@/bao/Bao'
 import { useContext } from 'react'
 
 import { Context } from '@/contexts/BaoProvider'
