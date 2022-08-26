@@ -48,7 +48,7 @@ export class Contracts {
 			networkId === Config.networkId
 				? Config.baskets.map(basket =>
 						Object.assign(basket, {
-							address: basket!.basketAddresses![networkId],
+							address: basket!.basketAddresses[networkId],
 							basketContract: this.getNewContract(ExperipieAbi),
 							ovenContract: this.getNewContract('oven.json'),
 						}),
@@ -63,6 +63,16 @@ export class Contracts {
 							underlyingAddress: market.underlyingAddresses[networkId],
 							marketContract: this.getNewContract(market.underlyingAddresses[Config.networkId] === 'ETH' ? CEtherAbi : CTokenAbi),
 							underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi),
+						}),
+				  )
+				: undefined
+
+		this.nfts =
+			networkId === Config.networkId
+				? Config.nfts.map(nft =>
+						Object.assign(nft, {
+							nftAddress: nft.address[networkId],
+							nftContract: this.getNewContract('nft.json'),
 						}),
 				  )
 				: undefined
