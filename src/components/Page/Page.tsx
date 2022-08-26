@@ -1,5 +1,7 @@
-import Footer from '@/components/Footer'
 import React, { PropsWithChildren } from 'react'
+
+import Footer from '@/components/Footer'
+
 import Container from '../Container'
 
 interface PageProps {

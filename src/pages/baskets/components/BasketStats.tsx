@@ -1,14 +1,16 @@
+import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { BigNumber } from 'bignumber.js'
+import React from 'react'
+import { isDesktop } from 'react-device-detect'
+
 import Badge from '@/components/Badge'
 import Card from '@/components/Card'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import useNav from '@/hooks/baskets/useNav'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'bignumber.js'
-import React from 'react'
-import { isDesktop } from 'react-device-detect'
+
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 type BasketStatsProps = {

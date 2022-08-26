@@ -1,14 +1,16 @@
-import { Farm } from '@/contexts/Farms'
-import Multicall from '@/utils/multicall'
-import { decimate, exponentiate } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import keccak256 from 'keccak256'
 import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import { Contract } from 'web3-eth-contract'
+
+import { Farm } from '@/contexts/Farms'
+import Multicall from '@/utils/multicall'
+import { decimate, exponentiate } from '@/utils/numberFormat'
+
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, ActiveSupportedNFT, SupportedNFT } from './lib/types'
+import { ActiveSupportedBasket, ActiveSupportedNFT } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,

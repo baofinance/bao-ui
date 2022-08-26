@@ -1,3 +1,12 @@
+import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ParentSize } from '@visx/responsive'
+import { BigNumber } from 'bignumber.js'
+import _ from 'lodash'
+import Image from 'next/future/image'
+import React, { useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
+
 import Badge from '@/components/Badge'
 import Button from '@/components/Button/Button'
 import DonutGraph from '@/components/Graphs/PieGraph'
@@ -7,14 +16,6 @@ import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ParentSize } from '@visx/responsive'
-import { BigNumber } from 'bignumber.js'
-import _ from 'lodash'
-import Image from 'next/future/image'
-import React, { useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 
 type CompositionProps = {
 	composition: BasketComponent[]

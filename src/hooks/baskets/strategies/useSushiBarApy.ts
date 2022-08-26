@@ -1,6 +1,6 @@
 import sushiData from '@sushiswap/sushi-data'
-import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
+import { useCallback, useEffect, useState } from 'react'
 
 // xSUSHI APY must be fetched from the sushi subgraph
 const useSushiBarApy = () => {

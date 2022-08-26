@@ -1,6 +1,8 @@
-import { getMasterChefContract, getUserInfoChef } from '@/bao/utils'
-import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { useCallback, useEffect, useState } from 'react'
+
+import { getMasterChefContract, getUserInfoChef } from '@/bao/utils'
+
 import useBao from '../base/useBao'
 
 export const useUserFarmInfo = (pid: number) => {

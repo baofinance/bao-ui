@@ -1,9 +1,10 @@
-import PageHeader from '@/components/PageHeader'
-import Typography from '@/components/Typography'
-import { useMarkets } from '@/hooks/markets/useMarkets'
 import { useWeb3React } from '@web3-react/core'
 import { NextSeo } from 'next-seo'
 import React from 'react'
+
+import PageHeader from '@/components/PageHeader'
+import { useMarkets } from '@/hooks/markets/useMarkets'
+
 import MarketList from './components/MarketList'
 import OfflineMarketList from './components/OfflineMarketList'
 import Overview from './components/Overview'

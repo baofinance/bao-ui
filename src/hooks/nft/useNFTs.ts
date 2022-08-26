@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
+
 import { ActiveSupportedNFT } from '@/bao/lib/types'
 import { getNFTs } from '@/bao/utils'
 import useBao from '@/hooks/base/useBao'
-import { useEffect, useState } from 'react'
 
 const useNFTs = (): ActiveSupportedNFT[] => {
 	const [nfts, setNFTs] = useState<ActiveSupportedNFT[] | undefined>()

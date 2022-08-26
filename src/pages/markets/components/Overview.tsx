@@ -1,17 +1,19 @@
-import Tooltipped from '@/components/Tooltipped'
-import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
-import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import 'react-circular-progressbar/dist/styles.css'
+
 import { faInfinity } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
 import { isDesktop } from 'react-device-detect'
+
+import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
+import useBao from '@/hooks/base/useBao'
+import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
+import useHealthFactor from '@/hooks/markets/useHealthFactor'
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 export const Overview = () => {
 	const bao = useBao()

@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Dialog, Transition } from '@headlessui/react'
+import React, { FC, Fragment } from 'react'
+
 import ModalActions, { ModalActionsProps } from '@/components/Modal/Actions'
 import ModalBody, { ModalBodyProps } from '@/components/Modal/Body'
 import ModalHeader, { ModalHeaderProps } from '@/components/Modal/Header'
 import { classNames } from '@/functions/styling'
 import useDesktopMediaQuery from '@/hooks/base/useDesktopMediaQuery'
-import { Dialog, Transition } from '@headlessui/react'
-import React, { cloneElement, FC, Fragment, isValidElement, ReactNode, useCallback, useMemo, useState } from 'react'
+
 import ModalOptions, { ModalOptionsProps } from './Options'
 
 const MAX_WIDTH_CLASS_MAPPING = {

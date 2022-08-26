@@ -1,5 +1,6 @@
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
+
 import Typography from '../Typography'
 
 type Stat = {
@@ -44,9 +45,12 @@ export const StatCards = ({ label, stats }: StatBlockProps) => (
 			</div>
 		)}
 		{stats.map(({ label, value }) => (
-			<div className='realtive flex min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+			<div
+				key={label}
+				className='realtive flex min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'
+			>
 				<div className='break-words text-center' key={label}>
-					<Typography variant='sm' className='text-text-200 font-medium'>
+					<Typography variant='sm' className='font-medium text-text-200'>
 						{label}
 					</Typography>
 					<Typography variant='base' className='font-semibold'>

@@ -1,12 +1,13 @@
+import { Accordion, AccordionHeader } from '@material-tailwind/react'
+import Image from 'next/image'
+import React, { useMemo } from 'react'
+
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { Accordion, AccordionHeader } from '@material-tailwind/react'
-import Image from 'next/image'
-import React, { useMemo } from 'react'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()

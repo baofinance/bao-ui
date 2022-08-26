@@ -1,2 +1,2 @@
-export { default, MaxButton, NavButtons, CloseButton, ButtonStack, SubmitButton } from './Button'
 export type { ButtonProps } from './Button'
+export { ButtonStack, CloseButton, default, MaxButton, NavButtons, SubmitButton } from './Button'

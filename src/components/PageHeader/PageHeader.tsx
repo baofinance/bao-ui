@@ -1,7 +1,8 @@
+import Image from 'next/future/image'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
+
 import Typography from '../Typography'
-import Image from 'next/future/image'
 
 interface PageHeaderProps {
 	icon?: any

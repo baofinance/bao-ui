@@ -1,5 +1,6 @@
-import Button from '@/components/Button'
 import React, { ReactNode } from 'react'
+
+import Button from '@/components/Button'
 
 export interface InputProps {
 	endAdornment?: ReactNode

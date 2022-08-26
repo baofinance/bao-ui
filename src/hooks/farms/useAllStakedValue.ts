@@ -1,10 +1,12 @@
 import { useWeb3React } from '@web3-react/core'
-import { getFarms, getMasterChefContract, getTotalLPWethValue, getWethContract } from '@/bao/utils'
 import BigNumber from 'bignumber.js'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
-import { getContract } from '@/utils/erc20'
 import { provider } from 'web3-core'
+
+import { getFarms, getMasterChefContract, getTotalLPWethValue, getWethContract } from '@/bao/utils'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import { getContract } from '@/utils/erc20'
+
 import useBao from '../base/useBao'
 
 export interface StakedValue {

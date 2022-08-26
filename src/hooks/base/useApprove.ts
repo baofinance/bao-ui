@@ -1,8 +1,9 @@
-import { approve, getMasterChefContract } from '@/bao/utils'
-import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { provider } from 'web3-core'
+import { useCallback } from 'react'
 import { Contract } from 'web3-eth-contract'
+
+import { approve, getMasterChefContract } from '@/bao/utils'
+
 import useBao from './useBao'
 
 const useApprove = (lpContract: Contract) => {

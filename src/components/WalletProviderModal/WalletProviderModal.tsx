@@ -1,11 +1,12 @@
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { useWeb3React } from '@web3-react/core'
+import React, { FC, useCallback, useEffect, useState } from 'react'
+
 import Config from '@/bao/lib/config'
 import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
 import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 import Button from '@/components/Button'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { useWeb3React } from '@web3-react/core'
-import React, { FC, useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
+
 import Modal from '../Modal'
 import Typography from '../Typography'
 

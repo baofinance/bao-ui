@@ -1,10 +1,3 @@
-import Config from '@/bao/lib/config'
-import Button from '@/components/Button'
-import Modal from '@/components/Modal'
-import Typography from '@/components/Typography'
-import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 import { faCheck, faClose, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -13,6 +6,14 @@ import Image from 'next/future/image'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { MoonLoader } from 'react-spinners'
+
+import Config from '@/bao/lib/config'
+import Button from '@/components/Button'
+import Modal from '@/components/Modal'
+import Typography from '@/components/Typography'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 
 interface AccountModalProps {
 	show: boolean

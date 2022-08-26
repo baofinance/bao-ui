@@ -1,6 +1,6 @@
-import { classNames } from '@/functions/styling'
 import { Chip } from '@material-tailwind/react'
-import { isDesktop } from 'react-device-detect'
+
+import { classNames } from '@/functions/styling'
 
 interface BadgeProps {
 	children: any

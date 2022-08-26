@@ -1,3 +1,10 @@
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'bignumber.js'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
@@ -7,12 +14,6 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useOvenInfo from '@/hooks/baskets/useOvenInfo'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket

@@ -1,5 +1,7 @@
-import { classNames } from '@/functions/styling'
 import React, { FC, ReactNode } from 'react'
+
+import { classNames } from '@/functions/styling'
+
 import CardActions, { CardActionsProps } from './Actions'
 import CardBody, { CardBodyProps } from './Body'
 import CardHeader, { CardHeaderProps } from './Header'

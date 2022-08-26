@@ -1,16 +1,18 @@
-import Config from '@/bao/lib/config'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { approvev2 } from '@/bao/utils'
-import Button, { ButtonStack, SubmitButton } from '@/components/Button'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useApprovals } from '@/hooks/markets/useApprovals'
-import { decimate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 import React from 'react'
+
+import Config from '@/bao/lib/config'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { approvev2 } from '@/bao/utils'
+import Button from '@/components/Button'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import { useApprovals } from '@/hooks/markets/useApprovals'
+import { decimate } from '@/utils/numberFormat'
+
 import { MarketOperations } from './Modals/Modals'
 
 type MarketButtonProps = {

@@ -1,6 +1,8 @@
-import { getMasterChefContract, getRefUrl, unstake } from '@/bao/utils'
-import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { useCallback } from 'react'
+
+import { getMasterChefContract, getRefUrl, unstake } from '@/bao/utils'
+
 import useBao from '../base/useBao'
 
 const useUnstake = (pid: number) => {

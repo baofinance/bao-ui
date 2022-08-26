@@ -1,3 +1,10 @@
+import { Switch } from '@headlessui/react'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import Image from 'next/future/image'
+import React, { useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
+
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
 import { PageLoader, SpinnerLoader } from '@/components/Loader'
@@ -10,12 +17,7 @@ import useFarms from '@/hooks/farms/useFarms'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
-import { Switch } from '@headlessui/react'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import Image from 'next/future/image'
-import React, { useEffect, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
+
 import { FarmModal } from './Modals'
 
 const FarmList: React.FC = () => {

@@ -1,7 +1,9 @@
-import { AbsoluteContainer } from '@/components/Container'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
+
+import { AbsoluteContainer } from '@/components/Container'
+
 import BallastSwapper from './components/BallastSwapper'
 
 const Ballast: React.FC = () => {

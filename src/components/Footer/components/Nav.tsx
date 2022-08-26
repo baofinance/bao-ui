@@ -1,8 +1,10 @@
-import IconLink from '@/components/IconLink'
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faComments } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
+
+import IconLink from '@/components/IconLink'
+
 import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {

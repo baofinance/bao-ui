@@ -1,6 +1,3 @@
-import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,6 +5,11 @@ import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+
+import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import { getBalanceNumber } from '@/utils/numberFormat'
+
 import AccountModal from '../AccountModal'
 import Button from '../Button'
 import Loader from '../Loader'

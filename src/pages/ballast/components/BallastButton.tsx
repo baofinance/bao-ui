@@ -1,3 +1,7 @@
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import React, { useMemo } from 'react'
+
 import Config from '@/bao/lib/config'
 import { approvev2 } from '@/bao/utils'
 import Button from '@/components/Button'
@@ -6,9 +10,6 @@ import useAllowancev2 from '@/hooks/base/useAllowancev2'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, exponentiate } from '@/utils/numberFormat'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import React, { useMemo } from 'react'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const bao = useBao()

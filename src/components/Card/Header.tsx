@@ -1,5 +1,6 @@
-import Typography from '@/components/Typography'
 import React, { FC, ReactNode } from 'react'
+
+import Typography from '@/components/Typography'
 
 export interface CardHeaderProps {
 	children?: any

@@ -1,6 +1,7 @@
-import { classNames } from '@/functions/styling'
 import React, { ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
+
+import { classNames } from '@/functions/styling'
 
 interface ContainerProps {
 	children: ReactNode

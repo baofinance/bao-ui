@@ -1,6 +1,8 @@
-import PageHeader from '@/components/PageHeader'
 import { NextSeo } from 'next-seo'
 import React from 'react'
+
+import PageHeader from '@/components/PageHeader'
+
 import Balances from './components/Balances'
 import FarmList from './components/FarmList'
 

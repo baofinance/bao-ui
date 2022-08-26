@@ -1,3 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
+import Image from 'next/image'
+import { NextSeo } from 'next-seo'
+import React from 'react'
+import { isDesktop } from 'react-device-detect'
+
 import { ActiveSupportedNFT } from '@/bao/lib/types'
 import { mintNFT } from '@/bao/utils'
 import Button from '@/components/Button/Button'
@@ -6,11 +12,6 @@ import PageHeader from '@/components/PageHeader'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useClaimedCheck } from '@/hooks/nft/useClaimedCheck'
 import useNFTs from '@/hooks/nft/useNFTs'
-import { useWeb3React } from '@web3-react/core'
-import { NextSeo } from 'next-seo'
-import Image from 'next/image'
-import React from 'react'
-import { isDesktop } from 'react-device-detect'
 
 const NFT: React.FC = () => {
 	const nfts = useNFTs()

@@ -1,5 +1,6 @@
-import { classNames } from '@/functions/styling'
 import React, { AllHTMLAttributes, FC, forwardRef, ReactHTML } from 'react'
+
+import { classNames } from '@/functions/styling'
 
 type SpacerVariant = 'sm' | 'md' | 'lg'
 

@@ -1,10 +1,12 @@
-import Container from '@/components/Container'
-import Logo from '@/components/Logo'
 import { Popover } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { FC, ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
+
+import Container from '@/components/Container'
+import Logo from '@/components/Logo'
+
 import AccountButton from '../AccountButton'
 import Nav from '../Nav'
 

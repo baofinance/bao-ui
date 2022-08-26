@@ -1,11 +1,13 @@
+import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
+
+import Multicall from '@/utils/multicall'
+
 import useBao from '../base/useBao'
-import { useWeb3React } from '@web3-react/core'
 import { useAccountLiquidity } from './useAccountLiquidity'
 import { useAccountMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import Multicall from '@/utils/multicall'
 
 const useHealthFactor = () => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()

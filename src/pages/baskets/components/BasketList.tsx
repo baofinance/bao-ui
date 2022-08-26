@@ -1,3 +1,8 @@
+import Image from 'next/future/image'
+import Link from 'next/link'
+import React from 'react'
+import { isDesktop } from 'react-device-detect'
+
 import Badge from '@/components/Badge'
 import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
@@ -6,10 +11,7 @@ import Typography from '@/components/Typography'
 import useComposition from '@/hooks/baskets/useComposition'
 import useBasketRates from '@/hooks/baskets/useNestRate'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import Link from 'next/link'
-import React from 'react'
-import { isDesktop } from 'react-device-detect'
-import Image from 'next/future/image'
+
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {

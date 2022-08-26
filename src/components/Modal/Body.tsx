@@ -1,4 +1,5 @@
 import React, { FC, ReactNode } from 'react'
+
 import { classNames } from '@/functions/styling'
 
 export interface ModalBodyProps {

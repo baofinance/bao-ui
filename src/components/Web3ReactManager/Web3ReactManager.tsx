@@ -1,7 +1,8 @@
-import { getNetworkConnector } from '@/bao/lib/connectors'
-import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect } from 'react'
+
+import { getNetworkConnector } from '@/bao/lib/connectors'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 
 const network = getNetworkConnector()
 

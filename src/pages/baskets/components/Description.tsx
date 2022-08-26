@@ -1,9 +1,8 @@
-import Config from '@/bao/lib/config'
-import Spacer from '@/components/Spacer'
-import Typography from '@/components/Typography'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-import styled from 'styled-components'
+
+import Config from '@/bao/lib/config'
+import Typography from '@/components/Typography'
 
 interface DescriptionProps {
 	basketAddress: string
@@ -36,7 +35,7 @@ const BDEFI: React.FC = () => (
 		</Typography>
 		<Typography variant='p' className='my-4'>
 			To generate revenue a defi project needs value deposited into their contracts. This makes Total Value Locked (TVL) a key metric for
-			evaluating a project's ability to generate revenue. Projects with a high TVL are also likely to gain more traction in the market
+			evaluating a project’s ability to generate revenue. Projects with a high TVL are also likely to gain more traction in the market
 			through the network effects the existing capital provides - capital attracts more capital. A good example of this is with Yearn
 			Finance. Yearn was able to generate massive amounts of revenue as a result of the large amount of capital they attracted. This gave
 			them the resources to further develop and innovate their products in a positive feedback loop. Yearn’s success has led to many
@@ -49,7 +48,7 @@ const BDEFI: React.FC = () => (
 			weighting than market cap weighted baskets.
 		</Typography>
 		<Typography variant='p' className='my-4'>
-			The Bao DeFi Basket will provide the crypto industry's first automated value investing, decentralized, tokenized portfolios. When you
+			The Bao DeFi Basket will provide the crypto industry’s first automated value investing, decentralized, tokenized portfolios. When you
 			add the prospect of the underlying tokens being put to work to earn yield.
 		</Typography>
 		<Typography variant='h3' className='my-2'>

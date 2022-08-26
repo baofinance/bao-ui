@@ -1,11 +1,12 @@
+import { useWeb3React } from '@web3-react/core'
+import { useCallback, useEffect, useState } from 'react'
+import { Contract } from 'web3-eth-contract'
+
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { useCallback, useEffect, useState } from 'react'
 import { decimate } from '@/utils/numberFormat'
-import { Contract } from 'web3-eth-contract'
-import { useWeb3React } from '@web3-react/core'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60

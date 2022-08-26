@@ -30,6 +30,7 @@
     "@web3-react/walletlink-connector": "^6.2.13",
     "bignumber.js": "^9.0.1",
     "d3-array": "^3.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "ether-swr": "^2.0.1",
     "ethereum-multicall": "^2.7.1",
     "ethers": "^5.6.8",
@@ -59,8 +60,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "npx eslint .",
-    "lint-fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "npx next lint --fix"
   },
   "eslintConfig": {
     "extends": "next"

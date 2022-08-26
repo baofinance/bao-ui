@@ -1,8 +1,9 @@
-import { classNames } from '@/functions/styling'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Tooltip } from '@material-tailwind/react'
 import React from 'react'
+
+import { classNames } from '@/functions/styling'
 
 interface TooltippedProps {
 	content: any

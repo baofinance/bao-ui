@@ -1,3 +1,6 @@
+import Image from 'next/future/image'
+import React, { useCallback, useMemo, useState } from 'react'
+
 import { NavButtons } from '@/components/Button'
 import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
@@ -10,8 +13,7 @@ import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { getContract } from '@/utils/erc20'
-import Image from 'next/future/image'
-import React, { useCallback, useMemo, useState } from 'react'
+
 import { Rewards, Stake, Unstake } from './Actions'
 import { FarmWithStakedValue } from './FarmList'
 

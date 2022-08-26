@@ -1,5 +1,6 @@
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
+
 import Typography from '../Typography'
 
 type ListHeaderProps = {

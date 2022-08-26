@@ -1,7 +1,8 @@
-import Typography from '@/components/Typography'
 import { faArrowLeft, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { FC, ReactNode } from 'react'
+
+import Typography from '@/components/Typography'
 
 export interface ModalHeaderProps {
 	children?: ReactNode

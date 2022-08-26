@@ -1,6 +1,8 @@
-import { getMasterChefContract, harvest } from '@/bao/utils'
-import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { useCallback } from 'react'
+
+import { getMasterChefContract, harvest } from '@/bao/utils'
+
 import useBao from '../base/useBao'
 
 const useReward = (pid: number) => {

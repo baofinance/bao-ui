@@ -1,3 +1,8 @@
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import React, { useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
+
 import { getBaoSupply } from '@/bao/utils'
 import Loader from '@/components/Loader'
 import { StatCards } from '@/components/Stats'
@@ -6,10 +11,6 @@ import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useAllEarnings from '@/hooks/farms/useAllEarnings'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
 import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import React, { useEffect, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()

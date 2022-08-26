@@ -1,7 +1,8 @@
-import useBao from '@/hooks/base/useBao'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
+
+import useBao from '@/hooks/base/useBao'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 
 export const useClaimedCheck = (nftAddress: string) => {
 	const [isClaimed, setIsClaimed] = useState<any | undefined>()

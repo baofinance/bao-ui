@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
-import Config from '@/bao/lib/config'
-import { classNames } from '@/functions/styling'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactNode, useMemo } from 'react'
-import { isDesktop } from 'react-device-detect'
+
+import Config from '@/bao/lib/config'
+import { classNames } from '@/functions/styling'
+
 import Loader from '../Loader'
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
