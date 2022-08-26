@@ -33,10 +33,10 @@ const Basket: React.FC = () => {
 	return basket ? (
 		<>
 			<NextSeo title={`${basketId} Basket`} description={`Mint or Redeem ${basketId}`} />
-			<div className='top-4 right-4 float-right mt-4 text-2xl text-text-100 hover:cursor-pointer'>
+			<div className='top-4 right-4 float-right mt-4 text-2xl hover:cursor-pointer'>
 				<Tooltipped content='View Contract on Etherscan' placement='bottom'>
 					<a
-						className='float-right mt-2 mr-3 align-middle text-xl text-text-100 hover:cursor-pointer'
+						className='float-right mt-2 mr-3 align-middle text-xl hover:cursor-pointer'
 						href={`https://etherscan.io/address/${basket.basketAddresses[1]}`}
 						target='_blank'
 						rel='noreferrer'

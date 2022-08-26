@@ -1,5 +1,4 @@
 import fetcher from '@/bao/lib/fetcher'
-import Container from '@/components/Container'
 import Header from '@/components/Header'
 import Page from '@/components/Page'
 import Web3ReactManager from '@/components/Web3ReactManager'
@@ -9,15 +8,13 @@ import FarmsProvider from '@/contexts/Farms'
 import MarketsProvider from '@/contexts/Markets'
 import TransactionProvider from '@/contexts/Transactions'
 import '@/styles/globals.css'
-import theme from '@/theme/index'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { Web3ReactProvider } from '@web3-react/core'
 import { DefaultSeo } from 'next-seo'
 import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
-import { ThemeProvider } from 'styled-components'
+import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
 import Web3 from 'web3'
 import { provider } from 'web3-core'
@@ -29,29 +26,6 @@ function getLibrary(provider: provider) {
 const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
 
 function App({ Component, pageProps }: AppProps) {
-	const [mobileMenu, setMobileMenu] = useState(false)
-	const [isDarkMode, setIsDarkMode] = useState(false)
-
-	const handleDismissMobileMenu = useCallback(() => {
-		setMobileMenu(false)
-	}, [setMobileMenu])
-
-	const handlePresentMobileMenu = useCallback(() => {
-		setMobileMenu(true)
-	}, [setMobileMenu])
-
-	const toggleTheme = useCallback(() => {
-		localStorage.setItem('darkMode', isDarkMode ? 'false' : 'true')
-		setIsDarkMode(!isDarkMode)
-	}, [isDarkMode])
-
-	// Remember darkmode prefs
-	useEffect(() => {
-		if (localStorage.getItem('darkMode') === null) localStorage.setItem('darkMode', 'false')
-		const isDarkMode = localStorage.getItem('darkMode') === 'true'
-		setIsDarkMode(isDarkMode)
-	}, [])
-
 	return (
 		<>
 			<Head>
@@ -87,51 +61,48 @@ function App({ Component, pageProps }: AppProps) {
 				/>
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />{' '}
 			</Head>
-			<Providers isDarkMode={isDarkMode}>
+			<Providers>
 				<DefaultSeo {...SEO} />
-				<Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
+				<Header />
 				<main>
-						<Page>
-							<Component {...pageProps} />
-						</Page>
+					<Page>
+						<Component {...pageProps} />
+					</Page>
 				</main>
 			</Providers>
 		</>
 	)
 }
 
-const Providers: React.FC<ProvidersProps> = ({ children, isDarkMode }: ProvidersProps) => {
+const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 	return (
-		<ThemeProvider theme={theme(isDarkMode)}>
-			<Web3ReactProvider getLibrary={getLibrary}>
-				<Web3ReactNetworkProvider getLibrary={getLibrary}>
-					<Web3ReactManager>
-						<BaoProvider>
-							<MarketsProvider>
-								<FarmsProvider>
-									<TransactionProvider>
-										<SWRConfig
-											value={{
-												fetcher,
-												refreshInterval: 300000,
-											}}
-										>
-											{children}
-										</SWRConfig>
-									</TransactionProvider>
-								</FarmsProvider>
-							</MarketsProvider>
-						</BaoProvider>
-					</Web3ReactManager>
-				</Web3ReactNetworkProvider>
-			</Web3ReactProvider>
-		</ThemeProvider>
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<Web3ReactNetworkProvider getLibrary={getLibrary}>
+				<Web3ReactManager>
+					<BaoProvider>
+						<MarketsProvider>
+							<FarmsProvider>
+								<TransactionProvider>
+									<SWRConfig
+										value={{
+											fetcher,
+											refreshInterval: 300000,
+										}}
+									>
+										{children}
+									</SWRConfig>
+								</TransactionProvider>
+							</FarmsProvider>
+						</MarketsProvider>
+					</BaoProvider>
+				</Web3ReactManager>
+			</Web3ReactNetworkProvider>
+		</Web3ReactProvider>
 	)
 }
 
 type ProvidersProps = {
 	children: ReactNode
-	isDarkMode: boolean
 }
 
 export default App

@@ -45,13 +45,7 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 	)
 }
 
-interface HeaderProps {
-	isDarkMode: boolean
-	toggleTheme: () => void
-	onPresentMobileMenu: () => void
-}
-
-const Header: FC<HeaderProps> = ({ onPresentMobileMenu, isDarkMode, toggleTheme }) => {
+const Header: FC = () => {
 	return (
 		<header className='bg-background-100 border-b border-b-primary-300 fixed w-full top-0 z-50'>
 			<nav>

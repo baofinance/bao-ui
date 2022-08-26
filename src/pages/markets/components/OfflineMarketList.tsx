@@ -51,7 +51,7 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 	return (
 		<>
 			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className='rounded-lg bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+				<AccordionHeader className='rounded-lg bg-primary-100 p-3 hover:bg-primary-200'>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
@@ -83,7 +83,7 @@ const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketL
 	return (
 		<>
 			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className='rounded-lg bg-primary-100 p-3 text-text-100 hover:bg-primary-200'>
+				<AccordionHeader className='rounded-lg bg-primary-100 p-3 hover:bg-primary-200'>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image

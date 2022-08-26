@@ -255,7 +255,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								<FontAwesomeIcon
 									icon={faQuestionCircle}
 									onClick={() => setShowFeeModal(true)}
-									className='text-text-200 hover:cursor-pointer hover:text-text-100 hover:duration-200'
+									className='text-text-200 hover:cursor-pointer hover:hover:duration-200'
 								/>
 							</Typography>
 						</div>

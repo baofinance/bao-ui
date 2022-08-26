@@ -145,7 +145,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		<>
 			<Accordion open={isOpen || showSupplyModal} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
 				<AccordionHeader
-					className={`rounded-lg border-0 bg-primary-100 p-3 text-text-100 hover:bg-primary-200 ${
+					className={`rounded-lg border-0 bg-primary-100 p-3 hover:bg-primary-200 ${
 						isOpen && 'rounded-b-none bg-primary-200'
 					}`}
 				>
@@ -301,7 +301,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 		<>
 			<Accordion open={isOpen || showBorrowModal} onClick={() => handleOpen()} className='my-2 rounded-lg border border-primary-300'>
 				<AccordionHeader
-					className={`rounded-lg border-0 bg-primary-100 p-3 text-text-100 hover:bg-primary-200 ${
+					className={`rounded-lg border-0 bg-primary-100 p-3 hover:bg-primary-200 ${
 						isOpen && 'rounded-b-none bg-primary-200'
 					}`}
 				>

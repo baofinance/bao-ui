@@ -136,10 +136,10 @@ const BallastSwapper: React.FC = () => {
 					{swapDirection ? baoUSDInput : daiInput}
 					<div className='mt-4 block select-none text-center'>
 						<span
-							className='mb-2 rounded-full border-none bg-primary-300 p-2 text-lg text-text-100 hover:cursor-pointer hover:bg-primary-400'
+							className='mb-2 rounded-full border-none bg-primary-300 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
 							onClick={() => setSwapDirection(!swapDirection)}
 						>
-							<FontAwesomeIcon icon={faSync} className='m-auto' />
+							<FontAwesomeIcon icon={faSync} size='sm' className='m-auto' />
 							{/* {' - '}
     Fee: {fees ? `${fees[swapDirection ? 'sell' : 'buy'].div(fees['denominator']).times(100).toString()}%` : <Loader />} */}
 						</span>

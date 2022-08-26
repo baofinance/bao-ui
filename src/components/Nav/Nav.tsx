@@ -38,7 +38,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 				<Link
 					href={href}
 					key={name}
-					className='relative -my-2 -mx-3 rounded-lg px-3 py-2 text-sm font-medium text-text-100 transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -my-2 -mx-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(index as any)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
@@ -65,7 +65,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 					key={name}
 					target='_blank'
 					rel='noreferrer'
-					className='relative -my-2 -mx-3 rounded-lg px-3 py-2 text-sm font-medium text-text-100 transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -my-2 -mx-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(index as any)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
