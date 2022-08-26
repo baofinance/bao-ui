@@ -1,7 +1,3 @@
-import BigNumber from 'bignumber.js'
-import Image from 'next/image'
-import React, { useCallback, useState } from 'react'
-
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { NavButtons } from '@/components/Button'
 import Input from '@/components/Input'
@@ -13,9 +9,11 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarketPrices } from '@/hooks/markets/usePrices'
 import { decimate, exponentiate } from '@/utils/numberFormat'
-
-import { MarketButton } from '../MarketButton'
-import { MarketStats } from '../Stats'
+import BigNumber from 'bignumber.js'
+import Image from 'next/image'
+import React, { useCallback, useState } from 'react'
+import MarketButton from '../MarketButton'
+import MarketStats from '../Stats'
 
 export enum MarketOperations {
 	supply = 'Supply',

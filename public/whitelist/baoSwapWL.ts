@@ -1,4 +1,4 @@
-const baoSwapWL = [
+export const baoSwapWL = [
 	'0x000000000007232d9e1d5ae25a80a0d707e94a4b',
 	'0x0000000000aed3f1f8567c76a9af9ae91e070254',
 	'0x00000b20f0f6a3a212aa6b85106709cd5941457c',

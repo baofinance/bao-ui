@@ -1,13 +1,3 @@
-import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
-import Image from 'next/image'
-import Link from 'next/link'
-import { default as React, useCallback, useMemo, useState } from 'react'
-import { Contract } from 'web3-eth-contract'
-
 import Config from '@/bao/lib/config'
 import { approvev2, getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
@@ -19,13 +9,23 @@ import { PoolType } from '@/contexts/Farms/types'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useEarnings from '@/hooks/farms/useEarnings'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
+import { getContract } from '@/utils/erc20'
 import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-
+import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import { ethers } from 'ethers'
+import Image from 'next/image'
+import Link from 'next/link'
+import { default as React, useCallback, useMemo, useState } from 'react'
+import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 
@@ -381,3 +381,63 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 		</>
 	)
 }
+
+interface ActionProps {
+	lpContract: Contract
+	lpTokenAddress: string
+	pid: number
+	max: BigNumber
+	tokenName?: string
+	poolType: PoolType
+	ref?: string
+	pairUrl: string
+	onHide: () => void
+	farm: FarmWithStakedValue
+}
+
+const Actions: React.FC<ActionProps> = ({ farm, onHide }) => {
+	const operations = ['Stake', 'Unstake', 'Rewards']
+	const [operation, setOperation] = useState(operations[0])
+	const { pid } = farm
+	const bao = useBao()
+
+	const lpTokenAddress = farm.lpTokenAddress
+
+	const lpContract = useMemo(() => {
+		return getContract(bao, lpTokenAddress)
+	}, [bao, lpTokenAddress])
+
+	const tokenBalance = useTokenBalance(lpContract.options.address)
+	const stakedBalance = useStakedBalance(pid)
+
+	return (
+		<div>
+			{operation === 'Stake' && (
+				<Stake
+					lpContract={lpContract}
+					lpTokenAddress={lpTokenAddress}
+					pid={farm.pid}
+					tokenName={farm.lpToken.toUpperCase()}
+					poolType={farm.poolType}
+					max={tokenBalance}
+					pairUrl={farm.pairUrl}
+					onHide={onHide}
+				/>
+			)}
+			{operation === 'Unstake' && (
+				<Unstake
+					farm={farm}
+					pid={farm.pid}
+					tokenName={farm.lpToken.toUpperCase()}
+					max={stakedBalance}
+					pairUrl={farm.pairUrl}
+					lpTokenAddress={farm.lpTokenAddress}
+					onHide={onHide}
+				/>
+			)}
+			{operation === 'Rewards' && <Rewards pid={farm.pid} />}
+		</div>
+	)
+}
+
+export default Actions

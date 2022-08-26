@@ -18,7 +18,7 @@ import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 
-import { FarmModal } from './Modals'
+import FarmModal from './Modals'
 
 const FarmList: React.FC = () => {
 	const bao = useBao()

@@ -1,6 +1,3 @@
-import Image from 'next/future/image'
-import React, { useCallback, useMemo, useState } from 'react'
-
 import { NavButtons } from '@/components/Button'
 import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
@@ -13,8 +10,9 @@ import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { getContract } from '@/utils/erc20'
-
-import { Rewards, Stake, Unstake } from './Actions'
+import Image from 'next/future/image'
+import React, { useCallback, useMemo, useState } from 'react'
+import Actions from './Actions'
 import { FarmWithStakedValue } from './FarmList'
 
 type FarmModalProps = {
@@ -23,7 +21,7 @@ type FarmModalProps = {
 	onHide: () => void
 }
 
-export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
+const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 	const { pid } = farm
@@ -53,13 +51,25 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 						</Typography>
 						{operation !== 'Rewards' ? (
 							<>
-								<Image className='z-10 inline-block select-none duration-200' src={farm.iconA} width={32} height={32} />
+								<Image className='z-10 inline-block select-none duration-200' src={farm.iconA} width={32} height={32} alt={farm.name} />
 								{farm.iconB !== null && (
-									<Image className='z-20 -ml-2 inline-block select-none duration-200' width={32} height={32} src={farm.iconB} />
+									<Image
+										className='z-20 -ml-2 inline-block select-none duration-200'
+										width={32}
+										height={32}
+										src={farm.iconB}
+										alt={farm.name}
+									/>
 								)}
 							</>
 						) : (
-							<Image className='z-10 inline-block select-none duration-200' src='/images/tokens/BAO.png' width={32} height={32} />
+							<Image
+								className='z-10 inline-block select-none duration-200'
+								src='/images/tokens/BAO.png'
+								width={32}
+								height={32}
+								alt={farm.name}
+							/>
 						)}
 					</>
 				}
@@ -67,33 +77,22 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 			<Modal.Options>
 				<NavButtons options={operations} active={operation} onClick={setOperation} />
 			</Modal.Options>
-			{operation === 'Stake' && (
-				<Stake
-					lpContract={lpContract}
-					lpTokenAddress={lpTokenAddress}
-					pid={farm.pid}
-					tokenName={farm.lpToken.toUpperCase()}
-					poolType={farm.poolType}
-					max={tokenBalance}
-					pairUrl={farm.pairUrl}
-					onHide={onHide}
-				/>
-			)}
-			{operation === 'Unstake' && (
-				<Unstake
-					farm={farm}
-					pid={farm.pid}
-					tokenName={farm.lpToken.toUpperCase()}
-					max={stakedBalance}
-					pairUrl={farm.pairUrl}
-					lpTokenAddress={farm.lpTokenAddress}
-					onHide={onHide}
-				/>
-			)}
-			{operation === 'Rewards' && <Rewards pid={farm.pid} />}
+			<Actions
+				farm={farm}
+				pid={farm.pid}
+				tokenName={farm.lpToken.toUpperCase()}
+				max={stakedBalance}
+				pairUrl={farm.pairUrl}
+				lpTokenAddress={farm.lpTokenAddress}
+				onHide={onHide}
+				lpContract={lpContract}
+				poolType={farm.poolType}
+			/>
 		</Modal>
 	)
 }
+
+export default FarmModal
 
 interface FeeModalProps {
 	pid: number

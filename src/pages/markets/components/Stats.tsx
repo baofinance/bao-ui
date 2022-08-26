@@ -1,13 +1,11 @@
-import BigNumber from 'bignumber.js'
-import React, { useMemo } from 'react'
-
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { StatBlock } from '@/components/Stats'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-
+import BigNumber from 'bignumber.js'
+import React, { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
 type MarketStatBlockProps = {
@@ -215,7 +213,7 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	)
 }
 
-export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
+const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 	const parsedAmount = amount && !isNaN(amount as unknown as number) ? parseFloat(amount) : 0
 	switch (operation) {
 		case MarketOperations.supply:
@@ -248,3 +246,5 @@ export const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 			)
 	}
 }
+
+export default MarketStats
