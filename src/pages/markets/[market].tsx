@@ -52,7 +52,6 @@ export async function getStaticProps({ params }: { params: any }) {
 const Market: NextPage<{
 	_marketId: string
 }> = ({ _marketId }) => {
-	const router = useRouter()
 	const marketId = _marketId
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()

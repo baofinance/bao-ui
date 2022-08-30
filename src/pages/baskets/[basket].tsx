@@ -43,7 +43,6 @@ export async function getStaticProps({ params }: { params: any }) {
 const Basket: NextPage<{
 	_basketId: string
 }> = ({ _basketId }) => {
-	const router = useRouter()
 	const basketId = _basketId
 	const baskets = useBaskets()
 
