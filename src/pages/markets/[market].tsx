@@ -105,7 +105,7 @@ const Market: NextPage<{
 			<NextSeo title={`${marketId} Market`} description={`Supply or withdraw ${activeMarket.underlyingSymbol} collateral.`} />
 			<div className='mt-6 flex items-center'>
 				<Typography variant='lg' className='float-left items-center'>
-					<Link href='/markets'>
+					<Link href='/'>
 						<a>
 							<FontAwesomeIcon className='mr-1' icon={faArrowLeft} size='sm' />
 							<Typography variant='lg' className='inline-block'>
