@@ -20,10 +20,31 @@ import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
 import Composition from './components/Composition'
 import Description from './components/Description'
+import { NextPage } from 'next'
 
-const Basket: React.FC = () => {
+export async function getStaticPaths() {
+	return {
+		paths: [{ params: { basket: 'bSTBL' } }],
+		fallback: false, // can also be true or 'blocking'
+	}
+}
+
+// `getStaticPaths` requires using `getStaticProps`
+export async function getStaticProps({ params }: { params: any }) {
+	const { basket } = params
+
+	return {
+		props: {
+			_basketId: basket,
+		},
+	}
+}
+
+const Basket: NextPage<{
+	_basketId: string
+}> = ({ _basketId }) => {
 	const router = useRouter()
-	const basketId = router.query.basket
+	const basketId = _basketId
 	const baskets = useBaskets()
 
 	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [baskets])

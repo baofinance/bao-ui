@@ -28,7 +28,12 @@ import { MarketDetails } from './components/Stats'
 
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { market: 'bSTBL' } }],
+		paths: [
+			{ params: { market: 'ETH' } },
+			{ params: { market: 'USDC' } },
+			{ params: { market: 'bSTBL' } },
+			{ params: { market: 'baoUSD' } },
+		],
 		fallback: false, // can also be true or 'blocking'
 	}
 }
