@@ -1,10 +1,3 @@
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
-import { faAngleDoubleRight, faFileContract } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useRouter } from 'next/router'
-import { NextSeo } from 'next-seo'
-import React, { useMemo } from 'react'
-
 import Badge from '@/components/Badge'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
@@ -14,13 +7,17 @@ import useComposition from '@/hooks/baskets/useComposition'
 import useBasketRates from '@/hooks/baskets/useNestRate'
 import usePairPrice from '@/hooks/baskets/usePairPrice'
 import { getDisplayBalance } from '@/utils/numberFormat'
-
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faAngleDoubleRight, faFileContract } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NextPage } from 'next'
+import { NextSeo } from 'next-seo'
+import React, { useMemo } from 'react'
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
 import Composition from './components/Composition'
 import Description from './components/Description'
-import { NextPage } from 'next'
 
 export async function getStaticPaths() {
 	return {
@@ -35,15 +32,14 @@ export async function getStaticProps({ params }: { params: any }) {
 
 	return {
 		props: {
-			_basketId: basket,
+			basketId: basket,
 		},
 	}
 }
 
 const Basket: NextPage<{
-	_basketId: string
-}> = ({ _basketId }) => {
-	const basketId = _basketId
+	basketId: string
+}> = ({ basketId }) => {
 	const baskets = useBaskets()
 
 	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [baskets])

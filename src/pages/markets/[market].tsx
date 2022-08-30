@@ -19,7 +19,6 @@ import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './components/Modals/BorrowModal'
@@ -44,15 +43,14 @@ export async function getStaticProps({ params }: { params: any }) {
 
 	return {
 		props: {
-			_marketId: market,
+			marketId: market,
 		},
 	}
 }
 
 const Market: NextPage<{
-	_marketId: string
-}> = ({ _marketId }) => {
-	const marketId = _marketId
+	marketId: string
+}> = ({ marketId }) => {
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
