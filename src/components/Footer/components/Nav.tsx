@@ -1,38 +1,100 @@
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faComments } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-
-import IconLink from '@/components/IconLink'
-
 import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {
 	return (
 		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm'}`}>
 			<Tooltipped content='Discord' placement='top'>
-				<IconLink href='https://discord.gg/BW3P62vJXT' label='Discord' icon={faDiscord} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://discord.gg/BW3P62vJXT'
+					aria-label='Discord'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faDiscord} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Twitter' placement='top'>
-				<IconLink href='https://twitter.com/BaoCommunity' label='Twitter' icon={faTwitter} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://twitter.com/BaoCommunity'
+					aria-label='Twitter'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faTwitter} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Medium' placement='top'>
-				<IconLink href='https://medium.com/baomunity' label='Medium' icon={faMedium} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://medium.com/baomunity'
+					aria-label='Medium'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faMedium} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Governance Forum' placement='top'>
-				<IconLink href='https://gov.bao.finance/' label='Governance Forum' icon={faComments} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://gov.bao.finance/'
+					aria-label='Governance Forum'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faComments} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Snapshot' placement='top'>
-				<IconLink href='https://snapshot.page/#/baovotes.eth' label='Snapshot' icon={faBolt} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://snapshot.page/#/baovotes.eth'
+					aria-label='Snapshot'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faBolt} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Documentation' placement='top'>
-				<IconLink href='https://docs.bao.finance/' label='Documentation' icon={faBook} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://docs.bao.finance/'
+					aria-label='Documentation'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faBook} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='GitHub' placement='top'>
-				<IconLink href='https://github.com/baofinance' label='GitHub' icon={faGithub} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://github.com/baofinance'
+					aria-label='GitHub'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faGithub} />
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Bug Bounty Program' placement='top'>
-				<IconLink href='https://www.immunefi.com/bounty/baofinance' label='Bug Bounty Program' icon={faBug} />
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://www.immunefi.com/bounty/baofinance'
+					aria-label='Bug Bounty Program'
+					rel='noreferrer'
+				>
+					<FontAwesomeIcon icon={faBug} />
+				</a>
 			</Tooltipped>
 		</div>
 	)

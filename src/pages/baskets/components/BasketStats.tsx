@@ -73,7 +73,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						Premium{' '}
 						<Tooltipped
 							content={`Percent difference between the price on exchange 
-							and the price to mint`}
+							and the price to mint.`}
 						/>
 					</div>
 					<Badge className='font-semibold'>

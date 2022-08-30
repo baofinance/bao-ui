@@ -54,5 +54,5 @@ input[type='number'] {
 }
 
 ::selection {
-	background: #622a2a;
+	background: rgba(256, 256, 256, 0.1);
 }
