@@ -5,7 +5,6 @@ import { FeeBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
-import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
@@ -33,7 +32,6 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 		return getContract(bao, lpTokenAddress)
 	}, [bao, lpTokenAddress])
 
-	const tokenBalance = useTokenBalance(lpContract.options.address)
 	const stakedBalance = useStakedBalance(pid)
 
 	const hideModal = useCallback(() => {

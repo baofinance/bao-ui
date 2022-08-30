@@ -75,19 +75,6 @@ export default {
 				abi: 'stabilizer.json',
 			},
 		},
-		// NFT
-		nft: {
-			1: {
-				address: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
-				abi: 'nft.json',
-			},
-		},
-		nft2: {
-			1: {
-				address: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
-				abi: 'nft.json',
-			},
-		},
 		// Baskets
 		recipe: {
 			1: {

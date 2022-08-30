@@ -51,9 +51,7 @@ const Header: FC = () => {
 			<nav>
 				<Container className='relative z-50 flex max-w-full justify-between py-4'>
 					<div className='relative z-10 flex items-center gap-8'>
-						<Link href='/' aria-label='Home'>
-							<Logo />
-						</Link>
+						<Logo />
 						{isDesktop && (
 							<div className='flex gap-8'>
 								<Nav />
@@ -99,7 +97,6 @@ const Header: FC = () => {
 															<MobileNavLink href='/ballast'>Ballast</MobileNavLink>
 															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
 															<MobileNavLink href='/farms'>Farms</MobileNavLink>
-															<MobileNavLink href='/nft'>NFT</MobileNavLink>
 															<MobileNavLink href='https://snapshot.page/#/baovotes.eth' target='_blank'>
 																Vote
 															</MobileNavLink>

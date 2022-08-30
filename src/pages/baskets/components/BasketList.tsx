@@ -33,7 +33,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 				<div className='flex w-full flex-row'>
 					<div className='flex w-full'>
 						<div className='my-auto'>
-							<Image src={`/images/tokens/${basket.symbol}.png`} className={`inline-block`} height={32} width={32} />
+							<Image src={`/images/tokens/${basket.symbol}.png`} alt={basket.symbol} className={`inline-block`} height={32} width={32} />
 							<span className='inline-block text-left align-middle'>
 								<Typography className='ml-2 font-bold'>{basket.symbol}</Typography>
 								{isDesktop && (
@@ -49,9 +49,9 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							composition.map((component: any) => {
 								return (
 									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
-										<a className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
+										<span className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
 											<Image src={component.image} alt={component.symbol} height={32} width={32} />
-										</a>
+										</span>
 									</Tooltipped>
 								)
 							})

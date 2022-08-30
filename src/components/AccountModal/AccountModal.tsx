@@ -84,7 +84,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 				<>
 					<div className='relative mt-4 flex-1 rounded-lg border border-primary-300 bg-primary-100 pb-3'>
 						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium'>
-							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-2 my-0 text-text-200' />
+							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 my-0 text-text-200' />
 						</Typography>
 
 						{Object.keys(transactions).length > 0 && (

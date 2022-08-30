@@ -3,18 +3,18 @@ module.exports = {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
 		fontFamily: {
-			poppins: ['Poppins', 'sans-serif'],
-			kaushan: ['Kaushan Script', 'sans-serif'],
+			rubik: ['Rubik', 'sans-serif'],
+			kaushan: ['Kaushan Script', 'cursive'],
 		},
 		accordion: {
 			styles: {
-			  base: {
-				header: {
-				  icon: "hidden",
+				base: {
+					header: {
+						icon: 'hidden',
+					},
 				},
-			  },
 			},
-		  },
+		},
 		extend: {
 			backgroundImage: () => ({
 				darkOverlay: "url('/images/background_overlay_dark.png'), radial-gradient(circle at center, #391818, #210e0e 50%) fixed",
@@ -41,37 +41,15 @@ module.exports = {
 					400: '#d6c9c2',
 					500: '#cebfb6',
 				},
-				accent: {
-					100: '#fde9d8',
-					200: '#fcd4b1',
-					300: '#fabe89',
-					400: '#f8a862',
-					500: '#f7933b',
-					600: '#f57d14',
-					700: '#ce6509',
-					800: '#b05607',
-					900: '#894306',
-				},
-				monochrome: {
-					100: '#e5e5e5',
-					200: '#cccccc',
-					300: '#b2b2b2',
-					400: '#999999',
-					500: '#7f7f7f',
-					600: '#666666',
-					700: '#4c4c4c',
-					800: '#323232',
-					900: '#191919',
-				},
 				text: {
 					100: '#fff8ee', //primary
 					200: '#aa9585', //secondary
-					300: '#CC9902', //hover link
-					400: '#FFD84B', //active link
+					300: '#CC9902', //active link
+					400: '#FFD84B', //hover link
 				},
 				background: {
-					100: '#210e0e', //dark mode
-					200: '#fff8ee', //dark mode
+					100: '#210e0e', //dark
+					200: '#fff8ee', //light
 				},
 				transparent: {
 					100: 'rgba(0, 0, 0, 0.1)', //dark

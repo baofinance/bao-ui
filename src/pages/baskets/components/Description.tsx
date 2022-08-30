@@ -120,7 +120,7 @@ const BSTBL: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Fees
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc'>
+		<ul className='ml-8 mb-4 list-disc font-light'>
 			<li>Entry Fee: 0%</li>
 			<li>Streaming Fee: 0%</li>
 			<li>Redemption Fee: 0%</li>
@@ -152,7 +152,7 @@ const BSTBL: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Characteristics
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc'>
+		<ul className='ml-8 mb-4 list-disc font-light'>
 			<li>Be a stable token project available on the Ethereum blockchain.</li>
 			<li>Be in liquid markets and being used in different lending protocols.</li>
 			<li>The protocol must be running for 6 months before qulaifying to be included in the basket.</li>

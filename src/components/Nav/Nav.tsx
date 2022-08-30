@@ -23,13 +23,12 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 		['1', 'Ballast', '/ballast'],
 		['2', 'Baskets', '/baskets'],
 		['3', 'Farms', '/farms'],
-		['4', 'NFT', '/nft'],
 	]
 
 	const externalLinks = [
-		['5', 'Vote', 'https://snapshot.page/#/baovotes.eth'],
-		['6', 'Forum', 'https://gov.bao.finance'],
-		['7', 'Docs', 'https://docs.bao.finance'],
+		['4', 'Vote', 'https://snapshot.page/#/baovotes.eth'],
+		['5', 'Forum', 'https://gov.bao.finance'],
+		['6', 'Docs', 'https://docs.bao.finance'],
 	]
 
 	return (

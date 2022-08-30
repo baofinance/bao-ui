@@ -70,18 +70,6 @@ export interface SupportedMarket {
 	price?: number
 }
 
-export interface SupportedNFT {
-	nid: number
-	address: {
-		[network: number]: string
-	}
-	name: string
-	image: string
-	whitelist: string[]
-	opensea: string
-	description: string
-}
-
 export interface FarmableSupportedPool extends SupportedPool {
 	lpAddress: string
 	tokenAddress: string
@@ -100,11 +88,6 @@ export interface ActiveSupportedMarket extends SupportedMarket {
 	marketContract: Contract
 	underlyingAddress: string
 	underlyingContract: Contract
-}
-
-export interface ActiveSupportedNFT extends SupportedNFT {
-	nftAddress: string
-	nftContract: Contract
 }
 
 export interface RpcConfig {
@@ -148,7 +131,6 @@ export interface Config {
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
 	markets: SupportedMarket[]
-	nfts: SupportedNFT[]
 }
 
 export type SWR = {

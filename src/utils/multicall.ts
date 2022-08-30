@@ -40,4 +40,5 @@ const parseCallResults = (call: ContractCallResults): any => {
 	return result
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default { createCallContext, parseCallResults }
