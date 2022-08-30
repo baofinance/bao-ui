@@ -16,9 +16,6 @@ const nextConfig = {
 	reactStrictMode: true,
 	swcMinify: false,
 	productionBrowserSourceMaps: false,
-	compiler: {
-		styledComponents: true,
-	},
 	experimental: {
 		newNextLinkBehavior: true,
 		scrollRestoration: true,
