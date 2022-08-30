@@ -7,7 +7,7 @@ import _ from 'lodash'
 import { MerkleTree } from 'merkletreejs'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, ActiveSupportedNFT, FarmableSupportedPool } from './lib/types'
+import { ActiveSupportedBasket, ActiveSupportedMarket, ActiveSupportedNFT, FarmableSupportedPool } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -52,6 +52,10 @@ export const getRecipeContract = (bao: Bao) => {
 
 export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
 	return bao && bao.contracts.baskets
+}
+
+export const getMarkets = (bao: Bao): ActiveSupportedMarket[] => {
+	return bao && bao.contracts.markets
 }
 
 export const getFarms = (bao: Bao): FarmableSupportedPool[] => {

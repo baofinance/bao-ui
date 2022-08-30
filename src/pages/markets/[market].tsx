@@ -1,12 +1,3 @@
-import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark, faLevelDownAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Image from 'next/future/image'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { NextSeo } from 'next-seo'
-import React, { useEffect, useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
-
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
@@ -22,15 +13,42 @@ import { useMarkets } from '@/hooks/markets/useMarkets'
 import GraphUtil from '@/utils/graph'
 import { formatAddress } from '@/utils/index'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-
+import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark, faLevelDownAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NextPage } from 'next'
+import { NextSeo } from 'next-seo'
+import Image from 'next/future/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect, useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
+import MarketBorrowModal from './components/Modals/BorrowModal'
+import MarketSupplyModal from './components/Modals/SupplyModal'
 import { MarketDetails } from './components/Stats'
 
-const MarketSupplyModal = React.lazy(() => import('./components/Modals/SupplyModal'))
-const MarketBorrowModal = React.lazy(() => import('./components/Modals/BorrowModal'))
+export async function getStaticPaths() {
+	return {
+		paths: [{ params: { market: 'bSTBL' } }],
+		fallback: false, // can also be true or 'blocking'
+	}
+}
 
-const Market: React.FC = () => {
+// `getStaticPaths` requires using `getStaticProps`
+export async function getStaticProps({ params }: { params: any }) {
+	const { market } = params
+
+	return {
+		props: {
+			_marketId: market,
+		},
+	}
+}
+
+const Market: NextPage<{
+	_marketId: string
+}> = ({ _marketId }) => {
 	const router = useRouter()
-	const marketId = router.query.market
+	const marketId = _marketId
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
