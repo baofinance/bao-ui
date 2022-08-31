@@ -44,12 +44,12 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 		<Modal isOpen={show} onDismiss={onHide}>
 			<Modal.Header header={'My Account'} onClose={onHide} />
 			<Modal.Body>
-				<div className={`grid grid-flow-col grid-cols-2 gap-4 px-4 pt-4 pb-4`}>
+				<div className={`grid grid-flow-col grid-cols-2 gap-4 p-4`}>
 					<div className='flex items-center justify-center'>
 						<div
 							className={`flex ${
 								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
-							} items-center justify-center rounded-full border-0 bg-primary-300`}
+							} items-center rounded-full bg-primary-300`}
 						>
 							<Image src='/images/tokens/ETH.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
@@ -67,7 +67,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						<div
 							className={`flex ${
 								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
-							} items-center justify-center rounded-full border-0 bg-primary-300`}
+							} items-center rounded-full bg-primary-300`}
 						>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
@@ -82,9 +82,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 					</div>
 				</div>
 				<>
-					<div className='relative mt-4 flex-1 rounded-lg border border-primary-300 bg-primary-100 pb-3'>
+					<div className='mt-4 flex-1 rounded-lg border border-primary-300 bg-primary-100 pb-3'>
 						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium'>
-							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 my-0 text-text-200' />
+							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-text-200' />
 						</Typography>
 
 						{Object.keys(transactions).length > 0 && (
@@ -94,7 +94,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 									localStorage.removeItem('transactions')
 								}}
 							>
-								<FontAwesomeIcon icon={faClose} /> <span>Clear</span>
+								<FontAwesomeIcon icon={faClose} /> Clear
 							</button>
 						)}
 
@@ -103,10 +103,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 								{_.reverse(Object.keys(transactions))
 									.slice(0, 5)
 									.map(txHash => (
-										<div
-											key={txHash}
-											className='flex min-h-[2rem] w-full items-center justify-between rounded-lg rounded-t-none bg-primary-100 px-3 py-1'
-										>
+										<div key={txHash} className='flex w-full items-center justify-between bg-primary-100 px-3 py-1'>
 											{transactions[txHash].receipt ? (
 												<FontAwesomeIcon icon={faCheck} className='ml-1 text-green' />
 											) : (

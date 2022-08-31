@@ -59,15 +59,15 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 										{account.slice(account.length - 4, account.length)}{' '}
 									</>
 								)}
-								<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 text-text-200' />
+								<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 text-text-200' />
 								{getBalanceNumber(ethBalance).toFixed(4)}
 								<FontAwesomeIcon icon={faEthereum} className='mx-1' />
 								{pendingTxs > 0 && (
 									<>
-										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 my-0 -mt-1 text-text-200' />
+										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 -mt-1 text-text-200' />
 										<Loader />
 										<span className='ml-2'>{pendingTxs}</span>
-										<FontAwesomeIcon icon={faReceipt} className='mx-2 my-0 -mt-1 text-text-200' />
+										<FontAwesomeIcon icon={faReceipt} className='mx-2 -mt-1 text-text-200' />
 									</>
 								)}
 							</div>
@@ -80,13 +80,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
 						{' '}
 						<>
-							Connect{' '}
-							<FontAwesomeIcon
-								icon={faLink}
-								style={{
-									marginLeft: '4px',
-								}}
-							/>
+							Connect <FontAwesomeIcon icon={faLink} className='ml-4' />
 						</>
 					</Button>
 				) : (
