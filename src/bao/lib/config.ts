@@ -99,6 +99,9 @@ export default {
 		baoMarkets: {
 			1: 'https://api.thegraph.com/subgraphs/name/baofinance/bao-markets',
 		},
+		curve: {
+			1: 'https://api.thegraph.com/subgraphs/name/messari/curve-finance-ethereum',
+		},
 	},
 	markets: [
 		{
