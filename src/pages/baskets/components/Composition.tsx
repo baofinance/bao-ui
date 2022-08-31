@@ -127,7 +127,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 				<div className='rounded-lg border border-primary-300 bg-primary-100'>
 					<div className='flex flex-row'>
 						<div className='flex flex-col'>
-							<DonutGraph width={200} height={200} composition={composition} basket={basketId} rates={rates} info={info}/>
+							<DonutGraph width={200} height={200} composition={composition} basket={basketId} rates={rates} info={info} />
 						</div>
 						<div className='m-auto flex flex-col'>
 							<div className='flex flex-row'>
