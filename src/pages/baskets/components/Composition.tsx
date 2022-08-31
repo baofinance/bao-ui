@@ -1,12 +1,3 @@
-import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ParentSize } from '@visx/responsive'
-import { BigNumber } from 'bignumber.js'
-import _ from 'lodash'
-import Image from 'next/future/image'
-import React, { useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
-
 import Badge from '@/components/Badge'
 import Button from '@/components/Button/Button'
 import DonutGraph from '@/components/Graphs/PieGraph'
@@ -16,14 +7,25 @@ import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
+import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ParentSize } from '@visx/responsive'
+import { BigNumber } from 'bignumber.js'
+import _ from 'lodash'
+import Image from 'next/future/image'
+import React, { useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 
 type CompositionProps = {
 	composition: BasketComponent[]
+	rates: any
+	info: any
+	basketId: string
 }
 
 type DisplayType = 'TABLE' | 'PIE'
 
-const Composition: React.FC<CompositionProps> = ({ composition }) => {
+const Composition: React.FC<CompositionProps> = ({ composition, rates, info, basketId }) => {
 	const [displayType, setDisplayType] = useState<DisplayType>('TABLE')
 
 	const maxPercentage = useMemo(() => {
@@ -122,10 +124,10 @@ const Composition: React.FC<CompositionProps> = ({ composition }) => {
 					</div>
 				</>
 			) : (
-				<div className='h-[500px] rounded-lg border border-primary-300 bg-primary-100'>
-					<div className='flex h-full flex-row'>
-						<div className='flex h-full flex-col'>
-							<ParentSize>{parent => <DonutGraph width={parent.width} height={parent.height} composition={composition} />}</ParentSize>
+				<div className='rounded-lg border border-primary-300 bg-primary-100'>
+					<div className='flex flex-row'>
+						<div className='flex flex-col'>
+							<DonutGraph width={200} height={200} composition={composition} basket={basketId} rates={rates} info={info}/>
 						</div>
 						<div className='m-auto flex flex-col'>
 							<div className='flex flex-row'>

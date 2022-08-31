@@ -9,10 +9,11 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ children, className = '', color }) => {
+	console.log(color)
 	return (
 		<Chip
 			className={classNames('bg-primary-200 px-2 py-1 text-sm font-medium', className)}
-			style={{ backgroundColor: `${color} !important` }}
+			style={{ backgroundColor: `${color}` }}
 			value={children}
 		/>
 	)
