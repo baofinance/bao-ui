@@ -1,15 +1,13 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { useWeb3React } from '@web3-react/core'
-import React, { FC, useEffect, useState } from 'react'
-
 import Config from '@/bao/lib/config'
 import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
 import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 import Button from '@/components/Button'
-
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { useWeb3React } from '@web3-react/core'
+import Image from 'next/future/image'
+import React, { FC, useEffect, useState } from 'react'
 import Modal from '../Modal'
 import Typography from '../Typography'
-import Image from 'next/future/image'
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
@@ -91,7 +89,7 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 							}}
 						>
 							<div className='flex h-full items-center'>
-								<Image className='inline-block' src={`/images/wallets/${name}.png`} alt={name} />
+								<Image className='inline-block' src={`/images/wallets/${name}.png`} alt={name} width={32} height={32} />
 								<Typography className='ml-2 inline-block font-semibold'>{activating ? 'Connecting...' : `${name}`}</Typography>
 							</div>
 						</Button>

@@ -7,6 +7,7 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { Accordion, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import Image from 'next/image'
 import React, { useMemo } from 'react'
+import { isDesktop } from 'react-device-detect'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -24,16 +25,20 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets
 	return (
 		<>
 			{collateralMarkets && synthMarkets ? (
-				<div className='flex flex-row gap-12'>
+				<div className={`flex ${isDesktop ? 'flex-row gap-12' : 'mt-4 flex-col gap-4'}`}>
 					<div className='flex w-full flex-col'>
-						<Typography variant='h3'>Collateral</Typography>
+						<Typography variant='xl' className='text-center'>
+							Collateral
+						</Typography>
 						<ListHeader headers={['Asset', 'Liquidity']} />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<OfflineListItemCollateral market={market} key={market.marketAddress} />
 						))}
 					</div>
 					<div className='flex w-full flex-col'>
-						<Typography variant='h3'>Synthetics</Typography>
+						<Typography variant='xl' className='text-center'>
+							Synthetics
+						</Typography>
 						<ListHeader headers={['Asset', 'APR', 'Wallet']} />
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<OfflineListItemSynth market={market} key={market.marketAddress} />
@@ -41,7 +46,7 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets
 					</div>
 				</div>
 			) : (
-				<PageLoader />
+				<PageLoader block />
 			)}
 		</>
 	)
@@ -51,7 +56,7 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 	return (
 		<>
 			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className='rounded-lg bg-primary-100 p-3 hover:bg-primary-200'>
+				<AccordionHeader className={`cursor-default rounded-lg border-0 bg-primary-100 p-3 hover:bg-primary-200`}>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
@@ -83,7 +88,7 @@ const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketL
 	return (
 		<>
 			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className='rounded-lg bg-primary-100 p-3 hover:bg-primary-200'>
+				<AccordionHeader className={`cursor-default rounded-lg border-0 bg-primary-100 p-3 hover:bg-primary-200`}>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
