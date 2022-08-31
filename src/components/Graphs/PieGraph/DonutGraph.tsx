@@ -67,7 +67,7 @@ export default function DonutGraph({
 		<svg width={width} height={height}>
 			<Group top={centerY + margin.top} left={centerX + margin.left}>
 				<Pie
-					data={selectedAssetAmount ? assetsBalance.filter(({ label }) => label === selectedAssetAmount) : assetsBalance}
+					data={selectedAssetAmount ? assetsBalance.filter(({ symbol }) => symbol === selectedAssetAmount) : assetsBalance}
 					pieValue={frequency}
 					pieSortValues={() => -1}
 					outerRadius={radius}
