@@ -134,7 +134,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		if (!(bao && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) return
 
 		fetchComposition()
-	}, [bao, basket, prices, transactions])
+	}, [bao, basket, fetchComposition, prices, transactions])
 
 	return composition
 }

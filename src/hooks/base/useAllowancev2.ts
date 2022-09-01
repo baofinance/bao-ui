@@ -22,11 +22,11 @@ const useAllowancev2 = (tokenAddress: string, spenderAddress: string) => {
 		} catch (e) {
 			setAllowance(new BigNumber(0))
 		}
-	}, [bao, account, tokenAddress, spenderAddress, transactions])
+	}, [bao, account, tokenAddress, spenderAddress])
 
 	useEffect(() => {
 		_getAllowance()
-	}, [bao, account, tokenAddress, spenderAddress, transactions])
+	}, [bao, account, tokenAddress, spenderAddress, transactions, _getAllowance])
 
 	return allowance
 }

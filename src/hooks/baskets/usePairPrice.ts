@@ -23,7 +23,7 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 		if (!(basket && bao)) return
 
 		fetchPairPrice()
-	}, [basket, bao])
+	}, [basket, bao, fetchPairPrice])
 
 	return price
 }

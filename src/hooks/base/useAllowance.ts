@@ -24,7 +24,7 @@ const useAllowance = (lpContract: Contract) => {
 		}
 		const refreshInterval = setInterval(fetchAllowance, 10000)
 		return () => clearInterval(refreshInterval)
-	}, [account, lpContract, transactions])
+	}, [account, fetchAllowance, lpContract, transactions])
 
 	return allowance
 }
