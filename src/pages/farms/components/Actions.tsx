@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { approvev2, getMasterChefContract } from '@/bao/utils'
+import { approve, getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -41,7 +41,7 @@ interface StakeProps {
 	onHide: () => void
 }
 
-export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
+export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -69,9 +69,9 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 				.div(2)
 				.toString(),
 		)
-	}, [fullBalance, setVal])
+	}, [max])
 
-	const allowance = useAllowance(lpContract)
+	const allowance = useAllowance(lpTokenAddress, account)
 
 	const masterChefContract = getMasterChefContract(bao)
 
@@ -100,7 +100,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 								<Typography variant='sm'>
 									{fullBalance}{' '}
 									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
-										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} size='xs' />
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								</Typography>
 							</div>
@@ -117,7 +117,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 				</Modal.Body>
 			</>
 			<Modal.Actions>
-				{!allowance.toNumber() ? (
+				{allowance && !allowance.toNumber() ? (
 					<>
 						{pendingTx ? (
 							<Button fullWidth disabled={true}>
@@ -127,7 +127,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 							<Button
 								fullWidth
 								onClick={async () => {
-									handleTx(approvev2(lpContract, masterChefContract, account), `Approve ${tokenName}`)
+									handleTx(approve(lpContract, masterChefContract, account), `Approve ${tokenName}`)
 								}}
 							>
 								Approve {tokenName}
@@ -226,7 +226,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 				.div(2)
 				.toString(),
 		)
-	}, [fullBalance, setVal])
+	}, [max])
 
 	const userInfo = useUserFarmInfo(pid)
 	const blockDiff = useBlockDiff(userInfo)
@@ -257,7 +257,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								<FontAwesomeIcon
 									icon={faQuestionCircle}
 									onClick={() => setShowFeeModal(true)}
-									className='text-text-200 hover:cursor-pointer hover:hover:duration-200'
+									className='text-text-200 hover:cursor-pointer hover:text-text-400 hover:duration-200'
 								/>
 							</Typography>
 						</div>
@@ -267,9 +267,9 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							</Typography>
 							<Typography variant='sm'>
 								{getDisplayBalance(fullBalance, 0)}{' '}
-								<Link href={pairUrl} target='_blank' rel='noopener noreferrer'>
+								<Link href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
 									<a>
-										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								</Link>
 							</Typography>
@@ -393,11 +393,10 @@ interface ActionProps {
 	pairUrl: string
 	onHide: () => void
 	farm: FarmWithStakedValue
+	operation: string
 }
 
-const Actions: React.FC<ActionProps> = ({ farm, onHide }) => {
-	const operations = ['Stake', 'Unstake', 'Rewards']
-	const [operation, setOperation] = useState(operations[0])
+const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
 	const bao = useBao()
 

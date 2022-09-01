@@ -1,13 +1,10 @@
-import BigNumber from 'bignumber.js'
-import { useCallback, useEffect, useState } from 'react'
-import useSWR from 'swr'
-
 import Config from '@/bao/lib/config'
 import fetcher from '@/bao/lib/fetcher'
 import { SWR } from '@/bao/lib/types'
-import useBlock from '@/hooks/base/useBlock'
 import MultiCall from '@/utils/multicall'
-
+import BigNumber from 'bignumber.js'
+import { useCallback, useEffect, useState } from 'react'
+import useSWR from 'swr'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 
@@ -52,7 +49,6 @@ export const useMarketPrices = (): MarketPrices => {
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const [prices, setPrices] = useState<undefined | { [key: string]: number }>()
-	const block = useBlock()
 
 	const fetchPrices = useCallback(async () => {
 		const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
@@ -83,7 +79,7 @@ export const useMarketPrices = (): MarketPrices => {
 	useEffect(() => {
 		if (!bao) return
 		fetchPrices()
-	}, [transactions, bao, block])
+	}, [transactions, bao])
 
 	return {
 		prices,

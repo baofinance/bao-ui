@@ -18,15 +18,13 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["src/components/*"],
-      "@/hooks/*": ["src/hooks/*"],
       "@/bao/*": ["src/bao/*"],
+      "@/components/*": ["src/components/*"],
       "@/contexts/*": ["src/contexts/*"],
+      "@/hooks/*": ["src/hooks/*"],
       "@/pages/*": ["src/pages/*"],
       "@/styles/*": ["src/styles/*"],
       "@/utils/*": ["src/utils/*"],
-      "@/config/*": ["src/config/*"],
-      "@/functions/*": ["src/functions/*"],
     },
     "noFallthroughCasesInSwitch": true
   },

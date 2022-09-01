@@ -38,6 +38,8 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 		onHide()
 	}, [onHide])
 
+	console.log(operation)
+
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>
 			<Modal.Header
@@ -85,6 +87,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 				onHide={onHide}
 				lpContract={lpContract}
 				poolType={farm.poolType}
+				operation={operation}
 			/>
 		</Modal>
 	)

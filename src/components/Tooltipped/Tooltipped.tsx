@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Tooltip } from '@material-tailwind/react/components/Tooltip'
 import React from 'react'
 
-import { classNames } from '@/functions/styling'
+import classNames from 'classnames'
 
 interface TooltippedProps {
 	content: any

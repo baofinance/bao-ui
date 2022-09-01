@@ -1,23 +1,21 @@
-import { Switch } from '@headlessui/react'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import Image from 'next/future/image'
-import React, { useEffect, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
-
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
 import Loader, { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import { Farm, PoolType } from '@/contexts/Farms/types'
-import { classNames } from '@/functions/styling'
 import useBao from '@/hooks/base/useBao'
 import useAllFarmTVL from '@/hooks/farms/useAllFarmTVL'
 import useFarms from '@/hooks/farms/useFarms'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
-
+import { Switch } from '@headlessui/react'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
+import classNames from 'classnames'
+import Image from 'next/future/image'
+import React, { useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import FarmModal from './Modals'
 
 const FarmList: React.FC = () => {
@@ -35,8 +33,6 @@ const FarmList: React.FC = () => {
 	const tempAddress = '0x0000000000000000000000000000000000000000'
 
 	const userAddress = account ? account : tempAddress
-
-	const BLOCKS_PER_YEAR = new BigNumber(2336000)
 
 	const [archived, showArchived] = useState(false)
 
@@ -84,6 +80,7 @@ const FarmList: React.FC = () => {
 				for (let i = 0; i < farms.length; i++) {
 					const farm = farms[i]
 					const tvlInfo = farmsTVL.tvls.find((fTVL: any) => fTVL.lpAddress.toLowerCase() === farm.lpAddress.toLowerCase())
+					const BLOCKS_PER_YEAR = new BigNumber(2336000)
 					const farmWithStakedValue = {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
@@ -216,8 +213,8 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 inline-block'>
-									<Image className='z-10 inline-block select-none' src={farm.iconA} width={32} height={32} />
-									<Image className='z-20 -ml-2 inline-block select-none' src={farm.iconB} width={32} height={32} />
+									<Image className='z-10 inline-block select-none' src={farm.iconA} alt={farm.lpToken} width={32} height={32} />
+									<Image className='z-20 -ml-2 inline-block select-none' src={farm.iconB} alt={farm.lpToken} width={32} height={32} />
 								</div>
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='base' className='font-bold'>

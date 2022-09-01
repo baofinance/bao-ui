@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
 import Config from '@/bao/lib/config'
-import { classNames } from '@/functions/styling'
+import classNames from 'classnames'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactNode, useMemo } from 'react'

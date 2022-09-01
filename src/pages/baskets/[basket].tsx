@@ -4,7 +4,7 @@ import Tooltipped from '@/components/Tooltipped'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
-import useBasketRates from '@/hooks/baskets/useNestRate'
+import useBasketRates from '@/hooks/baskets/useBasketRate'
 import usePairPrice from '@/hooks/baskets/usePairPrice'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
@@ -42,7 +42,7 @@ const Basket: NextPage<{
 }> = ({ basketId }) => {
 	const baskets = useBaskets()
 
-	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [baskets])
+	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [basketId, baskets])
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 	const info = useBasketInfo(basket)

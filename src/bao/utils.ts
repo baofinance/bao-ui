@@ -153,11 +153,7 @@ export const getTotalLPWethValue = async (
 	}
 }
 
-export const approve = async (lpContract: Contract, masterChefContract: Contract, account: string): Promise<string> => {
-	return lpContract.methods.approve(masterChefContract.options.address, ethers.constants.MaxUint256).send({ from: account })
-}
-
-export const approvev2 = (token: Contract, spender: Contract, account: string) => {
+export const approve = async (token: Contract, spender: Contract, account: string): Promise<string> => {
 	return token.methods.approve(spender.options.address, ethers.constants.MaxUint256).send({ from: account })
 }
 
