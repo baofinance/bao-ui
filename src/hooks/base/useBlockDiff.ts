@@ -17,11 +17,11 @@ const useBlockDiff = (userInfo: any) => {
 
 		const blockDiff = block - new BigNumber(firstDepositBlock.gt(lastWithdrawBlock) ? firstDepositBlock : lastWithdrawBlock).toNumber()
 		setBlockDiff(blockDiff)
-	}, [account, library, userInfo, block])
+	}, [library, block, userInfo])
 
 	useEffect(() => {
 		fetchBlockDiff()
-	}, [library, block, userInfo, fetchBlockDiff])
+	}, [library, block, userInfo])
 
 	return blockDiff > 0 && blockDiff
 }

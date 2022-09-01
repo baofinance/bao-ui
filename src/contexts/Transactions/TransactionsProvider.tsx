@@ -49,7 +49,7 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 		} catch (e) {
 			console.log(e)
 		}
-	}, [bao, handleTxReceipt])
+	}, [bao, dispatch])
 
 	useEffect(() => {
 		if (initialized) {

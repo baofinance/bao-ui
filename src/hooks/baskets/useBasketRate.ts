@@ -47,13 +47,13 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 			dai: new BigNumber(res[1].values[0].hex),
 			usd: wethPrice.times(res[0].values[0].hex),
 		})
-	}, [bao, basket])
+	}, [bao, basket, transactions])
 
 	useEffect(() => {
 		if (!(bao && basket)) return
 
 		fetchRates()
-	}, [bao, basket, fetchRates, transactions])
+	}, [bao, basket, transactions])
 
 	return rates
 }

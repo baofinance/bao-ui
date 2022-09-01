@@ -41,7 +41,7 @@ const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo =
 		if (!(basket && account && bao)) return
 
 		fetchOvenInfo()
-	}, [basket, account, bao, fetchOvenInfo])
+	}, [basket, account, bao])
 
 	return info
 }

@@ -28,7 +28,7 @@ export const useMarketsTVL = () => {
 		if (!(markets && prices && bao)) return
 
 		fetchTvl()
-	}, [markets, prices, bao, fetchTvl])
+	}, [markets, prices, bao])
 
 	return tvl
 }

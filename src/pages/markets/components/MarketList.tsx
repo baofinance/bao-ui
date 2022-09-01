@@ -49,7 +49,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 		return _markets
 			.filter(market => market.isSynth)
 			.sort((a, b) => (borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
-	}, [_markets, bao, borrowBalances])
+	}, [_markets, borrowBalances])
 
 	return (
 		<>
@@ -120,14 +120,14 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		() =>
 			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
 			decimate(exchangeRates[market.marketAddress]).toNumber(),
-		[market, supplyBalances, exchangeRates],
+		[supplyBalances, exchangeRates],
 	)
 
 	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])
 
 	const isInMarket = useMemo(
 		() => accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress),
-		[market, accountMarkets],
+		[accountMarkets],
 	)
 
 	const [isChecked, setIsChecked] = useState(!!isInMarket)

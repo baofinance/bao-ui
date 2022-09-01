@@ -55,13 +55,13 @@ export const useAccountBalances = (): Balance[] => {
 					: decimate(ethBalance).toNumber(),
 			})),
 		)
-	}, [tokens, bao, account])
+	}, [transactions, bao, account])
 
 	useEffect(() => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [transactions, bao, account, block, fetchBalances])
+	}, [transactions, bao, account, block])
 
 	return balances
 }
@@ -99,13 +99,13 @@ export const useSupplyBalances = (): Balance[] => {
 				).toNumber(),
 			})),
 		)
-	}, [tokens, bao, account])
+	}, [transactions, bao, account])
 
 	useEffect(() => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [transactions, bao, account, fetchBalances])
+	}, [transactions, bao, account])
 
 	return balances
 }
@@ -143,13 +143,13 @@ export const useBorrowBalances = (): Balance[] => {
 				).toNumber(),
 			})),
 		)
-	}, [tokens, bao, account])
+	}, [transactions, bao, account])
 
 	useEffect(() => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [transactions, bao, account, fetchBalances])
+	}, [transactions, bao, account])
 
 	return balances
 }

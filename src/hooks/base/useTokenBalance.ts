@@ -21,13 +21,13 @@ const useTokenBalance = (tokenAddress: string) => {
 
 		const balance = await getBalance(bao, tokenAddress, account)
 		setBalance(new BigNumber(balance))
-	}, [account, bao, tokenAddress])
+	}, [transactions, account, bao, tokenAddress])
 
 	useEffect(() => {
 		if (account && bao && tokenAddress) {
 			fetchBalance()
 		}
-	}, [transactions, account, bao, setBalance, tokenAddress, fetchBalance])
+	}, [transactions, account, bao, setBalance, tokenAddress])
 
 	return balance
 }

@@ -46,12 +46,12 @@ export const useApprovals = (pendingTx: string | boolean): Approvals => {
 				{},
 			),
 		)
-	}, [bao, account, markets])
+	}, [transactions, bao, account, markets, pendingTx])
 
 	useEffect(() => {
 		if (!(bao && account && markets)) return
 		fetchApprovals()
-	}, [transactions, bao, account, markets, pendingTx, fetchApprovals])
+	}, [transactions, bao, account, markets, pendingTx])
 
 	return {
 		approvals,

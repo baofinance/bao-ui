@@ -1,113 +1,73 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
-import { isMobile } from 'react-device-detect'
 
 import { injected } from './connectors'
 
-export const IS_IN_IFRAME = typeof window !== 'undefined' && window.parent !== window
-
 export function useEagerConnect() {
 	const { activate, active } = useWeb3React()
+
 	const [tried, setTried] = useState(false)
 
-	// gnosisSafe.isSafeApp() races a timeout against postMessage, so it delays pageload if we are not in a safe app;
-	// if we are not embedded in an iframe, it is not worth checking
-	const [triedSafe, setTriedSafe] = useState(!IS_IN_IFRAME)
-
-	// first, try connecting to a gnosis safe
 	useEffect(() => {
-		if (!triedSafe) {
-			import('@gnosis.pm/safe-apps-web3-react')
-				.then(({ SafeAppConnector }) => new SafeAppConnector())
-				.then(gnosisSafe =>
-					gnosisSafe.isSafeApp().then(loadedInSafe => {
-						if (loadedInSafe) {
-							activate(gnosisSafe, undefined, true).catch(() => {
-								setTriedSafe(true)
-							})
-						} else {
-							setTriedSafe(true)
-						}
-					}),
-				)
-		}
-	}, [activate, setTriedSafe, triedSafe])
+		injected.isAuthorized().then((isAuthorized: boolean) => {
+			if (isAuthorized) {
+				activate(injected, undefined, true).catch(() => {
+					setTried(true)
+				})
+			} else {
+				setTried(true)
+			}
+		})
+	}, []) // intentionally only running on mount (make sure it's only mounted once :))
 
-	// then, if that fails, try connecting to an injected connector
+	// if the connection worked, wait until we get confirmation of that to flip the flag
 	useEffect(() => {
-		if (!active && triedSafe) {
-			injected.isAuthorized().then(isAuthorized => {
-				if (isAuthorized) {
-					activate(injected, undefined, true).catch(() => {
-						setTried(true)
-					})
-				} else {
-					if (isMobile && window.ethereum) {
-						activate(injected, undefined, true).catch(() => {
-							setTried(true)
-						})
-					} else {
-						setTried(true)
-					}
-				}
-			})
-		}
-	}, [activate, active, triedSafe])
-
-	// wait until we get confirmation of a connection to flip the flag
-	useEffect(() => {
-		if (active) {
+		if (!tried && active) {
 			setTried(true)
 		}
-	}, [active])
+	}, [tried, active])
 
 	return tried
 }
 
-declare global {
-	interface Window {
-		ethereum?: any
-	}
-}
-
-/**
- * Use for network and injected - logs user in
- * and out after checking what network theyre on
- */
 export function useInactiveListener(suppress = false) {
 	const { active, error, activate } = useWeb3React()
 
-	useEffect(() => {
-		const ethereum = window.ethereum as any | undefined
-
+	useEffect((): any => {
+		const { ethereum } = window as any
 		if (ethereum && ethereum.on && !active && !error && !suppress) {
-			const handleChainChanged = () => {
-				// eat errors
-				activate(injected, undefined, true).catch(error => {
-					console.error('Failed to activate after chain changed', error)
-				})
+			const handleConnect = () => {
+				console.log("Handling 'connect' event")
+				activate(injected)
 			}
-
+			const handleChainChanged = (chainId: string | number) => {
+				console.log("Handling 'chainChanged' event with payload", chainId)
+				activate(injected)
+			}
 			const handleAccountsChanged = (accounts: string[]) => {
+				console.log("Handling 'accountsChanged' event with payload", accounts)
 				if (accounts.length > 0) {
-					// eat errors
-					activate(injected, undefined, true).catch(error => {
-						console.error('Failed to activate after accounts changed', error)
-					})
+					activate(injected)
 				}
 			}
+			const handleNetworkChanged = (networkId: string | number) => {
+				console.log("Handling 'networkChanged' event with payload", networkId)
+				activate(injected)
+			}
 
+			ethereum.on('connect', handleConnect)
 			ethereum.on('chainChanged', handleChainChanged)
 			ethereum.on('accountsChanged', handleAccountsChanged)
+			ethereum.on('networkChanged', handleNetworkChanged)
 
 			return () => {
 				if (ethereum.removeListener) {
+					ethereum.removeListener('connect', handleConnect)
 					ethereum.removeListener('chainChanged', handleChainChanged)
 					ethereum.removeListener('accountsChanged', handleAccountsChanged)
+					ethereum.removeListener('networkChanged', handleNetworkChanged)
 				}
 			}
 		}
-		return undefined
 	}, [active, error, suppress, activate])
 }
-export default useInactiveListener

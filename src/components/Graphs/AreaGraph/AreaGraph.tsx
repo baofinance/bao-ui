@@ -111,7 +111,7 @@ export default withTooltip<AreaProps, TooltipData>(
 					tooltipTop: valueScale(getValue(d)),
 				})
 			},
-			[dateScale, timeSeries, showTooltip, valueScale],
+			[showTooltip, valueScale, dateScale],
 		)
 
 		return (
