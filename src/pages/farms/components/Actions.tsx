@@ -100,7 +100,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 								<Typography variant='sm'>
 									{fullBalance}{' '}
 									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
-										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} size='xs' />
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								</Typography>
 							</div>
@@ -257,7 +257,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								<FontAwesomeIcon
 									icon={faQuestionCircle}
 									onClick={() => setShowFeeModal(true)}
-									className='text-text-200 hover:cursor-pointer hover:hover:duration-200'
+									className='text-text-200 hover:cursor-pointer hover:text-text-400 hover:duration-200'
 								/>
 							</Typography>
 						</div>
@@ -267,9 +267,9 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							</Typography>
 							<Typography variant='sm'>
 								{getDisplayBalance(fullBalance, 0)}{' '}
-								<Link href={pairUrl} target='_blank' rel='noopener noreferrer'>
+								<Link href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
 									<a>
-										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} style={{ height: '.75rem' }} />
+										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								</Link>
 							</Typography>
@@ -393,11 +393,10 @@ interface ActionProps {
 	pairUrl: string
 	onHide: () => void
 	farm: FarmWithStakedValue
+	operation: string
 }
 
-const Actions: React.FC<ActionProps> = ({ farm, onHide }) => {
-	const operations = ['Stake', 'Unstake', 'Rewards']
-	const [operation, setOperation] = useState(operations[0])
+const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
 	const bao = useBao()
 

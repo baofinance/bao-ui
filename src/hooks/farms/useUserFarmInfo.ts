@@ -13,11 +13,11 @@ export const useUserFarmInfo = (pid: number) => {
 	const fetchUserInfo = useCallback(async () => {
 		const _userInfo = await getUserInfoChef(getMasterChefContract(bao), pid, account)
 		setUserInfo(_userInfo)
-	}, [bao, account])
+	}, [bao, pid, account])
 
 	useEffect(() => {
 		fetchUserInfo()
-	}, [bao, account])
+	}, [bao, account, fetchUserInfo])
 
 	return userInfo
 }

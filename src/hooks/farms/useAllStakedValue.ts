@@ -34,13 +34,13 @@ const useAllStakedValue = (): StakedValue[] => {
 		)
 
 		setBalance(balances)
-	}, [account, masterChefContract, bao])
+	}, [farms, masterChefContract, wethContract, bao])
 
 	useEffect(() => {
 		if (account && masterChefContract && bao) {
 			fetchAllStakedValue()
 		}
-	}, [account, transactions, masterChefContract, setBalance, bao])
+	}, [account, transactions, masterChefContract, setBalance, bao, fetchAllStakedValue])
 
 	return balances
 }

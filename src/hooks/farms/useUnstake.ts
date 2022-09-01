@@ -16,7 +16,7 @@ const useUnstake = (pid: number) => {
 			const txHash = await unstake(masterChefContract, pid, amount, account, getRefUrl())
 			console.log(txHash)
 		},
-		[account, pid, bao],
+		[masterChefContract, pid, account],
 	)
 
 	return { onUnstake: handleUnstake }

@@ -1,9 +1,7 @@
+import { getEarned, getFarms, getMasterChefContract } from '@/bao/utils'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-
-import { getEarned, getFarms, getMasterChefContract } from '@/bao/utils'
-
 import useBao from '../base/useBao'
 import useBlock from '../base/useBlock'
 
@@ -20,13 +18,13 @@ const useAllEarnings = () => {
 			farms.map(({ pid }: { pid: number }) => getEarned(masterChefContract, pid, account)),
 		)
 		setBalance(balances)
-	}, [account, masterChefContract, bao])
+	}, [farms, masterChefContract, account])
 
 	useEffect(() => {
 		if (account && masterChefContract && bao) {
 			fetchAllBalances()
 		}
-	}, [account, block, masterChefContract, setBalance, bao])
+	}, [account, block, masterChefContract, setBalance, bao, fetchAllBalances])
 
 	return balances
 }

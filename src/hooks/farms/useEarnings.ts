@@ -17,13 +17,13 @@ const useEarnings = (pid: number) => {
 	const fetchBalance = useCallback(async () => {
 		const balance = await getEarned(masterChefContract, pid, account)
 		setBalance(new BigNumber(balance))
-	}, [account, masterChefContract, bao])
+	}, [masterChefContract, pid, account])
 
 	useEffect(() => {
 		if (account && masterChefContract && bao) {
 			fetchBalance()
 		}
-	}, [account, block, masterChefContract, setBalance, bao])
+	}, [account, block, masterChefContract, setBalance, bao, fetchBalance])
 
 	return balance
 }
