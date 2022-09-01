@@ -21,8 +21,6 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 		setShowBasketModal(true)
 	}
 
-	console.log(swapLink)
-
 	return (
 		<>
 			<BasketModal basket={basket} operation={modalOperation} show={showBasketModal} hideModal={() => setShowBasketModal(false)} />

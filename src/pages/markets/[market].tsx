@@ -106,7 +106,7 @@ const Market: NextPage<{
 			<div className='mt-6 flex items-center'>
 				<Typography variant='lg' className='float-left items-center'>
 					<Link href='/'>
-						<a>
+						<a className='hover:text-text-400'>
 							<FontAwesomeIcon className='mr-1' icon={faArrowLeft} size='sm' />
 							<Typography variant='lg' className='inline-block'>
 								Back to Markets
@@ -217,8 +217,11 @@ const Market: NextPage<{
 							{
 								label: 'Price Oracle',
 								value: (
-									<a href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${bao.getContract('marketOracle').options.address}`}>
-										{oracleAddress} <FontAwesomeIcon icon={faExternalLinkAlt} />
+									<a
+										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${bao.getContract('marketOracle').options.address}`}
+										className='hover:text-text-400'
+									>
+										{oracleAddress} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								),
 							},

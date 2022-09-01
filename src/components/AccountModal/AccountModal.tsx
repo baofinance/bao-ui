@@ -89,12 +89,12 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 
 						{Object.keys(transactions).length > 0 && (
 							<button
-								className='float-right m-3 rounded-lg border-0 bg-primary-300 px-2 py-1 text-xs font-medium hover:bg-primary-400'
+								className='float-right m-3 rounded-lg border-0 bg-primary-300 px-2 py-1 font-medium hover:bg-primary-400'
 								onClick={() => {
 									localStorage.removeItem('transactions')
 								}}
 							>
-								<FontAwesomeIcon icon={faClose} /> Clear
+								<FontAwesomeIcon icon={faClose} className='inline' /> <Typography className='inline'>Clear</Typography>
 							</button>
 						)}
 
