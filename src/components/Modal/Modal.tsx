@@ -1,7 +1,7 @@
 import ModalActions, { ModalActionsProps } from '@/components/Modal/Actions'
 import ModalBody, { ModalBodyProps } from '@/components/Modal/Body'
 import ModalHeader, { ModalHeaderProps } from '@/components/Modal/Header'
-import { classNames } from '@/functions/styling'
+import classNames from 'classnames'
 import { Dialog, Transition } from '@headlessui/react'
 import React, { FC, Fragment } from 'react'
 import { isDesktop } from 'react-device-detect'

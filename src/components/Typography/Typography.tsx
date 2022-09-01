@@ -2,7 +2,7 @@
 /* eslint-disable react/display-name */
 import React, { FC, forwardRef } from 'react'
 
-import { classNames } from '@/functions/styling'
+import classNames from 'classnames'
 
 export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'p' | 'sm' | 'xs' | 'xxs'
 
