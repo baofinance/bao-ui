@@ -29,16 +29,7 @@ export type DonutProps = {
 	animate?: boolean
 }
 
-export default function DonutGraph({
-	width,
-	height,
-	composition,
-	basket,
-	rates,
-	info,
-	margin = defaultMargin,
-	animate = true,
-}: DonutProps) {
+export default function DonutGraph({ width, height, composition, rates, info, margin = defaultMargin }: DonutProps) {
 	const [selectedAssetAmount, setSelectedAssetAmount] = useState<string | null>(null)
 	const [active, setActive] = useState(null)
 

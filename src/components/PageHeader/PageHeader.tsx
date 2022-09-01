@@ -13,7 +13,7 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title, icon, description }) => {
 	return (
 		<div className='mx-auto mb-4 mt-6 box-border flex flex-col items-center'>
-			{icon && <Image src={icon} height={`${isDesktop ? 128 : 64}`} width={`${isDesktop ? 128 : 64}`} />}
+			{icon && <Image src={icon} alt={title} height={`${isDesktop ? 128 : 64}`} width={`${isDesktop ? 128 : 64}`} />}
 			<Typography variant={`${isDesktop ? 'hero' : 'h1'}`} className='font-kaushan antialiased'>
 				{title}
 			</Typography>

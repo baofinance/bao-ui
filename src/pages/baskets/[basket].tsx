@@ -42,7 +42,7 @@ const Basket: NextPage<{
 }> = ({ basketId }) => {
 	const baskets = useBaskets()
 
-	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [baskets])
+	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [basketId, baskets])
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 	const info = useBasketInfo(basket)

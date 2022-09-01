@@ -62,7 +62,7 @@ const Market: NextPage<{
 	const activeMarket = useMemo(() => {
 		if (!markets) return undefined
 		return markets.find(market => market.underlyingSymbol === marketId)
-	}, [markets])
+	}, [marketId, markets])
 
 	// TODO- Use subgraph info for other stats
 	useEffect(() => {
@@ -116,7 +116,13 @@ const Market: NextPage<{
 				</Typography>
 				<Typography variant='lg' className='block flex-1 items-center'>
 					<span className='float-right items-center'>
-						<Image src={`/images/tokens/${activeMarket.underlyingSymbol}.png`} height={32} width={32} className='inline' />
+						<Image
+							src={`/images/tokens/${activeMarket.underlyingSymbol}.png`}
+							alt={activeMarket.underlyingSymbol}
+							height={32}
+							width={32}
+							className='inline'
+						/>
 						<Badge className='ml-2 rounded-full text-base'>
 							<div className='p-1'>
 								<FontAwesomeIcon icon={activeMarket.isSynth ? faChartLine : faLandmark} className='mr-2' />

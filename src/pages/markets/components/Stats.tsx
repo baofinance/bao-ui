@@ -34,23 +34,23 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				? supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance *
 				  decimate(exchangeRates[asset.marketAddress]).toNumber()
 				: 0,
-		[supplyBalances, exchangeRates],
+		[supplyBalances, exchangeRates, asset],
 	)
 	const walletBalance = useMemo(
 		() =>
 			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
 				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
 				: 0,
-		[balances],
+		[asset, balances],
 	)
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return
 		return getDisplayBalance(new BigNumber(asset.price).times(supplyBalance).toFixed(2), 0)
-	}, [supplyBalance])
+	}, [asset, supplyBalance])
 	const walletBalanceUsd = useMemo(() => {
 		if (!walletBalance) return
 		return getDisplayBalance(new BigNumber(asset.price).times(walletBalance).toFixed(2), 0)
-	}, [walletBalance])
+	}, [asset, walletBalance])
 
 	return (
 		<StatBlock
@@ -111,19 +111,19 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress)
 				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress).balance
 				: 0,
-		[borrowBalances],
+		[asset, borrowBalances],
 	)
 	const walletBalance = useMemo(
 		() =>
 			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
 				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
 				: 0,
-		[balances],
+		[asset, balances],
 	)
 	const price = useMemo(() => {
 		if (!borrowBalance) return
 		return getDisplayBalance(new BigNumber(asset.price).times(borrowBalance).toFixed(2), 0)
-	}, [borrowBalance])
+	}, [asset, borrowBalance])
 
 	return (
 		<StatBlock

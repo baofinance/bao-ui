@@ -42,14 +42,14 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 		return _markets
 			.filter(market => !market.isSynth)
 			.sort((a, b) => (supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
-	}, [_markets, supplyBalances])
+	}, [_markets, bao, supplyBalances])
 
 	const synthMarkets = useMemo(() => {
 		if (!(bao && _markets && borrowBalances)) return
 		return _markets
 			.filter(market => market.isSynth)
 			.sort((a, b) => (borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
-	}, [_markets, borrowBalances])
+	}, [_markets, bao, borrowBalances])
 
 	return (
 		<>
@@ -120,17 +120,14 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		() =>
 			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
 			decimate(exchangeRates[market.marketAddress]).toNumber(),
-		[supplyBalances, exchangeRates],
+		[market, supplyBalances, exchangeRates],
 	)
 
-	const borrowed = useMemo(
-		() => borrowBalances.find(balance => balance.address === market.marketAddress).balance,
-		[borrowBalances, exchangeRates],
-	)
+	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])
 
 	const isInMarket = useMemo(
 		() => accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress),
-		[accountMarkets],
+		[market, accountMarkets],
 	)
 
 	const [isChecked, setIsChecked] = useState(!!isInMarket)
@@ -279,15 +276,11 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	accountLiquidity,
 	accountBalances,
 	borrowBalances,
-	exchangeRates,
 }: MarketListItemProps) => {
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
 
-	const borrowed = useMemo(
-		() => borrowBalances.find(balance => balance.address === market.marketAddress).balance,
-		[borrowBalances, exchangeRates],
-	)
+	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [borrowBalances, market])
 
 	const handleOpen = () => {
 		!isOpen ? setIsOpen(true) : setIsOpen(false)

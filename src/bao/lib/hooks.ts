@@ -64,15 +64,9 @@ export function useEagerConnect() {
 	return tried
 }
 
-export interface EthereumProvider {
-	on?: (...args: any[]) => void
-	removeListener?: (...args: any[]) => void
-	autoRefreshOnNetworkChange?: boolean
-}
-
 declare global {
 	interface Window {
-		ethereum?: EthereumProvider
+		ethereum?: any
 	}
 }
 
@@ -84,7 +78,7 @@ export function useInactiveListener(suppress = false) {
 	const { active, error, activate } = useWeb3React()
 
 	useEffect(() => {
-		const ethereum = window.ethereum as EthereumProvider | undefined
+		const ethereum = window.ethereum as any | undefined
 
 		if (ethereum && ethereum.on && !active && !error && !suppress) {
 			const handleChainChanged = () => {
