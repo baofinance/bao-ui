@@ -34,6 +34,7 @@ export const injected = new InjectedConnector({
 export const walletConnect = new WalletConnectConnector({
 	rpc: { 1: RPC_URLS[1] },
 })
+
 export const coinbaseWallet = new WalletLinkConnector({
 	url: RPC_URLS[1],
 	appName: 'bao-ui',
