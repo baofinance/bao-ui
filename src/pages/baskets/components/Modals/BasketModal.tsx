@@ -6,7 +6,7 @@ import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useAllowancev2 from '@/hooks/base/useAllowancev2'
+import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -46,7 +46,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
-	const daiAllowance = useAllowancev2(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
+	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -119,7 +119,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					new BigNumber(value).gt(
 						decimate(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
 					))),
-		[value, daiAllowance, operation, mintOption, pendingTx],
+		[pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance],
 	)
 
 	const hide = () => {

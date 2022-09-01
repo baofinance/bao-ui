@@ -22,13 +22,13 @@ export const useAccountMarkets = (): ActiveSupportedMarket[] | undefined => {
 		const _accountMarkets = await comptroller.methods.getAssetsIn(account).call()
 
 		setAccountMarkets(_accountMarkets.map((address: string) => markets.find(({ marketAddress }) => marketAddress === address)))
-	}, [transactions, bao, markets, account])
+	}, [bao, markets, account])
 
 	useEffect(() => {
 		if (!(bao && markets && account)) return
 
 		fetchAccountMarkets()
-	}, [transactions, bao, markets, account])
+	}, [transactions, bao, markets, account, fetchAccountMarkets])
 
 	return accountMarkets
 }

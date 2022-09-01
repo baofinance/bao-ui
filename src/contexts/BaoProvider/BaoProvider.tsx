@@ -3,6 +3,7 @@ import React, { createContext, PropsWithChildren, useEffect, useState } from 're
 
 import { Bao } from '@/bao/Bao'
 import Config from '@/bao/lib/config'
+import { EthereumProvider } from '@/bao/lib/hooks'
 
 export interface BaoContext {
 	bao?: typeof Bao
@@ -20,7 +21,7 @@ declare global {
 	interface Window {
 		baosauce: any
 		bao: any
-		ethereum?: any
+		ethereum?: EthereumProvider
 	}
 }
 

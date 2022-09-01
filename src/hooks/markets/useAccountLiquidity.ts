@@ -76,12 +76,12 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			usdBorrow,
 			usdBorrowable: decimate(compAccountLiqudity[1]).toNumber(),
 		})
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
 
 	useEffect(() => {
 		if (!(bao && account && markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices)) return
 		fetchAccountLiquidity()
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices, fetchAccountLiquidity])
 
 	return accountLiquidity
 }

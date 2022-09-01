@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { approvev2, getMasterChefContract } from '@/bao/utils'
+import { approve, getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -41,7 +41,7 @@ interface StakeProps {
 	onHide: () => void
 }
 
-export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
+export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -69,9 +69,9 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 				.div(2)
 				.toString(),
 		)
-	}, [fullBalance, setVal])
+	}, [max])
 
-	const allowance = useAllowance(lpContract)
+	const allowance = useAllowance(lpTokenAddress, account)
 
 	const masterChefContract = getMasterChefContract(bao)
 
@@ -127,7 +127,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, pid, poolType, max, to
 							<Button
 								fullWidth
 								onClick={async () => {
-									handleTx(approvev2(lpContract, masterChefContract, account), `Approve ${tokenName}`)
+									handleTx(approve(lpContract, masterChefContract, account), `Approve ${tokenName}`)
 								}}
 							>
 								Approve {tokenName}
@@ -226,7 +226,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 				.div(2)
 				.toString(),
 		)
-	}, [fullBalance, setVal])
+	}, [max])
 
 	const userInfo = useUserFarmInfo(pid)
 	const blockDiff = useBlockDiff(userInfo)

@@ -3,10 +3,10 @@ import BigNumber from 'bignumber.js'
 import React, { useMemo } from 'react'
 
 import Config from '@/bao/lib/config'
-import { approvev2 } from '@/bao/utils'
+import { approve } from '@/bao/utils'
 import Button from '@/components/Button'
 import Loader from '@/components/Loader'
-import useAllowancev2 from '@/hooks/base/useAllowancev2'
+import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, exponentiate } from '@/utils/numberFormat'
@@ -16,8 +16,8 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 	const { account } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
 
-	const inputAApproval = useAllowancev2(Config.addressMap.DAI, Config.contracts.stabilizer[Config.networkId].address)
-	const inputBApproval = useAllowancev2(Config.addressMap.baoUSD, Config.contracts.stabilizer[Config.networkId].address)
+	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.stabilizer[Config.networkId].address)
+	const inputBApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.stabilizer[Config.networkId].address)
 
 	const handleClick = async () => {
 		if (!bao) return
@@ -27,7 +27,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
 				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.baoUSD)
-				return handleTx(approvev2(tokenContract, ballastContract, account), 'Ballast: Approve baoUSD')
+				return handleTx(approve(tokenContract, ballastContract, account), 'Ballast: Approve baoUSD')
 			}
 
 			handleTx(ballastContract.methods.sell(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap baoUSD to DAI')
@@ -35,7 +35,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
 				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.DAI)
-				return handleTx(approvev2(tokenContract, ballastContract, account), 'Ballast: Approve DAI')
+				return handleTx(approve(tokenContract, ballastContract, account), 'Ballast: Approve DAI')
 			}
 
 			handleTx(ballastContract.methods.buy(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap DAI to baoUSD')
