@@ -12,7 +12,7 @@ const useSushiBarApy = () => {
 
 	useEffect(() => {
 		fetchApy()
-	}, [])
+	}, [fetchApy])
 
 	return apy
 }

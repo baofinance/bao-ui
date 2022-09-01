@@ -101,7 +101,7 @@ const FarmList: React.FC = () => {
 				}
 				setPools(_pools)
 			})
-	}, [farmsTVL, bao])
+	}, [farmsTVL, bao, farms, userAddress, baoPrice])
 
 	return (
 		<>

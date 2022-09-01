@@ -1,11 +1,9 @@
-import BigNumber from 'bignumber.js'
-import { useCallback, useEffect, useState } from 'react'
-
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
-
+import BigNumber from 'bignumber.js'
+import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
@@ -134,7 +132,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		if (!(bao && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) return
 
 		fetchComposition()
-	}, [bao, basket, prices, transactions])
+	}, [bao, basket, fetchComposition, prices, transactions])
 
 	return composition
 }

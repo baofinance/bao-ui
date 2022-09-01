@@ -21,13 +21,13 @@ const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
 		setInfo({
 			totalSupply: new BigNumber(supply),
 		})
-	}, [bao, basket])
+	}, [basket])
 
 	useEffect(() => {
 		if (!(bao && basket)) return
 
 		fetchInfo()
-	}, [bao, basket, transactions])
+	}, [bao, basket, fetchInfo, transactions])
 
 	return info
 }

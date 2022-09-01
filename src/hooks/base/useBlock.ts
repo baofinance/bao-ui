@@ -29,7 +29,7 @@ const useBlock = () => {
 		}, 1000)
 
 		return () => clearInterval(interval)
-	}, [library])
+	}, [block, library])
 
 	return block
 }

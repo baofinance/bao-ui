@@ -25,7 +25,7 @@ const useStakedBalance = (pid: number) => {
 		if (account && bao) {
 			fetchBalance()
 		}
-	}, [account, pid, setBalance, transactions, bao])
+	}, [account, pid, setBalance, transactions, bao, fetchBalance])
 
 	return balance.decimalPlaces(18)
 }

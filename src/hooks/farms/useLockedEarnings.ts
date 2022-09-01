@@ -15,13 +15,13 @@ const useLockedEarnings = () => {
 	const fetchBalance = useCallback(async () => {
 		const balance = await getLockedEarned(baoContract, account)
 		setBalance(new BigNumber(balance))
-	}, [account, baoContract, bao])
+	}, [account, baoContract])
 
 	useEffect(() => {
 		if (account && baoContract && bao) {
 			fetchBalance()
 		}
-	}, [account, baoContract, setBalance, bao])
+	}, [account, baoContract, setBalance, bao, fetchBalance])
 
 	return balance
 }

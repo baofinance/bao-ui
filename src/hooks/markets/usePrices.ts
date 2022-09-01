@@ -74,7 +74,7 @@ export const useMarketPrices = (): MarketPrices => {
 				{},
 			),
 		)
-	}, [transactions, bao])
+	}, [bao])
 
 	useEffect(() => {
 		if (!bao) return
