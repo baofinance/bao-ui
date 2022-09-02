@@ -56,7 +56,7 @@ const Nav: React.FC = () => {
 				<a
 					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
 					target='_blank'
-					href='https://snapshot.page/#/baovotes.eth'
+					href='https://snapshot.org/#/baovotes.eth/'
 					aria-label='Snapshot'
 					rel='noreferrer'
 				>

@@ -25,12 +25,6 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 		['3', 'Farms', '/farms'],
 	]
 
-	const externalLinks = [
-		['4', 'Vote', 'https://snapshot.page/#/baovotes.eth'],
-		['5', 'Forum', 'https://gov.bao.finance'],
-		['6', 'Docs', 'https://docs.bao.finance'],
-	]
-
 	return (
 		<>
 			{navigation.map(([index, name, href]) => (
@@ -57,33 +51,6 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 					</AnimatePresence>
 					<span className={`relative z-10 ${isActive && 'bg-primary-100'}`}>{name}</span>
 				</Link>
-			))}
-			{externalLinks.map(([index, name, href]) => (
-				<a
-					href={href}
-					key={name}
-					target='_blank'
-					rel='noreferrer'
-					className='relative -my-2 -mx-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
-					onMouseEnter={() => setHoveredIndex(index as any)}
-					onMouseLeave={() => setHoveredIndex(null)}
-				>
-					<AnimatePresence>
-						{hoveredIndex === index && (
-							<motion.span
-								className='absolute inset-0 rounded-lg bg-primary-100'
-								layoutId='hoverBackground'
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1, transition: { duration: 0.15 } }}
-								exit={{
-									opacity: 0,
-									transition: { duration: 0.15, delay: 0.2 },
-								}}
-							/>
-						)}
-					</AnimatePresence>
-					<span className='relative z-10'>{name}</span>
-				</a>
 			))}
 		</>
 	)

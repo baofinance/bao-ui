@@ -1,11 +1,16 @@
 import Container from '@/components/Container'
 import Logo from '@/components/Logo'
-import { Popover } from '@headlessui/react'
+import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Menu, Popover, Transition } from '@headlessui/react'
+import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { FC, ReactNode } from 'react'
+import { FC, Fragment, ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
 import AccountButton from '../AccountButton'
+import Button from '../Button'
 import Nav from '../Nav'
 
 export interface IconProps {
@@ -58,7 +63,7 @@ const Header: FC = () => {
 							</div>
 						)}
 					</div>
-					<div className='flex items-center gap-6'>
+					<div className='flex items-center gap-2'>
 						{!isDesktop && (
 							<Popover>
 								{({ open }) => (
@@ -97,15 +102,6 @@ const Header: FC = () => {
 															<MobileNavLink href='/ballast'>Ballast</MobileNavLink>
 															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
 															<MobileNavLink href='/farms'>Farms</MobileNavLink>
-															<MobileNavLink href='https://snapshot.page/#/baovotes.eth' target='_blank'>
-																Vote
-															</MobileNavLink>
-															<MobileNavLink href='https://gov.bao.finance/' target='_blank'>
-																Forum
-															</MobileNavLink>
-															<MobileNavLink href='https://docs.bao.finance/' target='_blank'>
-																Docs
-															</MobileNavLink>
 														</div>
 													</Popover.Panel>
 												</>
@@ -116,6 +112,159 @@ const Header: FC = () => {
 							</Popover>
 						)}
 						<AccountButton />
+						<Menu as='div' className='relative inline-block text-left'>
+							<div>
+								<Menu.Button className='flex items-center rounded-lg'>
+									<Button size='sm' className='bg-primary-100 hover:bg-primary-300'>
+										<span className='sr-only'>Open options</span>
+										<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5' aria-hidden='true' />
+									</Button>
+								</Menu.Button>
+							</div>
+
+							<Transition
+								as={Fragment}
+								enter='transition ease-out duration-100'
+								enterFrom='transform opacity-0 scale-95'
+								enterTo='transform opacity-100 scale-100'
+								leave='transition ease-in duration-75'
+								leaveFrom='transform opacity-100 scale-100'
+								leaveTo='transform opacity-0 scale-95'
+							>
+								<Menu.Items className='absolute right-0 z-10 mt-2 w-fit origin-top-right rounded-md border border-primary-300 bg-background-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+									<div className='py-1'>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://docs.bao.finance'
+													aria-label='Documentation'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Documentation <FontAwesomeIcon icon={faBook} />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://gov.bao.finance'
+													aria-label='Governance Forums'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Governance <FontAwesomeIcon icon={faVoteYea} />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://snapshot.org/#/baovotes.eth/'
+													aria-label='Snapshot'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Snapshot <FontAwesomeIcon icon={faBolt} />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://discord.gg/BW3P62vJXT'
+													aria-label='Discord'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Discord <FontAwesomeIcon icon={faDiscord} className='text-end' />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://github.com/baofinance'
+													aria-label='GitHub'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													GitHub <FontAwesomeIcon icon={faGithub} />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://www.immunefi.com/bounty/baofinance'
+													aria-label='Immunefi'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Immunefi <FontAwesomeIcon icon={faBug} />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://twitter.com/BaoCommunity'
+													aria-label='Twitter'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Twitter <FontAwesomeIcon icon={faTwitter} />
+												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<a
+													target='_blank'
+													href='https://medium.com/baomunity'
+													aria-label='Medium'
+													rel='noreferrer'
+													className={classNames(
+														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Medium <FontAwesomeIcon icon={faMedium} />
+												</a>
+											)}
+										</Menu.Item>
+									</div>
+								</Menu.Items>
+							</Transition>
+						</Menu>
 					</div>
 				</Container>
 			</nav>
