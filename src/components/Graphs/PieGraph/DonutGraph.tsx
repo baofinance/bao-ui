@@ -1,12 +1,17 @@
+import Loader from '@/components/Loader'
+import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
+import { Text } from '@visx/text'
 import _ from 'lodash'
 import React, { useState } from 'react'
 import { animated, interpolate, useTransition } from 'react-spring'
-import { getBalanceNumber, getDisplayBalance } from 'utils/numberFormat'
 
 interface AssetAllocationAmount {
-	label: string
+	symbol: string
+	percentage: string
+	balance: string
+	tvl: string
 	frequency: number
 	color: string
 }
@@ -17,19 +22,24 @@ export type DonutProps = {
 	width: number
 	height: number
 	composition: Array<any>
+	rates: any
+	info: any
+	basket: string
 	margin?: typeof defaultMargin
 	animate?: boolean
 }
 
-export default function DonutGraph({ width, height, composition, margin = defaultMargin, animate = true }: DonutProps) {
+export default function DonutGraph({ width, height, composition, rates, info, margin = defaultMargin }: DonutProps) {
 	const [selectedAssetAmount, setSelectedAssetAmount] = useState<string | null>(null)
+	const [active, setActive] = useState(null)
 
 	const assetsBalance: AssetAllocationAmount[] = composition.map(component => ({
-		label: `
-			${component.percentage.toFixed(4)}%
-			${getDisplayBalance(component.balance, component.decimals)} ${component.symbol}
-			${component.price ? `$${getDisplayBalance(component.price.times(getBalanceNumber(component.balance, component.decimals)), 0)}` : ''}
-		`,
+		symbol: `${component.symbol}`,
+		percentage: `${component.percentage.toFixed(4)}%`,
+		balance: `${getDisplayBalance(component.balance, component.decimals)}`,
+		tvl: `${
+			component.price ? `$${getDisplayBalance(component.price.times(getBalanceNumber(component.balance, component.decimals)), 0)}` : ''
+		}`,
 		frequency: component.percentage,
 		color: component.color,
 	}))
@@ -48,24 +58,65 @@ export default function DonutGraph({ width, height, composition, margin = defaul
 		<svg width={width} height={height}>
 			<Group top={centerY + margin.top} left={centerX + margin.left}>
 				<Pie
-					data={selectedAssetAmount ? assetsBalance.filter(({ label }) => label === selectedAssetAmount) : assetsBalance}
+					data={selectedAssetAmount ? assetsBalance.filter(({ symbol }) => symbol === selectedAssetAmount) : assetsBalance}
 					pieValue={frequency}
 					pieSortValues={() => -1}
 					outerRadius={radius}
-					innerRadius={radius - 125}
+					innerRadius={({ data }) => {
+						const size = active && active.symbol == data.symbol ? 6 : 6
+						return radius - size
+					}}
+					padAngle={0.01}
 				>
-					{pie => (
-						<AnimatedPie<AssetAllocationAmount>
-							{...pie}
-							animate={animate}
-							getKey={({ data: { label } }) => label}
-							onClickDatum={({ data: { label } }) =>
-								animate && setSelectedAssetAmount(selectedAssetAmount && selectedAssetAmount === label ? null : label)
-							}
-							getColor={({ data: { color } }) => color}
-						/>
-					)}
+					{pie => {
+						return pie.arcs.map(arc => {
+							return (
+								<g
+									key={arc.data.symbol}
+									className='duration-200'
+									onMouseEnter={() => setActive(arc.data)}
+									onMouseLeave={() => setActive(null)}
+								>
+									<defs>
+										<filter id='glow'>
+											<feGaussianBlur className='blur' result='coloredBlur' stdDeviation='1.5'></feGaussianBlur>
+											<feMerge>
+												<feMergeNode in='coloredBlur'></feMergeNode>
+												<feMergeNode in='coloredBlur'></feMergeNode>
+												<feMergeNode in='coloredBlur'></feMergeNode>
+												<feMergeNode in='SourceGraphic'></feMergeNode>
+											</feMerge>
+										</filter>
+									</defs>
+									<path
+										d={pie.path(arc)}
+										fill={arc.data.color}
+										filter={active && active.symbol == arc.data.symbol ? 'url(#glow)' : ''}
+									></path>
+								</g>
+							)
+						})
+					}}
 				</Pie>
+				{!active ? (
+					<>
+						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
+							{`${rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}`}
+						</Text>
+						<Text textAnchor='middle' fill='#aa9585' className='text-xs' dy={14}>
+							{`Total Value Locked`}
+						</Text>
+					</>
+				) : (
+					<>
+						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
+							{`${active && active.tvl}`}
+						</Text>
+						<Text textAnchor='middle' fill={active.color} className='text-xs' dy={14}>
+							{`${active.balance} ${active.symbol}`}
+						</Text>
+					</>
+				)}
 			</Group>
 		</svg>
 	)
@@ -119,8 +170,6 @@ function AnimatedPie<Datum>({ animate, arcs, path, getKey, getColor, onClickDatu
 						}),
 					)}
 					fill={getColor(arc)}
-					onClick={() => onClickDatum(arc)}
-					onTouchStart={() => onClickDatum(arc)}
 				/>
 				{hasSpaceForLabel && (
 					<animated.g style={{ opacity: props.opacity }}>

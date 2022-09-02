@@ -1,37 +1,34 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-import styled from 'styled-components'
-import { Placement } from 'react-bootstrap/types'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Tooltip } from '@material-tailwind/react/components/Tooltip'
+import React from 'react'
+
+import classNames from 'classnames'
 
 interface TooltippedProps {
 	content: any
-	children?: JSX.Element
-	placement?: Placement
+	children?: any
+	placement?: any
+	className?: any
 }
 
-const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement }) => (
+const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement, className }) => (
 	<>
-		<OverlayTrigger key={placement} overlay={<Tooltip id={Math.random().toString()}>{content}</Tooltip>} placement={placement || 'bottom'}>
+		<Tooltip
+			id={Math.random().toString()}
+			content={content}
+			placement={placement}
+			offset={10}
+			className={classNames('max-w-xs border border-primary-300 bg-primary-100 p-2 text-center', className)}
+		>
 			{children || (
 				<span>
-					<QuestionIcon icon={faQuestionCircle} />
+					<FontAwesomeIcon icon={faQuestionCircle} className='text-text-100 duration-200 hover:text-text-400' />
 				</span>
 			)}
-		</OverlayTrigger>
+		</Tooltip>
 	</>
 )
-
-const QuestionIcon = styled(FontAwesomeIcon)`
-	color: ${props => props.theme.color.text[100]};
-
-	&:hover,
-	&:focus {
-		color: ${props => props.theme.color.text[400]};
-		animation: 200ms;
-	}
-`
 
 export default Tooltipped
 export type { TooltippedProps }

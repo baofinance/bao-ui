@@ -1,8 +1,9 @@
-import { ActiveSupportedBasket } from '../../bao/lib/types'
-import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
-import useBao from '../base/useBao'
+import { useCallback, useEffect, useState } from 'react'
+
+import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { getWethPriceLink } from '../../bao/utils'
+import useBao from '../base/useBao'
 
 const usePairPrice = (basket: ActiveSupportedBasket) => {
 	const [price, setPrice] = useState<BigNumber | undefined>()

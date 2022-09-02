@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
+import { useEffect, useState } from 'react'
+
+import { decimate } from '@/utils/numberFormat'
+
 import { BasketComponent } from './useComposition'
-import { decimate } from '../../utils/numberFormat'
 
 const useNav = (composition: BasketComponent[], supply: BigNumber) => {
 	const [nav, setNav] = useState<BigNumber | undefined>()

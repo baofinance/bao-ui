@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
-import useBaskets from './useBaskets'
 import BigNumber from 'bignumber.js'
+import { useCallback, useEffect, useState } from 'react'
+
+import useBaskets from './useBaskets'
 
 type Prices = {
 	[address: string]: BigNumber

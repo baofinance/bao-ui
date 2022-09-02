@@ -22,7 +22,7 @@ export interface SupportedPool {
 
 export interface SupportedBasket {
 	nid: number
-	basketAddresses?: {
+	basketAddresses: {
 		[network: number]: string
 	}
 	lpAddress: string
@@ -33,8 +33,8 @@ export interface SupportedBasket {
 	pieColors: { [asset: string]: string }
 	desc: string
 	swap?: string
-	address?: string
-	basketContract?: Contract
+	address: string
+	basketContract: Contract
 	ovenAddress: string
 	ovenContract?: Contract
 }
@@ -111,7 +111,7 @@ export interface ContractsConfig {
 		[networkId: number]: {
 			address: string
 			abi: string
-			contract?: Contract
+			contract: Contract
 		}
 	}
 }

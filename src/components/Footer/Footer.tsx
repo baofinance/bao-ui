@@ -1,37 +1,16 @@
 import React from 'react'
-import styled from 'styled-components'
+
+import Container from '../Container'
 import Nav from './components/Nav'
 
 const Footer: React.FC = () => (
-	<StyledFooter>
-		<StyledFooterInner>
-			<StyledNavWrapper>
+	<footer className='m-auto mt-4 p-4'>
+		<Container className='m-auto mb-3 flex h-[72px] items-center'>
+			<div className='flex flex-1 justify-center'>
 				<Nav />
-			</StyledNavWrapper>
-		</StyledFooterInner>
-	</StyledFooter>
+			</div>
+		</Container>
+	</footer>
 )
-
-const StyledFooter = styled.footer`
-	margin-top: ${props => props.theme.spacing[4]}px;
-	margin: auto;
-	padding: ${props => props.theme.spacing[4]}px;
-`
-const StyledFooterInner = styled.div`
-	margin: auto;
-	align-items: center;
-	display: flex;
-	height: ${props => props.theme.topBarSize}px;
-	justify-content: space-between;
-	max-width: ${props => props.theme.siteWidth}px;
-	width: 100%;
-	margin-bottom: -${props => props.theme.spacing[3]}px;
-`
-
-const StyledNavWrapper = styled.div`
-	display: flex;
-	flex: 1;
-	justify-content: center;
-`
 
 export default Footer

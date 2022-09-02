@@ -1,3 +1,4 @@
+import { curveMonotoneX } from '@visx/curve'
 import { localPoint } from '@visx/event'
 import { LinearGradient } from '@visx/gradient'
 import appleStock from '@visx/mock-data/lib/mocks/appleStock'
@@ -5,11 +6,11 @@ import { scaleLinear, scaleTime } from '@visx/scale'
 import { AreaClosed, Bar, Line, LinePath } from '@visx/shape'
 import { defaultStyles, TooltipWithBounds, withTooltip } from '@visx/tooltip'
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip'
-import { curveMonotoneX } from '@visx/curve'
 import BigNumber from 'bignumber.js'
 import { bisector, extent, max, min } from 'd3-array'
 import React, { useCallback, useMemo } from 'react'
-import { getDisplayBalance } from 'utils/numberFormat'
+
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 export type TimeseriesData = {
 	close: number

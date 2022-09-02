@@ -1,14 +1,15 @@
-import { Bao } from 'bao'
-import erc20Abi from 'bao/lib/abi/erc20.json'
-import lpAbi from 'bao/lib/abi/uni_v2_lp.json'
-import Config from 'bao/lib/config'
+import { Bao } from '@/bao/Bao'
 import BigNumber from 'bignumber.js/bignumber'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
-import GraphUtil from 'utils/graph'
-import Multicall from 'utils/multicall'
-import { decimate } from 'utils/numberFormat'
 import { AbiItem } from 'web3-utils'
+
+import erc20Abi from '@/bao/lib/abi/erc20.json'
+import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
+import Config from '@/bao/lib/config'
+import GraphUtil from '@/utils/graph'
+import Multicall from '@/utils/multicall'
+import { decimate } from '@/utils/numberFormat'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 	const results = Multicall.parseCallResults(

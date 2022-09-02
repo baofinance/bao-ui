@@ -1,28 +1,32 @@
 import { useWeb3React } from '@web3-react/core'
-import Config from 'bao/lib/config'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { getAllowance } from 'utils/erc20'
-import { Contract } from 'web3-eth-contract'
+
+import { getAllowance } from '@/utils/erc20'
+
+import useBao from './useBao'
 import useTransactionProvider from './useTransactionProvider'
 
-const useAllowance = (lpContract: Contract) => {
-	const [allowance, setAllowance] = useState(new BigNumber(0))
+const useAllowance = (tokenAddress: string, spenderAddress: string) => {
 	const { account } = useWeb3React()
+	const bao = useBao()
 	const { transactions } = useTransactionProvider()
 
-	const fetchAllowance = useCallback(async () => {
-		const allowance = await getAllowance(lpContract, account, Config.contracts.masterChef[Config.networkId].address)
-		setAllowance(new BigNumber(allowance))
-	}, [account, lpContract])
+	const [allowance, setAllowance] = useState<BigNumber | undefined>()
+
+	const _getAllowance: any = useCallback(async () => {
+		try {
+			const tokenContract = bao.getNewContract('erc20.json', tokenAddress)
+			const _allowance = await getAllowance(tokenContract, account, spenderAddress)
+			setAllowance(new BigNumber(_allowance))
+		} catch (e) {
+			setAllowance(new BigNumber(0))
+		}
+	}, [bao, account, tokenAddress, spenderAddress, transactions])
 
 	useEffect(() => {
-		if (account && lpContract) {
-			fetchAllowance()
-		}
-		const refreshInterval = setInterval(fetchAllowance, 10000)
-		return () => clearInterval(refreshInterval)
-	}, [account, lpContract, transactions])
+		_getAllowance()
+	}, [bao, account, tokenAddress, spenderAddress, transactions])
 
 	return allowance
 }

@@ -1,10 +1,12 @@
 import BigNumber from 'bignumber.js'
-import useBao from 'hooks/base/useBao'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
-import MultiCall from 'utils/multicall'
+
+import useBao from '@/hooks/base/useBao'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import MultiCall from '@/utils/multicall'
+import { decimate } from '@/utils/numberFormat'
+
 import { ActiveSupportedBasket } from '../../bao/lib/types'
-import { decimate } from '../../utils/numberFormat'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
 
@@ -111,7 +113,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 			_comp.push({
 				..._c,
-				image: require(`assets/img/tokens/${_getImageURL(_c.symbol)}.png`).default,
+				image: `/images/tokens/${_getImageURL(_c.symbol)}.png`,
 				color: basket.pieColors[_c.symbol],
 			})
 		}

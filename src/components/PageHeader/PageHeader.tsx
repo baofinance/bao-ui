@@ -1,47 +1,25 @@
-import { Icon } from 'components/Icon'
+import Image from 'next/future/image'
 import React from 'react'
-import { Container } from 'react-bootstrap'
-import styled from 'styled-components'
+import { isDesktop } from 'react-device-detect'
+
+import Typography from '../Typography'
 
 interface PageHeaderProps {
 	icon?: any
-	subtitle?: any
+	description?: any
 	title?: string
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ title, icon }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ title, icon, description }) => {
 	return (
-		<Container>
-			<StyledPageHeader>
-				<Icon src={icon} />
-				<StyledTitle>{title}</StyledTitle>
-			</StyledPageHeader>
-		</Container>
+		<div className='mx-auto mb-4 mt-6 box-border flex flex-col items-center'>
+			{icon && <Image src={icon} alt={title} height={`${isDesktop ? 128 : 64}`} width={`${isDesktop ? 128 : 64}`} />}
+			<Typography variant={`${isDesktop ? 'hero' : 'h1'}`} className='font-kaushan antialiased'>
+				{title}
+			</Typography>
+			{description && <Typography className='flex flex-1 items-center justify-center'>{description}</Typography>}
+		</div>
 	)
 }
-
-const StyledPageHeader = styled.div`
-	align-items: center;
-	box-sizing: border-box;
-	display: flex;
-	flex-direction: column;
-	padding-bottom: ${props => props.theme.spacing[2]}px;
-	margin: ${props => props.theme.spacing[6]}px auto 0;
-`
-
-export const StyledTitle = styled.h1`
-	font-family: 'Kaushan Script', sans-serif;
-	font-size: 4rem !important;
-	letter-spacing: -0.1rem;
-	text-align: center;
-	font-weight: ${props => props.theme.fontWeight.strong} !important;
-	color: ${props => props.theme.color.text[100]};
-
-	@keyframes bounce {
-		to {
-			background-position: 300%;
-		}
-	}
-`
 
 export default PageHeader

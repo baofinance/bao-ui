@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { SafeAppConnector, useSafeAppConnection } from '@gnosis.pm/safe-apps-web3-react'
 import { useWeb3React } from '@web3-react/core'
-
+import { useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { injected } from './connectors'
 
 export function useEagerConnect() {
@@ -8,24 +9,36 @@ export function useEagerConnect() {
 
 	const [tried, setTried] = useState(false)
 
-	useEffect(() => {
-		injected.isAuthorized().then((isAuthorized: boolean) => {
-			if (isAuthorized) {
-				activate(injected, undefined, true).catch(() => {
-					setTried(true)
-				})
-			} else {
-				setTried(true)
-			}
-		})
-	}, []) // intentionally only running on mount (make sure it's only mounted once :))
+	const safeMultisigConnector = new SafeAppConnector()
+	const triedToConnectToSafe = useSafeAppConnection(safeMultisigConnector)
 
-	// if the connection worked, wait until we get confirmation of that to flip the flag
+	// then, if that fails, try connecting to an injected connector
+	useEffect(() => {
+		if (triedToConnectToSafe) {
+			injected.isAuthorized().then(isAuthorized => {
+				if (isAuthorized) {
+					activate(injected, undefined, true).catch(() => {
+						setTried(true)
+					})
+				} else {
+					if (isMobile && window.ethereum) {
+						activate(injected, undefined, true).catch(() => {
+							setTried(true)
+						})
+					} else {
+						setTried(true)
+					}
+				}
+			})
+		}
+	}, [triedToConnectToSafe])
+
+	// wait until we get confirmation of a connection to flip the flag
 	useEffect(() => {
 		if (!tried && active) {
 			setTried(true)
 		}
-	}, [tried, active])
+	}, [active, tried])
 
 	return tried
 }

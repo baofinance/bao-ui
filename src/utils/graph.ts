@@ -1,6 +1,7 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
+
+import Config from '@/bao/lib/config'
 
 // TODO- Move Apollo Clients to provider so that the chain can be switched
 const clients: any = Object.keys(Config.subgraphs).reduce((prev, current) => {
@@ -253,6 +254,7 @@ const _getMarketsQuery = () =>
   }
   `
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
 	getPriceHistory,
 	getPriceHistoryMultiple,

@@ -1,8 +1,10 @@
-import { ActiveSupportedBasket } from '../../bao/lib/types'
-import { useCallback, useEffect, useState } from 'react'
-import useBao from '../base/useBao'
 import { BigNumber } from 'bignumber.js'
-import Multicall from '../../utils/multicall'
+import { useCallback, useEffect, useState } from 'react'
+
+import Multicall from '@/utils/multicall'
+
+import { ActiveSupportedBasket } from '../../bao/lib/types'
+import useBao from '../base/useBao'
 
 export type OvenInfo = {
 	balance: BigNumber

@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '@fontsource/rubik/variable.css';
+@import '@fontsource/kaushan-script/index.css';
+
+html {
+	overflow-y: scroll !important;
+}
+
+body {
+	background: url(/images/background_overlay_dark.png), radial-gradient(circle at center, #391818, #210e0e 50%) fixed;
+	margin: 0;
+	font-family: 'Rubik', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #fff8ee;
+	transition: 200ms;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
+/* Scrollbar Styling */
+/* Width */
+::-webkit-scrollbar {
+	width: 14px;
+	border-radius: 100%;
+}
+/* Track */
+::-webkit-scrollbar-track {
+	background: #391818;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #622a2a;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #562424;
+}
+
+#__next {
+	height: calc(100vh - 72px);
+}
+
+::selection {
+	background: rgba(256, 256, 256, 0.1);
+}

@@ -1,13 +1,13 @@
+import Config from '@/bao/lib/config'
+import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
+import Button from '@/components/Button'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useWeb3React } from '@web3-react/core'
-import Config from 'bao/lib/config'
-import { coinbaseWallet, injected, walletConnect } from 'bao/lib/connectors'
-import { useEagerConnect, useInactiveListener } from 'bao/lib/hooks'
-import { Button, CloseButton } from 'components/Button'
-import { WalletButton } from 'components/Button/Button'
-import React, { useCallback, useEffect, useState } from 'react'
-import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
-import styled from 'styled-components'
+import Image from 'next/future/image'
+import React, { FC, useEffect, useState } from 'react'
+import Modal from '../Modal'
+import Typography from '../Typography'
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
@@ -15,14 +15,19 @@ const connectorsByName: { [name: string]: AbstractConnector } = {
 	WalletConnect: walletConnect,
 }
 
-const WalletProviderModal = ({ onHide, show }: ModalProps) => {
+interface WalletProviderModalProps {
+	show: boolean
+	onHide: () => void
+}
+
+const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => {
 	const { connector, chainId, account, activate, active, error } = useWeb3React()
 
 	useEffect(() => {
 		if (account && chainId === Config.networkId) {
 			onHide()
 		}
-	}, [account, onHide])
+	}, [account, chainId, onHide])
 
 	const [activatingConnector, setActivatingConnector] = useState<any>()
 
@@ -40,11 +45,7 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 		if (account && active) {
 			onHide()
 		}
-	}, [account, onHide])
-
-	const hideModal = useCallback(() => {
-		onHide()
-	}, [onHide])
+	}, [account, active, onHide])
 
 	if (window.ethereum && window.ethereum.chainId !== Config.defaultRpc.chainId) {
 		try {
@@ -63,12 +64,9 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 	}
 
 	return (
-		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide} onHide={hideModal} />
-			<Modal.Header>
-				<Modal.Title>Select a wallet provider.</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
+		<Modal isOpen={show} onDismiss={onHide}>
+			<Modal.Header header='Select a wallet provider' onClose={onHide} />
+			<Modal.Actions>
 				{Object.keys(connectorsByName).map(name => {
 					const currentConnector = connectorsByName[name]
 					const activating = currentConnector === activatingConnector
@@ -76,7 +74,9 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 					const disabled = !triedEager || !!activatingConnector || connected || !!error
 
 					return (
-						<WalletButton
+						<Button
+							fullWidth
+							size='md'
 							disabled={disabled}
 							key={name}
 							onClick={() => {
@@ -88,40 +88,16 @@ const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 								})
 							}}
 						>
-							<Row>
-								<Col>
-									<ConnectorIconContainer>
-										<img
-											src={require(`assets/img/wallets/${name}.png`).default}
-											style={{
-												height: '24px',
-												marginRight: '0.75rem',
-												verticalAlign: 'middle',
-											}}
-										/>
-									</ConnectorIconContainer>
-									{activating ? 'Connecting...' : `${name}`}
-								</Col>
-							</Row>
-						</WalletButton>
+							<div className='flex h-full items-center'>
+								<Image className='inline-block' src={`/images/wallets/${name}.png`} alt={name} width={32} height={32} />
+								<Typography className='ml-2 inline-block font-semibold'>{activating ? 'Connecting...' : `${name}`}</Typography>
+							</div>
+						</Button>
 					)
 				})}
-			</Modal.Body>
-
-			<Modal.Footer>
-				<Button text='Cancel' variant='secondary' onClick={onHide} />
-			</Modal.Footer>
+			</Modal.Actions>
 		</Modal>
 	)
 }
-
-export const ConnectorIconContainer = styled.div`
-	height: 100%;
-	align-items: center;
-	margin: 0 auto;
-	display: inline-block;
-	vertical-align: middle;
-	color: ${props => props.theme.color.text[100]};
-`
 
 export default WalletProviderModal

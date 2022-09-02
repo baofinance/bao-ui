@@ -1,3 +1,4 @@
+import { FarmableSupportedPool } from '@/bao/lib/types'
 import BigNumber from 'bignumber.js/bignumber'
 import { Contract } from 'web3-eth-contract'
 
@@ -22,10 +23,11 @@ export interface Farm {
 	tokenSymbol: string
 	refUrl: string
 	pairUrl: string
-	poolType?: PoolType
-	tvl?: BigNumber
+	poolType: PoolType
+	tvl: BigNumber
+	type: string
 }
 
 export interface FarmsContext {
-	farms: Farm[]
+	farms: FarmableSupportedPool[]
 }
