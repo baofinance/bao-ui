@@ -13,7 +13,7 @@ const supportedChainIds = [1]
 let network: NetworkConnector
 
 const RPC_URLS: { [chainId: number]: string } = {
-	1: 'https://eth-mainnet.g.alchemy.com/v2/UZ88g_fys9oP-NhI2S-O47r6isdCIGHI',
+	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
 }
 
 export const getNetworkConnector = (): NetworkConnector => {
