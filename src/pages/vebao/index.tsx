@@ -1,6 +1,7 @@
+import Button from '@/components/Button'
 import PageHeader from '@/components/PageHeader'
 import Typography from '@/components/Typography'
-import { Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
+import { Tab } from '@headlessui/react'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -16,31 +17,54 @@ const veBAO: React.FC = () => {
 			<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-4 font-light tracking-tight'>
 				Lock your BAO for veBAO!
 			</Typography>
-			<Tabs value='lock'>
-				<TabsHeader>
-					<Tab key='lock' value='lock'>
-						Lock
+			<Tab.Group defaultIndex={0}>
+				<Tab.List className='m-auto flex w-fit flex-1 items-center justify-center gap-2 rounded-lg bg-background-100 p-2'>
+					<Tab className='border-0 outline-0'>
+						{({ selected }) => (
+							<button
+								className={`rounded-lg !border-none p-2 !outline-0  ${
+									selected ? 'border border-primary-300 bg-primary-200 hover:bg-primary-200' : 'bg-none hover:bg-primary-100'
+								}`}
+							>
+								Lock
+							</button>
+						)}
 					</Tab>
-					<Tab key='vote' value='vote'>
-						Vote
+					<Tab className='border-0 outline-0'>
+						{({ selected }) => (
+							<button
+								className={`rounded-lg !border-none p-2 !outline-0 ${
+									selected ? 'border border-primary-300 bg-primary-200 hover:bg-primary-200' : 'bg-none hover:bg-primary-100'
+								}`}
+							>
+								Vote
+							</button>
+						)}
 					</Tab>
-
-					<Tab key='gauges' value='gauges'>
-						Gauges
+					<Tab className='border-0 outline-0'>
+						{({ selected }) => (
+							<button
+								className={`rounded-lg !border-none p-2 !outline-0  ${
+									selected ? 'border border-primary-300 bg-primary-200 hover:bg-primary-200' : 'bg-none hover:bg-primary-100'
+								}`}
+							>
+								Gauges
+							</button>
+						)}
 					</Tab>
-				</TabsHeader>
-				<TabsBody>
-					<TabPanel key='lock' value='lock'>
+				</Tab.List>
+				<Tab.Panels className='mt-4'>
+					<Tab.Panel>
 						<Lock />
-					</TabPanel>
-					<TabPanel key='vote' value='vote'>
+					</Tab.Panel>
+					<Tab.Panel>
 						<Vote />
-					</TabPanel>
-					<TabPanel key='gauges' value='gauges'>
+					</Tab.Panel>
+					<Tab.Panel>
 						<Gauges />
-					</TabPanel>
-				</TabsBody>
-			</Tabs>
+					</Tab.Panel>
+				</Tab.Panels>
+			</Tab.Group>
 		</>
 	)
 }

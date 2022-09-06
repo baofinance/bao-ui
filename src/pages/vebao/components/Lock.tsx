@@ -1,4 +1,5 @@
 import Config from '@/bao/lib/config'
+import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
 import { StatCards } from '@/components/Stats'
@@ -6,14 +7,25 @@ import Tooltipped from '@/components/Tooltipped'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { Typography } from '@material-tailwind/react'
 import { useWeb3React } from '@web3-react/core'
 import { addYears, format } from 'date-fns'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
+
+function addDays(numOfDays: number, date = new Date()) {
+	date.setDate(date.getDate() + numOfDays)
+
+	return date
+}
+
+function addMonths(numOfMonths: number, date = new Date()) {
+	date.setMonth(date.getMonth() + numOfMonths)
+
+	return date
+}
 
 const Lock: React.FC = () => {
 	const bao = useBao()
@@ -90,7 +102,7 @@ const Lock: React.FC = () => {
 									customInput={
 										<button
 											type='button'
-											className='focus:ring-blue-500 inline-flex w-full justify-start rounded border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0'
+											className='inline-flex w-full justify-start rounded border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0'
 										>
 											{format(new Date(endDate), 'MM dd yyyy')}
 										</button>
@@ -109,7 +121,7 @@ const Lock: React.FC = () => {
                                             focus:ring-blue-500 inline-flex rounded border border-gray-300 bg-white p-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0
                                         `}
 												>
-													<FontAwesomeIcon icon={faChevronLeft} className='h-5 w-5 text-gray-600' />
+													<ChevronLeftIcon className='h-5 w-5 text-gray-600' />
 												</button>
 
 												<button
@@ -121,7 +133,7 @@ const Lock: React.FC = () => {
                                             focus:ring-blue-500 inline-flex rounded border border-gray-300 bg-white p-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0
                                         `}
 												>
-													<FontAwesomeIcon icon={faChevronRight} className='h-5 w-5 text-gray-600' />
+													<ChevronRightIcon className='h-5 w-5 text-gray-600' />
 												</button>
 											</div>
 										</div>
@@ -129,6 +141,24 @@ const Lock: React.FC = () => {
 								/>
 							</div>
 						</div>
+						<Button size='sm' onClick={() => setEndDate(addDays(7, new Date()))}>
+							1 Week
+						</Button>
+						<Button size='sm' onClick={() => setEndDate(addMonths(1, new Date()))}>
+							1 Month
+						</Button>
+						<Button size='sm' onClick={() => setEndDate(addMonths(3, new Date()))}>
+							3 Months
+						</Button>
+						<Button size='sm' onClick={() => setEndDate(addMonths(6, new Date()))}>
+							6 Months
+						</Button>
+						<Button size='sm' onClick={() => setEndDate(addYears(new Date(), 1))}>
+							1 Year
+						</Button>
+						<Button size='sm' onClick={() => setEndDate(addYears(new Date(), 4))}>
+							MAX
+						</Button>
 					</div>
 				</Card.Body>
 			</Card>
