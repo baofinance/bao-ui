@@ -125,9 +125,11 @@
     "showDetails": true
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.10",
     "@material-ui/pickers": "^3.3.10",
     "@types/react-datepicker": "^4.4.2",
     "flowbite-datepicker": "^1.2.2",
+    "heroicons": "^2.0.10",
     "react-date-picker": "^8.4.0",
     "react-datepicker": "^4.8.0"
   }

@@ -25,7 +25,7 @@ const veBAO: React.FC = () => {
 						Vote
 					</Tab>
 
-					<Tab key='gauuges' value='gauges'>
+					<Tab key='gauges' value='gauges'>
 						Gauges
 					</Tab>
 				</TabsHeader>
