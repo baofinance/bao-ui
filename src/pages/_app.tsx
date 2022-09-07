@@ -20,6 +20,7 @@ import BaoProvider from '@/contexts/BaoProvider'
 import FarmsProvider from '@/contexts/Farms'
 import MarketsProvider from '@/contexts/Markets'
 import TransactionProvider from '@/contexts/Transactions'
+import TxPopup from '@/components/TxPopup'
 
 function getLibrary(provider: provider) {
 	return new Web3(provider)
@@ -70,6 +71,7 @@ function App({ Component, pageProps }: AppProps) {
 					<Page>
 						<Component {...pageProps} />
 					</Page>
+					<TxPopup />
 				</main>
 			</Providers>
 		</>
