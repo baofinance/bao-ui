@@ -6,9 +6,11 @@ import { Progress } from '@/components/ProgressBar'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
+import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
 import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import { getDisplayBalance } from '@/utils/numberFormat'
+import BigNumber from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -66,6 +68,7 @@ interface GaugeProps {
 
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const weight = useGaugeWeight(gauge.lpAddress)
+	const allocation = useGaugeAllocation(gauge.lpAddress).toNumber()
 
 	return (
 		<tr key={gauge.name} className='even:bg-primary-100'>
@@ -82,7 +85,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 				</div>
 			</td>
 			<td className='p-2'>
-				<Progress width={(75 / 100) * 100} label={`75%`} assetColor={'#000'} />
+				<Progress width={(allocation / 100) * 100} label={`${getDisplayBalance(allocation, 16)}%`} assetColor={'#000'} />
 			</td>
 			<td className='p-2 text-end'>
 				<Badge className='bg-primary-300 font-semibold'>6.9%</Badge>

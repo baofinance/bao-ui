@@ -301,3 +301,7 @@ export const getAccountLiquidity = async (comptrollerContract: Contract, account
 export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
 	return gaugeControllerContract.methods.get_gauge_weight(lpAddress).call()
 }
+
+export const getGaugeAllocation = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
+	return gaugeControllerContract.methods.gauge_relative_weight(lpAddress).call()
+}
