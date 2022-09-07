@@ -52,7 +52,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 			</div>
 			{displayType === 'TABLE' ? (
 				<>
-					<div className='rounded-lg border border-primary-300 bg-primary-200'>
+					<div className='rounded border border-primary-300 bg-primary-200'>
 						<table className='w-full'>
 							<thead>
 								<tr className='rounded-t-lg bg-primary-100'>
@@ -123,7 +123,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 					</div>
 				</>
 			) : (
-				<div className='rounded-lg border border-primary-300 bg-primary-100'>
+				<div className='rounded border border-primary-300 bg-primary-100'>
 					<div className='flex flex-row'>
 						<div className='flex flex-col'>
 							<DonutGraph width={200} height={200} composition={composition} basket={basketId} rates={rates} info={info} />

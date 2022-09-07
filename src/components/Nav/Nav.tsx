@@ -33,14 +33,14 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 				<Link
 					href={href}
 					key={name}
-					className='relative -my-2 -mx-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -my-2 -mx-3 rounded px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(index as any)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
 					<AnimatePresence>
 						{hoveredIndex === index && (
 							<motion.span
-								className={`absolute inset-0 rounded-lg bg-primary-100`}
+								className={`absolute inset-0 rounded bg-primary-100`}
 								layoutId='hoverBackground'
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1, transition: { duration: 0.15 } }}

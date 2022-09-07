@@ -12,7 +12,7 @@ export const Progress: React.FC<ProgressBarProps> = ({ assetColor, width, label 
 	return (
 		<>
 			<div
-				className='float-left inline-block h-full rounded-lg px-4 py-1 font-semibold'
+				className='float-left inline-block h-full rounded px-4 py-1 font-semibold'
 				style={{ backgroundColor: `${assetColor}`, width: `${width}%` }}
 			>
 				{width > 20 ? label : <span className='opacity-0'>x</span> /* janky, but have to do it to make the bar show */}

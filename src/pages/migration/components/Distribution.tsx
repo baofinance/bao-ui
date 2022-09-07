@@ -11,19 +11,19 @@ const options = [
 	{
 		id: 1,
 		name: 'Migrate to veBAO',
-		shortDesc: 'Migrate your locked BAOv1 to veBAO',
+		shortDesc: 'Migrate your locked BAOv1 to veBAO.',
 		desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
 	},
 	{
 		id: 2,
-		name: 'Start Distribution',
-		shortDesc: 'Start your linear 3 year distribution now.',
+		name: 'Claim Now',
+		shortDesc: 'Claim your unlocked BAO.',
 		desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
 	},
 	{
 		id: 3,
-		name: 'Claim Now',
-		shortDesc: 'Claim your locked BAO now with a slashing penalty.',
+		name: 'End Distribution',
+		shortDesc: 'End your distribution.',
 		desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
 	},
 ]
@@ -93,7 +93,7 @@ const Distribution: React.FC = () => {
 					)}
 				</Listbox>
 			</div>
-			<div className='flex flex-row rounded-lg bg-primary-100 p-4'>{selectedOption.desc}</div>
+			<div className='flex flex-row rounded bg-primary-100 p-4'>{selectedOption.desc}</div>
 		</>
 	)
 }

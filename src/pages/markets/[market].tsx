@@ -195,7 +195,7 @@ const Market: NextPage<{
 				/>
 			</div>
 			<>
-				<div className='mb-4 rounded-lg border border-primary-300 bg-primary-100 p-4'>
+				<div className='mb-4 rounded border border-primary-300 bg-primary-100 p-4'>
 					<MarketDetails asset={activeMarket} />
 					<StatBlock
 						stats={[

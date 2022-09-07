@@ -1,4 +1,3 @@
-import Button from '@/components/Button'
 import PageHeader from '@/components/PageHeader'
 import Typography from '@/components/Typography'
 import { Tab } from '@headlessui/react'
@@ -17,9 +16,29 @@ const Migration: React.FC = () => {
 				Migrate your BAOv1 to BAOv2!
 			</Typography>
 			<Tab.Group defaultIndex={0}>
-				<Tab.List className='flex flex-1 items-center justify-center gap-2'>
-					<Tab>{({ selected }) => <Button className={selected ? 'bg-primary-300' : 'bg-primary-100'}>Liquid BAO</Button>}</Tab>
-					<Tab>{({ selected }) => <Button className={selected ? 'bg-primary-300' : 'bg-primary-100'}>Locked BAO</Button>}</Tab>
+				<Tab.List className='m-auto flex w-fit flex-1 items-center justify-center gap-2 rounded bg-background-100 p-2'>
+					<Tab className='border-0 outline-0'>
+						{({ selected }) => (
+							<button
+								className={`rounded !border-none p-2 !outline-0  ${
+									selected ? 'border border-primary-300 bg-primary-200 hover:bg-primary-200' : 'bg-none hover:bg-primary-100'
+								}`}
+							>
+								Liquid BAO
+							</button>
+						)}
+					</Tab>
+					<Tab className='border-0 outline-0'>
+						{({ selected }) => (
+							<button
+								className={`rounded !border-none p-2 !outline-0  ${
+									selected ? 'border border-primary-300 bg-primary-200 hover:bg-primary-200' : 'bg-none hover:bg-primary-100'
+								}`}
+							>
+								Locked BAO
+							</button>
+						)}
+					</Tab>
 				</Tab.List>
 				<Tab.Panels className='mt-4'>
 					<Tab.Panel>

@@ -58,11 +58,11 @@ input[type='number'] {
 }
 
 .react-datepicker__input-container input {
-    @apply block w-full text-base md:text-sm bg-white border border-gray-300 rounded shadow-sm
+    @apply block w-full text-base md:text-sm bg-primary-100 border border-primary-300 rounded shadow-sm
 }
 
 .react-datepicker-popper {
-    @apply z-40 w-72 text-sm bg-white shadow px-3 py-2 border-2 border-gray-200 rounded
+    @apply z-40 w-72 text-sm bg-primary-100 shadow px-3 py-2 border-2 border-primary-300 rounded
 }
 
 .react-datepicker-left {
@@ -74,7 +74,7 @@ input[type='number'] {
 }
 
 .react-datepicker__portal {
-    @apply absolute z-10 w-72 text-sm transform-none bg-white shadow px-3 py-2 top-12 right-0 border-2 border-gray-200 rounded
+    @apply absolute z-10 w-72 text-sm transform-none bg-white shadow px-3 py-2 top-12 right-0 border-2 border-primary-300 rounded
 }
 
 .react-datepicker__month-container {
@@ -86,7 +86,7 @@ input[type='number'] {
 }
 
 .react-datepicker__current-month {
-    @apply ml-2.5 text-lg font-semibold text-gray-800
+    @apply ml-2.5 text-lg font-semibold text-text-200
 }
 
 .react-datepicker__week {
@@ -94,11 +94,11 @@ input[type='number'] {
 }
 
 .react-datepicker__day-names {
-    @apply flex justify-around text-gray-400 font-medium text-center text-xs
+    @apply flex justify-around text-text-200 font-medium text-center text-xs
 }
 
 .react-datepicker__day-name {
-    @apply w-8 h-8 flex items-center justify-center py-1 rounded-full
+    @apply w-8 h-8 flex items-center justify-center py-1 rounded-full text-text-400
 }
 
 .react-datepicker__navigation {
@@ -114,7 +114,7 @@ input[type='number'] {
 }
 
 .react-datepicker__day {
-    @apply mb-1 w-8 h-8 flex items-center justify-center py-1 text-sm leading-loose transition text-gray-700 rounded
+    @apply mb-1 w-8 h-8 flex items-center justify-center py-1 text-sm leading-loose transition text-text-100 cursor-pointer
 }
 
 .react-datepicker__day--disabled {

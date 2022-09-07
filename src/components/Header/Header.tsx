@@ -69,7 +69,7 @@ const Header: FC = () => {
 								{({ open }) => (
 									<>
 										<Popover.Button
-											className='relative z-10 -mr-2 inline-flex items-center rounded-lg stroke-text-100 p-2 outline-none hover:bg-primary-100/50 [&:not(:focus-visible)]:focus:outline-none'
+											className='relative z-10 -mr-2 inline-flex items-center rounded stroke-text-100 p-2 outline-none hover:bg-primary-100/50 [&:not(:focus-visible)]:focus:outline-none'
 											aria-label='Toggle site navigation'
 										>
 											{({ open }) => (open ? <ChevronUpIcon className='h-6 w-6' /> : <MenuIcon className='h-6 w-6' />)}
@@ -114,7 +114,7 @@ const Header: FC = () => {
 						<AccountButton />
 						<Menu as='div' className='relative inline-block text-left'>
 							<div>
-								<Menu.Button className='flex items-center rounded-lg'>
+								<Menu.Button className='flex items-center rounded'>
 									<Button size='sm' className='bg-primary-100 hover:bg-primary-300'>
 										<span className='sr-only'>Open options</span>
 										<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5' aria-hidden='true' />
