@@ -5,7 +5,7 @@ import { ethers } from 'ethers'
 import _ from 'lodash'
 import { Contract } from 'web3-eth-contract'
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, ActiveSupportedMarket, FarmableSupportedPool } from './lib/types'
+import { ActiveSupportedBasket, ActiveSupportedGauge, ActiveSupportedMarket, FarmableSupportedPool } from './lib/types'
 
 BigNumber.config({
 	EXPONENTIAL_AT: 1000,
@@ -28,6 +28,10 @@ export const getMasterChefContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('masterChef')
 }
 
+export const getGaugeControllerContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('gaugeController')
+}
+
 export const getBaoContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('bao')
 }
@@ -46,6 +50,10 @@ export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
 
 export const getMarkets = (bao: Bao): ActiveSupportedMarket[] => {
 	return bao && bao.contracts.markets
+}
+
+export const getGauges = (bao: Bao): ActiveSupportedGauge[] => {
+	return bao && bao.contracts.gauges
 }
 
 export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
@@ -289,3 +297,7 @@ export const getUserInfoChef = async (masterChefContract: Contract, pid: number,
 
 export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) =>
 	await comptrollerContract.methods.getAccountLiquidity(account).call()
+
+export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
+	return gaugeControllerContract.methods.get_gauge_weight(lpAddress).call()
+}

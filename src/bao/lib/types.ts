@@ -20,6 +20,16 @@ export interface SupportedPool {
 	type: string
 }
 
+export interface SupportedGauge {
+	gid: number
+	lpToken: {
+		[network: number]: string
+	}
+	name: string
+	symbol: string
+	icon: string
+}
+
 export interface SupportedBasket {
 	nid: number
 	basketAddresses: {
@@ -77,6 +87,11 @@ export interface FarmableSupportedPool extends SupportedPool {
 	tokenContract: Contract
 }
 
+export interface ActiveSupportedGauge extends SupportedGauge {
+	lpAddress: string
+	lpContract: Contract
+}
+
 export interface ActiveSupportedBasket extends SupportedBasket {
 	address: string
 	basketContract: Contract
@@ -131,6 +146,7 @@ export interface Config {
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
 	markets: SupportedMarket[]
+	gauges: SupportedGauge[]
 }
 
 export type SWR = {

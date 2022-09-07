@@ -88,6 +88,13 @@ export default {
 				abi: 'lendingRegistry.json',
 			},
 		},
+		// veBAO (Currently set to Curve contracts)
+		gaugeController: {
+			1: {
+				address: '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB',
+				abi: 'gaugeController.json',
+			},
+		},
 	},
 	subgraphs: {
 		sushiExchange: {
@@ -171,6 +178,17 @@ export default {
 			icon: 'bSTBL.png',
 			coingeckoId: 'dai',
 			underlyingDecimals: 18,
+		},
+	],
+	gauges: [
+		{
+			gid: 1,
+			name: '3pool',
+			symbol: '3CRV',
+			lpToken: {
+				1: '0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A',
+			},
+			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
 		},
 	],
 	baskets: [

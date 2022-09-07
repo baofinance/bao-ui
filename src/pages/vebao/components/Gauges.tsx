@@ -1,22 +1,26 @@
+import { ActiveSupportedGauge } from '@/bao/lib/types'
+import { getGaugeControllerContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import { Progress } from '@/components/ProgressBar'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
+import useBao from '@/hooks/base/useBao'
+import useGauges from '@/hooks/vebao/useGauges'
+import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './GaugeModal'
 
-type GaugeProps = {
-	gauge: any
-	apr: any
-	weight: any
-	tvl: string
-}
-
-const Gauges: React.FC<GaugeProps> = ({ gauge, apr, weight, tvl }) => {
+const GaugeList: React.FC = () => {
+	const bao = useBao()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
+	const gauges = useGauges()
+	const gaugeControllerContract = getGaugeControllerContract(bao)
+
+	console.log(gauges)
 
 	return (
 		<>
@@ -43,49 +47,7 @@ const Gauges: React.FC<GaugeProps> = ({ gauge, apr, weight, tvl }) => {
 							</tr>
 						</thead>
 						<tbody className={`${isDesktop ? 'text-base' : 'text-sm'}`}>
-							<tr key={'bSTBL-DAI'} className='even:bg-primary-100'>
-								<td className='p-2 text-start'>
-									<div className='mx-0 my-auto inline-block h-full items-center'>
-										<div className='mr-2 inline-block'>
-											<Image
-												className='z-10 inline-block select-none'
-												src={'/images/tokens/bSTBL.png'}
-												alt={'bSTBL'}
-												width={24}
-												height={24}
-											/>
-											<Image
-												className='z-20 -ml-2 inline-block select-none'
-												src={'/images/tokens/DAI.png'}
-												alt={'DAI'}
-												width={24}
-												height={24}
-											/>
-										</div>
-										<span className='inline-block text-left align-middle'>
-											<Typography variant='base' className='font-bold'>
-												bSTBL-DAI
-											</Typography>
-										</span>
-									</div>
-								</td>
-								<td className='p-2'>
-									<Progress width={(75 / 100) * 100} label={`75%`} assetColor={'#febe44'} />
-								</td>
-								<td className='p-2 text-end'>
-									<Badge className='bg-primary-300 font-semibold'>6.9%</Badge>
-								</td>
-								<td className='p-2 text-end'>
-									<Tooltipped content={`Gauge Weight`}>
-										<a>
-											<Badge className='bg-primary-300 font-semibold'>495948801.90</Badge>
-										</a>
-									</Tooltipped>
-								</td>
-								<td className='p-2 text-end'>
-									<Badge className='bg-primary-300 font-semibold'>$420,690,420</Badge>
-								</td>
-							</tr>
+							{gauges && gauges.map(gauge => <Gauge key={gauge.gid} gauge={gauge} />)}
 						</tbody>
 					</table>
 				</div>
@@ -96,4 +58,45 @@ const Gauges: React.FC<GaugeProps> = ({ gauge, apr, weight, tvl }) => {
 	)
 }
 
-export default Gauges
+export default GaugeList
+
+interface GaugeProps {
+	gauge: ActiveSupportedGauge
+}
+
+const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
+	const weight = useGaugeWeight(gauge.lpAddress)
+
+	return (
+		<tr key={gauge.name} className='even:bg-primary-100'>
+			<td className='p-2 text-start'>
+				<div className='mx-0 my-auto inline-block h-full items-center'>
+					<div className='mr-2 inline-block'>
+						<Image className='z-10 inline-block select-none' src={gauge.icon} alt={gauge.name} width={24} height={24} />
+					</div>
+					<span className='inline-block text-left align-middle'>
+						<Typography variant='base' className='font-bold'>
+							{gauge.name}
+						</Typography>
+					</span>
+				</div>
+			</td>
+			<td className='p-2'>
+				<Progress width={(75 / 100) * 100} label={`75%`} assetColor={'#000'} />
+			</td>
+			<td className='p-2 text-end'>
+				<Badge className='bg-primary-300 font-semibold'>6.9%</Badge>
+			</td>
+			<td className='p-2 text-end'>
+				<Tooltipped content={`Gauge Weight`}>
+					<a>
+						<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(weight)}</Badge>
+					</a>
+				</Tooltipped>
+			</td>
+			<td className='p-2 text-end'>
+				<Badge className='bg-primary-300 font-semibold'>$420,690,420</Badge>
+			</td>
+		</tr>
+	)
+}
