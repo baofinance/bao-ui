@@ -7,9 +7,8 @@ import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
+import useVotingPower from '@/hooks/vebao/useVotingPower'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
-import { Tab } from '@headlessui/react'
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
 import { addYears, format } from 'date-fns'
@@ -36,8 +35,8 @@ const Lock: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
 	const [endDate, setEndDate] = useState(new Date())
-	const baoBalance = useTokenBalance(Config.addressMap.BAO)
-	const locks = useLockedEarnings()
+	const baoBalance = useTokenBalance(Config.addressMap.CRV)
+	const votingPower = useVotingPower()
 
 	return (
 		<>
@@ -58,12 +57,12 @@ const Lock: React.FC = () => {
 						{
 							label: `Your veBAO Balance`,
 							value: (
-								<a>
-									<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
-									<Tooltipped content={`Your locked veBAO balance.`}>
-										{account ? (window.screen.width > 1200 ? getDisplayBalance(locks) : truncateNumber(locks)) : '-'}
-									</Tooltipped>
-								</a>
+								<Tooltipped content={`Your locked veBAO balance.`}>
+									<a>
+										<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
+										{account ? (window.screen.width > 1200 ? getDisplayBalance(votingPower) : truncateNumber(votingPower)) : '-'}
+									</a>
+								</Tooltipped>
 							),
 						},
 						{

@@ -32,6 +32,10 @@ export const getGaugeControllerContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('gaugeController')
 }
 
+export const getVotingEscrowContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('votingEscrow')
+}
+
 export const getMinterContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('minter')
 }
@@ -319,4 +323,8 @@ export const getMintable = async (bao: Bao, gaugeContract: Contract): Promise<Bi
 	const timestamp = gaugeContract.methods.period_timestamp(period).call()
 	const crvContract = bao.contracts.getContract('crv')
 	return crvContract.methods.mintable_in_timeframe(timestamp, timestamp).call()
+}
+
+export const getVotingPower = async (votingEscrowContract: Contract, account: string): Promise<BigNumber> => {
+	return votingEscrowContract.methods.balanceOf(account).call()
 }
