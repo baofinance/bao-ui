@@ -68,10 +68,10 @@ function App({ Component, pageProps }: AppProps) {
 				<DefaultSeo {...SEO} />
 				<Header />
 				<main>
+					<TxPopup />
 					<Page>
 						<Component {...pageProps} />
 					</Page>
-					<TxPopup />
 				</main>
 			</Providers>
 		</>

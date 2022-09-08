@@ -123,5 +123,9 @@
     "budget": 3584000,
     "budgetPercentIncreaseRed": 40,
     "showDetails": true
+  },
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "react-notifications-component": "^4.0.1"
   }
 }

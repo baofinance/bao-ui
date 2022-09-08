@@ -1,48 +1,15 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useEffect } from 'react'
+import { ReactNotifications, Store as NotifStore } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css/animate.min.css'
 import { TransactionReceipt } from 'web3-core'
 import { useWeb3React } from '@web3-react/core'
 import Web3 from 'web3'
 import usePendingTransactions from '../../hooks/base/usePendingTransactions'
 import { waitTransaction, isSuccessfulTransaction } from './waitTransaction'
 
-interface PopupProps {
-	description?: any
-	receipt: TransactionReceipt
-}
-
-const Popup: React.FC<PopupProps> = ({ description, receipt }) => {
-	const hash = receipt.transactionHash
-	const success = isSuccessfulTransaction(receipt)
-	const successText = success ? 'Succeeded' : 'Failed'
-	return (
-		<div className='bg-white shadow-lg mx-auto w-96 max-w-full text-sm pointer-events-auto bg-clip-padding rounded-lg block'
-			id='static-example' role='alert' aria-live='assertive' aria-atomic='true' data-mdb-autohide='false'>
-			<div className='bg-white flex justify-between items-center py-2 px-3 bg-clip-padding border-b border-gray-200 rounded-t-lg'>
-				<p className='font-bold text-gray-500'>Transaction {successText}</p>
-				<div className='flex items-center'>
-					<p className='text-xs text-green'>
-						<FontAwesomeIcon icon={faCheck} size='2x' />
-					</p>
-				</div>
-			</div>
-			<div className='p-3 bg-white rounded-b-lg break-words text-gray-700'>
-				{description}
-				{' - '}
-				<a target='_blank' className='underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
-					href={`https://etherscan.io/tx/${receipt.transactionHash}`}>
-				 {hash.slice(0,6)}...{hash.slice(-9,-1)} 
-				</a>
-			</div>
-		</div>
-	)
-}
-
-
-interface TxPopupProps {
-	children?: any
-}
 
 interface TxForPopup {
 	hash: string
@@ -50,7 +17,7 @@ interface TxForPopup {
 	receipt: TransactionReceipt
 }
 
-const TxPopup: React.FC<TxPopupProps> = ({ children }) => {
+const TxPopup: React.FC = () => {
 	const pendingTxs = usePendingTransactions()
 	const [seenTxs, setSeenTxs] = useState({})
 	const [popups, setPopups] = useState([])
@@ -62,20 +29,33 @@ const TxPopup: React.FC<TxPopupProps> = ({ children }) => {
 			pendingTxs.map(tx => {
 				if (!txs[tx.hash]) {
 					waitTransaction(web3, tx.hash).then(receipt => {
-						console.log('got receipt, adding popup for', tx.hash)
-						setPopups(pps => {
-							const popupTx: TxForPopup = {
-								hash: tx.hash,
-								description: tx.description,
-								receipt,
-							}
-							pps.push(popupTx)
-							return pps
+						const success = isSuccessfulTransaction(receipt)
+						const successText = success ? 'Successful' : 'Failed'
+						NotifStore.addNotification({
+							title: `Transaction ${successText}`,
+							message: (
+								<>
+									{tx.description} --{' '}
+									<a target='_blank' rel='noreferrer' href={`https://etherscan.io/tx/${receipt.transactionHash}`}
+										className='underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
+									>
+										{tx.hash.slice(0,6)}...{tx.hash.slice(-9,-1)} 
+									</a>
+								</>
+							),
+							type: success ? 'success' : 'danger',
+							insert: 'top',
+							container: 'bottom-right',
+							animationIn: ['animate__animated', 'animate__fadeIn'],
+							animationOut: ['animate__animated', 'animate__fadeOut'],
+							dismiss: {
+								pauseOnHover: true,
+								duration: 7000,
+								onScreen: true,
+								click: false, // so one can click the etherscan link
+								touch: false, // so one can click the etherscan link
+							},
 						})
-						setTimeout(() => {
-							console.log('popup time over, removing popup for', tx.hash)
-							setPopups(pps => pps.filter(p => p.hash !== tx.hash))
-						}, 10000)
 					})
 				}
 				txs[tx.hash] = true
@@ -85,13 +65,7 @@ const TxPopup: React.FC<TxPopupProps> = ({ children }) => {
 	}, [pendingTxs, setSeenTxs, setPopups, library])
 
 	return (
-		<div className='fixed flex items-center justify-center bottom-[0] w-[100%] pb-10'>
-			<div className='flex justify-center space-x-2'>
-				{popups.map((tx, i) => (
-					<Popup key={i} description={tx.description} receipt={tx.receipt} />
-				))}
-			</div>
-		</div>
+		<ReactNotifications />
 	)
 }
 
