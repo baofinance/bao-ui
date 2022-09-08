@@ -38,6 +38,12 @@ export default {
 				abi: 'bao.json',
 			},
 		},
+		crv: {
+			1: {
+				address: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+				abi: 'erc20bao.json',
+			},
+		},
 		masterChef: {
 			1: {
 				address: '0xBD530a1c060DC600b951f16dc656E4EA451d1A2D',
@@ -93,6 +99,18 @@ export default {
 			1: {
 				address: '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB',
 				abi: 'gaugeController.json',
+			},
+		},
+		votingEscrow: {
+			1: {
+				address: '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2',
+				abi: 'votingEscrow.json',
+			},
+		},
+		minter: {
+			1: {
+				address: '0xd061D61a4d941c39E5453435B6345Dc261C2fcE0',
+				abi: 'minter.json',
 			},
 		},
 	},
@@ -185,8 +203,17 @@ export default {
 			gid: 1,
 			name: '3pool',
 			symbol: '3CRV',
-			lpToken: {
+			address: {
 				1: '0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A',
+			},
+			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
+		},
+		{
+			gid: 2,
+			name: 'tricrypto2',
+			symbol: 'CRV3CRYPTO',
+			address: {
+				1: '0xDeFd8FdD20e0f34115C7018CCfb655796F6B2168',
 			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
 		},

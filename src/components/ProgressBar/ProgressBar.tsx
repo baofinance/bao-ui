@@ -17,7 +17,11 @@ export const Progress: React.FC<ProgressBarProps> = ({ assetColor, width, label 
 			>
 				{width > 20 ? label : <span className='opacity-0'>x</span> /* janky, but have to do it to make the bar show */}
 			</div>
-			{width <= 20 && <Typography variant='sm'>{label}</Typography>}
+			{width <= 20 && (
+				<Typography variant='sm' className='font-medium'>
+					{label}
+				</Typography>
+			)}
 		</>
 	)
 }

@@ -37,8 +37,8 @@ export class Contracts {
 			networkId === Config.networkId
 				? Config.gauges.map(gauge =>
 						Object.assign(gauge, {
-							lpAddress: gauge.lpToken[networkId],
-							lpContract: this.getNewContract(GaugeAbi),
+							gaugeAddress: gauge.address[networkId],
+							gaugeContract: this.getNewContract(GaugeAbi),
 						}),
 				  )
 				: undefined
@@ -95,8 +95,8 @@ export class Contracts {
 			})
 
 			if (this.gauges) {
-				this.gauges.forEach(({ lpAddress, lpContract }) => {
-					setProvider(lpContract, lpAddress)
+				this.gauges.forEach(({ gaugeAddress, gaugeContract }) => {
+					setProvider(gaugeContract, gaugeAddress)
 				})
 			}
 			if (this.pools) {

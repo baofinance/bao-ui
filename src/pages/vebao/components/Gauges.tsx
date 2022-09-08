@@ -2,15 +2,14 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { getGaugeControllerContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
-import { Progress } from '@/components/ProgressBar'
-import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
 import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
-import { getDisplayBalance } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
+import useInflationRate from '@/hooks/vebao/useInflationRate'
+import useMintable from '@/hooks/vebao/useMintable'
+import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -41,11 +40,10 @@ const GaugeList: React.FC = () => {
 					<table className='w-full'>
 						<thead>
 							<tr className='rounded-t-lg bg-primary-100'>
-								<th className='w-2/12 rounded-tl-lg p-2 text-start font-bold'>Pair</th>
-								<th className='w-3/12 p-2 text-start font-bold'>Allocation</th>
-								<th className='w-2/12 p-2 text-end font-bold'>Boosted APR</th>
-								<th className='w-3/12 p-2 text-end font-bold'>Gauge Weight</th>
-								<th className='w-2/12 rounded-tr-lg p-2 px-4 text-end font-bold'>TVL</th>
+								<th className='rounded-tl-lg p-2 text-start font-bold'>Gauge</th>
+								<th className='p-2 text-end font-bold'>Gauge Weight</th>
+								<th className='p-2 text-end font-bold'>Relative Weight</th>
+								<th className='p-2 text-end font-bold'>Current APY</th>
 							</tr>
 						</thead>
 						<tbody className={`${isDesktop ? 'text-base' : 'text-sm'}`}>
@@ -67,8 +65,12 @@ interface GaugeProps {
 }
 
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
-	const weight = useGaugeWeight(gauge.lpAddress)
-	const allocation = useGaugeAllocation(gauge.lpAddress).toNumber()
+	const weight = useGaugeWeight(gauge.gaugeAddress).toNumber()
+	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress).toNumber()
+	const inflationRate = useInflationRate(gauge.gaugeContract).toNumber()
+	const mintable = useMintable(gauge.gaugeContract).toNumber()
+
+	console.log(mintable)
 
 	return (
 		<tr key={gauge.name} className='even:bg-primary-100'>
@@ -84,21 +86,14 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 					</span>
 				</div>
 			</td>
-			<td className='p-2'>
-				<Progress width={(allocation / 100) * 100} label={`${getDisplayBalance(allocation, 16)}%`} assetColor={'#000'} />
+			<td className='p-2 text-end'>
+				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(weight)}</Badge>
 			</td>
 			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>6.9%</Badge>
+				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(relativeWeight, 16)}</Badge>
 			</td>
 			<td className='p-2 text-end'>
-				<Tooltipped content={`Gauge Weight`}>
-					<a>
-						<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(weight)}</Badge>
-					</a>
-				</Tooltipped>
-			</td>
-			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>$420,690,420</Badge>
+				<Badge className='bg-primary-300 font-semibold'>{(inflationRate * relativeWeight) / 1e18}</Badge>
 			</td>
 		</tr>
 	)

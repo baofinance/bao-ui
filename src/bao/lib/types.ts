@@ -22,12 +22,12 @@ export interface SupportedPool {
 
 export interface SupportedGauge {
 	gid: number
-	lpToken: {
-		[network: number]: string
-	}
 	name: string
 	symbol: string
 	icon: string
+	address: {
+		[network: number]: string
+	}
 }
 
 export interface SupportedBasket {
@@ -88,8 +88,8 @@ export interface FarmableSupportedPool extends SupportedPool {
 }
 
 export interface ActiveSupportedGauge extends SupportedGauge {
-	lpAddress: string
-	lpContract: Contract
+	gaugeAddress: string
+	gaugeContract: Contract
 }
 
 export interface ActiveSupportedBasket extends SupportedBasket {

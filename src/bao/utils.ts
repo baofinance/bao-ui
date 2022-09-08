@@ -32,6 +32,10 @@ export const getGaugeControllerContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('gaugeController')
 }
 
+export const getMinterContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('minter')
+}
+
 export const getBaoContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('bao')
 }
@@ -302,6 +306,17 @@ export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddres
 	return gaugeControllerContract.methods.get_gauge_weight(lpAddress).call()
 }
 
-export const getGaugeAllocation = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
+export const getRelativeWeight = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
 	return gaugeControllerContract.methods.gauge_relative_weight(lpAddress).call()
+}
+
+export const getInflationRate = async (gaugeContract: Contract): Promise<BigNumber> => {
+	return gaugeContract.methods.inflation_rate().call()
+}
+
+export const getMintable = async (bao: Bao, gaugeContract: Contract): Promise<BigNumber> => {
+	const period = gaugeContract.methods.period().call()
+	const timestamp = gaugeContract.methods.period_timestamp(period).call()
+	const crvContract = bao.contracts.getContract('crv')
+	return crvContract.methods.mintable_in_timeframe(timestamp, timestamp).call()
 }

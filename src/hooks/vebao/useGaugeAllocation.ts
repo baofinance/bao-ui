@@ -1,4 +1,4 @@
-import { getGaugeAllocation, getGaugeControllerContract } from '@/bao/utils'
+import { getGaugeControllerContract, getRelativeWeight } from '@/bao/utils'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
@@ -9,7 +9,7 @@ const useGaugeAllocation = (lpAddress: string) => {
 	const gaugeControllerContract = getGaugeControllerContract(bao)
 
 	const fetchAllocation = useCallback(async () => {
-		const allocation = await getGaugeAllocation(gaugeControllerContract, lpAddress)
+		const allocation = await getRelativeWeight(gaugeControllerContract, lpAddress)
 		setAllocation(new BigNumber(allocation))
 	}, [gaugeControllerContract, bao])
 

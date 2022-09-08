@@ -66,7 +66,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 						<Typography variant='xl' className='text-center'>
 							Collateral
 						</Typography>
-						<ListHeader headers={['Asset', 'Wallet', 'Liquidity']} />
+						<ListHeader headers={['Asset', 'Wallet', 'Liquidity']} className='mr-10' />
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
 								market={market}
@@ -83,7 +83,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 						<Typography variant='xl' className='text-center'>
 							Synthetics
 						</Typography>
-						<ListHeader headers={['Asset', 'APR', 'Wallet']} />
+						<ListHeader headers={['Asset', 'APR', 'Wallet']} className='mr-10' />
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
