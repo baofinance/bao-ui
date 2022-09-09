@@ -1,5 +1,3 @@
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useEffect } from 'react'
 import { ReactNotifications, Store as NotifStore } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
@@ -10,24 +8,16 @@ import Web3 from 'web3'
 import usePendingTransactions from '../../hooks/base/usePendingTransactions'
 import { waitTransaction, isSuccessfulTransaction } from './waitTransaction'
 
-
-interface TxForPopup {
-	hash: string
-	description: string
-	receipt: TransactionReceipt
-}
-
 const TxPopup: React.FC = () => {
 	const pendingTxs = usePendingTransactions()
 	const [seenTxs, setSeenTxs] = useState({})
-	const [popups, setPopups] = useState([])
 	const { library } = useWeb3React()
 
 	useEffect(() => {
 		const web3 = new Web3(library)
-		setSeenTxs((txs: any) => {
+		setSeenTxs((stxs: any) => {
 			pendingTxs.map(tx => {
-				if (!txs[tx.hash]) {
+				if (!stxs[tx.hash]) {
 					waitTransaction(web3, tx.hash).then(receipt => {
 						const success = isSuccessfulTransaction(receipt)
 						const successText = success ? 'Successful' : 'Failed'
@@ -58,11 +48,11 @@ const TxPopup: React.FC = () => {
 						})
 					})
 				}
-				txs[tx.hash] = true
+				stxs[tx.hash] = true
 			})
-			return txs
+			return stxs
 		})
-	}, [pendingTxs, setSeenTxs, setPopups, library])
+	}, [pendingTxs, setSeenTxs, library])
 
 	return (
 		<ReactNotifications />
@@ -70,4 +60,3 @@ const TxPopup: React.FC = () => {
 }
 
 export default TxPopup
-export type { TxPopupProps }

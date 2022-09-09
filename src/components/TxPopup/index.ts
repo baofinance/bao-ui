@@ -1,4 +1,3 @@
-import TxPopup, { TxPopupProps } from './TxPopup'
+import TxPopup from './TxPopup'
 
 export default TxPopup
-export type { TxPopupProps }
