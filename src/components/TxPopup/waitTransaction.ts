@@ -17,7 +17,7 @@ interface Options {
 /**
  * Wait for one or multiple transactions to confirm.
  *
- * @param web3
+ * @param library A web3 library
  * @param txnHash A transaction hash or list of those
  * @param options Wait timers
  * @return Transaction receipt
