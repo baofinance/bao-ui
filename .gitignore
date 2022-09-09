@@ -5,3 +5,4 @@ build/
 *.log
 .next
 out
+.env
