@@ -8,14 +8,14 @@ const useGaugeAllocation = (lpAddress: string) => {
 	const bao = useBao()
 	const gaugeControllerContract = getGaugeControllerContract(bao)
 
-	const fetchAllocation = useCallback(async () => {
+	const fetchGaugeAllocation = useCallback(async () => {
 		const allocation = await getRelativeWeight(gaugeControllerContract, lpAddress)
 		setAllocation(new BigNumber(allocation))
 	}, [gaugeControllerContract, bao])
 
 	useEffect(() => {
 		if (gaugeControllerContract && bao) {
-			fetchAllocation()
+			fetchGaugeAllocation()
 		}
 	}, [gaugeControllerContract, setAllocation, bao])
 

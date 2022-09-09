@@ -9,9 +9,12 @@ import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useInflationRate from '@/hooks/vebao/useInflationRate'
 import useMintable from '@/hooks/vebao/useMintable'
+import useTotalSupply from '@/hooks/vebao/useTotalSupply'
+import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
 import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
+import BigNumber from 'bignumber.js'
 import Image from 'next/future/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './GaugeModal'
 
@@ -65,12 +68,27 @@ interface GaugeProps {
 }
 
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
+	const bao = useBao()
+	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const weight = useGaugeWeight(gauge.gaugeAddress).toNumber()
 	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress).toNumber()
 	const inflationRate = useInflationRate(gauge.gaugeContract).toNumber()
-	const mintable = useMintable(gauge.gaugeContract).toNumber()
+	const totalMintable = useMintable().toNumber()
+	const mintable = totalMintable * relativeWeight
+	const rewardTokenPrice = baoPrice && getBalanceNumber(baoPrice)
+	const epochUSDRewards = mintable * rewardTokenPrice
+	const totalSupply = useTotalSupply(gauge.gaugeContract)
+	const virtualPrice = useVirtualPrice(gauge.poolContract)
 
-	console.log(mintable)
+	useEffect(() => {
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
+			setBaoPrice(new BigNumber((await res.json())['curve-dao-token'].usd))
+		})
+	}, [bao, setBaoPrice])
+
+	// const mintable = crvContract.methods.mintable_in_timeframe(currentEpoch, futureEpoch).call()
+	console.log(totalSupply)
+	console.log(virtualPrice)
 
 	return (
 		<tr key={gauge.name} className='even:bg-primary-100'>
@@ -93,7 +111,10 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(relativeWeight, 16)}</Badge>
 			</td>
 			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>{(inflationRate * relativeWeight) / 1e18}</Badge>
+				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(mintable)}</Badge>
+			</td>
+			<td className='p-2 text-end'>
+				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(epochUSDRewards)}</Badge>
 			</td>
 		</tr>
 	)

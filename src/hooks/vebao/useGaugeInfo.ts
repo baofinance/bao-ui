@@ -18,7 +18,7 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 	const [info, setInfo] = useState<GaugeInfo | undefined>()
 	const bao = useBao()
 
-	const fetchInfo = useCallback(async () => {
+	const fetchGaugeInfo = useCallback(async () => {
 		const supply = await gauge.gaugeContract.methods.totalSupply().call()
 		const futureEpoch = await gauge.gaugeContract.methods.future_epoch_time().call()
 		const workingSupply = await gauge.gaugeContract.methods.working_supply().call()
@@ -37,7 +37,7 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 	useEffect(() => {
 		if (!(bao && gauge)) return
 
-		fetchInfo()
+		fetchGaugeInfo()
 	}, [bao, gauge])
 
 	return info

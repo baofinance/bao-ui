@@ -8,14 +8,14 @@ const useInflationRate = (gaugeContract: Contract) => {
 	const [inflationRate, setInflationRate] = useState(new BigNumber(0))
 	const bao = useBao()
 
-	const fetchAllocation = useCallback(async () => {
+	const fetchInflationRate = useCallback(async () => {
 		const inflationRate = await getInflationRate(gaugeContract)
 		setInflationRate(new BigNumber(inflationRate))
 	}, [gaugeContract, bao])
 
 	useEffect(() => {
 		if (gaugeContract && bao) {
-			fetchAllocation()
+			fetchInflationRate()
 		}
 	}, [gaugeContract, setInflationRate, bao])
 

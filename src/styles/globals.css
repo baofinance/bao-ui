@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '@fontsource/rubik/variable.css';
-@import '@fontsource/kaushan-script/index.css';
-
 html {
 	overflow-y: scroll !important;
 }

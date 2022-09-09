@@ -1,4 +1,5 @@
 import Config from '@/bao/lib/config'
+import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
@@ -67,7 +68,11 @@ const Lock: React.FC = () => {
 						},
 						{
 							label: `Rewards APR`,
-							value: `69%`,
+							value: (
+								<Tooltipped content={`DailyFees * 365 / (Total veBAO * BAO Price) * 100`}>
+									<a>-</a>
+								</Tooltipped>
+							),
 						},
 						{
 							label: `Total Locked`,
@@ -253,7 +258,28 @@ const Lock: React.FC = () => {
 				<div className='flex basis-1/4 flex-col pl-3'>
 					<Card>
 						<Card.Header>veBAO Rewards</Card.Header>
-						<Card.Body></Card.Body>
+						<Card.Body>
+							<div className='text-center'>
+								<Typography variant='sm' className='text-center text-text-200'>
+									veBAO Holder APY:
+								</Typography>
+								<Tooltipped content={`WeeklyFees * 365 / (Total veBAO * BAO Price) * 100`}>
+									<a>
+										<Badge>-</Badge>
+									</a>
+								</Tooltipped>
+							</div>
+							<div className='text-center'>
+								<Typography variant='sm' className='text-center text-text-200'>
+									BAO Price:
+								</Typography>
+								<Tooltipped content={`WeeklyFees * 365 / (Total veBAO * BAO Price) * 100`}>
+									<a>
+										<Badge>-</Badge>
+									</a>
+								</Tooltipped>
+							</div>
+						</Card.Body>
 					</Card>
 				</div>
 			</div>

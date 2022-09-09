@@ -44,6 +44,10 @@ export const getBaoContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('bao')
 }
 
+export const getCrvContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('crv')
+}
+
 export const getBasketContract = (bao: Bao, nid: number): Contract | undefined => {
 	if (bao && bao.contracts && bao.contracts.baskets) return _.find(bao.contracts.baskets, { nid }).basketContract
 }
@@ -306,25 +310,38 @@ export const getUserInfoChef = async (masterChefContract: Contract, pid: number,
 export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) =>
 	await comptrollerContract.methods.getAccountLiquidity(account).call()
 
-export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
-	return gaugeControllerContract.methods.get_gauge_weight(lpAddress).call()
+export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
+	return new BigNumber(await gaugeControllerContract.methods.get_gauge_weight(lpAddress).call())
 }
 
-export const getRelativeWeight = async (gaugeControllerContract: Contract, lpAddress: string): Promise<BigNumber> => {
-	return gaugeControllerContract.methods.gauge_relative_weight(lpAddress).call()
+export const getRelativeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
+	return new BigNumber(await gaugeControllerContract.methods.gauge_relative_weight(lpAddress).call())
 }
 
-export const getInflationRate = async (gaugeContract: Contract): Promise<BigNumber> => {
-	return gaugeContract.methods.inflation_rate().call()
+export const getInflationRate = async (gaugeContract: Contract) => {
+	return new BigNumber(await gaugeContract.methods.inflation_rate().call())
 }
 
-export const getMintable = async (bao: Bao, gaugeContract: Contract): Promise<BigNumber> => {
-	const period = gaugeContract.methods.period().call()
-	const timestamp = gaugeContract.methods.period_timestamp(period).call()
-	const crvContract = bao.contracts.getContract('crv')
-	return crvContract.methods.mintable_in_timeframe(timestamp, timestamp).call()
+export const getMintable = async (currentEpoch: BigNumber, futureEpoch: BigNumber, tokenContract: Contract) => {
+	return new BigNumber(await tokenContract.methods.mintable_in_timeframe(currentEpoch, futureEpoch).call())
 }
 
-export const getVotingPower = async (votingEscrowContract: Contract, account: string): Promise<BigNumber> => {
-	return votingEscrowContract.methods.balanceOf(account).call()
+export const getVotingPower = async (votingEscrowContract: Contract, account: string) => {
+	return new BigNumber(await votingEscrowContract.methods.balanceOf(account).call())
+}
+
+export const getCurrentEpoch = async (tokenContract: Contract) => {
+	return new BigNumber(await tokenContract.methods.start_epoch_time_write().call())
+}
+
+export const getFutureEpoch = async (tokenContract: Contract) => {
+	return new BigNumber(await tokenContract.methods.future_epoch_time_write().call())
+}
+
+export const getVirtualPrice = async (poolContract: Contract) => {
+	return new BigNumber(await poolContract.methods.get_virtual_price().call())
+}
+
+export const getTotalSupply = async (depositContract: Contract) => {
+	return new BigNumber(await depositContract.methods.totalSupply().call())
 }

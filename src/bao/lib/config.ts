@@ -204,8 +204,11 @@ export default {
 			gid: 1,
 			name: '3pool',
 			symbol: '3CRV',
-			address: {
+			gaugeAddresses: {
 				1: '0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A',
+			},
+			poolAddresses: {
+				1: '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
 			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
 		},
@@ -213,8 +216,11 @@ export default {
 			gid: 2,
 			name: 'tricrypto2',
 			symbol: 'CRV3CRYPTO',
-			address: {
+			gaugeAddresses: {
 				1: '0xDeFd8FdD20e0f34115C7018CCfb655796F6B2168',
+			},
+			poolAddresses: {
+				1: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
 			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
 		},

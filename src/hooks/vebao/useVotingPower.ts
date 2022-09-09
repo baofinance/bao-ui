@@ -10,14 +10,14 @@ const useVotingPower = () => {
 	const { account } = useWeb3React()
 	const votingEscrowContract = getVotingEscrowContract(bao)
 
-	const fetchWeight = useCallback(async () => {
+	const fetchVotingPower = useCallback(async () => {
 		const votingPower = await getVotingPower(votingEscrowContract, account)
 		setVotingPower(new BigNumber(votingPower))
 	}, [votingEscrowContract, bao])
 
 	useEffect(() => {
 		if (votingEscrowContract && bao) {
-			fetchWeight()
+			fetchVotingPower()
 		}
 	}, [votingEscrowContract, setVotingPower, bao])
 

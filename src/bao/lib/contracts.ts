@@ -7,6 +7,7 @@ import CTokenAbi from './abi/ctoken.json'
 import ERC20Abi from './abi/erc20.json'
 import ExperipieAbi from './abi/experipie.json'
 import GaugeAbi from './abi/gauge.json'
+import GaugePoolAbi from './abi/gaugePool.json'
 import UNIV2PairAbi from './abi/uni_v2_lp.json'
 import Config from './config'
 import * as Types from './types'
@@ -37,8 +38,10 @@ export class Contracts {
 			networkId === Config.networkId
 				? Config.gauges.map(gauge =>
 						Object.assign(gauge, {
-							gaugeAddress: gauge.address[networkId],
+							gaugeAddress: gauge.gaugeAddresses[networkId],
+							poolAddress: gauge.poolAddresses[networkId],
 							gaugeContract: this.getNewContract(GaugeAbi),
+							poolContract: this.getNewContract(GaugePoolAbi),
 						}),
 				  )
 				: undefined
@@ -95,8 +98,9 @@ export class Contracts {
 			})
 
 			if (this.gauges) {
-				this.gauges.forEach(({ gaugeAddress, gaugeContract }) => {
+				this.gauges.forEach(({ gaugeContract, gaugeAddress, poolContract, poolAddress }) => {
 					setProvider(gaugeContract, gaugeAddress)
+					setProvider(poolContract, poolAddress)
 				})
 			}
 			if (this.pools) {
