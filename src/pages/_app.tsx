@@ -21,6 +21,7 @@ import FarmsProvider from '@/contexts/Farms'
 import MarketsProvider from '@/contexts/Markets'
 import TransactionProvider from '@/contexts/Transactions'
 import TxPopup from '@/components/TxPopup'
+import '@/components/TxPopup/styles.css'
 
 function getLibrary(provider: provider) {
 	return new Web3(provider)
