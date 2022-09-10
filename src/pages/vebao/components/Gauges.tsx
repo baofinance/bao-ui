@@ -83,7 +83,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
-			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.bao[Config.networkId].address)
+			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.crv[Config.networkId].address)
 			setBaoPrice(baoPrice)
 		})
 	}, [bao, setBaoPrice])
