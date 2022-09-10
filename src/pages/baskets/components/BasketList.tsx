@@ -59,8 +59,8 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<Loader />
 						)}
 					</div>
-					<div className='mx-auto my-0 flex w-full flex-col items-end'>
-						<span className='inline-block align-middle'>
+					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
+						<span className='inline-block'>
 							{rates ? (
 								<>
 									<Typography variant='sm' className='m-0 font-semibold leading-5'>
