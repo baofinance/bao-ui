@@ -1,17 +1,19 @@
+import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { getGaugeControllerContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
+import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
+import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
-import useInflationRate from '@/hooks/vebao/useInflationRate'
 import useMintable from '@/hooks/vebao/useMintable'
-import useTotalSupply from '@/hooks/vebao/useTotalSupply'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
+import GraphUtil from '@/utils/graph'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
@@ -70,25 +72,23 @@ interface GaugeProps {
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const bao = useBao()
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
-	const weight = useGaugeWeight(gauge.gaugeAddress).toNumber()
-	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress).toNumber()
-	const inflationRate = useInflationRate(gauge.gaugeContract).toNumber()
-	const totalMintable = useMintable().toNumber()
-	const mintable = totalMintable * relativeWeight
-	const rewardTokenPrice = baoPrice && getBalanceNumber(baoPrice)
-	const epochUSDRewards = mintable * rewardTokenPrice
-	const totalSupply = useTotalSupply(gauge.gaugeContract)
+	const weight = useGaugeWeight(gauge.gaugeAddress)
+	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
+	const gaugeInfo = useGaugeInfo(gauge)
+	const totalMintable = useMintable()
+	const mintable = totalMintable.times(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
+	const gaugeTVL = gaugeInfo && virtualPrice.times(gaugeInfo.totalSupply.div(10 ** 18))
+	const rewardAPY = baoPrice && baoPrice.times(mintable).div(gaugeTVL)
 
 	useEffect(() => {
-		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			setBaoPrice(new BigNumber((await res.json())['curve-dao-token'].usd))
+		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
+			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.bao[Config.networkId].address)
+			setBaoPrice(baoPrice)
 		})
 	}, [bao, setBaoPrice])
 
-	// const mintable = crvContract.methods.mintable_in_timeframe(currentEpoch, futureEpoch).call()
-	console.log(totalSupply)
-	console.log(virtualPrice)
+	console.log(baoPrice)
 
 	return (
 		<tr key={gauge.name} className='even:bg-primary-100'>
@@ -111,10 +111,15 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(relativeWeight, 16)}</Badge>
 			</td>
 			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(mintable)}</Badge>
-			</td>
-			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(epochUSDRewards)}</Badge>
+				<Badge className='bg-primary-300 font-semibold'>
+					{rewardAPY ? (
+						<Typography variant='base' className='ml-2 inline-block font-medium'>
+							{rewardAPY.gt(0) ? `${rewardAPY.times(new BigNumber(100)).toNumber()}%` : 'N/A'}
+						</Typography>
+					) : (
+						<Loader />
+					)}
+				</Badge>
 			</td>
 		</tr>
 	)

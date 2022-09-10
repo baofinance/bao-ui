@@ -1,36 +1,40 @@
+import Multicall from '@/utils/multicall'
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
 
 type GaugeInfo = {
 	totalSupply: BigNumber
-	futureEpochTime: BigNumber
-	workingSupply: BigNumber
-	period: BigNumber
 	inflationRate: BigNumber
 }
 
 const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
-	const [info, setInfo] = useState<GaugeInfo | undefined>()
+	const [gaugeInfo, setGaugeInfo] = useState<GaugeInfo | undefined>()
 	const bao = useBao()
 
 	const fetchGaugeInfo = useCallback(async () => {
-		const supply = await gauge.gaugeContract.methods.totalSupply().call()
-		const futureEpoch = await gauge.gaugeContract.methods.future_epoch_time().call()
-		const workingSupply = await gauge.gaugeContract.methods.working_supply().call()
-		const period = await gauge.gaugeContract.methods.period().call()
-		const inflationRate = await gauge.gaugeContract.methods.inflation_rate().call()
+		const gaugeContract = gauge.gaugeContract
+		const query = Multicall.createCallContext([
+			{
+				contract: gaugeContract,
+				ref: 'gauge',
+				calls: [
+					{
+						method: 'totalSupply',
+					},
+					{
+						method: 'inflation_rate',
+					},
+				],
+			},
+		])
 
-		setInfo({
-			totalSupply: new BigNumber(supply),
-			futureEpochTime: new BigNumber(futureEpoch),
-			workingSupply: new BigNumber(workingSupply),
-			period: new BigNumber(period),
-			inflationRate: new BigNumber(inflationRate),
+		const { gauge: res } = Multicall.parseCallResults(await bao.multicall.call(query))
+
+		setGaugeInfo({
+			totalSupply: new BigNumber(res[0].values[0].hex),
+			inflationRate: new BigNumber(res[1].values[0].hex),
 		})
 	}, [bao, gauge])
 
@@ -40,7 +44,7 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 		fetchGaugeInfo()
 	}, [bao, gauge])
 
-	return info
+	return gaugeInfo
 }
 
 export default useGaugeInfo

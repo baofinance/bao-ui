@@ -2,18 +2,16 @@ import { getCrvContract, getMintable } from '@/bao/utils'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
-import useCurrentEpoch from './useCurrentEpoch'
-import useFutureEpoch from './useFutureEpoch'
+import useEpochTime from './useEpochTime'
 
 const useMintable = () => {
 	const [mintable, setMintable] = useState(new BigNumber(0))
 	const bao = useBao()
-	const currentEpoch = useCurrentEpoch()
-	const futureEpoch = useFutureEpoch()
+	const epochTime = useEpochTime()
 	const tokenContract = getCrvContract(bao)
 
 	const fetchMintable = useCallback(async () => {
-		const mintable = await getMintable(currentEpoch, futureEpoch, tokenContract)
+		const mintable = epochTime && (await getMintable(epochTime.start, epochTime.future, tokenContract))
 		setMintable(new BigNumber(mintable))
 	}, [bao])
 
