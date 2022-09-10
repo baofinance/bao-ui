@@ -1,0 +1,18 @@
+.rnc__notification-item {
+  border-radius: 3px;
+  box-shadow: 1px 3px 4px rgb(0 0 0 / 20%);
+  cursor: pointer;
+  display: flex;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.rnc__notification-item--success {
+	background-color: rgb(57 24 24 / 1);
+  border-left: 8px solid rgb(86 36 36 / 1);
+}
+
+.rnc__notification-item--danger {
+	background-color: rgb(57 24 24 / 1);
+  border-left: 8px solid rgb(86 36 36 / 1);
+}
