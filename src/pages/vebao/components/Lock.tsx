@@ -1,4 +1,5 @@
 import Config from '@/bao/lib/config'
+import { approve, getVotingEscrowContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
@@ -6,15 +7,22 @@ import Input from '@/components/Input'
 import { StatCards } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
+import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useVotingPower from '@/hooks/vebao/useVotingPower'
-import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
+import { decimate, getDisplayBalance, getFullDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
 import { addYears, format } from 'date-fns'
+import { ethers } from 'ethers'
 import Image from 'next/future/image'
-import React, { useState } from 'react'
+import Link from 'next/link'
+import React, { useCallback, useMemo, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
 
@@ -33,11 +41,25 @@ function addMonths(numOfMonths: number, date = new Date()) {
 const Lock: React.FC = () => {
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const [inputVal, setInputVal] = useState('')
+	const [val, setVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
 	const [endDate, setEndDate] = useState(new Date())
-	const baoBalance = useTokenBalance(Config.addressMap.CRV)
-	const votingPower = useVotingPower()
+	const crvBalance = useTokenBalance(Config.addressMap.CRV)
+	const crvAddress = Config.addressMap.CRV
+	const crvContract = bao && bao.getContract('crv')
+	const votingEscrowContract = getVotingEscrowContract(bao)
+	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[Config.networkId].address)
+	const { pendingTx, handleTx } = useTransactionHandler()
+	const length = new BigNumber(endDate.getTime() / 1000)
+
+	const lockInfo = useLockInfo()
+
+	const handleChange = useCallback(
+		(e: React.FormEvent<HTMLInputElement>) => {
+			setVal(e.currentTarget.value)
+		},
+		[setVal],
+	)
 
 	return (
 		<>
@@ -50,7 +72,7 @@ const Lock: React.FC = () => {
 								<Tooltipped content={`Your unlocked BAO balance.`}>
 									<a>
 										<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
-										{account ? (window.screen.width > 1200 ? getDisplayBalance(baoBalance) : truncateNumber(baoBalance)) : '-'}
+										{account ? (window.screen.width > 1200 ? getDisplayBalance(crvBalance) : truncateNumber(crvBalance)) : '-'}
 									</a>
 								</Tooltipped>
 							),
@@ -61,7 +83,11 @@ const Lock: React.FC = () => {
 								<Tooltipped content={`Your locked veBAO balance.`}>
 									<a>
 										<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
-										{account ? (window.screen.width > 1200 ? getDisplayBalance(votingPower) : truncateNumber(votingPower)) : '-'}
+										{account
+											? window.screen.width > 1200
+												? getDisplayBalance(lockInfo && lockInfo.balance)
+												: truncateNumber(lockInfo.balance)
+											: '-'}
 									</a>
 								</Tooltipped>
 							),
@@ -96,12 +122,12 @@ const Lock: React.FC = () => {
 										<Typography variant='sm' className='text-text-200'>
 											Bao Balance:
 										</Typography>
-										<Typography variant='sm'>{getDisplayBalance(baoBalance).toString()}</Typography>
+										<Typography variant='sm'>{getDisplayBalance(crvBalance).toString()}</Typography>
 									</div>
 									<Input
-										onSelectMax={() => setInputVal(decimate(baoBalance).toString())}
-										onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
-										value={inputVal}
+										onSelectMax={() => setVal(decimate(crvBalance).toString())}
+										onChange={handleChange}
+										value={val}
 										label={
 											<div className='flex flex-row items-center pl-2 pr-3'>
 												<div className='flex justify-center'>
@@ -125,7 +151,7 @@ const Lock: React.FC = () => {
 												setCalendarIsOpen(false)
 											}}
 											minDate={new Date()}
-											maxDate={addYears(new Date(), 4)}
+											maxDate={new Date(addYears(new Date(), 4).getTime() - 86400000)}
 											selected={endDate}
 											nextMonthButtonLabel='>'
 											previousMonthButtonLabel='<'
@@ -249,6 +275,101 @@ const Lock: React.FC = () => {
 											)}
 										/>
 									</div>
+								</div>
+								<div className='ml-3 flex flex-col'>
+									<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
+										<Typography variant='sm' className='text-text-200'>
+											Lock Length
+										</Typography>
+									</div>
+									{allowance && !allowance.toNumber() ? (
+										<>
+											{pendingTx ? (
+												<Button fullWidth disabled={true}>
+													Approving CRV
+												</Button>
+											) : (
+												<Button
+													fullWidth
+													onClick={async () => {
+														handleTx(approve(crvContract, votingEscrowContract, account), `Approve CRV`)
+													}}
+												>
+													Approve CRV
+												</Button>
+											)}
+										</>
+									) : (
+										<>
+											{pendingTx ? (
+												<Button fullWidth disabled={true}>
+													{typeof pendingTx === 'string' ? (
+														<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+															Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+														</Link>
+													) : (
+														'Pending Transaction'
+													)}
+												</Button>
+											) : lockInfo && lockInfo.balance.toNumber() > 0 ? (
+												length > lockInfo.lockEnd ? (
+													<Button
+														fullWidth
+														disabled={
+															!val ||
+															!bao ||
+															!endDate ||
+															isNaN(val as any) ||
+															parseFloat(val) > crvBalance.toNumber() ||
+															length.lte(lockInfo.lockEnd.plus(86400).times(1000).toNumber())
+														}
+														onClick={async () => {
+															const lockTx = votingEscrowContract.methods
+																.increase_unlock_time(length.toString().slice(0, 10))
+																.send({ from: account })
+
+															handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)
+														}}
+													>
+														Icrease Lock Time
+													</Button>
+												) : (
+													<Button
+														fullWidth
+														disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
+														onClick={async () => {
+															const lockTx = votingEscrowContract.methods
+																.increase_amount(ethers.utils.parseUnits(val.toString(), 18))
+																.send({ from: account })
+
+															handleTx(
+																lockTx,
+																`Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
+																	lockInfo.lockEnd.plus(86400).times(1000).toNumber(),
+																).toLocaleDateString()}`,
+															)
+														}}
+													>
+														Increase Amount
+													</Button>
+												)
+											) : (
+												<Button
+													fullWidth
+													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
+													onClick={async () => {
+														const lockTx = votingEscrowContract.methods
+															.create_lock(ethers.utils.parseUnits(val.toString(), 18), length.toString().slice(0, 10))
+															.send({ from: account })
+
+														handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
+													}}
+												>
+													Create Lock
+												</Button>
+											)}
+										</>
+									)}
 								</div>
 							</div>
 						</Card.Body>
