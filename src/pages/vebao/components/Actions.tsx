@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { approve } from '@/bao/utils'
+import { approve, getMinterContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
@@ -223,9 +223,11 @@ interface RewardsProps {
 }
 
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
+	const bao = useBao()
 	const gaugeInfo = useGaugeInfo(gauge)
 	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
+	const minterContract = getMinterContract(bao)
 
 	return (
 		<>
@@ -262,7 +264,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 							fullWidth
 							disabled={gaugeInfo && !gaugeInfo.claimableTokens.toNumber()}
 							onClick={async () => {
-								const harvestTx = gauge.gaugeContract.methods.claim_rewards().send({ from: account })
+								const harvestTx = minterContract.methods.mint(gauge.gaugeAddress).send({ from: account })
 
 								handleTx(harvestTx, `Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV from ${gauge.name}`)
 							}}
