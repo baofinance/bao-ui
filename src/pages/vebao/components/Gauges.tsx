@@ -1,8 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { getGaugeControllerContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
-import Button from '@/components/Button'
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
@@ -22,17 +20,10 @@ import GaugeModal from './GaugeModal'
 
 const GaugeList: React.FC = () => {
 	const bao = useBao()
-	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const gauges = useGauges()
-	const gaugeControllerContract = getGaugeControllerContract(bao)
-
-	console.log(gauges)
 
 	return (
 		<>
-			<Button fullWidth onClick={() => setShowGaugeModal(true)}>
-				Vote
-			</Button>
 			<div className='mt-4 mb-2 flex flex-row'>
 				<div className='flex flex-row items-center justify-center'>
 					<Typography variant='h3' className='float-left mr-2 inline font-semibold'>
@@ -56,8 +47,6 @@ const GaugeList: React.FC = () => {
 						</tbody>
 					</table>
 				</div>
-
-				<GaugeModal show={showGaugeModal} onHide={() => setShowGaugeModal(false)} />
 			</>
 		</>
 	)
@@ -81,6 +70,8 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const gaugeTVL = gaugeInfo && virtualPrice.times(gaugeInfo.totalSupply.div(10 ** 18))
 	const rewardAPY = baoPrice && baoPrice.times(mintable).div(gaugeTVL)
 
+	const [showGaugeModal, setShowGaugeModal] = useState(false)
+
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
 			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.crv[Config.networkId].address)
@@ -91,36 +82,39 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	console.log(baoPrice)
 
 	return (
-		<tr key={gauge.name} className='even:bg-primary-100'>
-			<td className='p-2 text-start'>
-				<div className='mx-0 my-auto inline-block h-full items-center'>
-					<div className='mr-2 inline-block'>
-						<Image className='z-10 inline-block select-none' src={gauge.icon} alt={gauge.name} width={24} height={24} />
+		<>
+			<tr key={gauge.name} className='even:bg-primary-100' onClick={() => setShowGaugeModal(true)}>
+				<td className='p-2 text-start'>
+					<div className='mx-0 my-auto inline-block h-full items-center'>
+						<div className='mr-2 inline-block'>
+							<Image className='z-10 inline-block select-none' src={gauge.icon} alt={gauge.name} width={24} height={24} />
+						</div>
+						<span className='inline-block text-left align-middle'>
+							<Typography variant='base' className='font-bold'>
+								{gauge.name}
+							</Typography>
+						</span>
 					</div>
-					<span className='inline-block text-left align-middle'>
-						<Typography variant='base' className='font-bold'>
-							{gauge.name}
-						</Typography>
-					</span>
-				</div>
-			</td>
-			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(weight)}</Badge>
-			</td>
-			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(relativeWeight, 16)}</Badge>
-			</td>
-			<td className='p-2 text-end'>
-				<Badge className='bg-primary-300 font-semibold'>
-					{rewardAPY ? (
-						<Typography variant='base' className='ml-2 inline-block font-medium'>
-							{rewardAPY.gt(0) ? `${rewardAPY.times(new BigNumber(100)).toNumber()}%` : 'N/A'}
-						</Typography>
-					) : (
-						<Loader />
-					)}
-				</Badge>
-			</td>
-		</tr>
+				</td>
+				<td className='p-2 text-end'>
+					<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(weight)}</Badge>
+				</td>
+				<td className='p-2 text-end'>
+					<Badge className='bg-primary-300 font-semibold'>{getDisplayBalance(relativeWeight, 16)}</Badge>
+				</td>
+				<td className='p-2 text-end'>
+					<Badge className='bg-primary-300 font-semibold'>
+						{rewardAPY ? (
+							<Typography variant='base' className='ml-2 inline-block font-medium'>
+								{rewardAPY.gt(0) ? `${rewardAPY.times(new BigNumber(100)).toNumber()}%` : 'N/A'}
+							</Typography>
+						) : (
+							<Loader />
+						)}
+					</Badge>
+				</td>
+			</tr>
+			<GaugeModal gauge={gauge} show={showGaugeModal} onHide={() => setShowGaugeModal(false)} />
+		</>
 	)
 }

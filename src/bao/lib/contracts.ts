@@ -40,8 +40,10 @@ export class Contracts {
 						Object.assign(gauge, {
 							gaugeAddress: gauge.gaugeAddresses[networkId],
 							poolAddress: gauge.poolAddresses[networkId],
+							lpAddress: gauge.lpAddresses[networkId],
 							gaugeContract: this.getNewContract(GaugeAbi),
 							poolContract: this.getNewContract(GaugePoolAbi),
+							lpContract: this.getNewContract(ERC20Abi),
 						}),
 				  )
 				: undefined
@@ -98,9 +100,10 @@ export class Contracts {
 			})
 
 			if (this.gauges) {
-				this.gauges.forEach(({ gaugeContract, gaugeAddress, poolContract, poolAddress }) => {
+				this.gauges.forEach(({ gaugeContract, gaugeAddress, poolContract, poolAddress, lpContract, lpAddress }) => {
 					setProvider(gaugeContract, gaugeAddress)
 					setProvider(poolContract, poolAddress)
+					setProvider(lpContract, lpAddress)
 				})
 			}
 			if (this.pools) {

@@ -210,7 +210,11 @@ export default {
 			poolAddresses: {
 				1: '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
 			},
+			lpAddresses: {
+				1: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
+			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
+			pairUrl: 'https://curve.fi/3pool',
 		},
 		{
 			gid: 2,
@@ -222,7 +226,11 @@ export default {
 			poolAddresses: {
 				1: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
 			},
+			lpAddresses: {
+				1: '0xc4AD29ba4B3c580e6D59105FFf484999997675Ff',
+			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
+			pairUrl: 'https://curve.fi/tricrypto',
 		},
 	],
 	baskets: [

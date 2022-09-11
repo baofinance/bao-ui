@@ -39,6 +39,17 @@ const veBAO: React.FC = () => {
 							</button>
 						)}
 					</Tab>
+					<Tab className='border-0 outline-0'>
+						{({ selected }) => (
+							<button
+								className={`rounded !border-none p-2 !outline-0  ${
+									selected ? 'border border-primary-300 bg-primary-200 hover:bg-primary-200' : 'bg-none hover:bg-primary-100'
+								}`}
+							>
+								Vote
+							</button>
+						)}
+					</Tab>
 				</Tab.List>
 				<Tab.Panels className='mt-4'>
 					<Tab.Panel>
@@ -47,6 +58,7 @@ const veBAO: React.FC = () => {
 					<Tab.Panel>
 						<Gauges />
 					</Tab.Panel>
+					<Tab.Panel>Gauge Voting</Tab.Panel>
 				</Tab.Panels>
 			</Tab.Group>
 		</>

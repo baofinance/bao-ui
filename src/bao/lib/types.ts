@@ -25,10 +25,14 @@ export interface SupportedGauge {
 	name: string
 	symbol: string
 	icon: string
+	pairUrl: string
 	gaugeAddresses: {
 		[network: number]: string
 	}
 	poolAddresses: {
+		[network: number]: string
+	}
+	lpAddresses: {
 		[network: number]: string
 	}
 }
@@ -93,8 +97,10 @@ export interface FarmableSupportedPool extends SupportedPool {
 export interface ActiveSupportedGauge extends SupportedGauge {
 	gaugeAddress: string
 	poolAddress: string
+	lpAddress: string
 	gaugeContract: Contract
 	poolContract: Contract
+	lpContract: Contract
 }
 
 export interface ActiveSupportedBasket extends SupportedBasket {
