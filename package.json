@@ -35,7 +35,6 @@
     ]
   },
   "devDependencies": {
-    "animate.css": "^4.1.1",
     "@apollo/client": "^3.4.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
@@ -48,6 +47,7 @@
     "@material-ui/pickers": "^3.3.10",
     "@next/bundle-analyzer": "^12.2.4",
     "@sushiswap/sushi-data": "^1.0.26",
+    "@tailwindcss/forms": "^0.5.3",
     "@types/bignumber.js": "^5.0.0",
     "@types/d3-array": "^3.0.3",
     "@types/jest": "^27.5.1",
@@ -69,6 +69,7 @@
     "@web3-react/network-connector": "^6.2.9",
     "@web3-react/walletconnect-connector": "^6.2.13",
     "@web3-react/walletlink-connector": "^6.2.13",
+    "animate.css": "^4.1.1",
     "autoprefixer": "^10.4.8",
     "bignumber.js": "^9.0.1",
     "classnames": "^2.3.1",

@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import Button from '@/components/Button'
+import classNames from 'classnames'
 
 export interface InputProps {
 	endAdornment?: ReactNode
@@ -14,6 +15,7 @@ export interface InputProps {
 	symbol?: string
 	onSelectMax?: () => void
 	onSelectHalf?: () => void
+	className?: string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -26,9 +28,10 @@ const Input: React.FC<InputProps> = ({
 	placeholder,
 	startAdornment,
 	value,
+	className,
 }) => {
 	return (
-		<div className='align-center flex h-12 w-full rounded border-0 bg-primary-400'>
+		<div className={classNames('align-center flex h-12 w-full rounded border-0 bg-primary-400', className)}>
 			<div className='align-center relative flex w-full justify-center align-middle'>
 				{!!startAdornment && startAdornment}
 				<input
@@ -44,6 +47,7 @@ const Input: React.FC<InputProps> = ({
 				/>
 				{!disabled && (
 					<>
+												{onSelectMax && (
 						<div className='flex h-full items-center justify-center'>
 							{onSelectHalf && (
 								<Button size='xs' onClick={onSelectHalf} className='mr-1'>
@@ -53,7 +57,7 @@ const Input: React.FC<InputProps> = ({
 							<Button size='xs' onClick={onSelectMax} className='mr-1'>
 								MAX
 							</Button>
-						</div>
+						</div> )}
 					</>
 				)}
 				{!!endAdornment && endAdornment}

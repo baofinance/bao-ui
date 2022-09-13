@@ -6,6 +6,7 @@ import React from 'react'
 import { isDesktop } from 'react-device-detect'
 import Gauges from './components/Gauges'
 import Lock from './components/Lock'
+import Vote from './components/Vote'
 
 const veBAO: React.FC = () => {
 	return (
@@ -58,7 +59,9 @@ const veBAO: React.FC = () => {
 					<Tab.Panel>
 						<Gauges />
 					</Tab.Panel>
-					<Tab.Panel>Gauge Voting</Tab.Panel>
+					<Tab.Panel>
+						<Vote />
+					</Tab.Panel>
 				</Tab.Panels>
 			</Tab.Group>
 		</>

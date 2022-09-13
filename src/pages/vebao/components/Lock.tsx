@@ -80,13 +80,22 @@ const Lock: React.FC = () => {
 						{
 							label: `Your veBAO Balance`,
 							value: (
-								<Tooltipped content={`Your locked veBAO balance.`}>
+								<Tooltipped
+									content={
+										<>
+											<div>
+												{getDisplayBalance(lockInfo && lockInfo.balance)} veBAO {`->`} {getDisplayBalance(lockInfo && lockInfo.lockAmount)}{' '}
+												BAO
+											</div>
+										</>
+									}
+								>
 									<a>
 										<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
 										{account
 											? window.screen.width > 1200
 												? getDisplayBalance(lockInfo && lockInfo.balance)
-												: truncateNumber(lockInfo.balance)
+												: truncateNumber(lockInfo && lockInfo.balance)
 											: '-'}
 									</a>
 								</Tooltipped>
