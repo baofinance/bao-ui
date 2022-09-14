@@ -339,6 +339,7 @@ const Lock: React.FC = () => {
 												) : (
 													<Button
 														fullWidth
+														disabled={crvBalance.lte(0)}
 														onClick={async () => {
 															const tx = crvContract.methods
 																.approve(

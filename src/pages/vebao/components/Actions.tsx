@@ -87,6 +87,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 						) : (
 							<Button
 								fullWidth
+								disabled={max.lte(0)}
 								onClick={async () => {
 									const tx = gauge.lpContract.methods
 										.approve(
