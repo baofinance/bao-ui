@@ -88,7 +88,14 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 							<Button
 								fullWidth
 								onClick={async () => {
-									handleTx(approve(gauge.lpContract, gauge.gaugeContract, account), `Approve ${gauge.name}`)
+									const tx = gauge.lpContract.methods
+										.approve(
+											gauge.gaugeContract.options.address,
+											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+										)
+										.send({ from: account })
+
+									handleTx(tx, `Approve ${gauge.name}`)
 								}}
 							>
 								Approve {gauge.name}

@@ -105,7 +105,7 @@ const Lock: React.FC = () => {
 													{getDisplayBalance(lockInfo && lockInfo.lockAmount)} BAO
 												</div>
 												<div className='flex flex-row justify-center'>
-													{lockInfo && new Date(lockInfo.lockEnd.toNumber()).toDateString()}
+													{new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber()).toDateString()}
 												</div>
 											</div>
 										</>
