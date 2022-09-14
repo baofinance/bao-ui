@@ -7,7 +7,7 @@
 
 const DEFAULT_INTERVAL = 500
 
-const DEFAULT_BLOCKS_TO_WAIT = 0
+const DEFAULT_BLOCKS_TO_WAIT = 1
 
 interface Options {
 	interval: number

@@ -17,7 +17,7 @@ const useGaugeAllocation = (lpAddress: string) => {
 		if (gaugeControllerContract && bao) {
 			fetchGaugeAllocation()
 		}
-	}, [gaugeControllerContract, setAllocation, bao])
+	}, [gaugeControllerContract, bao])
 
 	return allocation
 }

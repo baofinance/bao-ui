@@ -14,10 +14,10 @@ const useEpochTime = (): RewardsInfo => {
 	const bao = useBao()
 
 	const fetchEpochTime = useCallback(async () => {
-		const rewardToken = bao.getContract('crv')
+		const tokenContract = getCrvContract(bao)
 		const query = Multicall.createCallContext([
 			{
-				contract: rewardToken,
+				contract: tokenContract,
 				ref: 'bao',
 				calls: [
 					{

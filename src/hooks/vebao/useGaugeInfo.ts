@@ -4,6 +4,8 @@ import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
+import useTransactionHandler from '../base/useTransactionHandler'
+import useTransactionProvider from '../base/useTransactionProvider'
 
 type GaugeInfo = {
 	totalSupply: BigNumber
@@ -18,6 +20,7 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 	const [gaugeInfo, setGaugeInfo] = useState<GaugeInfo | undefined>()
 	const bao = useBao()
 	const { account } = useWeb3React()
+	const { txSuccess } = useTransactionHandler()
 
 	const fetchGaugeInfo = useCallback(async () => {
 		const gaugeContract = gauge.gaugeContract
@@ -68,7 +71,7 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 		if (!(bao && gauge)) return
 
 		fetchGaugeInfo()
-	}, [bao, gauge])
+	}, [bao, gauge, txSuccess])
 
 	return gaugeInfo
 }

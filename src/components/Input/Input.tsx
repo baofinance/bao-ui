@@ -47,17 +47,18 @@ const Input: React.FC<InputProps> = ({
 				/>
 				{!disabled && (
 					<>
-												{onSelectMax && (
-						<div className='flex h-full items-center justify-center'>
-							{onSelectHalf && (
-								<Button size='xs' onClick={onSelectHalf} className='mr-1'>
-									½
+						{onSelectMax && (
+							<div className='flex h-full items-center justify-center'>
+								{onSelectHalf && (
+									<Button size='xs' onClick={onSelectHalf} className='mr-1'>
+										½
+									</Button>
+								)}
+								<Button size='xs' onClick={onSelectMax} className='mr-1'>
+									MAX
 								</Button>
-							)}
-							<Button size='xs' onClick={onSelectMax} className='mr-1'>
-								MAX
-							</Button>
-						</div> )}
+							</div>
+						)}
 					</>
 				)}
 				{!!endAdornment && endAdornment}

@@ -56,7 +56,7 @@ const useLockInfo = (): LockInfo => {
 		if (!(bao && account)) return
 
 		fetchLockInfo()
-	}, [bao, account, transactions])
+	}, [bao, account])
 
 	return lockInfo
 }

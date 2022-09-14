@@ -17,7 +17,7 @@ const useGaugeWeight = (lpAddress: string) => {
 		if (gaugeControllerContract && bao) {
 			fetchGaugeWeight()
 		}
-	}, [gaugeControllerContract, setWeight, bao])
+	}, [gaugeControllerContract, bao])
 
 	return weight
 }
