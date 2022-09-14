@@ -9,6 +9,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
+import { ethers } from 'ethers'
 import Link from 'next/link'
 import React from 'react'
 import { MarketOperations } from './Modals/Modals'
@@ -70,7 +71,14 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approve(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
+							const tx = underlyingContract.methods
+							.approve(
+								marketContract.options.address,
+								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							)
+							.send({ from: account })
+			
+							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
@@ -132,7 +140,14 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approve(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
+							const tx = underlyingContract.methods
+							.approve(
+								marketContract.options.address,
+								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							)
+							.send({ from: account })
+							
+							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
