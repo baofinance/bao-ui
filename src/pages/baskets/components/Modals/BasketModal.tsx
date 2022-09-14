@@ -124,8 +124,8 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const hide = () => {
 		hideModal()
-		setValue(undefined)
-		setSecondaryValue(undefined)
+		setValue('')
+		setSecondaryValue('')
 	}
 
 	return basket ? (
@@ -282,7 +282,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					</div>
 				</Modal.Body>
 				<Modal.Actions>
-					<Button fullWidth disabled={isButtonDisabled} onClick={handleOperation}>
+					<Button fullWidth disabled={isButtonDisabled || (mintOption === MintOption.DAI && daiBalance.lte(0) || value === '0')} onClick={handleOperation}>
 						{pendingTx ? (
 							typeof pendingTx === 'string' ? (
 								<Link href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
