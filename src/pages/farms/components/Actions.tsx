@@ -126,6 +126,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 						) : (
 							<Button
 								fullWidth
+								disabled={max.lte(0)}
 								onClick={async () => {
 									const tx = bao
 										.getNewContract('erc20.json', lpTokenAddress)
@@ -135,7 +136,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 										)
 										.send({ from: account })
 
-									handleTx(tx, `Approve CRV`)
+									handleTx(tx, `Approve ${tokenName}`)
 								}}
 							>
 								Approve {tokenName}
