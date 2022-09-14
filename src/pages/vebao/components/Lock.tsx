@@ -12,11 +12,12 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
-import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ArrowRightIcon, CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
 import { addYears, format } from 'date-fns'
 import { ethers } from 'ethers'
 import Image from 'next/future/image'
@@ -62,6 +63,14 @@ const Lock: React.FC = () => {
 		},
 		[setVal],
 	)
+
+	const handleSelectMax = useCallback(() => {
+		setVal(getFullDisplayBalance(crvBalance))
+	}, [crvBalance, setVal])
+
+	const handleSelectHalf = useCallback(() => {
+		setVal(getFullDisplayBalance(new BigNumber(crvBalance.div(2).toNumber())))
+	}, [crvBalance])
 
 	console.log(lockInfo && lockInfo.lockEnd.times(1000).toNumber())
 	console.log(new Date().setUTCHours(0, 0, 0, 0))
@@ -145,8 +154,8 @@ const Lock: React.FC = () => {
 										<Typography variant='sm'>{getDisplayBalance(crvBalance).toString()}</Typography>
 									</div>
 									<Input
-										onSelectMax={() => setVal(decimate(crvBalance).toString())}
-										onSelectHalf={() => setVal(decimate(crvBalance).div(2).toString())}
+										onSelectMax={() => handleSelectMax()}
+										onSelectHalf={() => handleSelectHalf()}
 										onChange={handleChange}
 										value={val}
 										label={
@@ -189,7 +198,7 @@ const Lock: React.FC = () => {
 														onClick={() => setCalendarIsOpen(true)}
 														className='inline-flex h-12 w-full items-center rounded-l bg-primary-400 px-3 py-2 text-start text-text-100 hover:bg-primary-300'
 													>
-														{format(new Date(endDate), 'MM dd yyyy')}
+														{format(new Date(startDate), 'MM dd yyyy')}
 													</div>
 													<div
 														onClick={() => setCalendarIsOpen(true)}
@@ -239,7 +248,7 @@ const Lock: React.FC = () => {
 															size='sm'
 															className='h-[30px] w-[30px] !font-normal focus:outline-none focus:ring-2 focus:ring-text-400/50 focus:ring-offset-0'
 															onClick={() => {
-																setEndDate(startDate)
+																setEndDate(addDays(7, new Date(startDate)))
 																setCalendarIsOpen(false)
 															}}
 														>

@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
-import useTransactionHandler from '../base/useTransactionHandler'
+import useTransactionProvider from '../base/useTransactionProvider'
 
 type LockInfo = {
 	balance: BigNumber
@@ -17,7 +17,7 @@ const useLockInfo = (): LockInfo => {
 	const [lockInfo, setLockInfo] = useState<LockInfo | undefined>()
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const transactions = useTransactionHandler()
+	const { transactions } = useTransactionProvider()
 
 	const fetchLockInfo = useCallback(async () => {
 		const votingEscrowContract = getVotingEscrowContract(bao)
@@ -56,7 +56,7 @@ const useLockInfo = (): LockInfo => {
 		if (!(bao && account)) return
 
 		fetchLockInfo()
-	}, [bao, account])
+	}, [bao, account, transactions])
 
 	return lockInfo
 }
