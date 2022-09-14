@@ -1,11 +1,11 @@
-import { useWeb3React } from '@web3-react/core'
 import 'animate.css/animate.min.css'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { ReactNotifications, Store as NotifStore } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
-import usePendingTransactions from '../../hooks/base/usePendingTransactions'
+import usePendingTransactions from '@/hooks/base/usePendingTransactions'
+import useBao from '@/hooks/base/useBao'
 import { isSuccessfulTransaction, waitTransaction } from './waitTransaction'
 
 type PopupTitleProps = {
@@ -26,33 +26,44 @@ const PopupTitle: React.FC<PopupTitleProps> = ({ success }) => {
 	)
 }
 
+type PopupMessageProps = {
+	description: string
+	hash: string
+}
+
+const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
+	return (
+		<div className='TxPopup'>
+			{description} —{' '}
+			<a
+				target='_blank'
+				rel='noreferrer'
+				href={`https://etherscan.io/tx/${hash}`}
+				className='text-blue-600 hover:text-blue-800 underline visited:text-purple-600'
+			>
+				{hash.slice(0, 6)}...{hash.slice(-5, -1)}
+			</a>
+		</div>
+	)
+}
+
 const TxPopup: React.FC = () => {
 	const pendingTxs = usePendingTransactions()
 	const [seenTxs, setSeenTxs] = useState({})
-	const { library } = useWeb3React()
+	const bao = useBao()
 
 	useEffect(() => {
 		setSeenTxs((stxs: any) => {
+			// This is a guard so that we do not have multiple popups for the same tx
 			pendingTxs.map(tx => {
 				if (!stxs[tx.hash]) {
-					waitTransaction(library, tx.hash).then(receipt => {
+					waitTransaction(bao.web3, tx.hash).then(receipt => {
+						console.log(receipt)
+						if (receipt === null) { return }
 						const success = isSuccessfulTransaction(receipt)
-						const successText = success ? 'Successful' : 'Failed'
 						NotifStore.addNotification({
 							title: <PopupTitle success={success} />,
-							message: (
-								<div className='TxPopup'>
-									{tx.description} --{' '}
-									<a
-										target='_blank'
-										rel='noreferrer'
-										href={`https://etherscan.io/tx/${tx.hash}`}
-										className='text-blue-600 hover:text-blue-800 underline visited:text-purple-600'
-									>
-										{tx.hash.slice(0, 6)}...{tx.hash.slice(-9, -1)}
-									</a>
-								</div>
-							),
+							message: <PopupMessage description={tx.description} hash={tx.hash} />,
 							type: success ? 'success' : 'danger',
 							insert: 'top',
 							container: 'bottom-right',
@@ -71,8 +82,9 @@ const TxPopup: React.FC = () => {
 				stxs[tx.hash] = true
 			})
 			return stxs
+			// This is the end of the guard against multiple popups for the same tx
 		})
-	}, [pendingTxs, setSeenTxs, library])
+	}, [pendingTxs, setSeenTxs, bao])
 
 	return <ReactNotifications />
 }

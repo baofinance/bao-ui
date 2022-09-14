@@ -27,7 +27,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const ethBalance = useTokenBalance('ETH')
 
 	useEffect(() => {
-		const ensResolver = new ethers.providers.JsonRpcProvider(`${process.env.NEXT_PUBLIC_ALCHEMY_API_URL}`)
+		const ensResolver = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ALCHEMY_API_URL)
 
 		if (!account) return
 
