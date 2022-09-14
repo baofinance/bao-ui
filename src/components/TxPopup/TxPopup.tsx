@@ -59,7 +59,9 @@ const TxPopup: React.FC = () => {
 				if (!stxs[tx.hash]) {
 					waitTransaction(bao.web3, tx.hash).then(receipt => {
 						console.log(receipt)
-						if (receipt === null) { return }
+						if (receipt === null) {
+							return
+						}
 						const success = isSuccessfulTransaction(receipt)
 						NotifStore.addNotification({
 							title: <PopupTitle success={success} />,
