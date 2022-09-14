@@ -173,7 +173,7 @@ const Lock: React.FC = () => {
 											}}
 											minDate={new Date(startDate.setUTCHours(0, 0, 0, 0))}
 											maxDate={new Date(addYears(new Date(), 4).setUTCHours(0, 0, 0, 0))}
-											selected={startDate}
+											selected={endDate}
 											nextMonthButtonLabel='>'
 											previousMonthButtonLabel='<'
 											popperClassName='react-datepicker-left'
@@ -239,7 +239,7 @@ const Lock: React.FC = () => {
 															size='sm'
 															className='h-[30px] w-[30px] !font-normal focus:outline-none focus:ring-2 focus:ring-text-400/50 focus:ring-offset-0'
 															onClick={() => {
-																setEndDate(addDays(7, new Date(startDate)))
+																setEndDate(startDate)
 																setCalendarIsOpen(false)
 															}}
 														>
@@ -253,7 +253,7 @@ const Lock: React.FC = () => {
 															size='sm'
 															className='h-[30px] w-[30px] !font-normal focus:outline-none focus:ring-2 focus:ring-text-400/50 focus:ring-offset-0'
 															onClick={() => {
-																setEndDate(addMonths(1, new Date(startDate)))
+																setEndDate(addMonths(1, new Date(startDate.setUTCHours(0, 0, 0, 0) - 86400000 * 6)))
 																setCalendarIsOpen(false)
 															}}
 														>
@@ -267,7 +267,7 @@ const Lock: React.FC = () => {
 															size='sm'
 															className='h-[30px] w-[30px] !font-normal focus:outline-none focus:ring-2 focus:ring-text-400/50 focus:ring-offset-0'
 															onClick={() => {
-																setEndDate(addMonths(3, new Date(startDate)))
+																setEndDate(addMonths(3, new Date(startDate.setUTCHours(0, 0, 0, 0) - 86400000 * 5)))
 																setCalendarIsOpen(false)
 															}}
 														>
@@ -281,7 +281,7 @@ const Lock: React.FC = () => {
 															size='sm'
 															className='h-[30px] w-[30px] !font-normal focus:outline-none focus:ring-2 focus:ring-text-400/50 focus:ring-offset-0'
 															onClick={() => {
-																setEndDate(addMonths(6, new Date(startDate)))
+																setEndDate(addMonths(6, new Date(startDate.setUTCHours(0, 0, 0, 0) - 86400000 * 2)))
 																setCalendarIsOpen(false)
 															}}
 														>
@@ -295,7 +295,7 @@ const Lock: React.FC = () => {
 															size='sm'
 															className='h-[30px] w-[30px] !font-normal focus:outline-none focus:ring-2 focus:ring-text-400/50 focus:ring-offset-0'
 															onClick={() => {
-																setEndDate(addYears(new Date(startDate), 1))
+																setEndDate(new Date(addYears(new Date(startDate.setUTCHours(0, 0, 0, 0) - 604800000), 1)))
 																setCalendarIsOpen(false)
 															}}
 														>
@@ -367,7 +367,7 @@ const Lock: React.FC = () => {
 														disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 														onClick={async () => {
 															const lockTx = votingEscrowContract.methods
-																.create_lock(ethers.utils.parseUnits(val.toString(), 18), length)
+																.create_lock(ethers.utils.parseUnits(val.toString(), 18), length.toString().slice(0, 10))
 																.send({ from: account })
 
 															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
@@ -430,7 +430,9 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.times(1000).toNumber())}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.methods.increase_unlock_time(length.toString()).send({ from: account })
+														const lockTx = votingEscrowContract.methods
+															.increase_unlock_time(length.toString().slice(0, 10))
+															.send({ from: account })
 
 														handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)
 													}}
