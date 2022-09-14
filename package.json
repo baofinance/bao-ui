@@ -35,6 +35,7 @@
     ]
   },
   "devDependencies": {
+    "animate.css": "^4.1.1",
     "@apollo/client": "^3.4.1",
     "@fontsource/kaushan-script": "^4.5.9",
     "@fontsource/rubik": "^4.5.11",
@@ -99,6 +100,7 @@
     "react-circular-progressbar": "^2.0.4",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.1.0",
+    "react-notifications-component": "^4.0.1",
     "react-responsive": "^9.0.0-beta.10",
     "react-scripts": "4.0.3",
     "react-spinners": "^0.13.4",
