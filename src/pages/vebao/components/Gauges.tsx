@@ -11,7 +11,7 @@ import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
 import GraphUtil from '@/utils/graph'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
@@ -67,19 +67,22 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const totalMintable = useMintable()
 	const mintable = totalMintable.times(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
-	const gaugeTVL = gaugeInfo && virtualPrice.times(gaugeInfo.totalSupply.div(10 ** 18))
+	const gaugeTVL = gaugeInfo && gaugeInfo.totalSupply.div(10 ** 18).times(virtualPrice)
 	const rewardAPY = baoPrice && baoPrice.times(mintable).div(gaugeTVL)
 
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 
 	useEffect(() => {
-		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
-			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.crv[Config.networkId].address)
-			setBaoPrice(baoPrice)
+		if (!bao) return
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
+			setBaoPrice(new BigNumber((await res.json())['curve-dao-token'].usd))
 		})
 	}, [bao, setBaoPrice])
 
-	console.log(baoPrice)
+	console.log(baoPrice && baoPrice.toNumber())
+	console.log(getDisplayBalance(mintable.div(10 ** 18)))
+	console.log(getDisplayBalance(gaugeTVL))
+	console.log(getDisplayBalance(virtualPrice))
 
 	return (
 		<>
@@ -106,7 +109,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 					<Badge className='bg-primary-300 font-semibold'>
 						{rewardAPY ? (
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{rewardAPY.gt(0) ? `${rewardAPY.times(new BigNumber(100)).toNumber()}%` : 'N/A'}
+								{rewardAPY.gte(0) ? `${decimate(rewardAPY.times(new BigNumber(100)).toNumber())}%` : 'N/A'}
 							</Typography>
 						) : (
 							<Loader />
