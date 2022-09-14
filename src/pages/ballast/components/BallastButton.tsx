@@ -10,6 +10,7 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, exponentiate } from '@/utils/numberFormat'
+import { ethers } from 'ethers'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const bao = useBao()
@@ -27,7 +28,14 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
 				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.baoUSD)
-				return handleTx(approve(tokenContract, ballastContract, account), 'Ballast: Approve baoUSD')
+				const tx = tokenContract.methods
+				.approve(
+					ballastContract.options.address,
+					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+				)
+				.send({ from: account })
+
+				return handleTx(tx, 'Ballast: Approve baoUSD')
 			}
 
 			handleTx(ballastContract.methods.sell(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap baoUSD to DAI')
@@ -35,12 +43,20 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
 				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.DAI)
-				return handleTx(approve(tokenContract, ballastContract, account), 'Ballast: Approve DAI')
+				const tx = tokenContract.methods
+				.approve(
+					ballastContract.options.address,
+					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+				)
+				.send({ from: account })
+
+				return handleTx(tx, 'Ballast: Approve DAI')
 			}
 
 			handleTx(ballastContract.methods.buy(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap DAI to baoUSD')
 		}
 	}
+
 
 	const buttonText = () => {
 		if (!(inputAApproval && inputBApproval)) return <Loader />
