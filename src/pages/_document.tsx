@@ -15,7 +15,12 @@ export default function Document() {
 				<link rel='apple-touch-icon' sizes='192x192' href='/icons/icon-192.png' />
 				<link rel='apple-touch-icon' sizes='384x384' href='/icons/icon-384.png' />
 				<link rel='apple-touch-icon' sizes='512x512' href='/icons/icon-512.png' />
-				<link rel='stylesheet' href='https://use.typekit.net/kfv8uis.css' />
+				<link rel='preconnect' href='https://fonts.googleapis.com' />
+				<link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
+				<link
+					href='https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Rubik:wght@300;400;500;600;700;800&display=swap'
+					rel='stylesheet'
+				/>
 				<noscript>You need to enable JavaScript to view Bao Finance</noscript>
 				<div id='root'></div>
 				<Main />

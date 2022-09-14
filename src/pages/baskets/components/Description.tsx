@@ -11,7 +11,7 @@ interface DescriptionProps {
 const Description: React.FC<DescriptionProps> = ({ basketAddress = '' }) => {
 	return (
 		<>
-			<div className={`mt-4 w-full rounded-lg border border-primary-300 bg-primary-100 ${isDesktop ? 'px-8 py-6' : 'px-4 py-3'}`}>
+			<div className={`mt-4 w-full rounded border border-primary-300 bg-primary-100 ${isDesktop ? 'px-8 py-6' : 'px-4 py-3'}`}>
 				{basketAddress === Config.addressMap.bDEFI && <BDEFI />}
 				{basketAddress === Config.addressMap.bSTBL && <BSTBL />}
 			</div>

@@ -127,7 +127,15 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 							<Button
 								fullWidth
 								onClick={async () => {
-									handleTx(approve(lpContract, masterChefContract, account), `Approve ${tokenName}`)
+									const tx = bao
+										.getNewContract('erc20.json', lpTokenAddress)
+										.methods.approve(
+											masterChefContract.options.address,
+											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+										)
+										.send({ from: account })
+
+									handleTx(tx, `Approve CRV`)
 								}}
 							>
 								Approve {tokenName}

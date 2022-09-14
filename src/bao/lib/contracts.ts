@@ -6,6 +6,8 @@ import CEtherAbi from './abi/cether.json'
 import CTokenAbi from './abi/ctoken.json'
 import ERC20Abi from './abi/erc20.json'
 import ExperipieAbi from './abi/experipie.json'
+import GaugeAbi from './abi/gauge.json'
+import GaugePoolAbi from './abi/gaugePool.json'
 import UNIV2PairAbi from './abi/uni_v2_lp.json'
 import Config from './config'
 import * as Types from './types'
@@ -19,6 +21,7 @@ export class Contracts {
 	pools: Types.FarmableSupportedPool[] | undefined
 	baskets: Types.ActiveSupportedBasket[] | undefined
 	markets: Types.ActiveSupportedMarket[] | undefined
+	gauges: Types.ActiveSupportedGauge[] | undefined
 	blockGasLimit: any
 	notifier: any
 
@@ -30,6 +33,20 @@ export class Contracts {
 		Object.keys(Config.contracts).forEach(contractName => {
 			this.contracts[contractName][networkId].contract = this.getNewContract(this.contracts[contractName][networkId].abi)
 		})
+
+		this.gauges =
+			networkId === Config.networkId
+				? Config.gauges.map(gauge =>
+						Object.assign(gauge, {
+							gaugeAddress: gauge.gaugeAddresses[networkId],
+							poolAddress: gauge.poolAddresses[networkId],
+							lpAddress: gauge.lpAddresses[networkId],
+							gaugeContract: this.getNewContract(GaugeAbi),
+							poolContract: this.getNewContract(GaugePoolAbi),
+							lpContract: this.getNewContract(ERC20Abi),
+						}),
+				  )
+				: undefined
 
 		this.pools =
 			networkId === Config.networkId
@@ -82,6 +99,13 @@ export class Contracts {
 				setProvider(this.contracts[contractName][networkId].contract, this.contracts[contractName][networkId].address)
 			})
 
+			if (this.gauges) {
+				this.gauges.forEach(({ gaugeContract, gaugeAddress, poolContract, poolAddress, lpContract, lpAddress }) => {
+					setProvider(gaugeContract, gaugeAddress)
+					setProvider(poolContract, poolAddress)
+					setProvider(lpContract, lpAddress)
+				})
+			}
 			if (this.pools) {
 				this.pools.forEach(({ lpContract, lpAddress, tokenContract, tokenAddress }) => {
 					setProvider(lpContract, lpAddress)

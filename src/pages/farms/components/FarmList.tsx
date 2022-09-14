@@ -208,7 +208,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowFarmModal(true)} disabled={!account}>
-				<div className='rounded-lg border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
+				<div className='rounded border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
 					<div className='flex w-full flex-row items-center'>
 						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>

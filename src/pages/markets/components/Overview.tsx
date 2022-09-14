@@ -40,7 +40,7 @@ export const Overview = () => {
 	return bao && account && accountLiquidity ? (
 		<>
 			<div className={`mx-auto my-4 grid items-center justify-evenly ${isDesktop ? 'grid-cols-5' : 'grid-cols-2'} gap-4`}>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-text-200'>
 							Net APY
@@ -50,7 +50,7 @@ export const Overview = () => {
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-text-200'>
 							Your Collateral
@@ -97,7 +97,7 @@ export const Overview = () => {
 					</div>
 				)}
 
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-text-200'>
 							Total Debt
@@ -107,7 +107,7 @@ export const Overview = () => {
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded-lg border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-text-200'>
 							Health Factor{' '}
@@ -136,7 +136,7 @@ export const Overview = () => {
 
 			{!isDesktop && (
 				<div className='w-full'>
-					<div className='mt-4 flex w-full justify-center rounded-lg border border-primary-300 bg-primary-100 p-4'>
+					<div className='mt-4 flex w-full justify-center rounded border border-primary-300 bg-primary-100 p-4'>
 						<div className='flex w-full flex-row items-center justify-center text-sm font-medium'>
 							<div className='flex flex-row items-center gap-2'>
 								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-text-200'>
@@ -151,8 +151,8 @@ export const Overview = () => {
 								</Typography>
 							</div>
 
-							<div className='ml-2 flex h-1 w-full rounded-lg bg-primary-400'>
-								<div className='flex rounded-lg bg-text-100' style={{ width: `${borrowLimit}%` }} />
+							<div className='ml-2 flex h-1 w-full rounded bg-primary-400'>
+								<div className='flex rounded bg-text-100' style={{ width: `${borrowLimit}%` }} />
 							</div>
 
 							<div className='flex flex-row items-center'>

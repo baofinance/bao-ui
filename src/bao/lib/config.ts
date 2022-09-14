@@ -22,6 +22,7 @@ export default {
 		USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
 		WETH: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 		DEAD: '0x000000000000000000000000000000000000dead',
+		CRV: '0xD533a949740bb3306d119CC777fa900bA034cd52',
 		//Synths
 		baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 		// NFTs
@@ -36,6 +37,12 @@ export default {
 			1: {
 				address: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
 				abi: 'bao.json',
+			},
+		},
+		crv: {
+			1: {
+				address: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+				abi: 'erc20bao.json',
 			},
 		},
 		masterChef: {
@@ -86,6 +93,25 @@ export default {
 			1: {
 				address: '0x08a2b7D713e388123dc6678168656659d297d397',
 				abi: 'lendingRegistry.json',
+			},
+		},
+		// veBAO (Currently set to Curve contracts)
+		gaugeController: {
+			1: {
+				address: '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB',
+				abi: 'gaugeController.json',
+			},
+		},
+		votingEscrow: {
+			1: {
+				address: '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2',
+				abi: 'votingEscrow.json',
+			},
+		},
+		minter: {
+			1: {
+				address: '0xd061D61a4d941c39E5453435B6345Dc261C2fcE0',
+				abi: 'minter.json',
 			},
 		},
 	},
@@ -171,6 +197,40 @@ export default {
 			icon: 'bSTBL.png',
 			coingeckoId: 'dai',
 			underlyingDecimals: 18,
+		},
+	],
+	gauges: [
+		{
+			gid: 1,
+			name: '3pool',
+			symbol: '3CRV',
+			gaugeAddresses: {
+				1: '0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A',
+			},
+			poolAddresses: {
+				1: '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
+			},
+			lpAddresses: {
+				1: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
+			},
+			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
+			pairUrl: 'https://curve.fi/3pool',
+		},
+		{
+			gid: 2,
+			name: 'tricrypto2',
+			symbol: 'CRV3CRYPTO',
+			gaugeAddresses: {
+				1: '0xDeFd8FdD20e0f34115C7018CCfb655796F6B2168',
+			},
+			poolAddresses: {
+				1: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
+			},
+			lpAddresses: {
+				1: '0xc4AD29ba4B3c580e6D59105FFf484999997675Ff',
+			},
+			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
+			pairUrl: 'https://curve.fi/tricrypto',
 		},
 	],
 	baskets: [

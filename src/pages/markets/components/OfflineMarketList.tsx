@@ -55,8 +55,8 @@ export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets
 const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: MarketListItemProps) => {
 	return (
 		<>
-			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className={`cursor-default rounded-lg border-0 bg-primary-100 p-3 hover:bg-primary-200`}>
+			<Accordion open={false} className='my-2 rounded border border-primary-300'>
+				<AccordionHeader className={`cursor-default rounded border-0 bg-primary-100 p-3 hover:bg-primary-200`}>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
@@ -87,8 +87,8 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketListItemProps) => {
 	return (
 		<>
-			<Accordion open={false} className='my-2 rounded-lg border border-primary-300'>
-				<AccordionHeader className={`cursor-default rounded-lg border-0 bg-primary-100 p-3 hover:bg-primary-200`}>
+			<Accordion open={false} className='my-2 rounded border border-primary-300'>
+				<AccordionHeader className={`cursor-default rounded border-0 bg-primary-100 p-3 hover:bg-primary-200`}>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image

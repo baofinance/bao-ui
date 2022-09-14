@@ -29,7 +29,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
-			<button className='w-full rounded-lg border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200'>
+			<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200'>
 				<div className='flex w-full flex-row'>
 					<div className='flex w-full'>
 						<div className='my-auto'>
@@ -59,8 +59,8 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<Loader />
 						)}
 					</div>
-					<div className='mx-auto my-0 flex w-full flex-col items-end'>
-						<span className='inline-block align-middle'>
+					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
+						<span className='inline-block'>
 							{rates ? (
 								<>
 									<Typography variant='sm' className='m-0 font-semibold leading-5'>

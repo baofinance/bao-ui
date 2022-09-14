@@ -62,7 +62,7 @@ module.exports = {
 					{
 						letterSpacing: '-0.02em;',
 						lineHeight: '96px',
-						fontWeight: 700,
+						fontWeight: 500,
 					},
 				],
 			},
@@ -83,7 +83,7 @@ module.exports = {
 				'3xl': '1600px',
 			},
 		},
-		plugins: [],
+		plugins: [require('@tailwindcss/forms')],
 		corePlugins: {},
 	},
 }
