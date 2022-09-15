@@ -1,7 +1,8 @@
 import { Multicall as MC } from 'ethereum-multicall'
-import Web3 from 'web3'
-import { provider } from 'web3-core/types'
-import { Contract } from 'web3-eth-contract'
+import { ethers } from 'ethers'
+//import { provider } from 'web3-core/types'
+import { Provider, JsonRpcProvider } from '@ethersproject/providers'
+import { Contract } from '@ethersproject/contracts'
 import Config from './lib/config'
 import { Contracts } from './lib/contracts'
 
@@ -12,52 +13,44 @@ export interface BaoOptions {
 export class Bao {
 	public readonly networkId: number
 	public readonly contracts: Contracts
-	public readonly web3: Web3
+	public readonly provider: Provider
 	public readonly multicall: MC
 
-	constructor(provider: string | provider, networkId: number, options: BaoOptions) {
+	constructor(provider: string | Provider, networkId: number, options: BaoOptions) {
 		let realProvider
 
 		if (typeof provider === 'string') {
-			if (provider.includes('wss')) {
-				realProvider = new Web3.providers.WebsocketProvider(provider as string, {
-					timeout: options.ethereumNodeTimeout || 100000,
-				})
-			} else {
-				realProvider = new Web3.providers.HttpProvider(provider, {
-					timeout: options.ethereumNodeTimeout || 100000,
-				})
-			}
+			realProvider = new ethers.providers.JsonRpcProvider(provider)
 		} else if (provider) {
 			realProvider = provider
 		} else {
-			realProvider = new Web3.providers.HttpProvider(Config.defaultRpc.rpcUrls[0])
+			realProvider = new ethers.providers.JsonRpcProvider(Config.defaultRpc.rpcUrls[0])
 		}
 
 		this.networkId = networkId
-		this.web3 = new Web3(realProvider)
+		this.provider = realProvider
 		this.multicall = new MC({
-			web3Instance: this.web3,
+			ethersProvider: this.provider,
 			tryAggregate: true,
 		})
 
-		this.contracts = new Contracts(realProvider, networkId, this.web3)
+		this.contracts = new Contracts(realProvider, networkId)
 	}
 
 	getContract(contractName: string, networkId = this.networkId): Contract {
 		return this.contracts.getContract(contractName, networkId)
 	}
 
-	getNewContract(abi: string | unknown, address?: string): Contract {
-		return this.contracts.getNewContract(abi, address)
+	getNewContract(address: string, abi: string | unknown): Contract {
+		return this.contracts.getNewContract(address, abi, this.provider)
 	}
 
 	async hasAccounts(): Promise<boolean> {
-		return (await this.web3.eth.getAccounts()).length > 0
+		return (await (this.provider as JsonRpcProvider).listAccounts()).length > 0
 	}
 
-	setProvider(provider: provider, networkId: number): void {
-		this.web3.setProvider(provider)
+	setProvider(provider: Provider, networkId: number): void {
+		//this.web3.setProvider(provider)
 		this.contracts.setProvider(provider, networkId)
 	}
 }

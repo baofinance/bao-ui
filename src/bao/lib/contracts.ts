@@ -1,7 +1,6 @@
-import Web3 from 'web3'
-import { provider } from 'web3-core/types'
-import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
+import { ethers } from 'ethers'
+import { Provider } from '@ethersproject/providers'
+import { Contract } from '@ethersproject/contracts'
 import CEtherAbi from './abi/cether.json'
 import CTokenAbi from './abi/ctoken.json'
 import ERC20Abi from './abi/erc20.json'
@@ -16,7 +15,7 @@ export class Contracts {
 	[x: string]: any
 
 	networkId: number
-	web3: Web3
+	provider: Provider
 	contracts: Types.ContractsConfig
 	pools: Types.FarmableSupportedPool[] | undefined
 	baskets: Types.ActiveSupportedBasket[] | undefined
@@ -25,13 +24,17 @@ export class Contracts {
 	blockGasLimit: any
 	notifier: any
 
-	constructor(provider: string | provider, networkId: number, web3: Web3) {
+	constructor(provider: Provider, networkId: number) {
 		this.networkId = networkId
-		this.web3 = web3
+		this.provider = provider
 
 		this.contracts = Config.contracts
 		Object.keys(Config.contracts).forEach(contractName => {
-			this.contracts[contractName][networkId].contract = this.getNewContract(this.contracts[contractName][networkId].abi)
+			this.contracts[contractName][networkId].contract = this.getNewContract(
+				this.contracts[contractName][networkId].address,
+				this.contracts[contractName][networkId].abi,
+				provider,
+			)
 		})
 
 		this.gauges =
@@ -41,9 +44,9 @@ export class Contracts {
 							gaugeAddress: gauge.gaugeAddresses[networkId],
 							poolAddress: gauge.poolAddresses[networkId],
 							lpAddress: gauge.lpAddresses[networkId],
-							gaugeContract: this.getNewContract(GaugeAbi),
-							poolContract: this.getNewContract(GaugePoolAbi),
-							lpContract: this.getNewContract(ERC20Abi),
+							gaugeContract: this.getNewContract(gauge.gaugeAddresses[networkId], GaugeAbi, provider),
+							poolContract: this.getNewContract(gauge.poolAddresses[networkId], GaugePoolAbi, provider),
+							lpContract: this.getNewContract(gauge.lpAddresses[networkId], ERC20Abi, provider),
 						}),
 				  )
 				: undefined
@@ -54,8 +57,8 @@ export class Contracts {
 						Object.assign(pool, {
 							lpAddress: pool.lpAddresses[networkId],
 							tokenAddress: pool.tokenAddresses[networkId],
-							lpContract: this.getNewContract(UNIV2PairAbi),
-							tokenContract: this.getNewContract(ERC20Abi),
+							lpContract: this.getNewContract(pool.lpAddresses[networkId], UNIV2PairAbi, provider),
+							tokenContract: this.getNewContract(pool.tokenAddresses[networkId], ERC20Abi, provider),
 						}),
 				  )
 				: undefined
@@ -66,32 +69,33 @@ export class Contracts {
 				? Config.baskets.map(basket =>
 						Object.assign(basket, {
 							address: basket.basketAddresses[networkId],
-							basketContract: this.getNewContract(ExperipieAbi),
-							ovenContract: this.getNewContract('oven.json'),
+							basketContract: this.getNewContract(basket.lpAddress, ExperipieAbi, provider),
+							ovenContract: this.getNewContract(basket.ovenAddress, 'oven.json', provider),
 						}),
 				  )
 				: undefined
 
 		this.markets =
 			networkId === Config.networkId
-				? Config.markets.map(market =>
-						Object.assign(market, {
+				? Config.markets.map(market => {
+						const marketAddr = market.marketAddresses[Config.networkId]
+						const underlyingAddr = market.underlyingAddresses[Config.networkId]
+						return Object.assign(market, {
 							marketAddress: market.marketAddresses[networkId],
 							underlyingAddress: market.underlyingAddresses[networkId],
-							marketContract: this.getNewContract(market.underlyingAddresses[Config.networkId] === 'ETH' ? CEtherAbi : CTokenAbi),
-							underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi),
-						}),
-				  )
+							marketContract: this.getNewContract(marketAddr, underlyingAddr === 'ETH' ? CEtherAbi : CTokenAbi, provider),
+							underlyingContract: underlyingAddr !== 'ETH' && this.getNewContract(underlyingAddr, ERC20Abi, provider),
+						})
+				  })
 				: undefined
 
 		this.setProvider(provider, networkId)
-		this.setDefaultAccount(this.web3.eth.defaultAccount)
 	}
 
-	setProvider(provider: provider, networkId: number): void {
+	setProvider(provider: Provider, networkId: number): void {
 		const setProvider = (contract: Contract, address: string) => {
-			if (address) contract.options.address = address
-			else console.error('Contract address not found in network', networkId)
+			//if (address) contract.options.address = address
+			//else console.error('Contract address not found in network', networkId)
 		}
 
 		if (networkId === Config.networkId) {
@@ -127,15 +131,12 @@ export class Contracts {
 		}
 	}
 
-	setDefaultAccount(account: string): void {
-		Object.keys(this.contracts).forEach(contractName => (this.getContract(contractName).options.from = account))
-	}
-
 	getContract(contractName: string, networkId = this.networkId): Contract {
 		return this.contracts[contractName][networkId].contract
 	}
 
-	getNewContract(abi: string | unknown, address?: string): Contract {
-		return new this.web3.eth.Contract((typeof abi === 'string' ? require(`./abi/${abi}`) : abi) as AbiItem[], address)
+	getNewContract(address: string, abi: string | any, provider: Provider): Contract {
+		const _abi = typeof abi === 'string' ? require(`./abi/${abi}`) : abi
+		return new Contract(address, _abi, provider)
 	}
 }

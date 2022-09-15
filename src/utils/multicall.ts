@@ -1,6 +1,6 @@
 import { ContractCallContext, ContractCallResults } from 'ethereum-multicall'
 import _ from 'lodash'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 
 interface ContractCalls {
 	contract: Contract
@@ -14,12 +14,16 @@ interface ContractCall {
 	params?: Array<any>
 }
 
-const createCallContext = (contracts: ContractCalls[]): ContractCallContext[] =>
+const createCallContext = (contracts: ContractCalls[]): any[] =>
 	_.map(contracts, (contract: ContractCalls) => {
+		window.c = contract.contract
+		window.i = contract.contract.interface
+		window.f = contract.contract.interface.fragments
+		console.log()
 		return {
 			reference: contract.ref,
-			contractAddress: contract.contract.options.address,
-			abi: contract.contract.options.jsonInterface,
+			contractAddress: contract.contract.address,
+			abi: contract.contract.interface.format(),
 			calls: _.map(contract.calls, call => ({
 				reference: call.ref,
 				methodName: call.method,

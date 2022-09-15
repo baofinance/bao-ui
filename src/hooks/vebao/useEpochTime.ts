@@ -33,8 +33,8 @@ const useEpochTime = (): RewardsInfo => {
 		const { bao: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setEpochTime({
-			start: new BigNumber(res[0].values[0].hex),
-			future: new BigNumber(res[1].values[0].hex),
+			start: new BigNumber(res[0].values[0].toString()),
+			future: new BigNumber(res[1].values[0].toString()),
 		})
 	}, [bao])
 

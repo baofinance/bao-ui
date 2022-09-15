@@ -41,7 +41,7 @@ export const useApprovals = (pendingTx: string | boolean): Approvals => {
 			Object.keys(multicallResults).reduce(
 				(approvals: { [key: string]: BigNumber }, address: any) => ({
 					...approvals,
-					[address]: new BigNumber(multicallResults[address][0].values[0].hex),
+					[address]: new BigNumber(multicallResults[address][0].values[0].toString()),
 				}),
 				{},
 			),

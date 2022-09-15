@@ -46,7 +46,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
+	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -67,7 +67,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						tx = bao
 							.getNewContract('erc20.json', Config.addressMap.DAI)
 							.methods.approve(
-								recipe.options.address,
+								recipe.address,
 								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							)
 							.send({ from: account })

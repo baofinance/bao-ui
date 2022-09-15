@@ -15,7 +15,7 @@ import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao && bao.getContract('bao').options.address)
+	const baoBalance = useTokenBalance(bao && bao.getContract('bao').address)
 	const { account } = useWeb3React()
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const locks = useLockedEarnings()

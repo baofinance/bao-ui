@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 
 import Config from '@/bao/lib/config'
 import useBlock from '@/hooks/base/useBlock'
@@ -19,7 +19,7 @@ export type Balance = {
 export const useAccountBalances = (): Balance[] => {
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { account, library } = useWeb3React()
 	const block = useBlock()
 	const tokens = Config.markets.map(market => market.underlyingAddresses[Config.networkId])
 
@@ -27,7 +27,7 @@ export const useAccountBalances = (): Balance[] => {
 
 	const fetchBalances = useCallback(async () => {
 		const data: Contract[] = tokens
-			.map(address => address !== 'ETH' && bao.getNewContract('erc20.json', address))
+			.map(address => address !== 'ETH' && bao.getNewContract(address, 'erc20.json'))
 			.filter(contract => contract)
 
 		const multicallResults = MultiCall.parseCallResults(
@@ -36,7 +36,7 @@ export const useAccountBalances = (): Balance[] => {
 					data.map(
 						contract =>
 							contract && {
-								ref: contract.options.address,
+								ref: contract.address,
 								contract,
 								calls: [{ method: 'symbol' }, { method: 'decimals' }, { method: 'balanceOf', params: [account] }],
 							},
@@ -44,16 +44,18 @@ export const useAccountBalances = (): Balance[] => {
 				),
 			),
 		)
-		const ethBalance = await bao.web3.eth.getBalance(account)
+		const ethBalance = await bao.provider.getBalance(account)
 
 		setBalances(
-			tokens.map(address => ({
-				address,
-				symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
-				balance: multicallResults[address]
-					? decimate(multicallResults[address][2].values[0].hex, multicallResults[address][1].values[0]).toNumber()
-					: decimate(ethBalance).toNumber(),
-			})),
+			tokens.map(address => {
+				return {
+					address,
+					symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
+					balance: multicallResults[address]
+					? decimate(multicallResults[address][2].values[0], multicallResults[address][1].values[0]).toNumber()
+					: decimate(ethBalance.toString()).toNumber(),
+				}
+			}),
 		)
 	}, [transactions, bao, account])
 
@@ -75,13 +77,13 @@ export const useSupplyBalances = (): Balance[] => {
 	const [balances, setBalances] = useState<Balance[] | undefined>()
 
 	const fetchBalances = useCallback(async () => {
-		const data: Contract[] = tokens.map(address => bao.getNewContract('ctoken.json', address))
+		const data: Contract[] = tokens.map(address => bao.getNewContract(address, 'ctoken.json'))
 
 		const multicallResults = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
 					data.map(contract => ({
-						ref: contract.options.address,
+						ref: contract.address,
 						contract,
 						calls: [{ method: 'symbol' }, { method: 'balanceOf', params: [account] }],
 					})),
@@ -94,7 +96,7 @@ export const useSupplyBalances = (): Balance[] => {
 				address,
 				symbol: multicallResults[address][0].values[0],
 				balance: decimate(
-					multicallResults[address][1].values[0].hex,
+					multicallResults[address][1].values[0],
 					Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
 				).toNumber(),
 			})),
@@ -119,13 +121,13 @@ export const useBorrowBalances = (): Balance[] => {
 	const [balances, setBalances] = useState<Balance[] | undefined>()
 
 	const fetchBalances = useCallback(async () => {
-		const data: Contract[] = tokens.map(address => bao.getNewContract('ctoken.json', address))
+		const data: Contract[] = tokens.map(address => bao.getNewContract(address, 'ctoken.json'))
 
 		const multicallResults = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
 					data.map(contract => ({
-						ref: contract.options.address,
+						ref: contract.address,
 						contract,
 						calls: [{ method: 'symbol' }, { method: 'borrowBalanceStored', params: [account] }],
 					})),
@@ -138,7 +140,7 @@ export const useBorrowBalances = (): Balance[] => {
 				address,
 				symbol: multicallResults[address][0].values[0],
 				balance: decimate(
-					multicallResults[address][1].values[0].hex,
+					multicallResults[address][1].values[0],
 					Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
 				).toNumber(),
 			})),

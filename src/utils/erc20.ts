@@ -1,21 +1,25 @@
 import { Bao } from '@/bao/Bao'
-import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
+import { Contract } from '@ethersproject/contracts'
+import { Web3Provider } from '@ethersproject/providers'
+import { ethers } from 'ethers'
 
 import CreamABI from '@/bao/lib/abi/creamLending.json'
 import ERC20ABI from '@/bao/lib/abi/erc20.json'
 
-export const getContract = (bao: Bao, address: string) => {
-	return bao && bao.web3 && new bao.web3.eth.Contract(ERC20ABI as unknown as AbiItem, address)
+export const getContract = (library: Web3Provider, address: string) => {
+	window.libary = library
+	window.ethers = ethers
+	window.ERC20ABI = ERC20ABI
+	return library && new Contract(address, ERC20ABI, library)
 }
 
-export const getCreamContract = (bao: Bao, address: string) => {
-	return bao && bao.web3 && new bao.web3.eth.Contract(CreamABI as unknown as AbiItem, address)
+export const getCreamContract = (library: Web3Provider, address: string) => {
+	return library && new Contract(address, CreamABI, library)
 }
 
 export const getAllowance = async (contract: Contract, owner: string, spender: string): Promise<string> => {
 	try {
-		return await contract.methods.allowance(owner, spender).call()
+		return (await contract.allowance(owner, spender)).toString()
 	} catch (e) {
 		return '0'
 	}
@@ -24,7 +28,7 @@ export const getAllowance = async (contract: Contract, owner: string, spender: s
 export const getBalance = async (bao: Bao, tokenAddress: string, userAddress: string): Promise<string> => {
 	const tokenContract = getContract(bao, tokenAddress)
 	try {
-		return await tokenContract.methods.balanceOf(userAddress).call()
+		return (await tokenContract.balanceOf(userAddress)).toString()
 	} catch (e) {
 		return '0'
 	}
@@ -32,5 +36,5 @@ export const getBalance = async (bao: Bao, tokenAddress: string, userAddress: st
 
 export const getDecimals = async (bao: Bao, tokenAddress: string): Promise<string> => {
 	const tokenContract = getContract(bao, tokenAddress)
-	return await tokenContract.methods.decimals().call()
+	return (await tokenContract.decimals()).toString()
 }

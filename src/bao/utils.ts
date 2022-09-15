@@ -3,7 +3,7 @@ import { decimate, exponentiate } from '@/utils/numberFormat'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import _ from 'lodash'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 import { Bao } from './Bao'
 import { ActiveSupportedBasket, ActiveSupportedGauge, ActiveSupportedMarket, FarmableSupportedPool } from './lib/types'
 
@@ -105,7 +105,7 @@ export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
 					tokenSymbol,
 					tokenContract,
 					earnToken: 'BAO',
-					earnTokenAddress: bao.getContract('bao').options.address,
+					earnTokenAddress: bao.getContract('bao').address,
 					iconA,
 					iconB,
 					refUrl,
@@ -149,10 +149,10 @@ export const getTotalLPWethValue = async (
 	poolWeight: BigNumber
 }> => {
 	const [tokenAmountWholeLP, balance, totalSupply, lpContractWeth, poolWeight] = await Promise.all([
-		tokenContract.methods.balanceOf(lpContract.options.address).call(),
-		lpContract.methods.balanceOf(masterChefContract.options.address).call(),
+		tokenContract.methods.balanceOf(lpContract.address).call(),
+		lpContract.methods.balanceOf(masterChefContract.address).call(),
 		lpContract.methods.totalSupply().call(),
-		wethContract.methods.balanceOf(lpContract.options.address).call(),
+		wethContract.methods.balanceOf(lpContract.address).call(),
 		getPoolWeight(masterChefContract, pid),
 	])
 
@@ -174,7 +174,7 @@ export const getTotalLPWethValue = async (
 }
 
 export const approve = async (token: Contract, spender: Contract, account: string): Promise<string> => {
-	return token.methods.approve(spender.options.address, ethers.constants.MaxUint256).send({ from: account })
+	return token.methods.approve(spender.address, ethers.constants.MaxUint256).send({ from: account })
 }
 
 export const stake = async (masterChefContract: Contract, pid: number, amount: string, account: string, ref: string): Promise<string> => {
@@ -289,6 +289,7 @@ export const basketRedeem = (basketContract: Contract, amount: string, account: 
 
 export const getWethPriceLink = async (bao: Bao): Promise<BigNumber> => {
 	const priceOracle = bao.contracts.getContract('wethPrice')
+	console.log(bao.multicall)
 	const { wethPrice } = Multicall.parseCallResults(
 		await bao.multicall.call(
 			Multicall.createCallContext([
@@ -301,7 +302,7 @@ export const getWethPriceLink = async (bao: Bao): Promise<BigNumber> => {
 		),
 	)
 
-	return new BigNumber(wethPrice[1].values[1].hex).div(10 ** wethPrice[0].values[0])
+	return new BigNumber(wethPrice[1].values[1]).div(10 ** wethPrice[0].values[0])
 }
 
 export const getUserInfoChef = async (masterChefContract: Contract, pid: number, account: string) =>

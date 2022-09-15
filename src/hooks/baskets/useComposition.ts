@@ -33,7 +33,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const { transactions } = useTransactionProvider()
 
 	const fetchComposition = useCallback(async () => {
-		const tokenComposition: string[] = await basket.basketContract.methods.getTokens().call()
+		const tokenComposition: string[] = await basket.basketContract.getTokens()
 		const lendingRegistry = bao.getContract('lendingRegistry')
 
 		const tokensQuery = MultiCall.createCallContext(
@@ -56,7 +56,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						decimals: tokenInfo[tokenComposition[i]][0].values[0],
 						symbol: tokenInfo[tokenComposition[i]][1].values[0],
 						name: tokenInfo[tokenComposition[i]][2].values[0],
-						balance: new BigNumber(tokenInfo[tokenComposition[i]][3].values[0].hex),
+						balance: new BigNumber(tokenInfo[tokenComposition[i]][3].values[0].toString()),
 				  }
 				: {
 						// I don't like this, but MKR doesn't fit the mold.

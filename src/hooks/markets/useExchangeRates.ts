@@ -20,7 +20,7 @@ export const useExchangeRates = (): ExchangeRates => {
 		const tokenContracts = bao.contracts.markets.map((market: ActiveSupportedMarket) => market.marketContract)
 		const multiCallContext = MultiCall.createCallContext(
 			tokenContracts.map(tokenContract => ({
-				ref: tokenContract.options.address,
+				ref: tokenContract.address,
 				contract: tokenContract,
 				calls: [{ method: 'exchangeRateStored' }],
 			})),
@@ -31,7 +31,7 @@ export const useExchangeRates = (): ExchangeRates => {
 			Object.keys(data).reduce(
 				(exchangeRate: { [key: string]: BigNumber }, address: any) => ({
 					...exchangeRate,
-					[address]: new BigNumber(data[address][0].values[0].hex),
+					[address]: new BigNumber(data[address][0].values[0].toString()),
 				}),
 				{},
 			),

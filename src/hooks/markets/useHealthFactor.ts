@@ -37,7 +37,7 @@ const useHealthFactor = () => {
 				prev +
 				new BigNumber(prices[cur.marketAddress])
 					.div(10 ** (36 - cur.underlyingDecimals))
-					.times(balanceRes[cur.marketAddress][0].values[0].hex)
+					.times(balanceRes[cur.marketAddress][0].values[0].toString())
 					.div(10 ** cur.underlyingDecimals)
 					.times(cur.collateralFactor)
 					.toNumber(),

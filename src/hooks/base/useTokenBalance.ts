@@ -9,25 +9,24 @@ import useTransactionProvider from './useTransactionProvider'
 
 const useTokenBalance = (tokenAddress: string) => {
 	const [balance, setBalance] = useState(new BigNumber(0))
-	const { account } = useWeb3React()
-	const bao = useBao()
+	const { account, library } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 
 	const fetchBalance = useCallback(async () => {
 		if (tokenAddress === 'ETH') {
-			const ethBalance = await bao.web3.eth.getBalance(account)
-			return setBalance(new BigNumber(ethBalance))
+			const ethBalance = await library.getBalance(account)
+			return setBalance(new BigNumber(ethBalance.toString()))
 		}
 
-		const balance = await getBalance(bao, tokenAddress, account)
+		const balance = await getBalance(library, tokenAddress, account)
 		setBalance(new BigNumber(balance))
-	}, [account, bao, tokenAddress])
+	}, [account, library, tokenAddress])
 
 	useEffect(() => {
-		if (account && bao && tokenAddress) {
+		if (account && library && tokenAddress) {
 			fetchBalance()
 		}
-	}, [transactions, account, bao, tokenAddress])
+	}, [transactions, account, library, tokenAddress])
 
 	return balance
 }

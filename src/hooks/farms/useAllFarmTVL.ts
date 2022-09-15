@@ -2,7 +2,8 @@ import { Bao } from '@/bao/Bao'
 import BigNumber from 'bignumber.js/bignumber'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
-import { AbiItem } from 'web3-utils'
+//import { AbiItem } from 'web3-utils'
+import { ethers } from 'ethers'
 
 import erc20Abi from '@/bao/lib/abi/erc20.json'
 import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
@@ -19,7 +20,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 					farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
 						? ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new bao.web3.eth.Contract(erc20Abi as AbiItem[], farm.lpAddresses[Config.networkId]),
+								contract: new ethers.Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
 								calls: [
 									{
 										method: 'balanceOf',
@@ -30,7 +31,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 						  } as any)
 						: ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new bao.web3.eth.Contract(lpAbi as AbiItem[], farm.lpAddresses[Config.networkId]),
+								contract: new ethers.Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
 								calls: [
 									{ method: 'getReserves' },
 									{ method: 'token0' },
@@ -50,7 +51,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 	return Object.keys(results).map((key: any) => {
 		const res0 = results[key]
 
-		const reserves = [new BigNumber(res0[0].values[0].hex), new BigNumber(res0[0].values[1].hex)]
+		const reserves = [new BigNumber(res0[0].values[0].toString()), new BigNumber(res0[0].values[1].toString())]
 		const token0Address = res0[1].values[0]
 		const token1Address = res0[2].values[0]
 
@@ -68,8 +69,8 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 		return {
 			tokens,
 			lpAddress: key,
-			lpStaked: new BigNumber(res0[3].values[0].hex),
-			lpSupply: new BigNumber(res0[4].values[0].hex),
+			lpStaked: new BigNumber(res0[3].values[0].toString()),
+			lpSupply: new BigNumber(res0[4].values[0].toString()),
 		}
 	})
 }

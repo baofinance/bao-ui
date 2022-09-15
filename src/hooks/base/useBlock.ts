@@ -10,7 +10,7 @@ const useBlock = () => {
 	useEffect(() => {
 		// const setBlockDebounced = debounce(setBlock, 300)
 		if (!library) return
-		const web3 = new Web3(library)
+		window.library = library
 
 		// const subscription = new Web3(ethereum).eth.subscribe(
 		//   'newBlockHeaders',
@@ -22,7 +22,7 @@ const useBlock = () => {
 		// )
 
 		const interval = setInterval(async () => {
-			const latestBlockNumber = await web3.eth.getBlockNumber()
+			const latestBlockNumber = await library.getBlockNumber()
 			if (block !== latestBlockNumber) {
 				setBlock(latestBlockNumber)
 			}

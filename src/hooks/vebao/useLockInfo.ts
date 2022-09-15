@@ -45,10 +45,10 @@ const useLockInfo = (): LockInfo => {
 		const { votingEscrow: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setLockInfo({
-			balance: new BigNumber(res[0].values[0].hex),
-			totalSupply: new BigNumber(res[1].values[0].hex),
-			lockAmount: new BigNumber(res[2].values[0].hex),
-			lockEnd: new BigNumber(res[2].values[1].hex),
+			balance: new BigNumber(res[0].values[0].toString()),
+			totalSupply: new BigNumber(res[1].values[0].toString()),
+			lockAmount: new BigNumber(res[2].values[0].toString()),
+			lockEnd: new BigNumber(res[2].values[1].toString()),
 		})
 	}, [bao, account])
 

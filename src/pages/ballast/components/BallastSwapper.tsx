@@ -45,18 +45,18 @@ const BallastSwapper: React.FC = () => {
 			{
 				ref: 'DAI',
 				contract: bao.getNewContract('erc20.json', Config.addressMap.DAI),
-				calls: [{ method: 'balanceOf', params: [ballastContract.options.address] }],
+				calls: [{ method: 'balanceOf', params: [ballastContract.address] }],
 			},
 		])
 		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
 
-		setSupplyCap(new BigNumber(ballastRes[0].values[0].hex))
+		setSupplyCap(new BigNumber(ballastRes[0].values[0]))
 		setFees({
-			buy: new BigNumber(ballastRes[1].values[0].hex),
-			sell: new BigNumber(ballastRes[2].values[0].hex),
-			denominator: new BigNumber(ballastRes[3].values[0].hex),
+			buy: new BigNumber(ballastRes[1].values[0]),
+			sell: new BigNumber(ballastRes[2].values[0]),
+			denominator: new BigNumber(ballastRes[3].values[0]),
 		})
-		setReserves(new BigNumber(daiRes[0].values[0].hex))
+		setReserves(new BigNumber(daiRes[0].values[0]))
 	}, [bao])
 
 	useEffect(() => {

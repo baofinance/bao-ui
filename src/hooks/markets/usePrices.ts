@@ -69,7 +69,7 @@ export const useMarketPrices = (): MarketPrices => {
 			data['MarketOracle'].reduce(
 				(_prices: { [key: string]: { usd: number } }, result: any) => ({
 					..._prices,
-					[result.ref]: new BigNumber(result.values[0].hex).toNumber(),
+					[result.ref]: new BigNumber(result.values[0].toString()).toNumber(),
 				}),
 				{},
 			),

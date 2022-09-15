@@ -333,7 +333,7 @@ const Lock: React.FC = () => {
 														onClick={async () => {
 															const tx = crvContract.methods
 																.approve(
-																	votingEscrowContract.options.address,
+																	votingEscrowContract.address,
 																	ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 																)
 																.send({ from: account })

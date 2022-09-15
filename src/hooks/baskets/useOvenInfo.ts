@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 import Multicall from '@/utils/multicall'
 
@@ -16,9 +17,10 @@ export type OvenInfo = {
 const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo => {
 	const [info, setInfo] = useState<OvenInfo | undefined>()
 	const bao = useBao()
+	const { library } = useWeb3React()
 
 	const fetchOvenInfo = useCallback(async () => {
-		const balance = await bao.web3.eth.getBalance(basket.ovenAddress)
+		const balance = await library.getBalance(basket.ovenAddress)
 
 		const query = Multicall.createCallContext([
 			{
@@ -31,11 +33,11 @@ const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo =
 
 		setInfo({
 			balance: new BigNumber(balance),
-			userBalance: new BigNumber(res[0].values[0].hex),
-			userOutputBalance: new BigNumber(res[1].values[0].hex),
-			cap: new BigNumber(res[2].values[0].hex),
+			userBalance: new BigNumber(res[0].values[0].toString()),
+			userOutputBalance: new BigNumber(res[1].values[0].toString()),
+			cap: new BigNumber(res[2].values[0].toStrig()),
 		})
-	}, [basket, account, bao])
+	}, [basket, account, bao, library])
 
 	useEffect(() => {
 		if (!(basket && account && bao)) return

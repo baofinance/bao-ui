@@ -130,7 +130,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 									const tx = bao
 										.getNewContract('erc20.json', lpTokenAddress)
 										.methods.approve(
-											masterChefContract.options.address,
+											masterChefContract.address,
 											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 										)
 										.send({ from: account })
@@ -414,7 +414,7 @@ const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 		return getContract(bao, lpTokenAddress)
 	}, [bao, lpTokenAddress])
 
-	const tokenBalance = useTokenBalance(lpContract.options.address)
+	const tokenBalance = useTokenBalance(lpContract.address)
 	const stakedBalance = useStakedBalance(pid)
 
 	return (

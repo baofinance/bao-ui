@@ -19,7 +19,7 @@ export const useAccountMarkets = (): ActiveSupportedMarket[] | undefined => {
 
 	const fetchAccountMarkets = useCallback(async () => {
 		const comptroller = bao.getContract('comptroller')
-		const _accountMarkets = await comptroller.methods.getAssetsIn(account).call()
+		const _accountMarkets = await comptroller.getAssetsIn(account)
 
 		setAccountMarkets(_accountMarkets.map((address: string) => markets.find(({ marketAddress }) => marketAddress === address)))
 	}, [transactions, bao, markets, account])

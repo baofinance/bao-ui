@@ -117,10 +117,11 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const { account } = useWeb3React()
 
 	const suppliedUnderlying = useMemo(
-		() =>
-			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
-			decimate(exchangeRates[market.marketAddress]).toNumber(),
-		[supplyBalances, exchangeRates],
+		() => {
+			return (supplyBalances.find(balance => balance.address === market.marketAddress).balance *
+				decimate(exchangeRates[market.marketAddress]).toNumber())
+		},
+		[supplyBalances, exchangeRates]
 	)
 
 	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])

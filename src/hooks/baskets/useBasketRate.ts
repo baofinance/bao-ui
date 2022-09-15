@@ -43,9 +43,9 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 		const { recipe: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setRates({
-			eth: new BigNumber(res[0].values[0].hex),
-			dai: new BigNumber(res[1].values[0].hex),
-			usd: wethPrice.times(res[0].values[0].hex),
+			eth: new BigNumber(res[0].values[0].toString()),
+			dai: new BigNumber(res[1].values[0].toString()),
+			usd: wethPrice.times(res[0].values[0].toString()),
 		})
 	}, [bao, basket, transactions])
 

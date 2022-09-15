@@ -10,7 +10,7 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 	const bao = useBao()
 
 	const fetchPairPrice = useCallback(async () => {
-		const lpContract = bao.getNewContract('uni_v2_lp.json', basket.lpAddress)
+		const lpContract = bao.getNewContract(basket.lpAddress, 'uni_v2_lp.json')
 
 		const wethPrice = await getWethPriceLink(bao)
 		const reserves = await lpContract.methods.getReserves().call()

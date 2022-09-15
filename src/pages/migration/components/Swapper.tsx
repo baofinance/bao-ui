@@ -85,14 +85,14 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const handleClick = async () => {
 		if (!bao) return
 
-		const SwapperContract = bao.getContract('stabilizer')
+		const SwapperContract = bao.getContract('stabilizer') // FIXME: needs signer
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
 			const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.BAO)
 			return handleTx(approve(tokenContract, SwapperContract, account), 'Migration: Approve BAOv1')
 		}
 
-		handleTx(SwapperContract.methods.sell(exponentiate(inputVal).toString()).send({ from: account }), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(SwapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {

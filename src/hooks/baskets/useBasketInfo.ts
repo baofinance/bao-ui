@@ -16,7 +16,7 @@ const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
 	const { transactions } = useTransactionProvider()
 
 	const fetchInfo = useCallback(async () => {
-		const supply = await basket.basketContract.methods.totalSupply().call()
+		const supply = await basket.basketContract.totalSupply()
 
 		setInfo({
 			totalSupply: new BigNumber(supply),

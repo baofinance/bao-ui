@@ -58,12 +58,12 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 		const { gauge: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setGaugeInfo({
-			totalSupply: new BigNumber(res[0].values[0].hex),
-			inflationRate: new BigNumber(res[1].values[0].hex),
-			balance: new BigNumber(res[2].values[0].hex),
-			workingBalance: new BigNumber(res[3].values[0].hex),
-			claimableTokens: new BigNumber(res[4].values[0].hex),
-			integrateFraction: new BigNumber(res[5].values[0].hex),
+			totalSupply: new BigNumber(res[0].values[0].toString()),
+			inflationRate: new BigNumber(res[1].values[0].toString()),
+			balance: new BigNumber(res[2].values[0].toString()),
+			workingBalance: new BigNumber(res[3].values[0].toString()),
+			claimableTokens: new BigNumber(res[4].values[0].toString()),
+			integrateFraction: new BigNumber(res[5].values[0].toString()),
 		})
 	}, [bao, gauge])
 
