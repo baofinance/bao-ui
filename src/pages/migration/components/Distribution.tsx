@@ -8,6 +8,7 @@ import Image from 'next/future/image'
 import React, { Fragment, useState } from 'react'
 import 'katex/dist/katex.min.css'
 import Latex from 'react-latex-next'
+import Button from '@/components/Button'
 
 const options = [
 	{
@@ -43,22 +44,22 @@ const options = [
 							year period.
 						</Typography>
 					</div>
-						<div className='flex flex-col m-auto'>
-							<Latex>{`\\(P_u = Percent \\ Unlocked \\)`}</Latex>
-							<Latex>{`\\(x = Days \\)`}</Latex>
-							<div className='h-2' />
-							<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
-						</div>
-						<div className='flex w-1/2 flex-col items-center justify-center mt-4 m-auto'>
-							<img
-								src='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/672bf049e86f377e5129b84931bba7933e324bcc.png'
-								className='h-[200px] rounded'
-							/>
-							<Typography variant='xs' className='mt-2 text-center text-text-200'>
-								A graph showing how BAO will unlock over time following.
-							</Typography>
-						</div>
+					<div className='m-auto flex flex-col'>
+						<Latex>{`\\(P_u = Percent \\ Unlocked \\)`}</Latex>
+						<Latex>{`\\(x = Days \\)`}</Latex>
+						<div className='h-2' />
+						<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
 					</div>
+					<div className='m-auto mt-4 flex w-1/2 flex-col items-center justify-center'>
+						<img
+							src='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/672bf049e86f377e5129b84931bba7933e324bcc.png'
+							className='h-[200px] rounded'
+						/>
+						<Typography variant='xs' className='mt-2 text-center text-text-200'>
+							A graph showing how BAO will unlock over time following.
+						</Typography>
+					</div>
+				</div>
 			</>
 		),
 	},
@@ -185,7 +186,8 @@ const Distribution: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className='flex flex-row rounded bg-primary-100 p-4'>{selectedOption.desc}</div>
+			<div className='mb-4 flex flex-row rounded bg-primary-100 p-4'>{selectedOption.desc}</div>
+			<Button fullWidth>{selectedOption.name}</Button>
 		</>
 	)
 }
