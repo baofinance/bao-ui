@@ -25,7 +25,7 @@ import { ethers } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 
@@ -127,13 +127,11 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 							<Button
 								fullWidth
 								onClick={async () => {
-									const tx = bao
-										.getNewContract('erc20.json', lpTokenAddress)
-										.methods.approve(
+									const tx = bao.getNewContract('erc20.json', lpTokenAddress)
+										.approve(
 											masterChefContract.address,
 											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 										)
-										.send({ from: account })
 
 									handleTx(tx, `Approve CRV`)
 								}}
@@ -161,9 +159,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 										fullWidth
 										disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 										onClick={async () => {
-											const stakeTx = masterChefContract.methods
-												.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
-												.send({ from: account })
+											const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
 
 											handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 										}}
@@ -177,9 +173,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 								fullWidth
 								disabled={true}
 								onClick={async () => {
-									const stakeTx = masterChefContract.methods
-										.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
-										.send({ from: account })
+									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 								}}
 							>
@@ -315,7 +309,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							onClick={async () => {
 								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
-								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18)).send({ from: account })
+								const unstakeTx = masterChefContract.withdraw(pid, ethers.utils.parseUnits(val, 18))
 
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}
@@ -376,7 +370,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							fullWidth
 							disabled={!earnings.toNumber()}
 							onClick={async () => {
-								const harvestTx = masterChefContract.methods.claimReward(pid).send({ from: account })
+								const harvestTx = masterChefContract.claimReward(pid)
 
 								handleTx(harvestTx, `Harvest ${getDisplayBalance(earnings)} BAO`)
 							}}

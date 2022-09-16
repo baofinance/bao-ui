@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
 import { PropsWithChildren } from 'react'
-import { TransactionReceipt } from 'web3-core'
 
 import useBao from '@/hooks/base/useBao'
 
 import Context from './context'
 import reducer, { addTransaction, initialState, receiveTxReceipt, setTransactions } from './reducer'
-import { Transaction, TransactionsMap } from './types'
+import { Transaction, TransactionsMap, TransactionReceipt } from './types'
 
 interface TransactionsProviderProps {
 	children: any
@@ -42,7 +41,7 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 			for (const key of Object.keys(txs)) {
 				const tx = txs[key]
 				if (!tx.receipt) {
-					const receipt = await bao.web3.eth.getTransactionReceipt(tx.hash)
+					const receipt = await bao.provider.getTransactionReceipt(tx.hash)
 					if (receipt !== null) handleTxReceipt(receipt)
 				}
 			}

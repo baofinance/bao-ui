@@ -1,6 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
-import Web3 from 'web3'
 // import debounce from 'debounce'
 
 const useBlock = () => {
@@ -10,26 +9,20 @@ const useBlock = () => {
 	useEffect(() => {
 		// const setBlockDebounced = debounce(setBlock, 300)
 		if (!library) return
-		window.library = library
-
-		// const subscription = new Web3(ethereum).eth.subscribe(
-		//   'newBlockHeaders',
-		//   (error, result) => {
-		//     if (!error) {
-		//       setBlockDebounced(result.number)
-		//     }
-		//   },
-		// )
 
 		const interval = setInterval(async () => {
 			const latestBlockNumber = await library.getBlockNumber()
-			if (block !== latestBlockNumber) {
-				setBlock(latestBlockNumber)
-			}
+			setBlock((b: number) => {
+				if (b !== latestBlockNumber) {
+					return latestBlockNumber
+				} else {
+					return b
+				}
+			})
 		}, 1000)
 
 		return () => clearInterval(interval)
-	}, [library])
+	}, [library, setBlock])
 
 	return block
 }

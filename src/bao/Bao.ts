@@ -1,6 +1,6 @@
 import { Multicall as MC } from 'ethereum-multicall'
 import { ethers } from 'ethers'
-//import { provider } from 'web3-core/types'
+import { Signer } from '@ethersproject/abstract-signer'
 import { Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 import Config from './lib/config'
@@ -8,6 +8,7 @@ import { Contracts } from './lib/contracts'
 
 export interface BaoOptions {
 	ethereumNodeTimeout: number
+	signer?: Signer
 }
 
 export class Bao {
@@ -20,10 +21,13 @@ export class Bao {
 		let realProvider
 
 		if (typeof provider === 'string') {
+			console.log('JsonRpcProvider', provider)
 			realProvider = new ethers.providers.JsonRpcProvider(provider)
 		} else if (provider) {
+			console.log('some other provider', provider)
 			realProvider = provider
 		} else {
+			console.log('JsonRpcProvider', Config.defaultRpc.rpcUrls[0])
 			realProvider = new ethers.providers.JsonRpcProvider(Config.defaultRpc.rpcUrls[0])
 		}
 
@@ -34,23 +38,27 @@ export class Bao {
 			tryAggregate: true,
 		})
 
-		this.contracts = new Contracts(realProvider, networkId)
+		const signerOrProvider = options.signer || this.provider
+		this.contracts = new Contracts(signerOrProvider, this.networkId)
 	}
 
 	getContract(contractName: string, networkId = this.networkId): Contract {
 		return this.contracts.getContract(contractName, networkId)
 	}
 
-	getNewContract(address: string, abi: string | unknown): Contract {
-		return this.contracts.getNewContract(address, abi, this.provider)
+	getNewContract(address: string, abi: string | unknown, providerOrSigner?: Provider | Signer): Contract {
+		return this.contracts.getNewContract(address, abi, providerOrSigner || this.provider)
 	}
 
 	async hasAccounts(): Promise<boolean> {
 		return (await (this.provider as JsonRpcProvider).listAccounts()).length > 0
 	}
 
-	setProvider(provider: Provider, networkId: number): void {
-		//this.web3.setProvider(provider)
-		this.contracts.setProvider(provider, networkId)
+	setProvider(provider: Provider): void {
+		this.contracts.connectContracts(provider, this.networkId)
+	}
+
+	setSigner(signer: Signer): void {
+		this.contracts.connectContracts(signer, this.networkId)
 	}
 }

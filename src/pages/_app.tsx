@@ -8,9 +8,7 @@ import Head from 'next/head'
 import { DefaultSeo } from 'next-seo'
 import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
-//import Web3 from 'web3'
-//import { provider } from 'web3-core'
-import { Provider, Web3Provider } from '@ethersproject/providers'
+import { Web3Provider } from '@ethersproject/providers'
 
 import fetcher from '@/bao/lib/fetcher'
 import Header from '@/components/Header'
@@ -25,7 +23,10 @@ import TxPopup from '@/components/TxPopup'
 import '@/components/TxPopup/styles.css'
 
 function getLibrary(provider: any): Web3Provider {
-	return new Web3Provider(provider)
+	const library = new Web3Provider(provider)
+	window.provider = provider
+	window.library = library
+	return library
 }
 
 const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })

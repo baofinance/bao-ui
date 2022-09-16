@@ -2,10 +2,8 @@ import { Bao } from '@/bao/Bao'
 import BigNumber from 'bignumber.js/bignumber'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
-//import { AbiItem } from 'web3-utils'
-import { ethers } from 'ethers'
+import { Contract } from '@ethersproject/contracts'
 
-import erc20Abi from '@/bao/lib/abi/erc20.json'
 import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
@@ -20,7 +18,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 					farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
 						? ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new ethers.Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
+								contract: new Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
 								calls: [
 									{
 										method: 'balanceOf',
@@ -31,7 +29,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 						  } as any)
 						: ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new ethers.Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
+								contract: new Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
 								calls: [
 									{ method: 'getReserves' },
 									{ method: 'token0' },

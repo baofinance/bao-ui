@@ -21,6 +21,7 @@ import { isDesktop } from 'react-device-detect'
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
 
+	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
 	return (

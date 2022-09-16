@@ -25,15 +25,13 @@ declare global {
 }
 
 const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }) => {
-	const wallet = useWeb3React()
-	const { library }: any = wallet
+	const { library, account } = useWeb3React()
 	const [bao, setBao] = useState<any>()
 
 	// if (library) library.on('chainChanged', () => window.location.reload())
 
-	window.bao = bao
-
 	useEffect(() => {
+		if (!library || !account) { return }
 		// const { ethereum: windowEth } = window
 		// if (windowEth && !ethereum) {
 		// 	// Check if user has connected to the webpage before
@@ -43,13 +41,29 @@ const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }
 		// 	})
 		// }
 
-		const baoLib = new Bao(library, Config.networkId, {
-			ethereumNodeTimeout: 10000,
-		})
-		setBao(baoLib)
-		window.baosauce = baoLib
-	}, [library])
+		// TODO: get the networkId from the provider
+		if (!bao) {
+			const baoLib = new Bao(library, Config.networkId, {
+				ethereumNodeTimeout: 10000,
+				signer: account ? library.getSigner() : null,
+			})
+			setBao(baoLib)
+			window.baosauce = baoLib
+		} else {
+			console.log('setting UP baolib')
+			if (account) {
+				console.log('with signer')
+				bao.contracts.connectContracts(library.getSigner())
+			} else {
+				console.log('withOUT signer')
+				bao.contracts.connectContracts(library)
+			}
+		}
+	}, [library, account, bao])
 
+   useEffect(() => {
+		if (!bao && (!library || !account)) { return }
+	}, [bao, library, account])
 	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
 }
 

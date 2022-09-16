@@ -1,6 +1,7 @@
-import { ethers } from 'ethers'
-import { Provider } from '@ethersproject/providers'
+import { Signer } from '@ethersproject/abstract-signer'
 import { Contract } from '@ethersproject/contracts'
+import { Provider } from '@ethersproject/providers'
+//import { Contract } from '@ethersproject/contracts'
 import CEtherAbi from './abi/cether.json'
 import CTokenAbi from './abi/ctoken.json'
 import ERC20Abi from './abi/erc20.json'
@@ -24,16 +25,14 @@ export class Contracts {
 	blockGasLimit: any
 	notifier: any
 
-	constructor(provider: Provider, networkId: number) {
+	constructor(signerOrProvider: Signer | Provider, networkId: number) {
 		this.networkId = networkId
-		this.provider = provider
 
 		this.contracts = Config.contracts
 		Object.keys(Config.contracts).forEach(contractName => {
 			this.contracts[contractName][networkId].contract = this.getNewContract(
 				this.contracts[contractName][networkId].address,
 				this.contracts[contractName][networkId].abi,
-				provider,
 			)
 		})
 
@@ -44,9 +43,9 @@ export class Contracts {
 							gaugeAddress: gauge.gaugeAddresses[networkId],
 							poolAddress: gauge.poolAddresses[networkId],
 							lpAddress: gauge.lpAddresses[networkId],
-							gaugeContract: this.getNewContract(gauge.gaugeAddresses[networkId], GaugeAbi, provider),
-							poolContract: this.getNewContract(gauge.poolAddresses[networkId], GaugePoolAbi, provider),
-							lpContract: this.getNewContract(gauge.lpAddresses[networkId], ERC20Abi, provider),
+							gaugeContract: this.getNewContract(gauge.gaugeAddresses[networkId], GaugeAbi),
+							poolContract: this.getNewContract(gauge.poolAddresses[networkId], GaugePoolAbi),
+							lpContract: this.getNewContract(gauge.lpAddresses[networkId], ERC20Abi),
 						}),
 				  )
 				: undefined
@@ -57,8 +56,8 @@ export class Contracts {
 						Object.assign(pool, {
 							lpAddress: pool.lpAddresses[networkId],
 							tokenAddress: pool.tokenAddresses[networkId],
-							lpContract: this.getNewContract(pool.lpAddresses[networkId], UNIV2PairAbi, provider),
-							tokenContract: this.getNewContract(pool.tokenAddresses[networkId], ERC20Abi, provider),
+							lpContract: this.getNewContract(pool.lpAddresses[networkId], UNIV2PairAbi),
+							tokenContract: this.getNewContract(pool.tokenAddresses[networkId], ERC20Abi),
 						}),
 				  )
 				: undefined
@@ -69,8 +68,8 @@ export class Contracts {
 				? Config.baskets.map(basket =>
 						Object.assign(basket, {
 							address: basket.basketAddresses[networkId],
-							basketContract: this.getNewContract(basket.lpAddress, ExperipieAbi, provider),
-							ovenContract: this.getNewContract(basket.ovenAddress, 'oven.json', provider),
+							basketContract: this.getNewContract(basket.lpAddress, ExperipieAbi),
+							ovenContract: this.getNewContract(basket.ovenAddress, 'oven.json'),
 						}),
 				  )
 				: undefined
@@ -83,49 +82,53 @@ export class Contracts {
 						return Object.assign(market, {
 							marketAddress: market.marketAddresses[networkId],
 							underlyingAddress: market.underlyingAddresses[networkId],
-							marketContract: this.getNewContract(marketAddr, underlyingAddr === 'ETH' ? CEtherAbi : CTokenAbi, provider),
-							underlyingContract: underlyingAddr !== 'ETH' && this.getNewContract(underlyingAddr, ERC20Abi, provider),
+							marketContract: this.getNewContract(marketAddr, underlyingAddr === 'ETH' ? CEtherAbi : CTokenAbi),
+							underlyingContract: underlyingAddr !== 'ETH' && this.getNewContract(underlyingAddr, ERC20Abi),
 						})
 				  })
 				: undefined
 
-		this.setProvider(provider, networkId)
+		this.connectContracts(signerOrProvider, networkId)
 	}
 
-	setProvider(provider: Provider, networkId: number): void {
-		const setProvider = (contract: Contract, address: string) => {
-			//if (address) contract.options.address = address
-			//else console.error('Contract address not found in network', networkId)
+	connectContracts(providerOrSigner: Signer | Provider, networkId: number): void {
+		const _connect = (contract: Contract) => {
+			return contract.connect(providerOrSigner)
 		}
 
 		if (networkId === Config.networkId) {
 			Object.keys(this.contracts).forEach(contractName => {
-				setProvider(this.contracts[contractName][networkId].contract, this.contracts[contractName][networkId].address)
+				this.contracts[contractName][networkId].contract = _connect(this.contracts[contractName][networkId].contract)
 			})
 
 			if (this.gauges) {
-				this.gauges.forEach(({ gaugeContract, gaugeAddress, poolContract, poolAddress, lpContract, lpAddress }) => {
-					setProvider(gaugeContract, gaugeAddress)
-					setProvider(poolContract, poolAddress)
-					setProvider(lpContract, lpAddress)
+				Object.keys(this.gauges).forEach((k: string) => {
+					this.gauges[k].gaugeContract = _connect(this.gauges[k].gaugeContract)
+					this.gauges[k].poolContract = _connect(this.gauges[k].poolContract)
+					this.gauges[k].lpContract = _connect(this.gauges[k].lpContract)
 				})
 			}
+
 			if (this.pools) {
-				this.pools.forEach(({ lpContract, lpAddress, tokenContract, tokenAddress }) => {
-					setProvider(lpContract, lpAddress)
-					setProvider(tokenContract, tokenAddress)
+				Object.keys(this.pools).forEach((k: string) => {
+					this.pools[k].lpContract = _connect(this.pools[k].lpContract)
+					this.pools[k].tokenContract = _connect(this.pools[k].tokenContract)
 				})
 			}
+
 			if (this.baskets) {
-				this.baskets.forEach(({ address, basketContract, ovenAddress, ovenContract }) => {
-					setProvider(basketContract, address)
-					setProvider(ovenContract, ovenAddress)
+				Object.keys(this.baskets).forEach((k: string) => {
+					this.baskets[k].basketContract = _connect(this.baskets[k].basketContract)
+					this.baskets[k].oveContract = _connect(this.baskets[k].ovenContract)
 				})
 			}
+
 			if (this.markets) {
-				this.markets.forEach(({ marketContract, marketAddress, underlyingContract, underlyingAddress }) => {
-					setProvider(marketContract, marketAddress)
-					if (underlyingContract) setProvider(underlyingContract, underlyingAddress)
+				Object.keys(this.markets).forEach((k: string) => {
+					this.markets[k].marketContract = _connect(this.markets[k].marketContract)
+					if (this.markets[k].underlyingContract) {
+						this.markets[k].underlyingContract = _connect(this.markets[k].underlyingContract)
+					}
 				})
 			}
 		}
@@ -135,7 +138,7 @@ export class Contracts {
 		return this.contracts[contractName][networkId].contract
 	}
 
-	getNewContract(address: string, abi: string | any, provider: Provider): Contract {
+	getNewContract(address: string, abi: string | any, provider?: Signer | Provider): Contract {
 		const _abi = typeof abi === 'string' ? require(`./abi/${abi}`) : abi
 		return new Contract(address, _abi, provider)
 	}

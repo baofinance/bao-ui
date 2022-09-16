@@ -1,7 +1,7 @@
 import { getVirtualPrice } from '@/bao/utils'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 import useBao from '../base/useBao'
 
 const useVirtualPrice = (poolContract: Contract) => {

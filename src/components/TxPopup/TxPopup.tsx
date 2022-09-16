@@ -6,6 +6,8 @@ import { ReactNotifications, Store as NotifStore } from 'react-notifications-com
 import 'react-notifications-component/dist/theme.css'
 import usePendingTransactions from '@/hooks/base/usePendingTransactions'
 import useBao from '@/hooks/base/useBao'
+import { ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 import { isSuccessfulTransaction, waitTransaction } from './waitTransaction'
 
 type PopupTitleProps = {
@@ -50,6 +52,7 @@ const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
 const TxPopup: React.FC = () => {
 	const pendingTxs = usePendingTransactions()
 	const [seenTxs, setSeenTxs] = useState({})
+	const { library } = useWeb3React()
 	const bao = useBao()
 
 	useEffect(() => {
@@ -57,7 +60,7 @@ const TxPopup: React.FC = () => {
 			// This is a guard so that we do not have multiple popups for the same tx
 			pendingTxs.map(tx => {
 				if (!stxs[tx.hash]) {
-					waitTransaction(bao.web3, tx.hash).then(receipt => {
+					waitTransaction(library, tx.hash).then(receipt => {
 						console.log(receipt)
 						if (receipt === null) { return }
 						const success = isSuccessfulTransaction(receipt)
@@ -84,7 +87,7 @@ const TxPopup: React.FC = () => {
 			return stxs
 			// This is the end of the guard against multiple popups for the same tx
 		})
-	}, [pendingTxs, setSeenTxs, bao])
+	}, [pendingTxs, setSeenTxs, library, bao])
 
 	return <ReactNotifications />
 }

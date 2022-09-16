@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { Contract } from '@ethersproject/contracts'
-//import { Contract } from 'web3-eth-contract'
 
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
