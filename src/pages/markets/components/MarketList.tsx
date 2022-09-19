@@ -218,12 +218,12 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 												const contract = getComptrollerContract(bao)
 												if (isInMarket) {
 													handleTx(
-														contract.methods.exitMarket(market.marketAddress).send({ from: account }),
+														contract.exitMarket(market.marketAddress),
 														`Exit Market (${market.underlyingSymbol})`,
 													)
 												} else {
 													handleTx(
-														contract.methods.enterMarkets([market.marketAddress], Config.addressMap.DEAD).send({ from: account }), // Use dead as a placeholder param for `address borrower`, it will be unused
+														contract.enterMarkets([market.marketAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
 														`Enter Market (${market.underlyingSymbol})`,
 													)
 												}

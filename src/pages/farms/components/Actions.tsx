@@ -400,13 +400,13 @@ interface ActionProps {
 
 const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
-	const bao = useBao()
+	const { library } = useWeb3React()
 
 	const lpTokenAddress = farm.lpTokenAddress
 
 	const lpContract = useMemo(() => {
-		return getContract(bao, lpTokenAddress)
-	}, [bao, lpTokenAddress])
+		return getContract(library, lpTokenAddress)
+	}, [library, lpTokenAddress])
 
 	const tokenBalance = useTokenBalance(lpContract.address)
 	const stakedBalance = useStakedBalance(pid)

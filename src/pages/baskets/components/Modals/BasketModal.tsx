@@ -64,25 +64,19 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) {
-						tx = bao
-							.getNewContract('erc20.json', Config.addressMap.DAI)
-							.methods.approve(
-								recipe.address,
-								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							)
-							.send({ from: account })
+						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json').approve(
+							recipe.address,
+							ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+						)
 
 						handleTx(tx, 'Approve DAI for Baskets Recipe')
 						break
 					}
 
-					tx = recipe.methods.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0)).send({
-						from: account,
-					})
+					tx = recipe.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0))
 				} else {
 					// Else, use ETH to mint
-					tx = recipe.methods.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0)).send({
-						from: account,
+					tx = recipe.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0), {
 						value: exponentiate(value).toFixed(0),
 					})
 				}
@@ -90,9 +84,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				handleTx(tx, `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.methods.exitPool(exponentiate(value).toFixed(0)).send({
-					from: account,
-				})
+				tx = basket.basketContract.exitPool(exponentiate(value).toFixed(0))
 
 				handleTx(tx, `Redeem ${getDisplayBalance(new BigNumber(value), 0)} ${basket.symbol}`, () => hide())
 		}

@@ -79,8 +79,6 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 		})
 	}, [bao, setBaoPrice])
 
-	console.log(baoPrice)
-
 	return (
 		<>
 			<tr key={gauge.name} className='even:bg-primary-100' onClick={() => setShowGaugeModal(true)}>

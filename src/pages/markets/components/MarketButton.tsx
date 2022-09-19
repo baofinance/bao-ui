@@ -23,7 +23,7 @@ type MarketButtonProps = {
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const { account, library } = useWeb3React()
+	const { account } = useWeb3React()
 	const { approvals } = useApprovals(pendingTx)
 
 	const { marketContract } = asset
@@ -51,13 +51,14 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={isDisabled}
 						onClick={async () => {
 							let mintTx
-							// FIXME: needs signer
-							if (asset.underlyingAddress === 'ETH')
+							if (asset.underlyingAddress === 'ETH') {
 								mintTx = marketContract.mint(true, {
 									value: val.toString(),
-								}) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
-							else
+								})
+							// TODO- Give the user the option in the SupplyModal to tick collateral on/off
+							} else {
 								mintTx = marketContract.mint(val.toString(), true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
+							}
 							handleTx(mintTx, `Supply ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
@@ -69,7 +70,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approve(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
+							handleTx(approve(underlyingContract, marketContract), `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
@@ -83,7 +84,6 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
-								// FIXME: needs signer
 								marketContract.redeemUnderlying(val.toString()),
 								`Withdraw ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`,
 								() => onHide(),
@@ -101,7 +101,6 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
-								// FIXME: needs signer
 								marketContract.borrow(val.toString()),
 								`Mint ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.symbol}`,
 								() => onHide(),
@@ -119,9 +118,13 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={isDisabled}
 						onClick={() => {
 							let repayTx
-							if (asset.underlyingAddress === 'ETH')
-								repayTx = marketContract.repayBorrow().send({ from: account, value: val.toString() })
-							else repayTx = marketContract.repayBorrow(val.toString()).send({ from: account })
+							if (asset.underlyingAddress === 'ETH') {
+								repayTx = marketContract.repayBorrow({
+									value: val.toString(),
+								})
+							} else {
+								repayTx = marketContract.repayBorrow(val.toString()) 
+							}
 							handleTx(repayTx, `Repay ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
@@ -133,7 +136,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approve(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
+							handleTx(approve(underlyingContract, marketContract), `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}

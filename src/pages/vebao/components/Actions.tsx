@@ -29,7 +29,7 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -88,7 +88,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 							<Button
 								fullWidth
 								onClick={async () => {
-									handleTx(approve(gauge.lpContract, gauge.gaugeContract, account), `Approve ${gauge.name}`)
+									handleTx(approve(gauge.lpContract, gauge.gaugeContract), `Approve ${gauge.name}`)
 								}}
 							>
 								Approve {gauge.name}
@@ -112,7 +112,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								fullWidth
 								disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 								onClick={async () => {
-									const stakeTx = gauge.gaugeContract.methods.deposit(ethers.utils.parseUnits(val.toString(), 18)).send({ from: account })
+									const stakeTx = gauge.gaugeContract.deposit(ethers.utils.parseUnits(val.toString(), 18))
 
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${gauge.name} into gauge`, () => hideModal())
 								}}
@@ -135,7 +135,7 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -205,7 +205,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 							onClick={async () => {
 								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
-								const unstakeTx = gauge.gaugeContract.methods.withdraw(ethers.utils.parseUnits(val, 18)).send({ from: account })
+								const unstakeTx = gauge.gaugeContract.withdraw(ethers.utils.parseUnits(val, 18))
 
 								handleTx(unstakeTx, `Withdraw ${amount} ${gauge.name} from gauge`, () => hideModal())
 							}}
@@ -226,7 +226,7 @@ interface RewardsProps {
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 	const bao = useBao()
 	const gaugeInfo = useGaugeInfo(gauge)
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const minterContract = getMinterContract(bao)
 
@@ -265,7 +265,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 							fullWidth
 							disabled={gaugeInfo && !gaugeInfo.claimableTokens.toNumber()}
 							onClick={async () => {
-								const harvestTx = minterContract.methods.mint(gauge.gaugeAddress).send({ from: account })
+								const harvestTx = minterContract.mint(gauge.gaugeAddress)
 
 								handleTx(harvestTx, `Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV from ${gauge.name}`)
 							}}
@@ -289,7 +289,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = getGaugeControllerContract(bao)
-	const lockInfo = useLockInfo()
+	//const lockInfo = useLockInfo()
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -334,9 +334,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							fullWidth
 							disabled={!val || !bao || isNaN(val as any)}
 							onClick={async () => {
-								const stakeTx = gaugeControllerContract.methods
-									.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 10)
-									.send({ from: account })
+								const stakeTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 10)
 
 								handleTx(stakeTx, `${gauge.name} gauge - Voted ${parseFloat(val).toFixed(2)}% of your voting power`)
 							}}

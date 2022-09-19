@@ -42,28 +42,13 @@ const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }
 		// }
 
 		// TODO: get the networkId from the provider
-		if (!bao) {
-			const baoLib = new Bao(library, Config.networkId, {
-				ethereumNodeTimeout: 10000,
-				signer: account ? library.getSigner() : null,
-			})
-			setBao(baoLib)
-			window.baosauce = baoLib
-		} else {
-			console.log('setting UP baolib')
-			if (account) {
-				console.log('with signer')
-				bao.contracts.connectContracts(library.getSigner())
-			} else {
-				console.log('withOUT signer')
-				bao.contracts.connectContracts(library)
-			}
-		}
-	}, [library, account, bao])
+		const baoLib = new Bao(library, Config.networkId, {
+			signer: account ? library.getSigner() : null,
+		})
+		setBao(baoLib)
+		window.baosauce = baoLib
+	}, [library, account])
 
-   useEffect(() => {
-		if (!bao && (!library || !account)) { return }
-	}, [bao, library, account])
 	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
 }
 

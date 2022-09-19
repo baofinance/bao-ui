@@ -331,13 +331,10 @@ const Lock: React.FC = () => {
 													<Button
 														fullWidth
 														onClick={async () => {
-															const tx = crvContract.methods
-																.approve(
-																	votingEscrowContract.address,
-																	ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-																)
-																.send({ from: account })
-
+															const tx = crvContract.approve(
+																votingEscrowContract.address,
+																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+															)
 															handleTx(tx, `Approve CRV`)
 														}}
 													>
@@ -366,10 +363,7 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 														onClick={async () => {
-															const lockTx = votingEscrowContract.methods
-																.create_lock(ethers.utils.parseUnits(val.toString(), 18), length)
-																.send({ from: account })
-
+															const lockTx = votingEscrowContract.create_lock(ethers.utils.parseUnits(val.toString(), 18), length)
 															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}
 													>
@@ -397,10 +391,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.methods
-															.increase_amount(ethers.utils.parseUnits(val.toString(), 18))
-															.send({ from: account })
-
+														const lockTx = votingEscrowContract.increase_amount(ethers.utils.parseUnits(val.toString(), 18))
 														handleTx(
 															lockTx,
 															`Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
@@ -430,8 +421,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.times(1000).toNumber())}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.methods.increase_unlock_time(length.toString()).send({ from: account })
-
+														const lockTx = votingEscrowContract.increase_unlock_time(length.toString())
 														handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)
 													}}
 												>

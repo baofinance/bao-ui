@@ -11,7 +11,7 @@ const useMintable = () => {
 	const tokenContract = getCrvContract(bao)
 
 	const fetchMintable = useCallback(async () => {
-		const mintable = epochTime && (await getMintable(epochTime.start, epochTime.future, tokenContract))
+		const mintable = epochTime && (await getMintable(epochTime.start, epochTime.future, tokenContract)).toString()
 		setMintable(new BigNumber(mintable))
 	}, [bao])
 

@@ -24,7 +24,7 @@ const Balances: React.FC = () => {
 	for (const earning of allEarnings) {
 		sumEarning += new BigNumber(earning).div(new BigNumber(10).pow(18)).toNumber()
 	}
-
+ 
 	const stats = [
 		{
 			label: 'BAO Balance',
@@ -33,6 +33,7 @@ const Balances: React.FC = () => {
 		{ label: 'Locked BAO', value: `${account ? (window.screen.width > 1200 ? getDisplayBalance(locks) : truncateNumber(locks)) : '-'}` },
 		{ label: 'Pending Harvest', value: `${account ? getDisplayBalance(sumEarning, 0) : '-'}` },
 		{
+			// FIXME: the total supply is never retrieved from the contract
 			label: 'Total BAO Supply',
 			value: `${totalSupply ? window.screen.width > 1200 ? getDisplayBalance(totalSupply) : truncateNumber(totalSupply) : <Loader />}`,
 		},

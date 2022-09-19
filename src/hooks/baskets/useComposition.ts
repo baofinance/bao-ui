@@ -42,7 +42,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 					token => token.toLowerCase() !== '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', // Filter MKR because its symbol/name is a bytes32 object >_>
 				)
 				.map(address => ({
-					contract: bao.getNewContract('erc20.json', address),
+					contract: bao.getNewContract(address, 'erc20.json'),
 					ref: address,
 					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address] }],
 				})),
@@ -64,7 +64,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						symbol: 'MKR',
 						name: 'Maker DAO',
 						balance: new BigNumber(
-							await bao.getNewContract('erc20.json', '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2').methods.balanceOf(basket.address).call(),
+							(await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address)).toString(),
 						),
 				  }
 			_c.address = tokenComposition[i]
@@ -91,15 +91,15 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				_c.strategy = _getStrategy(lendingRes[1].values[0])
 
 				// Get Exchange Rate
-				const logicAddress = await lendingRegistry.methods.protocolToLogic(lendingRes[1].values[0]).call()
-				const logicContract = bao.getNewContract('lendingLogicKashi.json', logicAddress)
-				const exchangeRate = await logicContract.methods.exchangeRate(_c.address).call()
+				const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
+				const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
+				const exchangeRate = new BigNumber((await logicContract.exchangeRate(_c.address)).toString())
 				// xSushi APY can't be found on-chain, check for special case
 				const apy =
 					_c.strategy === 'Sushi Bar'
 						? await fetchSushiApy()
-						: new BigNumber(await logicContract.methods.getAPRFromUnderlying(lendingRes[0].values[0]).call())
-				const underlyingDecimals = await bao.getNewContract('erc20.json', lendingRes[0].values[0]).methods.decimals().call()
+						: new BigNumber((await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])).toString())
+				const underlyingDecimals = await bao.getNewContract(lendingRes[0].values[0], 'erc20.json').decimals()
 
 				_c.price = decimate(prices[_c.underlying.toLowerCase()].times(exchangeRate))
 				_c.apy = apy

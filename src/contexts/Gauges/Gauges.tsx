@@ -11,6 +11,7 @@ const Gauges: React.FC<PropsWithChildren<GaugesProps>> = ({ children }) => {
 	const bao = useBao()
 
 	const gauges = getGauges(bao)
+	console.log(gauges)
 
 	return (
 		<Context.Provider

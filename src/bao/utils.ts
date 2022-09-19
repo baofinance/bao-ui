@@ -118,10 +118,7 @@ export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
 }
 
 export const getPoolWeight = async (masterChefContract: Contract, pid: number): Promise<BigNumber> => {
-	const [{ allocPoint }, totalAllocPoint] = await Promise.all([
-		masterChefContract.poolInfo(pid),
-		masterChefContract.methods.totalAllocPoint(),
-	])
+	const [{ allocPoint }, totalAllocPoint] = await Promise.all([masterChefContract.poolInfo(pid), masterChefContract.totalAllocPoint()])
 
 	return new BigNumber(allocPoint.toString()).div(new BigNumber(totalAllocPoint.toString()))
 }
@@ -157,7 +154,7 @@ export const getTotalLPWethValue = async (
 	])
 
 	// Return p1 * w1 * 2
-	const portionLp = new BigNumber(balance.toString()).div(new BigNumber(totalSupply.toStrig()))
+	const portionLp = new BigNumber(balance.toString()).div(new BigNumber(totalSupply.toString()))
 	const lpWethWorth = new BigNumber(lpContractWeth.toString())
 	const totalLpWethValue = portionLp.times(lpWethWorth.toString()).times(new BigNumber(2))
 	// Calculate
@@ -262,7 +259,7 @@ export const fetchCalcToBasket = async (recipeContract: Contract, basketAddress:
 }
 
 export const basketIssue = (recipeContract: Contract, _outputToken: string, _inputToken: string, _maxInput: BigNumber, _data: string) => {
-	return recipeContract.methods.bake(_inputToken, _outputToken, exponentiate(_maxInput).toString(), _data)
+	return recipeContract.bake(_inputToken, _outputToken, exponentiate(_maxInput).toString(), _data)
 }
 
 export const basketRedeem = (basketContract: Contract, amount: string) => {
@@ -283,47 +280,48 @@ export const getWethPriceLink = async (bao: Bao): Promise<BigNumber> => {
 		),
 	)
 
-	return new BigNumber(wethPrice[1].values[1].toString()).div(10 ** wethPrice[0].values[0].toString())
+	return new wethPrice[1].values[1].div(10 ** wethPrice[0].values[0])
 }
 
 export const getUserInfoChef = async (masterChefContract: Contract, pid: number, account: string) =>
 	await masterChefContract.userInfo(pid, account)
 
-export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) =>
-	await comptrollerContract.getAccountLiquidity(account)
+export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) => {
+	return new BigNumber((await comptrollerContract.getAccountLiquidity(account)).toString())
+}
 
 export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
-	return new BigNumber(await gaugeControllerContract.get_gauge_weight(lpAddress))
+	return new BigNumber((await gaugeControllerContract.get_gauge_weight(lpAddress)).toString())
 }
 
 export const getRelativeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
-	return new BigNumber(await gaugeControllerContract.gauge_relative_weight(lpAddress))
+	return new BigNumber((await gaugeControllerContract['gauge_relative_weight(address)'](lpAddress)).toString())
 }
 
 export const getInflationRate = async (gaugeContract: Contract) => {
-	return new BigNumber(await gaugeContract.inflation_rate())
+	return new BigNumber((await gaugeContract.inflation_rate()).toString())
 }
 
 export const getMintable = async (currentEpoch: BigNumber, futureEpoch: BigNumber, tokenContract: Contract) => {
-	return new BigNumber(await tokenContract.mintable_in_timeframe(currentEpoch, futureEpoch))
+	return new BigNumber((await tokenContract.mintable_in_timeframe(currentEpoch, futureEpoch)).toString())
 }
 
 export const getVotingPower = async (votingEscrowContract: Contract, account: string) => {
-	return new BigNumber(await votingEscrowContract.balanceOf(account))
+	return new BigNumber((await votingEscrowContract.balanceOf(account)).toString())
 }
 
 export const getCurrentEpoch = async (tokenContract: Contract) => {
-	return new BigNumber(await tokenContract.start_epoch_time_write())
+	return new BigNumber((await tokenContract.start_epoch_time_write()).toString())
 }
 
 export const getFutureEpoch = async (tokenContract: Contract) => {
-	return new BigNumber(await tokenContract.future_epoch_time_write())
+	return new BigNumber((await tokenContract.future_epoch_time_write()).toString())
 }
 
 export const getVirtualPrice = async (poolContract: Contract) => {
-	return new BigNumber(await poolContract.get_virtual_price())
+	return new BigNumber((await poolContract.get_virtual_price()).toString())
 }
 
 export const getTotalSupply = async (depositContract: Contract) => {
-	return new BigNumber(await depositContract.totalSupply())
+	return new BigNumber((await depositContract.totalSupply()).toString())
 }

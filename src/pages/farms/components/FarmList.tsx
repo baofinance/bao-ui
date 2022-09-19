@@ -85,14 +85,14 @@ const FarmList: React.FC = () => {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
-						stakedUSD: decimate(result.masterChef[farms.length + i].values[0].toString())
+						stakedUSD: decimate(result.masterChef[farms.length + i].values[0])
 							.div(decimate(tvlInfo.lpStaked))
 							.times(tvlInfo.tvl),
 						apy:
 							baoPrice && farmsTVL
 								? baoPrice
 										.times(BLOCKS_PER_YEAR)
-										.times(new BigNumber(result.masterChef[i].values[0].toString()).div(10 ** 18))
+										.times(result.masterChef[i].values[0].div(10 ** 18))
 										.div(tvlInfo.tvl)
 								: null,
 					}
@@ -101,7 +101,7 @@ const FarmList: React.FC = () => {
 				}
 				setPools(_pools)
 			})
-	}, [farmsTVL, bao])
+	}, [bao, farmsTVL, baoPrice, farms, userAddress])
 
 	return (
 		<>

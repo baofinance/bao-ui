@@ -18,7 +18,7 @@ export interface StakedValue {
 
 const useAllStakedValue = (): StakedValue[] => {
 	const [balances, setBalance] = useState([] as Array<StakedValue>)
-	const { account } = useWeb3React()
+	const { account, library } = useWeb3React()
 	const bao = useBao()
 	const farms = getFarms(bao)
 	const masterChefContract = getMasterChefContract(bao)
@@ -27,19 +27,20 @@ const useAllStakedValue = (): StakedValue[] => {
 
 	const fetchAllStakedValue = useCallback(async () => {
 		const balances: Array<StakedValue> = await Promise.all(
-			farms.map(({ pid, lpContract, tokenAddress, tokenDecimals }) =>
-				getTotalLPWethValue(masterChefContract, wethContract, lpContract, getContract(bao, tokenAddress), tokenDecimals, pid),
-			),
+			farms.map(({ pid, lpContract, tokenAddress, tokenDecimals }) => {
+				const farmContract = getContract(library, tokenAddress)
+				return getTotalLPWethValue(masterChefContract, wethContract, lpContract, farmContract, tokenDecimals, pid)
+			}),
 		)
 
 		setBalance(balances)
-	}, [account, masterChefContract, bao])
+	}, [masterChefContract, library, farms, wethContract])
 
 	useEffect(() => {
-		if (account && masterChefContract && bao) {
+		if (account && masterChefContract && library) {
 			fetchAllStakedValue()
 		}
-	}, [account, transactions, masterChefContract, setBalance, bao])
+	}, [account, transactions, masterChefContract, setBalance, library, fetchAllStakedValue])
 
 	return balances
 }

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { getBalance } from '@/utils/erc20'
 
-import useBao from './useBao'
 import useTransactionProvider from './useTransactionProvider'
 
 const useTokenBalance = (tokenAddress: string) => {
@@ -26,7 +25,7 @@ const useTokenBalance = (tokenAddress: string) => {
 		if (account && library && tokenAddress) {
 			fetchBalance()
 		}
-	}, [transactions, account, library, tokenAddress])
+	}, [transactions, account, library, tokenAddress, fetchBalance])
 
 	return balance
 }

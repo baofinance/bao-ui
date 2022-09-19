@@ -1,5 +1,7 @@
-import { ContractCallContext, ContractCallResults } from 'ethereum-multicall'
+import { ContractCallResults } from 'ethereum-multicall'
 import _ from 'lodash'
+import BigNumber from 'bignumber.js'
+import { BigNumber as BN } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 
 interface ContractCalls {
@@ -16,14 +18,10 @@ interface ContractCall {
 
 const createCallContext = (contracts: ContractCalls[]): any[] =>
 	_.map(contracts, (contract: ContractCalls) => {
-		window.c = contract.contract
-		window.i = contract.contract.interface
-		window.f = contract.contract.interface.fragments
-		console.log()
 		return {
 			reference: contract.ref,
 			contractAddress: contract.contract.address,
-			abi: contract.contract.interface.format(),
+			abi: JSON.parse(contract.contract.interface.format('json') as string),
 			calls: _.map(contract.calls, call => ({
 				reference: call.ref,
 				methodName: call.method,
@@ -35,11 +33,20 @@ const createCallContext = (contracts: ContractCalls[]): any[] =>
 const parseCallResults = (call: ContractCallResults): any => {
 	const result: any = {}
 	_.each(Object.keys(call.results), key => {
-		result[key] = _.map(call.results[key].callsReturnContext, returnValue => ({
-			method: returnValue.methodName,
-			ref: returnValue.reference,
-			values: returnValue.returnValues,
-		}))
+		result[key] = _.map(call.results[key].callsReturnContext, returnValue => {
+			const values = returnValue.returnValues.map((x) => {
+				if (x.type === 'BigNumber') {
+					return new BigNumber(BN.from(x).toString())
+				} else {
+					return x
+				}
+			})
+			return {
+				method: returnValue.methodName,
+				ref: returnValue.reference,
+				values,
+			}
+		})
 	})
 	return result
 }

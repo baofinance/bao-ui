@@ -16,17 +16,17 @@ const useAllowance = (tokenAddress: string, spenderAddress: string) => {
 
 	const _getAllowance: any = useCallback(async () => {
 		try {
-			const tokenContract = bao.getNewContract('erc20.json', tokenAddress)
+			const tokenContract = bao.getNewContract(tokenAddress, 'erc20.json')
 			const _allowance = await getAllowance(tokenContract, account, spenderAddress)
 			setAllowance(new BigNumber(_allowance))
 		} catch (e) {
 			setAllowance(new BigNumber(0))
 		}
-	}, [bao, account, tokenAddress, spenderAddress, transactions])
+	}, [bao, account, tokenAddress, spenderAddress])
 
 	useEffect(() => {
 		_getAllowance()
-	}, [bao, account, tokenAddress, spenderAddress, transactions])
+	}, [bao, account, tokenAddress, spenderAddress, transactions, _getAllowance])
 
 	return allowance
 }

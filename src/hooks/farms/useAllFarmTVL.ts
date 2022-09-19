@@ -4,6 +4,7 @@ import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
 import { Contract } from '@ethersproject/contracts'
 
+import { ethers } from 'ethers'
 import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
@@ -11,6 +12,7 @@ import Multicall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
+	//const results = Multicall.parseCallResults(
 	const results = Multicall.parseCallResults(
 		await multicall.call(
 			Multicall.createCallContext(
@@ -49,27 +51,34 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 	return Object.keys(results).map((key: any) => {
 		const res0 = results[key]
 
-		const reserves = [new BigNumber(res0[0].values[0].toString()), new BigNumber(res0[0].values[1].toString())]
+		const r0 = res0[0].values[0]
+		const r1 = res0[0].values[1]
+
 		const token0Address = res0[1].values[0]
 		const token1Address = res0[2].values[0]
 
 		const tokens = [
 			{
 				address: token0Address,
-				balance: decimate(reserves[0]),
+				balance: decimate(r0),
 			},
 			{
 				address: token1Address,
-				balance: decimate(reserves[1], token1Address === Config.addressMap.USDC ? 6 : 18), // This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
+				balance: decimate(r1, token1Address === Config.addressMap.USDC ? 6 : 18),
+				// This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
 			},
 		]
 
-		return {
+		const lpStaked = res0[3].values[0]
+		const lpSupply = res0[4].values[0]
+
+		const out = {
 			tokens,
 			lpAddress: key,
-			lpStaked: new BigNumber(res0[3].values[0].toString()),
-			lpSupply: new BigNumber(res0[4].values[0].toString()),
+			lpStaked,
+			lpSupply,
 		}
+		return out
 	})
 }
 
@@ -109,6 +118,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 					tokenPrice = Object.values(tokenPrices).find(
 						priceInfo => priceInfo.address.toLowerCase() === Config.addressMap.USDC.toLowerCase(),
 					).price
+
 
 				lpStakedUSD = token.balance.times(tokenPrice).times(2).times(lpInfo.lpStaked.div(lpInfo.lpSupply))
 			}

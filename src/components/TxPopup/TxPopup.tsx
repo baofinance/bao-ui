@@ -49,13 +49,14 @@ const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
 	)
 }
 
+// FIXME: only render this in a web3reactcontext
 const TxPopup: React.FC = () => {
 	const pendingTxs = usePendingTransactions()
 	const [seenTxs, setSeenTxs] = useState({})
 	const { library } = useWeb3React()
-	const bao = useBao()
 
 	useEffect(() => {
+		if (!library) { return }
 		setSeenTxs((stxs: any) => {
 			// This is a guard so that we do not have multiple popups for the same tx
 			pendingTxs.map(tx => {
@@ -87,7 +88,7 @@ const TxPopup: React.FC = () => {
 			return stxs
 			// This is the end of the guard against multiple popups for the same tx
 		})
-	}, [pendingTxs, setSeenTxs, library, bao])
+	}, [pendingTxs, setSeenTxs, library])
 
 	return <ReactNotifications />
 }

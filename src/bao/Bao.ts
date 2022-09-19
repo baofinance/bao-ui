@@ -7,7 +7,6 @@ import Config from './lib/config'
 import { Contracts } from './lib/contracts'
 
 export interface BaoOptions {
-	ethereumNodeTimeout: number
 	signer?: Signer
 }
 
@@ -35,7 +34,6 @@ export class Bao {
 		this.provider = realProvider
 		this.multicall = new MC({
 			ethersProvider: this.provider,
-			tryAggregate: true,
 		})
 
 		const signerOrProvider = options.signer || this.provider

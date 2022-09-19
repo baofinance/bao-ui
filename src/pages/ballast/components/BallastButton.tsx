@@ -13,7 +13,7 @@ import { decimate, exponentiate } from '@/utils/numberFormat'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
 
 	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.stabilizer[Config.networkId].address)
@@ -26,19 +26,19 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		if (swapDirection) {
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
-				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.baoUSD)
-				return handleTx(approve(tokenContract, ballastContract, account), 'Ballast: Approve baoUSD')
+				const tokenContract = bao.getNewContract(Config.addressMap.baoUSD, 'erc20.json')
+				return handleTx(approve(tokenContract, ballastContract), 'Ballast: Approve baoUSD')
 			}
 
-			handleTx(ballastContract.methods.sell(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap baoUSD to DAI')
+			handleTx(ballastContract.sell(exponentiate(inputVal).toString()), 'Ballast: Swap baoUSD to DAI')
 		} else {
 			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
-				const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.DAI)
-				return handleTx(approve(tokenContract, ballastContract, account), 'Ballast: Approve DAI')
+				const tokenContract = bao.getNewContract(Config.addressMap.DAI, 'erc20.json')
+				return handleTx(approve(tokenContract, ballastContract), 'Ballast: Approve DAI')
 			}
 
-			handleTx(ballastContract.methods.buy(exponentiate(inputVal).toString()).send({ from: account }), 'Ballast: Swap DAI to baoUSD')
+			handleTx(ballastContract.buy(exponentiate(inputVal).toString()), 'Ballast: Swap DAI to baoUSD')
 		}
 	}
 
