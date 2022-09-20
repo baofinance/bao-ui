@@ -79,10 +79,8 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 								>
 									<defs>
 										<filter id='glow'>
-											<feGaussianBlur className='blur' result='coloredBlur' stdDeviation='1.5'></feGaussianBlur>
+											<feGaussianBlur className='blur' result='coloredBlur' stdDeviation='2'></feGaussianBlur>
 											<feMerge>
-												<feMergeNode in='coloredBlur'></feMergeNode>
-												<feMergeNode in='coloredBlur'></feMergeNode>
 												<feMergeNode in='coloredBlur'></feMergeNode>
 												<feMergeNode in='SourceGraphic'></feMergeNode>
 											</feMerge>

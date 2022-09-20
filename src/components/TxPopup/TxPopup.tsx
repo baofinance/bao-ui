@@ -1,11 +1,12 @@
-import 'animate.css/animate.min.css'
-import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
+import useBao from '@/hooks/base/useBao'
+import usePendingTransactions from '@/hooks/base/usePendingTransactions'
+import { faCheck, faExternalLinkAlt, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import 'animate.css/animate.min.css'
 import React, { useEffect, useState } from 'react'
 import { ReactNotifications, Store as NotifStore } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
-import usePendingTransactions from '@/hooks/base/usePendingTransactions'
-import useBao from '@/hooks/base/useBao'
+import Typography from '../Typography'
 import { isSuccessfulTransaction, waitTransaction } from './waitTransaction'
 
 type PopupTitleProps = {
@@ -18,9 +19,13 @@ const PopupTitle: React.FC<PopupTitleProps> = ({ success }) => {
 	const icon = success ? faCheck : faXmark
 	return (
 		<div className='flex items-center'>
-			<div className='flex-1'>Transaction {titleText}</div>
+			<div className='flex-1'>
+				<Typography>Transaction {titleText}</Typography>
+			</div>
 			<div className={`text-${color}`}>
-				<FontAwesomeIcon size='lg' icon={icon} />
+				<Typography>
+					<FontAwesomeIcon icon={icon} />
+				</Typography>
 			</div>
 		</div>
 	)
@@ -34,15 +39,18 @@ type PopupMessageProps = {
 const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
 	return (
 		<div className='TxPopup'>
-			{description} —{' '}
-			<a
-				target='_blank'
-				rel='noreferrer'
-				href={`https://etherscan.io/tx/${hash}`}
-				className='text-blue-600 hover:text-blue-800 underline visited:text-purple-600'
-			>
-				{hash.slice(0, 6)}...{hash.slice(-5, -1)}
-			</a>
+			<Typography variant='base'>{description}</Typography>
+			<Typography variant='sm'>
+				<a
+					target='_blank'
+					rel='noreferrer'
+					href={`https://etherscan.io/tx/${hash}`}
+					className='text-text-200 visited:text-text-300 hover:text-text-400'
+				>
+					{hash.slice(0, 6)}...{hash.slice(-5, -1)} - View on Explorer
+					<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 hover:text-text-400' size='xs' />
+				</a>
+			</Typography>
 		</div>
 	)
 }

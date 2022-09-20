@@ -41,10 +41,10 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 						Allocation Breakdown
 					</Typography>
 					<div className='m-auto flex gap-2'>
-						<Button size='xs' onClick={() => setDisplayType('TABLE')} className='h-8 w-8'>
+						<Button size='xs' onClick={() => setDisplayType('TABLE')} className={`${displayType === 'TABLE' && '!bg-primary-300'} h-8 w-8`}>
 							<FontAwesomeIcon icon={faTable} size='xs' />
 						</Button>
-						<Button size='xs' onClick={() => setDisplayType('PIE')} className='h-8 w-8'>
+						<Button size='xs' onClick={() => setDisplayType('PIE')} className={`${displayType === 'PIE' && '!bg-primary-300'} h-8 w-8`}>
 							<FontAwesomeIcon icon={faChartPie} size='xs' />
 						</Button>
 					</div>
@@ -124,18 +124,16 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 				</>
 			) : (
 				<div className='rounded border border-primary-300 bg-primary-100'>
-					<div className='flex flex-row'>
+					<div className='flex flex-row justify-center'>
 						<div className='flex flex-col'>
-							<DonutGraph width={200} height={200} composition={composition} basket={basketId} rates={rates} info={info} />
+							<DonutGraph width={250} height={250} composition={composition} basket={basketId} rates={rates} info={info} />
 						</div>
-						<div className='m-auto flex flex-col'>
-							<div className='flex flex-row'>
-								{composition.map(component => (
-									<div className='flex flex-col' key={component.symbol}>
-										<Badge color={component.color}>{component.symbol}</Badge>
-									</div>
-								))}
-							</div>
+						<div className='my-auto flex flex-col items-center gap-2'>
+							{composition.map(component => (
+								<div className='flex flex-row' key={component.symbol}>
+									<Badge color={component.color}>{component.symbol}</Badge>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>

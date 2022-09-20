@@ -139,9 +139,7 @@ const Market: NextPage<{
 							label: `Total ${activeMarket.underlyingSymbol} Supplied`,
 							value: (
 								<Tooltipped content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}>
-									<a>
-										<FontAwesomeIcon icon={faLevelDownAlt} /> {getDisplayBalance(activeMarket.supplied, 0)}{' '}
-									</a>
+									<a>{getDisplayBalance(activeMarket.supplied, 0)} </a>
 								</Tooltipped>
 							),
 						},
@@ -149,9 +147,7 @@ const Market: NextPage<{
 							label: `Total ${activeMarket.underlyingSymbol} Debt`,
 							value: (
 								<Tooltipped content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}>
-									<a>
-										<FontAwesomeIcon icon={faLevelDownAlt} /> {getDisplayBalance(activeMarket.totalBorrows, 0)}{' '}
-									</a>
+									<a>{getDisplayBalance(activeMarket.totalBorrows, 0)} </a>
 								</Tooltipped>
 							),
 						},
@@ -167,9 +163,7 @@ const Market: NextPage<{
 							label: `Your ${activeMarket.underlyingSymbol} Supply`,
 							value: (
 								<Tooltipped content={`$${supplied ? getDisplayBalance(supplied * activeMarket.price, 0) : '0'}`}>
-									<a>
-										<FontAwesomeIcon icon={faLevelDownAlt} /> {supplied ? supplied.toFixed(4) : '0'}{' '}
-									</a>
+									<a>{supplied ? supplied.toFixed(4) : '0'} </a>
 								</Tooltipped>
 							),
 						},
@@ -177,9 +171,7 @@ const Market: NextPage<{
 							label: `Your ${activeMarket.underlyingSymbol} Debt`,
 							value: (
 								<Tooltipped content={`$${borrowed ? getDisplayBalance(borrowed * activeMarket.price, 0) : '0'}`}>
-									<a>
-										<FontAwesomeIcon icon={faLevelDownAlt} /> {borrowed ? borrowed.toFixed(4) : '0'}{' '}
-									</a>
+									<a>{borrowed ? borrowed.toFixed(4) : '0'} </a>
 								</Tooltipped>
 							),
 						},

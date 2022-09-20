@@ -1,4 +1,5 @@
-import { faCheckCircle, faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons'
+import { faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import _ from 'lodash'
@@ -44,7 +45,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 
 	return (
 		<Modal isOpen={show} onDismiss={onHide}>
-			<Modal.Header header={'My Account'} onClose={onHide} />
+			<Modal.Header header={'Account'} onClose={onHide} />
 			<Modal.Body>
 				<div className={`grid grid-flow-col grid-cols-2 gap-4 p-4`}>
 					<div className='flex items-center justify-center'>
@@ -85,7 +86,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 				</div>
 				<>
 					<div className='mt-4 flex-1 rounded border border-primary-300 bg-primary-100 pb-3'>
-						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium'>
+						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium text-text-100'>
 							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-text-200' />
 						</Typography>
 
@@ -107,20 +108,24 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 									.map(txHash => (
 										<div key={txHash} className='flex w-full items-center justify-between bg-primary-100 px-3 py-1'>
 											{transactions[txHash].receipt ? (
-												<FontAwesomeIcon icon={faCheckCircle} className='text-green' />
+												transactions[txHash].receipt.status === true ? (
+													<FontAwesomeIcon icon={faCircleCheck} className='text-green' size='sm' />
+												) : (
+													<FontAwesomeIcon icon={faCircleXmark} className='text-red' />
+												)
 											) : (
 												<MoonLoader size={12} speedMultiplier={0.8} color='#FFD84B' />
 											)}
-											<Typography variant='sm' className='text-end text-text-200'>
-												{transactions[txHash].description}
-												<Tooltipped content='View on Etherscan'>
-													<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
-														<a>
-															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 text-text-300 hover:text-text-400' size='xs' />
-														</a>
-													</Link>
-												</Tooltipped>
-											</Typography>
+											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
+												<a>
+													<Typography variant='sm' className='text-end text-text-100 hover:text-text-400'>
+														{transactions[txHash].description}
+														<Tooltipped content='View on Etherscan'>
+															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1' size='sm' />
+														</Tooltipped>
+													</Typography>
+												</a>
+											</Link>
 										</div>
 									))}
 							</>
