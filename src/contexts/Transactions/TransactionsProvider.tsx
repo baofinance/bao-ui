@@ -30,6 +30,10 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 		[dispatch],
 	)
 
+	const handleClearTransactions = useCallback(() => {
+		dispatch(setTransactions({}))
+	}, [dispatch])
+
 	const fetchTransactions = useCallback(async () => {
 		try {
 			const txsRaw = localStorage.getItem('transactions')
@@ -67,6 +71,7 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 				transactions,
 				onAddTransaction: handleAddTransaction,
 				onTxReceipt: handleTxReceipt,
+				onClearTransactions: handleClearTransactions,
 			}}
 		>
 			{children}

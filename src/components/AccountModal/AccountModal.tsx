@@ -1,9 +1,9 @@
-import { faCheck, faClose, faReceipt } from '@fortawesome/free-solid-svg-icons'
+import { faCheckCircle, faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import _ from 'lodash'
 import Image from 'next/future/image'
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { MoonLoader } from 'react-spinners'
 
@@ -14,6 +14,8 @@ import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
+import Link from 'next/link'
+import Tooltipped from '../Tooltipped'
 
 interface AccountModalProps {
 	show: boolean
@@ -28,7 +30,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 		deactivate()
 	}, [onHide, deactivate])
 
-	const { transactions } = useTransactionProvider()
+	const { transactions, onClearTransactions } = useTransactionProvider()
 	const baoBalance = useTokenBalance(Config.addressMap.BAO)
 	const ethBalance = useTokenBalance('ETH')
 	const [tx, setTx] = useState({})
@@ -91,7 +93,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<button
 								className='float-right m-3 rounded border-0 bg-primary-300 px-2 py-1 font-medium hover:bg-primary-400'
 								onClick={() => {
-									localStorage.removeItem('transactions')
+									onClearTransactions()
 								}}
 							>
 								<FontAwesomeIcon icon={faClose} className='inline' /> <Typography className='inline'>Clear</Typography>
@@ -105,12 +107,19 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 									.map(txHash => (
 										<div key={txHash} className='flex w-full items-center justify-between bg-primary-100 px-3 py-1'>
 											{transactions[txHash].receipt ? (
-												<FontAwesomeIcon icon={faCheck} className='ml-1 text-green' />
+												<FontAwesomeIcon icon={faCheckCircle} className='text-green' />
 											) : (
 												<MoonLoader size={12} speedMultiplier={0.8} color='#FFD84B' />
 											)}
 											<Typography variant='sm' className='text-end text-text-200'>
 												{transactions[txHash].description}
+												<Tooltipped content='View on Etherscan'>
+													<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
+														<a>
+															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 text-text-300 hover:text-text-400' size='xs' />
+														</a>
+													</Link>
+												</Tooltipped>
 											</Typography>
 										</div>
 									))}
