@@ -1,6 +1,6 @@
 import { faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -49,15 +49,14 @@ const BallastSwapper: React.FC = () => {
 			},
 		])
 		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
-		conole.log(Ballast, DAI)
 
-		setSupplyCap(new BigNumber(ballastRes[0].values[0].toString()))
+		setSupplyCap(ballastRes[0].values[0])
 		setFees({
-			buy: new BigNumber(ballastRes[1].values[0].toString()),
-			sell: new BigNumber(ballastRes[2].values[0].toString()),
-			denominator: new BigNumber(ballastRes[3].values[0].toString()),
+			buy: ballastRes[1].values[0],
+			sell: ballastRes[2].values[0],
+			denominator: ballastRes[3].values[0],
 		})
-		setReserves(new BigNumber(daiRes[0].values[0].toString()))
+		setReserves(daiRes[0].values[0])
 	}, [bao])
 
 	useEffect(() => {
@@ -69,7 +68,7 @@ const BallastSwapper: React.FC = () => {
 	const daiInput = (
 		<>
 			<Typography variant='sm' className='float-left mb-1'>
-				Balance: {getDisplayBalance(daiBalance).toString()} DAI
+				Balance: {getDisplayBalance(daiBalance)} DAI
 			</Typography>
 			<Typography variant='sm' className='float-right mb-1 text-text-200'>
 				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />}{' '}
@@ -78,8 +77,9 @@ const BallastSwapper: React.FC = () => {
 				onSelectMax={() => setInputVal(decimate(daiBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
-					swapDirection && fees && !new BigNumber(inputVal).isNaN()
-						? new BigNumber(inputVal).times(new BigNumber(1).minus(fees['sell'].div(fees['denominator']))).toString()
+					swapDirection && fees && inputVal
+						? BigNumber.from(inputVal)
+								.mul(BigNumber.from(1).sub(fees['sell'].div(fees['denominator']))).toString()
 						: inputVal
 				}
 				disabled={swapDirection}
@@ -106,8 +106,9 @@ const BallastSwapper: React.FC = () => {
 				onSelectMax={() => setInputVal(decimate(baoUSDBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
-					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
-						? new BigNumber(inputVal).times(new BigNumber(1).minus(fees['buy'].div(fees['denominator']))).toString()
+					!swapDirection && fees && inputVal
+						? BigNumber.from(inputVal)
+								.mul(BigNumber.from(1).sub(fees['buy'].div(fees['denominator']))).toString()
 						: inputVal
 				}
 				disabled={!swapDirection}
@@ -154,7 +155,10 @@ const BallastSwapper: React.FC = () => {
 					<BallastButton
 						swapDirection={swapDirection}
 						inputVal={inputVal}
-						maxValues={{ buy: decimate(daiBalance), sell: decimate(baoUSDBalance) }}
+						maxValues={{
+							buy: decimate(daiBalance.toString()),
+							sell: decimate(baoUSDBalance.toString()),
+						}}
 						supplyCap={supplyCap}
 						reserves={reserves}
 					/>

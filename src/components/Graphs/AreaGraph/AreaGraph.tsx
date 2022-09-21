@@ -6,9 +6,9 @@ import { scaleLinear, scaleTime } from '@visx/scale'
 import { AreaClosed, Bar, Line, LinePath } from '@visx/shape'
 import { defaultStyles, TooltipWithBounds, withTooltip } from '@visx/tooltip'
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
+import { useCallback, useMemo } from 'react'
 import { bisector, extent, max, min } from 'd3-array'
-import React, { useCallback, useMemo } from 'react'
 
 import { getDisplayBalance } from '@/utils/numberFormat'
 
@@ -177,7 +177,7 @@ export default withTooltip<AreaProps, TooltipData>(
 				{tooltipData && (
 					<div>
 						<TooltipWithBounds key={Math.random()} top={tooltipTop - 12} left={tooltipLeft + 12} style={tooltipStyles}>
-							{`$${getDisplayBalance(new BigNumber(getValue(tooltipData)), 0)} ${formatDate(getDate(tooltipData))}`}
+							{`$${getDisplayBalance(BigNumber.from(getValue(tooltipData)), 0)} ${formatDate(getDate(tooltipData))}`}
 						</TooltipWithBounds>
 					</div>
 				)}

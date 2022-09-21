@@ -4,11 +4,12 @@ import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-s
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useMemo, useState } from 'react'
+import { getDisplayBalance } from '@/utils/numberFormat'
+//import { utils } from 'ethers'
 import { isDesktop } from 'react-device-detect'
 
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber } from '@/utils/numberFormat'
 
 import AccountModal from '../AccountModal'
 import Button from '../Button'
@@ -60,7 +61,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 									</>
 								)}
 								<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 text-text-200' />
-								{getBalanceNumber(ethBalance).toFixed(4)}
+								{getDisplayBalance(ethBalance)}
 								<FontAwesomeIcon icon={faEthereum} className='mx-1' />
 								{pendingTxs > 0 && (
 									<>

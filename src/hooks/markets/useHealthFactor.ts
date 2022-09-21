@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import Multicall from '@/utils/multicall'
@@ -9,6 +9,7 @@ import { useAccountLiquidity } from './useAccountLiquidity'
 import { useAccountMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
 
+// FIXME: this used to end up as infinity with bignumber.js but now it doesn't with ethers.BigNumber
 const useHealthFactor = () => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()
@@ -30,29 +31,33 @@ const useHealthFactor = () => {
 		)
 		const balanceRes = Multicall.parseCallResults(await bao.multicall.call(balanceQuery))
 
-		if (Object.keys(balanceRes).length === 0) return setHealthFactor(new BigNumber(0))
+		if (Object.keys(balanceRes).length === 0) return setHealthFactor(BigNumber.from(0))
 
-		const collateralSummation = _markets.reduce(
-			(prev, cur) =>
-				prev +
-				new BigNumber(prices[cur.marketAddress])
-					.div(10 ** (36 - cur.underlyingDecimals))
-					.times(balanceRes[cur.marketAddress][0].values[0].toString())
-					.div(10 ** cur.underlyingDecimals)
-					.times(cur.collateralFactor)
-					.toNumber(),
-			0,
-		)
+		const collateralSummation = _markets.reduce((prev, cur) => {
+			return (
+				prev.add(
+					BigNumber.from(prices[cur.marketAddress])
+					.div(BigNumber.from(10).pow(36 - cur.underlyingDecimals))
+					.mul(balanceRes[cur.marketAddress][0].values[0])
+					.div(BigNumber.from(10).pow(cur.underlyingDecimals))
+					.mul(cur.collateralFactor)
+				)
+			)
+		}, BigNumber.from(0))
 
-		const _healthFactor = new BigNumber(collateralSummation / usdBorrow)
-		setHealthFactor(_healthFactor.isNaN() ? new BigNumber(0) : _healthFactor)
+		try {
+			const _healthFactor = collateralSummation.div(usdBorrow)
+			setHealthFactor(_healthFactor)
+		} catch {
+			setHealthFactor(BigNumber.from(0))
+		}
 	}, [markets, accountLiquidity, bao, account, prices])
 
 	useEffect(() => {
 		if (!(markets && accountLiquidity && bao && account && prices)) return
 
 		fetchHealthFactor()
-	}, [markets, accountLiquidity, bao, account, prices])
+	}, [markets, accountLiquidity, bao, account, prices, fetchHealthFactor])
 
 	return healthFactor
 }

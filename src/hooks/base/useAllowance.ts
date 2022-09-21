@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import { getAllowance } from '@/utils/erc20'
@@ -14,13 +14,13 @@ const useAllowance = (tokenAddress: string, spenderAddress: string) => {
 
 	const [allowance, setAllowance] = useState<BigNumber | undefined>()
 
-	const _getAllowance: any = useCallback(async () => {
+	const _getAllowance = useCallback(async () => {
 		try {
 			const tokenContract = bao.getNewContract(tokenAddress, 'erc20.json')
 			const _allowance = await getAllowance(tokenContract, account, spenderAddress)
-			setAllowance(new BigNumber(_allowance))
+			setAllowance(BigNumber.from(_allowance))
 		} catch (e) {
-			setAllowance(new BigNumber(0))
+			setAllowance(BigNumber.from(0))
 		}
 	}, [bao, account, tokenAddress, spenderAddress])
 

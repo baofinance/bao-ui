@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
@@ -13,17 +13,17 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 		const lpContract = bao.getNewContract(basket.lpAddress, 'uni_v2_lp.json')
 
 		const wethPrice = await getWethPriceLink(bao)
-		const reserves = await lpContract.methods.getReserves().call()
+		const reserves = await lpContract.getReserves()
 
 		// This won't always work. Should check which side of the LP the basket token is on.
-		setPrice(wethPrice.times(new BigNumber(reserves[1]).div(reserves[0])))
+		setPrice(wethPrice.mul(BigNumber.from(reserves[1]).div(reserves[0])))
 	}, [basket, bao])
 
 	useEffect(() => {
 		if (!(basket && bao)) return
 
 		fetchPairPrice()
-	}, [basket, bao])
+	}, [basket, bao, fetchPairPrice])
 
 	return price
 }

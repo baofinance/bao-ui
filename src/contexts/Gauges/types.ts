@@ -1,6 +1,6 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import BigNumber from 'bignumber.js/bignumber'
-import { Contract } from 'ethers'
+import { BigNumber } from 'ethers'
+import { Contract } from '@ethersproject/contracts'
 
 export interface Gauge {
 	gid: number

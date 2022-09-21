@@ -2,7 +2,6 @@ import Config from '@/bao/lib/config'
 import fetcher from '@/bao/lib/fetcher'
 import { SWR } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
-import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import useBao from '../base/useBao'
@@ -69,7 +68,7 @@ export const useMarketPrices = (): MarketPrices => {
 			data['MarketOracle'].reduce(
 				(_prices: { [key: string]: { usd: number } }, result: any) => ({
 					..._prices,
-					[result.ref]: new BigNumber(result.values[0].toString()).toNumber(),
+					[result.ref]: result.values[0],
 				}),
 				{},
 			),

@@ -1,11 +1,11 @@
 import Loader from '@/components/Loader'
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
 import { Text } from '@visx/text'
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { animated, interpolate, useTransition } from 'react-spring'
+import { utils } from 'ethers'
+import { animated, useTransition } from 'react-spring'
 
 interface AssetAllocationAmount {
 	symbol: string
@@ -36,10 +36,8 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 	const assetsBalance: AssetAllocationAmount[] = composition.map(component => ({
 		symbol: `${component.symbol}`,
 		percentage: `${component.percentage.toFixed(4)}%`,
-		balance: `${getDisplayBalance(component.balance, component.decimals)}`,
-		tvl: `${
-			component.price ? `$${getDisplayBalance(component.price.times(getBalanceNumber(component.balance, component.decimals)), 0)}` : ''
-		}`,
+		balance: `${utils.formatUnits(component.balance, component.decimals)}`,
+		tvl: `${component.price ? `$${utils.formatUnits(component.price.mul(component.balance), component.decimals)}` : ''}`,
 		frequency: component.percentage,
 		color: component.color,
 	}))

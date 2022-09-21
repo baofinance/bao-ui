@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 
@@ -32,10 +32,10 @@ const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo =
 		const { [basket.ovenAddress]: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setInfo({
-			balance: new BigNumber(balance),
-			userBalance: new BigNumber(res[0].values[0].toString()),
-			userOutputBalance: new BigNumber(res[1].values[0].toString()),
-			cap: new BigNumber(res[2].values[0].toStrig()),
+			balance: balance,
+			userBalance: res[0].values[0],
+			userOutputBalance: res[1].values[0],
+			cap: res[2].values[0],
 		})
 	}, [basket, account, bao, library])
 
@@ -43,7 +43,7 @@ const useOvenInfo = (basket: ActiveSupportedBasket, account: string): OvenInfo =
 		if (!(basket && account && bao)) return
 
 		fetchOvenInfo()
-	}, [basket, account, bao])
+	}, [basket, account, bao, fetchOvenInfo])
 
 	return info
 }

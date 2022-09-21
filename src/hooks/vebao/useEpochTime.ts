@@ -1,6 +1,6 @@
 import { getCrvContract } from '@/bao/utils'
 import Multicall from '@/utils/multicall'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 

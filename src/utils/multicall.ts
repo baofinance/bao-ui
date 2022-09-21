@@ -1,6 +1,5 @@
 import { ContractCallResults } from 'ethereum-multicall'
 import _ from 'lodash'
-import BigNumber from 'bignumber.js'
 import { BigNumber as BN } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 
@@ -35,8 +34,13 @@ const parseCallResults = (call: ContractCallResults): any => {
 	_.each(Object.keys(call.results), key => {
 		result[key] = _.map(call.results[key].callsReturnContext, returnValue => {
 			const values = returnValue.returnValues.map((x) => {
+				//if (x.type === 'BigNumber') {
+					//return new BigNumber(BN.from(x).toString())
+				//} else {
+					//return x
+				//}
 				if (x.type === 'BigNumber') {
-					return new BigNumber(BN.from(x).toString())
+					return BN.from(x)
 				} else {
 					return x
 				}

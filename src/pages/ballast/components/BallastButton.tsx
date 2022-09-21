@@ -1,5 +1,5 @@
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+//import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import React, { useMemo } from 'react'
 
 import Config from '@/bao/lib/config'
@@ -54,10 +54,10 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 
 	const isDisabled = useMemo(
 		() =>
-			new BigNumber(inputVal).isNaN() ||
-			new BigNumber(inputVal).gt(maxValues[swapDirection ? 'sell' : 'buy']) ||
-			(swapDirection && new BigNumber(inputVal).gt(decimate(reserves))) ||
-			(!swapDirection && new BigNumber(inputVal).gt(decimate(supplyCap))),
+			inputVal === '' ||
+			BigNumber.from(inputVal.toString()).gt(maxValues[swapDirection ? 'sell' : 'buy']) ||
+			(swapDirection && BigNumber.from(inputVal).gt(decimate(reserves).toString())) ||
+			(!swapDirection && BigNumber.from(inputVal).gt(decimate(supplyCap).toString())),
 		[inputVal, maxValues, swapDirection, reserves, supplyCap],
 	)
 

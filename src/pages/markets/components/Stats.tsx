@@ -4,7 +4,7 @@ import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import React, { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
@@ -34,23 +34,23 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				? supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance *
 				  decimate(exchangeRates[asset.marketAddress]).toNumber()
 				: 0,
-		[supplyBalances, exchangeRates],
+		[supplyBalances, exchangeRates, asset.marketAddress],
 	)
 	const walletBalance = useMemo(
 		() =>
 			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
 				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
 				: 0,
-		[balances],
+		[balances, asset.underlyingAddress],
 	)
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return
-		return getDisplayBalance(new BigNumber(asset.price).times(supplyBalance).toFixed(2), 0)
-	}, [supplyBalance])
+		return getDisplayBalance(BigNumber.from(asset.price).mul(supplyBalance), 0)
+	}, [supplyBalance, asset.price])
 	const walletBalanceUsd = useMemo(() => {
 		if (!walletBalance) return
-		return getDisplayBalance(new BigNumber(asset.price).times(walletBalance).toFixed(2), 0)
-	}, [walletBalance])
+		return getDisplayBalance(BigNumber.from(asset.price).mul(walletBalance), 0)
+	}, [walletBalance, asset.price])
 
 	return (
 		<StatBlock
@@ -111,19 +111,19 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress)
 				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress).balance
 				: 0,
-		[borrowBalances],
+		[borrowBalances, asset.marketAddress],
 	)
 	const walletBalance = useMemo(
 		() =>
 			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
 				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
 				: 0,
-		[balances],
+		[balances, asset.underlyingAddress],
 	)
 	const price = useMemo(() => {
 		if (!borrowBalance) return
-		return getDisplayBalance(new BigNumber(asset.price).times(borrowBalance).toFixed(2), 0)
-	}, [borrowBalance])
+		return getDisplayBalance(BigNumber.from(asset.price).mul(borrowBalance), 0)
+	}, [borrowBalance, asset.price])
 
 	return (
 		<StatBlock

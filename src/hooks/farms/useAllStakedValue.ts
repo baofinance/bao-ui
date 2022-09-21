@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import { getFarms, getMasterChefContract, getTotalLPWethValue, getWethContract } from '@/bao/utils'

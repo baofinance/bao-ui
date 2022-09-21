@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import Config from '@/bao/lib/config'
@@ -39,7 +39,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 		for (const key in oraclePrices) {
 			prices[key] = decimate(
 				oraclePrices[key],
-				new BigNumber(36).minus(Config.markets.find(market => market.marketAddresses[Config.networkId] === key).underlyingDecimals),
+				36 - Config.markets.find(market => market.marketAddresses[Config.networkId] === key).underlyingDecimals,
 			).toNumber()
 		}
 

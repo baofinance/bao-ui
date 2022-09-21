@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import useBao from '@/hooks/base/useBao'
@@ -56,19 +56,17 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						decimals: tokenInfo[tokenComposition[i]][0].values[0],
 						symbol: tokenInfo[tokenComposition[i]][1].values[0],
 						name: tokenInfo[tokenComposition[i]][2].values[0],
-						balance: new BigNumber(tokenInfo[tokenComposition[i]][3].values[0].toString()),
+						balance: tokenInfo[tokenComposition[i]][3].values[0],
 				  }
 				: {
 						// I don't like this, but MKR doesn't fit the mold.
 						decimals: 18,
 						symbol: 'MKR',
 						name: 'Maker DAO',
-						balance: new BigNumber(
-							(await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address)).toString(),
-						),
+						balance: await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address),
 				  }
 			_c.address = tokenComposition[i]
-			_c.price = new BigNumber(prices[tokenComposition[i].toLowerCase()])
+			_c.price = BigNumber.from(prices[tokenComposition[i].toLowerCase()])
 
 			// Check if component is lent out. If the coin gecko prices array doesn't conclude it,
 			// the current component is a wrapped interest bearing token.
@@ -93,15 +91,12 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				// Get Exchange Rate
 				const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
 				const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
-				const exchangeRate = new BigNumber((await logicContract.exchangeRate(_c.address)).toString())
+				const exchangeRate = await logicContract.exchangeRate(_c.address)
 				// xSushi APY can't be found on-chain, check for special case
-				const apy =
-					_c.strategy === 'Sushi Bar'
-						? await fetchSushiApy()
-						: new BigNumber((await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])).toString())
+				const apy = _c.strategy === 'Sushi Bar' ? await fetchSushiApy() : await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
 				const underlyingDecimals = await bao.getNewContract(lendingRes[0].values[0], 'erc20.json').decimals()
 
-				_c.price = decimate(prices[_c.underlying.toLowerCase()].times(exchangeRate))
+				_c.price = decimate(prices[_c.underlying.toLowerCase()].mul(exchangeRate))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
@@ -118,13 +113,13 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			})
 		}
 
-		const marketCap = _comp.reduce((prev, comp) => prev.plus(decimate(comp.balance, comp.decimals).times(comp.price)), new BigNumber(0))
+		const marketCap = _comp.reduce((prev, comp) => prev.add(decimate(comp.balance, comp.decimals).mul(comp.price)), BigNumber.from(0))
 
 		// Assign allocation percentages
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
 
-			_comp[i].percentage = decimate(new BigNumber(comp.balance), comp.decimals).times(comp.price).div(marketCap).times(100).toNumber()
+			_comp[i].percentage = decimate(BigNumber.from(comp.balance), comp.decimals).mul(comp.price).div(marketCap).mul(100).toNumber()
 		}
 
 		setComposition(_comp)
@@ -134,7 +129,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		if (!(bao && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) return
 
 		fetchComposition()
-	}, [bao, basket, prices, transactions])
+	}, [bao, basket, prices, transactions, fetchComposition])
 
 	return composition
 }

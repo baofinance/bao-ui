@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import { BigNumber } from 'ethers'
 
 import { getBaoSupply } from '@/bao/utils'
 import Loader from '@/components/Loader'
@@ -20,9 +20,11 @@ const Balances: React.FC = () => {
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const locks = useLockedEarnings()
 	const allEarnings = useAllEarnings()
-	let sumEarning = 0
+
+	// FIXME: this should do math with an ethers.BigNumber, not a javascript number.
+	let sumEarning = BigNumber.from(0)
 	for (const earning of allEarnings) {
-		sumEarning += new BigNumber(earning).div(new BigNumber(10).pow(18)).toNumber()
+		sumEarning = sumEarning.add(BigNumber.from(earning).div(BigNumber.from(10).pow(18)))
 	}
  
 	const stats = [
@@ -52,7 +54,7 @@ const Balances: React.FC = () => {
 	useEffect(() => {
 		if (!bao) return
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=bao-finance&vs_currencies=usd').then(async res => {
-			setBaoPrice(new BigNumber((await res.json())['bao-finance'].usd))
+			setBaoPrice((await res.json())['bao-finance'].usd)
 		})
 	}, [bao, setBaoPrice])
 

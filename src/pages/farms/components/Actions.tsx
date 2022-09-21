@@ -20,8 +20,7 @@ import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/
 import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -200,7 +199,6 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -304,10 +302,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 					) : (
 						<Button
 							disabled={
-								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(new BigNumber(0))
+								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(BigNumber.from(0))
 							}
 							onClick={async () => {
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
+								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
 
 								const unstakeTx = masterChefContract.withdraw(pid, ethers.utils.parseUnits(val, 18))
 
@@ -331,7 +329,6 @@ interface RewardsProps {
 export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 	const bao = useBao()
 	const earnings = useEarnings(pid)
-	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const masterChefContract = getMasterChefContract(bao)
 

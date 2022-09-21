@@ -1,10 +1,10 @@
+// FIXME: BROKEN this won't be used anymore as the /farms/ page is getting trashed!
 import { Bao } from '@/bao/Bao'
-import BigNumber from 'bignumber.js/bignumber'
+import { BigNumber } from 'ethers'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
 import { Contract } from '@ethersproject/contracts'
 
-import { ethers } from 'ethers'
 import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
@@ -91,14 +91,14 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 		const tokenPrices = await GraphUtil.getPriceFromPairMultiple(wethPrice, [Config.addressMap.USDC])
 
 		const tvls: any[] = []
-		let _tvl = new BigNumber(0)
+		let _tvl = BigNumber.from(0)
 		lps.forEach((lpInfo: any) => {
 			let lpStakedUSD
 			if (lpInfo.singleAsset) {
-				lpStakedUSD = decimate(lpInfo.lpStaked).times(
+				lpStakedUSD = decimate(lpInfo.lpStaked).mul(
 					Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === lpInfo.lpAddress.toLowerCase()).price,
 				)
-				_tvl = _tvl.plus(lpStakedUSD)
+				_tvl = _tvl.add(lpStakedUSD)
 			} else {
 				let token, tokenPrice, specialPair
 				if (
@@ -119,8 +119,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 						priceInfo => priceInfo.address.toLowerCase() === Config.addressMap.USDC.toLowerCase(),
 					).price
 
-
-				lpStakedUSD = token.balance.times(tokenPrice).times(2).times(lpInfo.lpStaked.div(lpInfo.lpSupply))
+				lpStakedUSD = token.balance.toNumber() * tokenPrice * 2 * lpInfo.lpStaked.div(lpInfo.lpSupply).toNumber()
 			}
 
 			tvls.push({
@@ -128,7 +127,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 				tvl: lpStakedUSD,
 				lpStaked: lpInfo.lpStaked,
 			})
-			_tvl = _tvl.plus(lpStakedUSD)
+			_tvl = _tvl.add(lpStakedUSD)
 		})
 		setTvl({
 			tvl: _tvl,
@@ -141,7 +140,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 		if (!(bao && multicall) || tvl) return
 
 		fetchAllFarmTVL()
-	}, [bao, multicall])
+	}, [bao, multicall, fetchAllFarmTVL])
 
 	return tvl
 }

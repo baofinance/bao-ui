@@ -1,7 +1,7 @@
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -32,7 +32,8 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	useEffect(() => {
 		if (!(bao && account)) return
 
-		bao.web3.eth.getBalance(account).then((balance: any) => setEthBalance(decimate(balance)))
+		// FIXME: use useBalance('ETH')
+		bao.provider.getBalance(account).then((balance: any) => setEthBalance(decimate(balance)))
 	}, [bao, account])
 
 	return basket ? (

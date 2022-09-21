@@ -1,5 +1,6 @@
 import Config from '@/bao/lib/config'
 import { approve } from '@/bao/utils'
+import { isBigNumberish } from '@/utils/numberFormat'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
@@ -12,8 +13,8 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+//import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -54,7 +55,7 @@ const Swapper: React.FC = () => {
 						onSelectMax={null}
 						onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 						disabled={true}
-						value={inputVal && new BigNumber(inputVal).times(0.001).toString()}
+						value={inputVal && BigNumber.from(inputVal).mul(0.001).toString()}
 						label={
 							<div className='flex flex-row items-center pl-2 pr-4'>
 								<div className='flex w-6 items-center justify-center'>
@@ -78,7 +79,6 @@ export default Swapper
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.stabilizer[Config.networkId].address)
@@ -90,7 +90,7 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
 			const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.BAO)
-			return handleTx(approve(tokenContract, SwapperContract, account), 'Migration: Approve BAOv1')
+			return handleTx(approve(tokenContract, SwapperContract), 'Migration: Approve BAOv1')
 		}
 
 		handleTx(SwapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
@@ -113,8 +113,8 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	}
 
 	const isDisabled = useMemo(
-		() => typeof pendingTx === 'string' || pendingTx || new BigNumber(inputVal).isNaN() || new BigNumber(inputVal).gt(maxValue),
-		[pendingTx, inputVal],
+		() => typeof pendingTx === 'string' || pendingTx || !isBigNumberish(inputVal) || BigNumber.from(inputVal).gt(maxValue),
+		[pendingTx, inputVal, maxValue],
 	)
 
 	return (

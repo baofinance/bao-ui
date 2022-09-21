@@ -12,7 +12,8 @@ import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
 import GraphUtil from '@/utils/graph'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
+import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -60,22 +61,22 @@ interface GaugeProps {
 
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const bao = useBao()
-	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	const [baoPrice, setBaoPrice] = useState<BN | undefined>()
 	const weight = useGaugeWeight(gauge.gaugeAddress)
 	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
 	const gaugeInfo = useGaugeInfo(gauge)
 	const totalMintable = useMintable()
-	const mintable = totalMintable.times(relativeWeight)
+	const mintable = totalMintable.mul(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
-	const gaugeTVL = gaugeInfo && virtualPrice.times(gaugeInfo.totalSupply.div(10 ** 18))
-	const rewardAPY = baoPrice && baoPrice.times(mintable).div(gaugeTVL)
+	const gaugeTVL = gaugeInfo && virtualPrice.mul(gaugeInfo.totalSupply.div(BigNumber.from(10).pow(18))) || 0
+	const rewardAPY = baoPrice && baoPrice.times(new BN(mintable.toString())).div(new BN(gaugeTVL.toString()))
 
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
 			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.crv[Config.networkId].address)
-			setBaoPrice(baoPrice)
+			setBaoPrice(new BN(baoPrice))
 		})
 	}, [bao, setBaoPrice])
 
@@ -104,7 +105,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 					<Badge className='bg-primary-300 font-semibold'>
 						{rewardAPY ? (
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{rewardAPY.gt(0) ? `${rewardAPY.times(new BigNumber(100)).toNumber()}%` : 'N/A'}
+								{rewardAPY.gt(0) ? `${rewardAPY.times(100).toNumber()}%` : 'N/A'}
 							</Typography>
 						) : (
 							<Loader />

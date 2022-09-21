@@ -15,8 +15,7 @@ import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -203,7 +202,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(new BigNumber(0))
 							}
 							onClick={async () => {
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
+								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
 
 								const unstakeTx = gauge.gaugeContract.withdraw(ethers.utils.parseUnits(val, 18))
 

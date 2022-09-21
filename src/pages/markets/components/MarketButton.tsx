@@ -7,8 +7,8 @@ import { useApprovals } from '@/hooks/markets/useApprovals'
 import { decimate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+//import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import Link from 'next/link'
 import React from 'react'
 import { MarketOperations } from './Modals/Modals'
@@ -23,7 +23,6 @@ type MarketButtonProps = {
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const { account } = useWeb3React()
 	const { approvals } = useApprovals(pendingTx)
 
 	const { marketContract } = asset
@@ -55,11 +54,11 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 								mintTx = marketContract.mint(true, {
 									value: val.toString(),
 								})
-							// TODO- Give the user the option in the SupplyModal to tick collateral on/off
+								// TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							} else {
 								mintTx = marketContract.mint(val.toString(), true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							}
-							handleTx(mintTx, `Supply ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`, () => onHide())
+							handleTx(mintTx, `Supply ${decimate(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
 						Supply
@@ -85,7 +84,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							handleTx(
 								marketContract.redeemUnderlying(val.toString()),
-								`Withdraw ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`,
+								`Withdraw ${decimate(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -100,11 +99,9 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={isDisabled}
 						onClick={() => {
-							handleTx(
-								marketContract.borrow(val.toString()),
-								`Mint ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.symbol}`,
-								() => onHide(),
-							)
+							handleTx(marketContract.borrow(val.toString()), `Mint ${decimate(val, asset.underlyingDecimals)} ${asset.symbol}`, () => {
+								onHide()
+							})
 						}}
 					>
 						Mint
@@ -123,9 +120,9 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 									value: val.toString(),
 								})
 							} else {
-								repayTx = marketContract.repayBorrow(val.toString()) 
+								repayTx = marketContract.repayBorrow(val.toString())
 							}
-							handleTx(repayTx, `Repay ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`, () => onHide())
+							handleTx(repayTx, `Repay ${decimate(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
 						Repay

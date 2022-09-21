@@ -44,8 +44,8 @@ const Lock: React.FC = () => {
 	const [val, setVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
 	const startDate =
-		lockInfo && lockInfo.lockEnd.times(1000).toNumber() >= new Date().setUTCHours(0, 0, 0, 0)
-			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.times(1000).toNumber())))
+		lockInfo && lockInfo.lockEnd.mul(1000).toNumber() >= new Date().setUTCHours(0, 0, 0, 0)
+			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.mul(1000).toNumber())))
 			: new Date(addDays(7, new Date()))
 	const [endDate, setEndDate] = useState(startDate)
 	const crvAddress = Config.addressMap.CRV
@@ -63,10 +63,11 @@ const Lock: React.FC = () => {
 		[setVal],
 	)
 
-	console.log(lockInfo && lockInfo.lockEnd.times(1000).toNumber())
+	console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
 	console.log(new Date().setUTCHours(0, 0, 0, 0))
 	console.log(startDate.setUTCHours(0, 0, 0, 0))
 	console.log(length)
+	console.log(lockInfo)
 
 	return (
 		<>
@@ -92,8 +93,8 @@ const Lock: React.FC = () => {
 										<>
 											<div className='flex flex-col'>
 												<div className='flex flex-row justify-center'>
-													{getDisplayBalance(lockInfo && lockInfo.balance)} veBAO <ArrowRightIcon className='h-4 w-4' />
-													{getDisplayBalance(lockInfo && lockInfo.lockAmount)} BAO
+													{getDisplayBalance(lockInfo && lockInfo.balance || 0)} veBAO <ArrowRightIcon className='h-4 w-4' />
+													{getDisplayBalance(lockInfo && lockInfo.lockAmount || 0)} BAO
 												</div>
 												<div className='flex flex-row justify-center'>
 													{lockInfo && new Date(lockInfo.lockEnd.toNumber()).toDateString()}
@@ -105,8 +106,8 @@ const Lock: React.FC = () => {
 									<a>
 										{account && !isNaN(lockInfo && lockInfo.balance.toNumber())
 											? window.screen.width > 1200
-												? getDisplayBalance(lockInfo && lockInfo.balance)
-												: truncateNumber(lockInfo && lockInfo.balance)
+												? getDisplayBalance(lockInfo && lockInfo.balance || 0)
+												: truncateNumber(lockInfo && lockInfo.balance || 0)
 											: '-'}
 									</a>
 								</Tooltipped>
@@ -122,7 +123,7 @@ const Lock: React.FC = () => {
 						},
 						{
 							label: `Total veBAO`,
-							value: <Typography>{getDisplayBalance(lockInfo && lockInfo.totalSupply)}</Typography>,
+							value: <Typography>{getDisplayBalance(lockInfo && lockInfo.totalSupply || 0)}</Typography>,
 						},
 					]}
 				/>

@@ -3,7 +3,7 @@ import 'react-circular-progressbar/dist/styles.css'
 import { faInfinity } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import React from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import { isDesktop } from 'react-device-detect'
@@ -116,19 +116,32 @@ export const Overview = () => {
 						<Typography variant='base' className='font-medium'>
 							{' '}
 							{healthFactor &&
-								(healthFactor.isFinite() ? (
-									healthFactor.lte(0) ? (
-										'-'
-									) : healthFactor.gt(10000) ? (
-										<p>
-											{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
-										</p>
-									) : (
-										healthFactor.toFixed(2)
+								// FIXME: ethers.BigNumber does not end up as infinite ever.
+								//(healthFactor.isFinite() ? (
+								//	healthFactor.lte(0) ? (
+								//		'-'
+								//	) : healthFactor.gt(10000) ? (
+								//		<p>
+								//			{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
+								//		</p>
+								//	) : (
+								//		getDisplayBalance(healthFactor)
+								//	)
+								//) : (
+								//	<FontAwesomeIcon icon={faInfinity} />
+								//))
+									healthFactor && (
+										healthFactor.lte(0) ? (
+											'-'
+										) : healthFactor.gt(10000) ? (
+											<p>
+												{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
+											</p>
+										) : (
+											getDisplayBalance(healthFactor)
+										)
 									)
-								) : (
-									<FontAwesomeIcon icon={faInfinity} />
-								))}
+							}
 						</Typography>
 					</div>
 				</div>

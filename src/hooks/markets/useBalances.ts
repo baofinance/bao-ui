@@ -8,7 +8,6 @@ import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
 
 import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
 
 export type Balance = {
 	address: string
@@ -17,9 +16,8 @@ export type Balance = {
 }
 
 export const useAccountBalances = (): Balance[] => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account, library } = useWeb3React()
+	const { account } = useWeb3React()
 	const block = useBlock()
 	const tokens = Config.markets.map(market => market.underlyingAddresses[Config.networkId])
 
@@ -52,24 +50,23 @@ export const useAccountBalances = (): Balance[] => {
 					address,
 					symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
 					balance: multicallResults[address]
-					? decimate(multicallResults[address][2].values[0], multicallResults[address][1].values[0]).toNumber()
-					: decimate(ethBalance.toString()).toNumber(),
+						? decimate(multicallResults[address][2].values[0], multicallResults[address][1].values[0]).toNumber()
+						: decimate(ethBalance).toNumber(),
 				}
 			}),
 		)
-	}, [transactions, bao, account])
+	}, [tokens, bao, account])
 
 	useEffect(() => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [transactions, bao, account, block])
+	}, [fetchBalances, bao, account, block])
 
 	return balances
 }
 
 export const useSupplyBalances = (): Balance[] => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
@@ -101,19 +98,18 @@ export const useSupplyBalances = (): Balance[] => {
 				).toNumber(),
 			})),
 		)
-	}, [transactions, bao, account])
+	}, [bao, account, tokens])
 
 	useEffect(() => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [transactions, bao, account])
+	}, [bao, account, fetchBalances])
 
 	return balances
 }
 
 export const useBorrowBalances = (): Balance[] => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
@@ -145,13 +141,13 @@ export const useBorrowBalances = (): Balance[] => {
 				).toNumber(),
 			})),
 		)
-	}, [transactions, bao, account])
+	}, [tokens, bao, account])
 
 	useEffect(() => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [transactions, bao, account])
+	}, [fetchBalances, bao, account])
 
 	return balances
 }

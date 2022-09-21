@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import _ from 'lodash'
 import Image from 'next/future/image'
+import { utils } from 'ethers'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { MoonLoader } from 'react-spinners'
@@ -13,7 +14,6 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 
 interface AccountModalProps {
 	show: boolean
@@ -55,7 +55,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getBalanceNumber(ethBalance).toFixed(4)}
+								{utils.formatEther(ethBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								ETH Balance
@@ -73,7 +73,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getDisplayBalance(baoBalance)}
+								{utils.formatEther(baoBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								BAO Balance
