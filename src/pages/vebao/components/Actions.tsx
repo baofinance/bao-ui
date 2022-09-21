@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { approve, getGaugeControllerContract, getMinterContract } from '@/bao/utils'
+import { approve, getGaugeControllerContract, getMinterContract, getUserVotingPower } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
@@ -11,7 +11,8 @@ import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
-import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
+import { exponentiate, getBalanceNumber, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -298,6 +299,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = getGaugeControllerContract(bao)
 	const lockInfo = useLockInfo()
+	const votingPowerAllocated = useVotingPowerAllocated()
+
+	console.log(votingPowerAllocated.toNumber(), lockInfo && getBalanceNumber(lockInfo.balance))
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -324,6 +328,10 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 						% (of your voting power)
 					</Typography>
 				</div>
+				<div>
+					<Typography>Current Voting Power Allocated</Typography>
+					<Typography className='text-text-200'>{new BigNumber(10000).div(votingPowerAllocated).toNumber()}%</Typography>
+				</div>
 			</Modal.Body>
 			<Modal.Actions>
 				<>
@@ -343,7 +351,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							disabled={!val || !bao || isNaN(val as any)}
 							onClick={async () => {
 								const stakeTx = gaugeControllerContract.methods
-									.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 10)
+									.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 100)
 									.send({ from: account })
 
 								handleTx(stakeTx, `${gauge.name} gauge - Voted ${parseFloat(val).toFixed(2)}% of your voting power`)

@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { approve, getMasterChefContract } from '@/bao/utils'
+import { getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -17,7 +17,7 @@ import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { getContract } from '@/utils/erc20'
 import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt, faLongArrowAltRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
@@ -71,9 +71,8 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 		)
 	}, [max])
 
-	const allowance = useAllowance(lpTokenAddress, account)
-
 	const masterChefContract = getMasterChefContract(bao)
+	const allowance = useAllowance(lpTokenAddress, masterChefContract.options.address)
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -87,7 +86,6 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 					<div className='flex h-full flex-col items-center justify-center'>
 						<div className='flex w-full flex-row'>
 							<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-								<FontAwesomeIcon icon={faLongArrowAltRight} />
 								<Typography variant='sm' className='text-text-200'>
 									Fee:
 								</Typography>
@@ -98,7 +96,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 									Balance:
 								</Typography>
 								<Typography variant='sm'>
-									{fullBalance}{' '}
+									{getDisplayBalance(max).toString()}{' '}
 									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
 										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
@@ -162,8 +160,9 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 										fullWidth
 										disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 										onClick={async () => {
+											const refer = '0x0000000000000000000000000000000000000000'
 											const stakeTx = masterChefContract.methods
-												.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+												.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), refer)
 												.send({ from: account })
 
 											handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
@@ -256,7 +255,6 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-							<FontAwesomeIcon icon={faLongArrowAltRight} />
 							<Typography variant='sm' className='text-text-200'>
 								Fee:{' '}
 							</Typography>
@@ -314,10 +312,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(new BigNumber(0))
 							}
 							onClick={async () => {
+								const refer = '0x0000000000000000000000000000000000000000'
 								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
 
-								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18)).send({ from: account })
-
+								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18), refer).send({ from: account })
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}
 						>

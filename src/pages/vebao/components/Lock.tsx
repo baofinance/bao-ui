@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { getVotingEscrowContract } from '@/bao/utils'
+import { getCrvSupply, getVotingEscrowContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
@@ -12,17 +12,18 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
+import { useNextDistribution } from '@/hooks/vebao/useNextDistribution'
 import { getDisplayBalance, getFullDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ArrowRightIcon, CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { addYears, format } from 'date-fns'
 import { ethers } from 'ethers'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
 
@@ -45,7 +46,7 @@ const Lock: React.FC = () => {
 	const [val, setVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
 	const startDate =
-		lockInfo && lockInfo.lockEnd.times(1000).toNumber() >= new Date().setUTCHours(0, 0, 0, 0)
+		lockInfo && lockInfo.lockEnd.times(1000).toNumber() >= new Date().getTime()
 			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.times(1000).toNumber())))
 			: new Date(addDays(7, new Date()))
 	const [endDate, setEndDate] = useState(startDate)
@@ -53,9 +54,19 @@ const Lock: React.FC = () => {
 	const crvBalance = useTokenBalance(crvAddress)
 	const crvContract = bao && bao.getContract('crv')
 	const votingEscrowContract = getVotingEscrowContract(bao)
+	const nextFeeDistribution = useNextDistribution()
 	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[Config.networkId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const length = endDate.setUTCHours(0, 0, 0, 0) - 604800000 + 86400000
+	const length = endDate.setUTCHours(0, 0, 0, 0) + 604800000 - 86400000
+	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	const [totalSupply, setTotalSupply] = useState<BigNumber>()
+
+	useEffect(() => {
+		if (!bao) return
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
+			setBaoPrice(new BigNumber((await res.json())['curve-dao-token'].usd))
+		})
+	}, [bao, setBaoPrice])
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -72,6 +83,15 @@ const Lock: React.FC = () => {
 		setVal(getFullDisplayBalance(new BigNumber(crvBalance.div(2).toNumber())))
 	}, [crvBalance])
 
+	useEffect(() => {
+		const fetchTotalSupply = async () => {
+			const supply = await getCrvSupply(bao)
+			setTotalSupply(supply)
+		}
+
+		if (bao) fetchTotalSupply()
+	}, [bao, setTotalSupply])
+
 	console.log(lockInfo && lockInfo.lockEnd.times(1000).toNumber())
 	console.log(new Date().setUTCHours(0, 0, 0, 0))
 	console.log(startDate.setUTCHours(0, 0, 0, 0))
@@ -83,7 +103,7 @@ const Lock: React.FC = () => {
 				<StatCards
 					stats={[
 						{
-							label: `Your BAO Balance`,
+							label: `BAO Balance`,
 							value: (
 								<Tooltipped content={`Your unlocked BAO balance.`}>
 									<a>
@@ -94,44 +114,21 @@ const Lock: React.FC = () => {
 							),
 						},
 						{
-							label: `Your veBAO Balance`,
-							value: (
-								<Tooltipped
-									content={
-										<>
-											<div className='flex flex-col'>
-												<div className='flex flex-row justify-center'>
-													{getDisplayBalance(lockInfo && lockInfo.balance)} veBAO <ArrowRightIcon className='h-4 w-4' />
-													{getDisplayBalance(lockInfo && lockInfo.lockAmount)} BAO
-												</div>
-												<div className='flex flex-row justify-center'>
-													{new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber()).toDateString()}
-												</div>
-											</div>
-										</>
-									}
-								>
-									<a>
-										{account && !isNaN(lockInfo && lockInfo.balance.toNumber())
-											? window.screen.width > 1200
-												? getDisplayBalance(lockInfo && lockInfo.balance)
-												: truncateNumber(lockInfo && lockInfo.balance)
-											: '-'}
-									</a>
-								</Tooltipped>
-							),
+							label: `BAO Locked`,
+							value: <Typography>{getDisplayBalance(lockInfo && lockInfo.lockAmount)}</Typography>,
 						},
 						{
-							label: `Rewards APR`,
-							value: (
-								<Tooltipped content={`DailyFees * 365 / (Total veBAO * BAO Price) * 100`}>
-									<a>-</a>
-								</Tooltipped>
-							),
+							label: `veBAO Balance`,
+							value:
+								account && !isNaN(lockInfo && lockInfo.balance.toNumber())
+									? window.screen.width > 1200
+										? getDisplayBalance(lockInfo && lockInfo.balance)
+										: truncateNumber(lockInfo && lockInfo.balance)
+									: '-',
 						},
 						{
-							label: `Total veBAO`,
-							value: <Typography>{getDisplayBalance(lockInfo && lockInfo.totalSupply)}</Typography>,
+							label: `Locked Until`,
+							value: <Typography>{new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber()).toDateString()}</Typography>,
 						},
 					]}
 				/>
@@ -182,7 +179,7 @@ const Lock: React.FC = () => {
 											}}
 											minDate={new Date(startDate.setUTCHours(0, 0, 0, 0))}
 											maxDate={new Date(addYears(new Date(), 4).setUTCHours(0, 0, 0, 0))}
-											selected={endDate}
+											selected={startDate > endDate ? startDate : endDate}
 											nextMonthButtonLabel='>'
 											previousMonthButtonLabel='<'
 											popperClassName='react-datepicker-left'
@@ -198,7 +195,7 @@ const Lock: React.FC = () => {
 														onClick={() => setCalendarIsOpen(true)}
 														className='inline-flex h-12 w-full items-center rounded-l bg-primary-400 px-3 py-2 text-start text-text-100 hover:bg-primary-300'
 													>
-														{format(new Date(startDate), 'MM dd yyyy')}
+														{format(new Date(endDate > startDate ? endDate : startDate), 'MM dd yyyy')}
 													</div>
 													<div
 														onClick={() => setCalendarIsOpen(true)}
@@ -414,7 +411,7 @@ const Lock: React.FC = () => {
 														handleTx(
 															lockTx,
 															`Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
-																lockInfo.lockEnd.plus(86400).times(1000).toNumber(),
+																lockInfo.lockEnd.times(1000).toNumber(),
 															).toLocaleDateString()}`,
 														)
 													}}
@@ -460,27 +457,70 @@ const Lock: React.FC = () => {
 
 				<div className='flex basis-1/2 flex-col pl-3'>
 					<Card>
-						<Card.Header>veBAO Rewards</Card.Header>
+						<Card.Header>veBAO Stats</Card.Header>
 						<Card.Body>
-							<div className='text-center'>
-								<Typography variant='sm' className='text-center text-text-200'>
-									veBAO Holder APY:
-								</Typography>
-								<Tooltipped content={`WeeklyFees * 365 / (Total veBAO * BAO Price) * 100`}>
-									<a>
-										<Badge>-</Badge>
-									</a>
-								</Tooltipped>
-							</div>
-							<div className='text-center'>
-								<Typography variant='sm' className='text-center text-text-200'>
-									BAO Price:
-								</Typography>
-								<Tooltipped content={`WeeklyFees * 365 / (Total veBAO * BAO Price) * 100`}>
-									<a>
-										<Badge>-</Badge>
-									</a>
-								</Tooltipped>
+							<div className='flex flex-col gap-2'>
+								<div className='text-center'>
+									<Typography variant='sm' className='text-center text-text-200'>
+										Total BAO Supply
+									</Typography>
+									<Badge>{getDisplayBalance(totalSupply)}</Badge>
+								</div>
+								<div className='text-center'>
+									<Typography variant='sm' className='text-center text-text-200'>
+										Total BAO Locked
+									</Typography>
+									<Badge>{getDisplayBalance(lockInfo && lockInfo.totalSupply)}</Badge>
+								</div>
+								<div className='text-center'>
+									<Typography variant='sm' className='text-center text-text-200'>
+										Percentage of BAO Locked
+									</Typography>
+									<Badge>
+										{getDisplayBalance(lockInfo && totalSupply && lockInfo.totalSupply.div(totalSupply).times(100).times(1e18))}%
+									</Badge>
+								</div>
+
+								<div className='text-center'>
+									<Typography variant='sm' className='text-center text-text-200'>
+										Total veBAO
+									</Typography>
+									<Badge>{getDisplayBalance(lockInfo && lockInfo.supply)}</Badge>
+								</div>
+								<div className='text-center'>
+									<Typography variant='sm' className='text-center text-text-200'>
+										Average Lock Time
+									</Typography>
+									<Badge>-</Badge>
+								</div>
+								<div className='text-center'>
+									<Typography variant='sm' className='text-center text-text-200'>
+										BAO Price
+									</Typography>
+									<Badge>{baoPrice && baoPrice.toNumber()}</Badge>
+								</div>
+								<div className='text-center'>
+									<Tooltipped content='DailyFees * 365 / (Total veBAO * BAO Price) * 100'>
+										<a>
+											<Typography variant='sm' className='text-center text-text-200'>
+												veBAO Holder APY
+											</Typography>
+											<Badge>-</Badge>
+										</a>
+									</Tooltipped>
+								</div>
+								<div className='text-center'>
+									<Tooltipped content='Rewards are distributed once every two (2) weeks.'>
+										<a>
+											<Typography variant='sm' className='text-center text-text-200'>
+												Next Distribution
+											</Typography>
+											<Badge>
+												{addDays(1, new Date(nextFeeDistribution && nextFeeDistribution.times(1e18).times(1000).toNumber())).toUTCString()}
+											</Badge>
+										</a>
+									</Tooltipped>
+								</div>
 							</div>
 						</Card.Body>
 					</Card>

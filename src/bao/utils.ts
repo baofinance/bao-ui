@@ -36,6 +36,10 @@ export const getVotingEscrowContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('votingEscrow')
 }
 
+export const getFeeDistributorContract = (bao: Bao): Contract => {
+	return bao && bao.contracts && bao.getContract('feeDistributor')
+}
+
 export const getMinterContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('minter')
 }
@@ -219,6 +223,11 @@ export const getBaoSupply = async (bao: Bao) => {
 	return new BigNumber(await bao.getContract('bao').methods.totalSupply().call())
 }
 
+// Remove when we get veBAO deployed
+export const getCrvSupply = async (bao: Bao) => {
+	return new BigNumber(await bao.getContract('crv').methods.totalSupply().call())
+}
+
 export const getReferrals = async (masterChefContract: Contract, account: string): Promise<string> => {
 	return await masterChefContract.methods.getGlobalRefAmount(account).call()
 }
@@ -328,6 +337,10 @@ export const getMintable = async (currentEpoch: BigNumber, futureEpoch: BigNumbe
 
 export const getVotingPower = async (votingEscrowContract: Contract, account: string) => {
 	return new BigNumber(await votingEscrowContract.methods.balanceOf(account).call())
+}
+
+export const getUserVotingPower = async (gaugeControllerContract: Contract, account: string) => {
+	return new BigNumber(await gaugeControllerContract.methods.vote_user_power(account).call())
 }
 
 export const getCurrentEpoch = async (tokenContract: Contract) => {

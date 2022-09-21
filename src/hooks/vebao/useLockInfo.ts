@@ -8,6 +8,7 @@ import useTransactionProvider from '../base/useTransactionProvider'
 
 type LockInfo = {
 	balance: BigNumber
+	supply: BigNumber
 	totalSupply: BigNumber
 	lockAmount: BigNumber
 	lockEnd: BigNumber
@@ -35,6 +36,9 @@ const useLockInfo = (): LockInfo => {
 						method: 'totalSupply',
 					},
 					{
+						method: 'supply',
+					},
+					{
 						method: 'locked',
 						params: [account],
 					},
@@ -46,9 +50,10 @@ const useLockInfo = (): LockInfo => {
 
 		setLockInfo({
 			balance: new BigNumber(res[0].values[0].hex),
-			totalSupply: new BigNumber(res[1].values[0].hex),
-			lockAmount: new BigNumber(res[2].values[0].hex),
-			lockEnd: new BigNumber(res[2].values[1].hex),
+			supply: new BigNumber(res[1].values[0].hex),
+			totalSupply: new BigNumber(res[2].values[0].hex),
+			lockAmount: new BigNumber(res[3].values[0].hex),
+			lockEnd: new BigNumber(res[3].values[1].hex),
 		})
 	}, [bao, account])
 

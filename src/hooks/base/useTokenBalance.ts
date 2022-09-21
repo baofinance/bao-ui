@@ -5,12 +5,14 @@ import { useCallback, useEffect, useState } from 'react'
 import { getBalance } from '@/utils/erc20'
 
 import useBao from './useBao'
+import useBlock from './useBlock'
 import useTransactionProvider from './useTransactionProvider'
 
 const useTokenBalance = (tokenAddress: string) => {
 	const [balance, setBalance] = useState(new BigNumber(0))
 	const { account } = useWeb3React()
 	const bao = useBao()
+	const block = useBlock()
 	const { transactions } = useTransactionProvider()
 
 	const fetchBalance = useCallback(async () => {
@@ -27,7 +29,7 @@ const useTokenBalance = (tokenAddress: string) => {
 		if (account && bao && tokenAddress) {
 			fetchBalance()
 		}
-	}, [transactions, account, bao, tokenAddress])
+	}, [transactions, account, bao, tokenAddress, block])
 
 	return balance
 }

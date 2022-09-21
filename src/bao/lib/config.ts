@@ -114,6 +114,12 @@ export default {
 				abi: 'minter.json',
 			},
 		},
+		feeDistributor: {
+			1: {
+				address: '0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc',
+				abi: 'feeDistributor.json',
+			},
+		},
 	},
 	subgraphs: {
 		sushiExchange: {
