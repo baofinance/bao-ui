@@ -14,6 +14,7 @@ import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
 import { getDisplayBalance } from '@/utils/numberFormat'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export const Overview = () => {
 	const bao = useBao()
@@ -31,9 +32,9 @@ export const Overview = () => {
 	const healthFactorColor = (healthFactor: BigNumber) =>
 		healthFactor.eq(0)
 			? `${(props: any) => props.theme.color.text[100]}`
-			: healthFactor.lte(1.25)
+			: healthFactor.lte(parseUnits('1.25'))
 			? '#e32222'
-			: healthFactor.lt(1.55)
+			: healthFactor.lt(parseUnits('1.55'))
 			? '#ffdf19'
 			: '#45be31'
 
@@ -133,9 +134,9 @@ export const Overview = () => {
 								healthFactor &&
 								(healthFactor.lte(0) ? (
 									'-'
-								) : healthFactor.gt(10000) ? (
+								) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
 									<p>
-										{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
+										{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
 									</p>
 								) : (
 									getDisplayBalance(healthFactor)

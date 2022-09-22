@@ -45,11 +45,11 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 	)
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return
-		return getDisplayBalance(BigNumber.from(asset.price).mul(supplyBalance), 0)
+		return getDisplayBalance(asset.price * supplyBalance, 0)
 	}, [supplyBalance, asset.price])
 	const walletBalanceUsd = useMemo(() => {
 		if (!walletBalance) return
-		return getDisplayBalance(BigNumber.from(asset.price).mul(walletBalance), 0)
+		return getDisplayBalance(asset.price * walletBalance, 0)
 	}, [walletBalance, asset.price])
 
 	return (

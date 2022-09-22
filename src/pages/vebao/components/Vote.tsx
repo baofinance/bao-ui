@@ -136,7 +136,7 @@ const Vote: React.FC = () => {
 					fullWidth
 					disabled={!val || !bao || isNaN(val as any)}
 					// onClick={async () => {
-					// 	const stakeTx = selectedOption.gaugeContract.methods.vote_for_gauge_weights(parseFloat(val) * 10)
+					// 	const stakeTx = selectedOption.gaugeContract.vote_for_gauge_weights(parseFloat(val) * 10)
 
 					// 	handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${selectedOption} into gauge`)
 					// }}

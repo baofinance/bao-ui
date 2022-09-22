@@ -8,6 +8,7 @@ import useBao from '../base/useBao'
 import { useAccountLiquidity } from './useAccountLiquidity'
 import { useAccountMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 // FIXME: this used to end up as infinity with bignumber.js but now it doesn't with ethers.BigNumber
 const useHealthFactor = () => {
@@ -37,14 +38,17 @@ const useHealthFactor = () => {
 			return prev.add(
 				BigNumber.from(prices[cur.marketAddress])
 					.div(BigNumber.from(10).pow(36 - cur.underlyingDecimals))
-					.mul(balanceRes[cur.marketAddress][0].values[0])
+					.mul(parseUnits(balanceRes[cur.marketAddress][0].values[0].toString()))
 					.div(BigNumber.from(10).pow(cur.underlyingDecimals))
-					.mul(cur.collateralFactor),
+					.mul(parseUnits(cur.collateralFactor.toString())),
 			)
 		}, BigNumber.from(0))
 
+		console.log(collateralSummation.toString())
+		console.log(usdBorrow)
+
 		try {
-			const _healthFactor = collateralSummation.div(usdBorrow)
+			const _healthFactor = BigNumber.from(parseFloat(formatUnits(collateralSummation)) / usdBorrow)
 			setHealthFactor(_healthFactor)
 		} catch {
 			setHealthFactor(BigNumber.from(0))

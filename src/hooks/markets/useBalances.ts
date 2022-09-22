@@ -1,13 +1,14 @@
+import { Contract } from '@ethersproject/contracts'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { Contract } from '@ethersproject/contracts'
 
 import Config from '@/bao/lib/config'
 import useBlock from '@/hooks/base/useBlock'
 import MultiCall from '@/utils/multicall'
-import { decimate } from '@/utils/numberFormat'
 
+import { formatUnits } from 'ethers/lib/utils'
 import useBao from '../base/useBao'
+import useTransactionProvider from '../base/useTransactionProvider'
 
 export type Balance = {
 	address: string
@@ -18,6 +19,7 @@ export type Balance = {
 export const useAccountBalances = (): Balance[] => {
 	const bao = useBao()
 	const { account } = useWeb3React()
+	const { transactions } = useTransactionProvider()
 	const block = useBlock()
 	const tokens = Config.markets.map(market => market.underlyingAddresses[Config.networkId])
 
@@ -50,8 +52,8 @@ export const useAccountBalances = (): Balance[] => {
 					address,
 					symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
 					balance: multicallResults[address]
-						? decimate(multicallResults[address][2].values[0], multicallResults[address][1].values[0]).toNumber()
-						: decimate(ethBalance).toNumber(),
+						? parseFloat(formatUnits(multicallResults[address][2].values[0], multicallResults[address][1].values[0]))
+						: parseFloat(formatUnits(ethBalance)),
 				}
 			}),
 		)
@@ -61,7 +63,7 @@ export const useAccountBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [bao, account, block])
+	}, [bao, account, block, transactions])
 
 	return balances
 }
@@ -69,6 +71,7 @@ export const useAccountBalances = (): Balance[] => {
 export const useSupplyBalances = (): Balance[] => {
 	const bao = useBao()
 	const { account } = useWeb3React()
+	const { transactions } = useTransactionProvider()
 	const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
 
 	const [balances, setBalances] = useState<Balance[] | undefined>()
@@ -92,10 +95,12 @@ export const useSupplyBalances = (): Balance[] => {
 			Object.keys(multicallResults).map(address => ({
 				address,
 				symbol: multicallResults[address][0].values[0],
-				balance: decimate(
-					multicallResults[address][1].values[0],
-					Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
-				).toNumber(),
+				balance: parseFloat(
+					formatUnits(
+						multicallResults[address][1].values[0],
+						Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
+					),
+				),
 			})),
 		)
 	}, [bao, account, tokens])
@@ -104,7 +109,7 @@ export const useSupplyBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [bao, account])
+	}, [bao, account, transactions])
 
 	return balances
 }
@@ -112,6 +117,7 @@ export const useSupplyBalances = (): Balance[] => {
 export const useBorrowBalances = (): Balance[] => {
 	const bao = useBao()
 	const { account } = useWeb3React()
+	const { transactions } = useTransactionProvider()
 	const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
 
 	const [balances, setBalances] = useState<Balance[] | undefined>()
@@ -135,10 +141,12 @@ export const useBorrowBalances = (): Balance[] => {
 			Object.keys(multicallResults).map(address => ({
 				address,
 				symbol: multicallResults[address][0].values[0],
-				balance: decimate(
-					multicallResults[address][1].values[0],
-					Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
-				).toNumber(),
+				balance: parseFloat(
+					formatUnits(
+						multicallResults[address][1].values[0],
+						Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
+					),
+				),
 			})),
 		)
 	}, [tokens, bao, account])
@@ -147,7 +155,7 @@ export const useBorrowBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [bao, account])
+	}, [bao, account, transactions])
 
 	return balances
 }

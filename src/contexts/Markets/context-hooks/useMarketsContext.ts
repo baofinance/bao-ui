@@ -6,6 +6,9 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import useBao from '@/hooks/base/useBao'
 import { decimate } from '@/utils/numberFormat'
+import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -18,6 +21,7 @@ const toApy = (rate: number) => (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DA
 export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 	const bao = useBao()
 	const { library } = useWeb3React()
+	const { transactions } = useTransactionProvider()
 	const [markets, setMarkets] = useState<ActiveSupportedMarket[] | undefined>()
 
 	const fetchMarkets = useCallback(async () => {
@@ -80,28 +84,29 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 				supplyApy: supplyApys[i],
 				borrowApy: borrowApys[i],
 				borrowable: borrowState[i][1] > 0,
-				liquidity: decimate(cashes[i], marketConfig.underlyingDecimals).toNumber(),
-				totalReserves: decimate(totalReserves[i], 18 /* see note */).toNumber(),
-				totalBorrows: decimate(totalBorrows[i], 18 /* see note */).toNumber(),
-				collateralFactor: decimate(marketsInfo[i][1]).toNumber(),
-				imfFactor: decimate(marketsInfo[i][2]).toNumber(),
-				reserveFactor: decimate(reserveFactors[i]).toNumber(),
-				liquidationIncentive: decimate(liquidationIncentive).sub(1).mul(100).toNumber(),
+				liquidity: parseFloat(formatUnits(cashes[i], marketConfig.underlyingDecimals)),
+				totalReserves: parseFloat(formatUnits(totalReserves[i], 18 /* see note */)),
+				totalBorrows: parseFloat(formatUnits(totalBorrows[i], 18 /* see note */)),
+				collateralFactor: parseFloat(formatEther(marketsInfo[i][1])),
+				imfFactor: parseFloat(formatEther(marketsInfo[i][2])),
+				reserveFactor: parseFloat(formatEther(reserveFactors[i])),
+				liquidationIncentive: parseFloat(formatEther(liquidationIncentive.mul(10))) - 1,
 				borrowRestricted: borrowRestricted[i],
-				supplied: decimate(exchangeRates[i]).mul(decimate(totalSupplies[i], marketConfig.underlyingDecimals)).toNumber(),
-				price: decimate(prices[i], 36 - marketConfig.underlyingDecimals).toNumber(),
+				supplied: parseFloat(formatEther(exchangeRates[i])) * parseFloat(formatUnits(totalSupplies[i], marketConfig.underlyingDecimals)),
+				price: parseFloat(formatUnits(prices[i], 36 - marketConfig.underlyingDecimals)),
 				...marketConfig,
 			}
 		})
 		markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
 		setMarkets(markets)
-	}, [bao])
+		console.log(markets)
+	}, [bao, library, transactions])
 
 	useEffect(() => {
 		if (!(bao && library)) return
 		fetchMarkets()
-	}, [bao, library])
+	}, [bao, library, transactions])
 
 	return markets
 }

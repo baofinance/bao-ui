@@ -10,7 +10,7 @@ export const useNextDistribution = () => {
 	const feeDistributionContract = getFeeDistributorContract(bao)
 
 	const fetchNextDistribution = useCallback(async () => {
-		const nextFeeDistribution = ethers.utils.parseEther(await feeDistributionContract.methods.last_token_time().call())
+		const nextFeeDistribution = ethers.utils.parseEther(await feeDistributionContract.last_token_time())
 		setNextDistribution(nextFeeDistribution)
 	}, [bao])
 

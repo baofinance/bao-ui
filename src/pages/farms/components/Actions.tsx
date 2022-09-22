@@ -125,7 +125,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 								fullWidth
 								disabled={max.lte(0)}
 								onClick={async () => {
-									const tx = bao.getNewContract('erc20.json', lpTokenAddress).methods.approve(
+									const tx = bao.getNewContract('erc20.json', lpTokenAddress).approve(
 										masterChefContract.options.address,
 										ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 										library.getSigner(),
@@ -158,7 +158,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 										disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 										onClick={async () => {
 											const refer = '0x0000000000000000000000000000000000000000'
-											const stakeTx = masterChefContract.methods.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), refer)
+											const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), refer)
 
 											handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 										}}
@@ -308,7 +308,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								const refer = '0x0000000000000000000000000000000000000000'
 								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
 
-								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18), refer)
+								const unstakeTx = masterChefContract.withdraw(pid, ethers.utils.parseUnits(val, 18), refer)
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}
 						>

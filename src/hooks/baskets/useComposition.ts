@@ -34,9 +34,9 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const { transactions } = useTransactionProvider()
 
 	const fetchComposition = useCallback(async () => {
-		const tokenComposition: string[] = await basket.basketContract.getTokens()
+		const tokenComposition: string[] = await bao.getNewContract(basket.address, 'experipie.json').getTokens()
 		const lendingRegistry = bao.getContract('lendingRegistry')
-
+		console.log(tokenComposition)
 		const tokensQuery = MultiCall.createCallContext(
 			tokenComposition
 				.filter(

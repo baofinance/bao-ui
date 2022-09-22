@@ -12,6 +12,7 @@ import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
+import { formatEther } from 'ethers/lib/utils'
 
 export type AccountLiquidity = {
 	netApy: number
@@ -44,7 +45,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 		}
 
 		const usdSupply = Object.entries(supplyBalances).reduce((prev: number, [, { address, balance }]) => {
-			return prev + balance * decimate(exchangeRates[address]).toNumber() * prices[address]
+			return prev + balance * parseFloat(formatEther(exchangeRates[address])) * prices[address]
 		}, 0)
 
 		const usdBorrow = Object.entries(borrowBalances).reduce((prev: number, [, { address, balance }]) => prev + balance * prices[address], 0)
@@ -53,7 +54,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			(prev, { marketAddress, supplyApy }: ActiveSupportedMarket) =>
 				prev +
 				supplyBalances.find(balance => balance.address === marketAddress).balance *
-					decimate(exchangeRates[marketAddress]).toNumber() *
+					parseFloat(formatEther(exchangeRates[marketAddress])) *
 					prices[marketAddress] *
 					supplyApy,
 			0,
@@ -72,7 +73,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			netApy,
 			usdSupply,
 			usdBorrow,
-			usdBorrowable: decimate(compAccountLiqudity[1].toString()).toNumber(),
+			usdBorrowable: parseFloat(formatEther(compAccountLiqudity[1])),
 		})
 	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
 

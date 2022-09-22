@@ -216,7 +216,7 @@ export const getBaoSupply = async (bao: Bao) => {
 
 // Remove when we get veBAO deployed
 export const getCrvSupply = async (bao: Bao) => {
-	return BigNumber.from(await bao.getContract('crv').methods.totalSupply().call())
+	return BigNumber.from(await bao.getContract('crv').totalSupply())
 }
 
 export const getReferrals = async (masterChefContract: Contract, account: string): Promise<string> => {
@@ -319,7 +319,7 @@ export const getVotingPower = async (votingEscrowContract: Contract, account: st
 }
 
 export const getUserVotingPower = async (gaugeControllerContract: Contract, account: string) => {
-	return BigNumber.from(await gaugeControllerContract.methods.vote_user_power(account).call())
+	return BigNumber.from(await gaugeControllerContract.vote_user_power(account))
 }
 
 export const getCurrentEpoch = async (tokenContract: Contract) => {
