@@ -24,7 +24,7 @@ const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
 		if (!(bao && basket)) return
 
 		fetchInfo()
-	}, [bao, basket, fetchInfo])
+	}, [bao, basket])
 
 	return info
 }

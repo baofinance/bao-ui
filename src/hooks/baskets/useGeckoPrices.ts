@@ -35,7 +35,7 @@ const useGeckoPrices = (): Prices => {
 
 	useEffect(() => {
 		if (baskets) fetchPrices()
-	}, [baskets, fetchPrices])
+	}, [baskets])
 
 	return prices
 }

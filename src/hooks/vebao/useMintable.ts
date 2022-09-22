@@ -20,7 +20,7 @@ const useMintable = () => {
 		if (bao && epochTime) {
 			fetchMintable()
 		}
-	}, [fetchMintable, bao, epochTime])
+	}, [bao, epochTime])
 
 	return mintable
 }

@@ -17,7 +17,7 @@ const useVirtualPrice = (poolContract: Contract) => {
 		if (poolContract && bao) {
 			fetchVirtualPrice()
 		}
-	}, [poolContract, fetchVirtualPrice, bao])
+	}, [poolContract, bao])
 
 	return virtualPrice
 }

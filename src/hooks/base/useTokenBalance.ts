@@ -25,7 +25,7 @@ const useTokenBalance = (tokenAddress: string) => {
 		if (account && library && tokenAddress) {
 			fetchBalance()
 		}
-	}, [transactions, account, library, tokenAddress, fetchBalance])
+	}, [transactions, account, library, tokenAddress])
 
 	return balance
 }

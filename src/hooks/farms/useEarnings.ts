@@ -23,7 +23,7 @@ const useEarnings = (pid: number) => {
 		if (account && masterChefContract && bao) {
 			fetchBalance()
 		}
-	}, [account, block, masterChefContract, setBalance, bao, fetchBalance])
+	}, [account, block, masterChefContract, setBalance, bao])
 
 	return balance
 }

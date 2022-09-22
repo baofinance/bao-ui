@@ -63,7 +63,7 @@ const BallastSwapper: React.FC = () => {
 		if (!bao) return
 
 		fetchBallastInfo()
-	}, [bao, fetchBallastInfo, transactions])
+	}, [bao, transactions])
 
 	const daiInput = (
 		<>

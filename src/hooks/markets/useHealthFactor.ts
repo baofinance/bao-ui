@@ -55,7 +55,7 @@ const useHealthFactor = () => {
 		if (!(markets && accountLiquidity && bao && account && prices)) return
 
 		fetchHealthFactor()
-	}, [markets, accountLiquidity, bao, account, prices, fetchHealthFactor])
+	}, [markets, accountLiquidity, bao, account, prices])
 
 	return healthFactor
 }

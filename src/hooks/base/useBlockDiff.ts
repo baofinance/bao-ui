@@ -22,7 +22,7 @@ const useBlockDiff = (userInfo: any) => {
 
 	useEffect(() => {
 		fetchBlockDiff()
-	}, [library, block, userInfo, fetchBlockDiff])
+	}, [library, block, userInfo])
 
 	return blockDiff > 0 && blockDiff
 }

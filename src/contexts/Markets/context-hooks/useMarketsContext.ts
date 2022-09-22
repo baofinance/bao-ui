@@ -101,7 +101,7 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 	useEffect(() => {
 		if (!(bao && library)) return
 		fetchMarkets()
-	}, [bao, library, fetchMarkets])
+	}, [bao, library])
 
 	return markets
 }

@@ -23,7 +23,7 @@ const useStakedBalance = (pid: number) => {
 		if (account && bao) {
 			fetchBalance()
 		}
-	}, [account, bao, fetchBalance])
+	}, [account, bao])
 
 	//return balance.decimalPlaces(18)
 	return balance // FIXME: this should handle decimals and formatting etc

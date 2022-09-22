@@ -140,7 +140,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 		if (!(bao && multicall) || tvl) return
 
 		fetchAllFarmTVL()
-	}, [bao, multicall, fetchAllFarmTVL])
+	}, [bao, multicall])
 
 	return tvl
 }

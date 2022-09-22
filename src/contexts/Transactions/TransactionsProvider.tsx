@@ -62,7 +62,7 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 
 	useEffect(() => {
 		fetchTransactions()
-	}, [fetchTransactions])
+	}, [])
 
 	return (
 		<Context.Provider

@@ -26,7 +26,7 @@ const useAllEarnings = () => {
 		if (account && masterChefContract && bao) {
 			fetchAllBalances()
 		}
-	}, [account, block, masterChefContract, setBalance, bao, fetchAllBalances])
+	}, [account, block, masterChefContract, setBalance, bao])
 
 	return balances
 }

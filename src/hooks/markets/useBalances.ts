@@ -61,7 +61,7 @@ export const useAccountBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [fetchBalances, bao, account, block])
+	}, [bao, account, block])
 
 	return balances
 }
@@ -104,7 +104,7 @@ export const useSupplyBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [bao, account, fetchBalances])
+	}, [bao, account])
 
 	return balances
 }
@@ -147,7 +147,7 @@ export const useBorrowBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [fetchBalances, bao, account])
+	}, [bao, account])
 
 	return balances
 }

@@ -51,7 +51,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 		if (!(bao && basket)) return
 
 		fetchRates()
-	}, [bao, basket, fetchRates])
+	}, [bao, basket])
 
 	return rates
 }

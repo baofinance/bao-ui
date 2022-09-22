@@ -40,7 +40,7 @@ const useAllStakedValue = (): StakedValue[] => {
 		if (account && masterChefContract && library) {
 			fetchAllStakedValue()
 		}
-	}, [account, transactions, masterChefContract, setBalance, library, fetchAllStakedValue])
+	}, [account, transactions, masterChefContract, setBalance, library])
 
 	return balances
 }
