@@ -1,11 +1,12 @@
 import Loader from '@/components/Loader'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
 import { Text } from '@visx/text'
-import _ from 'lodash'
-import React, { useState } from 'react'
 import { utils } from 'ethers'
-import { animated, useTransition } from 'react-spring'
+import _ from 'lodash'
+import { useState } from 'react'
+import { animated, interpolate, useTransition } from 'react-spring'
 
 interface AssetAllocationAmount {
 	symbol: string
