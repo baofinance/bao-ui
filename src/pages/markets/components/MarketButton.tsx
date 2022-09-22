@@ -106,9 +106,13 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={isDisabled}
 						onClick={() => {
-							handleTx(marketContract.borrow(val.toString()), `Mint ${decimate(val, asset.underlyingDecimals)} ${asset.symbol}`, () => {
-								onHide()
-							})
+							handleTx(
+								marketContract.borrow(val.toString()),
+								`Mint ${decimate(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								() => {
+									onHide()
+								},
+							)
 						}}
 					>
 						Mint

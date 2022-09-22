@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import Multicall from '@/utils/multicall'
@@ -21,7 +21,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 		const recipe = bao.getContract('recipe')
 		const wethPrice = await getWethPriceLink(bao)
 
-		const params = [basket.address, BigNumber.from('1000000000000000000')]
+		const params = [basket.address, BigNumber.from(ethers.utils.parseEther('1'))]
 		const query = Multicall.createCallContext([
 			{
 				contract: recipe,

@@ -91,11 +91,10 @@ const Lock: React.FC = () => {
 		if (bao) fetchTotalSupply()
 	}, [bao, setTotalSupply])
 
-	console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
-	console.log(new Date().setUTCHours(0, 0, 0, 0))
-	console.log(startDate.setUTCHours(0, 0, 0, 0))
-	console.log(length)
-	console.log(lockInfo)
+	// console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
+	// console.log(new Date().setUTCHours(0, 0, 0, 0))
+	// console.log(startDate.setUTCHours(0, 0, 0, 0))
+	// console.log(length)
 
 	return (
 		<>
@@ -107,15 +106,21 @@ const Lock: React.FC = () => {
 							value: (
 								<Tooltipped content={`Your unlocked BAO balance.`}>
 									<a>
-										<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
-										{account ? (window.screen.width > 1200 ? getDisplayBalance(crvBalance) : truncateNumber(crvBalance)) : '-'}
+										<>
+											<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
+											{account ? (window.screen.width > 1200 ? getDisplayBalance(crvBalance) : truncateNumber(crvBalance)) : '-'}
+										</>
 									</a>
 								</Tooltipped>
 							),
 						},
 						{
 							label: `BAO Locked`,
-							value: <Typography>{getDisplayBalance(lockInfo && lockInfo.lockAmount)}</Typography>,
+							value: (
+								<Typography>
+									<>{getDisplayBalance(lockInfo && lockInfo.lockAmount)}</>
+								</Typography>
+							),
 						},
 						{
 							label: `veBAO Balance`,

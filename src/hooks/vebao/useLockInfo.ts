@@ -36,6 +36,9 @@ const useLockInfo = (): LockInfo => {
 						method: 'totalSupply',
 					},
 					{
+						method: 'supply',
+					},
+					{
 						method: 'locked',
 						params: [account],
 					},
@@ -48,9 +51,9 @@ const useLockInfo = (): LockInfo => {
 		setLockInfo({
 			balance: res[0].values[0],
 			supply: res[1].values[0],
-			totalSupply: res[1].values[0],
-			lockAmount: res[2].values[0],
-			lockEnd: res[2].values[1],
+			totalSupply: res[2].values[0],
+			lockAmount: res[3].values[0],
+			lockEnd: res[3].values[1],
 		})
 	}, [bao, account])
 

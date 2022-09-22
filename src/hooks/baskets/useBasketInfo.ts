@@ -1,6 +1,5 @@
-import { BigNumber } from 'ethers'
+import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import useBao from '../base/useBao'
 
@@ -16,8 +15,9 @@ const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
 		const supply = await basket.basketContract.totalSupply()
 
 		setInfo({
-			totalSupply: BigNumber.from(supply),
+			totalSupply: supply,
 		})
+		console.log(supply.toString())
 	}, [basket])
 
 	useEffect(() => {

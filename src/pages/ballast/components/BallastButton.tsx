@@ -25,10 +25,9 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		if (swapDirection) {
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
-				const tx = bao.getNewContract(Config.addressMap.baoUSD, 'erc20.json').approve(
+				const tx = bao.getNewContract(Config.addressMap.baoUSD, 'erc20.json', library.getSigner()).approve(
 					ballastContract,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-					library.getSigner(),
 				)
 				return handleTx(tx, 'Ballast: Approve baoUSD')
 			}
@@ -37,10 +36,9 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		} else {
 			// DAI->baoUSD
 			if (!inputBApproval.gt(0)) {
-				const tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json').approve(
+				const tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json', library.getSigner()).approve(
 					ballastContract,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-					library.getSigner(),
 				)
 				return handleTx(tx, 'Ballast: Approve DAI')
 			}
@@ -48,7 +46,6 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			handleTx(ballastContract.buy(ethers.utils.parseEther(inputVal).toString()), 'Ballast: Swap DAI to baoUSD')
 		}
 	}
-
 	const buttonText = () => {
 		if (!(inputAApproval && inputBApproval)) return <Loader />
 
