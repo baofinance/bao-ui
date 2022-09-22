@@ -318,6 +318,10 @@ export const getVotingPower = async (votingEscrowContract: Contract, account: st
 	return votingEscrowContract.balanceOf(account)
 }
 
+export const getUserVotingPower = async (gaugeControllerContract: Contract, account: string) => {
+	return BigNumber.from(await gaugeControllerContract.methods.vote_user_power(account).call())
+}
+
 export const getCurrentEpoch = async (tokenContract: Contract) => {
 	return tokenContract.start_epoch_time_write()
 }
