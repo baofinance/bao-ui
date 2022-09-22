@@ -49,7 +49,6 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		}
 	}
 
-
 	const buttonText = () => {
 		if (!(inputAApproval && inputBApproval)) return <Loader />
 

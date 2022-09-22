@@ -1,7 +1,7 @@
 import { getVotingEscrowContract } from '@/bao/utils'
 import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'

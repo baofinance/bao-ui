@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
 import useTransactionHandler from '../base/useTransactionHandler'
-import useTransactionProvider from '../base/useTransactionProvider'
 
 type GaugeInfo = {
 	totalSupply: BigNumber

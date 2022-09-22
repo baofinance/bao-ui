@@ -128,7 +128,7 @@ const Lock: React.FC = () => {
 						},
 						{
 							label: `Locked Until`,
-							value: <Typography>{new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber()).toDateString()}</Typography>,
+							value: <Typography>{new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}</Typography>,
 						},
 					]}
 				/>
@@ -239,7 +239,7 @@ const Lock: React.FC = () => {
 													<div className='grid w-full grid-flow-row grid-cols-6 content-evenly items-center justify-evenly justify-items-center'>
 														<Button
 															disabled={
-																addDays(7, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addDays(7, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -253,7 +253,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addMonths(1, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addMonths(1, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -267,7 +267,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addMonths(3, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addMonths(3, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -281,7 +281,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addMonths(6, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addMonths(6, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -295,7 +295,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addYears(new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber()), 1).setUTCHours(0, 0, 0, 0) >
+																addYears(new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()), 1).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -409,7 +409,7 @@ const Lock: React.FC = () => {
 														handleTx(
 															lockTx,
 															`Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
-																lockInfo.lockEnd.times(1000).toNumber(),
+																lockInfo.lockEnd.mul(1000).toNumber(),
 															).toLocaleDateString()}`,
 														)
 													}}
@@ -433,7 +433,7 @@ const Lock: React.FC = () => {
 											) : (
 												<Button
 													fullWidth
-													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.times(1000).toNumber())}
+													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.mul(1000).toNumber())}
 													onClick={async () => {
 														const lockTx = votingEscrowContract.methods
 															.increase_unlock_time(length.toString().slice(0, 10))
@@ -474,9 +474,7 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										Percentage of BAO Locked
 									</Typography>
-									<Badge>
-										{getDisplayBalance(lockInfo && totalSupply && lockInfo.totalSupply.div(totalSupply).times(100).times(1e18))}%
-									</Badge>
+									<Badge>{getDisplayBalance(lockInfo && totalSupply && lockInfo.totalSupply.div(totalSupply).mul(100).mul(1e18))}%</Badge>
 								</div>
 
 								<div className='text-center'>
@@ -514,7 +512,7 @@ const Lock: React.FC = () => {
 												Next Distribution
 											</Typography>
 											<Badge>
-												{addDays(1, new Date(nextFeeDistribution && nextFeeDistribution.times(1e18).times(1000).toNumber())).toUTCString()}
+												{addDays(1, new Date(nextFeeDistribution && nextFeeDistribution.mul(1e18).mul(1000).toNumber())).toUTCString()}
 											</Badge>
 										</a>
 									</Tooltipped>
