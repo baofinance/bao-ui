@@ -107,7 +107,7 @@ const Lock: React.FC = () => {
 										{account && !isNaN(lockInfo && lockInfo.balance.toNumber())
 											? window.screen.width > 1200
 												? getDisplayBalance((lockInfo && lockInfo.balance) || 0)
-												: truncateNumber((lockInfo && lockInfo.balance) || 0)
+												: truncateNumber(lockInfo && lockInfo.balance)
 											: '-'}
 									</a>
 								</Tooltipped>
@@ -234,7 +234,7 @@ const Lock: React.FC = () => {
 													<div className='grid w-full grid-flow-row grid-cols-6 content-evenly items-center justify-evenly justify-items-center'>
 														<Button
 															disabled={
-																addDays(7, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addDays(7, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -248,7 +248,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addMonths(1, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addMonths(1, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -262,7 +262,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addMonths(3, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addMonths(3, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -276,7 +276,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addMonths(6, new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
+																addMonths(6, new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -290,7 +290,7 @@ const Lock: React.FC = () => {
 														</Button>
 														<Button
 															disabled={
-																addYears(new Date(lockInfo && lockInfo.lockEnd.times(1000).toNumber()), 1).setUTCHours(0, 0, 0, 0) >
+																addYears(new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()), 1).setUTCHours(0, 0, 0, 0) >
 																addYears(new Date(), 4).setUTCHours(0, 0, 0, 0)
 															}
 															size='sm'
@@ -332,10 +332,9 @@ const Lock: React.FC = () => {
 													<Button
 														fullWidth
 														onClick={async () => {
-															const tx = crvContract.approve(
+															const tx = bao.getNewContract(Config.addressMap.CRV, 'erc20.json', library.getSigner()).approve(
 																votingEscrowContract.address,
 																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-																library.getSigner(),
 															)
 															handleTx(tx, `Approve CRV`)
 														}}
@@ -397,7 +396,7 @@ const Lock: React.FC = () => {
 														handleTx(
 															lockTx,
 															`Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
-																lockInfo.lockEnd.plus(86400).times(1000).toNumber(),
+																lockInfo.lockEnd.add(86400).mul(1000).toNumber(),
 															).toLocaleDateString()}`,
 														)
 													}}
@@ -421,7 +420,7 @@ const Lock: React.FC = () => {
 											) : (
 												<Button
 													fullWidth
-													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.times(1000).toNumber())}
+													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.mul(1000).toNumber())}
 													onClick={async () => {
 														const lockTx = votingEscrowContract.increase_unlock_time(length.toString())
 														handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)

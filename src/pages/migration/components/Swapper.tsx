@@ -92,10 +92,9 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 		const swapperContract = bao.getContract('stabilizer')
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const tx = bao.getNewContract(Config.addressMap.BAO, 'erc20.json').approve(
-				swapperContract,
+			const tx = bao.getNewContract(Config.addressMap.BAO, 'erc20.json', library.getSigner()).approve(
+				swapperContract.address,
 				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-				library.getSigner(),
 			)
 
 			return handleTx(tx, 'Migration: Approve BAOv1')
