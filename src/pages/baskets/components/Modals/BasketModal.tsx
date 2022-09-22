@@ -63,10 +63,9 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) {
-						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json').approve(
+						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json', library.getSigner()).approve(
 							recipe.address,
 							ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							library.getSigner(),
 						)
 
 						handleTx(tx, 'Approve DAI for Baskets Recipe')

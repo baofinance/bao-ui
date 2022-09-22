@@ -70,11 +70,10 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={!approvals}
 						onClick={() => {
-							const { underlyingContract } = asset
-							const tx = underlyingContract.approve(
-								marketContract,
+							const { underlyingAddress } = asset
+							const tx = bao.getNewContract(underlyingAddress, 'erc20.json', library.getSigner()).approve(
+								marketContract.address,
 								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-								library.getSigner(),
 							)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
@@ -143,11 +142,10 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={!approvals}
 						onClick={() => {
-							const { underlyingContract } = asset
-							const tx = underlyingContract.approve(
-								marketContract,
+							const { underlyingAddress } = asset
+							const tx = bao.getNewContract(underlyingAddress, 'erc20.json', library.getSigner()).approve(
+								marketContract.address,
 								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-								library.getSigner(),
 							)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}

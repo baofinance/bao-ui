@@ -21,12 +21,12 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 	const handleClick = async () => {
 		if (!bao) return
 
-		const ballastContract = bao.getContract('stabilizer')
+		const ballastContract = bao && bao.getContract('stabilizer')
 		if (swapDirection) {
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
 				const tx = bao.getNewContract(Config.addressMap.baoUSD, 'erc20.json', library.getSigner()).approve(
-					ballastContract,
+					ballastContract.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 				)
 				return handleTx(tx, 'Ballast: Approve baoUSD')
@@ -37,7 +37,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			// DAI->baoUSD
 			if (!inputBApproval.gt(0)) {
 				const tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json', library.getSigner()).approve(
-					ballastContract,
+					ballastContract.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 				)
 				return handleTx(tx, 'Ballast: Approve DAI')

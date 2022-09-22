@@ -343,10 +343,9 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
-															const tx = crvContract.approve(
+															const tx = bao.getNewContract(Config.addressMap.CRV, 'erc20.json', library.getSigner()).approve(
 																votingEscrowContract.address,
 																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-																library.getSigner(),
 															)
 															handleTx(tx, `Approve CRV`)
 														}}
