@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import { decimate } from '@/utils/numberFormat'
@@ -13,7 +13,7 @@ const useNav = (composition: BasketComponent[], supply: BigNumber) => {
 
 		setNav(
 			composition
-				.reduce((prev, comp) => prev.plus(comp.price.times(comp.balance.div(10 ** comp.decimals))), new BigNumber(0))
+				.reduce((prev, comp) => prev.add(comp.price.mul(comp.balance.div(10 ** comp.decimals))), BigNumber.from(0))
 				.div(decimate(supply)),
 		)
 	}, [composition, supply])

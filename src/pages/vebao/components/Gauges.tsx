@@ -1,4 +1,3 @@
-import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Loader from '@/components/Loader'
@@ -10,9 +9,8 @@ import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
-import GraphUtil from '@/utils/graph'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
+import { getDisplayBalance } from '@/utils/numberFormat'
+import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -65,17 +63,17 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
 	const gaugeInfo = useGaugeInfo(gauge)
 	const totalMintable = useMintable()
-	const mintable = totalMintable.times(relativeWeight)
+	const mintable = totalMintable.mul(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
-	const gaugeTVL = gaugeInfo && gaugeInfo.totalSupply.div(10 ** 18).times(virtualPrice)
-	const rewardAPY = baoPrice && baoPrice.times(mintable).div(gaugeTVL)
+	const gaugeTVL = (gaugeInfo && virtualPrice.mul(gaugeInfo.totalSupply.div(BigNumber.from(10).pow(18)))) || 0
+	const rewardAPY = baoPrice && baoPrice.mul(BigNumber.from(mintable.toString())).div(BigNumber.from(gaugeTVL.toString()))
 
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 
 	useEffect(() => {
 		if (!bao) return
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			setBaoPrice(new BigNumber((await res.json())['curve-dao-token'].usd))
+			setBaoPrice(BigNumber.from((await res.json())['curve-dao-token'].usd))
 		})
 	}, [bao, setBaoPrice])
 
@@ -109,7 +107,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 					<Badge className='bg-primary-300 font-semibold'>
 						{rewardAPY ? (
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{rewardAPY.gte(0) ? `${decimate(rewardAPY.times(new BigNumber(100)).toNumber())}%` : 'N/A'}
+								{rewardAPY.gt(0) ? `${rewardAPY.mul(100).toNumber()}%` : 'N/A'}
 							</Typography>
 						) : (
 							<Loader />

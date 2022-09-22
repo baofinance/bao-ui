@@ -16,8 +16,7 @@ import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
@@ -41,12 +40,12 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
 	const bao = useBao()
+	const { library } = useWeb3React()
 	const { handleTx, pendingTx } = useTransactionHandler()
-	const { account } = useWeb3React()
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').options.address)
+	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -63,26 +62,21 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			case 'MINT':
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
-					if (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) {
-						tx = bao
-							.getNewContract('erc20.json', Config.addressMap.DAI)
-							.methods.approve(
-								recipe.options.address,
-								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							)
-							.send({ from: account })
+					if (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) {
+						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json').approve(
+							recipe.address,
+							ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							library.getSigner(),
+						)
 
 						handleTx(tx, 'Approve DAI for Baskets Recipe')
 						break
 					}
 
-					tx = recipe.methods.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0)).send({
-						from: account,
-					})
+					tx = recipe.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0))
 				} else {
 					// Else, use ETH to mint
-					tx = recipe.methods.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0)).send({
-						from: account,
+					tx = recipe.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0), {
 						value: exponentiate(value).toFixed(0),
 					})
 				}
@@ -90,11 +84,9 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				handleTx(tx, `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.methods.exitPool(exponentiate(value).toFixed(0)).send({
-					from: account,
-				})
+				tx = basket.basketContract.exitPool(exponentiate(value).toFixed(0))
 
-				handleTx(tx, `Redeem ${getDisplayBalance(new BigNumber(value), 0)} ${basket.symbol}`, () => hide())
+				handleTx(tx, `Redeem ${getDisplayBalance(BigNumber.from(value), 0)} ${basket.symbol}`, () => hide())
 		}
 	}
 
@@ -109,14 +101,14 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					operation === 'MINT' &&
 					mintOption === MintOption.DAI &&
 					daiAllowance &&
-					(daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value)))
+					(daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value))))
 				)
 			) &&
 				// Else, check that the input value is valid.
 				(!value ||
 					!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
-					new BigNumber(value).lte(0) ||
-					new BigNumber(value).gt(
+					BigNumber.from(value).lte(0) ||
+					BigNumber.from(value).gt(
 						decimate(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
 					))),
 		[pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance],
@@ -180,16 +172,16 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Typography variant='sm'>
 										{operation === 'MINT'
 											? mintOption === MintOption.DAI
-												? `${daiBalance && decimate(daiBalance).toFixed(4)} DAI`
-												: `${ethBalance && decimate(ethBalance).toFixed(4)} ETH`
-											: `${basketBalance && decimate(basketBalance).toFixed(4)} ${basket.symbol}`}
+												? `${daiBalance && decimate(daiBalance)} DAI`
+												: `${ethBalance && decimate(ethBalance)} ETH`
+											: `${basketBalance && decimate(basketBalance)} ${basket.symbol}`}
 									</Typography>
 								</div>
 							</div>
 							<Input
 								value={value}
 								onChange={e => setValue(e.currentTarget.value)}
-								onSelectMax={() => setValue(decimate(basketBalance).toFixed(18))}
+								onSelectMax={() => setValue(ethers.utils.formatUnits(decimate(basketBalance), 18))}
 								disabled={operation === 'MINT'}
 								label={
 									<div className='flex flex-row items-center'>
@@ -236,11 +228,13 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 										value={secondaryValue}
 										onChange={e => {
 											const inputVal = decimate(mintOption === MintOption.DAI ? rates.dai : rates.eth)
-												.times(e.currentTarget.value)
-												.times(1.02)
+												.mul(e.currentTarget.value)
+												.mul(1.02)
 											setSecondaryValue(e.currentTarget.value)
 											setValue(
-												inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
+												// FIXME: ethers.BigNumber does not support an infinite value
+												//inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
+												ethers.utils.formatUnits(inputVal, 18),
 											)
 										}}
 										onSelectMax={() => {
@@ -258,8 +252,8 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 													break
 											}
 
-											const maxVal = usedBal.times(0.98)
-											setSecondaryValue(maxVal.div(decimate(usedRate)).toFixed(18))
+											const maxVal = usedBal.mul(0.98)
+											setSecondaryValue(ethers.utils.formatUnits(maxVal.div(decimate(usedRate)), 18))
 											setValue(usedBal.toString())
 										}}
 										label={
@@ -296,7 +290,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						) : operation === 'MINT' &&
 						  mintOption === MintOption.DAI &&
 						  daiAllowance &&
-						  (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) ? (
+						  (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) ? (
 							'Approve DAI'
 						) : !value ? (
 							'Enter a Value'

@@ -96,7 +96,7 @@ const Market: NextPage<{
 
 	const oracleAddress = useMemo(() => {
 		if (!bao) return
-		const address = bao.getContract('marketOracle').options.address
+		const address = bao.getContract('marketOracle').address
 		return formatAddress(address)
 	}, [bao])
 
@@ -210,7 +210,7 @@ const Market: NextPage<{
 								label: 'Price Oracle',
 								value: (
 									<a
-										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${bao.getContract('marketOracle').options.address}`}
+										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${bao.getContract('marketOracle').address}`}
 										className='hover:text-text-400'
 									>
 										{oracleAddress} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />

@@ -9,7 +9,7 @@ import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import _ from 'lodash'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
@@ -79,7 +79,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 												<td className='p-2'>
 													<Progress
 														width={(component.percentage / maxPercentage) * 100}
-														label={`${getDisplayBalance(new BigNumber(component.percentage), 0)}%`}
+														label={`${getDisplayBalance(BigNumber.from(component.percentage), 0)}%`}
 														assetColor={component.color}
 													/>
 												</td>

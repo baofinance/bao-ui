@@ -1,4 +1,4 @@
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 
 export interface SupportedPool {
 	pid: number

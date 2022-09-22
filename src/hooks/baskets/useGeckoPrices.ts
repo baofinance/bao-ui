@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import useBaskets from './useBaskets'
@@ -10,6 +10,8 @@ type Prices = {
 const useGeckoPrices = (): Prices => {
 	const [prices, setPrices] = useState<Prices | undefined>()
 	const baskets = useBaskets()
+
+	window.bn = BigNumber
 
 	const fetchPrices = useCallback(async () => {
 		const allCgIds: any = baskets.reduce((prev, cur) => {
@@ -24,7 +26,7 @@ const useGeckoPrices = (): Prices => {
 			Object.keys(res).reduce(
 				(prev, cur) => ({
 					...prev,
-					[allCgIds[cur].toLowerCase()]: new BigNumber(res[cur].usd),
+					[allCgIds[cur].toLowerCase()]: res[cur].usd,
 				}),
 				{},
 			),
@@ -33,7 +35,7 @@ const useGeckoPrices = (): Prices => {
 
 	useEffect(() => {
 		if (baskets) fetchPrices()
-	}, [baskets])
+	}, [baskets, fetchPrices])
 
 	return prices
 }

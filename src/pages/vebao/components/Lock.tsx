@@ -18,9 +18,8 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
 import { addYears, format } from 'date-fns'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -41,13 +40,13 @@ function addMonths(numOfMonths: number, date = new Date()) {
 
 const Lock: React.FC = () => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const lockInfo = useLockInfo()
 	const [val, setVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
 	const startDate =
-		lockInfo && lockInfo.lockEnd.times(1000).toNumber() >= new Date().getTime()
-			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.times(1000).toNumber())))
+		lockInfo && lockInfo.lockEnd.mul(1000).toNumber() >= new Date().setUTCHours(0, 0, 0, 0)
+			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.mul(1000).toNumber())))
 			: new Date(addDays(7, new Date()))
 	const [endDate, setEndDate] = useState(startDate)
 	const crvAddress = Config.addressMap.CRV
@@ -64,7 +63,7 @@ const Lock: React.FC = () => {
 	useEffect(() => {
 		if (!bao) return
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			setBaoPrice(new BigNumber((await res.json())['curve-dao-token'].usd))
+			setBaoPrice(BigNumber.from((await res.json())['curve-dao-token'].usd))
 		})
 	}, [bao, setBaoPrice])
 
@@ -80,7 +79,7 @@ const Lock: React.FC = () => {
 	}, [crvBalance, setVal])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(getFullDisplayBalance(new BigNumber(crvBalance.div(2).toNumber())))
+		setVal(getFullDisplayBalance(BigNumber.from(crvBalance.div(2).toNumber())))
 	}, [crvBalance])
 
 	useEffect(() => {
@@ -92,10 +91,11 @@ const Lock: React.FC = () => {
 		if (bao) fetchTotalSupply()
 	}, [bao, setTotalSupply])
 
-	console.log(lockInfo && lockInfo.lockEnd.times(1000).toNumber())
+	console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
 	console.log(new Date().setUTCHours(0, 0, 0, 0))
 	console.log(startDate.setUTCHours(0, 0, 0, 0))
 	console.log(length)
+	console.log(lockInfo)
 
 	return (
 		<>
@@ -338,13 +338,11 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
-															const tx = crvContract.methods
-																.approve(
-																	votingEscrowContract.options.address,
-																	ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-																)
-																.send({ from: account })
-
+															const tx = crvContract.approve(
+																votingEscrowContract.address,
+																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+																library.getSigner(),
+															)
 															handleTx(tx, `Approve CRV`)
 														}}
 													>
@@ -373,10 +371,10 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 														onClick={async () => {
-															const lockTx = votingEscrowContract.methods
-																.create_lock(ethers.utils.parseUnits(val.toString(), 18), length.toString().slice(0, 10))
-																.send({ from: account })
-
+															const lockTx = votingEscrowContract.create_lock(
+																ethers.utils.parseEther(val.toString()),
+																length.toString().slice(0, 10),
+															)
 															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}
 													>
@@ -405,7 +403,7 @@ const Lock: React.FC = () => {
 													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 													onClick={async () => {
 														const lockTx = votingEscrowContract.methods
-															.increase_amount(ethers.utils.parseUnits(val.toString(), 18))
+															.increase_amount(ethers.utils.parseEther(val.toString()))
 															.send({ from: account })
 
 														handleTx(

@@ -8,8 +8,8 @@ import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarketPrices } from '@/hooks/markets/usePrices'
-import { decimate, exponentiate } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
+import { decimate } from '@/utils/numberFormat'
+import { BigNumber, utils } from 'ethers'
 import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import MarketButton from '../MarketButton'
@@ -38,6 +38,9 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 	const accountLiquidity = useAccountLiquidity()
 	const { exchangeRates } = useExchangeRates()
 	const { prices } = useMarketPrices()
+
+	//console.log(balances, borrowBalances, supplyBalances, accountLiquidity, exchangeRates, prices)
+	//console.log(prices)
 
 	const supply =
 		supplyBalances && exchangeRates
@@ -148,7 +151,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 					<MarketButton
 						operation={operation}
 						asset={asset}
-						val={val && !isNaN(val as any as number) ? exponentiate(val, asset.underlyingDecimals) : new BigNumber(0)}
+						val={val && !isNaN(val as any as number) ? utils.parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
 						isDisabled={!val || !bao || isNaN(val as any as number) || parseFloat(val) > max()}
 						onHide={hideModal}
 					/>

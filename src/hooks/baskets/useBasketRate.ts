@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import Multicall from '@/utils/multicall'
@@ -6,7 +6,6 @@ import Multicall from '@/utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { getWethPriceLink } from '../../bao/utils'
 import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
 
 type BasketRates = {
 	eth: BigNumber
@@ -17,13 +16,12 @@ type BasketRates = {
 const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const [rates, setRates] = useState<BasketRates | undefined>()
 	const bao = useBao()
-	const { transactions } = useTransactionProvider()
 
 	const fetchRates = useCallback(async () => {
 		const recipe = bao.getContract('recipe')
 		const wethPrice = await getWethPriceLink(bao)
 
-		const params = [basket.address, new BigNumber(1e18).toString()]
+		const params = [basket.address, BigNumber.from('1000000000000000000')]
 		const query = Multicall.createCallContext([
 			{
 				contract: recipe,
@@ -43,17 +41,17 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 		const { recipe: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setRates({
-			eth: new BigNumber(res[0].values[0].hex),
-			dai: new BigNumber(res[1].values[0].hex),
-			usd: wethPrice.times(res[0].values[0].hex),
+			eth: res[0].values[0],
+			dai: res[1].values[0],
+			usd: wethPrice.mul(res[0].values[0]),
 		})
-	}, [bao, basket, transactions])
+	}, [bao, basket])
 
 	useEffect(() => {
 		if (!(bao && basket)) return
 
 		fetchRates()
-	}, [bao, basket, transactions])
+	}, [bao, basket, fetchRates])
 
 	return rates
 }

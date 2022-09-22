@@ -1,6 +1,6 @@
 import { faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import BigNumber from 'bignumber.js'
+import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -44,19 +44,19 @@ const BallastSwapper: React.FC = () => {
 			},
 			{
 				ref: 'DAI',
-				contract: bao.getNewContract('erc20.json', Config.addressMap.DAI),
-				calls: [{ method: 'balanceOf', params: [ballastContract.options.address] }],
+				contract: bao.getNewContract(Config.addressMap.DAI, 'erc20.json'),
+				calls: [{ method: 'balanceOf', params: [ballastContract.address] }],
 			},
 		])
 		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
 
-		setSupplyCap(new BigNumber(ballastRes[0].values[0].hex))
+		setSupplyCap(ballastRes[0].values[0])
 		setFees({
-			buy: new BigNumber(ballastRes[1].values[0].hex),
-			sell: new BigNumber(ballastRes[2].values[0].hex),
-			denominator: new BigNumber(ballastRes[3].values[0].hex),
+			buy: ballastRes[1].values[0],
+			sell: ballastRes[2].values[0],
+			denominator: ballastRes[3].values[0],
 		})
-		setReserves(new BigNumber(daiRes[0].values[0].hex))
+		setReserves(daiRes[0].values[0])
 	}, [bao])
 
 	useEffect(() => {
@@ -68,17 +68,21 @@ const BallastSwapper: React.FC = () => {
 	const daiInput = (
 		<>
 			<Typography variant='sm' className='float-left mb-1'>
-				Balance: {getDisplayBalance(daiBalance).toString()} DAI
+				Balance: {getDisplayBalance(daiBalance)} DAI
 			</Typography>
 			<Typography variant='sm' className='float-right mb-1 text-text-200'>
 				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />}{' '}
 			</Typography>
 			<Input
-				onSelectMax={() => setInputVal(decimate(daiBalance).toString())}
+				onSelectMax={() => setInputVal(ethers.utils.formatEther(daiBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
-					swapDirection && fees && !new BigNumber(inputVal).isNaN()
-						? new BigNumber(inputVal).times(new BigNumber(1).minus(fees['sell'].div(fees['denominator']))).toString()
+					swapDirection && fees && inputVal
+						? ethers.utils.formatEther(
+								BigNumber.from(ethers.utils.parseEther(inputVal))
+									.mul(BigNumber.from(1).sub(fees['sell'].div(fees['denominator'])))
+									.toString(),
+						  )
 						: inputVal
 				}
 				disabled={swapDirection}
@@ -102,11 +106,15 @@ const BallastSwapper: React.FC = () => {
 				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <Loader />}{' '}
 			</Typography>
 			<Input
-				onSelectMax={() => setInputVal(decimate(baoUSDBalance).toString())}
+				onSelectMax={() => setInputVal(ethers.utils.formatEther(baoUSDBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
-					!swapDirection && fees && !new BigNumber(inputVal).isNaN()
-						? new BigNumber(inputVal).times(new BigNumber(1).minus(fees['buy'].div(fees['denominator']))).toString()
+					!swapDirection && fees && inputVal
+						? ethers.utils.formatEther(
+								BigNumber.from(ethers.utils.parseEther(inputVal))
+									.mul(BigNumber.from(1).sub(fees['buy'].div(fees['denominator'])))
+									.toString(),
+						  )
 						: inputVal
 				}
 				disabled={!swapDirection}
@@ -153,7 +161,10 @@ const BallastSwapper: React.FC = () => {
 					<BallastButton
 						swapDirection={swapDirection}
 						inputVal={inputVal}
-						maxValues={{ buy: decimate(daiBalance), sell: decimate(baoUSDBalance) }}
+						maxValues={{
+							buy: ethers.utils.parseEther(daiBalance.toString()),
+							sell: ethers.utils.parseEther(baoUSDBalance.toString()),
+						}}
 						supplyCap={supplyCap}
 						reserves={reserves}
 					/>

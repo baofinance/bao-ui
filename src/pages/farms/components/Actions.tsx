@@ -20,12 +20,11 @@ import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/
 import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 
@@ -43,7 +42,7 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -131,6 +130,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 										.methods.approve(
 											masterChefContract.options.address,
 											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+											library.getSigner(),
 										)
 										.send({ from: account })
 
@@ -177,9 +177,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 								fullWidth
 								disabled={true}
 								onClick={async () => {
-									const stakeTx = masterChefContract.methods
-										.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
-										.send({ from: account })
+									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 								}}
 							>
@@ -309,11 +307,11 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 					) : (
 						<Button
 							disabled={
-								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(new BigNumber(0))
+								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(BigNumber.from(0))
 							}
 							onClick={async () => {
 								const refer = '0x0000000000000000000000000000000000000000'
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
+								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
 
 								const unstakeTx = masterChefContract.methods.withdraw(pid, ethers.utils.parseUnits(val, 18), refer).send({ from: account })
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
@@ -336,7 +334,6 @@ interface RewardsProps {
 export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 	const bao = useBao()
 	const earnings = useEarnings(pid)
-	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const masterChefContract = getMasterChefContract(bao)
 
@@ -375,7 +372,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							fullWidth
 							disabled={!earnings.toNumber()}
 							onClick={async () => {
-								const harvestTx = masterChefContract.methods.claimReward(pid).send({ from: account })
+								const harvestTx = masterChefContract.claimReward(pid)
 
 								handleTx(harvestTx, `Harvest ${getDisplayBalance(earnings)} BAO`)
 							}}
@@ -405,15 +402,15 @@ interface ActionProps {
 
 const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
-	const bao = useBao()
+	const { library } = useWeb3React()
 
 	const lpTokenAddress = farm.lpTokenAddress
 
 	const lpContract = useMemo(() => {
-		return getContract(bao, lpTokenAddress)
-	}, [bao, lpTokenAddress])
+		return getContract(library, lpTokenAddress)
+	}, [library, lpTokenAddress])
 
-	const tokenBalance = useTokenBalance(lpContract.options.address)
+	const tokenBalance = useTokenBalance(lpContract.address)
 	const stakedBalance = useStakedBalance(pid)
 
 	return (

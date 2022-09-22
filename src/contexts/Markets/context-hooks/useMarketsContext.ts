@@ -1,11 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import useBao from '@/hooks/base/useBao'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { decimate } from '@/utils/numberFormat'
 
 export const SECONDS_PER_BLOCK = 2
@@ -19,12 +18,11 @@ const toApy = (rate: number) => (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DA
 export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 	const bao = useBao()
 	const { library } = useWeb3React()
-	const { transactions } = useTransactionProvider()
 	const [markets, setMarkets] = useState<ActiveSupportedMarket[] | undefined>()
 
 	const fetchMarkets = useCallback(async () => {
 		const contracts: Contract[] = bao.contracts.markets.map((market: ActiveSupportedMarket) => {
-			return bao.getNewContract(market.underlyingAddress === 'ETH' ? 'cether.json' : 'ctoken.json', market.marketAddress)
+			return bao.getNewContract(market.marketAddress, market.underlyingAddress === 'ETH' ? 'cether.json' : 'ctoken.json')
 		})
 		const comptroller: Contract = bao.getContract('comptroller')
 		const oracle: Contract = bao.getContract('marketOracle')
@@ -46,36 +44,36 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 			borrowRestricted,
 			prices,
 		]: any = await Promise.all([
-			Promise.all(contracts.map(contract => contract.methods.reserveFactorMantissa().call())),
-			Promise.all(contracts.map(contract => contract.methods.totalReserves().call())),
-			Promise.all(contracts.map(contract => contract.methods.totalBorrows().call())),
-			Promise.all(contracts.map(contract => contract.methods.supplyRatePerBlock().call())),
-			Promise.all(contracts.map(contract => contract.methods.borrowRatePerBlock().call())),
-			Promise.all(contracts.map(contract => contract.methods.getCash().call())),
-			Promise.all(contracts.map(contract => comptroller.methods.markets(contract.options.address).call())),
-			Promise.all(contracts.map(contract => contract.methods.totalSupply().call())),
-			Promise.all(contracts.map(contract => contract.methods.exchangeRateCurrent().call())),
-			Promise.all(contracts.map(contract => comptroller.methods.compBorrowState(contract.options.address).call())),
+			Promise.all(contracts.map(contract => contract.reserveFactorMantissa())),
+			Promise.all(contracts.map(contract => contract.totalReserves())),
+			Promise.all(contracts.map(contract => contract.totalBorrows())),
+			Promise.all(contracts.map(contract => contract.supplyRatePerBlock())),
+			Promise.all(contracts.map(contract => contract.borrowRatePerBlock())),
+			Promise.all(contracts.map(contract => contract.getCash())),
+			Promise.all(contracts.map(contract => comptroller.markets(contract.address))),
+			Promise.all(contracts.map(contract => contract.totalSupply())),
+			Promise.all(contracts.map(contract => contract.callStatic.exchangeRateCurrent())),
+			Promise.all(contracts.map(contract => comptroller.compBorrowState(contract.address))),
 			Promise.all(
 				bao.contracts.markets.map(market => {
-					return market.marketContract.methods.symbol().call()
+					return market.marketContract.symbol()
 				}),
 			),
 			Promise.all(
 				bao.contracts.markets.map(market => {
-					return market.underlyingContract ? market.underlyingContract.methods.symbol().call() : 'ETH'
+					return market.underlyingContract ? market.underlyingContract.symbol() : 'ETH'
 				}),
 			),
-			comptroller.methods.liquidationIncentiveMantissa().call(),
-			Promise.all(contracts.map(market => comptroller.methods.borrowRestricted(market.options.address).call())),
-			Promise.all(contracts.map(market => oracle.methods.getUnderlyingPrice(market.options.address).call())),
+			comptroller.liquidationIncentiveMantissa(),
+			Promise.all(contracts.map(market => comptroller.borrowRestricted(market.address))),
+			Promise.all(contracts.map(market => oracle.getUnderlyingPrice(market.address))),
 		])
 
 		const supplyApys: number[] = supplyRates.map((rate: number) => toApy(rate))
 		const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
 		let markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
-			const marketConfig = bao.contracts.markets.find(market => market.marketAddresses[Config.networkId] === contract.options.address)
+			const marketConfig = bao.contracts.markets.find(market => market.marketAddresses[Config.networkId] === contract.address)
 			return {
 				symbol: symbols[i],
 				underlyingSymbol: underlyingSymbols[i],
@@ -88,9 +86,9 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 				collateralFactor: decimate(marketsInfo[i][1]).toNumber(),
 				imfFactor: decimate(marketsInfo[i][2]).toNumber(),
 				reserveFactor: decimate(reserveFactors[i]).toNumber(),
-				liquidationIncentive: decimate(liquidationIncentive).minus(1).times(100).toNumber(),
+				liquidationIncentive: decimate(liquidationIncentive).sub(1).mul(100).toNumber(),
 				borrowRestricted: borrowRestricted[i],
-				supplied: decimate(exchangeRates[i]).times(decimate(totalSupplies[i], marketConfig.underlyingDecimals)).toNumber(),
+				supplied: decimate(exchangeRates[i]).mul(decimate(totalSupplies[i], marketConfig.underlyingDecimals)).toNumber(),
 				price: decimate(prices[i], 36 - marketConfig.underlyingDecimals).toNumber(),
 				...marketConfig,
 			}
@@ -98,12 +96,12 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 		markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
 		setMarkets(markets)
-	}, [bao, library, transactions])
+	}, [bao])
 
 	useEffect(() => {
 		if (!(bao && library)) return
 		fetchMarkets()
-	}, [bao, library, transactions])
+	}, [bao, library, fetchMarkets])
 
 	return markets
 }

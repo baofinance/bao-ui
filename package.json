@@ -35,20 +35,47 @@
     ]
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^12.2.4",
+    "eslint": "8.21.0",
+    "eslint-config-next": "12.2.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0"
+  },
+  "next-unused": {
+    "debug": true,
+    "include": [
+      "src"
+    ],
+    "exclude": [],
+    "entrypoints": [
+      "src/pages"
+    ]
+  },
+  "nextBundleAnalysis": {
+    "budget": 3584000,
+    "budgetPercentIncreaseRed": 40,
+    "showDetails": true
+  },
+  "dependencies": {
     "@apollo/client": "^3.4.1",
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.7.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@gnosis.pm/safe-apps-web3-react": "^1.5.1",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^2.0.10",
     "@material-tailwind/react": "^1.2.3",
     "@material-ui/pickers": "^3.3.10",
-    "@next/bundle-analyzer": "^12.2.4",
     "@sushiswap/sushi-data": "^1.0.26",
     "@tailwindcss/forms": "^0.5.3",
+    "@tanstack/react-query": "^4.3.4",
     "@types/bignumber.js": "^5.0.0",
     "@types/d3-array": "^3.0.3",
     "@types/jest": "^27.5.1",
@@ -76,14 +103,10 @@
     "classnames": "^2.3.1",
     "cross-env": "^7.0.3",
     "d3-array": "^3.0.1",
-    "eslint": "8.21.0",
-    "eslint-config-next": "12.2.4",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
+    "eth-hooks": "^4.6.2",
+    "eth-ui": "^1.0.1",
     "ether-swr": "^2.0.1",
-    "ethereum-multicall": "^2.7.1",
+    "ethereum-multicall": "^2.15.0",
     "ethers": "^5.7.0",
     "framer-motion": "^7.2.1",
     "graphql": "^16.5.0",
@@ -113,23 +136,6 @@
     "react-spring": "^9.2.4",
     "swr": "^1.3.0",
     "tailwindcss": "^3.1.8",
-    "typescript": "4.7.4",
-    "web3": "^1.7.3",
-    "web3-utils": "^1.7.3"
-  },
-  "next-unused": {
-    "debug": true,
-    "include": [
-      "src"
-    ],
-    "exclude": [],
-    "entrypoints": [
-      "src/pages"
-    ]
-  },
-  "nextBundleAnalysis": {
-    "budget": 3584000,
-    "budgetPercentIncreaseRed": 40,
-    "showDetails": true
+    "typescript": "4.7.4"
   }
 }

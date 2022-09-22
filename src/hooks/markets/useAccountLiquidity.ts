@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import Config from '@/bao/lib/config'
@@ -33,16 +33,14 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 	const { prices: oraclePrices } = useMarketPrices()
 
 	const fetchAccountLiquidity = useCallback(async () => {
-		const compAccountLiqudity = await bao.getContract('comptroller').methods.getAccountLiquidity(account).call()
+		const compAccountLiqudity = await bao.getContract('comptroller').getAccountLiquidity(account)
 
 		const prices: { [key: string]: number } = {}
 		for (const key in oraclePrices) {
-			if (oraclePrices[key]) {
-				prices[key] = decimate(
-					oraclePrices[key],
-					new BigNumber(36).minus(Config.markets.find(market => market.marketAddresses[Config.networkId] === key).underlyingDecimals),
-				).toNumber()
-			}
+			prices[key] = decimate(
+				oraclePrices[key],
+				36 - Config.markets.find(market => market.marketAddresses[Config.networkId] === key).underlyingDecimals,
+			).toNumber()
 		}
 
 		const usdSupply = Object.entries(supplyBalances).reduce((prev: number, [, { address, balance }]) => {
@@ -74,7 +72,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			netApy,
 			usdSupply,
 			usdBorrow,
-			usdBorrowable: decimate(compAccountLiqudity[1]).toNumber(),
+			usdBorrowable: decimate(compAccountLiqudity[1].toString()).toNumber(),
 		})
 	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
 

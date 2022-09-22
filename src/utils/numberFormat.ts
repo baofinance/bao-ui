@@ -1,12 +1,14 @@
 import BigNumber from 'bignumber.js'
+import { BigNumber as BN } from 'ethers'
+// FIXME: this should all be using ethers.BigNumber
 
-export const getBalanceNumber = (balance: BigNumber, decimals = 18) => {
-	const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
+export const getBalanceNumber = (balance: BigNumber | BN, decimals = 18) => {
+	const displayBalance = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(decimals))
 	return displayBalance.toNumber()
 }
 
-export const getDisplayBalance = (balance: BigNumber | number | string, decimals = 18, precision?: number) => {
-	const displayBalance = new BigNumber(balance).dividedBy(new BigNumber(10).pow(decimals))
+export const getDisplayBalance = (balance: BigNumber | BN | number | string, decimals = 18, precision?: number) => {
+	const displayBalance = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(decimals))
 	if (displayBalance.lt(1e-6)) return 0
 	else if (displayBalance.lt(1)) {
 		return displayBalance.toPrecision(precision || 4)
@@ -16,8 +18,8 @@ export const getDisplayBalance = (balance: BigNumber | number | string, decimals
 	}
 }
 
-export const truncateNumber = (balance: BigNumber, decimals = 18) => {
-	const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
+export const truncateNumber = (balance: BigNumber | BN, decimals = 18) => {
+	const displayBalance = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(decimals))
 	const analytic = displayBalance.toNumber()
 
 	if (displayBalance.isGreaterThanOrEqualTo(1000000000)) {
@@ -35,11 +37,29 @@ export const truncateNumber = (balance: BigNumber, decimals = 18) => {
 	return analytic
 }
 
-export const getFullDisplayBalance = (balance: BigNumber, decimals = 18) => {
-	return balance && balance.dividedBy(new BigNumber(10).pow(decimals)).toFixed()
+export const getFullDisplayBalance = (balance: BigNumber | BN, decimals = 18) => {
+	return balance && new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(decimals)).toFixed()
 }
 
-export const decimate = (n: any, decimals?: any): BigNumber => new BigNumber(n).div(new BigNumber(10).pow(new BigNumber(decimals || 18)))
+//export const decimate = (n: any, decimals?: any): BigNumber => {
+export const decimate = (n: any, decimals?: any): BN => {
+	//return new BigNumber(n).div(new BigNumber(10).pow(new BigNumber(decimals || 18)))
+	const num = BN.from(n)
+	const den = BN.from(10).pow(BN.from(decimals || 18))
+	const o = num.div(den)
+	return o
+}
 
-export const exponentiate = (n: any, decimals?: any): BigNumber =>
-	new BigNumber(n).times(new BigNumber(10).pow(new BigNumber(decimals || 18)))
+// FIXME: make this return an ethers.BigNumber
+export const exponentiate = (n: any, decimals?: any): BigNumber => {
+	return new BigNumber(n).times(new BigNumber(10).pow(new BigNumber(decimals || 18)))
+}
+
+export const isBigNumberish = (val: any): boolean => {
+	try {
+		BN.from(val)
+		return true
+	} catch (e) {
+		return false
+	}
+}

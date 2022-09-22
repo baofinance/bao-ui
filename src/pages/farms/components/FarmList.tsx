@@ -1,3 +1,4 @@
+// FIXME: BROKEN this won't be used anymore as the /farms/ page is getting trashed!
 import Config from '@/bao/lib/config'
 import { getMasterChefContract } from '@/bao/utils'
 import Loader, { PageLoader } from '@/components/Loader'
@@ -11,7 +12,8 @@ import Multicall from '@/utils/multicall'
 import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 import { Switch } from '@headlessui/react'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
+import BN from 'bignumber.js'
 import classNames from 'classnames'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
@@ -24,7 +26,7 @@ const FarmList: React.FC = () => {
 	const farmsTVL = useAllFarmTVL(bao, bao && bao.multicall)
 	const { account } = useWeb3React()
 
-	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	const [baoPrice, setBaoPrice] = useState<BN | undefined>()
 	const [pools, setPools] = useState<any | undefined>({
 		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
@@ -39,7 +41,7 @@ const FarmList: React.FC = () => {
 	useEffect(() => {
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
 			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.bao[Config.networkId].address)
-			setBaoPrice(baoPrice)
+			setBaoPrice(new BN(baoPrice))
 		})
 
 		const _pools: any = {
@@ -80,19 +82,19 @@ const FarmList: React.FC = () => {
 				for (let i = 0; i < farms.length; i++) {
 					const farm = farms[i]
 					const tvlInfo = farmsTVL.tvls.find((fTVL: any) => fTVL.lpAddress.toLowerCase() === farm.lpAddress.toLowerCase())
-					const BLOCKS_PER_YEAR = new BigNumber(2336000)
+					const BLOCKS_PER_YEAR = 2336000
 					const farmWithStakedValue = {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
-						stakedUSD: decimate(result.masterChef[farms.length + i].values[0].hex)
+						stakedUSD: decimate(result.masterChef[farms.length + i].values[0])
 							.div(decimate(tvlInfo.lpStaked))
-							.times(tvlInfo.tvl),
+							.mul(tvlInfo.tvl),
 						apy:
 							baoPrice && farmsTVL
-								? baoPrice
+								? new BN(baoPrice.toString())
 										.times(BLOCKS_PER_YEAR)
-										.times(new BigNumber(result.masterChef[i].values[0].hex).div(10 ** 18))
+										.times(result.masterChef[i].values[0].div(BigNumber.from(10).pow(18)).toString())
 										.div(tvlInfo.tvl)
 								: null,
 					}
@@ -101,7 +103,7 @@ const FarmList: React.FC = () => {
 				}
 				setPools(_pools)
 			})
-	}, [farmsTVL, bao])
+	}, [bao, farmsTVL, baoPrice, farms, userAddress])
 
 	return (
 		<>
@@ -192,8 +194,8 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHead
 }
 
 export interface FarmWithStakedValue extends Farm {
-	apy: BigNumber
-	stakedUSD: BigNumber
+	apy: BN
+	stakedUSD: BN
 }
 
 interface FarmListItemProps {
@@ -234,7 +236,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							{farm.apy ? (
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									{farm.apy.gt(0) ? `${farm.apy.times(new BigNumber(100)).toNumber().toLocaleString('en-US').slice(0, -1)}%` : 'N/A'}
+									{farm.apy.gt(0) ? `${farm.apy.times(100).toNumber().toLocaleString('en-US').slice(0, -1)}%` : 'N/A'}
 								</Typography>
 							) : (
 								<Loader />

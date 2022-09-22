@@ -1,16 +1,15 @@
 import Multicall from '@/utils/multicall'
 import { decimate, exponentiate } from '@/utils/numberFormat'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import _ from 'lodash'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from '@ethersproject/contracts'
 import { Bao } from './Bao'
 import { ActiveSupportedBasket, ActiveSupportedGauge, ActiveSupportedMarket, FarmableSupportedPool } from './lib/types'
 
-BigNumber.config({
-	EXPONENTIAL_AT: 1000,
-	DECIMAL_PLACES: 80,
-})
+//BigNumber.config({
+//	EXPONENTIAL_AT: 1000,
+//	DECIMAL_PLACES: 80,
+//})
 
 export const getWethContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('weth')
@@ -109,7 +108,7 @@ export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
 					tokenSymbol,
 					tokenContract,
 					earnToken: 'BAO',
-					earnTokenAddress: bao.getContract('bao').options.address,
+					earnTokenAddress: bao.getContract('bao').address,
 					iconA,
 					iconB,
 					refUrl,
@@ -122,20 +121,17 @@ export const getFarms = (bao: Bao): FarmableSupportedPool[] => {
 }
 
 export const getPoolWeight = async (masterChefContract: Contract, pid: number): Promise<BigNumber> => {
-	const [{ allocPoint }, totalAllocPoint] = await Promise.all([
-		masterChefContract.methods.poolInfo(pid).call(),
-		masterChefContract.methods.totalAllocPoint().call(),
-	])
+	const [{ allocPoint }, totalAllocPoint] = await Promise.all([masterChefContract.poolInfo(pid), masterChefContract.totalAllocPoint()])
 
-	return new BigNumber(allocPoint).div(new BigNumber(totalAllocPoint))
+	return allocPoint.div(totalAllocPoint)
 }
 
 export const getEarned = async (masterChefContract: Contract, pid: number, account: string): Promise<BigNumber> => {
-	return masterChefContract.methods.pendingReward(pid, account).call()
+	return masterChefContract.pendingReward(pid, account)
 }
 
 export const getLockedEarned = async (baoContract: Contract, account: string): Promise<BigNumber> => {
-	return baoContract.methods.lockOf(account).call()
+	return baoContract.lockOf(account)
 }
 
 export const getTotalLPWethValue = async (
@@ -153,83 +149,78 @@ export const getTotalLPWethValue = async (
 	poolWeight: BigNumber
 }> => {
 	const [tokenAmountWholeLP, balance, totalSupply, lpContractWeth, poolWeight] = await Promise.all([
-		tokenContract.methods.balanceOf(lpContract.options.address).call(),
-		lpContract.methods.balanceOf(masterChefContract.options.address).call(),
-		lpContract.methods.totalSupply().call(),
-		wethContract.methods.balanceOf(lpContract.options.address).call(),
+		tokenContract.balanceOf(lpContract.address),
+		lpContract.balanceOf(masterChefContract.address),
+		lpContract.totalSupply(),
+		wethContract.balanceOf(lpContract.address),
 		getPoolWeight(masterChefContract, pid),
 	])
 
 	// Return p1 * w1 * 2
-	const portionLp = new BigNumber(balance).div(new BigNumber(totalSupply))
-	const lpWethWorth = new BigNumber(lpContractWeth)
-	const totalLpWethValue = portionLp.times(lpWethWorth).times(new BigNumber(2))
+	const portionLp = balance.div(totalSupply)
+	const lpWethWorth = lpContractWeth
+	const totalLpWethValue = portionLp.mul(lpWethWorth).mul(BigNumber.from(2))
 	// Calculate
-	const tokenAmount = new BigNumber(tokenAmountWholeLP).times(portionLp).div(new BigNumber(10).pow(tokenDecimals))
+	const tokenAmount = tokenAmountWholeLP.mul(portionLp).div(BigNumber.from(10).pow(tokenDecimals))
 
-	const wethAmount = new BigNumber(lpContractWeth).times(portionLp).div(new BigNumber(10).pow(18))
+	const wethAmount = lpContractWeth.mul(portionLp).div(BigNumber.from(10).pow(18))
 	return {
 		tokenAmount,
 		wethAmount,
-		totalWethValue: totalLpWethValue.div(new BigNumber(10).pow(18)),
+		totalWethValue: totalLpWethValue.div(BigNumber.from(10).pow(18)),
 		tokenPriceInWeth: wethAmount.div(tokenAmount),
 		poolWeight: poolWeight,
 	}
 }
 
-export const approve = async (token: Contract, spender: Contract, account: string): Promise<string> => {
-	return token.methods.approve(spender.options.address, ethers.constants.MaxUint256).send({ from: account })
+export const approve = async (token: Contract, spender: Contract): Promise<string> => {
+	return token.approve(spender.address, ethers.constants.MaxUint256)
 }
 
-export const stake = async (masterChefContract: Contract, pid: number, amount: string, account: string, ref: string): Promise<string> => {
-	return masterChefContract.methods
+export const stake = async (masterChefContract: Contract, pid: number, amount: string, ref: string): Promise<string> => {
+	return masterChefContract
 		.deposit(pid, ethers.utils.parseUnits(amount, 18), ref)
-		.send({ from: account })
 		.on('transactionHash', (tx: { transactionHash: string }) => {
 			console.log(tx)
 			return tx.transactionHash
 		})
 }
 
-export const unstake = async (masterChefContract: Contract, pid: number, amount: string, account: string, ref: string): Promise<string> => {
-	return masterChefContract.methods
+export const unstake = async (masterChefContract: Contract, pid: number, amount: string, ref: string): Promise<string> => {
+	return masterChefContract
 		.withdraw(pid, ethers.utils.parseUnits(amount, 18), ref)
-		.send({ from: account })
 		.on('transactionHash', (tx: { transactionHash: string }) => {
 			console.log(tx)
 			return tx.transactionHash
 		})
 }
-export const harvest = async (masterChefContract: Contract, pid: number, account: string): Promise<string> => {
-	return masterChefContract.methods
-		.claimReward(pid)
-		.send({ from: account })
-		.on('transactionHash', (tx: { transactionHash: string }) => {
-			console.log(tx)
-			return tx.transactionHash
-		})
+export const harvest = async (masterChefContract: Contract, pid: number): Promise<string> => {
+	return masterChefContract.claimReward(pid).on('transactionHash', (tx: { transactionHash: string }) => {
+		console.log(tx)
+		return tx.transactionHash
+	})
 }
 
 export const getStaked = async (masterChefContract: Contract, pid: number, account: string): Promise<BigNumber> => {
 	try {
-		const { amount } = await masterChefContract.methods.userInfo(pid, account).call()
-		return new BigNumber(amount)
+		const { amount } = await masterChefContract.userInfo(pid, account)
+		return BigNumber.from(amount)
 	} catch {
-		return new BigNumber(0)
+		return BigNumber.from(0)
 	}
 }
 
 export const getBaoSupply = async (bao: Bao) => {
-	return new BigNumber(await bao.getContract('bao').methods.totalSupply().call())
+	return await bao.getContract('bao').totalSupply()
 }
 
 // Remove when we get veBAO deployed
 export const getCrvSupply = async (bao: Bao) => {
-	return new BigNumber(await bao.getContract('crv').methods.totalSupply().call())
+	return BigNumber.from(await bao.getContract('crv').methods.totalSupply().call())
 }
 
 export const getReferrals = async (masterChefContract: Contract, account: string): Promise<string> => {
-	return await masterChefContract.methods.getGlobalRefAmount(account).call()
+	return await masterChefContract.getGlobalRefAmount(account)
 }
 
 export const getRefUrl = (): string => {
@@ -243,58 +234,45 @@ export const getRefUrl = (): string => {
 	return refer
 }
 
-export const redeem = async (masterChefContract: Contract, account: string): Promise<string> => {
+export const redeem = async (masterChefContract: Contract): Promise<string> => {
 	const now = new Date().getTime() / 1000
 	if (now >= 1597172400) {
-		return masterChefContract.methods
-			.exit()
-			.send({ from: account })
-			.on('transactionHash', (tx: { transactionHash: string }) => {
-				console.log(tx)
-				return tx.transactionHash
-			})
+		return masterChefContract.exit().on('transactionHash', (tx: { transactionHash: string }) => {
+			console.log(tx)
+			return tx.transactionHash
+		})
 	} else {
 		alert('pool not active')
 	}
 }
 
-export const enter = async (contract: Contract | undefined, amount: string, account: string): Promise<string> => {
-	return contract?.methods
-		.enter(exponentiate(amount).toString())
-		.send({ from: account })
-		.on('transactionHash', (tx: { transactionHash: string }) => {
-			console.log(tx)
-			return tx.transactionHash
-		})
+export const enter = async (contract: Contract | undefined, amount: string): Promise<string> => {
+	return contract?.enter(exponentiate(amount).toString()).on('transactionHash', (tx: { transactionHash: string }) => {
+		console.log(tx)
+		return tx.transactionHash
+	})
 }
 
-export const leave = async (contract: Contract, amount: string, account: string): Promise<string> => {
-	return contract.methods
-		.leave(exponentiate(amount).toString())
-		.send({ from: account })
-		.on('transactionHash', (tx: { transactionHash: string }) => {
-			console.log(tx)
-			return tx.transactionHash
-		})
+export const leave = async (contract: Contract, amount: string): Promise<string> => {
+	return contract.leave(exponentiate(amount).toString()).on('transactionHash', (tx: { transactionHash: string }) => {
+		console.log(tx)
+		return tx.transactionHash
+	})
 }
 
 export const fetchCalcToBasket = async (recipeContract: Contract, basketAddress: string, basketAmount: string) => {
 	const amount = exponentiate(basketAmount)
-	const amountEthNecessary = await recipeContract.methods.calcToPie(basketAddress, amount.toFixed(0)).call()
+	const amountEthNecessary = await recipeContract.calcToPie(basketAddress, amount.toFixed(0))
 	return decimate(amountEthNecessary)
 }
 
-export const basketIssue = (
-	recipeContract: Contract,
-	_outputToken: string,
-	_inputToken: string,
-	_maxInput: BigNumber,
-	_data: string,
-	account: string,
-) => recipeContract.methods.bake(_inputToken, _outputToken, exponentiate(_maxInput).toString(), _data).send({ from: account })
+export const basketIssue = (recipeContract: Contract, _outputToken: string, _inputToken: string, _maxInput: BigNumber, _data: string) => {
+	return recipeContract.bake(_inputToken, _outputToken, exponentiate(_maxInput).toString(), _data)
+}
 
-export const basketRedeem = (basketContract: Contract, amount: string, account: string) =>
-	basketContract.methods.exitPool(exponentiate(amount).toString()).send({ from: account })
+export const basketRedeem = (basketContract: Contract, amount: string) => {
+	return basketContract.exitPool(exponentiate(amount).toString())
+}
 
 export const getWethPriceLink = async (bao: Bao): Promise<BigNumber> => {
 	const priceOracle = bao.contracts.getContract('wethPrice')
@@ -310,51 +288,48 @@ export const getWethPriceLink = async (bao: Bao): Promise<BigNumber> => {
 		),
 	)
 
-	return new BigNumber(wethPrice[1].values[1].hex).div(10 ** wethPrice[0].values[0])
+	return wethPrice[1].values[1].div(BigNumber.from(10).pow(wethPrice[0].values[0]))
 }
 
 export const getUserInfoChef = async (masterChefContract: Contract, pid: number, account: string) =>
-	await masterChefContract.methods.userInfo(pid, account).call()
+	await masterChefContract.userInfo(pid, account)
 
-export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) =>
-	await comptrollerContract.methods.getAccountLiquidity(account).call()
+export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) => {
+	return comptrollerContract.getAccountLiquidity(account)
+}
 
 export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
-	return new BigNumber(await gaugeControllerContract.methods.get_gauge_weight(lpAddress).call())
+	return gaugeControllerContract.get_gauge_weight(lpAddress)
 }
 
 export const getRelativeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
-	return new BigNumber(await gaugeControllerContract.methods.gauge_relative_weight(lpAddress).call())
+	return gaugeControllerContract['gauge_relative_weight(address)'](lpAddress)
 }
 
 export const getInflationRate = async (gaugeContract: Contract) => {
-	return new BigNumber(await gaugeContract.methods.inflation_rate().call())
+	return gaugeContract.inflation_rate()
 }
 
 export const getMintable = async (currentEpoch: BigNumber, futureEpoch: BigNumber, tokenContract: Contract) => {
-	return new BigNumber(await tokenContract.methods.mintable_in_timeframe(currentEpoch, futureEpoch).call())
+	return tokenContract.mintable_in_timeframe(currentEpoch, futureEpoch)
 }
 
 export const getVotingPower = async (votingEscrowContract: Contract, account: string) => {
-	return new BigNumber(await votingEscrowContract.methods.balanceOf(account).call())
-}
-
-export const getUserVotingPower = async (gaugeControllerContract: Contract, account: string) => {
-	return new BigNumber(await gaugeControllerContract.methods.vote_user_power(account).call())
+	return votingEscrowContract.balanceOf(account)
 }
 
 export const getCurrentEpoch = async (tokenContract: Contract) => {
-	return new BigNumber(await tokenContract.methods.start_epoch_time_write().call())
+	return tokenContract.start_epoch_time_write()
 }
 
 export const getFutureEpoch = async (tokenContract: Contract) => {
-	return new BigNumber(await tokenContract.methods.future_epoch_time_write().call())
+	return tokenContract.future_epoch_time_write()
 }
 
 export const getVirtualPrice = async (poolContract: Contract) => {
-	return new BigNumber(await poolContract.methods.get_virtual_price().call())
+	return poolContract.get_virtual_price()
 }
 
 export const getTotalSupply = async (depositContract: Contract) => {
-	return new BigNumber(await depositContract.methods.totalSupply().call())
+	return depositContract.totalSupply()
 }

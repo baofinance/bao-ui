@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { approve, getGaugeControllerContract, getMinterContract, getUserVotingPower } from '@/bao/utils'
+import { approve, getGaugeControllerContract, getMinterContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
@@ -16,8 +16,7 @@ import { exponentiate, getBalanceNumber, getDisplayBalance, getFullDisplayBalanc
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -30,7 +29,7 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -90,12 +89,11 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								fullWidth
 								disabled={max.lte(0)}
 								onClick={async () => {
-									const tx = gauge.lpContract.methods
-										.approve(
-											gauge.gaugeContract.options.address,
-											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-										)
-										.send({ from: account })
+									const tx = gauge.lpContract.approve(
+										gauge.gaugeContract.options.address,
+										ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+										library.getSigner(),
+									)
 
 									handleTx(tx, `Approve ${gauge.name}`)
 								}}
@@ -121,7 +119,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								fullWidth
 								disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
 								onClick={async () => {
-									const stakeTx = gauge.gaugeContract.methods.deposit(ethers.utils.parseUnits(val.toString(), 18)).send({ from: account })
+									const stakeTx = gauge.gaugeContract.deposit(ethers.utils.parseUnits(val.toString(), 18))
 
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${gauge.name} into gauge`, () => hideModal())
 								}}
@@ -209,12 +207,12 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 					) : (
 						<Button
 							disabled={
-								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(new BigNumber(0))
+								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
 							}
 							onClick={async () => {
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : new BigNumber(0).toFixed(4)
+								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
 
-								const unstakeTx = gauge.gaugeContract.methods.withdraw(ethers.utils.parseUnits(val, 18)).send({ from: account })
+								const unstakeTx = gauge.gaugeContract.withdraw(ethers.utils.parseUnits(val, 18))
 
 								handleTx(unstakeTx, `Withdraw ${amount} ${gauge.name} from gauge`, () => hideModal())
 							}}
@@ -274,7 +272,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 							fullWidth
 							disabled={gaugeInfo && !gaugeInfo.claimableTokens.toNumber()}
 							onClick={async () => {
-								const harvestTx = minterContract.methods.mint(gauge.gaugeAddress).send({ from: account })
+								const harvestTx = minterContract.mint(gauge.gaugeAddress)
 
 								handleTx(harvestTx, `Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV from ${gauge.name}`)
 							}}
@@ -330,7 +328,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 				</div>
 				<div>
 					<Typography>Current Voting Power Allocated</Typography>
-					<Typography className='text-text-200'>{new BigNumber(10000).div(votingPowerAllocated).toNumber()}%</Typography>
+					<Typography className='text-text-200'>{BigNumber.from(10000).div(votingPowerAllocated).toNumber()}%</Typography>
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
@@ -350,9 +348,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							fullWidth
 							disabled={!val || !bao || isNaN(val as any)}
 							onClick={async () => {
-								const stakeTx = gaugeControllerContract.methods
-									.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 100)
-									.send({ from: account })
+								const stakeTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 100)
 
 								handleTx(stakeTx, `${gauge.name} gauge - Voted ${parseFloat(val).toFixed(2)}% of your voting power`)
 							}}

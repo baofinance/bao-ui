@@ -1,7 +1,7 @@
-import Web3 from 'web3'
-import { provider } from 'web3-core/types'
-import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
+import { Signer } from '@ethersproject/abstract-signer'
+import { Contract } from '@ethersproject/contracts'
+import { Provider } from '@ethersproject/providers'
+//import { Contract } from '@ethersproject/contracts'
 import CEtherAbi from './abi/cether.json'
 import CTokenAbi from './abi/ctoken.json'
 import ERC20Abi from './abi/erc20.json'
@@ -16,7 +16,7 @@ export class Contracts {
 	[x: string]: any
 
 	networkId: number
-	web3: Web3
+	provider: Provider
 	contracts: Types.ContractsConfig
 	pools: Types.FarmableSupportedPool[] | undefined
 	baskets: Types.ActiveSupportedBasket[] | undefined
@@ -25,13 +25,15 @@ export class Contracts {
 	blockGasLimit: any
 	notifier: any
 
-	constructor(provider: string | provider, networkId: number, web3: Web3) {
+	constructor(signerOrProvider: Signer | Provider, networkId: number) {
 		this.networkId = networkId
-		this.web3 = web3
 
 		this.contracts = Config.contracts
 		Object.keys(Config.contracts).forEach(contractName => {
-			this.contracts[contractName][networkId].contract = this.getNewContract(this.contracts[contractName][networkId].abi)
+			this.contracts[contractName][networkId].contract = this.getNewContract(
+				this.contracts[contractName][networkId].address,
+				this.contracts[contractName][networkId].abi,
+			)
 		})
 
 		this.gauges =
@@ -41,9 +43,9 @@ export class Contracts {
 							gaugeAddress: gauge.gaugeAddresses[networkId],
 							poolAddress: gauge.poolAddresses[networkId],
 							lpAddress: gauge.lpAddresses[networkId],
-							gaugeContract: this.getNewContract(GaugeAbi),
-							poolContract: this.getNewContract(GaugePoolAbi),
-							lpContract: this.getNewContract(ERC20Abi),
+							gaugeContract: this.getNewContract(gauge.gaugeAddresses[networkId], GaugeAbi),
+							poolContract: this.getNewContract(gauge.poolAddresses[networkId], GaugePoolAbi),
+							lpContract: this.getNewContract(gauge.lpAddresses[networkId], ERC20Abi),
 						}),
 				  )
 				: undefined
@@ -54,8 +56,8 @@ export class Contracts {
 						Object.assign(pool, {
 							lpAddress: pool.lpAddresses[networkId],
 							tokenAddress: pool.tokenAddresses[networkId],
-							lpContract: this.getNewContract(UNIV2PairAbi),
-							tokenContract: this.getNewContract(ERC20Abi),
+							lpContract: this.getNewContract(pool.lpAddresses[networkId], UNIV2PairAbi),
+							tokenContract: this.getNewContract(pool.tokenAddresses[networkId], ERC20Abi),
 						}),
 				  )
 				: undefined
@@ -66,76 +68,78 @@ export class Contracts {
 				? Config.baskets.map(basket =>
 						Object.assign(basket, {
 							address: basket.basketAddresses[networkId],
-							basketContract: this.getNewContract(ExperipieAbi),
-							ovenContract: this.getNewContract('oven.json'),
+							basketContract: this.getNewContract(basket.lpAddress, ExperipieAbi),
+							ovenContract: this.getNewContract(basket.ovenAddress, 'oven.json'),
 						}),
 				  )
 				: undefined
 
 		this.markets =
 			networkId === Config.networkId
-				? Config.markets.map(market =>
-						Object.assign(market, {
+				? Config.markets.map(market => {
+						const marketAddr = market.marketAddresses[Config.networkId]
+						const underlyingAddr = market.underlyingAddresses[Config.networkId]
+						return Object.assign(market, {
 							marketAddress: market.marketAddresses[networkId],
 							underlyingAddress: market.underlyingAddresses[networkId],
-							marketContract: this.getNewContract(market.underlyingAddresses[Config.networkId] === 'ETH' ? CEtherAbi : CTokenAbi),
-							underlyingContract: market.underlyingAddresses[Config.networkId] !== 'ETH' && this.getNewContract(ERC20Abi),
-						}),
-				  )
+							marketContract: this.getNewContract(marketAddr, underlyingAddr === 'ETH' ? CEtherAbi : CTokenAbi),
+							underlyingContract: underlyingAddr !== 'ETH' && this.getNewContract(underlyingAddr, ERC20Abi),
+						})
+				  })
 				: undefined
 
-		this.setProvider(provider, networkId)
-		this.setDefaultAccount(this.web3.eth.defaultAccount)
+		this.connectContracts(signerOrProvider, networkId)
 	}
 
-	setProvider(provider: provider, networkId: number): void {
-		const setProvider = (contract: Contract, address: string) => {
-			if (address) contract.options.address = address
-			else console.error('Contract address not found in network', networkId)
+	connectContracts(providerOrSigner: Signer | Provider, networkId: number): void {
+		const _connect = (contract: Contract) => {
+			return contract.connect(providerOrSigner)
 		}
 
 		if (networkId === Config.networkId) {
 			Object.keys(this.contracts).forEach(contractName => {
-				setProvider(this.contracts[contractName][networkId].contract, this.contracts[contractName][networkId].address)
+				this.contracts[contractName][networkId].contract = _connect(this.contracts[contractName][networkId].contract)
 			})
 
 			if (this.gauges) {
-				this.gauges.forEach(({ gaugeContract, gaugeAddress, poolContract, poolAddress, lpContract, lpAddress }) => {
-					setProvider(gaugeContract, gaugeAddress)
-					setProvider(poolContract, poolAddress)
-					setProvider(lpContract, lpAddress)
+				Object.keys(this.gauges).forEach((k: any) => {
+					this.gauges[k].gaugeContract = _connect(this.gauges[k].gaugeContract)
+					this.gauges[k].poolContract = _connect(this.gauges[k].poolContract)
+					this.gauges[k].lpContract = _connect(this.gauges[k].lpContract)
 				})
 			}
+
 			if (this.pools) {
-				this.pools.forEach(({ lpContract, lpAddress, tokenContract, tokenAddress }) => {
-					setProvider(lpContract, lpAddress)
-					setProvider(tokenContract, tokenAddress)
+				Object.keys(this.pools).forEach((k: any) => {
+					this.pools[k].lpContract = _connect(this.pools[k].lpContract)
+					this.pools[k].tokenContract = _connect(this.pools[k].tokenContract)
 				})
 			}
+
 			if (this.baskets) {
-				this.baskets.forEach(({ address, basketContract, ovenAddress, ovenContract }) => {
-					setProvider(basketContract, address)
-					setProvider(ovenContract, ovenAddress)
+				Object.keys(this.baskets).forEach((k: any) => {
+					this.baskets[k].basketContract = _connect(this.baskets[k].basketContract)
+					this.baskets[k].ovenContract = _connect(this.baskets[k].ovenContract)
 				})
 			}
+
 			if (this.markets) {
-				this.markets.forEach(({ marketContract, marketAddress, underlyingContract, underlyingAddress }) => {
-					setProvider(marketContract, marketAddress)
-					if (underlyingContract) setProvider(underlyingContract, underlyingAddress)
+				Object.keys(this.markets).forEach((k: any) => {
+					this.markets[k].marketContract = _connect(this.markets[k].marketContract)
+					if (this.markets[k].underlyingContract) {
+						this.markets[k].underlyingContract = _connect(this.markets[k].underlyingContract)
+					}
 				})
 			}
 		}
-	}
-
-	setDefaultAccount(account: string): void {
-		Object.keys(this.contracts).forEach(contractName => (this.getContract(contractName).options.from = account))
 	}
 
 	getContract(contractName: string, networkId = this.networkId): Contract {
 		return this.contracts[contractName][networkId].contract
 	}
 
-	getNewContract(abi: string | unknown, address?: string): Contract {
-		return new this.web3.eth.Contract((typeof abi === 'string' ? require(`./abi/${abi}`) : abi) as AbiItem[], address)
+	getNewContract(address: string, abi: string | any, provider?: Signer | Provider): Contract {
+		const _abi = typeof abi === 'string' ? require(`./abi/${abi}`) : abi
+		return new Contract(address, _abi, provider)
 	}
 }

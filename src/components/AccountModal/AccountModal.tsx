@@ -2,6 +2,7 @@ import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icon
 import { faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
+import { utils } from 'ethers'
 import _ from 'lodash'
 import Image from 'next/future/image'
 import { FC, useCallback, useEffect, useState } from 'react'
@@ -14,7 +15,6 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getBalanceNumber, getDisplayBalance } from '@/utils/numberFormat'
 import Link from 'next/link'
 import Tooltipped from '../Tooltipped'
 
@@ -58,7 +58,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getBalanceNumber(ethBalance).toFixed(4)}
+								{utils.formatEther(ethBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								ETH Balance
@@ -76,7 +76,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getDisplayBalance(baoBalance)}
+								{utils.formatEther(baoBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								BAO Balance
@@ -108,7 +108,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 									.map(txHash => (
 										<div key={txHash} className='flex w-full items-center justify-between bg-primary-100 px-3 py-1'>
 											{transactions[txHash].receipt ? (
-												transactions[txHash].receipt.status === true ? (
+												transactions[txHash].receipt.status === 1 ? (
 													<FontAwesomeIcon icon={faCircleCheck} className='text-green' size='sm' />
 												) : (
 													<FontAwesomeIcon icon={faCircleXmark} className='text-red' />

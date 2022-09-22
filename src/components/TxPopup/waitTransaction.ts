@@ -4,10 +4,11 @@
  *
  * Based on https://raw.githubusercontent.com/Kaisle/await-transaction-mined/master/index.js
  */
+import { ethers } from 'ethers'
 
-const DEFAULT_INTERVAL = 500
+const DEFAULT_INTERVAL = 1500
 
-const DEFAULT_BLOCKS_TO_WAIT = 0
+const DEFAULT_BLOCKS_TO_WAIT = 1
 
 interface Options {
 	interval: number
@@ -22,12 +23,12 @@ interface Options {
  * @param options Wait timers
  * @return Transaction receipt
  */
-export function waitTransaction(library: any, txnHash: string | string[], options: Options = null): Promise<any> {
+export async function waitTransaction(library: any, txnHash: string | string[], options: Options = null): Promise<any> {
 	const interval = options && options.interval ? options.interval : DEFAULT_INTERVAL
 	const blocksToWait = options && options.blocksToWait ? options.blocksToWait : DEFAULT_BLOCKS_TO_WAIT
 	const transactionReceiptAsync = async function (txnHash: any, resolve: any, reject: any) {
 		try {
-			const receipt = library.eth.getTransactionReceipt(txnHash)
+			const receipt = library.getTransactionReceipt(txnHash)
 			if (!receipt) {
 				setTimeout(function () {
 					transactionReceiptAsync(txnHash, resolve, reject)
@@ -41,10 +42,12 @@ export function waitTransaction(library: any, txnHash: string | string[], option
 						}, interval)
 					} else {
 						try {
-							const block = await library.eth.getBlock(resolvedReceipt.blockNumber)
-							const current = await library.eth.getBlock('latest')
+							const block = await library.getBlock(resolvedReceipt.blockNumber)
+							const current = await ethers.getDefaultProvider().getBlock('latest')
+							// FIXME: this || <part> might have a bug.
+							//if (current.number - block.number >= blocksToWait || current.hash === block.hash) {
 							if (current.number - block.number >= blocksToWait) {
-								const txn = await library.eth.getTransaction(txnHash)
+								const txn = await library.getTransaction(txnHash)
 								if (txn.blockNumber != null) resolve(resolvedReceipt)
 								else reject(new Error('Transaction with hash: ' + txnHash + ' ended up in an uncle block.'))
 							} else
@@ -57,7 +60,9 @@ export function waitTransaction(library: any, txnHash: string | string[], option
 							}, interval)
 						}
 					}
-				} else resolve(receipt)
+				} else {
+					resolve(receipt)
+				}
 			}
 		} catch (e) {
 			reject(e)
@@ -86,7 +91,7 @@ export function waitTransaction(library: any, txnHash: string | string[], option
  * @param receipt Transaction receipt
  */
 export function isSuccessfulTransaction(receipt: any): boolean {
-	if (receipt.status == '0x1' || receipt.status == 1) {
+	if (receipt.status === '0x1' || receipt.status == 1) {
 		return true
 	} else {
 		return false

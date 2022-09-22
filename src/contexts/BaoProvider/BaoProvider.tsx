@@ -25,15 +25,15 @@ declare global {
 }
 
 const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }) => {
-	const wallet = useWeb3React()
-	const { library }: any = wallet
+	const { library, account } = useWeb3React()
 	const [bao, setBao] = useState<any>()
 
 	// if (library) library.on('chainChanged', () => window.location.reload())
 
-	window.bao = bao
-
 	useEffect(() => {
+		if (!library || !account) {
+			return
+		}
 		// const { ethereum: windowEth } = window
 		// if (windowEth && !ethereum) {
 		// 	// Check if user has connected to the webpage before
@@ -43,12 +43,13 @@ const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }
 		// 	})
 		// }
 
+		// TODO: get the networkId from the provider
 		const baoLib = new Bao(library, Config.networkId, {
-			ethereumNodeTimeout: 10000,
+			signer: account ? library.getSigner() : null,
 		})
 		setBao(baoLib)
 		window.baosauce = baoLib
-	}, [library])
+	}, [library, account])
 
 	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
 }

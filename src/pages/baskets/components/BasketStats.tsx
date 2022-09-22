@@ -1,6 +1,6 @@
 import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
 
@@ -34,7 +34,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 						Market Cap
 					</div>
 					<Badge className='font-semibold'>
-						{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}
+						{rates && info ? `$${getDisplayBalance(rates.usd.mul(info.totalSupply), 36)}` : <Loader />}
 					</Badge>
 				</Card.Body>
 			</Card>
@@ -78,6 +78,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 					</div>
 					<Badge className='font-semibold'>
 						{pairPrice && rates ? (
+							// FIXME: needs implementation
 							// `${getDisplayBalance(
 							// 	pairPrice
 							// 		.minus(decimate(rates.usd))

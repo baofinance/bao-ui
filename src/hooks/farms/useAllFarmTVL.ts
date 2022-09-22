@@ -1,10 +1,10 @@
+// FIXME: BROKEN this won't be used anymore as the /farms/ page is getting trashed!
 import { Bao } from '@/bao/Bao'
-import BigNumber from 'bignumber.js/bignumber'
+import { BigNumber } from 'ethers'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
-import { AbiItem } from 'web3-utils'
+import { Contract } from '@ethersproject/contracts'
 
-import erc20Abi from '@/bao/lib/abi/erc20.json'
 import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
@@ -12,6 +12,7 @@ import Multicall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
+	//const results = Multicall.parseCallResults(
 	const results = Multicall.parseCallResults(
 		await multicall.call(
 			Multicall.createCallContext(
@@ -19,7 +20,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 					farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
 						? ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new bao.web3.eth.Contract(erc20Abi as AbiItem[], farm.lpAddresses[Config.networkId]),
+								contract: new Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
 								calls: [
 									{
 										method: 'balanceOf',
@@ -30,7 +31,7 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 						  } as any)
 						: ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new bao.web3.eth.Contract(lpAbi as AbiItem[], farm.lpAddresses[Config.networkId]),
+								contract: new Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
 								calls: [
 									{ method: 'getReserves' },
 									{ method: 'token0' },
@@ -50,27 +51,34 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 	return Object.keys(results).map((key: any) => {
 		const res0 = results[key]
 
-		const reserves = [new BigNumber(res0[0].values[0].hex), new BigNumber(res0[0].values[1].hex)]
+		const r0 = res0[0].values[0]
+		const r1 = res0[0].values[1]
+
 		const token0Address = res0[1].values[0]
 		const token1Address = res0[2].values[0]
 
 		const tokens = [
 			{
 				address: token0Address,
-				balance: decimate(reserves[0]),
+				balance: decimate(r0),
 			},
 			{
 				address: token1Address,
-				balance: decimate(reserves[1], token1Address === Config.addressMap.USDC ? 6 : 18), // This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
+				balance: decimate(r1, token1Address === Config.addressMap.USDC ? 6 : 18),
+				// This sucks. Should consider token decimals rather than check manually. Luckily, we're getting rid of farms soon & there's only 3 left.
 			},
 		]
 
-		return {
+		const lpStaked = res0[3].values[0]
+		const lpSupply = res0[4].values[0]
+
+		const out = {
 			tokens,
 			lpAddress: key,
-			lpStaked: new BigNumber(res0[3].values[0].hex),
-			lpSupply: new BigNumber(res0[4].values[0].hex),
+			lpStaked,
+			lpSupply,
 		}
+		return out
 	})
 }
 
@@ -83,14 +91,14 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 		const tokenPrices = await GraphUtil.getPriceFromPairMultiple(wethPrice, [Config.addressMap.USDC])
 
 		const tvls: any[] = []
-		let _tvl = new BigNumber(0)
+		let _tvl = BigNumber.from(0)
 		lps.forEach((lpInfo: any) => {
 			let lpStakedUSD
 			if (lpInfo.singleAsset) {
-				lpStakedUSD = decimate(lpInfo.lpStaked).times(
+				lpStakedUSD = decimate(lpInfo.lpStaked).mul(
 					Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === lpInfo.lpAddress.toLowerCase()).price,
 				)
-				_tvl = _tvl.plus(lpStakedUSD)
+				_tvl = _tvl.add(lpStakedUSD)
 			} else {
 				let token, tokenPrice, specialPair
 				if (
@@ -111,7 +119,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 						priceInfo => priceInfo.address.toLowerCase() === Config.addressMap.USDC.toLowerCase(),
 					).price
 
-				lpStakedUSD = token.balance.times(tokenPrice).times(2).times(lpInfo.lpStaked.div(lpInfo.lpSupply))
+				lpStakedUSD = token.balance.toNumber() * tokenPrice * 2 * lpInfo.lpStaked.div(lpInfo.lpSupply).toNumber()
 			}
 
 			tvls.push({
@@ -119,7 +127,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 				tvl: lpStakedUSD,
 				lpStaked: lpInfo.lpStaked,
 			})
-			_tvl = _tvl.plus(lpStakedUSD)
+			_tvl = _tvl.add(lpStakedUSD)
 		})
 		setTvl({
 			tvl: _tvl,
@@ -132,7 +140,7 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 		if (!(bao && multicall) || tvl) return
 
 		fetchAllFarmTVL()
-	}, [bao, multicall])
+	}, [bao, multicall, fetchAllFarmTVL])
 
 	return tvl
 }

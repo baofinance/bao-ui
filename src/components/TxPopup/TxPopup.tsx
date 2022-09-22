@@ -1,7 +1,7 @@
-import useBao from '@/hooks/base/useBao'
 import usePendingTransactions from '@/hooks/base/usePendingTransactions'
 import { faCheck, faExternalLinkAlt, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import 'animate.css/animate.min.css'
 import React, { useEffect, useState } from 'react'
 import { ReactNotifications, Store as NotifStore } from 'react-notifications-component'
@@ -55,17 +55,21 @@ const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
 	)
 }
 
+// FIXME: only render this in a web3reactcontext
 const TxPopup: React.FC = () => {
 	const pendingTxs = usePendingTransactions()
 	const [seenTxs, setSeenTxs] = useState({})
-	const bao = useBao()
+	const { library } = useWeb3React()
 
 	useEffect(() => {
+		if (!library) {
+			return
+		}
 		setSeenTxs((stxs: any) => {
 			// This is a guard so that we do not have multiple popups for the same tx
 			pendingTxs.map(tx => {
 				if (!stxs[tx.hash]) {
-					waitTransaction(bao.web3, tx.hash).then(receipt => {
+					waitTransaction(library, tx.hash).then(receipt => {
 						console.log(receipt)
 						if (receipt === null) {
 							return
@@ -94,7 +98,7 @@ const TxPopup: React.FC = () => {
 			return stxs
 			// This is the end of the guard against multiple popups for the same tx
 		})
-	}, [pendingTxs, setSeenTxs, bao])
+	}, [pendingTxs, setSeenTxs, library])
 
 	return <ReactNotifications />
 }

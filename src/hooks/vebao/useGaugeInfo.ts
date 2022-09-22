@@ -1,6 +1,6 @@
 import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
@@ -58,12 +58,12 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 		const { gauge: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setGaugeInfo({
-			totalSupply: new BigNumber(res[0].values[0].hex),
-			inflationRate: new BigNumber(res[1].values[0].hex),
-			balance: new BigNumber(res[2].values[0].hex),
-			workingBalance: new BigNumber(res[3].values[0].hex),
-			claimableTokens: new BigNumber(res[4].values[0].hex),
-			integrateFraction: new BigNumber(res[5].values[0].hex),
+			totalSupply: res[0].values[0],
+			inflationRate: res[1].values[0],
+			balance: res[2].values[0],
+			workingBalance: res[3].values[0],
+			claimableTokens: res[4].values[0],
+			integrateFraction: res[5].values[0],
 		})
 	}, [bao, gauge])
 

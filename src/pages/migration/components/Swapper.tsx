@@ -1,29 +1,27 @@
 import Config from '@/bao/lib/config'
-import { approve } from '@/bao/utils'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
-import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
-import { faArrowDown, faArrowRightLong, faLeftRight, faShip, faSync } from '@fortawesome/free-solid-svg-icons'
+import { decimate, exponentiate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
-import { isDesktop } from 'react-device-detect'
 
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
+	const { library } = useWeb3React()
 
+	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
 	return (
@@ -80,7 +78,7 @@ const Swapper: React.FC = () => {
 								onSelectMax={null}
 								onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 								disabled={true}
-								value={inputVal && new BigNumber(inputVal).times(0.001).toString()}
+								value={inputVal && BigNumber.from(inputVal).mul(0.001).toString()}
 								label={
 									<div className='flex flex-row items-center pl-2 pr-4'>
 										<div className='flex w-6 items-center justify-center'>
@@ -137,7 +135,7 @@ export default Swapper
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.stabilizer[Config.networkId].address)
@@ -145,14 +143,19 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const handleClick = async () => {
 		if (!bao) return
 
-		const SwapperContract = bao.getContract('stabilizer')
+		const swapperContract = bao.getContract('stabilizer')
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.BAO)
-			return handleTx(approve(tokenContract, SwapperContract, account), 'Migration: Approve BAOv1')
+			const tx = bao.getNewContract(Config.addressMap.BAO, 'erc20.json').approve(
+				swapperContract,
+				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+				library.getSigner(),
+			)
+
+			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(SwapperContract.methods.sell(exponentiate(inputVal).toString()).send({ from: account }), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(swapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {
@@ -172,13 +175,8 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	}
 
 	const isDisabled = useMemo(
-		() =>
-			typeof pendingTx === 'string' ||
-			pendingTx ||
-			new BigNumber(inputVal).isNaN() ||
-			new BigNumber(inputVal).gt(maxValue) ||
-			new BigNumber(maxValue).lte(0),
-		[pendingTx, inputVal],
+		() => typeof pendingTx === 'string' || pendingTx || !isBigNumberish(inputVal) || BigNumber.from(inputVal).gt(maxValue),
+		[pendingTx, inputVal, maxValue],
 	)
 
 	return (

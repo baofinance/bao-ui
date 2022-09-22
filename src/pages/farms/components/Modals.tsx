@@ -3,7 +3,7 @@ import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import { FeeBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
+import { useWeb3React } from '@web3-react/core'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
@@ -24,13 +24,13 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 	const { pid } = farm
-	const bao = useBao()
+	const { library } = useWeb3React()
 
 	const lpTokenAddress = farm.lpTokenAddress
 
 	const lpContract = useMemo(() => {
-		return getContract(bao, lpTokenAddress)
-	}, [bao, lpTokenAddress])
+		return getContract(library, lpTokenAddress)
+	}, [lpTokenAddress, library])
 
 	const stakedBalance = useStakedBalance(pid)
 

@@ -1,6 +1,6 @@
 import { getCrvContract } from '@/bao/utils'
 import Multicall from '@/utils/multicall'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 
@@ -33,8 +33,8 @@ const useEpochTime = (): RewardsInfo => {
 		const { bao: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
 		setEpochTime({
-			start: new BigNumber(res[0].values[0].hex),
-			future: new BigNumber(res[1].values[0].hex),
+			start: res[0].values[0],
+			future: res[1].values[0],
 		})
 	}, [bao])
 

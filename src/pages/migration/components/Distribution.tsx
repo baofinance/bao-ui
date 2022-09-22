@@ -1,14 +1,14 @@
+import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
+import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React, { Fragment, useState } from 'react'
-import 'katex/dist/katex.min.css'
 import Latex from 'react-latex-next'
-import Button from '@/components/Button'
 
 const options = [
 	{
@@ -51,9 +51,10 @@ const options = [
 						<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
 					</div>
 					<div className='m-auto mt-4 flex w-1/2 flex-col items-center justify-center'>
-						<img
+						<Image
 							src='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/672bf049e86f377e5129b84931bba7933e324bcc.png'
 							className='h-[200px] rounded'
+							alt='Distribution function'
 						/>
 						<Typography variant='xs' className='mt-2 text-center text-text-200'>
 							A graph showing how BAO will unlock over time following.
@@ -89,9 +90,10 @@ const options = [
 						the remainder of this percentage of their remaining distribution immediately.
 					</Typography>
 					<div className='m-auto mt-2 flex w-1/2 flex-col items-center justify-center'>
-						<img
+						<Image
 							src='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/d0683e4c31a1d5cbfdf4a1a23f76325ca884ee43.gif'
 							className='max-h-[400px] w-min rounded'
+							alt='Slash function'
 						/>
 						<Typography variant='xs' className='mt-2 text-center text-text-200'>
 							In the graph above, the blue points are the state of both curves respectively. The orange point is the percentage of their

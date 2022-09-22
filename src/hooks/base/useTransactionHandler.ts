@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TransactionReceipt } from 'web3-core'
+import { TransactionReceipt } from '@ethersproject/providers'
 
 import useTransactionProvider from './useTransactionProvider'
 
@@ -25,19 +25,14 @@ const useTransactionHandler = () => {
 		setPendingTx(false)
 	}
 
-	const handleTx = (tx: any, description: string, cb?: () => void) => {
-		tx.on('transactionHash', (txHash: string) => handlePendingTx(txHash, description))
-			.on('receipt', (receipt: TransactionReceipt) => {
-				handleReceipt(receipt)
-				if (cb) cb()
-				setTxSuccess(false)
-				if (receipt.status === true) {
-					setTxSuccess(true)
-				}
-				return txSuccess
-			})
-			.on('error', clearPendingTx)
+	const handleTx = async (_tx: any, description: string, cb?: () => void) => {
+		const tx = await _tx
+		handlePendingTx(tx.hash, description)
 		setPendingTx(true)
+		const receipt = await tx.wait()
+		handleReceipt(receipt)
+		if (cb) cb()
+		setTxSuccess(receipt.status === true)
 	}
 
 	return {

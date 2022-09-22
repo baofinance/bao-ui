@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 import { decimate } from '@/utils/numberFormat'
@@ -16,19 +16,19 @@ export const useMarketsTVL = () => {
 	const fetchTvl = useCallback(async () => {
 		const marketsTvl = markets.reduce(
 			(prev, current) =>
-				prev.plus(decimate((current.supplied - current.totalBorrows) * prices[current.marketAddress], 36 - current.underlyingDecimals)),
-			new BigNumber(0),
+				prev.add(decimate((current.supplied - current.totalBorrows) * prices[current.marketAddress], 36 - current.underlyingDecimals)),
+			BigNumber.from(0),
 		)
 		// Assume $1 for DAI - need to use oracle price
-		const ballastTvl = decimate(await bao.getContract('stabilizer').methods.supply().call())
-		setTvl(marketsTvl.plus(ballastTvl))
+		const ballastTvl = decimate(await bao.getContract('stabilizer').supply())
+		setTvl(marketsTvl.add(ballastTvl))
 	}, [markets, prices, bao])
 
 	useEffect(() => {
 		if (!(markets && prices && bao)) return
 
 		fetchTvl()
-	}, [markets, prices, bao])
+	}, [markets, prices, bao, fetchTvl])
 
 	return tvl
 }

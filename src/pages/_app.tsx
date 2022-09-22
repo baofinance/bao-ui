@@ -8,8 +8,9 @@ import Head from 'next/head'
 import { DefaultSeo } from 'next-seo'
 import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
-import Web3 from 'web3'
-import { provider } from 'web3-core'
+import { Web3Provider } from '@ethersproject/providers'
+import { EthersAppContext } from 'eth-hooks/context'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import fetcher from '@/bao/lib/fetcher'
 import Header from '@/components/Header'
@@ -23,8 +24,10 @@ import TransactionProvider from '@/contexts/Transactions'
 import TxPopup from '@/components/TxPopup'
 import '@/components/TxPopup/styles.css'
 
-function getLibrary(provider: provider) {
-	return new Web3(provider)
+function getLibrary(provider: any): Web3Provider {
+	const library = new Web3Provider(provider)
+	//library.pollingInterval = 12000
+	return library
 }
 
 const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
@@ -79,27 +82,31 @@ function App({ Component, pageProps }: AppProps) {
 	)
 }
 
+const queryClient = new QueryClient()
+
 const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
 			<Web3ReactNetworkProvider getLibrary={getLibrary}>
 				<Web3ReactManager>
-					<BaoProvider>
-						<MarketsProvider>
-							<FarmsProvider>
-								<TransactionProvider>
-									<SWRConfig
-										value={{
-											fetcher,
-											refreshInterval: 300000,
-										}}
-									>
-										{children}
-									</SWRConfig>
-								</TransactionProvider>
-							</FarmsProvider>
-						</MarketsProvider>
-					</BaoProvider>
+					<EthersAppContext customGetEthersAppProviderLibrary={getLibrary}>
+						<BaoProvider>
+							<MarketsProvider>
+								<FarmsProvider>
+									<TransactionProvider>
+										<SWRConfig
+											value={{
+												fetcher,
+												refreshInterval: 300000,
+											}}
+										>
+											{children}
+										</SWRConfig>
+									</TransactionProvider>
+								</FarmsProvider>
+							</MarketsProvider>
+						</BaoProvider>
+					</EthersAppContext>
 				</Web3ReactManager>
 			</Web3ReactNetworkProvider>
 		</Web3ReactProvider>

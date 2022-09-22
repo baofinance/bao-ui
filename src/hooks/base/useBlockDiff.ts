@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
+//import { useBlockNumber } from 'eth-hooks'
 
 import useBlock from './useBlock'
 
@@ -12,16 +13,16 @@ const useBlockDiff = (userInfo: any) => {
 	const fetchBlockDiff = useCallback(async () => {
 		if (!(account && library && userInfo)) return
 
-		const firstDepositBlock = new BigNumber(userInfo.firstDepositBlock)
-		const lastWithdrawBlock = new BigNumber(userInfo.lastWithdrawBlock)
+		const firstDepositBlock = BigNumber.from(userInfo.firstDepositBlock)
+		const lastWithdrawBlock = BigNumber.from(userInfo.lastWithdrawBlock)
 
-		const blockDiff = block - new BigNumber(firstDepositBlock.gt(lastWithdrawBlock) ? firstDepositBlock : lastWithdrawBlock).toNumber()
+		const blockDiff = block - BigNumber.from(firstDepositBlock.gt(lastWithdrawBlock) ? firstDepositBlock : lastWithdrawBlock).toNumber()
 		setBlockDiff(blockDiff)
-	}, [library, block, userInfo])
+	}, [library, block, userInfo, account])
 
 	useEffect(() => {
 		fetchBlockDiff()
-	}, [library, block, userInfo])
+	}, [library, block, userInfo, fetchBlockDiff])
 
 	return blockDiff > 0 && blockDiff
 }

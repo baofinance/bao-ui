@@ -19,7 +19,7 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Switch } from '@headlessui/react'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
@@ -116,12 +116,12 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const bao = useBao()
 	const { account } = useWeb3React()
 
-	const suppliedUnderlying = useMemo(
-		() =>
+	const suppliedUnderlying = useMemo(() => {
+		return (
 			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
-			decimate(exchangeRates[market.marketAddress]).toNumber(),
-		[supplyBalances, exchangeRates],
-	)
+			decimate(exchangeRates[market.marketAddress]).toNumber()
+		)
+	}, [supplyBalances, exchangeRates])
 
 	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])
 
@@ -216,13 +216,10 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 												event.stopPropagation()
 												const contract = getComptrollerContract(bao)
 												if (isInMarket) {
-													handleTx(
-														contract.methods.exitMarket(market.marketAddress).send({ from: account }),
-														`Exit Market (${market.underlyingSymbol})`,
-													)
+													handleTx(contract.exitMarket(market.marketAddress), `Exit Market (${market.underlyingSymbol})`)
 												} else {
 													handleTx(
-														contract.methods.enterMarkets([market.marketAddress], Config.addressMap.DEAD).send({ from: account }), // Use dead as a placeholder param for `address borrower`, it will be unused
+														contract.enterMarkets([market.marketAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
 														`Enter Market (${market.underlyingSymbol})`,
 													)
 												}
