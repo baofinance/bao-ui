@@ -68,7 +68,7 @@ export class Contracts {
 				? Config.baskets.map(basket =>
 						Object.assign(basket, {
 							address: basket.basketAddresses[networkId],
-							basketContract: this.getNewContract(basket.lpAddress, ExperipieAbi),
+							basketContract: this.getNewContract(basket.basketAddresses[networkId], ExperipieAbi),
 							ovenContract: this.getNewContract(basket.ovenAddress, 'oven.json'),
 						}),
 				  )
