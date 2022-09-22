@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers'
+import BN from 'bignumber.js'
 import { useEffect, useState } from 'react'
 
 import { decimate } from '@/utils/numberFormat'
@@ -6,16 +7,18 @@ import { decimate } from '@/utils/numberFormat'
 import { BasketComponent } from './useComposition'
 
 const useNav = (composition: BasketComponent[], supply: BigNumber) => {
-	const [nav, setNav] = useState<BigNumber | undefined>()
+	const [nav, setNav] = useState<BN | undefined>()
 
 	useEffect(() => {
 		if (!(composition && supply)) return
 
-		setNav(
-			composition
-				.reduce((prev, comp) => prev.add(comp.price.mul(comp.balance.div(10 ** comp.decimals))), BigNumber.from(0))
-				.div(decimate(supply)),
-		)
+		// FIXME: uses bignumber.js
+		const _nav = composition
+			.reduce((prev, comp) => {
+				return prev.plus(comp.price.times(new BN(comp.balance.toString()).div(10 ** comp.decimals).toString()))
+			}, new BN(0))
+			.div(decimate(supply).toString())
+		setNav(_nav)
 	}, [composition, supply])
 
 	return nav
