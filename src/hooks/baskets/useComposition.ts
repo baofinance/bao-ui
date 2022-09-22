@@ -5,6 +5,7 @@ import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
+import BN from 'bignumber.js'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
@@ -15,7 +16,7 @@ export type BasketComponent = {
 	symbol: string
 	name: string
 	decimals: number
-	price: BigNumber
+	price: BN
 	image: any
 	balance: BigNumber
 	percentage: number
@@ -66,7 +67,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						balance: await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address),
 				  }
 			_c.address = tokenComposition[i]
-			_c.price = BigNumber.from(prices[tokenComposition[i].toLowerCase()])
+			//console.log(i, prices, tokenInfo[tokenComposition[i]], tokenComposition)
 
 			// Check if component is lent out. If the coin gecko prices array doesn't conclude it,
 			// the current component is a wrapped interest bearing token.
@@ -84,6 +85,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				])
 				const { lendingRegistry: lendingRes } = MultiCall.parseCallResults(await bao.multicall.call(lendingQuery))
 
+				//_c.price = prices[lendingRes[0].values[0].toLowerCase()]
 				_c.underlying = lendingRes[0].values[0]
 				_c.underlyingPrice = prices[_c.underlying.toLowerCase()]
 				_c.strategy = _getStrategy(lendingRes[1].values[0])
@@ -91,12 +93,13 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				// Get Exchange Rate
 				const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
 				const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
-				const exchangeRate = await logicContract.exchangeRate(_c.address)
+				const exchangeRate = await logicContract.callStatic.exchangeRate(_c.address)
 				// xSushi APY can't be found on-chain, check for special case
 				const apy = _c.strategy === 'Sushi Bar' ? await fetchSushiApy() : await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
 				const underlyingDecimals = await bao.getNewContract(lendingRes[0].values[0], 'erc20.json').decimals()
 
-				_c.price = decimate(prices[_c.underlying.toLowerCase()].mul(exchangeRate))
+				console.log(exchangeRate.toString(), prices[_c.underlying.toLowerCase()])
+				_c.price = new BN(exchangeRate.toString()).times(new BN(prices[_c.underlying.toLowerCase()]))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
@@ -113,13 +116,13 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			})
 		}
 
-		const marketCap = _comp.reduce((prev, comp) => prev.add(decimate(comp.balance, comp.decimals).mul(comp.price)), BigNumber.from(0))
+		const marketCap = _comp.reduce((prev, comp) => prev.add(decimate(comp.balance, comp.decimals).mul(comp.price.toString())), BigNumber.from(0))
 
 		// Assign allocation percentages
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
 
-			_comp[i].percentage = decimate(BigNumber.from(comp.balance), comp.decimals).mul(comp.price).div(marketCap).mul(100).toNumber()
+			_comp[i].percentage = decimate(BigNumber.from(comp.balance), comp.decimals).mul(comp.price.toString()).div(marketCap).mul(100).toNumber()
 		}
 
 		setComposition(_comp)

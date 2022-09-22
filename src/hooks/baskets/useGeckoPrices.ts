@@ -11,8 +11,6 @@ const useGeckoPrices = (): Prices => {
 	const [prices, setPrices] = useState<Prices | undefined>()
 	const baskets = useBaskets()
 
-	window.bn = BigNumber
-
 	const fetchPrices = useCallback(async () => {
 		const allCgIds: any = baskets.reduce((prev, cur) => {
 			const reversedCgIds = Object.keys(cur.cgIds).reduce((_prev, _cur) => ({ ..._prev, [cur.cgIds[_cur]]: _cur }), {})
