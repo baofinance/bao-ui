@@ -17,7 +17,8 @@ const useNav = (composition: BasketComponent[], supply: BigNumber) => {
 			.reduce((prev, comp) => {
 				return prev.plus(comp.price.times(new BN(comp.balance.toString()).div(10 ** comp.decimals).toString()))
 			}, new BN(0))
-			.div(decimate(supply).toString())
+			.div(supply.toString())
+		console.log(_nav)
 		setNav(_nav)
 	}, [composition, supply])
 
