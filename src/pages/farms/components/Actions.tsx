@@ -42,7 +42,7 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -126,11 +126,10 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 							<Button
 								fullWidth
 								onClick={async () => {
-									const tx = bao.getNewContract('erc20.json', lpTokenAddress)
-										.approve(
-											masterChefContract.address,
-											ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-										)
+									const tx = bao.getNewContract('erc20.json', lpTokenAddress, library.getSigner()).approve(
+										masterChefContract.address,
+										ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+									)
 
 									handleTx(tx, `Approve CRV`)
 								}}

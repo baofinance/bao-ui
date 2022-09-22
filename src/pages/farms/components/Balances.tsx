@@ -26,7 +26,7 @@ const Balances: React.FC = () => {
 	for (const earning of allEarnings) {
 		sumEarning = sumEarning.add(BigNumber.from(earning).div(BigNumber.from(10).pow(18)))
 	}
- 
+
 	const stats = [
 		{
 			label: 'BAO Balance',

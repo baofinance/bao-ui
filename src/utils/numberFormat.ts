@@ -59,7 +59,7 @@ export const isBigNumberish = (val: any): boolean => {
 	try {
 		BN.from(val)
 		return true
-	} catch(e) {
+	} catch (e) {
 		return false
 	}
 }

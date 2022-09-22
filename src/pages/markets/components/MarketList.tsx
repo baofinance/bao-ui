@@ -116,13 +116,12 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const bao = useBao()
 	const { account } = useWeb3React()
 
-	const suppliedUnderlying = useMemo(
-		() => {
-			return (supplyBalances.find(balance => balance.address === market.marketAddress).balance *
-				decimate(exchangeRates[market.marketAddress]).toNumber())
-		},
-		[supplyBalances, exchangeRates]
-	)
+	const suppliedUnderlying = useMemo(() => {
+		return (
+			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
+			decimate(exchangeRates[market.marketAddress]).toNumber()
+		)
+	}, [supplyBalances, exchangeRates])
 
 	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])
 
@@ -217,10 +216,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 												event.stopPropagation()
 												const contract = getComptrollerContract(bao)
 												if (isInMarket) {
-													handleTx(
-														contract.exitMarket(market.marketAddress),
-														`Exit Market (${market.underlyingSymbol})`,
-													)
+													handleTx(contract.exitMarket(market.marketAddress), `Exit Market (${market.underlyingSymbol})`)
 												} else {
 													handleTx(
 														contract.enterMarkets([market.marketAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused

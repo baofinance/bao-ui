@@ -89,7 +89,6 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 		<Web3ReactProvider getLibrary={getLibrary}>
 			<Web3ReactNetworkProvider getLibrary={getLibrary}>
 				<Web3ReactManager>
-
 					<EthersAppContext customGetEthersAppProviderLibrary={getLibrary}>
 						<BaoProvider>
 							<MarketsProvider>
@@ -108,7 +107,6 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 							</MarketsProvider>
 						</BaoProvider>
 					</EthersAppContext>
-
 				</Web3ReactManager>
 			</Web3ReactNetworkProvider>
 		</Web3ReactProvider>

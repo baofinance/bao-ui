@@ -2,13 +2,15 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { approve } from '@/bao/utils'
 import Button from '@/components/Button'
+import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/markets/useApprovals'
 import { decimate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 //import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
 import React from 'react'
 import { MarketOperations } from './Modals/Modals'
@@ -22,6 +24,8 @@ type MarketButtonProps = {
 }
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
+	const bao = useBao()
+	const { library } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const { approvals } = useApprovals(pendingTx)
 
@@ -69,7 +73,12 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approve(underlyingContract, marketContract), `Approve ${asset.underlyingSymbol} for Markets`)
+							const tx = underlyingContract.approve(
+								marketContract,
+								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+								library.getSigner(),
+							)
+							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
@@ -133,7 +142,12 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingContract } = asset
-							handleTx(approve(underlyingContract, marketContract), `Approve ${asset.underlyingSymbol} for Markets`)
+							const tx = underlyingContract.approve(
+								marketContract,
+								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+								library.getSigner(),
+							)
+							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}

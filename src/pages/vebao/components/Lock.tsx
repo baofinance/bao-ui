@@ -39,7 +39,7 @@ function addMonths(numOfMonths: number, date = new Date()) {
 
 const Lock: React.FC = () => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const lockInfo = useLockInfo()
 	const [val, setVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
@@ -93,8 +93,8 @@ const Lock: React.FC = () => {
 										<>
 											<div className='flex flex-col'>
 												<div className='flex flex-row justify-center'>
-													{getDisplayBalance(lockInfo && lockInfo.balance || 0)} veBAO <ArrowRightIcon className='h-4 w-4' />
-													{getDisplayBalance(lockInfo && lockInfo.lockAmount || 0)} BAO
+													{getDisplayBalance((lockInfo && lockInfo.balance) || 0)} veBAO <ArrowRightIcon className='h-4 w-4' />
+													{getDisplayBalance((lockInfo && lockInfo.lockAmount) || 0)} BAO
 												</div>
 												<div className='flex flex-row justify-center'>
 													{lockInfo && new Date(lockInfo.lockEnd.toNumber()).toDateString()}
@@ -106,8 +106,8 @@ const Lock: React.FC = () => {
 									<a>
 										{account && !isNaN(lockInfo && lockInfo.balance.toNumber())
 											? window.screen.width > 1200
-												? getDisplayBalance(lockInfo && lockInfo.balance || 0)
-												: truncateNumber(lockInfo && lockInfo.balance || 0)
+												? getDisplayBalance((lockInfo && lockInfo.balance) || 0)
+												: truncateNumber((lockInfo && lockInfo.balance) || 0)
 											: '-'}
 									</a>
 								</Tooltipped>
@@ -123,7 +123,7 @@ const Lock: React.FC = () => {
 						},
 						{
 							label: `Total veBAO`,
-							value: <Typography>{getDisplayBalance(lockInfo && lockInfo.totalSupply || 0)}</Typography>,
+							value: <Typography>{getDisplayBalance((lockInfo && lockInfo.totalSupply) || 0)}</Typography>,
 						},
 					]}
 				/>
@@ -335,6 +335,7 @@ const Lock: React.FC = () => {
 															const tx = crvContract.approve(
 																votingEscrowContract.address,
 																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+																library.getSigner(),
 															)
 															handleTx(tx, `Approve CRV`)
 														}}

@@ -3,7 +3,7 @@ import { useBlockNumber } from 'eth-hooks'
 
 const useBlock = () => {
 	const { library } = useWeb3React()
-	const [block] = useBlockNumber(library, (bn?: number) => { }, {
+	const [block] = useBlockNumber(library, (bn?: number) => {}, {
 		refetchInterval: undefined,
 		blockNumberInterval: 10,
 	})

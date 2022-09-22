@@ -110,7 +110,7 @@ const getMarketInfo = async (tokenAddress: string): Promise<any> =>
 const getMarketsInfo = async (): Promise<any> => await _querySubgraph(_getMarketsQuery(), 'baoMarkets', Config.networkId)
 
 const _getPriceHistoryQuery = (tokenAddress: string) =>
-`
+	`
 	{
 	tokens(where: {id:"${tokenAddress}"}) {
 		id
@@ -125,7 +125,7 @@ const _getPriceHistoryQuery = (tokenAddress: string) =>
 `
 
 const _getPriceHistoryQueryMultiple = (tokenAddresses: string[], first = 100) =>
-`
+	`
 	{
 		tokens(where: {id_in:["${tokenAddresses.map(symbol => symbol.toLowerCase()).join('","')}"]}) {
 			id
@@ -141,7 +141,7 @@ const _getPriceHistoryQueryMultiple = (tokenAddresses: string[], first = 100) =>
 `
 
 const _getPriceFromPair = (tokenAddress: string) =>
-`
+	`
 	{
 		token(id:"${tokenAddress}"){
 			${['basePairs', 'quotePairs'].map(
@@ -187,7 +187,7 @@ const _getPriceFromPairMultiple = (tokenAddresses: string[]) => {
 }
 
 const _getBaoBurnQuery = () =>
-`
+	`
 	{
 		burn(id:"0"){
 			burnedTokens,
@@ -197,7 +197,7 @@ const _getBaoBurnQuery = () =>
 `
 
 const _getBaoSupplyQuery = () =>
-`
+	`
 	{
 		tokenStats(id:"0"){
 			supply
@@ -206,7 +206,7 @@ const _getBaoSupplyQuery = () =>
 `
 
 const _getMarketQuery = (tokenAddress: string) =>
-`
+	`
 	{
 		market(id:"${tokenAddress.toLowerCase()}"){
 			cash,
@@ -231,7 +231,7 @@ const _getMarketQuery = (tokenAddress: string) =>
 `
 
 const _getMarketsQuery = () =>
-`
+	`
 	{
 		markets {
 			cash,

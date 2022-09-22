@@ -1,6 +1,6 @@
 import { faShip, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -74,12 +74,15 @@ const BallastSwapper: React.FC = () => {
 				Reserves: {reserves ? getDisplayBalance(reserves).toString() : <Loader />}{' '}
 			</Typography>
 			<Input
-				onSelectMax={() => setInputVal(decimate(daiBalance).toString())}
+				onSelectMax={() => setInputVal(ethers.utils.formatEther(daiBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
 					swapDirection && fees && inputVal
-						? BigNumber.from(inputVal)
-								.mul(BigNumber.from(1).sub(fees['sell'].div(fees['denominator']))).toString()
+						? ethers.utils.formatEther(
+								BigNumber.from(ethers.utils.parseEther(inputVal))
+									.mul(BigNumber.from(1).sub(fees['sell'].div(fees['denominator'])))
+									.toString(),
+						  )
 						: inputVal
 				}
 				disabled={swapDirection}
@@ -103,12 +106,15 @@ const BallastSwapper: React.FC = () => {
 				Mint Limit: {supplyCap ? getDisplayBalance(supplyCap).toString() : <Loader />}{' '}
 			</Typography>
 			<Input
-				onSelectMax={() => setInputVal(decimate(baoUSDBalance).toString())}
+				onSelectMax={() => setInputVal(ethers.utils.formatEther(baoUSDBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={
 					!swapDirection && fees && inputVal
-						? BigNumber.from(inputVal)
-								.mul(BigNumber.from(1).sub(fees['buy'].div(fees['denominator']))).toString()
+						? ethers.utils.formatEther(
+								BigNumber.from(ethers.utils.parseEther(inputVal))
+									.mul(BigNumber.from(1).sub(fees['buy'].div(fees['denominator'])))
+									.toString(),
+						  )
 						: inputVal
 				}
 				disabled={!swapDirection}
@@ -156,8 +162,8 @@ const BallastSwapper: React.FC = () => {
 						swapDirection={swapDirection}
 						inputVal={inputVal}
 						maxValues={{
-							buy: decimate(daiBalance.toString()),
-							sell: decimate(baoUSDBalance.toString()),
+							buy: ethers.utils.parseEther(daiBalance.toString()),
+							sell: ethers.utils.parseEther(baoUSDBalance.toString()),
 						}}
 						supplyCap={supplyCap}
 						reserves={reserves}

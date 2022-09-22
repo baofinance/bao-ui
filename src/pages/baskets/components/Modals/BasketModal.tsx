@@ -15,6 +15,7 @@ import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import { ethers, BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import Link from 'next/link'
@@ -39,6 +40,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
 	const bao = useBao()
+	const { library } = useWeb3React()
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
@@ -64,6 +66,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json').approve(
 							recipe.address,
 							ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							library.getSigner(),
 						)
 
 						handleTx(tx, 'Approve DAI for Baskets Recipe')

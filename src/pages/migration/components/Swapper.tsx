@@ -14,13 +14,15 @@ import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import { useWeb3React } from '@web3-react/core'
 
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
+	const { library } = useWeb3React()
 
 	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
@@ -79,6 +81,7 @@ export default Swapper
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
 	const bao = useBao()
+	const { library } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.stabilizer[Config.networkId].address)
@@ -86,14 +89,19 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const handleClick = async () => {
 		if (!bao) return
 
-		const SwapperContract = bao.getContract('stabilizer') // FIXME: needs signer
+		const swapperContract = bao.getContract('stabilizer')
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const tokenContract = bao.getNewContract('erc20.json', Config.addressMap.BAO)
-			return handleTx(approve(tokenContract, SwapperContract), 'Migration: Approve BAOv1')
+			const tx = bao.getNewContract(Config.addressMap.BAO, 'erc20.json').approve(
+				swapperContract,
+				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+				library.getSigner(),
+			)
+
+			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(SwapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(swapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {

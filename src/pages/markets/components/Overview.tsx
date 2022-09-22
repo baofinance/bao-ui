@@ -130,18 +130,16 @@ export const Overview = () => {
 								//) : (
 								//	<FontAwesomeIcon icon={faInfinity} />
 								//))
-									healthFactor && (
-										healthFactor.lte(0) ? (
-											'-'
-										) : healthFactor.gt(10000) ? (
-											<p>
-												{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
-											</p>
-										) : (
-											getDisplayBalance(healthFactor)
-										)
-									)
-							}
+								healthFactor &&
+								(healthFactor.lte(0) ? (
+									'-'
+								) : healthFactor.gt(10000) ? (
+									<p>
+										{'>'} 10000 <Tooltipped content={`Your health factor is ${healthFactor}.`} />
+									</p>
+								) : (
+									getDisplayBalance(healthFactor)
+								))}
 						</Typography>
 					</div>
 				</div>

@@ -33,11 +33,11 @@ const parseCallResults = (call: ContractCallResults): any => {
 	const result: any = {}
 	_.each(Object.keys(call.results), key => {
 		result[key] = _.map(call.results[key].callsReturnContext, returnValue => {
-			const values = returnValue.returnValues.map((x) => {
+			const values = returnValue.returnValues.map(x => {
 				//if (x.type === 'BigNumber') {
-					//return new BigNumber(BN.from(x).toString())
+				//return new BigNumber(BN.from(x).toString())
 				//} else {
-					//return x
+				//return x
 				//}
 				if (x.type === 'BigNumber') {
 					return BN.from(x)

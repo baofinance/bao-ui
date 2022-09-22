@@ -31,7 +31,9 @@ const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }
 	// if (library) library.on('chainChanged', () => window.location.reload())
 
 	useEffect(() => {
-		if (!library || !account) { return }
+		if (!library || !account) {
+			return
+		}
 		// const { ethereum: windowEth } = window
 		// if (windowEth && !ethereum) {
 		// 	// Check if user has connected to the webpage before

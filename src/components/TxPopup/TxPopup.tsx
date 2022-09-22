@@ -56,14 +56,18 @@ const TxPopup: React.FC = () => {
 	const { library } = useWeb3React()
 
 	useEffect(() => {
-		if (!library) { return }
+		if (!library) {
+			return
+		}
 		setSeenTxs((stxs: any) => {
 			// This is a guard so that we do not have multiple popups for the same tx
 			pendingTxs.map(tx => {
 				if (!stxs[tx.hash]) {
 					waitTransaction(library, tx.hash).then(receipt => {
 						console.log(receipt)
-						if (receipt === null) { return }
+						if (receipt === null) {
+							return
+						}
 						const success = isSuccessfulTransaction(receipt)
 						NotifStore.addNotification({
 							title: <PopupTitle success={success} />,

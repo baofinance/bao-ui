@@ -34,14 +34,12 @@ const useHealthFactor = () => {
 		if (Object.keys(balanceRes).length === 0) return setHealthFactor(BigNumber.from(0))
 
 		const collateralSummation = _markets.reduce((prev, cur) => {
-			return (
-				prev.add(
-					BigNumber.from(prices[cur.marketAddress])
+			return prev.add(
+				BigNumber.from(prices[cur.marketAddress])
 					.div(BigNumber.from(10).pow(36 - cur.underlyingDecimals))
 					.mul(balanceRes[cur.marketAddress][0].values[0])
 					.div(BigNumber.from(10).pow(cur.underlyingDecimals))
-					.mul(cur.collateralFactor)
-				)
+					.mul(cur.collateralFactor),
 			)
 		}, BigNumber.from(0))
 

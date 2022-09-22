@@ -68,7 +68,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const totalMintable = useMintable()
 	const mintable = totalMintable.mul(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
-	const gaugeTVL = gaugeInfo && virtualPrice.mul(gaugeInfo.totalSupply.div(BigNumber.from(10).pow(18))) || 0
+	const gaugeTVL = (gaugeInfo && virtualPrice.mul(gaugeInfo.totalSupply.div(BigNumber.from(10).pow(18)))) || 0
 	const rewardAPY = baoPrice && baoPrice.times(new BN(mintable.toString())).div(new BN(gaugeTVL.toString()))
 
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
