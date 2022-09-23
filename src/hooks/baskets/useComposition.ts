@@ -36,7 +36,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const fetchComposition = useCallback(async () => {
 		const tokenComposition: string[] = await bao.getNewContract(basket.address, 'experipie.json').getTokens()
 		const lendingRegistry = bao.getContract('lendingRegistry')
-		console.log(tokenComposition)
 		const tokensQuery = MultiCall.createCallContext(
 			tokenComposition
 				.filter(
@@ -67,7 +66,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						balance: await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address),
 				  }
 			_c.address = tokenComposition[i]
-			//console.log(i, prices, tokenInfo[tokenComposition[i]], tokenComposition)
 
 			// Check if component is lent out. If the coin gecko prices array doesn't conclude it,
 			// the current component is a wrapped interest bearing token.
@@ -98,8 +96,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				const apy = _c.strategy === 'Sushi Bar' ? await fetchSushiApy() : await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
 				const underlyingDecimals = await bao.getNewContract(lendingRes[0].values[0], 'erc20.json').decimals()
 
-				console.log(exchangeRate.toString(), prices[_c.underlying.toLowerCase()])
-				_c.price = new BN(exchangeRate.toString()).times(new BN(prices[_c.underlying.toLowerCase()]))
+				_c.price = new BN(exchangeRate.toString()).times(new BN(prices[_c.underlying.toLowerCase()].toString()))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
@@ -116,13 +113,20 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			})
 		}
 
-		const marketCap = _comp.reduce((prev, comp) => prev.add(decimate(comp.balance, comp.decimals).mul(comp.price.toString())), BigNumber.from(0))
+		const marketCap = _comp.reduce((prev, comp) => {
+			return prev.add(decimate(comp.balance, comp.decimals).mul(comp.price.toString()))
+		}, BigNumber.from(0))
 
 		// Assign allocation percentages
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
 
-			_comp[i].percentage = decimate(BigNumber.from(comp.balance), comp.decimals).mul(comp.price.toString()).div(marketCap).mul(100).toNumber()
+			_comp[i].percentage = new BN(comp.balance.toString())
+				.times(comp.price.toString())
+				.div(marketCap.toString())
+				.times(100)
+				.div(10 ** comp.decimals)
+				.toNumber()
 		}
 
 		setComposition(_comp)

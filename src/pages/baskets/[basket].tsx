@@ -81,7 +81,7 @@ const Basket: NextPage<{
 			</div>
 			<BasketStats basket={basket} composition={composition} rates={rates} info={info} pairPrice={pairPrice} />
 			<BasketButtons basket={basket} swapLink={basket.swap} />
-			{/* <Composition composition={composition} rates={rates} info={info} basketId={basketId} /> */}
+			<Composition composition={composition} rates={rates} info={info} basketId={basketId} />
 			<Description basketAddress={basket.basketAddresses[1]} />
 		</>
 	) : (

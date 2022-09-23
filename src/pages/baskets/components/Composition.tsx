@@ -9,7 +9,8 @@ import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
+import BN from 'bignumber.js'
+import { utils, BigNumber } from 'ethers'
 import _ from 'lodash'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
@@ -67,43 +68,45 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 								<tbody className={`${isDesktop ? 'text-base' : 'text-sm'}`}>
 									{composition
 										.sort((a, b) => (a.percentage < b.percentage ? 1 : -1))
-										.map((component: any) => (
-											<tr key={component.symbol} className='even:bg-primary-100'>
-												<td className='p-2 text-center'>
-													<Tooltipped content={component.symbol} placement='left'>
-														<a>
-															<Image src={component.image} width={32} height={32} alt={component.symbol} className='inline' />
-														</a>
-													</Tooltipped>
-												</td>
-												<td className='p-2'>
-													<Progress
-														width={(component.percentage / maxPercentage) * 100}
-														label={`${getDisplayBalance(BigNumber.from(component.percentage), 0)}%`}
-														assetColor={component.color}
-													/>
-												</td>
-												<td className='p-2 text-center'>
-													<Badge className='bg-primary-300 font-semibold'>
-														${getDisplayBalance(component.basePrice || component.price, 0)}
-													</Badge>
-												</td>
-												<td className='p-2 text-center'>
-													<Tooltipped content={component.apy ? `${component.apy.div(1e18).times(100).toFixed(18)}%` : '-'}>
-														<a>
-															<Badge className='bg-primary-300 font-semibold'>
-																{component.apy ? `${component.apy.div(1e18).times(100).toFixed(2)}%` : '-'}
-															</Badge>
-														</a>
-													</Tooltipped>
-												</td>
-												{isDesktop && (
+										.map((component: any) => {
+											return (
+												<tr key={component.symbol} className='even:bg-primary-100'>
 													<td className='p-2 text-center'>
-														<Badge className='bg-primary-300 font-semibold'>{component.strategy || 'None'}</Badge>
+														<Tooltipped content={component.symbol} placement='left'>
+															<a>
+																<Image src={component.image} width={32} height={32} alt={component.symbol} className='inline' />
+															</a>
+														</Tooltipped>
 													</td>
-												)}
-											</tr>
-										)) || (
+													<td className='p-2'>
+														<Progress
+															width={(component.percentage / maxPercentage) * 100}
+															label={`${getDisplayBalance(component.percentage, 0)}%`}
+															assetColor={component.color}
+														/>
+													</td>
+													<td className='p-2 text-center'>
+														<Badge className='bg-primary-300 font-semibold'>
+															${getDisplayBalance(new BN(component.basePrice || component.price).div(1e18), 0)}
+														</Badge>
+													</td>
+													<td className='p-2 text-center'>
+														<Tooltipped content={component.apy ? `${new BN(component.apy.toString()).div(1e18).times(100).toFixed(18)}%` : '-'}>
+															<a>
+																<Badge className='bg-primary-300 font-semibold'>
+																	{component.apy ? `${new BN(component.apy.toString()).div(1e18).times(100).toFixed(2)}%` : '-'}
+																</Badge>
+															</a>
+														</Tooltipped>
+													</td>
+													{isDesktop && (
+														<td className='p-2 text-center'>
+															<Badge className='bg-primary-300 font-semibold'>{component.strategy || 'None'}</Badge>
+														</td>
+													)}
+												</tr>
+											)}
+										) || (
 										<tr>
 											{['name', 'perc', 'price', 'apy', 'strategy'].map(tdClass => (
 												<td key={Math.random()} className={tdClass}>
