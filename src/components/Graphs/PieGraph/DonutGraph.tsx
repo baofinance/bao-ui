@@ -3,7 +3,7 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
 import { Text } from '@visx/text'
-import { utils } from 'ethers'
+import { utils, BigNumber } from 'ethers'
 import _ from 'lodash'
 import { useState } from 'react'
 import { animated, interpolate, useTransition } from 'react-spring'
@@ -34,14 +34,20 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 	const [selectedAssetAmount, setSelectedAssetAmount] = useState<string | null>(null)
 	const [active, setActive] = useState(null)
 
-	const assetsBalance: AssetAllocationAmount[] = composition.map(component => ({
-		symbol: `${component.symbol}`,
-		percentage: `${component.percentage.toFixed(4)}%`,
-		balance: `${utils.formatUnits(component.balance, component.decimals)}`,
-		tvl: `${component.price ? `$${utils.formatUnits(component.price.mul(component.balance), component.decimals)}` : ''}`,
-		frequency: component.percentage,
-		color: component.color,
-	}))
+	const assetsBalance: AssetAllocationAmount[] = composition.map(component => {
+		const tvl = component.price.times(component.balance.toString())
+			.div(10 ** 18)
+			.div(10 ** component.decimals)
+			.toFixed(2)
+		return ({
+			symbol: `${component.symbol}`,
+			percentage: `${component.percentage.toFixed(4)}%`,
+			balance: `${utils.formatUnits(component.balance, component.decimals)}`,
+			tvl: `${component.price ? tvl : ''}`,
+			frequency: component.percentage,
+			color: component.color,
+		})
+	})
 
 	const frequency = (d: AssetAllocationAmount) => d.frequency
 
@@ -98,7 +104,7 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 				{!active ? (
 					<>
 						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
-							{`${rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <Loader />}`}
+							{`${rates && info ? `$${getDisplayBalance(rates.usd.mul(info.totalSupply), 36)}` : <Loader />}`}
 						</Text>
 						<Text textAnchor='middle' fill='#aa9585' className='text-xs' dy={14}>
 							{`Total Value Locked`}
@@ -107,7 +113,7 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 				) : (
 					<>
 						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
-							{`${active && active.tvl}`}
+							{`$${active && active.tvl}`}
 						</Text>
 						<Text textAnchor='middle' fill={active.color} className='text-xs' dy={14}>
 							{`${active.balance} ${active.symbol}`}
