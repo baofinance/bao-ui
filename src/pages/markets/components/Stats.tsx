@@ -5,6 +5,7 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import React, { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
@@ -122,7 +123,7 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 	)
 	const price = useMemo(() => {
 		if (!borrowBalance) return
-		return getDisplayBalance(BigNumber.from(asset.price).mul(borrowBalance), 0)
+		return getDisplayBalance(asset.price * borrowBalance, 0)
 	}, [borrowBalance, asset.price])
 
 	return (
