@@ -39,14 +39,14 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 			.div(10 ** 18)
 			.div(10 ** component.decimals)
 			.toFixed(2)
-		return ({
+		return {
 			symbol: `${component.symbol}`,
 			percentage: `${component.percentage.toFixed(4)}%`,
 			balance: `${utils.formatUnits(component.balance, component.decimals)}`,
 			tvl: `${component.price ? tvl : ''}`,
 			frequency: component.percentage,
 			color: component.color,
-		})
+		}
 	})
 
 	const frequency = (d: AssetAllocationAmount) => d.frequency

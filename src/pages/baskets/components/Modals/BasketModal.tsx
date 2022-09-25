@@ -17,6 +17,7 @@ import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { ethers, BigNumber } from 'ethers'
+import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
@@ -226,14 +227,14 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Input
 										value={secondaryValue}
 										onChange={e => {
-											const inputVal = decimate(mintOption === MintOption.DAI ? rates.dai : rates.eth)
-												.mul(e.currentTarget.value)
-												.mul(1.02)
+											const inputVal = new BN(decimate(mintOption === MintOption.DAI ? rates.dai : rates.eth).toString())
+												.times(e.currentTarget.value)
+												.times(1.02)
 											setSecondaryValue(e.currentTarget.value)
 											setValue(
 												// FIXME: ethers.BigNumber does not support an infinite value
-												//inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
-												ethers.utils.formatUnits(inputVal, 18),
+												inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
+												//ethers.utils.formatUnits(inputVal, 18),
 											)
 										}}
 										onSelectMax={() => {
