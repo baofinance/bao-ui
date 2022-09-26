@@ -52,6 +52,8 @@ const options = [
 					</div>
 					<div className='m-auto mt-4 flex w-1/2 flex-col items-center justify-center'>
 						<Image
+							width={624}
+							height={243}
 							src='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/672bf049e86f377e5129b84931bba7933e324bcc.png'
 							className='h-[200px] rounded'
 							alt='Distribution function'
@@ -91,6 +93,8 @@ const options = [
 					</Typography>
 					<div className='m-auto mt-2 flex w-1/2 flex-col items-center justify-center'>
 						<Image
+							width={624}
+							height={243}
 							src='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/d0683e4c31a1d5cbfdf4a1a23f76325ca884ee43.gif'
 							className='max-h-[400px] w-min rounded'
 							alt='Slash function'
