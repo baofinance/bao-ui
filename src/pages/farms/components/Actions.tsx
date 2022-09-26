@@ -30,7 +30,7 @@ import { FeeModal } from './Modals'
 
 interface StakeProps {
 	lpContract: Contract
-	lpTokenAddress: string
+	lpTokenAddress: string // FIXME: this is passed in but we get it again
 	pid: number
 	max: BigNumber
 	tokenName?: string
@@ -40,9 +40,9 @@ interface StakeProps {
 	onHide: () => void
 }
 
-export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
+export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
+	const { library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -71,7 +71,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 	}, [max])
 
 	const masterChefContract = getMasterChefContract(bao)
-	const allowance = useAllowance(lpTokenAddress, masterChefContract.options.address)
+	const allowance = useAllowance(lpTokenAddress, masterChefContract.address)
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -125,12 +125,10 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 								fullWidth
 								disabled={max.lte(0)}
 								onClick={async () => {
-									const tx = bao.getNewContract('erc20.json', lpTokenAddress).approve(
-										masterChefContract.options.address,
-										ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-										library.getSigner(),
-									)
-
+									const signer = library.getSigner()
+									const lpToken = getContract(signer, lpTokenAddress)
+									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+									const tx = lpToken.approve(masterChefContract.address, ethers.constants.MaxUint256, signer)
 									handleTx(tx, `Approve ${tokenName}`)
 								}}
 							>
@@ -199,7 +197,6 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 

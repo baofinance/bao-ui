@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { BigNumber } from 'ethers'
 
+import Config from '@/bao/lib/config'
 import { getBaoSupply } from '@/bao/utils'
 import Loader from '@/components/Loader'
 import { StatCards } from '@/components/Stats'
@@ -15,7 +16,7 @@ import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao && bao.getContract('bao').address)
+	const baoBalance = useTokenBalance(Config.addressMap.BAO)
 	const { account } = useWeb3React()
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const locks = useLockedEarnings()

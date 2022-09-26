@@ -25,6 +25,8 @@ import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
+import { Contract } from '@ethersproject/contracts'
+import ERC20_ABI from '@/bao/lib/abi/erc20.json'
 
 function addDays(numOfDays: number, date = new Date()) {
 	date.setDate(date.getDate() + numOfDays)
@@ -51,7 +53,6 @@ const Lock: React.FC = () => {
 	const [endDate, setEndDate] = useState(startDate)
 	const crvAddress = Config.addressMap.CRV
 	const crvBalance = useTokenBalance(crvAddress)
-	const crvContract = bao && bao.getContract('crv')
 	const votingEscrowContract = getVotingEscrowContract(bao)
 	const nextFeeDistribution = useNextDistribution()
 	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[Config.networkId].address)
@@ -343,10 +344,9 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
-															const tx = bao.getNewContract(Config.addressMap.CRV, 'erc20.json', library.getSigner()).approve(
-																votingEscrowContract.address,
-																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-															)
+															const crv = new Contract(Config.addressMap.CRV, ERC20_ABI, library.getSigner())
+															// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+															const tx = crv.approve(votingEscrowContract.address, ethers.constants.MaxUint256)
 															handleTx(tx, `Approve CRV`)
 														}}
 													>

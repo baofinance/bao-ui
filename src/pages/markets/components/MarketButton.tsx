@@ -1,7 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Button from '@/components/Button'
-import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/markets/useApprovals'
 import { decimate } from '@/utils/numberFormat'
@@ -12,6 +11,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
 import { MarketOperations } from './Modals/Modals'
+import { Erc20__factory } from '@/typechain/factories'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -22,7 +22,6 @@ type MarketButtonProps = {
 }
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
-	const bao = useBao()
 	const { library } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const { approvals } = useApprovals(pendingTx)
@@ -71,10 +70,9 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingAddress } = asset
-							const tx = bao.getNewContract(underlyingAddress, 'erc20.json', library.getSigner()).approve(
-								marketContract.address,
-								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							)
+							const erc20 = Erc20__factory.connect(underlyingAddress, library.getSigner())
+							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
@@ -143,10 +141,9 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={!approvals}
 						onClick={() => {
 							const { underlyingAddress } = asset
-							const tx = bao.getNewContract(underlyingAddress, 'erc20.json', library.getSigner()).approve(
-								marketContract.address,
-								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							)
+							const erc20 = Erc20__factory.connect(underlyingAddress, library.getSigner())
+							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
