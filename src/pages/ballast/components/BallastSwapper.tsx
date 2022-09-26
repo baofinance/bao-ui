@@ -16,7 +16,11 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import Multicall from '@/utils/multicall'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
+
+import { useWeb3React } from '@web3-react/core'
+import { Stabilizer__factory } from '@/typechain/factories'
+import { Dai__factory } from '@/typechain/factories'
 
 import BallastButton from './BallastButton'
 
@@ -33,19 +37,22 @@ const BallastSwapper: React.FC = () => {
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 
+	const { library, chainId } = useWeb3React()
+
 	// TODO: Move this to a hook ?
 	const fetchBallastInfo = useCallback(async () => {
-		const ballastContract = bao.getContract('stabilizer')
+		const ballast = Stabilizer__factory.connect(Config.contracts.stabilizer[chainId].address, library)
+		const dai = Dai__factory.connect(Config.contracts.dai[chainId].address, library)
 		const ballastQueries = Multicall.createCallContext([
 			{
 				ref: 'Ballast',
-				contract: ballastContract,
+				contract: ballast,
 				calls: [{ method: 'supplyCap' }, { method: 'buyFee' }, { method: 'sellFee' }, { method: 'FEE_DENOMINATOR' }],
 			},
 			{
 				ref: 'DAI',
-				contract: bao.getNewContract(Config.addressMap.DAI, 'erc20.json'),
-				calls: [{ method: 'balanceOf', params: [ballastContract.address] }],
+				contract: dai,
+				calls: [{ method: 'balanceOf', params: [ballast.address] }],
 			},
 		])
 		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
@@ -57,13 +64,13 @@ const BallastSwapper: React.FC = () => {
 			denominator: ballastRes[3].values[0],
 		})
 		setReserves(daiRes[0].values[0])
-	}, [bao])
+	}, [bao, library, chainId])
 
 	useEffect(() => {
-		if (!bao) return
+		if (!bao || !library || !chainId) return
 
 		fetchBallastInfo()
-	}, [bao, transactions])
+	}, [bao, library, chainId])
 
 	const daiInput = (
 		<>
