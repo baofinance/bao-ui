@@ -7,7 +7,6 @@ import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
@@ -22,6 +21,7 @@ import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 import { SimpleUniRecipe__factory } from '@/typechain/factories'
+import { Dai__factory } from '@/typechain/factories'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -41,7 +41,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
-	const bao = useBao()
 	const { library, chainId } = useWeb3React()
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
@@ -67,11 +66,9 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) {
-						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json', library.getSigner()).approve(
-							recipe.address,
-							ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-						)
-
+						const dai = Dai__factory.connect(Config.addressMap.DAI, library.getSigner())
+						// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
+						tx = dai.approve(recipe.address, ethers.constants.MaxUint256)
 						handleTx(tx, 'Approve DAI for Baskets Recipe')
 						break
 					}
