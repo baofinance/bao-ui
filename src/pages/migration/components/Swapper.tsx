@@ -16,6 +16,8 @@ import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import { Stabilizer__factory } from '@/typechain/factories'
+import { Bao__factory } from '@/typechain/factories'
 
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
@@ -135,7 +137,7 @@ export default Swapper
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
+	const { library, chainId } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.stabilizer[Config.networkId].address)
@@ -143,10 +145,13 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const handleClick = async () => {
 		if (!bao) return
 
-		const swapperContract = bao.getContract('stabilizer')
+		const signer = library.getSigner()
+		const swapperContract = Stabilizer__factory.connect(Config.contracts.stabilizer[chainId].address, signer)
+
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const tx = bao.getNewContract(Config.addressMap.BAO, 'erc20.json', library.getSigner()).approve(
+			const baoContract = Bao__factory.connect(Config.addressMap.BAO, signer)
+			const tx = baoContract.approve(
 				swapperContract.address,
 				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 			)
