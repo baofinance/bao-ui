@@ -89,7 +89,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			case 'REDEEM':
 				tx = basket.basketContract.exitPool(exponentiate(value).toFixed(0))
 
-				handleTx(tx, `Redeem ${getDisplayBalance(BigNumber.from(value), 0)} ${basket.symbol}`, () => hide())
+				handleTx(tx, `Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
 		}
 	}
 
