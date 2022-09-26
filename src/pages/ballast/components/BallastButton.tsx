@@ -11,6 +11,7 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useWeb3React } from '@web3-react/core'
 import { Stabilizer__factory } from '@/typechain/factories'
 import { Dai__factory } from '@/typechain/factories'
+import { Erc20bao__factory } from '@/typechain/factories'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const bao = useBao()
@@ -28,7 +29,8 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		if (swapDirection) {
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
-				const tx = bao.getNewContract(Config.addressMap.baoUSD, 'erc20.json', library.getSigner()).approve(
+				const baoUSD = Erc20bao__factory.connect(Config.addressMap.baoUSD, signer)
+				const tx = baoUSD.approve(
 					ballast.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 				)

@@ -72,9 +72,6 @@ const BallastSwapper: React.FC = () => {
 		fetchBallastInfo()
 	}, [bao, library, chainId, transactions])
 
-	console.log()
-	//const canSwapDai = new BigNumber(daiBalance.toString)
-
 	const daiInput = (
 		<>
 			<Typography variant='sm' className='float-left mb-1'>
