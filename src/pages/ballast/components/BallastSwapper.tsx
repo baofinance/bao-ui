@@ -70,7 +70,10 @@ const BallastSwapper: React.FC = () => {
 		if (!bao || !library || !chainId) return
 
 		fetchBallastInfo()
-	}, [bao, library, chainId])
+	}, [bao, library, chainId, transactions])
+
+	console.log()
+	//const canSwapDai = new BigNumber(daiBalance.toString)
 
 	const daiInput = (
 		<>
@@ -169,8 +172,8 @@ const BallastSwapper: React.FC = () => {
 						swapDirection={swapDirection}
 						inputVal={inputVal}
 						maxValues={{
-							buy: ethers.utils.parseEther(daiBalance.toString()),
-							sell: ethers.utils.parseEther(baoUSDBalance.toString()),
+							buy: daiBalance,
+							sell: baoUSDBalance,
 						}}
 						supplyCap={supplyCap}
 						reserves={reserves}
