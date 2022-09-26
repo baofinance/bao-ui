@@ -21,6 +21,7 @@ import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
+import { SimpleUniRecipe__factory } from '@/typechain/factories'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -41,12 +42,12 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
 	const bao = useBao()
-	const { library } = useWeb3React()
+	const { library, chainId } = useWeb3React()
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').address)
+	const daiAllowance = useAllowance(Config.addressMap.DAI, Config.addressMap.dai)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -57,7 +58,9 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const handleOperation = () => {
 		let tx
-		const recipe = bao.getContract('recipe')
+
+		const signer = library.getSigner()
+		const recipe = SimpleUniRecipe__factory.connect(Config.contracts.recipe[chainId].address, signer)
 
 		switch (operation) {
 			case 'MINT':
@@ -107,10 +110,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				// Else, check that the input value is valid.
 				(!value ||
 					!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
-					BigNumber.from(value).lte(0) ||
-					BigNumber.from(value).gt(
-						decimate(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
-					))),
+					ethers.utils.parseEther(value).lte(0) ||
+					ethers.utils
+						.parseEther(value)
+						.gt(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
+				)),
 		[pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance],
 	)
 
@@ -181,7 +185,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Input
 								value={value}
 								onChange={e => setValue(e.currentTarget.value)}
-								onSelectMax={() => setValue(ethers.utils.formatUnits(decimate(basketBalance), 18))}
+								onSelectMax={() => setValue(ethers.utils.formatUnits(basketBalance, 18))}
 								disabled={operation === 'MINT'}
 								label={
 									<div className='flex flex-row items-center'>
@@ -227,9 +231,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Input
 										value={secondaryValue}
 										onChange={e => {
-											const inputVal = new BN(decimate(mintOption === MintOption.DAI ? rates.dai : rates.eth).toString())
+											const inputVal = new BN((mintOption === MintOption.DAI ? rates.dai : rates.eth).toString())
+												.div(10 ** 18)
 												.times(e.currentTarget.value)
 												.times(1.02)
+											console.log(inputVal)
 											setSecondaryValue(e.currentTarget.value)
 											setValue(
 												// FIXME: ethers.BigNumber does not support an infinite value
@@ -252,8 +258,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 													break
 											}
 
-											const maxVal = usedBal.mul(0.98)
-											setSecondaryValue(ethers.utils.formatUnits(maxVal.div(decimate(usedRate)), 18))
+											const maxVal = new BN(usedBal.toString()).times(0.98)
+											const secVal = new BN(maxVal.toString())
+												.div(usedRate.toString())
+												.times(10 ** 18)
+											setSecondaryValue(secVal.toFixed())
 											setValue(usedBal.toString())
 										}}
 										label={
