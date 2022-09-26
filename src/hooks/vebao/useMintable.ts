@@ -11,16 +11,17 @@ const useMintable = () => {
 	const tokenContract = getCrvContract(bao)
 
 	const fetchMintable = useCallback(async () => {
-		console.log(epochTime)
-		const mintable = epochTime && (await getMintable(epochTime.start, epochTime.future, tokenContract))
-		setMintable(mintable)
-	}, [bao])
+		if (epochTime) {
+			const mintable = await getMintable(epochTime.start, epochTime.future, tokenContract)
+			setMintable(mintable)
+		}
+	}, [epochTime, tokenContract])
 
 	useEffect(() => {
-		if (bao && epochTime) {
+		if (epochTime) {
 			fetchMintable()
 		}
-	}, [bao, epochTime])
+	}, [epochTime, fetchMintable])
 
 	return mintable
 }

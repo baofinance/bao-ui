@@ -20,6 +20,7 @@ import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/reac
 import { useWeb3React } from '@web3-react/core'
 import { addYears, format } from 'date-fns'
 import { BigNumber, ethers } from 'ethers'
+import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -62,11 +63,11 @@ const Lock: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
 
 	useEffect(() => {
-		if (!bao) return
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			setBaoPrice(BigNumber.from((await res.json())['curve-dao-token'].usd))
+			const price = (await res.json())['curve-dao-token'].usd.toString()
+			setBaoPrice(ethers.utils.parseUnits(price))
 		})
-	}, [bao, setBaoPrice])
+	}, [setBaoPrice])
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -97,6 +98,13 @@ const Lock: React.FC = () => {
 	// console.log(startDate.setUTCHours(0, 0, 0, 0))
 	// console.log(length)
 
+	let suppliedPercentage
+	if (lockInfo && totalSupply) {
+		const numer = new BN(lockInfo.totalSupply.toString())
+		const denom = new BN(totalSupply.toString())
+		suppliedPercentage = numer.div(denom).times(100)
+	}
+
 	return (
 		<>
 			<div className={`mx-auto my-4 ${isDesktop ? 'flex-flow flex gap-4' : 'flex flex-col gap-3'} justify-evenly`}>
@@ -119,7 +127,7 @@ const Lock: React.FC = () => {
 							label: `BAO Locked`,
 							value: (
 								<Typography>
-									<>{getDisplayBalance(lockInfo && lockInfo.lockAmount)}</>
+									<>{lockInfo && getDisplayBalance(lockInfo.lockAmount)}</>
 								</Typography>
 							),
 						},
@@ -462,26 +470,26 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										Total BAO Supply
 									</Typography>
-									<Badge>{getDisplayBalance(totalSupply)}</Badge>
+									<Badge>{totalSupply && getDisplayBalance(totalSupply)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
 										Total BAO Locked
 									</Typography>
-									<Badge>{getDisplayBalance(lockInfo && lockInfo.totalSupply)}</Badge>
+									<Badge>{lockInfo && getDisplayBalance(lockInfo.totalSupply)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
 										Percentage of BAO Locked
 									</Typography>
-									<Badge>{getDisplayBalance(lockInfo && totalSupply && lockInfo.totalSupply.div(totalSupply).mul(100).mul(1e18))}%</Badge>
+									<Badge>{lockInfo && totalSupply && suppliedPercentage.toFixed(2)}%</Badge>
 								</div>
 
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
 										Total veBAO
 									</Typography>
-									<Badge>{getDisplayBalance(lockInfo && lockInfo.supply)}</Badge>
+									<Badge>{lockInfo && getDisplayBalance(lockInfo.supply)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
@@ -493,7 +501,7 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										BAO Price
 									</Typography>
-									<Badge>{baoPrice && baoPrice.toNumber()}</Badge>
+									<Badge>{baoPrice && ethers.utils.formatUnits(baoPrice)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Tooltipped content='DailyFees * 365 / (Total veBAO * BAO Price) * 100'>
@@ -511,9 +519,7 @@ const Lock: React.FC = () => {
 											<Typography variant='sm' className='text-center text-text-200'>
 												Next Distribution
 											</Typography>
-											<Badge>
-												{addDays(1, new Date(nextFeeDistribution && nextFeeDistribution.mul(1e18).mul(1000).toNumber())).toUTCString()}
-											</Badge>
+											<Badge>{nextFeeDistribution && addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toUTCString()}</Badge>
 										</a>
 									</Tooltipped>
 								</div>

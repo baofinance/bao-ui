@@ -1,11 +1,18 @@
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
+import BN from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
 
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
-import BN from 'bignumber.js'
+import Config from '@/bao/lib/config'
+import { Mkr__factory } from '@/typechain/factories'
+import { Experipie__factory } from '@/typechain/factories'
+import { LendingRegistry__factory } from '@/typechain/factories'
+import { LendingLogicKashi__factory } from '@/typechain/factories'
+import { Erc20__factory } from '@/typechain/factories'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
@@ -31,18 +38,22 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const [composition, setComposition] = useState<Array<BasketComponent> | undefined>()
 	const prices = useGeckoPrices()
 	const bao = useBao()
+	const { library, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 
 	const fetchComposition = useCallback(async () => {
-		const tokenComposition: string[] = await bao.getNewContract(basket.address, 'experipie.json').getTokens()
-		const lendingRegistry = bao.getContract('lendingRegistry')
+		const basketContract = Experipie__factory.connect(basket.address, library)
+		const lendingRegistry = LendingRegistry__factory.connect(Config.contracts.lendingRegistry[chainId].address, library)
+		const mkr = Mkr__factory.connect(Config.addressMap.MKR, library)
+
+		const tokenComposition: string[] = await basketContract.getTokens()
 		const tokensQuery = MultiCall.createCallContext(
 			tokenComposition
 				.filter(
 					token => token.toLowerCase() !== '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', // Filter MKR because its symbol/name is a bytes32 object >_>
 				)
 				.map(address => ({
-					contract: bao.getNewContract(address, 'erc20.json'),
+					contract: Erc20__factory.connect(address, library),
 					ref: address,
 					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address] }],
 				})),
@@ -59,11 +70,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						balance: tokenInfo[tokenComposition[i]][3].values[0],
 				  }
 				: {
-						// I don't like this, but MKR doesn't fit the mold.
-						decimals: 18,
-						symbol: 'MKR',
-						name: 'Maker DAO',
-						balance: await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address),
+						decimals: await mkr.decimals(),
+						symbol: 'MKR', // MKR token uses bytes32 for this
+						name: 'Maker DAO', // MKR token uses bytes32 for this
+						balance: await mkr.balanceOf(basket.address),
 				  }
 			_c.address = tokenComposition[i]
 
@@ -90,11 +100,13 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 				// Get Exchange Rate
 				const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
-				const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
+				//const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
+				const logicContract = LendingLogicKashi__factory.connect(logicAddress, library)
 				const exchangeRate = await logicContract.callStatic.exchangeRate(_c.address)
 				// xSushi APY can't be found on-chain, check for special case
 				const apy = _c.strategy === 'Sushi Bar' ? await fetchSushiApy() : await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
-				const underlyingDecimals = await bao.getNewContract(lendingRes[0].values[0], 'erc20.json').decimals()
+				const underlyingToken = Erc20__factory.connect(lendingRes[0].values[0], library)
+				const underlyingDecimals = await underlyingToken.decimals()
 
 				_c.price = new BN(exchangeRate.toString()).times(new BN(prices[_c.underlying.toLowerCase()].toString()))
 				_c.apy = apy
@@ -104,6 +116,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				// Here, the price is already decimated by 1e18, so we can subtract 8
 				// from the underlying token's decimals.
 				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
+				console.log(_c.price.toString())
 			}
 
 			_comp.push({
@@ -130,13 +143,16 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		}
 
 		setComposition(_comp)
-	}, [bao, basket, prices])
+	}, [library, chainId, basket, prices, bao])
 
 	useEffect(() => {
-		if (!(bao && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) return
+		if (!(library && chainId && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) {
+			return
+		}
+		console.log(library, chainId)
 
 		fetchComposition()
-	}, [bao, basket, prices, transactions])
+	}, [library, chainId, basket, prices, transactions, fetchComposition])
 
 	return composition
 }

@@ -216,7 +216,7 @@ export const getBaoSupply = async (bao: Bao) => {
 
 // Remove when we get veBAO deployed
 export const getCrvSupply = async (bao: Bao) => {
-	return BigNumber.from(await bao.getContract('crv').totalSupply())
+	return await bao.getContract('crv').totalSupply({ gasLimit: 100000 })
 }
 
 export const getReferrals = async (masterChefContract: Contract, account: string): Promise<string> => {
@@ -295,45 +295,45 @@ export const getUserInfoChef = async (masterChefContract: Contract, pid: number,
 	await masterChefContract.userInfo(pid, account)
 
 export const getAccountLiquidity = async (comptrollerContract: Contract, account: string) => {
-	return comptrollerContract.getAccountLiquidity(account)
+	return comptrollerContract.getAccountLiquidity(account, { gasLimit: 100000 })
 }
 
 export const getGaugeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
-	return gaugeControllerContract.get_gauge_weight(lpAddress)
+	return gaugeControllerContract.get_gauge_weight(lpAddress, { gasLimit: 100000 })
 }
 
 export const getRelativeWeight = async (gaugeControllerContract: Contract, lpAddress: string) => {
-	return gaugeControllerContract['gauge_relative_weight(address)'](lpAddress)
+	return gaugeControllerContract['gauge_relative_weight(address)'](lpAddress, { gasLimit: 100000 })
 }
 
 export const getInflationRate = async (gaugeContract: Contract) => {
-	return gaugeContract.inflation_rate()
+	return gaugeContract.inflation_rate({ gasLimit: 100000 })
 }
 
 export const getMintable = async (currentEpoch: BigNumber, futureEpoch: BigNumber, tokenContract: Contract) => {
-	return tokenContract.mintable_in_timeframe(currentEpoch, futureEpoch)
+	return tokenContract.mintable_in_timeframe(currentEpoch, futureEpoch, { gasLimit: 100000 })
 }
 
 export const getVotingPower = async (votingEscrowContract: Contract, account: string) => {
-	return votingEscrowContract.balanceOf(account)
+	return votingEscrowContract.balanceOf(account, { gasLimit: 100000 })
 }
 
 export const getUserVotingPower = async (gaugeControllerContract: Contract, account: string) => {
-	return BigNumber.from(await gaugeControllerContract.vote_user_power(account))
+	return await gaugeControllerContract.vote_user_power(account, { gasLimit: 100000 })
 }
 
 export const getCurrentEpoch = async (tokenContract: Contract) => {
-	return tokenContract.start_epoch_time_write()
+	return tokenContract.start_epoch_time_write({ gasLimit: 100000 })
 }
 
 export const getFutureEpoch = async (tokenContract: Contract) => {
-	return tokenContract.future_epoch_time_write()
+	return tokenContract.future_epoch_time_write({ gasLimit: 100000 })
 }
 
 export const getVirtualPrice = async (poolContract: Contract) => {
-	return poolContract.get_virtual_price()
+	return poolContract.get_virtual_price({ gasLimit: 100000 })
 }
 
 export const getTotalSupply = async (depositContract: Contract) => {
-	return depositContract.totalSupply()
+	return depositContract.totalSupply({ gasLimit: 100000 })
 }

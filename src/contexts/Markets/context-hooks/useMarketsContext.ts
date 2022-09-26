@@ -100,8 +100,7 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 		markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
 		setMarkets(markets)
-		console.log(markets)
-	}, [bao, library, transactions])
+	}, [bao, library])
 
 	useEffect(() => {
 		if (!(bao && library)) return

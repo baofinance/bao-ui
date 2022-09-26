@@ -14,7 +14,8 @@ import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+//import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import usePendingTransactions from '@/hooks/base/usePendingTransactions'
 import Multicall from '@/utils/multicall'
 import { getDisplayBalance } from '@/utils/numberFormat'
 
@@ -26,7 +27,8 @@ import BallastButton from './BallastButton'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
-	const { transactions } = useTransactionProvider()
+	//const { transactions } = useTransactionProvider()
+	const pendingTxs = usePendingTransactions()
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
 	const [inputVal, setInputVal] = useState('')
 
@@ -70,7 +72,7 @@ const BallastSwapper: React.FC = () => {
 		if (!bao || !library || !chainId) return
 
 		fetchBallastInfo()
-	}, [bao, library, chainId, transactions])
+	}, [bao, library, chainId, pendingTxs])
 
 	const daiInput = (
 		<>

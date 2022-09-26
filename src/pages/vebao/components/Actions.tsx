@@ -17,9 +17,12 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { ethers, BigNumber } from 'ethers'
+import BN from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
+
+import { Gauge__factory } from '@/typechain/factories'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -78,7 +81,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 				</Modal.Body>
 			</>
 			<Modal.Actions>
-				{allowance && !allowance.toNumber() ? (
+				{allowance && !allowance.toString() ? (
 					<>
 						{pendingTx ? (
 							<Button fullWidth disabled={true}>
@@ -89,12 +92,8 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								fullWidth
 								disabled={max.lte(0)}
 								onClick={async () => {
-									const tx = gauge.lpContract.approve(
-										gauge.gaugeContract.options.address,
-										ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-										library.getSigner(),
-									)
-
+									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+									const tx = gauge.lpContract.approve(gauge.gaugeContract.address, ethers.constants.MaxUint256)
 									handleTx(tx, `Approve ${gauge.name}`)
 								}}
 							>
@@ -117,9 +116,11 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 						) : (
 							<Button
 								fullWidth
-								disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
+								disabled={!val || !bao || isNaN(val as any) || ethers.utils.parseUnits(val).gt(max)}
 								onClick={async () => {
-									const stakeTx = gauge.gaugeContract.deposit(ethers.utils.parseUnits(val.toString(), 18))
+									const gaugeContract = Gauge__factory.connect(gauge.gaugeAddress, library.getSigner())
+									const amount = ethers.utils.parseUnits(val.toString(), 18)
+									const stakeTx = gaugeContract['deposit(uint256)'](amount)
 
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${gauge.name} into gauge`, () => hideModal())
 								}}
@@ -142,7 +143,7 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -210,10 +211,9 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
 							}
 							onClick={async () => {
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
-
-								const unstakeTx = gauge.gaugeContract.withdraw(ethers.utils.parseUnits(val, 18))
-
+								const amount = ethers.utils.parseUnits(val, 18)
+								const gaugeContract = Gauge__factory.connect(gauge.gaugeAddress, library.getSigner())
+								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
 								handleTx(unstakeTx, `Withdraw ${amount} ${gauge.name} from gauge`, () => hideModal())
 							}}
 						>
