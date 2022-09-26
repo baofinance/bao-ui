@@ -37,8 +37,8 @@ enum MintOption {
 
 // TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
 const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal }) => {
-	const [value, setValue] = useState<string | undefined>()
-	const [secondaryValue, setSecondaryValue] = useState<string | undefined>()
+	const [value, setValue] = useState<string | undefined>('0')
+	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
 	const bao = useBao()
@@ -120,13 +120,13 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const hide = () => {
 		hideModal()
-		setValue('')
-		setSecondaryValue('')
+		setValue('0')
+		setSecondaryValue('0')
 	}
 
 	return basket ? (
 		<>
-			<Modal isOpen={show} onDismiss={hideModal}>
+			<Modal isOpen={show} onDismiss={hide}>
 				<Modal.Header
 					header={
 						<div className='mx-0 my-auto flex h-full items-center gap-2 text-text-100'>
@@ -134,7 +134,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 						</div>
 					}
-					onClose={hideModal}
+					onClose={hide}
 				></Modal.Header>
 				<Modal.Body>
 					<div className='mb-4'>

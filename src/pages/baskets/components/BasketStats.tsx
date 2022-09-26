@@ -24,7 +24,6 @@ type BasketStatsProps = {
 const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, info, pairPrice }) => {
 	const nav = useNav(composition, info && info.totalSupply)
 
-	console.log(rates && ethers.utils.formatEther(rates.usd), info && ethers.utils.formatEther(info.totalSupply))
 	return (
 		<div className={`mt-4 grid w-full grid-flow-col ${isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-2 gap-2'}`}>
 			<Card>

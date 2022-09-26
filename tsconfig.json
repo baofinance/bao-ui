@@ -25,6 +25,7 @@
       "@/pages/*": ["src/pages/*"],
       "@/styles/*": ["src/styles/*"],
       "@/utils/*": ["src/utils/*"],
+      "@/typechain/*": ["src/typechain/*"],
     },
     "noFallthroughCasesInSwitch": true
   },
