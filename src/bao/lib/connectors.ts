@@ -23,7 +23,7 @@ export const getNetworkConnector = (): NetworkConnector => {
 
 	return (network = new NetworkConnector({
 		defaultChainId: 1,
-		urls: { 1: RPC_URLS[1] },
+		urls: RPC_URLS,
 	}))
 }
 
@@ -32,7 +32,7 @@ export const injected = new InjectedConnector({
 })
 
 export const walletConnect = new WalletConnectConnector({
-	rpc: { 1: RPC_URLS[1] },
+	rpc: RPC_URLS,
 })
 
 export const coinbaseWallet = new WalletLinkConnector({

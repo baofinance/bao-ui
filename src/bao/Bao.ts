@@ -16,22 +16,9 @@ export class Bao {
 	public readonly provider: Provider
 	public readonly multicall: MC
 
-	constructor(provider: string | Provider, networkId: number, options: BaoOptions) {
-		let realProvider
-
-		if (typeof provider === 'string') {
-			console.log('JsonRpcProvider', provider)
-			realProvider = new ethers.providers.JsonRpcProvider(provider)
-		} else if (provider) {
-			console.log('some other provider', provider)
-			realProvider = provider
-		} else {
-			console.log('JsonRpcProvider', Config.defaultRpc.rpcUrls[0])
-			realProvider = new ethers.providers.JsonRpcProvider(Config.defaultRpc.rpcUrls[0])
-		}
-
+	constructor(provider: Provider, networkId: number, options: BaoOptions) {
 		this.networkId = networkId
-		this.provider = realProvider
+		this.provider = provider
 		this.multicall = new MC({
 			ethersProvider: this.provider,
 		})

@@ -26,7 +26,7 @@ import '@/components/TxPopup/styles.css'
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
-	//library.pollingInterval = 12000
+	library.pollingInterval = 12000
 	return library
 }
 
