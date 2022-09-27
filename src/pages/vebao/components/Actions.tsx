@@ -233,7 +233,7 @@ interface RewardsProps {
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 	const bao = useBao()
 	const gaugeInfo = useGaugeInfo(gauge)
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const minterContract = getMinterContract(bao)
 
@@ -247,7 +247,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='xl' className='font-medium'>
-								{getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)}
+								{gaugeInfo && getDisplayBalance(gaugeInfo.claimableTokens)}
 							</Typography>
 						</div>
 					</div>
