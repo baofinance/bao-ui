@@ -140,13 +140,13 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const { library, chainId } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
-	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.stabilizer[Config.networkId].address)
+	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[Config.networkId].address)
 
 	const handleClick = async () => {
 		if (!bao) return
 
 		const signer = library.getSigner()
-		const swapperContract = Stabilizer__factory.connect(Config.contracts.stabilizer[chainId].address, signer)
+		const swapperContract = Stabilizer__factory.connect(Config.contracts.Stabilizer[chainId].address, signer)
 
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {

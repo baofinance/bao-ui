@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
-import Config from '@/bao/lib/config'
-import { FeeDistributor__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { FeeDistributor } from '@/typechain/index'
 
 export const useNextDistribution = () => {
 	const [nextDistribution, setNextDistribution] = useState<BigNumber | undefined>()
-	const { library, chainId } = useWeb3React()
+
+	const feeDistributor: FeeDistributor = useContract('FeeDistributor')
 
 	const fetchNextDistribution = useCallback(async () => {
-		const feeDistributorAddr = Config.contracts.feeDistributor[chainId].address
-		const feeDistributionContract = FeeDistributor__factory.connect(feeDistributorAddr, library)
-		const nextFeeDistribution = await feeDistributionContract.last_token_time({ gasLimit: 100000 })
+		const nextFeeDistribution = await feeDistributor.last_token_time({ gasLimit: 100000 })
 		setNextDistribution(nextFeeDistribution)
-	}, [library, chainId])
+	}, [feeDistributor])
 
 	useEffect(() => {
-		if (!library || !chainId) return
+		if (!feeDistributor) return
 		fetchNextDistribution()
-	}, [library, chainId, fetchNextDistribution])
+	}, [feeDistributor, fetchNextDistribution])
 
 	return nextDistribution
 }

@@ -6,30 +6,24 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Loader from '@/components/Loader'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useWeb3React } from '@web3-react/core'
-import { Stabilizer__factory } from '@/typechain/factories'
-import { Dai__factory } from '@/typechain/factories'
-import { Erc20bao__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Stabilizer, Dai, Erc20bao } from '@/typechain/index'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
-	const bao = useBao()
-	const { library, chainId } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
 
-	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.stabilizer[Config.networkId].address)
-	const inputBApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.stabilizer[Config.networkId].address)
+	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.Stabilizer[Config.networkId].address)
+	const inputBApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.Stabilizer[Config.networkId].address)
+
+	const ballast: Stabilizer = useContract('Stabilizer')
+	const dai: Dai = useContract('Dai')
+	const baoUSD: Erc20bao = useContract('Erc20bao', Config.addressMap.baoUSD)
 
 	const handleClick = async () => {
-		if (!bao || !library || !chainId) return
-
-		const signer = library.getSigner()
-		const ballast = Stabilizer__factory.connect(Config.contracts.stabilizer[chainId].address, signer)
 		if (swapDirection) {
 			// baoUSD->DAI
 			if (!inputBApproval.gt(0)) {
-				const baoUSD = Erc20bao__factory.connect(Config.addressMap.baoUSD, signer)
 				const tx = baoUSD.approve(
 					ballast.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
@@ -41,7 +35,6 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 		} else {
 			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
-				const dai = Dai__factory.connect(Config.addressMap.DAI, signer)
 				const tx = dai.approve(
 					ballast.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
@@ -52,6 +45,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 			handleTx(ballast.buy(ethers.utils.parseEther(inputVal).toString()), 'Ballast: Swap DAI to baoUSD')
 		}
 	}
+
 	const buttonText = () => {
 		if (!(inputAApproval && inputBApproval)) return <Loader />
 

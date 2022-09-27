@@ -77,7 +77,7 @@ export default {
 				abi: 'marketOracle.json',
 			},
 		},
-		stabilizer: {
+		Stabilizer: {
 			1: {
 				address: '0x720282BB7e721634c95F0933636DE3171dc405de',
 				abi: 'stabilizer.json',
@@ -115,13 +115,13 @@ export default {
 				abi: 'minter.json',
 			},
 		},
-		feeDistributor: {
+		FeeDistributor: {
 			1: {
 				address: '0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc',
 				abi: 'feeDistributor.json',
 			},
 		},
-		dai: {
+		Dai: {
 			1: {
 				address: '0x6b175474e89094c44da98b954eedeac495271d0f',
 				abi: 'dai.json',

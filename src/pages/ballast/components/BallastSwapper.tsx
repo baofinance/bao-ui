@@ -4,6 +4,7 @@ import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+//import { useWeb3React } from '@web3-react/core'
 
 import Config from '@/bao/lib/config'
 import Card from '@/components/Card'
@@ -15,20 +16,17 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-//import usePendingTransactions from '@/hooks/base/usePendingTransactions'
 import Multicall from '@/utils/multicall'
 import { getDisplayBalance } from '@/utils/numberFormat'
 
-import { useWeb3React } from '@web3-react/core'
-import { Stabilizer__factory } from '@/typechain/factories'
-import { Dai__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Stabilizer, Dai } from '@/typechain/index'
 
 import BallastButton from './BallastButton'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
 	const { transactions } = useTransactionProvider()
-	//const pendingTxs = usePendingTransactions()
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
 	const [inputVal, setInputVal] = useState('')
 
@@ -39,12 +37,11 @@ const BallastSwapper: React.FC = () => {
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 
-	const { library, chainId } = useWeb3React()
+	const ballast: Stabilizer = useContract('Stabilizer')
+	const dai: Dai = useContract('Dai')
 
 	// TODO: Move this to a hook ?
 	const fetchBallastInfo = useCallback(async () => {
-		const ballast = Stabilizer__factory.connect(Config.contracts.stabilizer[chainId].address, library)
-		const dai = Dai__factory.connect(Config.contracts.dai[chainId].address, library)
 		const ballastQueries = Multicall.createCallContext([
 			{
 				ref: 'Ballast',
@@ -66,13 +63,12 @@ const BallastSwapper: React.FC = () => {
 			denominator: ballastRes[3].values[0],
 		})
 		setReserves(daiRes[0].values[0])
-	}, [bao, library, chainId])
+	}, [bao, ballast, dai])
 
 	useEffect(() => {
-		if (!bao || !library || !chainId) return
-
+		if (!bao || !ballast || !dai) return
 		fetchBallastInfo()
-	}, [bao, library, chainId, fetchBallastInfo, transactions])
+	}, [bao, ballast, dai, fetchBallastInfo, transactions])
 
 	const daiInput = (
 		<>
