@@ -17,7 +17,7 @@ import React, { Fragment, useCallback, useMemo, useState } from 'react'
 
 const Vote: React.FC = () => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const gauges = useGauges()
 	const lockInfo = useLockInfo()
@@ -48,7 +48,7 @@ const Vote: React.FC = () => {
 					have, the more weight your vote has.
 				</p>
 			</div>
-			<Typography>You&lsquo;re voting with {getDisplayBalance(lockInfo && lockInfo.balance)} veBAO</Typography>
+			<Typography>You&lsquo;re voting with {lockInfo && getDisplayBalance(lockInfo.balance)} veBAO</Typography>
 			<div className='my-4 flex w-1/4 flex-col'>
 				<Listbox value={selectedOption} onChange={setSelectedOption}>
 					{({ open }) => (
