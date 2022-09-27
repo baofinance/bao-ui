@@ -59,7 +59,8 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 		let tx
 
 		const signer = library.getSigner()
-		const recipe = SimpleUniRecipe__factory.connect(Config.contracts.recipe[chainId].address, signer)
+		const recipeAddr = Config.contracts.recipe[chainId].address
+		const recipe = SimpleUniRecipe__factory.connect(recipeAddr, signer)
 
 		switch (operation) {
 			case 'MINT':
@@ -85,7 +86,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				break
 			case 'REDEEM':
 				tx = basket.basketContract.exitPool(exponentiate(value).toFixed(0))
-
 				handleTx(tx, `Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
 		}
 	}

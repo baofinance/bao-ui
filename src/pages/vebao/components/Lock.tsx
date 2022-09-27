@@ -81,7 +81,7 @@ const Lock: React.FC = () => {
 	}, [crvBalance, setVal])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(getFullDisplayBalance(BigNumber.from(crvBalance.div(2).toNumber())))
+		setVal(getFullDisplayBalance(crvBalance.div(2)))
 	}, [crvBalance])
 
 	useEffect(() => {
@@ -341,7 +341,7 @@ const Lock: React.FC = () => {
 							<div className='flex flex-col'>
 								{isNaN(lockInfo && lockInfo.balance.toNumber()) || (lockInfo && lockInfo.balance.lte(0)) ? (
 									<div className='mt-3 flex flex-row gap-4'>
-										{allowance && !allowance.toNumber() ? (
+										{allowance && allowance.gt(0) ? (
 											<>
 												{pendingTx ? (
 													<Button fullWidth disabled={true}>
@@ -353,9 +353,19 @@ const Lock: React.FC = () => {
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
 															const crv = new Contract(Config.addressMap.CRV, ERC20_ABI, library.getSigner())
+															window.crv = crv
+															window.ve = votingEscrowContract
 															// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-															const tx = crv.approve(votingEscrowContract.address, ethers.constants.MaxUint256)
-															handleTx(tx, `Approve CRV`)
+															console.log('hi1', account)
+															const gasLimit = await crv.estimateGas.approve(account, ethers.constants.MaxUint256)
+															const gasPrice = await library.getGasPrice()
+															console.log('hi2', gasLimit.toString(), gasPrice.toString())
+															console.log(ethers.constants.MaxUint256.toString())
+															const tx = crv.approve(votingEscrowContract.address, ethers.constants.MaxUint256, {
+																gasLimit,
+																gasPrice,
+															})
+															handleTx(tx, `Approve CRV for veCRV`)
 														}}
 													>
 														Approve CRV
@@ -381,11 +391,26 @@ const Lock: React.FC = () => {
 												) : (
 													<Button
 														fullWidth
-														disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 														onClick={async () => {
+															const gasPrice = await library.getGasPrice()
+															console.log('gas price', gasPrice.toString())
+															let gasLimit
+															try {
+																gasLimit = await votingEscrowContract.estimateGas.create_lock(
+																	ethers.utils.parseEther(val.toString()),
+																	length.toString().slice(0, 10),
+																)
+																console.log('gas limit', gasLimit.toString())
+															} catch (e: any) {
+																console.error('!!could not get gas limit!!', e.message)
+															}
 															const lockTx = votingEscrowContract.create_lock(
 																ethers.utils.parseEther(val.toString()),
 																length.toString().slice(0, 10),
+																{
+																	gasLimit,
+																	gasPrice,
+																}
 															)
 															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}
