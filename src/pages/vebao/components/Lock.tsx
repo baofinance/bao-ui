@@ -507,7 +507,7 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										Percentage of BAO Locked
 									</Typography>
-									<Badge>{lockInfo && totalSupply && suppliedPercentage.toFixed(2)}%</Badge>
+									<Badge>{lockInfo && totalSupply && `${suppliedPercentage.toFixed(2)}%`}</Badge>
 								</div>
 
 								<div className='text-center'>
