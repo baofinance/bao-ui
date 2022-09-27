@@ -11,17 +11,15 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, exponentiate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
-import { Stabilizer__factory } from '@/typechain/factories'
-import { Bao__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Stabilizer, Bao } from '@/typechain/index'
 
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
-	const { library } = useWeb3React()
 
 	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
@@ -137,29 +135,27 @@ export default Swapper
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
 	const bao = useBao()
-	const { library, chainId } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[Config.networkId].address)
 
+	const ballast: Stabilizer = useContract('Stabilizer')
+	const baoContract: Bao = useContract('Bao', Config.addressMap.BAO)
+
 	const handleClick = async () => {
 		if (!bao) return
 
-		const signer = library.getSigner()
-		const swapperContract = Stabilizer__factory.connect(Config.contracts.Stabilizer[chainId].address, signer)
-
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const baoContract = Bao__factory.connect(Config.addressMap.BAO, signer)
 			const tx = baoContract.approve(
-				swapperContract.address,
+				ballast.address,
 				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 			)
 
 			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(swapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(ballast.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {

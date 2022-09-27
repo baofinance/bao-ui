@@ -8,11 +8,11 @@ import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
 import Config from '@/bao/lib/config'
-import { Mkr__factory } from '@/typechain/factories'
 import { Experipie__factory } from '@/typechain/factories'
-import { LendingRegistry__factory } from '@/typechain/factories'
 import { LendingLogicKashi__factory } from '@/typechain/factories'
 import { Erc20__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Mkr, LendingRegistry } from '@/typechain/index'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
@@ -41,11 +41,11 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const { library, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 
+	const lendingRegistry: LendingRegistry = useContract('LendingRegistry')
+	const mkr: Mkr = useContract('Mkr', Config.addressMap.MKR)
+
 	const fetchComposition = useCallback(async () => {
 		const basketContract = Experipie__factory.connect(basket.address, library)
-		const lendingRegistry = LendingRegistry__factory.connect(Config.contracts.lendingRegistry[chainId].address, library)
-		const mkr = Mkr__factory.connect(Config.addressMap.MKR, library)
-
 		const tokenComposition: string[] = await basketContract.getTokens()
 		const tokensQuery = MultiCall.createCallContext(
 			tokenComposition
@@ -143,16 +143,23 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		}
 
 		setComposition(_comp)
-	}, [library, chainId, basket, prices, bao])
+	}, [library, basket, prices, bao, lendingRegistry, mkr])
 
 	useEffect(() => {
-		if (!(library && chainId && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) {
+		if (!(library &&
+				chainId &&
+				basket &&
+				lendingRegistry &&
+				mkr &&
+				basket.pieColors &&
+				prices &&
+				Object.keys(prices).length > 0
+			)) {
 			return
 		}
-		console.log(library, chainId)
 
 		fetchComposition()
-	}, [library, chainId, basket, prices, transactions, fetchComposition])
+	}, [library, chainId, basket, prices, transactions, fetchComposition, lendingRegistry, mkr])
 
 	return composition
 }

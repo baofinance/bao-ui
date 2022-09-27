@@ -12,17 +12,18 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
-import { exponentiate, getBalanceNumber, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { getBalanceNumber, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { ethers, BigNumber } from 'ethers'
-import BN from 'bignumber.js'
+//import BN from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 
-import { Gauge__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Gauge } from '@/typechain/index'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -35,6 +36,8 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
+
+	const gaugeContract: Gauge = useContract('Gauge', gauge.gaugeAddress)
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -93,7 +96,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								disabled={max.lte(0)}
 								onClick={async () => {
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-									const tx = gauge.lpContract.approve(gauge.gaugeContract.address, ethers.constants.MaxUint256)
+									const tx = gauge.lpContract.approve(gaugeContract.address, ethers.constants.MaxUint256)
 									handleTx(tx, `Approve ${gauge.name}`)
 								}}
 							>
@@ -118,7 +121,6 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								fullWidth
 								disabled={!val || !bao || isNaN(val as any) || ethers.utils.parseUnits(val).gt(max)}
 								onClick={async () => {
-									const gaugeContract = Gauge__factory.connect(gauge.gaugeAddress, library.getSigner())
 									const amount = ethers.utils.parseUnits(val.toString(), 18)
 									const stakeTx = gaugeContract['deposit(uint256)'](amount)
 
@@ -148,6 +150,8 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const gaugeInfo = useGaugeInfo(gauge)
+
+	const gaugeContract: Gauge = useContract('Gauge', gauge.gaugeAddress)
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -212,7 +216,6 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 							}
 							onClick={async () => {
 								const amount = ethers.utils.parseUnits(val, 18)
-								const gaugeContract = Gauge__factory.connect(gauge.gaugeAddress, library.getSigner())
 								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
 								handleTx(unstakeTx, `Withdraw ${amount} ${gauge.name} from gauge`, () => hideModal())
 							}}

@@ -6,6 +6,8 @@ import Multicall from '@/utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { getWethPriceLink } from '../../bao/utils'
 import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { SimpleUniRecipe, Dai } from '@/typechain/index'
 
 type BasketRates = {
 	eth: BigNumber
@@ -17,8 +19,9 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const [rates, setRates] = useState<BasketRates | undefined>()
 	const bao = useBao()
 
+	const recipe: SimpleUniRecipe = useContract('SimpleUniRecipe')
+
 	const fetchRates = useCallback(async () => {
-		const recipe = bao.getContract('recipe')
 		const wethPrice = await getWethPriceLink(bao)
 
 		const params = [basket.address, BigNumber.from(ethers.utils.parseEther('1'))]

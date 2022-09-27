@@ -14,14 +14,13 @@ import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { ethers, BigNumber } from 'ethers'
 import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
-import { SimpleUniRecipe__factory } from '@/typechain/factories'
-import { Dai__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { SimpleUniRecipe, Dai } from '@/typechain/index'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -41,7 +40,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
-	const { library, chainId } = useWeb3React()
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
@@ -55,19 +53,17 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const swapLink = basket && basket.swap
 
+	const recipe: SimpleUniRecipe = useContract('SimpleUniRecipe')
+	const dai: Dai = useContract('Dai')
+
 	const handleOperation = () => {
 		let tx
-
-		const signer = library.getSigner()
-		const recipeAddr = Config.contracts.recipe[chainId].address
-		const recipe = SimpleUniRecipe__factory.connect(recipeAddr, signer)
 
 		switch (operation) {
 			case 'MINT':
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) {
-						const dai = Dai__factory.connect(Config.addressMap.DAI, library.getSigner())
 						// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
 						tx = dai.approve(recipe.address, ethers.constants.MaxUint256)
 						handleTx(tx, 'Approve DAI for Baskets Recipe')

@@ -4,7 +4,6 @@ import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-//import { useWeb3React } from '@web3-react/core'
 
 import Config from '@/bao/lib/config'
 import Card from '@/components/Card'

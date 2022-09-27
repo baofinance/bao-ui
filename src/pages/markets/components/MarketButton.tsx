@@ -6,12 +6,11 @@ import { useApprovals } from '@/hooks/markets/useApprovals'
 import { decimate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-//import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
 import { MarketOperations } from './Modals/Modals'
-import { Erc20__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20 } from '@/typechain/index'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -22,11 +21,12 @@ type MarketButtonProps = {
 }
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
-	const { library } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const { approvals } = useApprovals(pendingTx)
 
 	const { marketContract } = asset
+
+	const erc20: Erc20 = useContract('Erc20', asset.underlyingAddress)
 
 	if (pendingTx) {
 		return (
@@ -69,8 +69,6 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={!approvals}
 						onClick={() => {
-							const { underlyingAddress } = asset
-							const erc20 = Erc20__factory.connect(underlyingAddress, library.getSigner())
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
@@ -140,8 +138,6 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={!approvals}
 						onClick={() => {
-							const { underlyingAddress } = asset
-							const erc20 = Erc20__factory.connect(underlyingAddress, library.getSigner())
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
