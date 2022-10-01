@@ -1,27 +1,23 @@
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-
-import { getBaoContract, getLockedEarned } from '@/bao/utils'
-
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Bao } from '@/typechain/index'
 
 const useLockedEarnings = () => {
 	const [balance, setBalance] = useState(BigNumber.from(0))
 	const { account } = useWeb3React()
-	const bao = useBao()
-	const baoContract = getBaoContract(bao)
+	const baoContract = useContract<Bao>('Bao')
 
 	const fetchBalance = useCallback(async () => {
-		const balance = await getLockedEarned(baoContract, account)
-		setBalance(BigNumber.from(balance))
+		const balance = await baoContract.lockOf(account)
+		setBalance(balance)
 	}, [account, baoContract])
 
 	useEffect(() => {
-		if (account && baoContract && bao) {
-			fetchBalance()
-		}
-	}, [account, baoContract, bao])
+		if (!account || !baoContract) return
+		fetchBalance()
+	}, [fetchBalance, account, baoContract])
 
 	return balance
 }

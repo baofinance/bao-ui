@@ -1,5 +1,4 @@
 import Config from '@/bao/lib/config'
-import { getCrvSupply, getVotingEscrowContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
@@ -88,12 +87,12 @@ const Lock: React.FC = () => {
 
 	useEffect(() => {
 		const fetchTotalSupply = async () => {
-			const supply = await getCrvSupply(bao)
+			const supply = await crv.totalSupply()
 			setTotalSupply(supply)
 		}
 
-		if (bao) fetchTotalSupply()
-	}, [bao, setTotalSupply])
+		if (crv) fetchTotalSupply()
+	}, [crv, setTotalSupply])
 
 	// console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
 	// console.log(new Date().setUTCHours(0, 0, 0, 0))

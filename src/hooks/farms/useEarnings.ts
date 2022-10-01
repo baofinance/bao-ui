@@ -1,29 +1,25 @@
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-
-import { getEarned, getMasterChefContract } from '@/bao/utils'
-
-import useBao from '../base/useBao'
-import useBlock from '../base/useBlock'
+import useBlock from '@/hooks/base/useBlock'
+import useContract from '@/hooks/base/useContract'
+import type { Masterchef } from '@/typechain/index'
 
 const useEarnings = (pid: number) => {
 	const [balance, setBalance] = useState(BigNumber.from(0))
 	const { account } = useWeb3React()
-	const bao = useBao()
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 	const block = useBlock()
 
 	const fetchBalance = useCallback(async () => {
-		const balance = await getEarned(masterChefContract, pid, account)
-		setBalance(BigNumber.from(balance))
+		const balance = await masterChefContract.pendingReward(pid, account)
+		setBalance(balance)
 	}, [account, pid, masterChefContract])
 
 	useEffect(() => {
-		if (account && masterChefContract && bao) {
-			fetchBalance()
-		}
-	}, [account, block, masterChefContract, setBalance, bao])
+		if (!account || !masterChefContract) return
+		fetchBalance()
+	}, [fetchBalance, account, block, masterChefContract, setBalance])
 
 	return balance
 }

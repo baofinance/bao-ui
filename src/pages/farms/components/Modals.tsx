@@ -3,16 +3,17 @@ import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import { FeeBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
-import { getContract } from '@/utils/erc20'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
 import Actions from './Actions'
 import { FarmWithStakedValue } from './FarmList'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20 } from '@/typechain/index'
 
 type FarmModalProps = {
 	farm: FarmWithStakedValue
@@ -24,13 +25,8 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 	const { pid } = farm
-	const { library } = useWeb3React()
 
-	const lpTokenAddress = farm.lpTokenAddress
-
-	const lpContract = useMemo(() => {
-		return getContract(library, lpTokenAddress)
-	}, [lpTokenAddress, library])
+	const lpContract = useContract<Erc20>('Erc20', !farm ? null : farm.lpTokenAddress)
 
 	const stakedBalance = useStakedBalance(pid)
 

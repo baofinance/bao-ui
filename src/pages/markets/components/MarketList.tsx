@@ -30,6 +30,8 @@ import { formatEther } from 'ethers/lib/utils'
 import useContract from '@/hooks/base/useContract'
 import type { Comptroller } from '@/typechain/index'
 
+// FIXME: these components should all be using ethers.BigNumber instead of js float math
+
 export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
 	const accountBalances = useAccountBalances()

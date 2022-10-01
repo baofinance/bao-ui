@@ -34,25 +34,25 @@ export default {
 		bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 	},
 	contracts: {
-		bao: {
+		Bao: {
 			1: {
 				address: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
 				abi: 'bao.json',
 			},
 		},
-		crv: {
+		Crv: {
 			1: {
 				address: '0xD533a949740bb3306d119CC777fa900bA034cd52',
 				abi: 'erc20bao.json',
 			},
 		},
-		masterChef: {
+		Masterchef: {
 			1: {
 				address: '0xBD530a1c060DC600b951f16dc656E4EA451d1A2D',
 				abi: 'masterchef.json',
 			},
 		},
-		weth: {
+		Weth: {
 			1: {
 				address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 				abi: 'weth.json',
@@ -97,7 +97,7 @@ export default {
 			},
 		},
 		// veBAO (Currently set to Curve contracts)
-		gaugeController: {
+		GaugeController: {
 			1: {
 				address: '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB',
 				abi: 'gaugeController.json',
@@ -109,7 +109,7 @@ export default {
 				abi: 'votingEscrow.json',
 			},
 		},
-		minter: {
+		Minter: {
 			1: {
 				address: '0xd061D61a4d941c39E5453435B6345Dc261C2fcE0',
 				abi: 'minter.json',

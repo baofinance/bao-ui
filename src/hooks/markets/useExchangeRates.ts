@@ -5,7 +5,8 @@ import { ActiveSupportedMarket } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
 
 import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
+import { useMarkets } from '@/hooks/markets/useMarkets'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 
 type ExchangeRates = {
 	exchangeRates: { [key: string]: BigNumber }
@@ -15,9 +16,10 @@ export const useExchangeRates = (): ExchangeRates => {
 	const [exchangeRates, setExchangeRates] = useState<undefined | { [key: string]: BigNumber }>()
 	const bao = useBao()
 	const { transactions } = useTransactionProvider()
+	const markets = useMarkets()
 
 	const fetchExchangeRates = useCallback(async () => {
-		const tokenContracts = bao.contracts.markets.map((market: ActiveSupportedMarket) => market.marketContract)
+		const tokenContracts = markets.map((market: ActiveSupportedMarket) => market.marketContract)
 		const multiCallContext = MultiCall.createCallContext(
 			tokenContracts.map(tokenContract => ({
 				ref: tokenContract.address,
@@ -36,12 +38,12 @@ export const useExchangeRates = (): ExchangeRates => {
 				{},
 			),
 		)
-	}, [bao])
+	}, [bao, markets])
 
 	useEffect(() => {
-		if (!bao) return
+		if (!bao || !markets) return
 		fetchExchangeRates()
-	}, [bao, transactions, fetchExchangeRates])
+	}, [bao, transactions, fetchExchangeRates, markets])
 
 	return {
 		exchangeRates,

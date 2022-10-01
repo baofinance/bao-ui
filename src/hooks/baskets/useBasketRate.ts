@@ -1,13 +1,13 @@
 import { BigNumber, ethers } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-
+import { useWeb3React } from '@web3-react/core'
 import Multicall from '@/utils/multicall'
-
-import { ActiveSupportedBasket } from '../../bao/lib/types'
-import { getWethPriceLink } from '../../bao/utils'
+import Config from '@/bao/lib/config'
+import { ActiveSupportedBasket } from '@/bao/lib/types'
+import { getOraclePrice } from '@/bao/utils'
 import useBao from '../base/useBao'
 import useContract from '@/hooks/base/useContract'
-import type { SimpleUniRecipe } from '@/typechain/index'
+import type { SimpleUniRecipe, Chainoracle } from '@/typechain/index'
 
 export type BasketRates = {
 	eth: BigNumber
@@ -19,10 +19,13 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const [rates, setRates] = useState<BasketRates | undefined>()
 	const bao = useBao()
 
+	const { chainId } = useWeb3React()
+
 	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
+	const wethOracle = useContract<Chainoracle>('Chainoracle', !chainId ? null : Config.contracts.wethPrice[chainId].address)
 
 	const fetchRates = useCallback(async () => {
-		const wethPrice = await getWethPriceLink(bao)
+		const wethPrice = await getOraclePrice(bao, wethOracle)
 
 		const params = [basket.address, ethers.utils.parseEther('1')]
 		const query = Multicall.createCallContext([

@@ -8,6 +8,7 @@ const useContract = <T = Contract>(contractName: string, address?: string): T =>
 
 	const contract: T | null = useMemo(() => {
 		if (!library || !chainId) return null
+		if (address === null) return null
 		const factory = require(`@/typechain/factories`)[`${contractName}__factory`]
 		let contractAddr
 		try {

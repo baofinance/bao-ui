@@ -1,6 +1,6 @@
+//import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { getGaugeControllerContract, getMinterContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
@@ -10,7 +10,7 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
-import useLockInfo from '@/hooks/vebao/useLockInfo'
+//import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 
 import useContract from '@/hooks/base/useContract'
-import type { Gauge } from '@/typechain/index'
+import type { Gauge, GaugeController, Minter } from '@/typechain/index'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -30,7 +30,7 @@ interface StakeProps {
 }
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
-	const bao = useBao()
+	//const { library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -116,7 +116,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 						) : (
 							<Button
 								fullWidth
-								disabled={!val || !bao || isNaN(val as any) || ethers.utils.parseUnits(val).gt(max)}
+								disabled={!val || isNaN(val as any) || ethers.utils.parseUnits(val).gt(max)}
 								onClick={async () => {
 									const amount = ethers.utils.parseUnits(val.toString(), 18)
 									const stakeTx = gaugeContract['deposit(uint256)'](amount)
@@ -234,7 +234,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
 	//const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const minterContract = getMinterContract(bao)
+	const minterContract = useContract<Minter>('Minter')
 
 	return (
 		<>
@@ -269,10 +269,9 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 					) : (
 						<Button
 							fullWidth
-							disabled={gaugeInfo && !gaugeInfo.claimableTokens.toNumber()}
+							disabled={gaugeInfo && gaugeInfo.claimableTokens.gt(0)}
 							onClick={async () => {
 								const harvestTx = minterContract.mint(gauge.gaugeAddress)
-
 								handleTx(harvestTx, `Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV from ${gauge.name}`)
 							}}
 						>
@@ -293,8 +292,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const gaugeControllerContract = getGaugeControllerContract(bao)
-	const lockInfo = useLockInfo()
+	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
+	//const lockInfo = useLockInfo()
 	const votingPowerAllocated = useVotingPowerAllocated()
 
 	const handleChange = useCallback(

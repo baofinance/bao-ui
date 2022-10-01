@@ -1,32 +1,40 @@
+import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
-import { getWethPriceLink } from '../../bao/utils'
-import useBao from '../base/useBao'
+import { getOraclePrice } from '@/bao/utils'
+import useBao from '@/hooks/base/useBao'
 import useContract from '@/hooks/base/useContract'
-import type { Uni_v2_lp } from '@/typechain/index'
+import type { Uni_v2_lp, Chainoracle } from '@/typechain/index'
 
 const usePairPrice = (basket: ActiveSupportedBasket) => {
 	const [price, setPrice] = useState<BigNumber>(BigNumber.from(1))
 	const bao = useBao()
 
+	const { chainId } = useWeb3React()
+
 	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', (basket && basket.lpAddress || '0x000000000000000000000000000000000000dead'))
+	const wethOracle = useContract<Chainoracle>('Chainoracle', !chainId ? null : Config.contracts.wethPrice[chainId].address)
 
 	const fetchPairPrice = useCallback(async () => {
-		const wethPrice = await getWethPriceLink(bao)
+		const wethPrice = await getOraclePrice(bao, wethOracle)
 		const reserves = await lpContract.getReserves()
 
 		// This won't always work. Should check which side of the LP the basket token is on.
 		const _price = wethPrice.mul(reserves[0].div(reserves[1]))
-		console.log(wethPrice.toString(), reserves[1].div(reserves[0]).toString(), reserves[1].toString())
+		console.log('wethPrice', wethPrice.toString())
+		console.log('r0', reserves[0].toString(), 'r1', reserves[1].toString())
+		console.log('r0/r1', reserves[0].div(reserves[1]).toString())
+		console.log('wethPrice*(r0/r1)', _price.toString())
 		setPrice(_price)
-	}, [bao, lpContract])
+	}, [bao, lpContract, wethOracle])
 
 	useEffect(() => {
-		if (!basket || !bao || !lpContract) return
+		if (!basket || !bao || !lpContract || !wethOracle) return
 		fetchPairPrice()
-	}, [fetchPairPrice, basket, bao, lpContract])
+	}, [fetchPairPrice, basket, bao, lpContract, wethOracle])
 
 	return price
 }

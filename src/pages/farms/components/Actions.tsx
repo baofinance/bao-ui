@@ -1,5 +1,4 @@
 import Config from '@/bao/lib/config'
-import { getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -28,7 +27,7 @@ import { Contract } from 'ethers'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 import useContract from '@/hooks/base/useContract'
-import type { Uni_v2_lp } from '@/typechain/index'
+import type { Uni_v2_lp, Masterchef } from '@/typechain/index'
 
 interface StakeProps {
 	lpContract: Contract
@@ -72,7 +71,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 		)
 	}, [max])
 
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 	const allowance = useAllowance(lpTokenAddress, masterChefContract.address)
 
 	const hideModal = useCallback(() => {
@@ -172,7 +171,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 								fullWidth
 								disabled={true}
 								onClick={async () => {
-									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), '0x00')
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 								}}
 							>
@@ -232,7 +231,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 	const blockDiff = useBlockDiff(userInfo)
 	const fees = useFees(blockDiff)
 
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	const [showFeeModal, setShowFeeModal] = useState(false)
 
@@ -326,10 +325,9 @@ interface RewardsProps {
 }
 
 export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
-	const bao = useBao()
 	const earnings = useEarnings(pid)
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	return (
 		<>

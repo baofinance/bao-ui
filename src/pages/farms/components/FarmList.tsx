@@ -1,6 +1,5 @@
 // FIXME: BROKEN this won't be used anymore as the /farms/ page is getting trashed!
 import Config from '@/bao/lib/config'
-import { getMasterChefContract } from '@/bao/utils'
 import Loader, { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import { Farm, PoolType } from '@/contexts/Farms/types'
@@ -19,14 +18,16 @@ import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import FarmModal from './Modals'
+import useContract from '@/hooks/base/useContract'
+import type { Masterchef } from '@/typechain/index'
 
 const FarmList: React.FC = () => {
 	const bao = useBao()
-	const [farms] = useFarms()
-	const farmsTVL = useAllFarmTVL(bao, bao && bao.multicall)
-	const { account } = useWeb3React()
+	const farms = useFarms()
+	const farmsTVL = useAllFarmTVL()
+	const { account, chainId } = useWeb3React()
 
-	const [baoPrice, setBaoPrice] = useState<BN | undefined>()
+	const [baoPrice, setBaoPrice] = useState<BN>(new BN(0))
 	const [pools, setPools] = useState<any | undefined>({
 		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
@@ -38,11 +39,18 @@ const FarmList: React.FC = () => {
 
 	const [archived, showArchived] = useState(false)
 
+	const masterChefContract = useContract<Masterchef>('Masterchef')
+
 	useEffect(() => {
+		if (!chainId) return
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
-			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.bao[Config.networkId].address)
+			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
 			setBaoPrice(new BN(baoPrice))
 		})
+	}, [setBaoPrice, chainId])
+
+	useEffect(() => {
+		if (!bao || !chainId || !masterChefContract) return
 
 		const _pools: any = {
 			[PoolType.ACTIVE]: [],
@@ -55,7 +63,7 @@ const FarmList: React.FC = () => {
 				Multicall.createCallContext([
 					{
 						ref: 'masterChef',
-						contract: getMasterChefContract(bao),
+						contract: masterChefContract,
 						calls: farms
 							.map((farm, i) => {
 								return {
@@ -103,7 +111,7 @@ const FarmList: React.FC = () => {
 				}
 				setPools(_pools)
 			})
-	}, [bao, farmsTVL, baoPrice, farms, userAddress])
+	}, [bao, chainId, masterChefContract, farmsTVL, farms, baoPrice, userAddress])
 
 	return (
 		<>

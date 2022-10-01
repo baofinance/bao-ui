@@ -68,7 +68,6 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 
 	useEffect(() => {
 		if (!(bao && account && gauge)) return
-
 		fetchGaugeInfo()
 	}, [fetchGaugeInfo, bao, account, gauge, txSuccess])
 

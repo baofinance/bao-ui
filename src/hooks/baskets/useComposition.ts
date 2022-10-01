@@ -7,11 +7,10 @@ import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
 import Config from '@/bao/lib/config'
-import { Experipie__factory } from '@/typechain/factories'
 import { LendingLogicKashi__factory } from '@/typechain/factories'
 import { Erc20__factory } from '@/typechain/factories'
 import useContract from '@/hooks/base/useContract'
-import type { Mkr, LendingRegistry } from '@/typechain/index'
+import type { Mkr, LendingRegistry, Experipie } from '@/typechain/index'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
@@ -43,9 +42,9 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 	const lendingRegistry = useContract<LendingRegistry>('LendingRegistry')
 	const mkr = useContract<Mkr>('Mkr', Config.addressMap.MKR)
+	const basketContract = useContract<Experipie>('Experipie', basket ? basket.address : null)
 
 	const fetchComposition = useCallback(async () => {
-		const basketContract = Experipie__factory.connect(basket.address, library)
 		const tokenComposition: string[] = await basketContract.getTokens()
 		const tokensQuery = MultiCall.createCallContext(
 			tokenComposition
@@ -55,7 +54,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				.map(address => ({
 					contract: Erc20__factory.connect(address, library),
 					ref: address,
-					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address] }],
+					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address]
+					}],
 				})),
 		)
 		const tokenInfo = MultiCall.parseCallResults(await bao.multicall.call(tokensQuery))
@@ -100,7 +100,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 				// Get Exchange Rate
 				const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
-				//const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
 				const logicContract = LendingLogicKashi__factory.connect(logicAddress, library)
 				const exchangeRate = await logicContract.callStatic.exchangeRate(_c.address)
 				// xSushi APY can't be found on-chain, check for special case
@@ -139,7 +138,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		}
 
 		setComposition(_comp)
-	}, [library, basket, prices, bao, lendingRegistry, mkr])
+	}, [basketContract, library, basket, prices, bao, lendingRegistry, mkr])
 
 	useEffect(() => {
 		if (!(library &&
@@ -147,6 +146,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				basket &&
 				lendingRegistry &&
 				mkr &&
+				basketContract &&
 				basket.pieColors &&
 				prices &&
 				Object.keys(prices).length > 0
@@ -155,7 +155,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		}
 
 		fetchComposition()
-	}, [library, chainId, basket, prices, transactions, fetchComposition, lendingRegistry, mkr])
+	}, [library, chainId, basket, basketContract, prices, transactions, fetchComposition, lendingRegistry, mkr])
 
 	return composition
 }

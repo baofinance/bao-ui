@@ -1,15 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { Contract } from '@ethersproject/contracts'
-
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import useBao from '@/hooks/base/useBao'
-import { decimate } from '@/utils/numberFormat'
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
-import { BigNumber } from 'ethers'
+//import { BigNumber } from 'ethers'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import useContract from '@/hooks/base/useContract'
+import { Cether__factory, Ctoken__factory, Erc20__factory } from '@/typechain/factories'
 import type { Comptroller, MarketOracle } from '@/typechain/index'
 
 export const SECONDS_PER_BLOCK = 2
@@ -21,7 +19,7 @@ export const DAYS_PER_YEAR = 365
 const toApy = (rate: number) => (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100
 
 export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
-	const bao = useBao()
+	const { library, chainId, account } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 	const [markets, setMarkets] = useState<ActiveSupportedMarket[] | undefined>()
 
@@ -29,8 +27,25 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 	const oracle = useContract<MarketOracle>('MarketOracle')
 
 	const fetchMarkets = useCallback(async () => {
-		const contracts: Contract[] = bao.contracts.markets.map((market: ActiveSupportedMarket) => {
-			return bao.getNewContract(market.marketAddress, market.underlyingAddress === 'ETH' ? 'cether.json' : 'ctoken.json')
+		const signerOrProvider = account ? library.getSigner() : library
+		const _markets = Config.markets.map(market => {
+			const marketAddress = market.marketAddresses[chainId]
+			const underlyingAddress = market.underlyingAddresses[chainId]
+			let marketContract
+			if (underlyingAddress === 'ETH') marketContract = Cether__factory.connect(marketAddress, signerOrProvider)
+			else marketContract = Ctoken__factory.connect(marketAddress, signerOrProvider)
+			let underlyingContract
+			if (underlyingAddress !== 'ETH') underlyingContract = Erc20__factory.connect(underlyingAddress, signerOrProvider)
+			return Object.assign(market, {
+				marketAddress,
+				marketContract,
+				underlyingAddress,
+				underlyingContract,
+			})
+		})
+
+		const contracts: Contract[] = _markets.map((market: ActiveSupportedMarket) => {
+			return market.marketContract
 		})
 
 		const [
@@ -61,12 +76,12 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 			Promise.all(contracts.map(contract => contract.callStatic.exchangeRateCurrent())),
 			Promise.all(contracts.map(contract => comptroller.compBorrowState(contract.address))),
 			Promise.all(
-				bao.contracts.markets.map(market => {
+				_markets.map(market => {
 					return market.marketContract.symbol()
 				}),
 			),
 			Promise.all(
-				bao.contracts.markets.map(market => {
+				_markets.map(market => {
 					return market.underlyingContract ? market.underlyingContract.symbol() : 'ETH'
 				}),
 			),
@@ -79,7 +94,8 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 		const borrowApys: number[] = borrowRates.map((rate: number) => toApy(rate))
 
 		let markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
-			const marketConfig = bao.contracts.markets.find(market => market.marketAddresses[Config.networkId] === contract.address)
+			const marketConfig = _markets.find(market => market.marketAddresses[Config.networkId] === contract.address)
+			// FIXME: this should all be using ethers.BigNumber
 			return {
 				symbol: symbols[i],
 				underlyingSymbol: underlyingSymbols[i],
@@ -102,12 +118,12 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 		markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
 		setMarkets(markets)
-	}, [bao, comptroller, oracle])
+	}, [account, chainId, library, comptroller, oracle])
 
 	useEffect(() => {
-		if (!bao || !comptroller || !oracle) return
+		if (!library || !chainId || !comptroller || !oracle) return
 		fetchMarkets()
-	}, [fetchMarkets, bao, transactions, comptroller, oracle])
+	}, [fetchMarkets, library, chainId, transactions, comptroller, oracle])
 
 	return markets
 }

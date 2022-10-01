@@ -23,6 +23,7 @@ export type AccountLiquidity = {
 	usdBorrowable: number
 }
 
+// FIXME: this should be refactored to use ethers.BigNumber.. not JavaScript floats
 export const useAccountLiquidity = (): AccountLiquidity => {
 	const [accountLiquidity, setAccountLiquidity] = useState<undefined | AccountLiquidity>()
 
@@ -47,8 +48,9 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			).toNumber()
 		}
 
-		const usdSupply = Object.entries(supplyBalances).reduce((prev: number, [, { address, balance }]) => {
-			return prev + balance * parseFloat(formatEther(exchangeRates[address])) * prices[address]
+		const usdSupply = Object.keys(exchangeRates).reduce((prev: number, addr: string) => {
+			const supply = supplyBalances.find(b => b.address === addr)
+			return prev + supply.balance * parseFloat(formatEther(exchangeRates[addr])) * prices[addr]
 		}, 0)
 
 		const usdBorrow = Object.entries(borrowBalances).reduce((prev: number, [, { address, balance }]) => prev + balance * prices[address], 0)

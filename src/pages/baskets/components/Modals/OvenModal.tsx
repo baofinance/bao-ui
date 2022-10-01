@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Button from '@/components/Button'
@@ -25,16 +26,16 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	const [value, setValue] = useState<string | undefined>()
 	const [ethBalance, setEthBalance] = useState<BigNumber | undefined>()
 
+	const { library } = useWeb3React()
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const ovenInfo = useOvenInfo(basket, account)
 
 	useEffect(() => {
-		if (!(bao && account)) return
-
-		// FIXME: use useBalance('ETH')
-		bao.provider.getBalance(account).then((balance: any) => setEthBalance(decimate(balance)))
-	}, [bao, account])
+		if (!(library && account)) return
+		// FIXME: use useBalance('ETH') from eth-hooks maybe?
+		library.getBalance(account).then((balance: any) => setEthBalance(decimate(balance)))
+	}, [library, account])
 
 	return basket ? (
 		<>

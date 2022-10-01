@@ -1,4 +1,3 @@
-import { getVotingEscrowContract } from '@/bao/utils'
 import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -7,7 +6,7 @@ import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import Config from '@/bao/lib/config'
 import useContract from '@/hooks/base/useContract'
-import type { Erc20, VotingEscrow } from '@/typechain/index'
+import type { VotingEscrow } from '@/typechain/index'
 
 type LockInfo = {
 	balance: BigNumber

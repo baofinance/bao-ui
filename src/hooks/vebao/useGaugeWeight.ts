@@ -1,23 +1,24 @@
-import { getGaugeControllerContract, getGaugeWeight } from '@/bao/utils'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { GaugeController } from '@/typechain/index'
 
 const useGaugeWeight = (lpAddress: string) => {
 	const [weight, setWeight] = useState(BigNumber.from(0))
-	const bao = useBao()
-	const gaugeControllerContract = getGaugeControllerContract(bao)
+	const gaugeController = useContract<GaugeController>('GaugeController')
 
 	const fetchGaugeWeight = useCallback(async () => {
-		const weight = await getGaugeWeight(gaugeControllerContract, lpAddress)
-		setWeight(BigNumber.from(weight))
-	}, [gaugeControllerContract, bao])
+		const weight = await gaugeController.get_gauge_weight(lpAddress, {
+			gasLimit: 100000,
+		})
+		setWeight(weight)
+	}, [gaugeController, lpAddress])
 
 	useEffect(() => {
-		if (gaugeControllerContract && bao) {
+		if (gaugeController) {
 			fetchGaugeWeight()
 		}
-	}, [gaugeControllerContract, bao])
+	}, [fetchGaugeWeight, gaugeController])
 
 	return weight
 }

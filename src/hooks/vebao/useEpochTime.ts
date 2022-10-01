@@ -1,8 +1,11 @@
-import { getCrvContract } from '@/bao/utils'
+import { useWeb3React } from '@web3-react/core'
+import Config from '@/bao/lib/config'
 import Multicall from '@/utils/multicall'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20bao } from '@/typechain/index'
 
 type RewardsInfo = {
 	start: BigNumber
@@ -11,13 +14,14 @@ type RewardsInfo = {
 
 const useEpochTime = (): RewardsInfo => {
 	const [epochTime, setEpochTime] = useState<RewardsInfo | undefined>()
+	const { chainId } = useWeb3React()
 	const bao = useBao()
+	const token = useContract<Erc20bao>('Erc20bao', !chainId ? null : Config.contracts.Crv[chainId].address)
 
 	const fetchEpochTime = useCallback(async () => {
-		const tokenContract = getCrvContract(bao)
 		const query = Multicall.createCallContext([
 			{
-				contract: tokenContract,
+				contract: token,
 				ref: 'bao',
 				calls: [
 					{
@@ -36,13 +40,13 @@ const useEpochTime = (): RewardsInfo => {
 			start: res[0].values[0],
 			future: res[1].values[0],
 		})
-	}, [bao])
+	}, [bao, token])
 
 	useEffect(() => {
-		if (!bao) return
+		if (!bao || !token) return
 
 		fetchEpochTime()
-	}, [bao])
+	}, [fetchEpochTime, bao, token])
 
 	return epochTime
 }
