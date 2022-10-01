@@ -96,7 +96,7 @@ const Market: NextPage<{
 
 	const oracleAddress = useMemo(() => {
 		if (!chainId) return
-		const address = Config.contracts.marketOracle[chainId].address
+		const address = Config.contracts.MarketOracle[chainId].address
 		return formatAddress(address)
 	}, [chainId])
 

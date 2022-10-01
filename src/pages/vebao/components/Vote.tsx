@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Typography } from '@material-tailwind/react'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import Link from 'next/link'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
@@ -21,11 +21,12 @@ const Vote: React.FC = () => {
 	const [val, setVal] = useState('')
 	const gauges = useGauges()
 	const lockInfo = useLockInfo()
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx } = useTransactionHandler()
 	const [selectedOption, setSelectedOption] = useState()
 
 	const fullBalance = useMemo(() => {
-		return getFullDisplayBalance(lockInfo && lockInfo.balance)
+		if (!lockInfo) return
+		return getFullDisplayBalance(lockInfo.balance)
 	}, [lockInfo])
 
 	const handleChange = useCallback(
@@ -37,7 +38,7 @@ const Vote: React.FC = () => {
 
 	const handleSelectMax = useCallback(() => {
 		setVal(fullBalance)
-	}, [lockInfo, setVal])
+	}, [fullBalance])
 
 	return (
 		<>

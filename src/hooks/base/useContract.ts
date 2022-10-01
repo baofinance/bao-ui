@@ -1,11 +1,12 @@
 import { useMemo } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
 
-const useContract = (contractName: string, address?: string) => {
+const useContract = <T = Contract>(contractName: string, address?: string): T => {
 	const { library, account, chainId } = useWeb3React()
 
-	const contract = useMemo(() => {
+	const contract: T | null = useMemo(() => {
 		if (!library || !chainId) return null
 		const factory = require(`@/typechain/factories`)[`${contractName}__factory`]
 		let contractAddr
@@ -14,8 +15,8 @@ const useContract = (contractName: string, address?: string) => {
 		} catch (e) {
 			throw new Error(`No contract address given and cannot find ${contractName} in Config.contracts.`)
 		}
-		const signer = library.getSigner()
-		return factory.connect(contractAddr, account ? signer : library)
+		const _contract: T = factory.connect(contractAddr, account ? library.getSigner() : library)
+		return _contract
 	}, [contractName, address, library, account, chainId])
 
 	return contract

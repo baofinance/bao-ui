@@ -13,6 +13,8 @@ import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
 import { formatEther } from 'ethers/lib/utils'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller } from '@/typechain/index'
 
 export type AccountLiquidity = {
 	netApy: number
@@ -32,9 +34,10 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 	const borrowBalances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
 	const { prices: oraclePrices } = useMarketPrices()
+	const comptroller = useContract<Comptroller>('Comptroller')
 
 	const fetchAccountLiquidity = useCallback(async () => {
-		const compAccountLiqudity = await bao.getContract('comptroller').getAccountLiquidity(account)
+		const compAccountLiqudity = await comptroller.getAccountLiquidity(account)
 
 		const prices: { [key: string]: number } = {}
 		for (const key in oraclePrices) {
@@ -75,12 +78,12 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			usdBorrow,
 			usdBorrowable: parseFloat(formatEther(compAccountLiqudity[1])),
 		})
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [comptroller, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
 
 	useEffect(() => {
-		if (!(bao && account && markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices)) return
+		if (!(markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices && comptroller)) return
 		fetchAccountLiquidity()
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices, fetchAccountLiquidity, comptroller])
 
 	return accountLiquidity
 }

@@ -7,9 +7,9 @@ import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { getWethPriceLink } from '../../bao/utils'
 import useBao from '../base/useBao'
 import useContract from '@/hooks/base/useContract'
-import type { SimpleUniRecipe, Dai } from '@/typechain/index'
+import type { SimpleUniRecipe } from '@/typechain/index'
 
-type BasketRates = {
+export type BasketRates = {
 	eth: BigNumber
 	dai: BigNumber
 	usd: BigNumber
@@ -19,12 +19,12 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const [rates, setRates] = useState<BasketRates | undefined>()
 	const bao = useBao()
 
-	const recipe: SimpleUniRecipe = useContract('SimpleUniRecipe')
+	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
 
 	const fetchRates = useCallback(async () => {
 		const wethPrice = await getWethPriceLink(bao)
 
-		const params = [basket.address, BigNumber.from(ethers.utils.parseEther('1'))]
+		const params = [basket.address, ethers.utils.parseEther('1')]
 		const query = Multicall.createCallContext([
 			{
 				contract: recipe,
@@ -46,15 +46,15 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 		setRates({
 			eth: res[0].values[0],
 			dai: res[1].values[0],
-			usd: wethPrice.mul(res[0].values[0]),
+			usd: wethPrice.mul(res[0].values[0]).mul(100).div(BigNumber.from(10).pow(18)),
 		})
-	}, [bao, basket])
+	}, [recipe, bao, basket])
 
 	useEffect(() => {
-		if (!(bao && basket)) return
+		if (!(bao && recipe && basket)) return
 
 		fetchRates()
-	}, [bao, basket])
+	}, [bao, fetchRates, recipe, basket])
 
 	return rates
 }

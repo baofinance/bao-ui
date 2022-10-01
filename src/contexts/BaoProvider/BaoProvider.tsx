@@ -2,35 +2,31 @@ import { useWeb3React } from '@web3-react/core'
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
 
 import { Bao } from '@/bao/Bao'
-import Config from '@/bao/lib/config'
 
 export interface BaoContext {
-	bao?: typeof Bao
+	bao?: Bao
 }
 
 interface BaoProviderProps {
-	children: any
+	children: React.ReactNode
 }
 
 export const Context = createContext<BaoContext>({
-	bao: undefined,
+	bao: null,
 })
 
 declare global {
 	interface Window {
-		baosauce: any
-		ethereum?: any
+		baosauce?: Bao
 	}
 }
 
 const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }) => {
 	const { library, account, chainId } = useWeb3React()
-	const [bao, setBao] = useState<any>()
+	const [bao, setBao] = useState<Bao | null>(null)
 
 	useEffect(() => {
-		if (!library || !chainId) {
-			return
-		}
+		if (!library || !chainId) return
 		const baoLib = new Bao(library, chainId, {
 			signer: account ? library.getSigner() : null,
 		})

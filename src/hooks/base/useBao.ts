@@ -4,7 +4,7 @@ import { useContext } from 'react'
 import { Context } from '@/contexts/BaoProvider'
 
 const useBao = (): Bao => {
-	const { bao }: any = useContext(Context)
+	const { bao }: any  = useContext(Context)
 	return bao
 }
 

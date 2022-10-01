@@ -65,13 +65,13 @@ export default {
 			},
 		},
 		// Hard Synths
-		comptroller: {
+		Comptroller: {
 			1: {
 				address: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
 				abi: 'comptroller.json',
 			},
 		},
-		marketOracle: {
+		MarketOracle: {
 			1: {
 				address: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
 				abi: 'marketOracle.json',
@@ -125,6 +125,12 @@ export default {
 			1: {
 				address: '0x6b175474e89094c44da98b954eedeac495271d0f',
 				abi: 'dai.json',
+			},
+		},
+		Uni_v2_lp: {
+			1: {
+				address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+				abi: 'uni_v2_lp.json',
 			},
 		},
 	},

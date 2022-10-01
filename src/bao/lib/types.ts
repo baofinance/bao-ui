@@ -1,4 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
+import { Experipie, Oven } from '@/typechain/index'
 
 export interface SupportedPool {
 	pid: number
@@ -105,8 +106,8 @@ export interface ActiveSupportedGauge extends SupportedGauge {
 
 export interface ActiveSupportedBasket extends SupportedBasket {
 	address: string
-	basketContract: Contract
-	ovenContract: Contract
+	basketContract: Experipie
+	ovenContract: Oven
 }
 
 export interface ActiveSupportedMarket extends SupportedMarket {

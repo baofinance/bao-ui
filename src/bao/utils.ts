@@ -4,19 +4,10 @@ import { ethers, BigNumber } from 'ethers'
 import _ from 'lodash'
 import { Contract } from '@ethersproject/contracts'
 import { Bao } from './Bao'
-import { ActiveSupportedBasket, ActiveSupportedGauge, ActiveSupportedMarket, FarmableSupportedPool } from './lib/types'
-
-//BigNumber.config({
-//	EXPONENTIAL_AT: 1000,
-//	DECIMAL_PLACES: 80,
-//})
+import { ActiveSupportedGauge, ActiveSupportedMarket, FarmableSupportedPool } from './lib/types'
 
 export const getWethContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('weth')
-}
-
-export const getWethPriceContract = (bao: Bao): Contract => {
-	return bao && bao.contracts && bao.getContract('wethPrice')
 }
 
 export const getComptrollerContract = (bao: Bao): Contract => {
@@ -35,10 +26,6 @@ export const getVotingEscrowContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('votingEscrow')
 }
 
-export const getFeeDistributorContract = (bao: Bao): Contract => {
-	return bao && bao.contracts && bao.getContract('feeDistributor')
-}
-
 export const getMinterContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('minter')
 }
@@ -51,16 +38,8 @@ export const getCrvContract = (bao: Bao): Contract => {
 	return bao && bao.contracts && bao.getContract('crv')
 }
 
-export const getBasketContract = (bao: Bao, nid: number): Contract | undefined => {
-	if (bao && bao.contracts && bao.contracts.baskets) return _.find(bao.contracts.baskets, { nid }).basketContract
-}
-
 export const getRecipeContract = (bao: Bao) => {
 	return bao && bao.contracts && bao.getContract('recipe')
-}
-
-export const getBaskets = (bao: Bao): ActiveSupportedBasket[] => {
-	return bao && bao.contracts.baskets
 }
 
 export const getMarkets = (bao: Bao): ActiveSupportedMarket[] => {
@@ -288,7 +267,7 @@ export const getWethPriceLink = async (bao: Bao): Promise<BigNumber> => {
 		),
 	)
 
-	return wethPrice[1].values[1].div(BigNumber.from(10).pow(wethPrice[0].values[0]))
+	return wethPrice[1].values[1].mul(BigNumber.from(10).pow(wethPrice[0].values[0]))
 }
 
 export const getUserInfoChef = async (masterChefContract: Contract, pid: number, account: string) =>

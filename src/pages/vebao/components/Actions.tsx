@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { approve, getGaugeControllerContract, getMinterContract } from '@/bao/utils'
+import { getGaugeControllerContract, getMinterContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
@@ -12,12 +12,10 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
-import { getBalanceNumber, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-import { ethers, BigNumber } from 'ethers'
-//import BN from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -33,11 +31,10 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
-	const gaugeContract: Gauge = useContract('Gauge', gauge.gaugeAddress)
+	const gaugeContract = useContract<Gauge>('Gauge', gauge.gaugeAddress)
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -145,13 +142,12 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const gaugeInfo = useGaugeInfo(gauge)
 
-	const gaugeContract: Gauge = useContract('Gauge', gauge.gaugeAddress)
+	const gaugeContract = useContract<Gauge>('Gauge', gauge.gaugeAddress)
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -296,13 +292,10 @@ interface VoteProps {
 export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
-	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = getGaugeControllerContract(bao)
 	const lockInfo = useLockInfo()
 	const votingPowerAllocated = useVotingPowerAllocated()
-
-	console.log(votingPowerAllocated.toNumber(), lockInfo && getBalanceNumber(lockInfo.balance))
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {

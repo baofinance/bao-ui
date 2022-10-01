@@ -9,6 +9,8 @@ import { decimate } from '@/utils/numberFormat'
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
 import { BigNumber } from 'ethers'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller, MarketOracle } from '@/typechain/index'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -20,16 +22,16 @@ const toApy = (rate: number) => (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DA
 
 export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 	const bao = useBao()
-	const { library } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 	const [markets, setMarkets] = useState<ActiveSupportedMarket[] | undefined>()
+
+	const comptroller = useContract<Comptroller>('Comptroller')
+	const oracle = useContract<MarketOracle>('MarketOracle')
 
 	const fetchMarkets = useCallback(async () => {
 		const contracts: Contract[] = bao.contracts.markets.map((market: ActiveSupportedMarket) => {
 			return bao.getNewContract(market.marketAddress, market.underlyingAddress === 'ETH' ? 'cether.json' : 'ctoken.json')
 		})
-		const comptroller: Contract = bao.getContract('comptroller')
-		const oracle: Contract = bao.getContract('marketOracle')
 
 		const [
 			reserveFactors,
@@ -100,12 +102,12 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 		markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
 		setMarkets(markets)
-	}, [bao, library])
+	}, [bao, comptroller, oracle])
 
 	useEffect(() => {
-		if (!(bao && library)) return
+		if (!bao || !comptroller || !oracle) return
 		fetchMarkets()
-	}, [bao, library, transactions])
+	}, [fetchMarkets, bao, transactions, comptroller, oracle])
 
 	return markets
 }

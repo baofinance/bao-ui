@@ -1,6 +1,5 @@
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import BN from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
 
 import useBao from '@/hooks/base/useBao'
@@ -17,13 +16,14 @@ import type { Mkr, LendingRegistry } from '@/typechain/index'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export type BasketComponent = {
 	address: string
 	symbol: string
 	name: string
 	decimals: number
-	price: BN
+	price: BigNumber
 	image: any
 	balance: BigNumber
 	percentage: number
@@ -41,8 +41,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const { library, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 
-	const lendingRegistry: LendingRegistry = useContract('LendingRegistry')
-	const mkr: Mkr = useContract('Mkr', Config.addressMap.MKR)
+	const lendingRegistry = useContract<LendingRegistry>('LendingRegistry')
+	const mkr = useContract<Mkr>('Mkr', Config.addressMap.MKR)
 
 	const fetchComposition = useCallback(async () => {
 		const basketContract = Experipie__factory.connect(basket.address, library)
@@ -108,15 +108,15 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				const underlyingToken = Erc20__factory.connect(lendingRes[0].values[0], library)
 				const underlyingDecimals = await underlyingToken.decimals()
 
-				_c.price = new BN(exchangeRate.toString()).times(new BN(prices[_c.underlying.toLowerCase()].toString()))
+				const p = prices[_c.underlying.toLowerCase()]
+				_c.price = exchangeRate.mul(p).div(BigNumber.from(10).pow(18))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
 				// wrapped balance * exchange rate / 10 ** (18 - 8 + underlyingDecimals)
 				// Here, the price is already decimated by 1e18, so we can subtract 8
 				// from the underlying token's decimals.
-				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
-				console.log(_c.price.toString())
+				if (_c.strategy === 'Compound') _c.price = _c.price.div(BigNumber.from(10).pow(underlyingDecimals - 8))
 			}
 
 			_comp.push({
@@ -134,12 +134,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
 
-			_comp[i].percentage = new BN(comp.balance.toString())
-				.times(comp.price.toString())
-				.div(marketCap.toString())
-				.times(100)
-				.div(10 ** comp.decimals)
-				.toNumber()
+			const percentage = comp.balance.mul(comp.price).div(marketCap).mul(100)
+			_comp[i].percentage = parseFloat(formatUnits(percentage, _comp[i].decimals))
 		}
 
 		setComposition(_comp)

@@ -26,7 +26,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 
 	const { marketContract } = asset
 
-	const erc20: Erc20 = useContract('Erc20', asset.underlyingAddress)
+	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 
 	if (pendingTx) {
 		return (

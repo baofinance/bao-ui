@@ -41,7 +41,7 @@ export const useExchangeRates = (): ExchangeRates => {
 	useEffect(() => {
 		if (!bao) return
 		fetchExchangeRates()
-	}, [bao, transactions])
+	}, [bao, transactions, fetchExchangeRates])
 
 	return {
 		exchangeRates,

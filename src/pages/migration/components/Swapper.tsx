@@ -139,8 +139,8 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 
 	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[Config.networkId].address)
 
-	const ballast: Stabilizer = useContract('Stabilizer')
-	const baoContract: Bao = useContract('Bao', Config.addressMap.BAO)
+	const ballast = useContract<Stabilizer>('Stabilizer')
+	const baoContract = useContract<Bao>('Bao', Config.addressMap.BAO)
 
 	const handleClick = async () => {
 		if (!bao) return

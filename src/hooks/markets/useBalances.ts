@@ -51,6 +51,7 @@ export const useAccountBalances = (): Balance[] => {
 				return {
 					address,
 					symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
+					// FIXME: make this .balance a bn.js for decimals or format it later in the component
 					balance: multicallResults[address]
 						? parseFloat(formatUnits(multicallResults[address][2].values[0], multicallResults[address][1].values[0]))
 						: parseFloat(formatUnits(ethBalance)),
@@ -63,7 +64,7 @@ export const useAccountBalances = (): Balance[] => {
 		if (!(bao && account)) return
 
 		fetchBalances()
-	}, [bao, account, block, transactions])
+	}, [fetchBalances, bao, account, block, transactions])
 
 	return balances
 }

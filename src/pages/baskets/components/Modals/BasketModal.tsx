@@ -15,7 +15,7 @@ import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ethers, BigNumber } from 'ethers'
-import BN from 'bignumber.js'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
@@ -43,8 +43,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
+	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
+	const dai = useContract<Dai>('Dai')
+
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, Config.addressMap.dai)
+	const daiAllowance = useAllowance(dai.address, recipe.address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -53,9 +56,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const swapLink = basket && basket.swap
 
-	const recipe: SimpleUniRecipe = useContract('SimpleUniRecipe')
-	const dai: Dai = useContract('Dai')
-
 	const handleOperation = () => {
 		let tx
 
@@ -63,7 +63,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			case 'MINT':
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
-					if (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) {
+					if (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) {
 						// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
 						tx = dai.approve(recipe.address, ethers.constants.MaxUint256)
 						handleTx(tx, 'Approve DAI for Baskets Recipe')
@@ -86,30 +86,23 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 		}
 	}
 
-	const isButtonDisabled = useMemo(
-		() =>
-			pendingTx !== false /* can be string | boolean */ ||
-			(!(
-				// First, check if we are minting, the mintOption is DAI, and the account has
-				// inadequate approval. If so, the button needs to be enabled for the account
-				// to approve DAI.
-				(
-					operation === 'MINT' &&
-					mintOption === MintOption.DAI &&
-					daiAllowance &&
-					(daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value))))
-				)
-			) &&
-				// Else, check that the input value is valid.
-				(!value ||
-					!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
-					ethers.utils.parseEther(value).lte(0) ||
-					ethers.utils
-						.parseEther(value)
-						.gt(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
-				)),
-		[pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance],
-	)
+	const isButtonDisabled = useMemo(() => {
+		if (pendingTx !== false) {
+			return true
+		}
+		if (operation === 'MINT') {
+			const _val = value && parseUnits(value)
+			const daiOrEth = mintOption === MintOption.DAI ? daiBalance : ethBalance
+			const walletBallance = operation === 'MINT' ? daiOrEth : basketBalance
+			return (
+				mintOption === MintOption.DAI &&
+				daiAllowance &&
+				(daiAllowance.eq(0) || daiAllowance.lt(_val)) &&
+				(parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance))
+			)
+		}
+		return false
+	}, [pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance])
 
 	const hide = () => {
 		hideModal()
@@ -178,7 +171,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Input
 								value={value}
 								onChange={e => setValue(e.currentTarget.value)}
-								onSelectMax={() => setValue(ethers.utils.formatUnits(basketBalance, 18))}
+								onSelectMax={() => setValue(formatUnits(basketBalance, 18))}
 								disabled={operation === 'MINT'}
 								label={
 									<div className='flex flex-row items-center'>
@@ -224,17 +217,21 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Input
 										value={secondaryValue}
 										onChange={e => {
-											const inputVal = new BN((mintOption === MintOption.DAI ? rates.dai : rates.eth).toString())
-												.div(10 ** 18)
-												.times(e.currentTarget.value)
-												.times(1.02)
-											console.log(inputVal)
+											try {
+												parseUnits(e.currentTarget.value)
+											} catch {
+												setValue('0')
+												setSecondaryValue('')
+												return
+											}
+											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											const inputVal = BigNumber.from(mintOption === MintOption.DAI ? rates.dai : rates.eth)
+												.mul(parseUnits(e.currentTarget.value))
+												.div(BigNumber.from(10).pow(18))
+												.mul(parseUnits('1.02'))
+												.div(BigNumber.from(10).pow(18))
 											setSecondaryValue(e.currentTarget.value)
-											setValue(
-												// FIXME: ethers.BigNumber does not support an infinite value
-												inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
-												//ethers.utils.formatUnits(inputVal, 18),
-											)
+											setValue(formatUnits(inputVal))
 										}}
 										onSelectMax={() => {
 											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
@@ -242,21 +239,19 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 											let usedRate
 											switch (mintOption) {
 												case MintOption.DAI:
-													usedBal = decimate(daiBalance)
+													usedBal = daiBalance
 													usedRate = rates.dai
 													break
 												case MintOption.ETH:
-													usedBal = decimate(ethBalance)
+													usedBal = ethBalance
 													usedRate = rates.eth
 													break
 											}
 
-											const maxVal = new BN(usedBal.toString()).times(0.98)
-											const secVal = new BN(maxVal.toString())
-												.div(usedRate.toString())
-												.times(10 ** 18)
-											setSecondaryValue(secVal.toFixed())
-											setValue(usedBal.toString())
+											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											const maxVal = usedBal.mul(parseUnits('0.98')).div(usedRate)
+											setSecondaryValue(formatUnits(maxVal))
+											setValue(formatUnits(usedBal))
 										}}
 										label={
 											<div className='flex flex-row items-center pl-2 pr-4'>
@@ -296,16 +291,16 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						) : operation === 'MINT' &&
 						  mintOption === MintOption.DAI &&
 						  daiAllowance &&
-						  (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) ? (
+						  (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) ? (
 							'Approve DAI'
 						) : !value ? (
 							'Enter a Value'
 						) : isButtonDisabled ? (
 							'Invalid Input'
 						) : operation === 'MINT' ? (
-							`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`
+							`Mint ${(secondaryValue && getDisplayBalance(secondaryValue, 0)) || 0} ${basket.symbol}`
 						) : (
-							`Redeem ${getDisplayBalance(value, 0) || 0} ${basket.symbol}`
+							`Redeem ${(value && getDisplayBalance(value, 0)) || 0} ${basket.symbol}`
 						)}
 					</Button>
 				</Modal.Actions>

@@ -27,6 +27,8 @@ import { default as React, useCallback, useMemo, useState } from 'react'
 import { Contract } from 'ethers'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
+import useContract from '@/hooks/base/useContract'
+import type { Uni_v2_lp } from '@/typechain/index'
 
 interface StakeProps {
 	lpContract: Contract
@@ -64,7 +66,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 	const handleSelectHalf = useCallback(() => {
 		setVal(
 			max
-				.div(10 ** 18)
+				.div(BigNumber.from(10).pow(18))
 				.div(2)
 				.toString(),
 		)
@@ -394,13 +396,10 @@ interface ActionProps {
 
 const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
-	const { library } = useWeb3React()
 
 	const lpTokenAddress = farm.lpTokenAddress
 
-	const lpContract = useMemo(() => {
-		return getContract(library, lpTokenAddress)
-	}, [library, lpTokenAddress])
+	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', lpTokenAddress)
 
 	const tokenBalance = useTokenBalance(lpContract.address)
 	const stakedBalance = useStakedBalance(pid)

@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
+import useContract from '@/hooks/base/useContract'
+import type { MarketOracle } from '@/typechain/index'
 
 type Prices = {
 	prices: {
@@ -48,13 +50,14 @@ export const useMarketPrices = (): MarketPrices => {
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const [prices, setPrices] = useState<undefined | { [key: string]: number }>()
+	const oracle = useContract<MarketOracle>('MarketOracle')
 
 	const fetchPrices = useCallback(async () => {
 		const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
 		const multiCallContext = MultiCall.createCallContext([
 			{
 				ref: 'MarketOracle',
-				contract: bao.getContract('marketOracle'),
+				contract: oracle,
 				calls: tokens.map(token => ({
 					ref: token,
 					method: 'getUnderlyingPrice',
@@ -73,12 +76,12 @@ export const useMarketPrices = (): MarketPrices => {
 				{},
 			),
 		)
-	}, [transactions, bao])
+	}, [transactions, bao, oracle])
 
 	useEffect(() => {
-		if (!bao) return
+		if (!bao || !oracle) return
 		fetchPrices()
-	}, [transactions, bao])
+	}, [transactions, bao, oracle])
 
 	return {
 		prices,

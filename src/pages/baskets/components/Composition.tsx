@@ -15,6 +15,7 @@ import _ from 'lodash'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -87,14 +88,15 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 													</td>
 													<td className='p-2 text-center'>
 														<Badge className='bg-primary-300 font-semibold'>
-															${getDisplayBalance(new BN(component.basePrice || component.price).div(1e18), 0)}
+															${(component.basePrice && getDisplayBalance(component.basePrice)) ||
+																	new BN(formatUnits(component.price)).toFixed(2)}
 														</Badge>
 													</td>
 													<td className='p-2 text-center'>
-														<Tooltipped content={component.apy ? `${new BN(component.apy.toString()).div(1e18).times(100).toFixed(18)}%` : '-'}>
+														<Tooltipped content={component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(8)}%` : '-'}>
 															<a>
 																<Badge className='bg-primary-300 font-semibold'>
-																	{component.apy ? `${new BN(component.apy.toString()).div(1e18).times(100).toFixed(2)}%` : '-'}
+																	{component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(2)}%` : '-'}
 																</Badge>
 															</a>
 														</Tooltipped>

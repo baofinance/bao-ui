@@ -26,8 +26,8 @@ import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
-import { Contract } from '@ethersproject/contracts'
-import ERC20_ABI from '@/bao/lib/abi/erc20.json'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20, VotingEscrow } from '@/typechain/index'
 
 function addDays(numOfDays: number, date = new Date()) {
 	date.setDate(date.getDate() + numOfDays)
@@ -54,13 +54,15 @@ const Lock: React.FC = () => {
 	const [endDate, setEndDate] = useState(startDate)
 	const crvAddress = Config.addressMap.CRV
 	const crvBalance = useTokenBalance(crvAddress)
-	const votingEscrowContract = getVotingEscrowContract(bao)
 	const nextFeeDistribution = useNextDistribution()
 	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[Config.networkId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const length = endDate.setUTCHours(0, 0, 0, 0) + 604800000 - 86400000
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
-	const [totalSupply, setTotalSupply] = useState<BigNumber>()
+	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
+
+	const crv = useContract<Erc20>('Erc20', Config.addressMap.CRV)
+	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[Config.networkId].address)
 
 	useEffect(() => {
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
@@ -352,16 +354,13 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
-															const crv = new Contract(Config.addressMap.CRV, ERC20_ABI, library.getSigner())
-															window.crv = crv
-															window.ve = votingEscrowContract
 															// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 															console.log('hi1', account)
 															const gasLimit = await crv.estimateGas.approve(account, ethers.constants.MaxUint256)
 															const gasPrice = await library.getGasPrice()
 															console.log('hi2', gasLimit.toString(), gasPrice.toString())
 															console.log(ethers.constants.MaxUint256.toString())
-															const tx = crv.approve(votingEscrowContract.address, ethers.constants.MaxUint256, {
+															const tx = crv.approve(votingEscrow.address, ethers.constants.MaxUint256, {
 																gasLimit,
 																gasPrice,
 															})
@@ -396,7 +395,7 @@ const Lock: React.FC = () => {
 															console.log('gas price', gasPrice.toString())
 															let gasLimit
 															try {
-																gasLimit = await votingEscrowContract.estimateGas.create_lock(
+																gasLimit = await votingEscrow.estimateGas.create_lock(
 																	ethers.utils.parseEther(val.toString()),
 																	length.toString().slice(0, 10),
 																)
@@ -404,7 +403,7 @@ const Lock: React.FC = () => {
 															} catch (e: any) {
 																console.error('!!could not get gas limit!!', e.message)
 															}
-															const lockTx = votingEscrowContract.create_lock(
+															const lockTx = votingEscrow.create_lock(
 																ethers.utils.parseEther(val.toString()),
 																length.toString().slice(0, 10),
 																{
@@ -439,7 +438,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.increase_amount(ethers.utils.parseEther(val.toString()))
+														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 
 														handleTx(
 															lockTx,
@@ -470,7 +469,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.mul(1000).toNumber())}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.increase_unlock_time(length.toString().slice(0, 10))
+														const lockTx = votingEscrow.increase_unlock_time(length.toString().slice(0, 10))
 
 														handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)
 													}}
