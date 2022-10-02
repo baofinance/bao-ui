@@ -27,9 +27,7 @@ const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }
 
 	useEffect(() => {
 		if (!library || !chainId) return
-		const baoLib = new Bao(library, chainId, {
-			signer: account ? library.getSigner() : null,
-		})
+		const baoLib = new Bao(library)
 		setBao(baoLib)
 		window.baosauce = baoLib
 	}, [library, chainId, account])

@@ -8,10 +8,11 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { decimate, exponentiate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
@@ -155,7 +156,7 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(ballast.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(ballast.sell(parseUnits(inputVal)), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {

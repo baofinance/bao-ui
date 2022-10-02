@@ -10,7 +10,7 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -70,18 +70,18 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						break
 					}
 
-					tx = recipe.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0))
+					tx = recipe.bake(basket.address, parseUnits(value), parseUnits(secondaryValue))
 				} else {
 					// Else, use ETH to mint
-					tx = recipe.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0), {
-						value: exponentiate(value).toFixed(0),
+					tx = recipe.toBasket(basket.address, parseUnits(secondaryValue), {
+						value: parseUnits(value),
 					})
 				}
 
 				handleTx(tx, `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.exitPool(exponentiate(value).toFixed(0))
+				tx = basket.basketContract.exitPool(parseUnits(value))
 				handleTx(tx, `Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
 		}
 	}

@@ -5,10 +5,10 @@ import { useCallback, useEffect, useState } from 'react'
 import { getTotalLPWethValue } from '@/bao/utils'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import useFarms from '@/hooks/farms/useFarms'
-import { getContract } from '@/utils/erc20'
 
 import useContract from '@/hooks/base/useContract'
 import type { Masterchef, Weth } from '@/typechain/index'
+import { Erc20__factory } from '@/typechain/factories'
 
 export interface StakedValue {
 	tokenAmount: BigNumber
@@ -29,7 +29,7 @@ const useAllStakedValue = (): StakedValue[] => {
 	const fetchAllStakedValue = useCallback(async () => {
 		const balances: Array<StakedValue> = await Promise.all(
 			farms.map(({ pid, lpContract, tokenAddress, tokenDecimals }) => {
-				const farmContract = getContract(library, tokenAddress)
+				const farmContract = Erc20__factory.connect(tokenAddress, library)
 				return getTotalLPWethValue(masterChefContract, wethContract, lpContract, farmContract, tokenDecimals, pid)
 			}),
 		)

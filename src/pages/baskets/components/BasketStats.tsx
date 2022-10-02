@@ -1,6 +1,6 @@
 import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
 
@@ -34,10 +34,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 	let premium = null
 	let premiumColor = 'white'
 	if (nav && pairPrice && rates) {
-		premium = new BN(nav.toString())
-			.minus(rates.usd.toString())
-			.div(rates.usd.toString())
-			.times(100)
+		premium = new BN(nav.toString()).minus(rates.usd.toString()).div(rates.usd.toString()).times(100)
 		premiumColor = premium.isNegative() ? 'red' : 'green'
 	}
 

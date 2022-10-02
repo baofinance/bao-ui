@@ -26,7 +26,7 @@ import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
-import { formatEther } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import useContract from '@/hooks/base/useContract'
 import type { Comptroller } from '@/typechain/index'
 
@@ -123,7 +123,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const suppliedUnderlying = useMemo(() => {
 		return (
 			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
-			parseFloat(formatEther(exchangeRates[market.marketAddress]))
+			parseFloat(formatUnits(exchangeRates[market.marketAddress]))
 		)
 	}, [supplyBalances, exchangeRates, market.marketAddress])
 

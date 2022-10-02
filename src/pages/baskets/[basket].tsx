@@ -74,7 +74,7 @@ const Basket: NextPage<{
 					1 {basket.symbol} ={' '}
 					{rates ? (
 						<>
-							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
+							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}{' '}
 							{getDisplayBalance(rates.dai)}
 							{' DAI '}
 							<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}

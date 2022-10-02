@@ -14,8 +14,7 @@ import useEarnings from '@/hooks/farms/useEarnings'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
-import { getContract } from '@/utils/erc20'
-import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -24,13 +23,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { Contract } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 import useContract from '@/hooks/base/useContract'
 import type { Uni_v2_lp, Masterchef } from '@/typechain/index'
+import { Uni_v2_lp__factory } from '@/typechain/factories'
 
 interface StakeProps {
-	lpContract: Contract
+	lpContract: Uni_v2_lp
 	lpTokenAddress: string // FIXME: this is passed in but we get it again
 	pid: number
 	max: BigNumber
@@ -63,12 +64,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 	}, [fullBalance, setVal])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(
-			max
-				.div(BigNumber.from(10).pow(18))
-				.div(2)
-				.toString(),
-		)
+		setVal(max.div(BigNumber.from(10).pow(18)).div(2).toString())
 	}, [max])
 
 	const masterChefContract = useContract<Masterchef>('Masterchef')
@@ -127,7 +123,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 								disabled={max.lte(0)}
 								onClick={async () => {
 									const signer = library.getSigner()
-									const lpToken = getContract(signer, lpTokenAddress)
+									const lpToken = Uni_v2_lp__factory.connect(lpTokenAddress, signer)
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 									const tx = lpToken.approve(masterChefContract.address, ethers.constants.MaxUint256, signer)
 									handleTx(tx, `Approve ${tokenName}`)
@@ -304,9 +300,8 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							}
 							onClick={async () => {
 								const refer = '0x0000000000000000000000000000000000000000'
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
-
-								const unstakeTx = masterChefContract.withdraw(pid, ethers.utils.parseUnits(val, 18), refer)
+								const amount = val ? parseUnits(val) : BigNumber.from(0)
+								const unstakeTx = masterChefContract.withdraw(pid, parseUnits(val), refer)
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}
 						>
