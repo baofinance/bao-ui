@@ -1,6 +1,5 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { getComptrollerContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import { ListHeader } from '@/components/List'
@@ -27,7 +26,11 @@ import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
-import { formatEther } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller } from '@/typechain/index'
+
+// FIXME: these components should all be using ethers.BigNumber instead of js float math
 
 export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
 	const bao = useBao()
@@ -39,14 +42,14 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 	const { exchangeRates } = useExchangeRates()
 
 	const collateralMarkets = useMemo(() => {
-		if (!(bao && _markets && supplyBalances)) return
+		if (!(_markets && supplyBalances)) return
 		return _markets
 			.filter(market => !market.isSynth)
 			.sort((a, b) => (supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
-	}, [_markets, bao, supplyBalances])
+	}, [_markets, supplyBalances])
 
 	const synthMarkets = useMemo(() => {
-		if (!(bao && _markets && borrowBalances)) return
+		if (!(_markets && borrowBalances)) return
 		return _markets
 			.filter(market => market.isSynth)
 			.sort((a, b) => (borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
@@ -113,22 +116,22 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	exchangeRates,
 }: MarketListItemProps) => {
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const { handleTx } = useTransactionHandler()
-	const bao = useBao()
 	const { account } = useWeb3React()
+	const { handleTx } = useTransactionHandler()
+	const comptroller = useContract<Comptroller>('Comptroller')
 
 	const suppliedUnderlying = useMemo(() => {
 		return (
 			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
-			parseFloat(formatEther(exchangeRates[market.marketAddress]))
+			parseFloat(formatUnits(exchangeRates[market.marketAddress]))
 		)
-	}, [supplyBalances, exchangeRates])
+	}, [supplyBalances, exchangeRates, market.marketAddress])
 
 	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])
 
 	const isInMarket = useMemo(
 		() => accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress),
-		[accountMarkets],
+		[accountMarkets, market.marketAddress],
 	)
 
 	const [isChecked, setIsChecked] = useState(!!isInMarket)
@@ -215,12 +218,11 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 											onChange={setIsChecked}
 											onClick={(event: { stopPropagation: () => void }) => {
 												event.stopPropagation()
-												const contract = getComptrollerContract(bao)
 												if (isInMarket) {
-													handleTx(contract.exitMarket(market.marketAddress), `Exit Market (${market.underlyingSymbol})`)
+													handleTx(comptroller.exitMarket(market.marketAddress), `Exit Market (${market.underlyingSymbol})`)
 												} else {
 													handleTx(
-														contract.enterMarkets([market.marketAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
+														comptroller.enterMarkets([market.marketAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
 														`Enter Market (${market.underlyingSymbol})`,
 													)
 												}

@@ -1,4 +1,4 @@
-import { Contract } from '@ethersproject/contracts'
+import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool } from '@/typechain/index'
 
 export interface SupportedPool {
 	pid: number
@@ -51,9 +51,9 @@ export interface SupportedBasket {
 	desc: string
 	swap?: string
 	address: string
-	basketContract: Contract
+	basketContract: Experipie
 	ovenAddress: string
-	ovenContract?: Contract
+	ovenContract?: Oven
 }
 
 export interface SupportedMarket {
@@ -90,30 +90,30 @@ export interface SupportedMarket {
 export interface FarmableSupportedPool extends SupportedPool {
 	lpAddress: string
 	tokenAddress: string
-	lpContract: Contract
-	tokenContract: Contract
+	lpContract: Uni_v2_lp
+	tokenContract: Erc20
 }
 
 export interface ActiveSupportedGauge extends SupportedGauge {
 	gaugeAddress: string
 	poolAddress: string
 	lpAddress: string
-	gaugeContract: Contract
-	poolContract: Contract
-	lpContract: Contract
+	gaugeContract: Gauge
+	poolContract: GaugePool
+	lpContract: Uni_v2_lp
 }
 
 export interface ActiveSupportedBasket extends SupportedBasket {
 	address: string
-	basketContract: Contract
-	ovenContract: Contract
+	basketContract: Experipie
+	ovenContract: Oven
 }
 
 export interface ActiveSupportedMarket extends SupportedMarket {
 	marketAddress: string
-	marketContract: Contract
+	marketContract: Cether | Ctoken
 	underlyingAddress: string
-	underlyingContract: Contract
+	underlyingContract: Erc20
 }
 
 export interface RpcConfig {
@@ -137,7 +137,6 @@ export interface ContractsConfig {
 		[networkId: number]: {
 			address: string
 			abi: string
-			contract: Contract
 		}
 	}
 }

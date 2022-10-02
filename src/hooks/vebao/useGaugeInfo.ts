@@ -64,13 +64,12 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 			claimableTokens: res[4].values[0],
 			integrateFraction: res[5].values[0],
 		})
-	}, [bao, gauge])
+	}, [bao, account, gauge])
 
 	useEffect(() => {
-		if (!(bao && gauge)) return
-
+		if (!(bao && account && gauge)) return
 		fetchGaugeInfo()
-	}, [bao, gauge, txSuccess])
+	}, [fetchGaugeInfo, bao, account, gauge, txSuccess])
 
 	return gaugeInfo
 }

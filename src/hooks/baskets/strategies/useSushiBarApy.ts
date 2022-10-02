@@ -7,12 +7,13 @@ const useSushiBarApy = () => {
 	const [apy, setApy] = useState<BigNumber | undefined>()
 
 	const fetchApy = useCallback(async () => {
-		setApy(await fetchSushiApy())
-	}, [])
+		const sushiApy = await fetchSushiApy()
+		setApy(sushiApy)
+	}, [setApy])
 
 	useEffect(() => {
 		fetchApy()
-	}, [])
+	}, [fetchApy])
 
 	return apy
 }
@@ -30,6 +31,7 @@ export const fetchSushiApy = async (): Promise<BigNumber> => {
 
 	const avgVolumeWeekly = dayData.reduce((prev, cur) => prev.add(cur.volumeETH), BigNumber.from(0)).div(dayData.length)
 
+	// FIXME: this is broken for ethers.BigNumber i think idk
 	return avgVolumeWeekly.mul(0.05).mul(0.01).div(info.totalSupply).mul(365).div(BigNumber.from(info.ratio).mul(derivedETH)).mul(1e18)
 }
 

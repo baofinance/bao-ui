@@ -13,6 +13,8 @@ import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
 import { formatEther } from 'ethers/lib/utils'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller } from '@/typechain/index'
 
 export type AccountLiquidity = {
 	netApy: number
@@ -21,6 +23,7 @@ export type AccountLiquidity = {
 	usdBorrowable: number
 }
 
+// FIXME: this should be refactored to use ethers.BigNumber.. not JavaScript floats
 export const useAccountLiquidity = (): AccountLiquidity => {
 	const [accountLiquidity, setAccountLiquidity] = useState<undefined | AccountLiquidity>()
 
@@ -32,9 +35,10 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 	const borrowBalances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
 	const { prices: oraclePrices } = useMarketPrices()
+	const comptroller = useContract<Comptroller>('Comptroller')
 
 	const fetchAccountLiquidity = useCallback(async () => {
-		const compAccountLiqudity = await bao.getContract('comptroller').getAccountLiquidity(account)
+		const compAccountLiqudity = await comptroller.getAccountLiquidity(account)
 
 		const prices: { [key: string]: number } = {}
 		for (const key in oraclePrices) {
@@ -44,8 +48,9 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			).toNumber()
 		}
 
-		const usdSupply = Object.entries(supplyBalances).reduce((prev: number, [, { address, balance }]) => {
-			return prev + balance * parseFloat(formatEther(exchangeRates[address])) * prices[address]
+		const usdSupply = Object.keys(exchangeRates).reduce((prev: number, addr: string) => {
+			const supply = supplyBalances.find(b => b.address === addr)
+			return prev + supply.balance * parseFloat(formatEther(exchangeRates[addr])) * prices[addr]
 		}, 0)
 
 		const usdBorrow = Object.entries(borrowBalances).reduce((prev: number, [, { address, balance }]) => prev + balance * prices[address], 0)
@@ -75,12 +80,12 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			usdBorrow,
 			usdBorrowable: parseFloat(formatEther(compAccountLiqudity[1])),
 		})
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [comptroller, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
 
 	useEffect(() => {
-		if (!(bao && account && markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices)) return
+		if (!(markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices && comptroller)) return
 		fetchAccountLiquidity()
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices, fetchAccountLiquidity, comptroller])
 
 	return accountLiquidity
 }

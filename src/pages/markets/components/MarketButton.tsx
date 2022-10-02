@@ -1,17 +1,16 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Button from '@/components/Button'
-import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/markets/useApprovals'
 import { decimate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
-//import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
 import { MarketOperations } from './Modals/Modals'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20 } from '@/typechain/index'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -22,12 +21,12 @@ type MarketButtonProps = {
 }
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
-	const bao = useBao()
-	const { library } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const { approvals } = useApprovals(pendingTx)
 
 	const { marketContract } = asset
+
+	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 
 	if (pendingTx) {
 		return (
@@ -70,11 +69,8 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={!approvals}
 						onClick={() => {
-							const { underlyingAddress } = asset
-							const tx = bao.getNewContract(underlyingAddress, 'erc20.json', library.getSigner()).approve(
-								marketContract.address,
-								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							)
+							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>
@@ -142,11 +138,8 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						fullWidth
 						disabled={!approvals}
 						onClick={() => {
-							const { underlyingAddress } = asset
-							const tx = bao.getNewContract(underlyingAddress, 'erc20.json', library.getSigner()).approve(
-								marketContract.address,
-								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							)
+							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
 							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
 						}}
 					>

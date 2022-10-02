@@ -1,18 +1,17 @@
-// FIXME: BROKEN this won't be used anymore as the /farms/ page is getting trashed!
-import { Bao } from '@/bao/Bao'
 import { BigNumber } from 'ethers'
 import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
-import { Contract } from '@ethersproject/contracts'
+import { Provider } from '@ethersproject/providers'
 
-import lpAbi from '@/bao/lib/abi/uni_v2_lp.json'
+import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
+import useBao from '@/hooks/base/useBao'
 import { decimate } from '@/utils/numberFormat'
+import { Uni_v2_lp__factory } from '@/typechain/factories'
 
-export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
-	//const results = Multicall.parseCallResults(
+export const fetchLPInfo = async (farms: any[], multicall: MC, library: Provider) => {
 	const results = Multicall.parseCallResults(
 		await multicall.call(
 			Multicall.createCallContext(
@@ -20,25 +19,25 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 					farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
 						? ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
+								contract: Uni_v2_lp__factory.connect(farm.lpAddresses[Config.networkId], library),
 								calls: [
 									{
 										method: 'balanceOf',
-										params: [Config.contracts.masterChef[Config.networkId].address],
+										params: [Config.contracts.Masterchef[Config.networkId].address],
 									},
 									{ method: 'totalSupply' },
 								],
 						  } as any)
 						: ({
 								ref: farm.lpAddresses[Config.networkId],
-								contract: new Contract(farm.lpAddresses[Config.networkId], lpAbi, bao.provider),
+								contract: Uni_v2_lp__factory.connect(farm.lpAddresses[Config.networkId], library),
 								calls: [
 									{ method: 'getReserves' },
 									{ method: 'token0' },
 									{ method: 'token1' },
 									{
 										method: 'balanceOf',
-										params: [Config.contracts.masterChef[Config.networkId].address],
+										params: [Config.contracts.Masterchef[Config.networkId].address],
 									},
 									{ method: 'totalSupply' },
 								],
@@ -82,11 +81,14 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
 	})
 }
 
-const useAllFarmTVL = (bao: Bao, multicall: MC) => {
+const useAllFarmTVL = () => {
 	const [tvl, setTvl] = useState<any | undefined>()
 
+	const { library } = useWeb3React()
+	const bao = useBao()
+
 	const fetchAllFarmTVL = useCallback(async () => {
-		const lps: any = await fetchLPInfo(Config.farms, multicall, bao)
+		const lps: any = await fetchLPInfo(Config.farms, bao.multicall, library)
 		const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
 		const tokenPrices = await GraphUtil.getPriceFromPairMultiple(wethPrice, [Config.addressMap.USDC])
 
@@ -133,14 +135,14 @@ const useAllFarmTVL = (bao: Bao, multicall: MC) => {
 			tvl: _tvl,
 			tvls,
 		})
-	}, [bao, multicall])
+	}, [bao, library])
 
 	useEffect(() => {
 		// Only fetch TVL once per page load
-		if (!(bao && multicall) || tvl) return
+		if (!(library && bao) || tvl) return
 
 		fetchAllFarmTVL()
-	}, [bao, multicall])
+	}, [fetchAllFarmTVL, bao, library, tvl])
 
 	return tvl
 }

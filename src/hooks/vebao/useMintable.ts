@@ -1,26 +1,27 @@
-import { getCrvContract, getMintable } from '@/bao/utils'
+import { useWeb3React } from '@web3-react/core'
+import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20bao } from '@/typechain/index'
 import useEpochTime from './useEpochTime'
 
 const useMintable = () => {
 	const [mintable, setMintable] = useState(BigNumber.from(0))
-	const bao = useBao()
+	const { chainId } = useWeb3React()
 	const epochTime = useEpochTime()
-	const tokenContract = getCrvContract(bao)
+	const token = useContract<Erc20bao>('Erc20bao', !chainId ? null : Config.contracts.Crv[chainId].address)
 
 	const fetchMintable = useCallback(async () => {
-		console.log(epochTime)
-		const mintable = epochTime && (await getMintable(epochTime.start, epochTime.future, tokenContract))
+		const mintable = await token.mintable_in_timeframe(epochTime.start, epochTime.future)
 		setMintable(mintable)
-	}, [bao])
+	}, [epochTime, token])
 
 	useEffect(() => {
-		if (bao && epochTime) {
+		if (epochTime && token) {
 			fetchMintable()
 		}
-	}, [bao, epochTime])
+	}, [fetchMintable, token, epochTime])
 
 	return mintable
 }

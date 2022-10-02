@@ -2,54 +2,35 @@ import { useWeb3React } from '@web3-react/core'
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
 
 import { Bao } from '@/bao/Bao'
-import Config from '@/bao/lib/config'
 
 export interface BaoContext {
-	bao?: typeof Bao
+	bao?: Bao
 }
 
 interface BaoProviderProps {
-	children: any
+	children: React.ReactNode
 }
 
 export const Context = createContext<BaoContext>({
-	bao: undefined,
+	bao: null,
 })
 
 declare global {
 	interface Window {
-		baosauce: any
-		bao: any
-		ethereum?: any
+		baosauce?: Bao
 	}
 }
 
 const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }) => {
-	const { library, account } = useWeb3React()
-	const [bao, setBao] = useState<any>()
-
-	// if (library) library.on('chainChanged', () => window.location.reload())
+	const { library, account, chainId } = useWeb3React()
+	const [bao, setBao] = useState<Bao | null>(null)
 
 	useEffect(() => {
-		if (!library || !account) {
-			return
-		}
-		// const { ethereum: windowEth } = window
-		// if (windowEth && !ethereum) {
-		// 	// Check if user has connected to the webpage before
-		// 	const mmWeb3 = new Web3Provider(windowEth)
-		// 	mmWeb3.eth.getAccounts().then((accounts: string[]) => {
-		// 		if (accounts.length > 0) activate('injected')
-		// 	})
-		// }
-
-		// TODO: get the networkId from the provider
-		const baoLib = new Bao(library, Config.networkId, {
-			signer: account ? library.getSigner() : null,
-		})
+		if (!library || !chainId) return
+		const baoLib = new Bao(library)
 		setBao(baoLib)
 		window.baosauce = baoLib
-	}, [library, account])
+	}, [library, chainId, account])
 
 	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
 }

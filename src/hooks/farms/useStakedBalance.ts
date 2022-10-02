@@ -1,29 +1,24 @@
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-
-import { getMasterChefContract, getStaked } from '@/bao/utils'
-
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Masterchef } from '@/typechain/index'
 
 const useStakedBalance = (pid: number) => {
 	const [balance, setBalance] = useState(BigNumber.from(0))
 	const { account } = useWeb3React()
-	const bao = useBao()
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	const fetchBalance = useCallback(async () => {
-		const balance = await getStaked(masterChefContract, pid, account)
-		const userBalance = BigNumber.from(balance)
+		const { amount } = await masterChefContract.userInfo(pid, account)
 		//setBalance(userBalance.decimalPlaces(18))
-		setBalance(userBalance) // FIXME: this should handle decimals and formatting etc
+		setBalance(amount) // FIXME: this should handle decimals and formatting etc
 	}, [pid, account, masterChefContract])
 
 	useEffect(() => {
-		if (account && bao) {
-			fetchBalance()
-		}
-	}, [account, bao])
+		if (!account || !masterChefContract) return
+		fetchBalance()
+	}, [fetchBalance, account, masterChefContract])
 
 	//return balance.decimalPlaces(18)
 	return balance // FIXME: this should handle decimals and formatting etc

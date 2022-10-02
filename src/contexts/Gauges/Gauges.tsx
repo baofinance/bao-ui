@@ -1,17 +1,14 @@
-import { getGauges } from '@/bao/utils'
-import useBao from '@/hooks/base/useBao'
+import useGauges from '@/hooks/vebao/useGauges'
 import React, { PropsWithChildren } from 'react'
 import Context from './context'
+//import { ActiveSupportedGauge } from '@/bao/lib/types'
 
 interface GaugesProps {
-	children: any
+	children: React.ReactNode
 }
 
 const Gauges: React.FC<PropsWithChildren<GaugesProps>> = ({ children }) => {
-	const bao = useBao()
-
-	const gauges = getGauges(bao)
-	console.log(gauges)
+	const gauges = useGauges()
 
 	return (
 		<Context.Provider

@@ -2,29 +2,26 @@ import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { ListHeader } from '@/components/List'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Accordion, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import Image from 'next/image'
 import React, { useMemo } from 'react'
 import { isDesktop } from 'react-device-detect'
 
-export const OfflineMarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
-	const bao = useBao()
-
+export const OfflineMarketList: React.FC<MarketListProps> = ({ markets }: MarketListProps) => {
 	const collateralMarkets = useMemo(() => {
-		if (!(bao && _markets)) return
-		return _markets.filter(market => !market.isSynth)
-	}, [bao, _markets])
+		if (!markets) return []
+		return markets.filter(market => !market.isSynth)
+	}, [markets])
 
 	const synthMarkets = useMemo(() => {
-		if (!(bao && _markets)) return
-		return _markets.filter(market => market.isSynth)
-	}, [bao, _markets])
+		if (!markets) return []
+		return markets.filter(market => market.isSynth)
+	}, [markets])
 
 	return (
 		<>
-			{collateralMarkets && synthMarkets ? (
+			{markets ? (
 				<div className={`flex ${isDesktop ? 'flex-row gap-12' : 'mt-4 flex-col gap-4'}`}>
 					<div className='flex w-full flex-col'>
 						<Typography variant='xl' className='text-center'>
@@ -61,7 +58,7 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
 								src={`/images/tokens/${market.icon}`}
-								alt={`${market.underlyingSymbol}`}
+								alt={market.underlyingSymbol}
 								width={32}
 								height={32}
 								className='inline-block select-none'

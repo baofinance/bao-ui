@@ -1,5 +1,4 @@
 import Config from '@/bao/lib/config'
-import { getMasterChefContract } from '@/bao/utils'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -15,8 +14,7 @@ import useEarnings from '@/hooks/farms/useEarnings'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
-import { getContract } from '@/utils/erc20'
-import { exponentiate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -25,12 +23,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { Contract } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
+import useContract from '@/hooks/base/useContract'
+import type { Uni_v2_lp, Masterchef } from '@/typechain/index'
+import { Uni_v2_lp__factory } from '@/typechain/factories'
 
 interface StakeProps {
-	lpContract: Contract
-	lpTokenAddress: string
+	lpContract: Uni_v2_lp
+	lpTokenAddress: string // FIXME: this is passed in but we get it again
 	pid: number
 	max: BigNumber
 	tokenName?: string
@@ -40,9 +42,9 @@ interface StakeProps {
 	onHide: () => void
 }
 
-export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
+export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
+	const { library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -62,16 +64,11 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 	}, [fullBalance, setVal])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(
-			max
-				.div(10 ** 18)
-				.div(2)
-				.toString(),
-		)
+		setVal(max.div(BigNumber.from(10).pow(18)).div(2).toString())
 	}, [max])
 
-	const masterChefContract = getMasterChefContract(bao)
-	const allowance = useAllowance(lpTokenAddress, masterChefContract.options.address)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
+	const allowance = useAllowance(lpTokenAddress, masterChefContract.address)
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -125,12 +122,10 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 								fullWidth
 								disabled={max.lte(0)}
 								onClick={async () => {
-									const tx = bao.getNewContract('erc20.json', lpTokenAddress).approve(
-										masterChefContract.options.address,
-										ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-										library.getSigner(),
-									)
-
+									const signer = library.getSigner()
+									const lpToken = Uni_v2_lp__factory.connect(lpTokenAddress, signer)
+									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+									const tx = lpToken.approve(masterChefContract.address, ethers.constants.MaxUint256, signer)
 									handleTx(tx, `Approve ${tokenName}`)
 								}}
 							>
@@ -172,7 +167,7 @@ export const Stake: React.FC<StakeProps> = ({ lpContract, lpTokenAddress, pid, p
 								fullWidth
 								disabled={true}
 								onClick={async () => {
-									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18))
+									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), '0x00')
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 								}}
 							>
@@ -199,7 +194,6 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pairUrl = '', onHide }) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -233,7 +227,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 	const blockDiff = useBlockDiff(userInfo)
 	const fees = useFees(blockDiff)
 
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	const [showFeeModal, setShowFeeModal] = useState(false)
 
@@ -306,9 +300,8 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 							}
 							onClick={async () => {
 								const refer = '0x0000000000000000000000000000000000000000'
-								const amount = val && isNaN(val as any) ? exponentiate(val, 18) : BigNumber.from(0)
-
-								const unstakeTx = masterChefContract.withdraw(pid, ethers.utils.parseUnits(val, 18), refer)
+								const amount = val ? parseUnits(val) : BigNumber.from(0)
+								const unstakeTx = masterChefContract.withdraw(pid, parseUnits(val), refer)
 								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}
 						>
@@ -327,10 +320,9 @@ interface RewardsProps {
 }
 
 export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
-	const bao = useBao()
 	const earnings = useEarnings(pid)
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const masterChefContract = getMasterChefContract(bao)
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	return (
 		<>
@@ -397,13 +389,10 @@ interface ActionProps {
 
 const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
-	const { library } = useWeb3React()
 
 	const lpTokenAddress = farm.lpTokenAddress
 
-	const lpContract = useMemo(() => {
-		return getContract(library, lpTokenAddress)
-	}, [library, lpTokenAddress])
+	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', lpTokenAddress)
 
 	const tokenBalance = useTokenBalance(lpContract.address)
 	const stakedBalance = useStakedBalance(pid)

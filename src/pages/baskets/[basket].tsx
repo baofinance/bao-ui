@@ -18,6 +18,7 @@ import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
 import Composition from './components/Composition'
 import Description from './components/Description'
+//import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export async function getStaticPaths() {
 	return {
@@ -42,7 +43,11 @@ const Basket: NextPage<{
 }> = ({ basketId }) => {
 	const baskets = useBaskets()
 
-	const basket = useMemo(() => baskets && baskets.find(basket => basket.symbol === basketId), [basketId, baskets])
+	const basket = useMemo(() => {
+		if (!baskets) return
+		return baskets.find(basket => basket.symbol === basketId)
+	}, [basketId, baskets])
+
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 	const info = useBasketInfo(basket)
@@ -69,7 +74,7 @@ const Basket: NextPage<{
 					1 {basket.symbol} ={' '}
 					{rates ? (
 						<>
-							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
+							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}{' '}
 							{getDisplayBalance(rates.dai)}
 							{' DAI '}
 							<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}

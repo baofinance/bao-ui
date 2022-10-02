@@ -6,14 +6,13 @@ import Loader, { PageLoader } from '@/components/Loader'
 import { StatBlock, StatCards } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
 import { useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarkets } from '@/hooks/markets/useMarkets'
 import GraphUtil from '@/utils/graph'
 import { formatAddress } from '@/utils/index'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark, faLevelDownAlt } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
@@ -24,6 +23,7 @@ import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './components/Modals/BorrowModal'
 import MarketSupplyModal from './components/Modals/SupplyModal'
 import { MarketDetails } from './components/Stats'
+import { useWeb3React } from '@web3-react/core'
 
 export async function getStaticPaths() {
 	return {
@@ -55,7 +55,7 @@ const Market: NextPage<{
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
-	const bao = useBao()
+	const { chainId } = useWeb3React()
 
 	const [marketInfo, setMarketInfo] = useState<any | undefined>()
 
@@ -95,10 +95,10 @@ const Market: NextPage<{
 	}, [activeMarket])
 
 	const oracleAddress = useMemo(() => {
-		if (!bao) return
-		const address = bao.getContract('marketOracle').address
+		if (!chainId) return
+		const address = Config.contracts.MarketOracle[chainId].address
 		return formatAddress(address)
-	}, [bao])
+	}, [chainId])
 
 	return markets && activeMarket ? (
 		<>
@@ -209,10 +209,7 @@ const Market: NextPage<{
 							{
 								label: 'Price Oracle',
 								value: (
-									<a
-										href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${bao.getContract('marketOracle').address}`}
-										className='hover:text-text-400'
-									>
+									<a href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${oracleAddress}`} className='hover:text-text-400'>
 										{oracleAddress} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								),

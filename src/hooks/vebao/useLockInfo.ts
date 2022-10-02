@@ -1,10 +1,12 @@
-import { getVotingEscrowContract } from '@/bao/utils'
 import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
+import Config from '@/bao/lib/config'
+import useContract from '@/hooks/base/useContract'
+import type { VotingEscrow } from '@/typechain/index'
 
 type LockInfo = {
 	balance: BigNumber
@@ -19,13 +21,12 @@ const useLockInfo = (): LockInfo => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const { transactions } = useTransactionProvider()
+	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[Config.networkId].address)
 
 	const fetchLockInfo = useCallback(async () => {
-		const votingEscrowContract = getVotingEscrowContract(bao)
-
 		const query = Multicall.createCallContext([
 			{
-				contract: votingEscrowContract,
+				contract: votingEscrow,
 				ref: 'votingEscrow',
 				calls: [
 					{
@@ -55,13 +56,13 @@ const useLockInfo = (): LockInfo => {
 			lockAmount: res[3].values[0],
 			lockEnd: res[3].values[1],
 		})
-	}, [bao, account])
+	}, [bao, account, votingEscrow])
 
 	useEffect(() => {
-		if (!(bao && account)) return
+		if (!(bao && account && votingEscrow)) return
 
 		fetchLockInfo()
-	}, [bao, account, transactions])
+	}, [fetchLockInfo, bao, account, transactions, votingEscrow])
 
 	return lockInfo
 }

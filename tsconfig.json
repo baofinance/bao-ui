@@ -25,9 +25,10 @@
       "@/pages/*": ["src/pages/*"],
       "@/styles/*": ["src/styles/*"],
       "@/utils/*": ["src/utils/*"],
+      "@/typechain/*": ["src/typechain/*"],
     },
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts",  "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

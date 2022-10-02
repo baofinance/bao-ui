@@ -10,22 +10,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Typography } from '@material-tailwind/react'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import Link from 'next/link'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
 
 const Vote: React.FC = () => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	//const { account } = useWeb3React()
 	const [val, setVal] = useState('')
 	const gauges = useGauges()
 	const lockInfo = useLockInfo()
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx } = useTransactionHandler()
 	const [selectedOption, setSelectedOption] = useState()
 
 	const fullBalance = useMemo(() => {
-		return getFullDisplayBalance(lockInfo && lockInfo.balance)
+		if (!lockInfo) return
+		return getFullDisplayBalance(lockInfo.balance)
 	}, [lockInfo])
 
 	const handleChange = useCallback(
@@ -37,7 +38,7 @@ const Vote: React.FC = () => {
 
 	const handleSelectMax = useCallback(() => {
 		setVal(fullBalance)
-	}, [lockInfo, setVal])
+	}, [fullBalance])
 
 	return (
 		<>
@@ -48,7 +49,7 @@ const Vote: React.FC = () => {
 					have, the more weight your vote has.
 				</p>
 			</div>
-			<Typography>You&lsquo;re voting with {getDisplayBalance(lockInfo && lockInfo.balance)} veBAO</Typography>
+			<Typography>You&lsquo;re voting with {lockInfo && getDisplayBalance(lockInfo.balance)} veBAO</Typography>
 			<div className='my-4 flex w-1/4 flex-col'>
 				<Listbox value={selectedOption} onChange={setSelectedOption}>
 					{({ open }) => (

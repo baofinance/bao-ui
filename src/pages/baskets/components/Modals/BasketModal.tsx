@@ -7,20 +7,20 @@ import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { ethers, BigNumber } from 'ethers'
-import BN from 'bignumber.js'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
+import useContract from '@/hooks/base/useContract'
+import type { SimpleUniRecipe, Dai } from '@/typechain/index'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -36,17 +36,18 @@ enum MintOption {
 
 // TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
 const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal }) => {
-	const [value, setValue] = useState<string | undefined>()
-	const [secondaryValue, setSecondaryValue] = useState<string | undefined>()
+	const [value, setValue] = useState<string | undefined>('0')
+	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
 
-	const bao = useBao()
-	const { library } = useWeb3React()
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
+	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
+	const dai = useContract<Dai>('Dai')
+
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, bao && bao.getContract('recipe').address)
+	const daiAllowance = useAllowance(dai.address, recipe.address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -57,72 +58,61 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const handleOperation = () => {
 		let tx
-		const recipe = bao.getContract('recipe')
 
 		switch (operation) {
 			case 'MINT':
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
-					if (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) {
-						tx = bao.getNewContract(Config.addressMap.DAI, 'erc20.json', library.getSigner()).approve(
-							recipe.address,
-							ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-						)
-
+					if (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) {
+						// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
+						tx = dai.approve(recipe.address, ethers.constants.MaxUint256)
 						handleTx(tx, 'Approve DAI for Baskets Recipe')
 						break
 					}
 
-					tx = recipe.bake(basket.address, exponentiate(value).toFixed(0), exponentiate(secondaryValue).toFixed(0))
+					tx = recipe.bake(basket.address, parseUnits(value), parseUnits(secondaryValue))
 				} else {
 					// Else, use ETH to mint
-					tx = recipe.toBasket(basket.address, exponentiate(secondaryValue).toFixed(0), {
-						value: exponentiate(value).toFixed(0),
+					tx = recipe.toBasket(basket.address, parseUnits(secondaryValue), {
+						value: parseUnits(value),
 					})
 				}
 
 				handleTx(tx, `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.exitPool(exponentiate(value).toFixed(0))
-
-				handleTx(tx, `Redeem ${getDisplayBalance(BigNumber.from(value), 0)} ${basket.symbol}`, () => hide())
+				tx = basket.basketContract.exitPool(parseUnits(value))
+				handleTx(tx, `Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
 		}
 	}
 
-	const isButtonDisabled = useMemo(
-		() =>
-			pendingTx !== false /* can be string | boolean */ ||
-			(!(
-				// First, check if we are minting, the mintOption is DAI, and the account has
-				// inadequate approval. If so, the button needs to be enabled for the account
-				// to approve DAI.
-				(
-					operation === 'MINT' &&
-					mintOption === MintOption.DAI &&
-					daiAllowance &&
-					(daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value))))
-				)
-			) &&
-				// Else, check that the input value is valid.
-				(!value ||
-					!value.match(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/) ||
-					BigNumber.from(value).lte(0) ||
-					BigNumber.from(value).gt(
-						decimate(operation === 'MINT' ? (mintOption === MintOption.DAI ? daiBalance : ethBalance) : basketBalance),
-					))),
-		[pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance],
-	)
+	const isButtonDisabled = useMemo(() => {
+		if (pendingTx !== false) {
+			return true
+		}
+		if (operation === 'MINT') {
+			const _val = value && parseUnits(value)
+			const daiOrEth = mintOption === MintOption.DAI ? daiBalance : ethBalance
+			const walletBallance = operation === 'MINT' ? daiOrEth : basketBalance
+			return (
+				mintOption === MintOption.DAI &&
+				daiAllowance &&
+				(daiAllowance.eq(0) || daiAllowance.lt(_val)) &&
+				(parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance))
+			)
+		}
+		return false
+	}, [pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance])
 
 	const hide = () => {
 		hideModal()
-		setValue('')
-		setSecondaryValue('')
+		setValue('0')
+		setSecondaryValue('0')
 	}
 
 	return basket ? (
 		<>
-			<Modal isOpen={show} onDismiss={hideModal}>
+			<Modal isOpen={show} onDismiss={hide}>
 				<Modal.Header
 					header={
 						<div className='mx-0 my-auto flex h-full items-center gap-2 text-text-100'>
@@ -130,7 +120,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 						</div>
 					}
-					onClose={hideModal}
+					onClose={hide}
 				></Modal.Header>
 				<Modal.Body>
 					<div className='mb-4'>
@@ -181,7 +171,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Input
 								value={value}
 								onChange={e => setValue(e.currentTarget.value)}
-								onSelectMax={() => setValue(ethers.utils.formatUnits(decimate(basketBalance), 18))}
+								onSelectMax={() => setValue(formatUnits(basketBalance, 18))}
 								disabled={operation === 'MINT'}
 								label={
 									<div className='flex flex-row items-center'>
@@ -227,15 +217,21 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Input
 										value={secondaryValue}
 										onChange={e => {
-											const inputVal = new BN(decimate(mintOption === MintOption.DAI ? rates.dai : rates.eth).toString())
-												.times(e.currentTarget.value)
-												.times(1.02)
+											try {
+												parseUnits(e.currentTarget.value)
+											} catch {
+												setValue('0')
+												setSecondaryValue('')
+												return
+											}
+											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											const inputVal = BigNumber.from(mintOption === MintOption.DAI ? rates.dai : rates.eth)
+												.mul(parseUnits(e.currentTarget.value))
+												.div(BigNumber.from(10).pow(18))
+												.mul(parseUnits('1.02'))
+												.div(BigNumber.from(10).pow(18))
 											setSecondaryValue(e.currentTarget.value)
-											setValue(
-												// FIXME: ethers.BigNumber does not support an infinite value
-												inputVal.isFinite() ? inputVal.toFixed(18) : '0', // Pad an extra 2% ETH. It will be returned to the user if it is not used.
-												//ethers.utils.formatUnits(inputVal, 18),
-											)
+											setValue(formatUnits(inputVal))
 										}}
 										onSelectMax={() => {
 											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
@@ -243,18 +239,19 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 											let usedRate
 											switch (mintOption) {
 												case MintOption.DAI:
-													usedBal = decimate(daiBalance)
+													usedBal = daiBalance
 													usedRate = rates.dai
 													break
 												case MintOption.ETH:
-													usedBal = decimate(ethBalance)
+													usedBal = ethBalance
 													usedRate = rates.eth
 													break
 											}
 
-											const maxVal = usedBal.mul(0.98)
-											setSecondaryValue(ethers.utils.formatUnits(maxVal.div(decimate(usedRate)), 18))
-											setValue(usedBal.toString())
+											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											const maxVal = usedBal.mul(parseUnits('0.98')).div(usedRate)
+											setSecondaryValue(formatUnits(maxVal))
+											setValue(formatUnits(usedBal))
 										}}
 										label={
 											<div className='flex flex-row items-center pl-2 pr-4'>
@@ -294,16 +291,16 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						) : operation === 'MINT' &&
 						  mintOption === MintOption.DAI &&
 						  daiAllowance &&
-						  (daiAllowance.eq(0) || daiAllowance.lt(BigNumber.from(exponentiate(value)))) ? (
+						  (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) ? (
 							'Approve DAI'
 						) : !value ? (
 							'Enter a Value'
 						) : isButtonDisabled ? (
 							'Invalid Input'
 						) : operation === 'MINT' ? (
-							`Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`
+							`Mint ${(secondaryValue && getDisplayBalance(secondaryValue, 0)) || 0} ${basket.symbol}`
 						) : (
-							`Redeem ${getDisplayBalance(value, 0) || 0} ${basket.symbol}`
+							`Redeem ${(value && getDisplayBalance(value, 0)) || 0} ${basket.symbol}`
 						)}
 					</Button>
 				</Modal.Actions>

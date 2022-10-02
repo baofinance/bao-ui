@@ -2,7 +2,6 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
 import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useGauges from '@/hooks/vebao/useGauges'
@@ -10,14 +9,14 @@ import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
+import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './GaugeModal'
 
 const GaugeList: React.FC = () => {
-	const bao = useBao()
 	const gauges = useGauges()
 
 	return (
@@ -57,8 +56,7 @@ interface GaugeProps {
 }
 
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
-	const bao = useBao()
-	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	const [baoPrice, setBaoPrice] = useState<BN>(new BN(0))
 	const weight = useGaugeWeight(gauge.gaugeAddress)
 	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
 	const gaugeInfo = useGaugeInfo(gauge)
@@ -66,21 +64,19 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 	const mintable = totalMintable.mul(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
 	const gaugeTVL = (gaugeInfo && virtualPrice.mul(gaugeInfo.totalSupply.div(BigNumber.from(10).pow(18)))) || 0
-	const rewardAPY = baoPrice && baoPrice.mul(BigNumber.from(mintable.toString())).div(BigNumber.from(gaugeTVL.toString()))
+	let rewardAPY = new BN(0)
+	if (baoPrice && gaugeTVL > 0) {
+		rewardAPY = baoPrice.times(mintable.toString()).div(gaugeTVL.toString()).times(100)
+	}
 
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 
 	useEffect(() => {
-		if (!bao) return
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			setBaoPrice(BigNumber.from((await res.json())['curve-dao-token'].usd))
+			const price = (await res.json())['curve-dao-token'].usd
+			setBaoPrice(new BN(price))
 		})
-	}, [bao, setBaoPrice])
-
-	console.log(baoPrice && baoPrice.toNumber())
-	console.log(getDisplayBalance(mintable.div(10 ** 18)))
-	console.log(getDisplayBalance(gaugeTVL))
-	console.log(getDisplayBalance(virtualPrice))
+	}, [setBaoPrice])
 
 	return (
 		<>
@@ -107,7 +103,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 					<Badge className='bg-primary-300 font-semibold'>
 						{rewardAPY ? (
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{rewardAPY.gt(0) ? `${rewardAPY.mul(100).toNumber()}%` : 'N/A'}
+								{rewardAPY.gt(0) ? `${getDisplayBalance(rewardAPY)}%` : 'N/A'}
 							</Typography>
 						) : (
 							<Loader />

@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
-import { decimate } from '@/utils/numberFormat'
-import { getFeeDistributorContract } from '@/bao/utils'
-import { BigNumber, ethers } from 'ethers'
-import useBao from '../base/useBao'
+import { BigNumber } from 'ethers'
+import useContract from '@/hooks/base/useContract'
+import type { FeeDistributor } from '@/typechain/index'
 
 export const useNextDistribution = () => {
 	const [nextDistribution, setNextDistribution] = useState<BigNumber | undefined>()
-	const bao = useBao()
-	const feeDistributionContract = getFeeDistributorContract(bao)
+
+	const feeDistributor: FeeDistributor = useContract('FeeDistributor')
 
 	const fetchNextDistribution = useCallback(async () => {
-		const nextFeeDistribution = ethers.utils.parseEther(await feeDistributionContract.last_token_time())
+		const nextFeeDistribution = await feeDistributor.last_token_time({ gasLimit: 100000 })
 		setNextDistribution(nextFeeDistribution)
-	}, [bao])
+	}, [feeDistributor])
 
 	useEffect(() => {
-		if (!bao) return
-
+		if (!feeDistributor) return
 		fetchNextDistribution()
-	}, [bao])
+	}, [feeDistributor, fetchNextDistribution])
 
 	return nextDistribution
 }

@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
+import { parseUnits } from 'ethers/lib/utils'
 
 import useBaskets from './useBaskets'
 
@@ -24,7 +25,7 @@ const useGeckoPrices = (): Prices => {
 			Object.keys(res).reduce(
 				(prev, cur) => ({
 					...prev,
-					[allCgIds[cur].toLowerCase()]: res[cur].usd,
+					[allCgIds[cur].toLowerCase()]: parseUnits(res[cur].usd.toString()),
 				}),
 				{},
 			),
@@ -33,7 +34,7 @@ const useGeckoPrices = (): Prices => {
 
 	useEffect(() => {
 		if (baskets) fetchPrices()
-	}, [baskets])
+	}, [fetchPrices, baskets])
 
 	return prices
 }

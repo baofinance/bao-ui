@@ -20,7 +20,7 @@ const useHealthFactor = () => {
 	const { prices } = useMarketPrices()
 
 	const fetchHealthFactor = useCallback(async () => {
-		const { usdBorrow } = accountLiquidity
+		const usdBorrow = BigNumber.from(parseUnits(accountLiquidity.usdBorrow.toString()))
 		const _markets = markets.filter(market => !market.isSynth)
 
 		const balanceQuery = Multicall.createCallContext(
@@ -44,11 +44,8 @@ const useHealthFactor = () => {
 			)
 		}, BigNumber.from(0))
 
-		console.log(collateralSummation.toString())
-		console.log(usdBorrow)
-
 		try {
-			const _healthFactor = BigNumber.from(parseFloat(formatUnits(collateralSummation)) / usdBorrow)
+			const _healthFactor = collateralSummation.div(usdBorrow.toString())
 			setHealthFactor(_healthFactor)
 		} catch {
 			setHealthFactor(BigNumber.from(0))
@@ -59,7 +56,7 @@ const useHealthFactor = () => {
 		if (!(markets && accountLiquidity && bao && account && prices)) return
 
 		fetchHealthFactor()
-	}, [markets, accountLiquidity, bao, account, prices])
+	}, [markets, accountLiquidity, bao, account, prices, fetchHealthFactor])
 
 	return healthFactor
 }

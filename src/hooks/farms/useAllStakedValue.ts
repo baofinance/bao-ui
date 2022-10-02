@@ -2,11 +2,13 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
-import { getFarms, getMasterChefContract, getTotalLPWethValue, getWethContract } from '@/bao/utils'
+import { getTotalLPWethValue } from '@/bao/utils'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { getContract } from '@/utils/erc20'
+import useFarms from '@/hooks/farms/useFarms'
 
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Masterchef, Weth } from '@/typechain/index'
+import { Erc20__factory } from '@/typechain/factories'
 
 export interface StakedValue {
 	tokenAmount: BigNumber
@@ -19,16 +21,15 @@ export interface StakedValue {
 const useAllStakedValue = (): StakedValue[] => {
 	const [balances, setBalance] = useState([] as Array<StakedValue>)
 	const { account, library } = useWeb3React()
-	const bao = useBao()
-	const farms = getFarms(bao)
-	const masterChefContract = getMasterChefContract(bao)
-	const wethContract = getWethContract(bao)
+	const farms = useFarms()
+	const masterChefContract = useContract<Masterchef>('Masterchef')
+	const wethContract = useContract<Weth>('Weth')
 	const { transactions } = useTransactionProvider()
 
 	const fetchAllStakedValue = useCallback(async () => {
 		const balances: Array<StakedValue> = await Promise.all(
 			farms.map(({ pid, lpContract, tokenAddress, tokenDecimals }) => {
-				const farmContract = getContract(library, tokenAddress)
+				const farmContract = Erc20__factory.connect(tokenAddress, library)
 				return getTotalLPWethValue(masterChefContract, wethContract, lpContract, farmContract, tokenDecimals, pid)
 			}),
 		)
@@ -40,7 +41,7 @@ const useAllStakedValue = (): StakedValue[] => {
 		if (account && masterChefContract && library) {
 			fetchAllStakedValue()
 		}
-	}, [account, transactions, masterChefContract, setBalance, library])
+	}, [fetchAllStakedValue, account, transactions, masterChefContract, setBalance, library])
 
 	return balances
 }

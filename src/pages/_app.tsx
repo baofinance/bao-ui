@@ -10,7 +10,7 @@ import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
 import { Web3Provider } from '@ethersproject/providers'
 import { EthersAppContext } from 'eth-hooks/context'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 
 import fetcher from '@/bao/lib/fetcher'
 import Header from '@/components/Header'
@@ -26,7 +26,7 @@ import '@/components/TxPopup/styles.css'
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
-	//library.pollingInterval = 12000
+	library.pollingInterval = 12000
 	return library
 }
 

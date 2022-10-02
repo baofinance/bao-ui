@@ -1,22 +1,28 @@
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
-import BN from 'bignumber.js'
+import Config from '@/bao/lib/config'
+import { LendingLogicKashi__factory } from '@/typechain/factories'
+import { Erc20__factory } from '@/typechain/factories'
+import useContract from '@/hooks/base/useContract'
+import type { Mkr, LendingRegistry, Experipie } from '@/typechain/index'
 
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export type BasketComponent = {
 	address: string
 	symbol: string
 	name: string
 	decimals: number
-	price: BN
+	price: BigNumber
 	image: any
 	balance: BigNumber
 	percentage: number
@@ -31,20 +37,25 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const [composition, setComposition] = useState<Array<BasketComponent> | undefined>()
 	const prices = useGeckoPrices()
 	const bao = useBao()
+	const { library, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 
+	const lendingRegistry = useContract<LendingRegistry>('LendingRegistry')
+	const mkr = useContract<Mkr>('Mkr', Config.addressMap.MKR)
+	const basketContract = useContract<Experipie>('Experipie', basket ? basket.address : null)
+
 	const fetchComposition = useCallback(async () => {
-		const tokenComposition: string[] = await bao.getNewContract(basket.address, 'experipie.json').getTokens()
-		const lendingRegistry = bao.getContract('lendingRegistry')
+		const tokenComposition: string[] = await basketContract.getTokens()
 		const tokensQuery = MultiCall.createCallContext(
 			tokenComposition
 				.filter(
 					token => token.toLowerCase() !== '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', // Filter MKR because its symbol/name is a bytes32 object >_>
 				)
 				.map(address => ({
-					contract: bao.getNewContract(address, 'erc20.json'),
+					contract: Erc20__factory.connect(address, library),
 					ref: address,
-					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address] }],
+					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address]
+					}],
 				})),
 		)
 		const tokenInfo = MultiCall.parseCallResults(await bao.multicall.call(tokensQuery))
@@ -59,11 +70,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						balance: tokenInfo[tokenComposition[i]][3].values[0],
 				  }
 				: {
-						// I don't like this, but MKR doesn't fit the mold.
-						decimals: 18,
-						symbol: 'MKR',
-						name: 'Maker DAO',
-						balance: await bao.getNewContract('0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'erc20.json').balanceOf(basket.address),
+						decimals: await mkr.decimals(),
+						symbol: 'MKR', // MKR token uses bytes32 for this
+						name: 'Maker DAO', // MKR token uses bytes32 for this
+						balance: await mkr.balanceOf(basket.address),
 				  }
 			_c.address = tokenComposition[i]
 
@@ -90,20 +100,22 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 				// Get Exchange Rate
 				const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
-				const logicContract = bao.getNewContract(logicAddress, 'lendingLogicKashi.json')
+				const logicContract = LendingLogicKashi__factory.connect(logicAddress, library)
 				const exchangeRate = await logicContract.callStatic.exchangeRate(_c.address)
 				// xSushi APY can't be found on-chain, check for special case
 				const apy = _c.strategy === 'Sushi Bar' ? await fetchSushiApy() : await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
-				const underlyingDecimals = await bao.getNewContract(lendingRes[0].values[0], 'erc20.json').decimals()
+				const underlyingToken = Erc20__factory.connect(lendingRes[0].values[0], library)
+				const underlyingDecimals = await underlyingToken.decimals()
 
-				_c.price = new BN(exchangeRate.toString()).times(new BN(prices[_c.underlying.toLowerCase()].toString()))
+				const p = prices[_c.underlying.toLowerCase()]
+				_c.price = exchangeRate.mul(p).div(BigNumber.from(10).pow(18))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
 				// wrapped balance * exchange rate / 10 ** (18 - 8 + underlyingDecimals)
 				// Here, the price is already decimated by 1e18, so we can subtract 8
 				// from the underlying token's decimals.
-				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
+				if (_c.strategy === 'Compound') _c.price = _c.price.div(BigNumber.from(10).pow(underlyingDecimals - 8))
 			}
 
 			_comp.push({
@@ -121,22 +133,29 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
 
-			_comp[i].percentage = new BN(comp.balance.toString())
-				.times(comp.price.toString())
-				.div(marketCap.toString())
-				.times(100)
-				.div(10 ** comp.decimals)
-				.toNumber()
+			const percentage = comp.balance.mul(comp.price).div(marketCap).mul(100)
+			_comp[i].percentage = parseFloat(formatUnits(percentage, _comp[i].decimals))
 		}
 
 		setComposition(_comp)
-	}, [bao, basket, prices])
+	}, [basketContract, library, basket, prices, bao, lendingRegistry, mkr])
 
 	useEffect(() => {
-		if (!(bao && basket && basket.basketContract && basket.pieColors && prices && Object.keys(prices).length > 0)) return
+		if (!(library &&
+				chainId &&
+				basket &&
+				lendingRegistry &&
+				mkr &&
+				basketContract &&
+				basket.pieColors &&
+				prices &&
+				Object.keys(prices).length > 0
+			)) {
+			return
+		}
 
 		fetchComposition()
-	}, [bao, basket, prices, transactions])
+	}, [library, chainId, basket, basketContract, prices, transactions, fetchComposition, lendingRegistry, mkr])
 
 	return composition
 }

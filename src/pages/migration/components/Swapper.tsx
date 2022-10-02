@@ -8,18 +8,19 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { decimate, exponentiate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import useContract from '@/hooks/base/useContract'
+import type { Stabilizer, Bao } from '@/typechain/index'
 
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
-	const { library } = useWeb3React()
 
 	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
@@ -135,26 +136,27 @@ export default Swapper
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
-	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.stabilizer[Config.networkId].address)
+	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[Config.networkId].address)
+
+	const ballast = useContract<Stabilizer>('Stabilizer')
+	const baoContract = useContract<Bao>('Bao', Config.addressMap.BAO)
 
 	const handleClick = async () => {
 		if (!bao) return
 
-		const swapperContract = bao.getContract('stabilizer')
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const tx = bao.getNewContract(Config.addressMap.BAO, 'erc20.json', library.getSigner()).approve(
-				swapperContract.address,
+			const tx = baoContract.approve(
+				ballast.address,
 				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 			)
 
 			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(swapperContract.sell(exponentiate(inputVal).toString()), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(ballast.sell(parseUnits(inputVal)), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {

@@ -1,15 +1,14 @@
-import { getVirtualPrice } from '@/bao/utils'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import { Contract } from '@ethersproject/contracts'
 import useBao from '../base/useBao'
 
-const useVirtualPrice = (poolContract: Contract) => {
+const useVirtualPrice = (poolContract?: Contract) => {
 	const [virtualPrice, setVirtualPrice] = useState(BigNumber.from(0))
 	const bao = useBao()
 
 	const fetchVirtualPrice = useCallback(async () => {
-		const virtualPrice = await getVirtualPrice(poolContract)
+		const virtualPrice = await poolContract.get_virtual_price({ gasLimit: 100000 })
 		setVirtualPrice(BigNumber.from(virtualPrice))
 	}, [poolContract, setVirtualPrice])
 
@@ -17,7 +16,7 @@ const useVirtualPrice = (poolContract: Contract) => {
 		if (poolContract && bao) {
 			fetchVirtualPrice()
 		}
-	}, [poolContract, bao])
+	}, [fetchVirtualPrice, poolContract, bao])
 
 	return virtualPrice
 }

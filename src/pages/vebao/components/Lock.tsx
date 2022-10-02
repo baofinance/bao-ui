@@ -1,5 +1,4 @@
 import Config from '@/bao/lib/config'
-import { getCrvSupply, getVotingEscrowContract } from '@/bao/utils'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
@@ -20,11 +19,14 @@ import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/reac
 import { useWeb3React } from '@web3-react/core'
 import { addYears, format } from 'date-fns'
 import { BigNumber, ethers } from 'ethers'
+import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
+import useContract from '@/hooks/base/useContract'
+import type { Erc20, VotingEscrow } from '@/typechain/index'
 
 function addDays(numOfDays: number, date = new Date()) {
 	date.setDate(date.getDate() + numOfDays)
@@ -51,21 +53,22 @@ const Lock: React.FC = () => {
 	const [endDate, setEndDate] = useState(startDate)
 	const crvAddress = Config.addressMap.CRV
 	const crvBalance = useTokenBalance(crvAddress)
-	const crvContract = bao && bao.getContract('crv')
-	const votingEscrowContract = getVotingEscrowContract(bao)
 	const nextFeeDistribution = useNextDistribution()
 	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[Config.networkId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const length = endDate.setUTCHours(0, 0, 0, 0) + 604800000 - 86400000
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
-	const [totalSupply, setTotalSupply] = useState<BigNumber>()
+	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
+
+	const crv = useContract<Erc20>('Erc20', Config.addressMap.CRV)
+	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[Config.networkId].address)
 
 	useEffect(() => {
-		if (!bao) return
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			setBaoPrice(BigNumber.from((await res.json())['curve-dao-token'].usd))
+			const price = (await res.json())['curve-dao-token'].usd.toString()
+			setBaoPrice(ethers.utils.parseUnits(price))
 		})
-	}, [bao, setBaoPrice])
+	}, [setBaoPrice])
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -79,22 +82,29 @@ const Lock: React.FC = () => {
 	}, [crvBalance, setVal])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(getFullDisplayBalance(BigNumber.from(crvBalance.div(2).toNumber())))
+		setVal(getFullDisplayBalance(crvBalance.div(2)))
 	}, [crvBalance])
 
 	useEffect(() => {
 		const fetchTotalSupply = async () => {
-			const supply = await getCrvSupply(bao)
+			const supply = await crv.totalSupply()
 			setTotalSupply(supply)
 		}
 
-		if (bao) fetchTotalSupply()
-	}, [bao, setTotalSupply])
+		if (crv) fetchTotalSupply()
+	}, [crv, setTotalSupply])
 
 	// console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
 	// console.log(new Date().setUTCHours(0, 0, 0, 0))
 	// console.log(startDate.setUTCHours(0, 0, 0, 0))
 	// console.log(length)
+
+	let suppliedPercentage
+	if (lockInfo && totalSupply) {
+		const numer = new BN(lockInfo.totalSupply.toString())
+		const denom = new BN(totalSupply.toString())
+		suppliedPercentage = numer.div(denom).times(100)
+	}
 
 	return (
 		<>
@@ -118,7 +128,7 @@ const Lock: React.FC = () => {
 							label: `BAO Locked`,
 							value: (
 								<Typography>
-									<>{getDisplayBalance(lockInfo && lockInfo.lockAmount)}</>
+									<>{lockInfo && getDisplayBalance(lockInfo.lockAmount)}</>
 								</Typography>
 							),
 						},
@@ -332,7 +342,7 @@ const Lock: React.FC = () => {
 							<div className='flex flex-col'>
 								{isNaN(lockInfo && lockInfo.balance.toNumber()) || (lockInfo && lockInfo.balance.lte(0)) ? (
 									<div className='mt-3 flex flex-row gap-4'>
-										{allowance && !allowance.toNumber() ? (
+										{allowance && allowance.gt(0) ? (
 											<>
 												{pendingTx ? (
 													<Button fullWidth disabled={true}>
@@ -343,11 +353,17 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
-															const tx = bao.getNewContract(Config.addressMap.CRV, 'erc20.json', library.getSigner()).approve(
-																votingEscrowContract.address,
-																ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-															)
-															handleTx(tx, `Approve CRV`)
+															// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+															console.log('hi1', account)
+															const gasLimit = await crv.estimateGas.approve(account, ethers.constants.MaxUint256)
+															const gasPrice = await library.getGasPrice()
+															console.log('hi2', gasLimit.toString(), gasPrice.toString())
+															console.log(ethers.constants.MaxUint256.toString())
+															const tx = crv.approve(votingEscrow.address, ethers.constants.MaxUint256, {
+																gasLimit,
+																gasPrice,
+															})
+															handleTx(tx, `Approve CRV for veCRV`)
 														}}
 													>
 														Approve CRV
@@ -373,11 +389,26 @@ const Lock: React.FC = () => {
 												) : (
 													<Button
 														fullWidth
-														disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 														onClick={async () => {
-															const lockTx = votingEscrowContract.create_lock(
+															const gasPrice = await library.getGasPrice()
+															console.log('gas price', gasPrice.toString())
+															let gasLimit
+															try {
+																gasLimit = await votingEscrow.estimateGas.create_lock(
+																	ethers.utils.parseEther(val.toString()),
+																	length.toString().slice(0, 10),
+																)
+																console.log('gas limit', gasLimit.toString())
+															} catch (e: any) {
+																console.error('!!could not get gas limit!!', e.message)
+															}
+															const lockTx = votingEscrow.create_lock(
 																ethers.utils.parseEther(val.toString()),
 																length.toString().slice(0, 10),
+																{
+																	gasLimit,
+																	gasPrice,
+																}
 															)
 															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}
@@ -406,7 +437,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.increase_amount(ethers.utils.parseEther(val.toString()))
+														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 
 														handleTx(
 															lockTx,
@@ -437,7 +468,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.mul(1000).toNumber())}
 													onClick={async () => {
-														const lockTx = votingEscrowContract.increase_unlock_time(length.toString().slice(0, 10))
+														const lockTx = votingEscrow.increase_unlock_time(length.toString().slice(0, 10))
 
 														handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)
 													}}
@@ -462,26 +493,26 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										Total BAO Supply
 									</Typography>
-									<Badge>{getDisplayBalance(totalSupply)}</Badge>
+									<Badge>{totalSupply && getDisplayBalance(totalSupply)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
 										Total BAO Locked
 									</Typography>
-									<Badge>{getDisplayBalance(lockInfo && lockInfo.totalSupply)}</Badge>
+									<Badge>{lockInfo && getDisplayBalance(lockInfo.totalSupply)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
 										Percentage of BAO Locked
 									</Typography>
-									<Badge>{getDisplayBalance(lockInfo && totalSupply && lockInfo.totalSupply.div(totalSupply).mul(100).mul(1e18))}%</Badge>
+									<Badge>{lockInfo && totalSupply && `${suppliedPercentage.toFixed(2)}%`}</Badge>
 								</div>
 
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
 										Total veBAO
 									</Typography>
-									<Badge>{getDisplayBalance(lockInfo && lockInfo.supply)}</Badge>
+									<Badge>{lockInfo && getDisplayBalance(lockInfo.supply)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Typography variant='sm' className='text-center text-text-200'>
@@ -493,7 +524,7 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										BAO Price
 									</Typography>
-									<Badge>{baoPrice && baoPrice.toNumber()}</Badge>
+									<Badge>{baoPrice && ethers.utils.formatUnits(baoPrice)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Tooltipped content='DailyFees * 365 / (Total veBAO * BAO Price) * 100'>
@@ -511,9 +542,7 @@ const Lock: React.FC = () => {
 											<Typography variant='sm' className='text-center text-text-200'>
 												Next Distribution
 											</Typography>
-											<Badge>
-												{addDays(1, new Date(nextFeeDistribution && nextFeeDistribution.mul(1e18).mul(1000).toNumber())).toUTCString()}
-											</Badge>
+											<Badge>{nextFeeDistribution && addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toUTCString()}</Badge>
 										</a>
 									</Tooltipped>
 								</div>

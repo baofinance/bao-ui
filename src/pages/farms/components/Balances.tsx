@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { BigNumber } from 'ethers'
 
-import { getBaoSupply } from '@/bao/utils'
+import Config from '@/bao/lib/config'
 import Loader from '@/components/Loader'
 import { StatCards } from '@/components/Stats'
 import useBao from '@/hooks/base/useBao'
@@ -11,15 +11,19 @@ import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useAllEarnings from '@/hooks/farms/useAllEarnings'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
 import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import useContract from '@/hooks/base/useContract'
+import { Bao } from '@/typechain/index'
 
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
 	const bao = useBao()
-	const baoBalance = useTokenBalance(bao && bao.getContract('bao').address)
+	const baoBalance = useTokenBalance(Config.addressMap.BAO)
 	const { account } = useWeb3React()
 	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
 	const locks = useLockedEarnings()
 	const allEarnings = useAllEarnings()
+
+	const baoContract = useContract<Bao>('Bao')
 
 	// FIXME: this should do math with an ethers.BigNumber, not a javascript number.
 	let sumEarning = BigNumber.from(0)
@@ -44,12 +48,12 @@ const Balances: React.FC = () => {
 
 	useEffect(() => {
 		const fetchTotalSupply = async () => {
-			const supply = await getBaoSupply(bao)
+			const supply = await baoContract.totalSupply()
 			setTotalSupply(supply)
 		}
 
-		if (bao) fetchTotalSupply()
-	}, [bao, setTotalSupply])
+		if (baoContract) fetchTotalSupply()
+	}, [baoContract])
 
 	useEffect(() => {
 		if (!bao) return

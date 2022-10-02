@@ -1,25 +1,24 @@
-import { getGaugeControllerContract, getUserVotingPower } from '@/bao/utils'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { GaugeController } from '@/typechain/index'
 
 const useVotingPowerAllocated = () => {
 	const [votingPower, setVotingPower] = useState(BigNumber.from(0))
-	const bao = useBao()
 	const { account } = useWeb3React()
-	const gaugeControllerContract = getGaugeControllerContract(bao)
+	const gaugeController = useContract<GaugeController>('GaugeController')
 
 	const fetchVotingPower = useCallback(async () => {
-		const votingPower = await getUserVotingPower(gaugeControllerContract, account)
-		setVotingPower(BigNumber.from(votingPower))
-	}, [gaugeControllerContract, bao])
+		const votingPower = await gaugeController.vote_user_power(account)
+		setVotingPower(votingPower)
+	}, [gaugeController, account])
 
 	useEffect(() => {
-		if (gaugeControllerContract && bao) {
+		if (gaugeController) {
 			fetchVotingPower()
 		}
-	}, [gaugeControllerContract, bao])
+	}, [fetchVotingPower, gaugeController])
 
 	return votingPower
 }

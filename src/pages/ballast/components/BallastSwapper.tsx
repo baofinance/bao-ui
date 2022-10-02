@@ -16,7 +16,10 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import Multicall from '@/utils/multicall'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
+
+import useContract from '@/hooks/base/useContract'
+import type { Stabilizer, Dai } from '@/typechain/index'
 
 import BallastButton from './BallastButton'
 
@@ -33,19 +36,21 @@ const BallastSwapper: React.FC = () => {
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 
+	const ballast: Stabilizer = useContract('Stabilizer')
+	const dai: Dai = useContract('Dai')
+
 	// TODO: Move this to a hook ?
 	const fetchBallastInfo = useCallback(async () => {
-		const ballastContract = bao.getContract('stabilizer')
 		const ballastQueries = Multicall.createCallContext([
 			{
 				ref: 'Ballast',
-				contract: ballastContract,
+				contract: ballast,
 				calls: [{ method: 'supplyCap' }, { method: 'buyFee' }, { method: 'sellFee' }, { method: 'FEE_DENOMINATOR' }],
 			},
 			{
 				ref: 'DAI',
-				contract: bao.getNewContract(Config.addressMap.DAI, 'erc20.json'),
-				calls: [{ method: 'balanceOf', params: [ballastContract.address] }],
+				contract: dai,
+				calls: [{ method: 'balanceOf', params: [ballast.address] }],
 			},
 		])
 		const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
@@ -57,13 +62,12 @@ const BallastSwapper: React.FC = () => {
 			denominator: ballastRes[3].values[0],
 		})
 		setReserves(daiRes[0].values[0])
-	}, [bao])
+	}, [bao, ballast, dai])
 
 	useEffect(() => {
-		if (!bao) return
-
+		if (!bao || !ballast || !dai) return
 		fetchBallastInfo()
-	}, [bao, transactions])
+	}, [bao, ballast, dai, fetchBallastInfo, transactions])
 
 	const daiInput = (
 		<>
@@ -162,8 +166,8 @@ const BallastSwapper: React.FC = () => {
 						swapDirection={swapDirection}
 						inputVal={inputVal}
 						maxValues={{
-							buy: ethers.utils.parseEther(daiBalance.toString()),
-							sell: ethers.utils.parseEther(baoUSDBalance.toString()),
+							buy: daiBalance,
+							sell: baoUSDBalance,
 						}}
 						supplyCap={supplyCap}
 						reserves={reserves}
