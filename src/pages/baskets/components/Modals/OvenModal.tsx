@@ -34,7 +34,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	useEffect(() => {
 		if (!(library && account)) return
 		// FIXME: use useBalance('ETH') from eth-hooks maybe?
-		library.getBalance(account).then((balance: any) => setEthBalance(decimate(balance)))
+		library.getBalance(account).then((balance: any) => setEthBalance(balance))
 	}, [library, account])
 
 	return basket ? (
@@ -79,7 +79,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									<Typography variant='sm' className='text-text-200'>
 										{`Available:`}{' '}
 									</Typography>
-									<Typography variant='sm'>{`${ethBalance && ethBalance.toFixed(4)} ETH`}</Typography>
+									<Typography variant='sm'>{`${ethBalance && getDisplayBalance(ethBalance)} ETH`}</Typography>
 								</div>
 							</div>
 						</div>

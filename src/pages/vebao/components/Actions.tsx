@@ -15,7 +15,7 @@ import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -230,7 +230,6 @@ interface RewardsProps {
 }
 
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
-	const bao = useBao()
 	const gaugeInfo = useGaugeInfo(gauge)
 	//const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()

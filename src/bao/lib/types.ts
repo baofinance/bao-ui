@@ -1,4 +1,5 @@
 import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool } from '@/typechain/index'
+import { BigNumber } from 'ethers'
 
 export interface SupportedPool {
 	pid: number
@@ -71,20 +72,20 @@ export interface SupportedMarket {
 	coingeckoId: string
 	underlyingDecimals: number
 	underlyingSymbol?: string
-	supplyApy?: number
-	borrowApy?: number
-	rewardApy?: number
-	liquidity?: number
-	collateralFactor?: number
-	imfFactor?: number
-	reserveFactor?: number
-	totalBorrows?: number
-	totalReserves?: number
-	supplied?: number
+	supplyApy?: BigNumber
+	borrowApy?: BigNumber
+	rewardApy?: BigNumber
+	liquidity?: BigNumber
+	collateralFactor?: BigNumber
+	imfFactor?: BigNumber
+	reserveFactor?: BigNumber
+	totalBorrows?: BigNumber
+	totalReserves?: BigNumber
+	supplied?: BigNumber
 	borrowable?: boolean
-	liquidationIncentive?: number
+	liquidationIncentive?: BigNumber
 	borrowRestricted?: boolean
-	price?: number
+	price?: BigNumber
 }
 
 export interface FarmableSupportedPool extends SupportedPool {
@@ -113,7 +114,7 @@ export interface ActiveSupportedMarket extends SupportedMarket {
 	marketAddress: string
 	marketContract: Cether | Ctoken
 	underlyingAddress: string
-	underlyingContract: Erc20
+	underlyingContract?: Erc20
 }
 
 export interface RpcConfig {

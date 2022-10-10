@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
+import { BigNumber } from 'ethers'
 
 import Config from '@/bao/lib/config'
 //import useBlock from '@/hooks/base/useBlock'
@@ -14,7 +15,8 @@ import useTransactionProvider from '../base/useTransactionProvider'
 export type Balance = {
 	address: string
 	symbol: string
-	balance: number
+	balance: BigNumber
+	decimals: number
 }
 
 export const useAccountBalances = (): Balance[] => {
@@ -29,7 +31,7 @@ export const useAccountBalances = (): Balance[] => {
 		const tokens = Config.markets.map(market => market.underlyingAddresses[chainId])
 		const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
-		const multicallResults = MultiCall.parseCallResults(
+		const res = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
 					contracts.map(
@@ -47,14 +49,11 @@ export const useAccountBalances = (): Balance[] => {
 
 		setBalances(
 			tokens.map(address => {
-				return {
-					address,
-					symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
-					// FIXME: make this .balance a bn.js for decimals or format it later in the component
-					balance: multicallResults[address]
-						? parseFloat(formatUnits(multicallResults[address][2].values[0], multicallResults[address][1].values[0]))
-						: parseFloat(formatUnits(ethBalance)),
-				}
+				const symbol = res[address] ? res[address][0].values[0] : 'ETH'
+				const decimals = res[address] ? res[address][1].values[0] : 18
+				const balance = res[address] ? res[address][2].values[0] : ethBalance
+				// FIXME: make this .balance a bn.js for decimals or format it later in the component
+				return { address, symbol, balance, decimals }
 			}),
 		)
 	}, [library, bao, account, chainId])
@@ -78,7 +77,7 @@ export const useSupplyBalances = (): Balance[] => {
 		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 		const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
-		const multicallResults = MultiCall.parseCallResults(
+		const res = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
 					contracts.map(contract => ({
@@ -91,16 +90,15 @@ export const useSupplyBalances = (): Balance[] => {
 		)
 
 		setBalances(
-			Object.keys(multicallResults).map(address => ({
-				address,
-				symbol: multicallResults[address][0].values[0],
-				balance: parseFloat(
-					formatUnits(
-						multicallResults[address][1].values[0],
-						Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
-					),
-				),
-			})),
+			Object.keys(res).map(address => {
+				const decimals = Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals
+				return {
+					address,
+					symbol: res[address][0].values[0],
+					balance: res[address][1].values[0],
+					decimals,
+				}
+			}),
 		)
 	}, [bao, account, library, chainId])
 
@@ -123,7 +121,7 @@ export const useBorrowBalances = (): Balance[] => {
 		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 		const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
-		const multicallResults = MultiCall.parseCallResults(
+		const res = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
 					contracts.map(contract => ({
@@ -136,16 +134,15 @@ export const useBorrowBalances = (): Balance[] => {
 		)
 
 		setBalances(
-			Object.keys(multicallResults).map(address => ({
-				address,
-				symbol: multicallResults[address][0].values[0],
-				balance: parseFloat(
-					formatUnits(
-						multicallResults[address][1].values[0],
-						Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals, // use underlying decimals
-					),
-				),
-			})),
+			Object.keys(res).map(address => {
+				const decimals = Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
+				return {
+					address,
+					symbol: res[address][0].values[0],
+					balance: res[address][1].values[0],
+					decimals,
+				}
+			}),
 		)
 	}, [bao, account, library, chainId])
 

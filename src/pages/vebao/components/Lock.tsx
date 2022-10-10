@@ -19,13 +19,13 @@ import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/reac
 import { useWeb3React } from '@web3-react/core'
 import { addYears, format } from 'date-fns'
 import { BigNumber, ethers } from 'ethers'
-import BN from 'bignumber.js'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
 import useContract from '@/hooks/base/useContract'
+//import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import type { Erc20, VotingEscrow } from '@/typechain/index'
 
 function addDays(numOfDays: number, date = new Date()) {
@@ -90,20 +90,13 @@ const Lock: React.FC = () => {
 			const supply = await crv.totalSupply()
 			setTotalSupply(supply)
 		}
-
 		if (crv) fetchTotalSupply()
 	}, [crv, setTotalSupply])
 
-	// console.log(lockInfo && lockInfo.lockEnd.mul(1000).toNumber())
-	// console.log(new Date().setUTCHours(0, 0, 0, 0))
-	// console.log(startDate.setUTCHours(0, 0, 0, 0))
-	// console.log(length)
-
 	let suppliedPercentage
-	if (lockInfo && totalSupply) {
-		const numer = new BN(lockInfo.totalSupply.toString())
-		const denom = new BN(totalSupply.toString())
-		suppliedPercentage = numer.div(denom).times(100)
+	if (lockInfo && totalSupply && totalSupply.gt(0)) {
+		const lockSupplyPercent = lockInfo.totalSupply.mul(100).mul(BigNumber.from(10).pow(18))
+		suppliedPercentage = lockSupplyPercent.div(totalSupply)
 	}
 
 	return (
@@ -505,7 +498,7 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										Percentage of BAO Locked
 									</Typography>
-									<Badge>{lockInfo && totalSupply && `${suppliedPercentage.toFixed(2)}%`}</Badge>
+									<Badge>{suppliedPercentage && `${getDisplayBalance(suppliedPercentage)}%`}</Badge>
 								</div>
 
 								<div className='text-center'>

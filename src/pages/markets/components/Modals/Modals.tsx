@@ -8,8 +8,9 @@ import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarketPrices } from '@/hooks/markets/usePrices'
-import { decimate } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance, exponentiate } from '@/utils/numberFormat'
 import { BigNumber, utils } from 'ethers'
+import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import MarketButton from '../MarketButton'
@@ -44,35 +45,51 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 
 	const supply =
 		supplyBalances && exchangeRates
-			? supplyBalances.find(_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance *
-			  decimate(exchangeRates[asset.marketAddress]).toNumber()
-			: 0
+			? supplyBalances.find(_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance
+				.mul(exchangeRates[asset.marketAddress])
+			: BigNumber.from(0)
 
-	const _imfFactor = accountLiquidity ? 1.1 / (1 + asset.imfFactor * Math.sqrt(supply)) : 0
+	//const _imfFactor = accountLiquidity
+		//? parseUnits('1.1').div(asset.imfFactor.mul(Math.sqrt(supply)).add(parseUnits('1')))
+		//: 0
+	let _imfFactor = BigNumber.from(0)
+	if (accountLiquidity) {
+		const num = parseUnits('1.1')
+		const sqrt = parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString())
+		const denom = asset.imfFactor.mul(sqrt).add(parseUnits('1'))
+		_imfFactor = num.div(denom)
+		console.log("sqrt", formatUnits(sqrt))
+	console.log("imf", _imfFactor.toString(), num.toString(), denom.toString())
+	}
 
-	const withdrawable = accountLiquidity
-		? _imfFactor > asset.collateralFactor
-			? accountLiquidity.usdBorrowable / (asset.collateralFactor * asset.price)
-			: accountLiquidity.usdBorrowable / (_imfFactor * asset.price)
-		: 0
+	let withdrawable = BigNumber.from(0)
+	if (_imfFactor.gt(asset.collateralFactor)) {
+		if (asset.collateralFactor.mul(asset.price).gt(0)) {
+			withdrawable = accountLiquidity.usdBorrowable.div(asset.collateralFactor.mul(asset.price))
+		} else if (_imfFactor.mul(asset.price)) {
+			withdrawable = accountLiquidity.usdBorrowable.div(_imfFactor.mul(asset.price))
+		}
+	}
 
 	const max = () => {
 		switch (operation) {
 			case MarketOperations.supply:
-				return balances ? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance : 0
+				return balances
+					? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
+					: BigNumber.from(0)
 			case MarketOperations.withdraw:
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable > supply ? supply : withdrawable
 			case MarketOperations.mint:
-				return prices && accountLiquidity ? accountLiquidity.usdBorrowable / asset.price : 0
+				return prices && accountLiquidity ? accountLiquidity.usdBorrowable.div(asset.price) : BigNumber.from(0)
 			case MarketOperations.repay:
 				if (borrowBalances && balances) {
 					const borrowBalance = borrowBalances.find(
 						_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase(),
 					).balance
 					const walletBalance = balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
-					return walletBalance < borrowBalance ? walletBalance : borrowBalance
+					return walletBalance.lt(borrowBalance) ? walletBalance : borrowBalance
 				} else {
-					return 0
+					return BigNumber.from(0)
 				}
 		}
 	}
@@ -123,13 +140,13 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 								<Typography variant='sm' className='text-text-200'>
 									{`${maxLabel()}:`}
 								</Typography>
-								<Typography variant='sm'>{`${max().toFixed(4)} ${asset.underlyingSymbol}`}</Typography>
+								<Typography variant='sm'>{`${getDisplayBalance(max())} ${asset.underlyingSymbol}`}</Typography>
 							</div>
 						</div>
 						<Input
 							value={val}
 							onChange={handleChange}
-							onSelectMax={() => setVal((Math.floor(max() * 10 ** asset.underlyingDecimals) / 10 ** asset.underlyingDecimals).toString())}
+							onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
 							label={
 								<div className='flex flex-row items-center pl-2 pr-4'>
 									<div className='flex w-6 justify-center'>
@@ -151,8 +168,8 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 					<MarketButton
 						operation={operation}
 						asset={asset}
-						val={val && !isNaN(val as any as number) ? utils.parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-						isDisabled={!val || !bao || isNaN(val as any as number) || parseFloat(val) > max()}
+						val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+						isDisabled={!val || (val && parseUnits(val).gt(max()))}
 						onHide={hideModal}
 					/>
 				</Modal.Actions>

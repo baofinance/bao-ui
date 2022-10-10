@@ -25,7 +25,7 @@ export type BasketComponent = {
 	price: BigNumber
 	image: any
 	balance: BigNumber
-	percentage: number
+	percentage: BigNumber
 	color: string
 	underlying?: string
 	underlyingPrice?: BigNumber
@@ -54,8 +54,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				.map(address => ({
 					contract: Erc20__factory.connect(address, library),
 					ref: address,
-					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address]
-					}],
+					calls: [{ method: 'decimals' }, { method: 'symbol' }, { method: 'name' }, { method: 'balanceOf', params: [basket.address] }],
 				})),
 		)
 		const tokenInfo = MultiCall.parseCallResults(await bao.multicall.call(tokensQuery))
@@ -132,9 +131,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		// Assign allocation percentages
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
-
 			const percentage = comp.balance.mul(comp.price).div(marketCap).mul(100)
-			_comp[i].percentage = parseFloat(formatUnits(percentage, _comp[i].decimals))
+			_comp[i].percentage = percentage
+				.mul(BigNumber.from(10).pow(18))
+				.div(BigNumber.from(10).pow(_comp[i].decimals))
 		}
 
 		setComposition(_comp)

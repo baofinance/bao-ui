@@ -12,7 +12,7 @@ import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberForma
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
+import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
@@ -24,6 +24,8 @@ const Swapper: React.FC = () => {
 
 	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
+
+ 	console.log(getDisplayBalance(inputVal))
 
 	return (
 		<>
@@ -45,12 +47,12 @@ const Swapper: React.FC = () => {
 								<Typography variant='sm' className='text-text-200'>
 									Wallet
 								</Typography>
-								<Typography variant='sm'>{getDisplayBalance(baov1Balance).toString()} BAO v1</Typography>
+								<Typography variant='sm'>{getDisplayBalance(baov1Balance)} BAO v1</Typography>
 							</div>
 							<Input
-								onSelectMax={() => setInputVal(decimate(baov1Balance).toString())}
+								onSelectMax={() => setInputVal(baov1Balance.toString())}
 								onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
-								value={inputVal}
+								value={inputVal && formatUnits(decimate(parseUnits(inputVal)))}
 								label={
 									<div className='flex flex-row items-center pl-2 pr-4'>
 										<div className='flex w-6 items-center justify-center'>
@@ -72,14 +74,14 @@ const Swapper: React.FC = () => {
 									<Typography variant='sm' className='text-text-200'>
 										Wallet
 									</Typography>
-									<Typography variant='sm'>{getDisplayBalance(baov1Balance).toString()} BAO v2</Typography>
+									<Typography variant='sm'>{getDisplayBalance(baov1Balance)} BAO v2</Typography>
 								</div>
 							</div>
 							<Input
 								onSelectMax={null}
 								onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 								disabled={true}
-								value={inputVal && BigNumber.from(inputVal).mul(0.001).toString()}
+								value={inputVal && formatUnits(decimate(parseUnits(inputVal).mul(parseUnits('0.001')), 36))}
 								label={
 									<div className='flex flex-row items-center pl-2 pr-4'>
 										<div className='flex w-6 items-center justify-center'>

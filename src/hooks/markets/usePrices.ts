@@ -3,6 +3,7 @@ import fetcher from '@/bao/lib/fetcher'
 import { SWR } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
 import { useCallback, useEffect, useState } from 'react'
+import { BigNumber } from 'ethers'
 import useSWR from 'swr'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
@@ -19,7 +20,7 @@ type Prices = {
 
 type MarketPrices = {
 	prices: {
-		[key: string]: number
+		[key: string]: BigNumber
 	}
 }
 
@@ -49,7 +50,7 @@ export const usePrices = (): SWR & Prices => {
 export const useMarketPrices = (): MarketPrices => {
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const [prices, setPrices] = useState<undefined | { [key: string]: number }>()
+	const [prices, setPrices] = useState<{ [key: string]: BigNumber } | undefined>()
 	const oracle = useContract<MarketOracle>('MarketOracle')
 
 	const fetchPrices = useCallback(async () => {
@@ -76,12 +77,12 @@ export const useMarketPrices = (): MarketPrices => {
 				{},
 			),
 		)
-	}, [transactions, bao, oracle])
+	}, [bao, oracle])
 
 	useEffect(() => {
 		if (!bao || !oracle) return
 		fetchPrices()
-	}, [transactions, bao, oracle])
+	}, [fetchPrices, transactions, bao, oracle])
 
 	return {
 		prices,

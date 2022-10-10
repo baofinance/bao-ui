@@ -94,11 +94,17 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			const _val = value && parseUnits(value)
 			const daiOrEth = mintOption === MintOption.DAI ? daiBalance : ethBalance
 			const walletBallance = operation === 'MINT' ? daiOrEth : basketBalance
+			let canParseValue = true
+			try {
+				parseUnits(value)
+			} catch {
+				canParseValue = false
+			}
 			return (
 				mintOption === MintOption.DAI &&
 				daiAllowance &&
 				(daiAllowance.eq(0) || daiAllowance.lt(_val)) &&
-				(parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance))
+				(canParseValue && (parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance)))
 			)
 		}
 		return false
@@ -162,9 +168,9 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Typography variant='sm'>
 										{operation === 'MINT'
 											? mintOption === MintOption.DAI
-												? `${daiBalance && decimate(daiBalance)} DAI`
-												: `${ethBalance && decimate(ethBalance)} ETH`
-											: `${basketBalance && decimate(basketBalance)} ${basket.symbol}`}
+												? `${daiBalance && getDisplayBalance(daiBalance)} DAI`
+												: `${ethBalance && getDisplayBalance(ethBalance)} ETH`
+											: `${basketBalance && getDisplayBalance(basketBalance)} ${basket.symbol}`}
 									</Typography>
 								</div>
 							</div>

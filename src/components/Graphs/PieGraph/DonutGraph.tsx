@@ -3,17 +3,21 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
 import { Text } from '@visx/text'
-import { utils, BigNumber } from 'ethers'
+import { BigNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import _ from 'lodash'
 import { useState } from 'react'
 import { animated, interpolate, useTransition } from 'react-spring'
+import { BasketComponent } from '@/hooks/baskets/useComposition'
+import { BasketRates } from '@/hooks/baskets/useBasketRate'
+import { BasketInfo } from '@/hooks/baskets/useBasketInfo'
 
 interface AssetAllocationAmount {
 	symbol: string
-	percentage: string
-	balance: string
-	tvl: string
-	frequency: number
+	balance: BigNumber
+	decimals: number
+	tvl: BigNumber
+	frequency: BigNumber
 	color: string
 }
 
@@ -22,34 +26,29 @@ const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 }
 export type DonutProps = {
 	width: number
 	height: number
-	composition: Array<any>
-	rates: any
-	info: any
+	composition: BasketComponent[]
+	rates: BasketRates
+	info: BasketInfo
 	basket: string
 	margin?: typeof defaultMargin
 	animate?: boolean
 }
 
 export default function DonutGraph({ width, height, composition, rates, info, margin = defaultMargin }: DonutProps) {
-	const [selectedAssetAmount, setSelectedAssetAmount] = useState<string | null>(null)
 	const [active, setActive] = useState(null)
 
 	const assetsBalance: AssetAllocationAmount[] = composition.map(component => {
-		const tvl = component.price.times(component.balance.toString())
-			.div(10 ** 18)
-			.div(10 ** component.decimals)
-			.toFixed(2)
 		return {
-			symbol: `${component.symbol}`,
-			percentage: `${component.percentage.toFixed(4)}%`,
-			balance: `${utils.formatUnits(component.balance, component.decimals)}`,
-			tvl: `${component.price ? tvl : ''}`,
+			tvl: component.price.mul(component.balance.toString()).div(BigNumber.from(10).pow(component.decimals)),
+			symbol: component.symbol,
+			balance: component.balance,
+			decimals: component.decimals,
 			frequency: component.percentage,
 			color: component.color,
 		}
 	})
 
-	const frequency = (d: AssetAllocationAmount) => d.frequency
+	const frequency = (d: AssetAllocationAmount) => parseFloat(formatUnits(d.frequency))
 
 	if (width < 10) return null
 
@@ -63,7 +62,7 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 		<svg width={width} height={height}>
 			<Group top={centerY + margin.top} left={centerX + margin.left}>
 				<Pie
-					data={selectedAssetAmount ? assetsBalance.filter(({ symbol }) => symbol === selectedAssetAmount) : assetsBalance}
+					data={assetsBalance}
 					pieValue={frequency}
 					pieSortValues={() => -1}
 					outerRadius={radius}
@@ -113,10 +112,10 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 				) : (
 					<>
 						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
-							{`$${active && active.tvl}`}
+							{`$${active && getDisplayBalance(active.tvl)}`}
 						</Text>
 						<Text textAnchor='middle' fill={active.color} className='text-xs' dy={14}>
-							{`${active.balance} ${active.symbol}`}
+							{`${getDisplayBalance(active.balance, active.decimals, 4)} ${active.symbol}`}
 						</Text>
 					</>
 				)}

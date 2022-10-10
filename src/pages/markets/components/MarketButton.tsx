@@ -3,7 +3,7 @@ import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/markets/useApprovals'
-import { decimate } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
@@ -53,13 +53,13 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 							let mintTx
 							if (asset.underlyingAddress === 'ETH') {
 								mintTx = marketContract.mint(true, {
-									value: val.toString(),
+									value: val,
 								})
 								// TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							} else {
-								mintTx = marketContract.mint(val.toString(), true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
+								mintTx = marketContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							}
-							handleTx(mintTx, `Supply ${decimate(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`, () => onHide())
+							handleTx(mintTx, `Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
 						Supply
@@ -86,7 +86,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							handleTx(
 								marketContract.redeemUnderlying(val.toString()),
-								`Withdraw ${decimate(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								`Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -102,8 +102,8 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
-								marketContract.borrow(val.toString()),
-								`Mint ${decimate(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								marketContract.borrow(val),
+								`Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => {
 									onHide()
 								},
@@ -123,12 +123,12 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 							let repayTx
 							if (asset.underlyingAddress === 'ETH') {
 								repayTx = marketContract.repayBorrow({
-									value: val.toString(),
+									value: val,
 								})
 							} else {
-								repayTx = marketContract.repayBorrow(val.toString())
+								repayTx = marketContract.repayBorrow(val)
 							}
-							handleTx(repayTx, `Repay ${decimate(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () => onHide())
+							handleTx(repayTx, `Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
 						Repay

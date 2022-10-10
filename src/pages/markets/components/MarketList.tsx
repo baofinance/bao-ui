@@ -121,13 +121,16 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const comptroller = useContract<Comptroller>('Comptroller')
 
 	const suppliedUnderlying = useMemo(() => {
-		return (
-			supplyBalances.find(balance => balance.address === market.marketAddress).balance *
-			parseFloat(formatUnits(exchangeRates[market.marketAddress]))
-		)
+		const supply = supplyBalances.find(balance => balance.address === market.marketAddress)
+		if (supply === undefined) return BigNumber.from(0)
+		return decimate(supply.balance.mul(exchangeRates[market.marketAddress]))
 	}, [supplyBalances, exchangeRates, market.marketAddress])
 
-	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [market, borrowBalances])
+	const borrowed = useMemo(() => {
+		const borrow = borrowBalances.find(balance => balance.address === market.marketAddress)
+		if (borrow === undefined) return BigNumber.from(0)
+		return borrow.balance
+	}, [market, borrowBalances])
 
 	const isInMarket = useMemo(
 		() => accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress),
@@ -163,13 +166,19 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
 							<Typography className='ml-2 font-medium leading-5'>
-								{account ? accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4) : '-'}
+								{account
+									? getDisplayBalance(
+											accountBalances.find(balance => balance.address === market.underlyingAddress).balance,
+											market.underlyingDecimals,
+										)
+									: '-'
+								}
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}
+									{`$${getDisplayBalance(decimate(market.supplied.mul(market.price).sub(market.totalBorrows.mul(market.price)), 18))}`}
 								</span>
 							</Typography>
 						</div>
@@ -181,17 +190,11 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Supplied',
-								value: `${market.supplied.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(
-									market.supplied * market.price,
-									0,
-								)}`,
+								value: `${getDisplayBalance(market.supplied, market.underlyingDecimals)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(market.supplied.mul(market.price)), 18)}`,
 							},
 							{
 								label: 'Your Supply',
-								value: `${suppliedUnderlying.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(
-									suppliedUnderlying * market.price,
-									0,
-								)}`,
+								value: `${getDisplayBalance(suppliedUnderlying)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(suppliedUnderlying.mul(market.price)))}`,
 							},
 							{
 								label: 'Collateral',
@@ -212,8 +215,8 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 										<Switch
 											checked={isChecked}
 											disabled={
-												(isInMarket && borrowed > 0) ||
-												supplyBalances.find(balance => balance.address === market.marketAddress).balance === 0
+												(isInMarket && borrowed.gt(0)) ||
+												supplyBalances.find(balance => balance.address === market.marketAddress).balance.eq(0)
 											}
 											onChange={setIsChecked}
 											onClick={(event: { stopPropagation: () => void }) => {
@@ -228,7 +231,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 												}
 											}}
 											className={classNames(
-												!isInMarket && borrowed === 0 ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
+												!isInMarket && borrowed.eq(0) ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
 												'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
 											)}
 										>
@@ -245,7 +248,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							},
 							{
 								label: 'Wallet Balance',
-								value: `${accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4)} ${
+								value: `${getDisplayBalance(accountBalances.find(balance => balance.address === market.underlyingAddress).balance)} ${
 									market.underlyingSymbol
 								}`,
 							},
@@ -287,6 +290,9 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 		showBorrowModal && setIsOpen(true)
 	}
 
+	const accountBal = accountBalances.find(balance => balance.address === market.underlyingAddress)
+	const accountBalance = accountBal !== undefined ? accountBal.balance : BigNumber.from(0)
+
 	return (
 		<>
 			<Accordion open={isOpen || showBorrowModal} onClick={() => handleOpen()} className='my-2 rounded border border-primary-300'>
@@ -307,12 +313,12 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							</span>
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
-							<Typography className='ml-2 font-medium leading-5'>{market.borrowApy.toFixed(2)}% </Typography>
+							<Typography className='ml-2 font-medium leading-5'>{getDisplayBalance(market.borrowApy)}% </Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{accountBalances.find(balance => balance.address === market.underlyingAddress).balance.toFixed(4)}{' '}
+									{getDisplayBalance(accountBalance)}{' '}
 								</span>
 							</Typography>
 						</div>
@@ -324,21 +330,22 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Debt',
-								value: `$${getDisplayBalance(market.totalBorrows * market.price, 0)}`,
+								value: `$${getDisplayBalance(market.totalBorrows.mul(market.price), 18+market.underlyingDecimals)}`,
 							},
 							{
 								label: 'Your Debt',
-								value: `${borrowed.toFixed(4)} ${market.underlyingSymbol} | $${getDisplayBalance(borrowed * market.price, 0)}`,
+								value: `${getDisplayBalance(borrowed)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(borrowed.mul(market.price)))}`,
 							},
 							{
 								label: 'Debt Limit Remaining',
-								value: `$${getDisplayBalance(accountLiquidity.usdBorrowable, 0)}`,
+								value: `$${getDisplayBalance(accountLiquidity.usdBorrowable)}`,
 							},
 							{
 								label: '% of Your Debt',
-								value: `${Math.floor(
-									accountLiquidity.usdBorrow > 0 ? ((borrowed * market.price) / accountLiquidity.usdBorrow) * 100 : 0,
-								)}%`,
+								value: `${getDisplayBalance(accountLiquidity.usdBorrow.gt(0)
+									? (borrowed.mul(market.price).div(accountLiquidity.usdBorrow)).mul(100)
+									: BigNumber.from(0))
+								}%`,
 							},
 						]}
 					/>
