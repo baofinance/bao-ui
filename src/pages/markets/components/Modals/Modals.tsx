@@ -45,21 +45,20 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 
 	const supply =
 		supplyBalances && exchangeRates
-			? supplyBalances.find(_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance
-				.mul(exchangeRates[asset.marketAddress])
+			? supplyBalances
+					.find(_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase())
+					.balance.mul(exchangeRates[asset.marketAddress])
 			: BigNumber.from(0)
 
 	//const _imfFactor = accountLiquidity
-		//? parseUnits('1.1').div(asset.imfFactor.mul(Math.sqrt(supply)).add(parseUnits('1')))
-		//: 0
+	//? parseUnits('1.1').div(asset.imfFactor.mul(Math.sqrt(supply)).add(parseUnits('1')))
+	//: 0
 	let _imfFactor = BigNumber.from(0)
 	if (accountLiquidity) {
 		const num = parseUnits('1.1')
 		const sqrt = parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString())
 		const denom = asset.imfFactor.mul(sqrt).add(parseUnits('1'))
 		_imfFactor = num.div(denom)
-		console.log("sqrt", formatUnits(sqrt))
-	console.log("imf", _imfFactor.toString(), num.toString(), denom.toString())
 	}
 
 	let withdrawable = BigNumber.from(0)
