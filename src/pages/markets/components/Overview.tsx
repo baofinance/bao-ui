@@ -13,7 +13,7 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance, exponentiate, decimate } from '@/utils/numberFormat'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export const Overview = () => {
@@ -23,22 +23,25 @@ export const Overview = () => {
 	const healthFactor = useHealthFactor()
 
 	const borrowLimit =
-		accountLiquidity && accountLiquidity.usdBorrow !== 0
-			? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
-			: 0
+		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
+			? exponentiate(accountLiquidity.usdBorrow).div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
+			: BigNumber.from(0)
 
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable : 0
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 
-	const healthFactorColor = (healthFactor: BigNumber) =>
-		healthFactor.eq(0)
+	const healthFactorColor = (healthFactor: BigNumber) => {
+		const c = healthFactor.eq(0)
 			? `${(props: any) => props.theme.color.text[100]}`
 			: healthFactor.lte(parseUnits('1.25'))
 			? '#e32222'
 			: healthFactor.lt(parseUnits('1.55'))
 			? '#ffdf19'
 			: '#45be31'
+		console.log(c)
+		return c
+	}
 
-	return bao && account && accountLiquidity ? (
+	return accountLiquidity ? (
 		<>
 			<div className={`mx-auto my-4 grid items-center justify-evenly ${isDesktop ? 'grid-cols-5' : 'grid-cols-2'} gap-4`}>
 				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
@@ -47,7 +50,7 @@ export const Overview = () => {
 							Net APY
 						</Typography>
 						<Typography variant='base' className='font-semibold'>
-							{`${bao && account && accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}%
+							{`${accountLiquidity ? getDisplayBalance(accountLiquidity.netApy) : 0}`}%
 						</Typography>
 					</div>
 				</div>
@@ -57,7 +60,7 @@ export const Overview = () => {
 							Your Collateral
 						</Typography>
 						<Typography variant='base' className='font-medium'>
-							${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply, 0, 2) : 0}`}{' '}
+							${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply, 18, 2) : 0}`}{' '}
 						</Typography>
 					</div>
 				</div>
@@ -66,7 +69,7 @@ export const Overview = () => {
 					<div className='flex flex-col'>
 						<div className='m-auto w-[150px]'>
 							<CircularProgressbarWithChildren
-								value={borrowLimit}
+								value={parseFloat(formatUnits(borrowLimit))}
 								strokeWidth={10}
 								styles={buildStyles({
 									strokeLinecap: 'butt',
@@ -83,12 +86,12 @@ export const Overview = () => {
 												Debt Limit
 											</Typography>
 											<Typography>
-												{`${
-													bao && account && accountLiquidity.usdBorrowable > 0
-														? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
-														: 0
-												}`}
-												%
+												{getDisplayBalance(
+													accountLiquidity && !borrowable.eq(0)
+														? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100)
+														: 0,
+												)}
+												{'%'}
 											</Typography>
 										</div>
 									</div>
@@ -104,7 +107,7 @@ export const Overview = () => {
 							Total Debt
 						</Typography>
 						<Typography variant='base' className='font-medium'>
-							${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2) : 0}`}
+							${`${accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow, 18, 2) : 0}`}
 						</Typography>
 					</div>
 				</div>
@@ -155,10 +158,9 @@ export const Overview = () => {
 									Debt Limit
 								</Typography>
 								<Typography variant='sm' className='m-0 ml-2'>
-									{`${
-										bao && account && accountLiquidity.usdBorrowable > 0
-											? Math.floor((accountLiquidity.usdBorrow / (accountLiquidity.usdBorrowable + accountLiquidity.usdBorrow)) * 100)
-											: 0
+									{`${accountLiquidity.usdBorrowable.gt(0)
+										? (accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow))).mul(100)
+										: 0
 									}%`}{' '}
 								</Typography>
 							</div>

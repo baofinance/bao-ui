@@ -6,7 +6,7 @@ import { Progress } from '@/components/ProgressBar'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { getFullDisplayBalance, getDisplayBalance } from '@/utils/numberFormat'
 import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BN from 'bignumber.js'
@@ -28,12 +28,6 @@ type DisplayType = 'TABLE' | 'PIE'
 
 const Composition: React.FC<CompositionProps> = ({ composition, rates, info, basketId }) => {
 	const [displayType, setDisplayType] = useState<DisplayType>('TABLE')
-
-	const maxPercentage = useMemo(() => {
-		if (!composition) return
-
-		return _.max(composition.map(component => component.percentage))
-	}, [composition])
 
 	return (
 		<>
@@ -68,7 +62,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 							{composition && (
 								<tbody className={`${isDesktop ? 'text-base' : 'text-sm'}`}>
 									{composition
-										.sort((a, b) => (a.percentage < b.percentage ? 1 : -1))
+										.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
 										.map((component: any) => {
 											return (
 												<tr key={component.symbol} className='even:bg-primary-100'>
@@ -81,15 +75,14 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 													</td>
 													<td className='p-2'>
 														<Progress
-															width={(component.percentage / maxPercentage) * 100}
-															label={`${getDisplayBalance(component.percentage, 0)}%`}
+															width={parseFloat(getDisplayBalance(component.percentage))}
+															label={`${getDisplayBalance(component.percentage)}%`}
 															assetColor={component.color}
 														/>
 													</td>
 													<td className='p-2 text-center'>
 														<Badge className='bg-primary-300 font-semibold'>
-															${(component.basePrice && getDisplayBalance(component.basePrice)) ||
-																	new BN(formatUnits(component.price)).toFixed(2)}
+															${component.basePrice ? getDisplayBalance(component.basePrice) : getDisplayBalance(component.price)}
 														</Badge>
 													</td>
 													<td className='p-2 text-center'>

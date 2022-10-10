@@ -12,7 +12,7 @@ import { MarketOperations } from './Modals/Modals'
 type MarketStatBlockProps = {
 	title?: string
 	asset: ActiveSupportedMarket
-	amount?: number
+	amount?: BigNumber
 }
 
 type MarketStatProps = {
@@ -32,25 +32,28 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()) &&
 			exchangeRates &&
 			exchangeRates[asset.marketAddress]
-				? supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance *
-				  decimate(exchangeRates[asset.marketAddress]).toNumber()
-				: 0,
+				? supplyBalances
+						.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance
+						.mul(exchangeRates[asset.marketAddress])
+						.div(BigNumber.from(10).pow(18))
+				: BigNumber.from(0),
 		[supplyBalances, exchangeRates, asset.marketAddress],
 	)
 	const walletBalance = useMemo(
 		() =>
 			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
 				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
-				: 0,
+				: BigNumber.from(0),
 		[balances, asset.underlyingAddress],
 	)
 	const supplyBalanceUsd = useMemo(() => {
-		if (!supplyBalance) return
-		return getDisplayBalance(asset.price * supplyBalance, 0)
+		if (!supplyBalance) return '0'
+		// FIXME: needs decimals
+		return getDisplayBalance(decimate(asset.price.mul(supplyBalance)))
 	}, [supplyBalance, asset.price])
 	const walletBalanceUsd = useMemo(() => {
 		if (!walletBalance) return
-		return getDisplayBalance(asset.price * walletBalance, 0)
+		return getDisplayBalance(decimate(asset.price.mul(walletBalance)))
 	}, [walletBalance, asset.price])
 
 	return (
@@ -59,15 +62,15 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'Supply APY',
-					value: `${asset.supplyApy.toFixed(2)}%`,
+					value: `${asset.supplyApy}%`,
 				},
 				{
 					label: 'Supply Balance',
-					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol} | $${supplyBalanceUsd || '~'}`,
+					value: `${getDisplayBalance(supplyBalance)} ${asset.underlyingSymbol} | $${supplyBalanceUsd || '~'}`,
 				},
 				{
 					label: 'Wallet Balance',
-					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol} | $${walletBalanceUsd || '~'}`,
+					value: `${getDisplayBalance(walletBalance)} ${asset.underlyingSymbol} | $${walletBalanceUsd || '~'}`,
 				},
 			]}
 		/>
@@ -75,28 +78,25 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 }
 
 export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
-	const totalReservesUsd = asset.totalReserves ? `$${getDisplayBalance(asset.totalReserves * asset.price, 0)}` : '-'
-	const reserveFactor = asset.reserveFactor ? `${asset.reserveFactor * 100}%` : '-'
-
 	return (
 		<StatBlock
 			label={title}
 			stats={[
 				{
 					label: 'Collateral Factor',
-					value: `${asset.collateralFactor * 100}%`,
+					value: `${getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%`,
 				},
 				{
-					label: 'Inital Margin Factor',
-					value: `${asset.imfFactor * 100}%`,
+					label: 'Initial Margin Factor',
+					value: `${getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%`,
 				},
 				{
 					label: 'Reserve Factor',
-					value: reserveFactor,
+					value: `${getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%`,
 				},
 				{
 					label: 'Total Reserves',
-					value: totalReservesUsd,
+					value: `$${getDisplayBalance(asset.totalReserves.mul(asset.price), 18+asset.underlyingDecimals)}`,
 				},
 			]}
 		/>
@@ -123,7 +123,7 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 	)
 	const price = useMemo(() => {
 		if (!borrowBalance) return
-		return getDisplayBalance(asset.price * borrowBalance, 0)
+		return getDisplayBalance(decimate(asset.price.mul(borrowBalance)))
 	}, [borrowBalance, asset.price])
 
 	return (
@@ -132,15 +132,15 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 			stats={[
 				{
 					label: 'APR',
-					value: `${asset.borrowApy.toFixed(2)}%`,
+					value: `${getDisplayBalance(asset.borrowApy)}%`,
 				},
 				{
 					label: 'Debt Balance',
-					value: `${borrowBalance.toFixed(4)} ${asset.underlyingSymbol} | $${price || '~'}`,
+					value: `${getDisplayBalance(borrowBalance)} ${asset.underlyingSymbol} | $${price || '~'}`,
 				},
 				{
 					label: 'Wallet Balance',
-					value: `${walletBalance.toFixed(4)} ${asset.underlyingSymbol}`,
+					value: `${getDisplayBalance(walletBalance)} ${asset.underlyingSymbol}`,
 				},
 			]}
 		/>
@@ -150,9 +150,9 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
 
-	const change = amount ? asset.collateralFactor * amount * asset.price : 0
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable : 0
-	const newBorrowable = borrowable + change
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
+	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
+	const newBorrowable = borrowable.add(change)
 
 	return (
 		<div className='mt-4'>
@@ -161,13 +161,12 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 				stats={[
 					{
 						label: 'Debt Limit',
-						value: `$${getDisplayBalance(borrowable.toFixed(2), 0)} ➜ $${getDisplayBalance(newBorrowable.toFixed(2), 0)}`,
+						value: `$${getDisplayBalance(borrowable)} ➜ $${getDisplayBalance(newBorrowable)}`,
 					},
 					{
 						label: 'Debt Limit Used',
-						value: `${(accountLiquidity && borrowable !== 0 ? (accountLiquidity.usdBorrow / borrowable) * 100 : 0).toFixed(
-							2,
-						)}% ➜ ${(accountLiquidity && newBorrowable !== 0 ? (accountLiquidity.usdBorrow / newBorrowable) * 100 : 0).toFixed(2)}%`,
+						value: `${getDisplayBalance(accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0)
+						}% ➜ ${getDisplayBalance(accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0)}%`,
 					},
 				]}
 			/>
@@ -177,15 +176,16 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 
 const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
-	const change = amount ? amount * asset.price : 0
 
-	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : 0
+	const change = amount ? decimate(BigNumber.from(amount).mul(asset.price)) : BigNumber.from(0)
 
-	const newBorrow = borrow ? borrow - (change > 0 ? change : 0) : 0
+	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable : 0
+	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 
-	const newBorrowable = borrowable ? borrowable + (change < 0 ? change : 0) : 0
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
+
+	const newBorrowable = borrowable ? borrowable.add(change.lt(0) ? change : 0) : BigNumber.from(0)
 
 	return (
 		<div className='mt-4'>
@@ -194,19 +194,19 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 				stats={[
 					{
 						label: 'Debt Limit Remaining',
-						value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.toFixed(2) : 0, 0)} ➜ $${getDisplayBalance(
-							accountLiquidity ? accountLiquidity.usdBorrowable + change : 0,
-							0,
+						value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0))} ➜ $${getDisplayBalance(
+							accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0),
 						)}`,
 					},
-					{
+					{ // FIXME: this seems broken
 						label: 'Debt Limit Used',
-						value: `${(borrowable !== 0 ? (borrow / borrowable) * 100 : 0).toFixed(2)}% ➜ ${(newBorrowable !== 0
-							? borrow < 0.01
-								? (change / borrowable) * -100
-								: (newBorrow / newBorrowable) * 100
-							: 0
-						).toFixed(2)}%`,
+						value: `${getDisplayBalance(!borrowable.eq(0) ? borrow.div(borrowable).mul(100) : 0)}% ➜ ${
+							getDisplayBalance(!newBorrowable.eq(0)
+								? borrow.gt(parseUnits('0.01'))
+									? !borrowable.eq(0) ? borrow.div(borrowable).mul(-100) : 0
+									: !newBorrowable.eq(0) ? borrow.div(newBorrowable).mul(100) : 0
+									: 0
+						)}%`,
 					},
 				]}
 			/>
@@ -215,7 +215,7 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 }
 
 const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
-	const parsedAmount = amount && !isNaN(amount as unknown as number) ? parseFloat(amount) : 0
+	const parsedAmount = amount ? parseUnits(amount) : BigNumber.from(0)
 	switch (operation) {
 		case MarketOperations.supply:
 			return (
@@ -228,14 +228,14 @@ const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
 			return (
 				<>
 					<SupplyDetails asset={asset} />
-					<DebtLimit asset={asset} amount={-1 * parsedAmount} />
+					<DebtLimit asset={asset} amount={parsedAmount.mul(-1)} />
 				</>
 			)
 		case MarketOperations.mint:
 			return (
 				<>
 					<MintDetails asset={asset} />
-					<DebtLimitRemaining asset={asset} amount={-1 * parsedAmount} />
+					<DebtLimitRemaining asset={asset} amount={parsedAmount.mul(-1)} />
 				</>
 			)
 		case MarketOperations.repay:

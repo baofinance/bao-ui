@@ -7,6 +7,7 @@ import { Accordion, AccordionHeader } from '@material-tailwind/react/components/
 import Image from 'next/image'
 import React, { useMemo } from 'react'
 import { isDesktop } from 'react-device-detect'
+import { exponentiate, decimate } from '@/utils/numberFormat'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets }: MarketListProps) => {
 	const collateralMarkets = useMemo(() => {
@@ -70,7 +71,7 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}
+									{`$${getDisplayBalance(decimate(market.supplied.mul(market.price)).sub(decimate(market.totalBorrows.mul(market.price))), 18, 0)}`}
 								</span>
 							</Typography>
 						</div>
@@ -100,12 +101,12 @@ const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketL
 							</span>
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
-							<Typography className='ml-2 font-medium leading-5'>{market.borrowApy.toFixed(2)}% </Typography>
+							<Typography className='ml-2 font-medium leading-5'>{getDisplayBalance(market.borrowApy)}% </Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{`$${getDisplayBalance(market.supplied * market.price - market.totalBorrows * market.price, 0, 0)}`}
+									{`$${getDisplayBalance(decimate(market.supplied.mul(market.price)).sub(decimate(market.totalBorrows.mul(market.price))), 18, 0)}`}
 								</span>
 							</Typography>
 						</div>
