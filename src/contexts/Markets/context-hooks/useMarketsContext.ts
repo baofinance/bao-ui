@@ -107,8 +107,6 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 
 		let markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
 			const marketConfig = _markets.find(market => market.marketAddresses[Config.networkId] === contract.address)
-			// FIXME: this should all be using ethers.BigNumber
-		console.log(borrowState[i][1] > 0)
 			return {
 				symbol: symbols[i],
 				underlyingSymbol: underlyingSymbols[i],

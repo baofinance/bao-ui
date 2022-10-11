@@ -36,8 +36,8 @@ const BallastSwapper: React.FC = () => {
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 
-	const ballast: Stabilizer = useContract('Stabilizer')
-	const dai: Dai = useContract('Dai')
+	const ballast = useContract<Stabilizer>('Stabilizer')
+	const dai = useContract<Dai>('Dai')
 
 	// TODO: Move this to a hook ?
 	const fetchBallastInfo = useCallback(async () => {
