@@ -10,7 +10,8 @@ import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
 import { Web3Provider } from '@ethersproject/providers'
 import { EthersAppContext } from 'eth-hooks/context'
-import { QueryClient } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import fetcher from '@/bao/lib/fetcher'
 import Header from '@/components/Header'
@@ -86,30 +87,33 @@ const queryClient = new QueryClient()
 
 const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 	return (
-		<Web3ReactProvider getLibrary={getLibrary}>
-			<Web3ReactNetworkProvider getLibrary={getLibrary}>
-				<Web3ReactManager>
-					<EthersAppContext customGetEthersAppProviderLibrary={getLibrary}>
-						<BaoProvider>
-							<MarketsProvider>
-								<FarmsProvider>
-									<TransactionProvider>
-										<SWRConfig
-											value={{
-												fetcher,
-												refreshInterval: 300000,
-											}}
-										>
-											{children}
-										</SWRConfig>
-									</TransactionProvider>
-								</FarmsProvider>
-							</MarketsProvider>
-						</BaoProvider>
-					</EthersAppContext>
-				</Web3ReactManager>
-			</Web3ReactNetworkProvider>
-		</Web3ReactProvider>
+		<QueryClientProvider client={queryClient}>
+			<Web3ReactProvider getLibrary={getLibrary}>
+				<Web3ReactNetworkProvider getLibrary={getLibrary}>
+					<Web3ReactManager>
+						<EthersAppContext customGetEthersAppProviderLibrary={getLibrary}>
+							<BaoProvider>
+								<MarketsProvider>
+									<FarmsProvider>
+										<TransactionProvider>
+											<SWRConfig
+												value={{
+													fetcher,
+													refreshInterval: 300000,
+												}}
+											>
+												{children}
+											</SWRConfig>
+										</TransactionProvider>
+									</FarmsProvider>
+								</MarketsProvider>
+							</BaoProvider>
+						</EthersAppContext>
+					</Web3ReactManager>
+				</Web3ReactNetworkProvider>
+			</Web3ReactProvider>
+			<ReactQueryDevtools initialIsOpen={false} />
+		</QueryClientProvider>
 	)
 }
 

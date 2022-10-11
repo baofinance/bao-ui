@@ -6,7 +6,7 @@ import type { FeeDistributor } from '@/typechain/index'
 export const useNextDistribution = () => {
 	const [nextDistribution, setNextDistribution] = useState<BigNumber | undefined>()
 
-	const feeDistributor: FeeDistributor = useContract('FeeDistributor')
+	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	const fetchNextDistribution = useCallback(async () => {
 		const nextFeeDistribution = await feeDistributor.last_token_time({ gasLimit: 100000 })

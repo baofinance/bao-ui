@@ -37,7 +37,6 @@ export const Overview = () => {
 			: healthFactor.lt(parseUnits('1.55'))
 			? '#ffdf19'
 			: '#45be31'
-		console.log(c)
 		return c
 	}
 

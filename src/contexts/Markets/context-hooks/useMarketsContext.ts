@@ -20,6 +20,7 @@ export const BLOCKS_PER_SECOND = 1 / SECONDS_PER_BLOCK
 export const BLOCKS_PER_DAY = BLOCKS_PER_SECOND * SECONDS_PER_DAY
 export const DAYS_PER_YEAR = 365
 
+// FIXME: this should be ethers.BigNumber math
 const toApy = (rate: BigNumber) => (Math.pow((rate.toNumber() / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100
 //const toApy = (rate: BigNumber) => {
 	//const n = rate.mul(BLOCKS_PER_DAY).add(1)
@@ -106,8 +107,6 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 
 		let markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
 			const marketConfig = _markets.find(market => market.marketAddresses[Config.networkId] === contract.address)
-			// FIXME: this should all be using ethers.BigNumber
-		console.log(borrowState[i][1] > 0)
 			return {
 				symbol: symbols[i],
 				underlyingSymbol: underlyingSymbols[i],

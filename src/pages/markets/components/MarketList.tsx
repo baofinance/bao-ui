@@ -8,7 +8,6 @@ import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import classNames from 'classnames'
-import useBao from '@/hooks/base/useBao'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { AccountLiquidity, useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
@@ -26,14 +25,13 @@ import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
-import { formatUnits } from 'ethers/lib/utils'
+import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import useContract from '@/hooks/base/useContract'
 import type { Comptroller } from '@/typechain/index'
 
 // FIXME: these components should all be using ethers.BigNumber instead of js float math
 
 export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
-	const bao = useBao()
 	const accountBalances = useAccountBalances()
 	const accountMarkets = useAccountMarkets()
 	const accountLiquidity = useAccountLiquidity()
@@ -45,14 +43,18 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 		if (!(_markets && supplyBalances)) return
 		return _markets
 			.filter(market => !market.isSynth)
-			.sort((a, b) => (supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
+			.sort((a, b) =>
+				supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0,
+			)
 	}, [_markets, supplyBalances])
 
 	const synthMarkets = useMemo(() => {
 		if (!(_markets && borrowBalances)) return
 		return _markets
 			.filter(market => market.isSynth)
-			.sort((a, b) => (borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance > 0 ? 1 : 0))
+			.sort((a, b) =>
+				borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0,
+			)
 	}, [_markets, borrowBalances])
 
 	return (
@@ -147,8 +149,9 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 
 	return (
 		<>
-			<Accordion open={isOpen || showSupplyModal} onClick={() => handleOpen()} className='my-2 rounded border border-primary-300'>
+			<Accordion open={isOpen || showSupplyModal} className='my-2 rounded border border-primary-300'>
 				<AccordionHeader
+					onClick={() => handleOpen()}
 					className={`rounded border-0 bg-primary-100 p-3 hover:bg-primary-200 ${isOpen && 'rounded-b-none bg-primary-200'}`}
 				>
 					<div className='flex w-full flex-row items-center justify-center'>
@@ -170,9 +173,8 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 									? getDisplayBalance(
 											accountBalances.find(balance => balance.address === market.underlyingAddress).balance,
 											market.underlyingDecimals,
-										)
-									: '-'
-								}
+									  )
+									: '-'}
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
@@ -190,7 +192,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Supplied',
-								value: `${getDisplayBalance(market.supplied, market.underlyingDecimals)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(market.supplied.mul(market.price)), 18)}`,
+								value: `${getDisplayBalance(market.supplied, market.underlyingDecimals)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(market.supplied.mul(market.price)))}`,
 							},
 							{
 								label: 'Your Supply',
@@ -269,7 +271,14 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 					</div>
 				</AccordionBody>
 			</Accordion>
-			<MarketSupplyModal asset={market} show={showSupplyModal} onHide={() => [setShowSupplyModal(false), setIsOpen(true)]} />
+			<MarketSupplyModal
+				asset={market}
+				show={showSupplyModal}
+				onHide={() => {
+					setShowSupplyModal(false)
+					setIsOpen(true)
+				}}
+			/>
 		</>
 	)
 }
@@ -317,9 +326,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
-								<span className='inline-block align-middle'>
-									{getDisplayBalance(accountBalance)}{' '}
-								</span>
+								<span className='inline-block align-middle'>{getDisplayBalance(accountBalance)} </span>
 							</Typography>
 						</div>
 					</div>
@@ -330,7 +337,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Debt',
-								value: `$${getDisplayBalance(market.totalBorrows.mul(market.price), 18+market.underlyingDecimals)}`,
+								value: `$${getDisplayBalance(decimate(market.totalBorrows.mul(market.price)), market.underlyingDecimals)}`,
 							},
 							{
 								label: 'Your Debt',
@@ -342,10 +349,11 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							},
 							{
 								label: '% of Your Debt',
-								value: `${getDisplayBalance(accountLiquidity.usdBorrow.gt(0)
-									? (borrowed.mul(market.price).div(accountLiquidity.usdBorrow)).mul(100)
-									: BigNumber.from(0))
-								}%`,
+								value: `${getDisplayBalance(
+									accountLiquidity.usdBorrow.gt(0)
+										? borrowed.mul(market.price).div(accountLiquidity.usdBorrow).mul(100)
+										: BigNumber.from(0),
+								)}%`,
 							},
 						]}
 					/>

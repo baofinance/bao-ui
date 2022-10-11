@@ -8,10 +8,11 @@ import useAllFarmTVL from '@/hooks/farms/useAllFarmTVL'
 import useFarms from '@/hooks/farms/useFarms'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
-import { decimate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { getDisplayBalance, truncateNumber, decimate, exponentiate } from '@/utils/numberFormat'
 import { Switch } from '@headlessui/react'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
+import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import BN from 'bignumber.js'
 import classNames from 'classnames'
 import Image from 'next/future/image'
@@ -25,9 +26,9 @@ const FarmList: React.FC = () => {
 	const bao = useBao()
 	const farms = useFarms()
 	const farmsTVL = useAllFarmTVL()
-	const { account, chainId } = useWeb3React()
+	const { account, library, chainId } = useWeb3React()
 
-	const [baoPrice, setBaoPrice] = useState<BN>(new BN(0))
+	const [baoPrice, setBaoPrice] = useState<BigNumber>(BigNumber.from(0))
 	const [pools, setPools] = useState<any | undefined>({
 		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
@@ -42,15 +43,15 @@ const FarmList: React.FC = () => {
 	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	useEffect(() => {
-		if (!chainId) return
+		if (!library || !chainId) return
 		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
 			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
-			setBaoPrice(new BN(baoPrice))
+			setBaoPrice(parseUnits(new BN(baoPrice).toFixed(18)))
 		})
-	}, [setBaoPrice, chainId])
+	}, [setBaoPrice, library, chainId])
 
 	useEffect(() => {
-		if (!bao || !chainId || !masterChefContract) return
+		if (!bao || !library || !masterChefContract) return
 
 		const _pools: any = {
 			[PoolType.ACTIVE]: [],
@@ -95,15 +96,15 @@ const FarmList: React.FC = () => {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
-						stakedUSD: decimate(result.masterChef[farms.length + i].values[0])
-							.div(decimate(tvlInfo.lpStaked))
+						stakedUSD: result.masterChef[farms.length + i].values[0]
+							.div(tvlInfo.lpStaked)
 							.mul(tvlInfo.tvl),
 						apy:
-							baoPrice && farmsTVL
-								? new BN(baoPrice.toString())
-										.times(BLOCKS_PER_YEAR)
-										.times(result.masterChef[i].values[0].div(BigNumber.from(10).pow(18)).toString())
-										.div(tvlInfo.tvl)
+							baoPrice.gt(0) && farmsTVL
+							? baoPrice
+								.mul(BLOCKS_PER_YEAR)
+								.mul(result.masterChef[i].values[0])
+								.div(tvlInfo.tvl)
 								: null,
 					}
 
@@ -111,7 +112,7 @@ const FarmList: React.FC = () => {
 				}
 				setPools(_pools)
 			})
-	}, [bao, chainId, masterChefContract, farmsTVL, farms, baoPrice, userAddress])
+	}, [bao, library, masterChefContract, farms, farmsTVL, baoPrice, userAddress, setPools])
 
 	return (
 		<>
@@ -202,8 +203,8 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHead
 }
 
 export interface FarmWithStakedValue extends Farm {
-	apy: BN
-	stakedUSD: BN
+	apy: BigNumber
+	stakedUSD: BigNumber
 }
 
 interface FarmListItemProps {
@@ -244,7 +245,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							{farm.apy ? (
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									{farm.apy.gt(0) ? `${farm.apy.times(100).toNumber().toLocaleString('en-US').slice(0, -1)}%` : 'N/A'}
+									{farm.apy.gt(0) ? `${getDisplayBalance(farm.apy.mul(100))}%` : 'N/A'}
 								</Typography>
 							) : (
 								<Loader />
@@ -260,7 +261,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 						{isDesktop && (
 							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									${window.screen.width > 1200 ? getDisplayBalance(farm.tvl, 0) : truncateNumber(farm.tvl, 0)}
+									${window.screen.width > 1200 ? getDisplayBalance(farm.tvl) : truncateNumber(farm.tvl, 0)}
 								</Typography>
 							</div>
 						)}

@@ -6,7 +6,6 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { PoolType } from '@/contexts/Farms/types'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBao from '@/hooks/base/useBao'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -15,6 +14,7 @@ import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
 import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
@@ -23,7 +23,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { Contract } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 import useContract from '@/hooks/base/useContract'
@@ -43,14 +42,9 @@ interface StakeProps {
 }
 
 export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
-	const bao = useBao()
 	const { library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
-
-	const fullBalance = useMemo(() => {
-		return getFullDisplayBalance(max)
-	}, [max])
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -60,11 +54,11 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 	)
 
 	const handleSelectMax = useCallback(() => {
-		setVal(fullBalance)
-	}, [fullBalance, setVal])
+		setVal(getFullDisplayBalance(max))
+	}, [setVal, max])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(max.div(BigNumber.from(10).pow(18)).div(2).toString())
+		setVal(formatUnits(max.div(2)))
 	}, [max])
 
 	const masterChefContract = useContract<Masterchef>('Masterchef')
@@ -104,7 +98,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 							onSelectHalf={handleSelectHalf}
 							onChange={handleChange}
 							value={val}
-							max={fullBalance}
+							max={formatUnits(max)}
 							symbol={tokenName}
 						/>
 					</div>
@@ -150,7 +144,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 								) : (
 									<Button
 										fullWidth
-										disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > max.toNumber()}
+										disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
 										onClick={async () => {
 											const refer = '0x0000000000000000000000000000000000000000'
 											const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), refer)
@@ -193,15 +187,10 @@ interface UnstakeProps {
 }
 
 export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pairUrl = '', onHide }) => {
-	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const stakedBalance = useStakedBalance(pid)
-
-	const fullBalance = useMemo(() => {
-		return getFullDisplayBalance(max)
-	}, [max])
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -211,16 +200,11 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 	)
 
 	const handleSelectMax = useCallback(() => {
-		setVal(fullBalance)
-	}, [fullBalance, setVal])
+		setVal(getFullDisplayBalance(max))
+	}, [setVal, max])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(
-			max
-				.div(10 ** 18)
-				.div(2)
-				.toString(),
-		)
+		setVal(formatUnits(max.div(2)))
 	}, [max])
 
 	const userInfo = useUserFarmInfo(pid)
@@ -260,7 +244,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								Balance:
 							</Typography>
 							<Typography variant='sm'>
-								{getDisplayBalance(fullBalance, 0)}{' '}
+								{getFullDisplayBalance(max)}{' '}
 								<Link href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
 									<a>
 										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
@@ -274,7 +258,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 						onSelectHalf={handleSelectHalf}
 						onChange={handleChange}
 						value={val}
-						max={fullBalance}
+						max={formatUnits(max)}
 						symbol={tokenName}
 					/>
 				</div>
@@ -295,9 +279,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 						</Button>
 					) : (
 						<Button
-							disabled={
-								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || stakedBalance.eq(BigNumber.from(0))
-							}
+							disabled={!val || isNaN(val as any) || parseUnits(val).gt(max) || stakedBalance.eq(BigNumber.from(0))}
 							onClick={async () => {
 								const refer = '0x0000000000000000000000000000000000000000'
 								const amount = val ? parseUnits(val) : BigNumber.from(0)
@@ -389,12 +371,8 @@ interface ActionProps {
 
 const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 	const { pid } = farm
-
-	const lpTokenAddress = farm.lpTokenAddress
-
-	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', lpTokenAddress)
-
-	const tokenBalance = useTokenBalance(lpContract.address)
+	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', farm.lpTokenAddress)
+	const tokenBalance = useTokenBalance(farm.lpTokenAddress)
 	const stakedBalance = useStakedBalance(pid)
 
 	return (
@@ -402,7 +380,7 @@ const Actions: React.FC<ActionProps> = ({ farm, onHide, operation }) => {
 			{operation === 'Stake' && (
 				<Stake
 					lpContract={lpContract}
-					lpTokenAddress={lpTokenAddress}
+					lpTokenAddress={farm.lpTokenAddress}
 					pid={farm.pid}
 					tokenName={farm.lpToken.toUpperCase()}
 					poolType={farm.poolType}

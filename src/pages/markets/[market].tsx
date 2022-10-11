@@ -38,7 +38,7 @@ export async function getStaticPaths() {
 }
 
 // `getStaticPaths` requires using `getStaticProps`
-export async function getStaticProps({ params }: { params: any }) {
+export async function getStaticProps({ params }: { params: { market: string } }) {
 	const { market } = params
 
 	return {
@@ -73,15 +73,13 @@ const Market: NextPage<{
 
 	const supplied = useMemo(() => {
 		if (!(activeMarket && supplyBalances && exchangeRates)) return
-		return (
-			supplyBalances.find(balance => balance.address.toLowerCase() === activeMarket.marketAddress.toLowerCase()).balance *
-			decimate(exchangeRates[activeMarket.marketAddress]).toNumber()
-		)
+		const bal = supplyBalances.find(balance => balance.address.toLowerCase() === activeMarket.marketAddress.toLowerCase()).balance
+		return decimate(bal.mul(exchangeRates[activeMarket.marketAddress]))
 	}, [activeMarket, supplyBalances, exchangeRates])
 
 	const totalSuppliedUSD = useMemo(() => {
 		if (!activeMarket) return
-		return activeMarket.supplied * activeMarket.price
+		return decimate(activeMarket.supplied.mul(activeMarket.price))
 	}, [activeMarket])
 
 	const borrowed = useMemo(() => {
@@ -91,7 +89,7 @@ const Market: NextPage<{
 
 	const totalBorrowedUSD = useMemo(() => {
 		if (!activeMarket) return
-		return activeMarket.totalBorrows * activeMarket.price
+		return decimate(activeMarket.totalBorrows.mul(activeMarket.price))
 	}, [activeMarket])
 
 	const oracleAddress = useMemo(() => {
@@ -139,7 +137,7 @@ const Market: NextPage<{
 							label: `Total ${activeMarket.underlyingSymbol} Supplied`,
 							value: (
 								<Tooltipped content={`$${getDisplayBalance(totalSuppliedUSD, 0)}`}>
-									<a>{getDisplayBalance(activeMarket.supplied, 0)} </a>
+									<a>{getDisplayBalance(activeMarket.supplied)} </a>
 								</Tooltipped>
 							),
 						},
@@ -147,31 +145,31 @@ const Market: NextPage<{
 							label: `Total ${activeMarket.underlyingSymbol} Debt`,
 							value: (
 								<Tooltipped content={`$${getDisplayBalance(totalBorrowedUSD, 0)}`}>
-									<a>{getDisplayBalance(activeMarket.totalBorrows, 0)} </a>
+									<a>{getDisplayBalance(activeMarket.totalBorrows)} </a>
 								</Tooltipped>
 							),
 						},
 						{
 							label: `APY`,
-							value: `${activeMarket.supplyApy.toFixed(2)}%`,
+							value: `${getDisplayBalance(activeMarket.supplyApy)}%`,
 						},
 						{
 							label: `APR`,
-							value: `${activeMarket.borrowApy.toFixed(2)}%`,
+							value: `${getDisplayBalance(activeMarket.borrowApy)}%`,
 						},
 						{
 							label: `Your ${activeMarket.underlyingSymbol} Supply`,
 							value: (
-								<Tooltipped content={`$${supplied ? getDisplayBalance(supplied * activeMarket.price, 0) : '0'}`}>
-									<a>{supplied ? supplied.toFixed(4) : '0'} </a>
+								<Tooltipped content={`$${supplied ? getDisplayBalance(supplied.mul(activeMarket.price)) : '0'}`}>
+									<a>{supplied ? getDisplayBalance(supplied) : '0'} </a>
 								</Tooltipped>
 							),
 						},
 						{
 							label: `Your ${activeMarket.underlyingSymbol} Debt`,
 							value: (
-								<Tooltipped content={`$${borrowed ? getDisplayBalance(borrowed * activeMarket.price, 0) : '0'}`}>
-									<a>{borrowed ? borrowed.toFixed(4) : '0'} </a>
+								<Tooltipped content={`$${borrowed ? getDisplayBalance(borrowed.mul(activeMarket.price)) : '0'}`}>
+									<a>{borrowed ? getDisplayBalance(borrowed) : '0'} </a>
 								</Tooltipped>
 							),
 						},
@@ -193,14 +191,15 @@ const Market: NextPage<{
 						stats={[
 							{
 								label: 'Market Utilization',
-								value: `${(
-									(activeMarket.totalBorrows / (activeMarket.supplied + activeMarket.totalBorrows - activeMarket.totalReserves)) *
-									100
-								).toFixed(2)}%`,
+								value: `${getDisplayBalance(
+									activeMarket.totalBorrows
+										.div(activeMarket.supplied.add(activeMarket.totalBorrows).sub(activeMarket.totalReserves))
+										.mul(100),
+								)}%`,
 							},
 							{
 								label: 'Liquidation Incentive',
-								value: `${activeMarket.liquidationIncentive}%`,
+								value: `${getDisplayBalance(activeMarket.liquidationIncentive)}%`,
 							},
 							{
 								label: 'Borrow Restricted?',

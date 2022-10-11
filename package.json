@@ -39,6 +39,7 @@
     "@dethcrypto/eth-sdk": "^0.3.3",
     "@dethcrypto/eth-sdk-client": "^0.1.6",
     "@next/bundle-analyzer": "^12.2.4",
+    "@tanstack/react-query-devtools": "^4.11.0",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.4",
     "eslint-config-prettier": "^8.5.0",

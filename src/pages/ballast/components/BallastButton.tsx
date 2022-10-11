@@ -9,7 +9,7 @@ import Loader from '@/components/Loader'
 import useAllowance from '@/hooks/base/useAllowance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useContract from '@/hooks/base/useContract'
-import type { Stabilizer, Dai, Erc20bao } from '@/typechain/index'
+import type { Stabilizer, Dai, Erc20 } from '@/typechain/index'
 
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const { handleTx } = useTransactionHandler()
@@ -17,9 +17,9 @@ const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, 
 	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.Stabilizer[Config.networkId].address)
 	const inputBApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.Stabilizer[Config.networkId].address)
 
-	const ballast: Stabilizer = useContract('Stabilizer')
-	const dai: Dai = useContract('Dai')
-	const baoUSD: Erc20bao = useContract('Erc20bao', Config.addressMap.baoUSD)
+	const ballast = useContract<Stabilizer>('Stabilizer')
+	const dai = useContract<Dai>('Dai')
+	const baoUSD = useContract<Erc20>('Erc20', Config.addressMap.baoUSD)
 
 	const isDisabled = useMemo(
 		() =>
