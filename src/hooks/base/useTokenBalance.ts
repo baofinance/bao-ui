@@ -9,41 +9,51 @@ import type { Erc20 } from '@/typechain/index'
 
 export const useEthBalance = () => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
+	const enabled = !!library && !!chainId && !!account
 	const { data: balance, refetch } = useQuery(
 		['@/hooks/base/useEthBalance', { chainId, account }],
 		async () => {
 			return await library.getBalance(account)
 		},
 		{
-			enabled: !!library && !!chainId && !!account,
+			enabled,
 			placeholderData: BigNumber.from(0),
 		},
 	)
 
-	useTxReceiptUpdater(refetch)
-	useBlockUpdater(refetch, 10)
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
 
-	return balance
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return balance ?? BigNumber.from(0)
 }
 
 const useTokenBalance = (tokenAddress: string) => {
 	const { chainId, account } = useWeb3React<Web3Provider>()
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
+	const enabled = !!chainId && !!account && !!contract
 	const { data: balance, refetch } = useQuery(
 		['@/hooks/base/useBalance', { chainId, account }, tokenAddress],
 		async () => {
 			return await contract.balanceOf(account)
 		},
 		{
-			enabled: !!contract && !!chainId && !!account,
+			enabled,
 			placeholderData: BigNumber.from(0),
 		},
 	)
 
-	useTxReceiptUpdater(refetch)
-	useBlockUpdater(refetch, 10)
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
 
-	return balance
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return balance ?? BigNumber.from(0)
 }
 
 export default useTokenBalance

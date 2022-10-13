@@ -1,8 +1,8 @@
-import { useContext, useRef, useEffect, useState } from 'react'
+import { useContext, useRef } from 'react'
 import { BaoContext } from '@/contexts/BaoProvider'
 
 const useBlock = (): number => {
-	const { block }: BaoContext = useContext(BaoContext)
+	const { block } = useContext(BaoContext)
 	return block
 }
 
@@ -20,7 +20,7 @@ export const useBlockUpdater = (callback: (() => void) | (() => Promise<void>), 
 	if (allowUpdate) {
 		// number that only increases every (X * options.blockNumberInterval) blocks
 		const blockNumberFilter = block > 0 ? Math.floor(block / (interval ?? 1)) : undefined
-		if (blockNumberFilter !== updateNumberRef.current) {
+		if (blockNumberFilter && blockNumberFilter !== updateNumberRef.current) {
 			updateNumberRef.current = blockNumberFilter
 			callback()
 		}
