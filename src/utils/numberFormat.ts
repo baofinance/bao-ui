@@ -2,21 +2,6 @@ import BN from 'bignumber.js'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import type { BigNumberish } from '@ethersproject/bignumber'
-// FIXME: this should all be using ethers.BigNumber
-
-declare global {
-	interface Window {
-		BN?: typeof BN
-		BigNumber?: typeof BigNumber
-	}
-}
-
-try {
-	window.BN = BN
-	window.BigNumber = BigNumber
-} catch (e) {
-	void e
-}
 
 export const getDisplayBalance = (balance: BigNumberish | BN, decimals = 18, precision?: number): string => {
 	const n = new BN(balance.toString()).div(new BN(10).pow(decimals))

@@ -1,4 +1,4 @@
-import BN from 'bignumber.js/bignumber'
+import BN from 'bignumber.js'
 
 BN.config({
 	EXPONENTIAL_AT: 1000,

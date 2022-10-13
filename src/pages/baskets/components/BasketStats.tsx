@@ -3,9 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-
-import BN from 'bignumber.js'
-
+import BN from 'bignumber.js' // INFO: use bignumber.js because the premium can be negative
 import Badge from '@/components/Badge'
 import Card from '@/components/Card'
 import Loader from '@/components/Loader'
@@ -30,7 +28,6 @@ type BasketStatsProps = {
 const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, info, pairPrice }) => {
 	const nav = useNav(composition, info ? info.totalSupply : BigNumber.from(0))
 
-	// INFO: use bignumber.js because the premium can be negative
 	let premium = null
 	let premiumColor = 'white'
 	if (nav && pairPrice && rates) {

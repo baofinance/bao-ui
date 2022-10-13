@@ -1,16 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-
 import Multicall from '@/utils/multicall'
-
 import useBao from '../base/useBao'
 import { useAccountLiquidity } from './useAccountLiquidity'
 import { useAccountMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
-// FIXME: this used to end up as infinity with bignumber.js but now it doesn't with ethers.BigNumber
 const useHealthFactor = () => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()

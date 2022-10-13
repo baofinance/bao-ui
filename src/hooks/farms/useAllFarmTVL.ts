@@ -3,13 +3,12 @@ import { Multicall as MC } from 'ethereum-multicall'
 import { useCallback, useEffect, useState } from 'react'
 import { Provider } from '@ethersproject/providers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
-import BN from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
 import useBao from '@/hooks/base/useBao'
-import { decimate, exponentiate } from '@/utils/numberFormat'
+import { decimate, exponentiate, fromDecimal } from '@/utils/numberFormat'
 import { Uni_v2_lp__factory } from '@/typechain/factories'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, library: Provider, chainId: number) => {
@@ -82,10 +81,6 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, library: Provider
 	})
 }
 
-const parseDecimals = (n: number) => {
-	return parseUnits(new BN(n).toFixed(18))
-}
-
 const useAllFarmTVL = () => {
 	const [tvl, setTvl] = useState<any | undefined>()
 
@@ -103,7 +98,7 @@ const useAllFarmTVL = () => {
 			let lpStakedUSD
 			if (lpInfo.singleAsset) {
 				lpStakedUSD = decimate(lpInfo.lpStaked).mul(
-					parseDecimals(
+					fromDecimal(
 						Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === lpInfo.lpAddress.toLowerCase()).price,
 					),
 				)
@@ -124,7 +119,7 @@ const useAllFarmTVL = () => {
 					tokenPrice = parseUnits(new BN(wethPrice).toFixed(18))
 				else if (token.address.toLowerCase() === Config.addressMap.USDC.toLowerCase() && specialPair)
 					// BAO-nDEFI pair
-					tokenPrice = parseDecimals(
+					tokenPrice = fromDecimal(
 						Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === Config.addressMap.USDC.toLowerCase()).price,
 					)
 

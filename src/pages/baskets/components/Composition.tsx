@@ -9,8 +9,7 @@ import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getFullDisplayBalance, getDisplayBalance } from '@/utils/numberFormat'
 import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import BN from 'bignumber.js'
-import { utils, BigNumber } from 'ethers'
+import BN from 'bignumber.js' // INFO: this is necessary for decimal display logic
 import _ from 'lodash'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
@@ -63,7 +62,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 								<tbody className={`${isDesktop ? 'text-base' : 'text-sm'}`}>
 									{composition
 										.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
-										.map((component: any) => {
+										.map(component => {
 											return (
 												<tr key={component.symbol} className='even:bg-primary-100'>
 													<td className='p-2 text-center'>
@@ -81,9 +80,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 														/>
 													</td>
 													<td className='p-2 text-center'>
-														<Badge className='bg-primary-300 font-semibold'>
-															${component.basePrice ? getDisplayBalance(component.basePrice) : getDisplayBalance(component.price)}
-														</Badge>
+														<Badge className='bg-primary-300 font-semibold'>${getDisplayBalance(component.price)}</Badge>
 													</td>
 													<td className='p-2 text-center'>
 														<Tooltipped content={component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(8)}%` : '-'}>
