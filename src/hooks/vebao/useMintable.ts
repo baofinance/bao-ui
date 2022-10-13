@@ -10,7 +10,7 @@ const useMintable = () => {
 	const [mintable, setMintable] = useState(BigNumber.from(0))
 	const { chainId } = useWeb3React()
 	const epochTime = useEpochTime()
-	const token = useContract<Erc20bao>('Erc20bao', !chainId ? null : Config.contracts.Crv[chainId].address)
+	const token = useContract<Erc20bao>('Erc20bao', Config.contracts.Crv[chainId].address)
 
 	const fetchMintable = useCallback(async () => {
 		const mintable = await token.mintable_in_timeframe(epochTime.start, epochTime.future)

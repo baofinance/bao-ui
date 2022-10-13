@@ -47,7 +47,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const dai = useContract<Dai>('Dai')
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(dai.address, recipe.address)
+	const daiAllowance = useAllowance(dai && dai.address, recipe && recipe.address)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket && basket.address)
@@ -104,7 +104,8 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				mintOption === MintOption.DAI &&
 				daiAllowance &&
 				(daiAllowance.eq(0) || daiAllowance.lt(_val)) &&
-				(canParseValue && (parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance)))
+				canParseValue &&
+				(parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance))
 			)
 		}
 		return false
@@ -231,13 +232,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 												return
 											}
 											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
-											const inputVal = BigNumber.from(mintOption === MintOption.DAI ? rates.dai : rates.eth)
-												.mul(parseUnits(e.currentTarget.value))
-												.div(BigNumber.from(10).pow(18))
-												.mul(parseUnits('1.02'))
-												.div(BigNumber.from(10).pow(18))
+											const inputVal = decimate(
+												BigNumber.from(mintOption === MintOption.DAI ? rates.dai : rates.eth).mul(parseUnits(e.currentTarget.value)),
+											).mul(parseUnits('1.02'))
 											setSecondaryValue(e.currentTarget.value)
-											setValue(formatUnits(inputVal))
+											setValue(formatUnits(decimate(inputVal)))
 										}}
 										onSelectMax={() => {
 											// Seek to mint 98% of total value (use remaining 2% as slippage protection)

@@ -61,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		)
 
 		return (
-			<div
+			<button
 				{...rest}
 				ref={ref}
 				disabled={isDisabled}
@@ -84,7 +84,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 						{buttonText}
 					</>
 				)}
-			</div>
+			</button>
 		)
 	},
 )

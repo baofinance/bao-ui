@@ -89,7 +89,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 														<Tooltipped content={component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(8)}%` : '-'}>
 															<a>
 																<Badge className='bg-primary-300 font-semibold'>
-																	{component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(2)}%` : '-'}
+																	{component.apy ? `${getDisplayBalance(component.apy.mul(100))}%` : '-'}
 																</Badge>
 															</a>
 														</Tooltipped>

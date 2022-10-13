@@ -1,26 +1,9 @@
-import { useMemo } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { Signer } from 'ethers'
-import { Web3Provider } from '@ethersproject/providers'
+//import { Signer } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
+import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
-
-type ProviderKey = {
-	provider: string
-	signer: string
-}
-/*
- * Get a react-query query key for an ethers provider or signer.
- * */
-const providerKey = (library?: Web3Provider, account?: string): ProviderKey | null => {
-  if (library == null) return null
-	const connection_url = library?.connection.url.substring(0, 25)
-	return {
-		provider: `${library?.network?.chainId}_${library?.network?.name}_${connection_url}`,
-		signer: account || null,
-	}
-}
 
 /*
  * Provides a connected `typechain` contract instance from the generated factories, looking
@@ -36,8 +19,9 @@ const useContract = <T = Contract>(contractName: string, address?: string): T =>
 		//refetch,
 		//status,
 	} = useQuery(
-		['@/hooks/base/useContract', providerKey(library, account), { contractName, address, chainId }],
+		['@/hooks/base/useContract', providerKey(library, account, chainId), { contractName, address }],
 		async () => {
+			if (address === 'ETH') return null
 			let contractAddr
 			try {
 				contractAddr = address || Config.contracts[contractName][chainId].address
@@ -50,9 +34,10 @@ const useContract = <T = Contract>(contractName: string, address?: string): T =>
 			return _contract
 		},
 		{
-			enabled: !!library?.network && !!chainId,
+			enabled: !!library && !!chainId,
 			staleTime: Infinity,
 			cacheTime: Infinity,
+			networkMode: 'always',
 		},
 	)
 

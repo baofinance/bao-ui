@@ -9,7 +9,6 @@ import { DefaultSeo } from 'next-seo'
 import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
 import { Web3Provider } from '@ethersproject/providers'
-import { EthersAppContext } from 'eth-hooks/context'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
@@ -83,7 +82,17 @@ function App({ Component, pageProps }: AppProps) {
 	)
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 60 * 10, // ten minutes
+			cacheTime: 1000 * 60 * 60, // one hour
+			refetchOnReconnect: false,
+			refetchOnWindowFocus: false,
+			refetchOnMount: true,
+		},
+	},
+})
 
 const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 	return (
@@ -91,24 +100,22 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 			<Web3ReactProvider getLibrary={getLibrary}>
 				<Web3ReactNetworkProvider getLibrary={getLibrary}>
 					<Web3ReactManager>
-						<EthersAppContext customGetEthersAppProviderLibrary={getLibrary}>
-							<BaoProvider>
-								<MarketsProvider>
-									<FarmsProvider>
-										<TransactionProvider>
-											<SWRConfig
-												value={{
-													fetcher,
-													refreshInterval: 300000,
-												}}
-											>
-												{children}
-											</SWRConfig>
-										</TransactionProvider>
-									</FarmsProvider>
-								</MarketsProvider>
-							</BaoProvider>
-						</EthersAppContext>
+						<BaoProvider>
+							<MarketsProvider>
+								<FarmsProvider>
+									<TransactionProvider>
+										<SWRConfig
+											value={{
+												fetcher,
+												refreshInterval: 300000,
+											}}
+										>
+											{children}
+										</SWRConfig>
+									</TransactionProvider>
+								</FarmsProvider>
+							</MarketsProvider>
+						</BaoProvider>
 					</Web3ReactManager>
 				</Web3ReactNetworkProvider>
 			</Web3ReactProvider>

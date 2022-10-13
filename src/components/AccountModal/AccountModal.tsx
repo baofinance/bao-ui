@@ -2,13 +2,13 @@ import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icon
 import { faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import { utils } from 'ethers'
+//import { utils } from 'ethers'
 import _ from 'lodash'
 import Image from 'next/future/image'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { MoonLoader } from 'react-spinners'
-
+import { getDisplayBalance } from '@/utils/numberFormat'
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
@@ -24,7 +24,7 @@ interface AccountModalProps {
 }
 
 const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
-	const { account, deactivate } = useWeb3React()
+	const { account, library, deactivate } = useWeb3React()
 
 	const handleSignOutClick = useCallback(() => {
 		onHide()
@@ -37,9 +37,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 	const [tx, setTx] = useState({})
 
 	useEffect(() => {
-		const tx = localStorage.getItem('transactions')
+		const _tx = localStorage.getItem('transactions')
 		if (tx) {
-			setTx(tx)
+			setTx(_tx)
 		}
 	}, [transactions, tx])
 
@@ -58,7 +58,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{utils.formatEther(ethBalance)}
+								{getDisplayBalance(ethBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								ETH Balance
@@ -76,7 +76,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{utils.formatEther(baoBalance)}
+								{getDisplayBalance(baoBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								BAO Balance

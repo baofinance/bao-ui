@@ -12,7 +12,7 @@ import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import { useNextDistribution } from '@/hooks/vebao/useNextDistribution'
-import { getDisplayBalance, getFullDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance, truncateNumber, exponentiate } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
@@ -25,6 +25,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
 import useContract from '@/hooks/base/useContract'
+import usePrice from '@/hooks/base/usePrice'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import type { Erc20, VotingEscrow } from '@/typechain/index'
 
@@ -42,7 +43,7 @@ function addMonths(numOfMonths: number, date = new Date()) {
 
 const Lock: React.FC = () => {
 	const bao = useBao()
-	const { library, account } = useWeb3React()
+	const { library, account, chainId } = useWeb3React()
 	const lockInfo = useLockInfo()
 	const [val, setVal] = useState('')
 	const [calendarIsOpen, setCalendarIsOpen] = useState(false)
@@ -54,21 +55,15 @@ const Lock: React.FC = () => {
 	const crvAddress = Config.addressMap.CRV
 	const crvBalance = useTokenBalance(crvAddress)
 	const nextFeeDistribution = useNextDistribution()
-	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[Config.networkId].address)
+	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[chainId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const length = endDate.setUTCHours(0, 0, 0, 0) + 604800000 - 86400000
-	const [baoPrice, setBaoPrice] = useState<BigNumber | undefined>()
+	// FIXME: change this to be the 'bao-finance' token once we launch the new version.
+	const baoPrice = usePrice('curve-dao-token')
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 
 	const crv = useContract<Erc20>('Erc20', Config.addressMap.CRV)
-	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[Config.networkId].address)
-
-	useEffect(() => {
-		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			const price = (await res.json())['curve-dao-token'].usd.toString()
-			setBaoPrice(ethers.utils.parseUnits(price))
-		})
-	}, [setBaoPrice])
+	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -95,7 +90,7 @@ const Lock: React.FC = () => {
 
 	let suppliedPercentage
 	if (lockInfo && totalSupply && totalSupply.gt(0)) {
-		const lockSupplyPercent = lockInfo.totalSupply.mul(100).mul(BigNumber.from(10).pow(18))
+		const lockSupplyPercent = exponentiate(lockInfo.totalSupply.mul(100))
 		suppliedPercentage = lockSupplyPercent.div(totalSupply)
 	}
 
@@ -401,7 +396,7 @@ const Lock: React.FC = () => {
 																{
 																	gasLimit,
 																	gasPrice,
-																}
+																},
 															)
 															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}

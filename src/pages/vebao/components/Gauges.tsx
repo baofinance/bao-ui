@@ -8,11 +8,12 @@ import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
-import { getDisplayBalance } from '@/utils/numberFormat'
-import { BigNumber, ethers } from 'ethers'
-import BN from 'bignumber.js'
+import usePrice from '@/hooks/base/usePrice'
+import { decimate, getDisplayBalance, fromDecimal } from '@/utils/numberFormat'
+import { BigNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './GaugeModal'
 
@@ -56,27 +57,18 @@ interface GaugeProps {
 }
 
 const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
-	const [baoPrice, setBaoPrice] = useState<BN>(new BN(0))
+	// FIXME: change this to be the 'bao-finance' token once we launch the new version.
+	const baoPrice = usePrice('curve-dao-token')
 	const weight = useGaugeWeight(gauge.gaugeAddress)
 	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
 	const gaugeInfo = useGaugeInfo(gauge)
 	const totalMintable = useMintable()
 	const mintable = totalMintable.mul(relativeWeight)
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
-	const gaugeTVL = (gaugeInfo && virtualPrice.mul(gaugeInfo.totalSupply.div(BigNumber.from(10).pow(18)))) || 0
-	let rewardAPY = new BN(0)
-	if (baoPrice && gaugeTVL > 0) {
-		rewardAPY = baoPrice.times(mintable.toString()).div(gaugeTVL.toString()).times(100)
-	}
+	const gaugeTVL = gaugeInfo ? decimate(virtualPrice.mul(gaugeInfo.totalSupply)) : BigNumber.from(0)
+	const rewardAPY = gaugeTVL.gt(0) ? decimate(baoPrice.mul(mintable)).div(gaugeTVL).mul(100) : BigNumber.from(0)
 
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
-
-	useEffect(() => {
-		fetch('https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token&vs_currencies=usd').then(async res => {
-			const price = (await res.json())['curve-dao-token'].usd
-			setBaoPrice(new BN(price))
-		})
-	}, [setBaoPrice])
 
 	return (
 		<>
@@ -103,7 +95,7 @@ const Gauge: React.FC<GaugeProps> = ({ gauge }) => {
 					<Badge className='bg-primary-300 font-semibold'>
 						{rewardAPY ? (
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{rewardAPY.gt(0) ? `${getDisplayBalance(rewardAPY)}%` : 'N/A'}
+								{rewardAPY.gt(0) ? `${getDisplayBalance(rewardAPY, 18, 2)}%` : 'N/A'}
 							</Typography>
 						) : (
 							<Loader />

@@ -16,7 +16,7 @@ const useEpochTime = (): RewardsInfo => {
 	const [epochTime, setEpochTime] = useState<RewardsInfo | undefined>()
 	const { chainId } = useWeb3React()
 	const bao = useBao()
-	const token = useContract<Erc20bao>('Erc20bao', !chainId ? null : Config.contracts.Crv[chainId].address)
+	const token = useContract<Erc20bao>('Erc20bao', Config.contracts.Crv[chainId].address)
 
 	const fetchEpochTime = useCallback(async () => {
 		const query = Multicall.createCallContext([

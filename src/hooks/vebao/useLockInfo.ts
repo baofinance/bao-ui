@@ -20,9 +20,9 @@ const useLockInfo = (): LockInfo => {
 	const [lockInfo, setLockInfo] = useState<LockInfo | undefined>()
 	const bao = useBao()
 	// FIXME: let us get the totalSupply and supply without needing an account.
-	const { account } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
-	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[Config.networkId].address)
+	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
 
 	const fetchLockInfo = useCallback(async () => {
 		const query = Multicall.createCallContext([

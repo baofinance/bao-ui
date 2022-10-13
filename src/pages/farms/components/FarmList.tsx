@@ -6,14 +6,14 @@ import { Farm, PoolType } from '@/contexts/Farms/types'
 import useBao from '@/hooks/base/useBao'
 import useAllFarmTVL from '@/hooks/farms/useAllFarmTVL'
 import useFarms from '@/hooks/farms/useFarms'
+import { useQuery } from '@tanstack/react-query'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
-import { getDisplayBalance, truncateNumber, decimate, exponentiate } from '@/utils/numberFormat'
+import { getDisplayBalance, truncateNumber, decimate, exponentiate, fromDecimal } from '@/utils/numberFormat'
 import { Switch } from '@headlessui/react'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
-import BN from 'bignumber.js'
 import classNames from 'classnames'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
@@ -28,7 +28,6 @@ const FarmList: React.FC = () => {
 	const farmsTVL = useAllFarmTVL()
 	const { account, library, chainId } = useWeb3React()
 
-	const [baoPrice, setBaoPrice] = useState<BigNumber>(BigNumber.from(0))
 	const [pools, setPools] = useState<any | undefined>({
 		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
@@ -42,22 +41,29 @@ const FarmList: React.FC = () => {
 
 	const masterChefContract = useContract<Masterchef>('Masterchef')
 
-	useEffect(() => {
-		if (!library || !chainId) return
-		GraphUtil.getPrice(Config.addressMap.WETH).then(async wethPrice => {
-			const baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
-			setBaoPrice(parseUnits(new BN(baoPrice).toFixed(18)))
-		})
-	}, [setBaoPrice, library, chainId])
+	const { data: baoPrice } = useQuery(
+		['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
+		async () => {
+			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
+			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
+			return fromDecimal(_baoPrice)
+		},
+		{
+			enabled: !!chainId,
+			refetchOnReconnect: true,
+			refetchInterval: 1000 * 60 * 5,
+			placeholderData: BigNumber.from(0),
+		},
+	)
 
 	useEffect(() => {
-		if (!bao || !library || !masterChefContract) return
+		console.log('rendering')
+		if (!bao || !library || !masterChefContract || !farmsTVL) return
 
 		const _pools: any = {
 			[PoolType.ACTIVE]: [],
 			[PoolType.ARCHIVED]: [],
 		}
-		if (!(farmsTVL && bao)) return setPools(_pools)
 
 		bao.multicall
 			.call(
@@ -96,20 +102,13 @@ const FarmList: React.FC = () => {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
-						stakedUSD: result.masterChef[farms.length + i].values[0]
-							.div(tvlInfo.lpStaked)
-							.mul(tvlInfo.tvl),
-						apy:
-							baoPrice.gt(0) && farmsTVL
-							? baoPrice
-								.mul(BLOCKS_PER_YEAR)
-								.mul(result.masterChef[i].values[0])
-								.div(tvlInfo.tvl)
-								: null,
+						stakedUSD: result.masterChef[farms.length + i].values[0].div(tvlInfo.lpStaked).mul(tvlInfo.tvl),
+						apy: baoPrice.gt(0) && farmsTVL ? baoPrice.mul(BLOCKS_PER_YEAR).mul(result.masterChef[i].values[0]).div(tvlInfo.tvl) : null,
 					}
 
 					_pools[farmWithStakedValue.poolType].push(farmWithStakedValue)
 				}
+
 				setPools(_pools)
 			})
 	}, [bao, library, masterChefContract, farms, farmsTVL, baoPrice, userAddress, setPools])

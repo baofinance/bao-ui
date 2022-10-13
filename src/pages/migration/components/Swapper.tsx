@@ -12,6 +12,7 @@ import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberForma
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
@@ -140,7 +141,9 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const bao = useBao()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
-	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[Config.networkId].address)
+	const { chainId } = useWeb3React()
+
+	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[chainId].address)
 
 	const ballast = useContract<Stabilizer>('Stabilizer')
 	const baoContract = useContract<Bao>('Bao', Config.addressMap.BAO)

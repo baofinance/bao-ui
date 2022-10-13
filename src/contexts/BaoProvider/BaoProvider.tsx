@@ -1,38 +1,62 @@
 import { useWeb3React } from '@web3-react/core'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
-
+import { useQuery } from '@tanstack/react-query'
+import { providerKey } from '@/utils/index'
 import { Bao } from '@/bao/Bao'
+import { getNetworkConnector } from '@/bao/lib/connectors'
+import { useBlock } from './useBlock'
 
 export interface BaoContext {
-	bao?: Bao
+	bao: Bao
+	block: number
 }
 
 interface BaoProviderProps {
 	children: React.ReactNode
 }
 
-export const Context = createContext<BaoContext>({
+export const BaoContext = createContext<BaoContext>({
 	bao: null,
+	block: 0,
 })
 
-declare global {
-	interface Window {
-		baosauce?: Bao
-	}
-}
-
 const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }) => {
-	const { library, account, chainId } = useWeb3React()
-	const [bao, setBao] = useState<Bao | null>(null)
+	const { library, account, chainId, active, activate, error } = useWeb3React()
 
+	const triedEager = useEagerConnect()
+
+	useInactiveListener(!triedEager)
+
+	const block = useBlock()
+
+	// always activate the http rpc backup
 	useEffect(() => {
-		if (!library || !chainId) return
-		const baoLib = new Bao(library)
-		setBao(baoLib)
-		window.baosauce = baoLib
-	}, [library, chainId, account])
+		if (triedEager && !active && !error) {
+			activate(getNetworkConnector())
+		}
+	}, [activate, active, triedEager, error])
 
-	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
+	const { data: bao } = useQuery(
+		['@/contexts/BaoProvider/bao', providerKey(library, account, chainId)],
+		async () => {
+			return new Bao(library)
+		},
+		{
+			enabled: !!library && active && !!chainId,
+			staleTime: Infinity,
+			cacheTime: Infinity,
+			networkMode: 'always',
+		},
+	)
+
+	// Wait for a valid baolib and web3 library with chain connection
+	if (bao && library && chainId) {
+		return <BaoContext.Provider value={{ bao, block }}>{children}</BaoContext.Provider>
+	} else {
+		return null
+	}
 }
 
 export default BaoProvider

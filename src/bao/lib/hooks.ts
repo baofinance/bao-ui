@@ -1,8 +1,14 @@
 import { SafeAppConnector, useSafeAppConnection } from '@gnosis.pm/safe-apps-web3-react'
 import { useWeb3React } from '@web3-react/core'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected, getNetworkConnector } from './connectors'
+
+declare global {
+	interface Window {
+		ethereum?: any
+	}
+}
 
 export function useEagerConnect() {
 	const { activate, active } = useWeb3React()
@@ -12,7 +18,7 @@ export function useEagerConnect() {
 	const safeMultisigConnector = new SafeAppConnector()
 	const triedToConnectToSafe = useSafeAppConnection(safeMultisigConnector)
 
-	// then, if that fails, try connecting to an injected connector
+	// try connecting to an injected connector first, then the default read-only one
 	useEffect(() => {
 		if (triedToConnectToSafe) {
 			injected.isAuthorized().then(isAuthorized => {
@@ -28,7 +34,6 @@ export function useEagerConnect() {
 					activate(getNetworkConnector(), undefined, true).catch(() => {
 						setTried(true)
 					})
-					//setTried(true)
 				}
 			})
 		}

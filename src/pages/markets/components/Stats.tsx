@@ -32,10 +32,11 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()) &&
 			exchangeRates &&
 			exchangeRates[asset.marketAddress]
-				? supplyBalances
-						.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()).balance
-						.mul(exchangeRates[asset.marketAddress])
-						.div(BigNumber.from(10).pow(18))
+				? decimate(
+						supplyBalances
+							.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase())
+							.balance.mul(exchangeRates[asset.marketAddress]),
+				  )
 				: BigNumber.from(0),
 		[supplyBalances, exchangeRates, asset.marketAddress],
 	)

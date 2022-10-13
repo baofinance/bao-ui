@@ -2,6 +2,7 @@ import Config from '@/bao/lib/config'
 import fetcher from '@/bao/lib/fetcher'
 import { SWR } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
+import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
 import useSWR from 'swr'
@@ -53,8 +54,10 @@ export const useMarketPrices = (): MarketPrices => {
 	const [prices, setPrices] = useState<{ [key: string]: BigNumber } | undefined>()
 	const oracle = useContract<MarketOracle>('MarketOracle')
 
+	const { chainId } = useWeb3React()
+
 	const fetchPrices = useCallback(async () => {
-		const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
+		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 		const multiCallContext = MultiCall.createCallContext([
 			{
 				ref: 'MarketOracle',
@@ -77,7 +80,7 @@ export const useMarketPrices = (): MarketPrices => {
 				{},
 			),
 		)
-	}, [bao, oracle])
+	}, [bao, oracle, chainId])
 
 	useEffect(() => {
 		if (!bao || !oracle) return

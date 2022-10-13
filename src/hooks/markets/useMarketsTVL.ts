@@ -19,12 +19,12 @@ export const useMarketsTVL = () => {
 	const fetchTvl = useCallback(async () => {
 		const marketsTvl = markets.reduce((prev, current) => {
 			const _tvl = BigNumber.from(current.supplied).sub(current.totalBorrows).mul(prices[current.marketAddress])
-			return prev.add(_tvl.div(BigNumber.from(10).pow(current.underlyingDecimals)))
+			return prev.add(decimate(_tvl, current.underlyingDecimals))
 		}, BigNumber.from(0))
 
 		// Assume $1 for DAI - need to use oracle price
 		const ballastTvl = await stabilizer.supply()
-		setTvl(marketsTvl.add(ballastTvl.div(BigNumber.from(10).pow(18))))
+		setTvl(marketsTvl.add(decimate(ballastTvl)))
 	}, [stabilizer, markets, prices])
 
 	useEffect(() => {

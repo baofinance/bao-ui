@@ -91,7 +91,7 @@ export const useSupplyBalances = (): Balance[] => {
 
 		setBalances(
 			Object.keys(res).map(address => {
-				const decimals = Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals
+				const decimals = Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
 					symbol: res[address][0].values[0],

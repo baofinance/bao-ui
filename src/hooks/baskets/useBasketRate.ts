@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import Multicall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
+import { decimate } from '@/utils/numberFormat'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import { getOraclePrice } from '@/bao/utils'
 import useBao from '../base/useBao'
@@ -22,7 +23,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const { chainId } = useWeb3React()
 
 	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
-	const wethOracle = useContract<Chainoracle>('Chainoracle', !chainId ? null : Config.contracts.wethPrice[chainId].address)
+	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
 
 	const fetchRates = useCallback(async () => {
 		const wethPrice = await getOraclePrice(bao, wethOracle)
@@ -49,9 +50,9 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 		setRates({
 			eth: res[0].values[0],
 			dai: res[1].values[0],
-			usd: wethPrice.mul(res[0].values[0]).mul(100).div(BigNumber.from(10).pow(18)),
+			usd: decimate(wethPrice.mul(res[0].values[0]).mul(100)),
 		})
-	}, [recipe, bao, basket])
+	}, [recipe, bao, basket, wethOracle])
 
 	useEffect(() => {
 		if (!(bao && recipe && basket)) return

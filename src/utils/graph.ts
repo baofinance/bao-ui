@@ -1,6 +1,5 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 //import { BigNumber } from 'ethers'
-//import BN from 'bignumber.js'
 
 import Config from '@/bao/lib/config'
 

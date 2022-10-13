@@ -1,6 +1,5 @@
 import Config from '@/bao/lib/config'
 import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
-import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
 import Button from '@/components/Button'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useWeb3React } from '@web3-react/core'
@@ -8,6 +7,12 @@ import Image from 'next/future/image'
 import React, { FC, useEffect, useState } from 'react'
 import Modal from '../Modal'
 import Typography from '../Typography'
+
+declare global {
+	interface Window {
+		ethereum?: any
+	}
+}
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
 	Metamask: injected,
@@ -24,22 +29,19 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 	const { connector, chainId, account, activate, active, error } = useWeb3React()
 
 	useEffect(() => {
+		// FIXME: need to change this when the frontend is multichain like sushi
 		if (account && chainId === Config.networkId) {
 			onHide()
 		}
 	}, [account, chainId, onHide])
 
-	const [activatingConnector, setActivatingConnector] = useState<any>()
+	const [activatingConnector, setActivatingConnector] = useState<AbstractConnector>()
 
 	useEffect(() => {
 		if (activatingConnector && activatingConnector === connector) {
 			setActivatingConnector(undefined)
 		}
 	}, [activatingConnector, connector])
-
-	const triedEager = useEagerConnect()
-
-	useInactiveListener(!triedEager || !!activatingConnector)
 
 	useEffect(() => {
 		if (account && active) {
@@ -71,7 +73,7 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 					const currentConnector = connectorsByName[name]
 					const activating = currentConnector === activatingConnector
 					const connected = currentConnector === connector
-					const disabled = !triedEager || !!activatingConnector || connected || !!error
+					const disabled = connected || !!error
 
 					return (
 						<Button

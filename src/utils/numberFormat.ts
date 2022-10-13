@@ -1,5 +1,6 @@
 import BN from 'bignumber.js'
 import { BigNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import type { BigNumberish } from '@ethersproject/bignumber'
 // FIXME: this should all be using ethers.BigNumber
 
@@ -20,11 +21,11 @@ try {
 export const getDisplayBalance = (balance: BigNumberish | BN, decimals = 18, precision?: number): string => {
 	const n = new BN(balance.toString()).div(new BN(10).pow(decimals))
 	if (n.gt(0) && n.lt(1)) {
-		return n.toFormat(typeof precision === "number" ? precision : 4)
+		return n.toFormat(typeof precision === 'number' ? precision : 4)
 	} else if (n.lt(0) && n.gt(-1)) {
-		return n.toFormat(typeof precision === "number" ? precision : 4)
+		return n.toFormat(typeof precision === 'number' ? precision : 4)
 	} else {
-		return n.toFormat(typeof precision === "number" ? precision : 2)
+		return n.toFormat(typeof precision === 'number' ? precision : 2)
 	}
 }
 
@@ -64,4 +65,8 @@ export const isBigNumberish = (val: BigNumberish | BN): boolean => {
 	} catch (e) {
 		return false
 	}
+}
+
+export const fromDecimal = (n: number | string): BigNumber => {
+	return parseUnits(new BN(n).toFixed(18))
 }

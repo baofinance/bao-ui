@@ -15,8 +15,8 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 
 	const { chainId } = useWeb3React()
 
-	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', (basket && basket.lpAddress || '0x000000000000000000000000000000000000dead'))
-	const wethOracle = useContract<Chainoracle>('Chainoracle', !chainId ? null : Config.contracts.wethPrice[chainId].address)
+	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', basket ? basket.lpAddress : '0x000000000000000000000000000000000000dead')
+	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
 
 	const fetchPairPrice = useCallback(async () => {
 		const wethPrice = await getOraclePrice(bao, wethOracle)
@@ -24,10 +24,6 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 
 		// This won't always work. Should check which side of the LP the basket token is on.
 		const _price = wethPrice.mul(reserves[0].div(reserves[1]))
-		console.log('wethPrice', wethPrice.toString())
-		console.log('r0', reserves[0].toString(), 'r1', reserves[1].toString())
-		console.log('r0/r1', reserves[0].div(reserves[1]).toString())
-		console.log('wethPrice*(r0/r1)', _price.toString())
 		setPrice(_price)
 	}, [bao, lpContract, wethOracle])
 

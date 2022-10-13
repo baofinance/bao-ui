@@ -1,8 +1,7 @@
-//import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import React, { useMemo } from 'react'
-
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Loader from '@/components/Loader'
@@ -14,8 +13,10 @@ import type { Stabilizer, Dai, Erc20 } from '@/typechain/index'
 const BallastButton: React.FC<BallastButtonProps> = ({ swapDirection, inputVal, maxValues, supplyCap, reserves }: BallastButtonProps) => {
 	const { handleTx } = useTransactionHandler()
 
-	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.Stabilizer[Config.networkId].address)
-	const inputBApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.Stabilizer[Config.networkId].address)
+	const { chainId } = useWeb3React()
+
+	const inputAApproval = useAllowance(Config.addressMap.DAI, Config.contracts.Stabilizer[chainId].address)
+	const inputBApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.Stabilizer[chainId].address)
 
 	const ballast = useContract<Stabilizer>('Stabilizer')
 	const dai = useContract<Dai>('Dai')

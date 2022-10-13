@@ -11,7 +11,7 @@ import Card from '@/components/Card'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import useNav from '@/hooks/baskets/useNav'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance, decimate, exponentiate } from '@/utils/numberFormat'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 import type { BasketComponent } from '@/hooks/baskets/useComposition'
@@ -40,7 +40,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 
 	let marketCap
 	if (rates && info) {
-		marketCap = rates.usd.mul(info.totalSupply).div(BigNumber.from(10).pow(18))
+		marketCap = decimate(rates.usd.mul(info.totalSupply))
 	}
 
 	return (

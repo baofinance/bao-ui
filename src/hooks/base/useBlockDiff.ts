@@ -3,23 +3,27 @@ import { useCallback, useEffect, useState } from 'react'
 
 import useBlock from './useBlock'
 
-const useBlockDiff = (userInfo: any) => {
+interface BlockDiffOptions {
+	firstDepositBlock: number
+	lastWithdrawBlock: number
+}
+
+const useBlockDiff = (options: BlockDiffOptions) => {
 	const { library } = useWeb3React()
 	const block = useBlock()
-	const [blockDiff, setBlockDiff] = useState<number | undefined>()
+	const [blockDiff, setBlockDiff] = useState<number>(0)
 
 	const fetchBlockDiff = useCallback(async () => {
-		const firstDepositBlock = userInfo.firstDepositBlock
-		const lastWithdrawBlock = userInfo.lastWithdrawBlock
+		const { firstDepositBlock, lastWithdrawBlock } = options
 		const firstOrLast = firstDepositBlock > lastWithdrawBlock ? firstDepositBlock : lastWithdrawBlock
 		const blockDiff = block - firstOrLast
 		setBlockDiff(blockDiff)
-	}, [block, userInfo])
+	}, [block, options])
 
 	useEffect(() => {
-		if (!library || !userInfo) return
+		if (!library || !options) return
 		fetchBlockDiff()
-	}, [fetchBlockDiff, library, block, userInfo])
+	}, [fetchBlockDiff, library, block, options])
 
 	return blockDiff > 0 && blockDiff
 }

@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
-import { Contract } from '@ethersproject/contracts'
+//import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -40,26 +40,29 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 
 	const fetchMarkets = useCallback(async () => {
 		const signerOrProvider = account ? library.getSigner() : library
-		const _markets = Config.markets.map(market => {
-			const marketAddress = market.marketAddresses[chainId]
-			const underlyingAddress = market.underlyingAddresses[chainId]
-			let marketContract
-			if (underlyingAddress === 'ETH') marketContract = Cether__factory.connect(marketAddress, signerOrProvider)
-			else marketContract = Ctoken__factory.connect(marketAddress, signerOrProvider)
-			let underlyingContract
-			if (underlyingAddress !== 'ETH') underlyingContract = Erc20__factory.connect(underlyingAddress, signerOrProvider)
-			return Object.assign(market, {
-				marketAddress,
-				marketContract,
-				underlyingAddress,
-				underlyingContract,
+		const _markets = Config.markets
+			.filter(market => !market.archived) // TODO- add in option to view archived markets
+			.map(market => {
+				const marketAddress = market.marketAddresses[chainId]
+				const underlyingAddress = market.underlyingAddresses[chainId]
+				let marketContract
+				if (underlyingAddress === 'ETH') marketContract = Cether__factory.connect(marketAddress, signerOrProvider)
+				else marketContract = Ctoken__factory.connect(marketAddress, signerOrProvider)
+				let underlyingContract
+				if (underlyingAddress !== 'ETH') underlyingContract = Erc20__factory.connect(underlyingAddress, signerOrProvider)
+				return Object.assign(market, {
+					marketAddress,
+					marketContract,
+					underlyingAddress,
+					underlyingContract,
+				})
 			})
-		})
 
 		const contracts: Cmarket[] = _markets.map((market: ActiveSupportedMarket) => {
 			return market.marketContract
 		})
 
+		// FIXME: this should be one multicall per contract instead of HELLA ethereum rpc calls
 		const [
 			reserveFactors,
 			totalReserves,
@@ -87,16 +90,8 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 			Promise.all(contracts.map(contract => contract.totalSupply())),
 			Promise.all(contracts.map(contract => contract.callStatic.exchangeRateCurrent())),
 			Promise.all(contracts.map(contract => comptroller.callStatic.compBorrowState(contract.address))),
-			Promise.all(
-				_markets.map(market => {
-					return market.marketContract.symbol()
-				}),
-			),
-			Promise.all(
-				_markets.map(market => {
-					return market.underlyingContract ? market.underlyingContract.symbol() : 'ETH'
-				}),
-			),
+			Promise.all(contracts.map(contract => contract.symbol())),
+			Promise.all(_markets.map(market => (market.underlyingContract ? market.underlyingContract.symbol() : 'ETH'))),
 			comptroller.callStatic.liquidationIncentiveMantissa(),
 			Promise.all(contracts.map(market => comptroller.callStatic.borrowRestricted(market.address))),
 			Promise.all(contracts.map(market => oracle.callStatic.getUnderlyingPrice(market.address))),
@@ -105,8 +100,8 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 		const supplyApys: BigNumber[] = supplyRates.map((rate: BigNumber) => parseUnits(toApy(rate).toString()))
 		const borrowApys: BigNumber[] = borrowRates.map((rate: BigNumber) => parseUnits(toApy(rate).toString()))
 
-		let markets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
-			const marketConfig = _markets.find(market => market.marketAddresses[Config.networkId] === contract.address)
+		const newMarkets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
+			const marketConfig = _markets.find(market => market.marketAddresses[chainId] === contract.address)
 			return {
 				symbol: symbols[i],
 				underlyingSymbol: underlyingSymbols[i],
@@ -126,9 +121,8 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 				...marketConfig,
 			}
 		})
-		markets = markets.filter((market: ActiveSupportedMarket) => !market.archived) // TODO- add in option to view archived markets
 
-		setMarkets(markets)
+		setMarkets(newMarkets)
 	}, [chainId, library, account, comptroller, oracle])
 
 	useEffect(() => {

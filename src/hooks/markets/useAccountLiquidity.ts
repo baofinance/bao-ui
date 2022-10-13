@@ -29,7 +29,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
@@ -42,7 +42,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
 		const prices: { [key: string]: BigNumber } = {}
 		for (const key in oraclePrices) {
-			const decimals = 36 - Config.markets.find(market => market.marketAddresses[Config.networkId] === key).underlyingDecimals
+			const decimals = 36 - Config.markets.find(market => market.marketAddresses[chainId] === key).underlyingDecimals
 			prices[key] = decimate(oraclePrices[key], decimals)
 		}
 
@@ -81,7 +81,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			usdBorrow,
 			usdBorrowable: compAccountLiqudity[1],
 		})
-	}, [comptroller, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [comptroller, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices, chainId])
 
 	useEffect(() => {
 		if (!(markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices && comptroller)) return

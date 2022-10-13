@@ -2,15 +2,14 @@ import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { BigNumber } from 'ethers'
-import BN from 'bignumber.js'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Config from '@/bao/lib/config'
 import Loader from '@/components/Loader'
 import { StatCards } from '@/components/Stats'
-import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useAllEarnings from '@/hooks/farms/useAllEarnings'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
+import usePrice from '@/hooks/base/usePrice'
 import { getDisplayBalance, truncateNumber, decimate, exponentiate } from '@/utils/numberFormat'
 import useContract from '@/hooks/base/useContract'
 import { Bao } from '@/typechain/index'
@@ -19,16 +18,15 @@ const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
 	const baoBalance = useTokenBalance(Config.addressMap.BAO)
 	const { account } = useWeb3React()
-	const [baoPrice, setBaoPrice] = useState<BigNumber>(BigNumber.from(0))
+	const baoPrice = usePrice('bao-finance')
 	const locks = useLockedEarnings()
 	const allEarnings = useAllEarnings()
 
 	const baoContract = useContract<Bao>('Bao')
 
-	let sumEarning = BigNumber.from(0)
-	for (const earning of allEarnings) {
-		sumEarning = sumEarning.add(BigNumber.from(earning))
-	}
+	const sumEarning = allEarnings.reduce((earning, acc) => {
+		return acc.add(earning)
+	}, BigNumber.from(0))
 
 	const stats = [
 		{
@@ -54,19 +52,10 @@ const Balances: React.FC = () => {
 		if (baoContract) fetchTotalSupply()
 	}, [baoContract])
 
-	useEffect(() => {
-		fetch('https://api.coingecko.com/api/v3/simple/price?ids=bao-finance&vs_currencies=usd').then(async res => {
-			const _baoPrice = parseUnits(new BN((await res.json())['bao-finance'].usd).toFixed(18))
-			setBaoPrice(_baoPrice)
-		})
-	}, [setBaoPrice])
-
 	return (
-		<>
-			<div className={`mx-auto my-4 ${isDesktop ? 'flex-flow flex gap-4' : 'flex flex-col gap-3'} justify-evenly`}>
-				<StatCards stats={stats} />
-			</div>
-		</>
+		<div className={`mx-auto my-4 ${isDesktop ? 'flex-flow flex gap-4' : 'flex flex-col gap-3'} justify-evenly`}>
+			<StatCards stats={stats} />
+		</div>
 	)
 }
 

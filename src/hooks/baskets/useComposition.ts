@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import useBao from '@/hooks/base/useBao'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
-import { decimate } from '@/utils/numberFormat'
+import { decimate, exponentiate } from '@/utils/numberFormat'
 import Config from '@/bao/lib/config'
 import { LendingLogicKashi__factory } from '@/typechain/factories'
 import { Erc20__factory } from '@/typechain/factories'
@@ -114,7 +114,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				// wrapped balance * exchange rate / 10 ** (18 - 8 + underlyingDecimals)
 				// Here, the price is already decimated by 1e18, so we can subtract 8
 				// from the underlying token's decimals.
-				if (_c.strategy === 'Compound') _c.price = _c.price.div(BigNumber.from(10).pow(underlyingDecimals - 8))
+				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
 			}
 
 			_comp.push({
@@ -132,9 +132,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 		for (let i = 0; i < _comp.length; i++) {
 			const comp = _comp[i]
 			const percentage = comp.balance.mul(comp.price).div(marketCap).mul(100)
-			_comp[i].percentage = percentage
-				.mul(BigNumber.from(10).pow(18))
-				.div(BigNumber.from(10).pow(_comp[i].decimals))
+			_comp[i].percentage = decimate(exponentiate(percentage), _comp[i].decimals)
 		}
 
 		setComposition(_comp)

@@ -12,33 +12,33 @@ import useBao from '@/hooks/base/useBao'
 import { decimate, exponentiate } from '@/utils/numberFormat'
 import { Uni_v2_lp__factory } from '@/typechain/factories'
 
-export const fetchLPInfo = async (farms: any[], multicall: MC, library: Provider) => {
+export const fetchLPInfo = async (farms: any[], multicall: MC, library: Provider, chainId: number) => {
 	const results = Multicall.parseCallResults(
 		await multicall.call(
 			Multicall.createCallContext(
 				farms.map(farm =>
 					farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
 						? ({
-								ref: farm.lpAddresses[Config.networkId],
-								contract: Uni_v2_lp__factory.connect(farm.lpAddresses[Config.networkId], library),
+								ref: farm.lpAddresses[chainId],
+								contract: Uni_v2_lp__factory.connect(farm.lpAddresses[chainId], library),
 								calls: [
 									{
 										method: 'balanceOf',
-										params: [Config.contracts.Masterchef[Config.networkId].address],
+										params: [Config.contracts.Masterchef[chainId].address],
 									},
 									{ method: 'totalSupply' },
 								],
 						  } as any)
 						: ({
-								ref: farm.lpAddresses[Config.networkId],
-								contract: Uni_v2_lp__factory.connect(farm.lpAddresses[Config.networkId], library),
+								ref: farm.lpAddresses[chainId],
+								contract: Uni_v2_lp__factory.connect(farm.lpAddresses[chainId], library),
 								calls: [
 									{ method: 'getReserves' },
 									{ method: 'token0' },
 									{ method: 'token1' },
 									{
 										method: 'balanceOf',
-										params: [Config.contracts.Masterchef[Config.networkId].address],
+										params: [Config.contracts.Masterchef[chainId].address],
 									},
 									{ method: 'totalSupply' },
 								],
@@ -82,14 +82,18 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, library: Provider
 	})
 }
 
+const parseDecimals = (n: number) => {
+	return parseUnits(new BN(n).toFixed(18))
+}
+
 const useAllFarmTVL = () => {
 	const [tvl, setTvl] = useState<any | undefined>()
 
-	const { library } = useWeb3React()
+	const { library, chainId } = useWeb3React()
 	const bao = useBao()
 
 	const fetchAllFarmTVL = useCallback(async () => {
-		const lps: any = await fetchLPInfo(Config.farms, bao.multicall, library)
+		const lps = await fetchLPInfo(Config.farms, bao.multicall, library, chainId)
 		const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
 		const tokenPrices = await GraphUtil.getPriceFromPairMultiple(wethPrice, [Config.addressMap.USDC])
 
@@ -99,7 +103,9 @@ const useAllFarmTVL = () => {
 			let lpStakedUSD
 			if (lpInfo.singleAsset) {
 				lpStakedUSD = decimate(lpInfo.lpStaked).mul(
-					parseUnits(new BN(Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === lpInfo.lpAddress.toLowerCase()).price).toFixed(18)),
+					parseDecimals(
+						Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === lpInfo.lpAddress.toLowerCase()).price,
+					),
 				)
 				_tvl = _tvl.add(lpStakedUSD)
 			} else {
@@ -118,9 +124,9 @@ const useAllFarmTVL = () => {
 					tokenPrice = parseUnits(new BN(wethPrice).toFixed(18))
 				else if (token.address.toLowerCase() === Config.addressMap.USDC.toLowerCase() && specialPair)
 					// BAO-nDEFI pair
-					tokenPrice = parseUnits(new BN(Object.values(tokenPrices).find(
-						priceInfo => priceInfo.address.toLowerCase() === Config.addressMap.USDC.toLowerCase(),
-					).price).toFixed(18))
+					tokenPrice = parseDecimals(
+						Object.values(tokenPrices).find(priceInfo => priceInfo.address.toLowerCase() === Config.addressMap.USDC.toLowerCase()).price,
+					)
 
 				const stakeBySupply = exponentiate(lpInfo.lpStaked).div(lpInfo.lpSupply)
 				const balanceAtPrice = decimate(token.balance.mul(tokenPrice))
@@ -139,7 +145,7 @@ const useAllFarmTVL = () => {
 			tvl: _tvl,
 			tvls,
 		})
-	}, [bao, library, setTvl])
+	}, [bao, library, setTvl, chainId])
 
 	useEffect(() => {
 		if (!bao || !library) return

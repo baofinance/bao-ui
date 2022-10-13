@@ -16,6 +16,7 @@ import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ethers, BigNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -116,9 +117,9 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 						) : (
 							<Button
 								fullWidth
-								disabled={!val || isNaN(val as any) || ethers.utils.parseUnits(val).gt(max)}
+								disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
 								onClick={async () => {
-									const amount = ethers.utils.parseUnits(val.toString(), 18)
+									const amount = parseUnits(val.toString(), 18)
 									const stakeTx = gaugeContract['deposit(uint256)'](amount)
 
 									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${gauge.name} into gauge`, () => hideModal())
@@ -211,7 +212,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
 							}
 							onClick={async () => {
-								const amount = ethers.utils.parseUnits(val, 18)
+								const amount = parseUnits(val, 18)
 								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
 								handleTx(unstakeTx, `Withdraw ${amount} ${gauge.name} from gauge`, () => hideModal())
 							}}

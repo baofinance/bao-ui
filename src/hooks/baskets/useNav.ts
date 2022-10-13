@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
+import { decimate } from '@/utils/numberFormat'
 import { BasketComponent } from './useComposition'
 
 const useNav = (composition: BasketComponent[], supply: BigNumber) => {
@@ -7,9 +8,9 @@ const useNav = (composition: BasketComponent[], supply: BigNumber) => {
 		if (!composition) return null
 		const _nav = composition
 			.reduce((prev, comp) => {
-				return prev.add(comp.price.mul(comp.balance.div(BigNumber.from(10).pow(comp.decimals))))
+				return prev.add(decimate(comp.price.mul(comp.balance), comp.decimals))
 			}, BigNumber.from(0))
-			.div(supply.div(BigNumber.from(10).pow(18)))
+			.div(decimate(supply))
 		return _nav
 	}, [composition, supply])
 
