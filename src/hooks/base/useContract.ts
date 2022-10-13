@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 //import { Signer } from 'ethers'
+import dynamic from 'next/dynamic'
 import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
 import { providerKey } from '@/utils/index'
@@ -34,7 +35,7 @@ const useContract = <T = Contract>(contractName: string, address?: string): T =>
 			return _contract
 		},
 		{
-			enabled: !!library && !!chainId,
+			enabled: !!library && !!chainId && address !== null,
 			staleTime: Infinity,
 			cacheTime: Infinity,
 			networkMode: 'always',

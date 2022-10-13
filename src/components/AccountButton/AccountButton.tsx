@@ -8,7 +8,7 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 //import { utils } from 'ethers'
 import { isDesktop } from 'react-device-detect'
 
-import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 
 import AccountModal from '../AccountModal'
@@ -25,7 +25,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	const { transactions } = useTransactionProvider()
 	const { account } = useWeb3React()
-	const ethBalance = useTokenBalance('ETH')
+	const ethBalance = useEthBalance()
 
 	useEffect(() => {
 		const ensResolver = new ethers.providers.JsonRpcProvider(`${process.env.NEXT_PUBLIC_ALCHEMY_API_URL}`)

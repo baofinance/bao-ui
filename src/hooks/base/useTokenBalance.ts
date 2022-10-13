@@ -1,30 +1,44 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import useTransactionProvider from './useTransactionProvider'
 import useContract from '@/hooks/base/useContract'
 import type { Erc20 } from '@/typechain/index'
 
+export const useEthBalance = () => {
+	const { library, chainId, account } = useWeb3React<Web3Provider>()
+	const { transactions } = useTransactionProvider()
+	const txs = Object.keys(transactions ? transactions : {}).length
+	const { data: balance } = useQuery(
+		['@/hooks/base/useEthBalance', { chainId, account, txs }],
+		async () => {
+			return await library.getBalance(account)
+		},
+		{
+			enabled: !!library && !!chainId && !!account,
+			placeholderData: BigNumber.from(0),
+		},
+	)
+
+	return balance
+}
+
 const useTokenBalance = (tokenAddress: string) => {
-	const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0))
-	const { library, account } = useWeb3React()
+	const { chainId, account } = useWeb3React<Web3Provider>()
 	const { transactions } = useTransactionProvider()
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
-
-	const fetchBalance = useCallback(async () => {
-		let balance
-		if (tokenAddress === 'ETH') {
-			balance = await library.getBalance(account)
-		} else {
-			balance = await contract.balanceOf(account)
-		}
-		setBalance(balance)
-	}, [library, contract, account, tokenAddress])
-
-	useEffect(() => {
-		if (!library || !account || !contract) return
-		fetchBalance()
-	}, [fetchBalance, library, contract, account, tokenAddress, transactions])
+	const txs = Object.keys(transactions ? transactions : {}).length
+	const { data: balance } = useQuery(
+		['@/hooks/base/useBalance', { chainId, account, txs }, tokenAddress],
+		async () => {
+			return await contract.balanceOf(account)
+		},
+		{
+			enabled: !!contract && !!chainId && !!account,
+			placeholderData: BigNumber.from(0),
+		},
+	)
 
 	return balance
 }

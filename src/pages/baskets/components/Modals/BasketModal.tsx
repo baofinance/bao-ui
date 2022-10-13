@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
@@ -7,7 +8,7 @@ import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
-import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
@@ -36,6 +37,7 @@ enum MintOption {
 
 // TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
 const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal }) => {
+	const { chainId } = useWeb3React()
 	const [value, setValue] = useState<string | undefined>('0')
 	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
 	const [mintOption, setMintOption] = useState<MintOption>(MintOption.DAI)
@@ -47,12 +49,12 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const dai = useContract<Dai>('Dai')
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(dai && dai.address, recipe && recipe.address)
+	const daiAllowance = useAllowance(Config.addressMap.DAI, Config.contracts.SimpleUniRecipe[chainId].address)
 
 	// Get Basket & DAI balances
-	const basketBalance = useTokenBalance(basket && basket.address)
+	const basketBalance = useTokenBalance(basket.address)
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
-	const ethBalance = useTokenBalance('ETH')
+	const ethBalance = useEthBalance()
 
 	const swapLink = basket && basket.swap
 

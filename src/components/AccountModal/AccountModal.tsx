@@ -13,7 +13,7 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import Link from 'next/link'
 import Tooltipped from '../Tooltipped'
@@ -33,7 +33,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 
 	const { transactions, onClearTransactions } = useTransactionProvider()
 	const baoBalance = useTokenBalance(Config.addressMap.BAO)
-	const ethBalance = useTokenBalance('ETH')
+	const ethBalance = useEthBalance()
 	const [tx, setTx] = useState({})
 
 	useEffect(() => {
