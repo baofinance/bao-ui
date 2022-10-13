@@ -2,16 +2,15 @@ import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useQuery } from '@tanstack/react-query'
-import useTransactionProvider from './useTransactionProvider'
 import useContract from '@/hooks/base/useContract'
+import { useBlockUpdater } from './useBlock'
+import { useTxReceiptUpdater } from './useTransactionProvider'
 import type { Erc20 } from '@/typechain/index'
 
 export const useEthBalance = () => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
-	const { transactions } = useTransactionProvider()
-	const txs = Object.keys(transactions ? transactions : {}).length
-	const { data: balance } = useQuery(
-		['@/hooks/base/useEthBalance', { chainId, account, txs }],
+	const { data: balance, refetch } = useQuery(
+		['@/hooks/base/useEthBalance', { chainId, account }],
 		async () => {
 			return await library.getBalance(account)
 		},
@@ -21,16 +20,17 @@ export const useEthBalance = () => {
 		},
 	)
 
+	useTxReceiptUpdater(refetch)
+	useBlockUpdater(refetch, 10)
+
 	return balance
 }
 
 const useTokenBalance = (tokenAddress: string) => {
 	const { chainId, account } = useWeb3React<Web3Provider>()
-	const { transactions } = useTransactionProvider()
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
-	const txs = Object.keys(transactions ? transactions : {}).length
-	const { data: balance } = useQuery(
-		['@/hooks/base/useBalance', { chainId, account, txs }, tokenAddress],
+	const { data: balance, refetch } = useQuery(
+		['@/hooks/base/useBalance', { chainId, account }, tokenAddress],
 		async () => {
 			return await contract.balanceOf(account)
 		},
@@ -39,6 +39,9 @@ const useTokenBalance = (tokenAddress: string) => {
 			placeholderData: BigNumber.from(0),
 		},
 	)
+
+	useTxReceiptUpdater(refetch)
+	useBlockUpdater(refetch, 10)
 
 	return balance
 }

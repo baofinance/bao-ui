@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { useContext, useRef, useEffect, useState } from 'react'
 import { BaoContext } from '@/contexts/BaoProvider'
 
 const useBlock = (): number => {
@@ -14,19 +14,15 @@ const useBlock = (): number => {
  * @param callback Function to call when the proper number of blocks have passed
  * @param allowUpdate Switch the callback interval on or off
  */
-export const useBlockInterval = (
-	callback: ((block: number) => void) | ((block: number) => Promise<void>),
-	interval = 1,
-	allowUpdate = true,
-): void => {
+export const useBlockUpdater = (callback: (() => void) | (() => Promise<void>), interval = 1, allowUpdate = true): void => {
 	const block = useBlock()
-	const updateNumberRef = useRef<undefined | number>(undefined)
+	const updateNumberRef = useRef<number>(block)
 	if (allowUpdate) {
 		// number that only increases every (X * options.blockNumberInterval) blocks
 		const blockNumberFilter = block > 0 ? Math.floor(block / (interval ?? 1)) : undefined
 		if (blockNumberFilter !== updateNumberRef.current) {
 			updateNumberRef.current = blockNumberFilter
-			callback(block)
+			callback()
 		}
 	}
 }
