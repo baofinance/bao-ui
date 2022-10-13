@@ -79,7 +79,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 			case MarketOperations.withdraw:
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable > supply ? supply : withdrawable
 			case MarketOperations.mint:
-				return prices && accountLiquidity ? accountLiquidity.usdBorrowable.div(asset.price) : BigNumber.from(0)
+				return prices && accountLiquidity ? exponentiate(accountLiquidity.usdBorrowable.div(asset.price)) : BigNumber.from(0)
 			case MarketOperations.repay:
 				if (borrowBalances && balances) {
 					const borrowBalance = borrowBalances.find(
@@ -139,7 +139,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 								<Typography variant='sm' className='text-text-200'>
 									{`${maxLabel()}:`}
 								</Typography>
-								<Typography variant='sm'>{`${getDisplayBalance(max())} ${asset.underlyingSymbol}`}</Typography>
+								<Typography variant='sm'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${asset.underlyingSymbol}`}</Typography>
 							</div>
 						</div>
 						<Input
@@ -168,7 +168,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 						operation={operation}
 						asset={asset}
 						val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-						isDisabled={!val || (val && parseUnits(val).gt(max()))}
+						isDisabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
 						onHide={hideModal}
 					/>
 				</Modal.Actions>
