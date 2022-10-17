@@ -159,7 +159,7 @@ export default {
 				1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 			},
 			isSynth: true,
-			icon: 'bUSD.png',
+			icon: 'baoUSD.png',
 			coingeckoId: 'dai',
 			underlyingSymbol: 'baoUSD',
 			underlyingDecimals: 18,
