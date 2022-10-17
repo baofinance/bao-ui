@@ -125,7 +125,7 @@ const BallastSwapper: React.FC = () => {
 				label={
 					<div className='flex flex-row items-center pl-2 pr-4'>
 						<div className='flex w-6 justify-center'>
-							<Image src='/images/tokens/bUSD.png' height={32} width={32} alt='baoUSD' />
+							<Image src='/images/tokens/baoUSD.png' height={32} width={32} alt='baoUSD' />
 						</div>
 					</div>
 				}

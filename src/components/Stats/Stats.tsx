@@ -45,15 +45,12 @@ export const StatCards = ({ label, stats }: StatBlockProps) => (
 			</div>
 		)}
 		{stats.map(({ label, value }) => (
-			<div
-				key={label}
-				className='realtive flex min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'
-			>
+			<div key={label} className='realtive flex min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3'>
 				<div className='break-words text-center' key={label}>
-					<Typography variant='sm' className='font-medium text-text-200'>
+					<Typography variant='sm' className='mb-1 text-left text-text-200'>
 						{label}
 					</Typography>
-					<Typography variant='base' className='font-semibold'>
+					<Typography variant='base' className='text-left font-semibold'>
 						{value}
 					</Typography>
 				</div>
