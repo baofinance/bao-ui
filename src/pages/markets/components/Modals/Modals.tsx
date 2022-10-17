@@ -9,10 +9,10 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarketPrices } from '@/hooks/markets/usePrices'
 import { decimate, getDisplayBalance, exponentiate } from '@/utils/numberFormat'
-import { BigNumber, utils } from 'ethers'
+import { BigNumber, FixedNumber, utils } from 'ethers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import MarketButton from '../MarketButton'
 import MarketStats from '../Stats'
 
@@ -40,20 +40,29 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 	const { exchangeRates } = useExchangeRates()
 	const { prices } = useMarketPrices()
 
-	//console.log(balances, borrowBalances, supplyBalances, accountLiquidity, exchangeRates, prices)
-	//console.log(prices)
+	const supply = useMemo(
+		() =>
+			supplyBalances &&
+			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()) &&
+			exchangeRates &&
+			exchangeRates[asset.marketAddress]
+				? decimate(
+						supplyBalances
+							.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase())
+							.balance.mul(exchangeRates[asset.marketAddress]),
+				  )
+				: BigNumber.from(0),
+		[supplyBalances, exchangeRates, asset.marketAddress],
+	)
 
-	const supply =
-		supplyBalances && exchangeRates
-			? supplyBalances
-					.find(_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase())
-					.balance.mul(exchangeRates[asset.marketAddress])
-			: BigNumber.from(0)
-
-	//const _imfFactor = accountLiquidity
-	//? parseUnits('1.1').div(asset.imfFactor.mul(Math.sqrt(supply)).add(parseUnits('1')))
-	//: 0
-	let _imfFactor = BigNumber.from(0)
+	// const _imfFactor = accountLiquidity
+	// 	? FixedNumber.from('1.1').divUnsafe(
+	// 			FixedNumber.from('1')
+	// 				.addUnsafe(FixedNumber.from(asset.imfFactor))
+	// 				.mulUnsafe(FixedNumber.from(Math.sqrt(supply.toNumber()))),
+	// 	  )
+	// 	: BigNumber.from(0)
+	let _imfFactor = asset.imfFactor
 	if (accountLiquidity) {
 		const num = parseUnits('1.1')
 		const sqrt = parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString())
@@ -61,14 +70,37 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 		_imfFactor = num.div(denom)
 	}
 
+	console.log('IMF', asset.imfFactor.toString())
+	console.log(
+		'Margin Factor',
+		parseUnits('1.1')
+			.div(asset.imfFactor.mul(parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString())).add(parseUnits('1')))
+			.toString(),
+	)
+	console.log('num', parseUnits('1.1').toString())
+	console.log('SqRt', parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString()).toString())
+	console.log(
+		'Denom',
+		asset.imfFactor
+			.mul(parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString()))
+			.add(parseUnits('1'))
+			.toString(),
+	)
+
 	let withdrawable = BigNumber.from(0)
 	if (_imfFactor.gt(asset.collateralFactor)) {
 		if (asset.collateralFactor.mul(asset.price).gt(0)) {
-			withdrawable = accountLiquidity.usdBorrowable.div(asset.collateralFactor.mul(asset.price))
+			withdrawable = accountLiquidity.usdBorrowable.div(asset.collateralFactor).mul(asset.price)
 		} else if (_imfFactor.mul(asset.price)) {
-			withdrawable = accountLiquidity.usdBorrowable.div(_imfFactor.mul(asset.price))
+			withdrawable = accountLiquidity && accountLiquidity.usdBorrowable.div(_imfFactor).mul(asset.price)
 		}
 	}
+
+	console.log('Price', asset.price.toString())
+	console.log('usdBorrowable', accountLiquidity && accountLiquidity.usdBorrowable.toString())
+	console.log('Collateral Factor', asset.collateralFactor.toString())
+	console.log('Supply', supply.toString())
+	console.log('Withdrawable', accountLiquidity && withdrawable.toString())
 
 	const max = () => {
 		switch (operation) {
@@ -76,10 +108,18 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 				return balances
 					? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
 					: BigNumber.from(0)
+			//Broken
 			case MarketOperations.withdraw:
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable > supply ? supply : withdrawable
+			//Broken
 			case MarketOperations.mint:
-				return prices && accountLiquidity ? exponentiate(accountLiquidity.usdBorrowable.div(asset.price)) : BigNumber.from(0)
+				return prices && accountLiquidity
+					? BigNumber.from(
+							FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
+								FixedNumber.from(formatUnits(asset.price)),
+							),
+					  )
+					: BigNumber.from(0)
 			case MarketOperations.repay:
 				if (borrowBalances && balances) {
 					const borrowBalance = borrowBalances.find(
@@ -92,6 +132,8 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 				}
 		}
 	}
+
+	console.log()
 
 	const maxLabel = () => {
 		switch (operation) {
