@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
-import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
 //import { BigNumber } from 'ethers'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import useContract from '@/hooks/base/useContract'
@@ -115,7 +115,7 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
 				reserveFactor: reserveFactors[i],
 				supplied: decimate(exchangeRates[i].mul(totalSupplies[i])),
 				borrowable: borrowState[i][1] > 0,
-				liquidationIncentive: liquidationIncentive.mul(10).sub(1),
+				liquidationIncentive: decimate(liquidationIncentive.mul(10).sub(exponentiate(1))),
 				borrowRestricted: borrowRestricted[i],
 				price: prices[i],
 				...marketConfig,

@@ -11,7 +11,7 @@ import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarkets } from '@/hooks/markets/useMarkets'
 import GraphUtil from '@/utils/graph'
 import { formatAddress } from '@/utils/index'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NextPage } from 'next'
@@ -24,6 +24,7 @@ import MarketBorrowModal from './components/Modals/BorrowModal'
 import MarketSupplyModal from './components/Modals/SupplyModal'
 import { MarketDetails } from './components/Stats'
 import { useWeb3React } from '@web3-react/core'
+import { formatUnits } from 'ethers/lib/utils'
 
 export async function getStaticPaths() {
 	return {
@@ -191,15 +192,20 @@ const Market: NextPage<{
 						stats={[
 							{
 								label: 'Market Utilization',
-								value: `${getDisplayBalance(
-									activeMarket.totalBorrows
-										.div(activeMarket.supplied.add(activeMarket.totalBorrows).sub(activeMarket.totalReserves))
-										.mul(100),
-								)}%`,
+								value: `${
+									activeMarket &&
+									(
+										(parseFloat(formatUnits(activeMarket.totalBorrows)) /
+											(parseFloat(formatUnits(activeMarket.supplied)) +
+												parseFloat(formatUnits(activeMarket.totalBorrows)) -
+												parseFloat(formatUnits(activeMarket.totalReserves)))) *
+										100
+									).toFixed(2)
+								}%`,
 							},
 							{
 								label: 'Liquidation Incentive',
-								value: `${getDisplayBalance(activeMarket.liquidationIncentive)}%`,
+								value: `${activeMarket.liquidationIncentive}%`,
 							},
 							{
 								label: 'Borrow Restricted?',
