@@ -8,7 +8,7 @@ import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarketPrices } from '@/hooks/markets/usePrices'
-import { decimate, getDisplayBalance, exponentiate } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance, exponentiate, sqrt } from '@/utils/numberFormat'
 import { BigNumber, FixedNumber, utils } from 'ethers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
@@ -55,52 +55,22 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 		[supplyBalances, exchangeRates, asset.marketAddress],
 	)
 
-	// const _imfFactor = accountLiquidity
-	// 	? FixedNumber.from('1.1').divUnsafe(
-	// 			FixedNumber.from('1')
-	// 				.addUnsafe(FixedNumber.from(asset.imfFactor))
-	// 				.mulUnsafe(FixedNumber.from(Math.sqrt(supply.toNumber()))),
-	// 	  )
-	// 	: BigNumber.from(0)
 	let _imfFactor = asset.imfFactor
 	if (accountLiquidity) {
-		const num = parseUnits('1.1')
-		const sqrt = parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString())
-		const denom = asset.imfFactor.mul(sqrt).add(parseUnits('1'))
+		const _sqrt = sqrt(supply)
+		const num = exponentiate(parseUnits('1.1'))
+		const denom = decimate(asset.imfFactor.mul(_sqrt).add(parseUnits('1')))
 		_imfFactor = num.div(denom)
 	}
-
-	console.log('IMF', asset.imfFactor.toString())
-	console.log(
-		'Margin Factor',
-		parseUnits('1.1')
-			.div(asset.imfFactor.mul(parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString())).add(parseUnits('1')))
-			.toString(),
-	)
-	console.log('num', parseUnits('1.1').toString())
-	console.log('SqRt', parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString()).toString())
-	console.log(
-		'Denom',
-		asset.imfFactor
-			.mul(parseUnits(Math.sqrt(parseFloat(formatUnits(supply))).toString()))
-			.add(parseUnits('1'))
-			.toString(),
-	)
 
 	let withdrawable = BigNumber.from(0)
 	if (_imfFactor.gt(asset.collateralFactor)) {
 		if (asset.collateralFactor.mul(asset.price).gt(0)) {
-			withdrawable = accountLiquidity.usdBorrowable.div(asset.collateralFactor).mul(asset.price)
-		} else if (_imfFactor.mul(asset.price)) {
-			withdrawable = accountLiquidity && accountLiquidity.usdBorrowable.div(_imfFactor).mul(asset.price)
+			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(asset.collateralFactor.mul(asset.price)))
+		} else {
+			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(asset.price))
 		}
 	}
-
-	console.log('Price', asset.price.toString())
-	console.log('usdBorrowable', accountLiquidity && accountLiquidity.usdBorrowable.toString())
-	console.log('Collateral Factor', asset.collateralFactor.toString())
-	console.log('Supply', supply.toString())
-	console.log('Withdrawable', accountLiquidity && withdrawable.toString())
 
 	const max = () => {
 		switch (operation) {
@@ -110,7 +80,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 					: BigNumber.from(0)
 			//Broken
 			case MarketOperations.withdraw:
-				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable > supply ? supply : withdrawable
+				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
 			//Broken
 			case MarketOperations.mint:
 				return prices && accountLiquidity

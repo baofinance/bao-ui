@@ -43,6 +43,20 @@ export const exponentiate = (n: BigNumberish | BN, decimals = 18): BigNumber => 
 	return BigNumber.from(n.toString()).mul(BigNumber.from(10).pow(BigNumber.from(decimals)))
 }
 
+const ONE = BigNumber.from(1)
+const TWO = BigNumber.from(2)
+
+export const sqrt = (value: BigNumber): BigNumber => {
+	const x = BigNumber.from(value)
+	let z = x.add(ONE).div(TWO)
+	let y = x
+	while (z.sub(y).isNegative()) {
+		y = z
+		z = x.div(z).add(z).div(TWO)
+	}
+	return y
+}
+
 export const isBigNumberish = (val: BigNumberish | BN): boolean => {
 	try {
 		BigNumber.from(val.toString())
