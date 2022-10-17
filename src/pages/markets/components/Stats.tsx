@@ -3,9 +3,9 @@ import { StatBlock } from '@/components/Stats'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import React, { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
@@ -97,7 +97,7 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Total Reserves',
-					value: `$${getDisplayBalance(asset.totalReserves.mul(asset.price), 18+asset.underlyingDecimals)}`,
+					value: `$${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}`,
 				},
 			]}
 		/>
@@ -166,8 +166,11 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 					},
 					{
 						label: 'Debt Limit Used',
-						value: `${getDisplayBalance(accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0)
-						}% ➜ ${getDisplayBalance(accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0)}%`,
+						value: `${getDisplayBalance(
+							accountLiquidity && !borrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100) : 0,
+						)}% ➜ ${getDisplayBalance(
+							accountLiquidity && !newBorrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(newBorrowable).mul(100) : 0,
+						)}%`,
 					},
 				]}
 			/>
@@ -199,15 +202,14 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 							accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0),
 						)}`,
 					},
-					{ // FIXME: this seems broken
+					{
+						// FIXME: this seems broken
 						label: 'Debt Limit Used',
-						value: `${getDisplayBalance(!borrowable.eq(0) ? borrow.div(borrowable).mul(100) : 0)}% ➜ ${
-							getDisplayBalance(!newBorrowable.eq(0)
-								? borrow.gt(parseUnits('0.01'))
-									? !borrowable.eq(0) ? borrow.div(borrowable).mul(-100) : 0
-									: !newBorrowable.eq(0) ? borrow.div(newBorrowable).mul(100) : 0
-									: 0
-						)}%`,
+						value: `${getDisplayBalance(
+							!borrowable.eq(0) ? exponentiate(borrow).div(borrowable).mul(100) : 0,
+							18,
+							2,
+						)}% ➜ ${getDisplayBalance(!newBorrowable.eq(0) ? exponentiate(newBorrow).div(newBorrowable).mul(100) : 0, 18, 2)}%`,
 					},
 				]}
 			/>
