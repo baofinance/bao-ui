@@ -57,8 +57,8 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
 		const supplyApy = markets.reduce((prev, { marketAddress, supplyApy }: ActiveSupportedMarket) => {
 			const supplyBal = supplyBalances
-				.find(balance => balance.address === marketAddress).balance
-				.mul(exchangeRates[marketAddress])
+				.find(balance => balance.address === marketAddress)
+				.balance.mul(exchangeRates[marketAddress])
 				.mul(prices[marketAddress])
 				.mul(supplyApy)
 			return prev.add(supplyBal)
@@ -69,11 +69,12 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			return prev.add(apy.mul(prices[marketAddress]).mul(supplyApy))
 		}, BigNumber.from(0))
 
-		const netApy = (supplyApy.gt(borrowApy) && !usdSupply.eq(0))
-			? supplyApy.sub(borrowApy).div(usdSupply)
-			: (borrowApy.gt(supplyApy) && !usdBorrow.eq(0))
-			? supplyApy.sub(borrowApy).div(usdBorrow)
-			: BigNumber.from(0)
+		const netApy =
+			supplyApy.gt(borrowApy) && !usdSupply.eq(0)
+				? supplyApy.sub(borrowApy).div(usdSupply)
+				: borrowApy.gt(supplyApy) && !usdBorrow.eq(0)
+				? supplyApy.sub(borrowApy).div(usdBorrow)
+				: BigNumber.from(0)
 
 		setAccountLiquidity({
 			netApy,

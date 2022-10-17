@@ -86,9 +86,7 @@ export const Overview = () => {
 											</Typography>
 											<Typography>
 												{getDisplayBalance(
-													accountLiquidity && !borrowable.eq(0)
-														? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100)
-														: 0,
+													accountLiquidity && !borrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100) : 0,
 												)}
 												{'%'}
 											</Typography>
@@ -157,9 +155,10 @@ export const Overview = () => {
 									Debt Limit
 								</Typography>
 								<Typography variant='sm' className='m-0 ml-2'>
-									{`${accountLiquidity.usdBorrowable.gt(0)
-										? (accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow))).mul(100)
-										: 0
+									{`${
+										accountLiquidity.usdBorrowable.gt(0)
+											? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
+											: 0
 									}%`}{' '}
 								</Typography>
 							</div>
