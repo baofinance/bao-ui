@@ -28,6 +28,7 @@ import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import type { Erc20, VotingEscrow } from '@/typechain/index'
+import { formatUnits } from 'ethers/lib/utils'
 
 function addDays(numOfDays: number, date = new Date()) {
 	date.setDate(date.getDate() + numOfDays)
@@ -94,6 +95,8 @@ const Lock: React.FC = () => {
 		suppliedPercentage = lockSupplyPercent.div(totalSupply)
 	}
 
+	console.log('Allowance', allowance.toString())
+
 	return (
 		<>
 			<div className={`mx-auto my-4 ${isDesktop ? 'flex-flow flex gap-4' : 'flex flex-col gap-3'} justify-evenly`}>
@@ -123,7 +126,7 @@ const Lock: React.FC = () => {
 						{
 							label: `veBAO Balance`,
 							value:
-								account && !isNaN(lockInfo && lockInfo.balance.toNumber())
+								account && !isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance)))
 									? window.screen.width > 1200
 										? getDisplayBalance(lockInfo && lockInfo.balance)
 										: truncateNumber(lockInfo && lockInfo.balance)
@@ -328,9 +331,9 @@ const Lock: React.FC = () => {
 								</div>
 							</div>
 							<div className='flex flex-col'>
-								{isNaN(lockInfo && lockInfo.balance.toNumber()) || (lockInfo && lockInfo.balance.lte(0)) ? (
+								{isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance))) || (lockInfo && lockInfo.balance.lte(0)) ? (
 									<div className='mt-3 flex flex-row gap-4'>
-										{allowance && allowance.gt(0) ? (
+										{allowance && allowance.lte(0) ? (
 											<>
 												{pendingTx ? (
 													<Button fullWidth disabled={true}>

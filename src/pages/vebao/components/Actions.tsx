@@ -23,6 +23,7 @@ import { default as React, useCallback, useMemo, useState } from 'react'
 
 import useContract from '@/hooks/base/useContract'
 import type { Gauge, GaugeController, Minter } from '@/typechain/index'
+import { useWeb3React } from '@web3-react/core'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -59,6 +60,8 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 		setVal('')
 	}, [onHide])
 
+	console.log('Allowance', allowance.toString())
+
 	return (
 		<>
 			<>
@@ -82,7 +85,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 				</Modal.Body>
 			</>
 			<Modal.Actions>
-				{allowance && !allowance.toString() ? (
+				{allowance && allowance.lte(0) ? (
 					<>
 						{pendingTx ? (
 							<Button fullWidth disabled={true}>
@@ -290,6 +293,7 @@ interface VoteProps {
 
 export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const bao = useBao()
+	const { account, library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
@@ -302,6 +306,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 		},
 		[setVal],
 	)
+
+	console.log('Voting Power Allocated', votingPowerAllocated.toString())
 
 	return (
 		<>
@@ -323,7 +329,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 				</div>
 				<div>
 					<Typography>Current Voting Power Allocated</Typography>
-					<Typography className='text-text-200'>{BigNumber.from(10000).div(votingPowerAllocated).toNumber()}%</Typography>
+					<Typography className='text-text-200'>
+						{votingPowerAllocated.gt(0) ? BigNumber.from(10000).div(votingPowerAllocated).toNumber() : '0'}%
+					</Typography>
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
@@ -343,9 +351,20 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							fullWidth
 							disabled={!val || !bao || isNaN(val as any)}
 							onClick={async () => {
-								const stakeTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, parseFloat(val) * 100)
-
-								handleTx(stakeTx, `${gauge.name} gauge - Voted ${parseFloat(val).toFixed(2)}% of your voting power`)
+								const gasPrice = await library.getGasPrice()
+								console.log('gas price', gasPrice.toString())
+								let gasLimit
+								try {
+									gasLimit = await gaugeControllerContract.estimateGas.vote_for_gauge_weights(gauge.gaugeAddress, parseUnits(val).mul(100))
+									console.log('gas limit', gasLimit.toString())
+								} catch (e: any) {
+									console.error('!!could not get gas limit!!', e.message)
+								}
+								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, parseUnits(val).mul(100), {
+									gasLimit,
+									gasPrice,
+								})
+								handleTx(voteTx, `${gauge.name} gauge - Voted ${parseFloat(val).toFixed(2)}% of your voting power`)
 							}}
 						>
 							Vote for {gauge.name}
