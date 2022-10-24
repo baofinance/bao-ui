@@ -105,7 +105,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 				</Modal.Body>
 			</>
 			<Modal.Actions>
-				{allowance && !allowance.toNumber() ? (
+				{allowance && allowance.lte(0) ? (
 					<>
 						{pendingTx ? (
 							<Button fullWidth disabled={true}>
@@ -119,7 +119,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 									const signer = library.getSigner()
 									const lpToken = Uni_v2_lp__factory.connect(lpTokenAddress, signer)
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-									const tx = lpToken.approve(masterChefContract.address, ethers.constants.MaxUint256, signer)
+									const tx = lpToken.approve(masterChefContract.address, ethers.constants.MaxUint256)
 									handleTx(tx, `Farms: Approve ${tokenName}`)
 								}}
 							>
@@ -244,7 +244,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								Balance:
 							</Typography>
 							<Typography variant='sm'>
-								{getFullDisplayBalance(max)}{' '}
+								{getDisplayBalance(max)}{' '}
 								<Link href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
 									<a>
 										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />

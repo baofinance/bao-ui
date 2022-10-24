@@ -307,6 +307,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	)
 
 	console.log('Voting Power Allocated', votingPowerAllocated.toString())
+	console.log(val)
 
 	return (
 		<>
@@ -359,10 +360,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 								} catch (e: any) {
 									console.error('!!could not get gas limit!!', e.message)
 								}
-								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, parseUnits(val).mul(100), {
-									gasLimit,
-									gasPrice,
-								})
+								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
 								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(val).toFixed(2)}% of your veBAO`)
 							}}
 						>

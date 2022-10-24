@@ -427,7 +427,7 @@ const Lock: React.FC = () => {
 											) : (
 												<Button
 													fullWidth
-													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > crvBalance.toNumber()}
+													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(crvBalance))}
 													onClick={async () => {
 														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 
