@@ -180,7 +180,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 37597,
   },
   {
     name: "apply_transfer_ownership",
@@ -188,7 +187,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 38497,
   },
   {
     name: "gauge_types",
@@ -206,7 +204,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1625,
   },
   {
     name: "add_gauge",
@@ -250,7 +247,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 18033784416,
   },
   {
     name: "checkpoint_gauge",
@@ -263,7 +259,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 18087678795,
   },
   {
     name: "gauge_relative_weight",
@@ -384,7 +379,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 36246310050,
   },
   {
     name: "change_gauge_weight",
@@ -401,7 +395,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 36354170809,
   },
   {
     name: "vote_for_gauge_weights",
@@ -418,7 +411,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 18142052127,
   },
   {
     name: "get_gauge_weight",
@@ -436,7 +428,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2974,
   },
   {
     name: "get_type_weight",
@@ -454,7 +445,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2977,
   },
   {
     name: "get_total_weight",
@@ -467,7 +457,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2693,
   },
   {
     name: "get_weights_sum_per_type",
@@ -485,7 +474,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 3109,
   },
   {
     name: "admin",
@@ -498,7 +486,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1841,
   },
   {
     name: "future_admin",
@@ -511,7 +498,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1871,
   },
   {
     name: "token",
@@ -524,7 +510,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1901,
   },
   {
     name: "voting_escrow",
@@ -537,7 +522,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1931,
   },
   {
     name: "n_gauge_types",
@@ -550,7 +534,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1961,
   },
   {
     name: "n_gauges",
@@ -563,7 +546,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1991,
   },
   {
     name: "gauge_type_names",
@@ -581,7 +563,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 8628,
   },
   {
     name: "gauges",
@@ -599,7 +580,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2160,
   },
   {
     name: "vote_user_slopes",
@@ -629,7 +609,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 5020,
   },
   {
     name: "vote_user_power",
@@ -647,7 +626,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2265,
   },
   {
     name: "last_user_vote",
@@ -669,7 +647,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2449,
   },
   {
     name: "points_weight",
@@ -695,7 +672,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 3859,
   },
   {
     name: "time_weight",
@@ -713,7 +689,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2355,
   },
   {
     name: "points_sum",
@@ -739,7 +714,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 3970,
   },
   {
     name: "time_sum",
@@ -757,7 +731,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2370,
   },
   {
     name: "points_total",
@@ -775,7 +748,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2406,
   },
   {
     name: "time_total",
@@ -788,7 +760,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2321,
   },
   {
     name: "points_type_weight",
@@ -810,7 +781,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2671,
   },
   {
     name: "time_type_weight",
@@ -828,7 +798,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2490,
   },
 ];
 

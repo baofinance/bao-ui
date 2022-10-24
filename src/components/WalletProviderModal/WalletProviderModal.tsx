@@ -28,14 +28,14 @@ interface WalletProviderModalProps {
 const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => {
 	const { connector, chainId, account, activate, active, error } = useWeb3React()
 
+	const [activatingConnector, setActivatingConnector] = useState<AbstractConnector>()
+
 	useEffect(() => {
 		// FIXME: need to change this when the frontend is multichain like sushi
 		if (account && chainId === Config.networkId) {
 			onHide()
 		}
 	}, [account, chainId, onHide])
-
-	const [activatingConnector, setActivatingConnector] = useState<AbstractConnector>()
 
 	useEffect(() => {
 		if (activatingConnector && activatingConnector === connector) {
@@ -50,19 +50,19 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 	}, [account, active, onHide])
 
 	if (window.ethereum && window.ethereum.chainId !== Config.defaultRpc.chainId) {
-		try {
-			window.ethereum.request({
+		window.ethereum
+			.request({
 				method: 'wallet_switchEthereumChain',
 				params: [{ chainId: Config.defaultRpc.chainId }],
 			})
-		} catch (error: any) {
-			if (error.code === 4902) {
-				window.ethereum.request({
-					method: 'wallet_addEthereumChain',
-					params: [Config.defaultRpc],
-				})
-			}
-		}
+			.catch((error: any) => {
+				if (error.code === 4902) {
+					window.ethereum.request({
+						method: 'wallet_addEthereumChain',
+						params: [Config.defaultRpc],
+					})
+				}
+			})
 	}
 
 	return (

@@ -11,18 +11,18 @@ const _abi = [
     name: "Transfer",
     inputs: [
       {
-        type: "address",
         name: "_from",
-        indexed: true,
-      },
-      {
         type: "address",
-        name: "_to",
         indexed: true,
       },
       {
-        type: "uint256",
+        name: "_to",
+        type: "address",
+        indexed: true,
+      },
+      {
         name: "_value",
+        type: "uint256",
         indexed: false,
       },
     ],
@@ -33,18 +33,18 @@ const _abi = [
     name: "Approval",
     inputs: [
       {
-        type: "address",
         name: "_owner",
-        indexed: true,
-      },
-      {
         type: "address",
-        name: "_spender",
         indexed: true,
       },
       {
-        type: "uint256",
+        name: "_spender",
+        type: "address",
+        indexed: true,
+      },
+      {
         name: "_value",
+        type: "uint256",
         indexed: false,
       },
     ],
@@ -55,18 +55,18 @@ const _abi = [
     name: "UpdateMiningParameters",
     inputs: [
       {
-        type: "uint256",
         name: "time",
+        type: "uint256",
         indexed: false,
       },
       {
-        type: "uint256",
         name: "rate",
+        type: "uint256",
         indexed: false,
       },
       {
-        type: "uint256",
         name: "supply",
+        type: "uint256",
         indexed: false,
       },
     ],
@@ -77,8 +77,8 @@ const _abi = [
     name: "SetMinter",
     inputs: [
       {
-        type: "address",
         name: "minter",
+        type: "address",
         indexed: false,
       },
     ],
@@ -89,8 +89,8 @@ const _abi = [
     name: "SetAdmin",
     inputs: [
       {
-        type: "address",
         name: "admin",
+        type: "address",
         indexed: false,
       },
     ],
@@ -98,402 +98,362 @@ const _abi = [
     type: "event",
   },
   {
-    outputs: [],
-    inputs: [
-      {
-        type: "string",
-        name: "_name",
-      },
-      {
-        type: "string",
-        name: "_symbol",
-      },
-      {
-        type: "uint256",
-        name: "_decimals",
-      },
-    ],
     stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    name: "update_mining_parameters",
-    outputs: [],
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 148748,
-  },
-  {
-    name: "start_epoch_time_write",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 149603,
-  },
-  {
-    name: "future_epoch_time_write",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 149806,
-  },
-  {
-    name: "available_supply",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 4018,
-  },
-  {
-    name: "mintable_in_timeframe",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
     inputs: [
       {
-        type: "uint256",
-        name: "start",
-      },
-      {
-        type: "uint256",
-        name: "end",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-    gas: 2216141,
-  },
-  {
-    name: "set_minter",
-    outputs: [],
-    inputs: [
-      {
-        type: "address",
-        name: "_minter",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 38698,
-  },
-  {
-    name: "set_admin",
-    outputs: [],
-    inputs: [
-      {
-        type: "address",
-        name: "_admin",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 37837,
-  },
-  {
-    name: "totalSupply",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 1421,
-  },
-  {
-    name: "allowance",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [
-      {
-        type: "address",
-        name: "_owner",
-      },
-      {
-        type: "address",
-        name: "_spender",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-    gas: 1759,
-  },
-  {
-    name: "transfer",
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-      },
-    ],
-    inputs: [
-      {
-        type: "address",
-        name: "_to",
-      },
-      {
-        type: "uint256",
-        name: "_value",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 75139,
-  },
-  {
-    name: "transferFrom",
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-      },
-    ],
-    inputs: [
-      {
-        type: "address",
-        name: "_from",
-      },
-      {
-        type: "address",
-        name: "_to",
-      },
-      {
-        type: "uint256",
-        name: "_value",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 111433,
-  },
-  {
-    name: "approve",
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-      },
-    ],
-    inputs: [
-      {
-        type: "address",
-        name: "_spender",
-      },
-      {
-        type: "uint256",
-        name: "_value",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 39288,
-  },
-  {
-    name: "mint",
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-      },
-    ],
-    inputs: [
-      {
-        type: "address",
-        name: "_to",
-      },
-      {
-        type: "uint256",
-        name: "_value",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 228030,
-  },
-  {
-    name: "burn",
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-      },
-    ],
-    inputs: [
-      {
-        type: "uint256",
-        name: "_value",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-    gas: 74999,
-  },
-  {
-    name: "set_name",
-    outputs: [],
-    inputs: [
-      {
-        type: "string",
         name: "_name",
+        type: "string",
       },
       {
-        type: "string",
         name: "_symbol",
+        type: "string",
+      },
+      {
+        name: "_decimals",
+        type: "uint8",
       },
     ],
+    outputs: [],
+  },
+  {
     stateMutability: "nonpayable",
     type: "function",
-    gas: 178270,
-  },
-  {
-    name: "name",
-    outputs: [
-      {
-        type: "string",
-        name: "",
-      },
-    ],
+    name: "update_mining_parameters",
     inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 8063,
+    outputs: [],
   },
   {
-    name: "symbol",
-    outputs: [
-      {
-        type: "string",
-        name: "",
-      },
-    ],
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "start_epoch_time_write",
     inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 7116,
-  },
-  {
-    name: "decimals",
     outputs: [
       {
+        name: "",
         type: "uint256",
-        name: "",
       },
     ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 1721,
   },
   {
-    name: "balanceOf",
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "future_epoch_time_write",
+    inputs: [],
     outputs: [
       {
-        type: "uint256",
         name: "",
+        type: "uint256",
       },
     ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "available_supply",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "mintable_in_timeframe",
     inputs: [
       {
+        name: "start",
+        type: "uint256",
+      },
+      {
+        name: "end",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "set_minter",
+    inputs: [
+      {
+        name: "_minter",
         type: "address",
+      },
+    ],
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "set_admin",
+    inputs: [
+      {
+        name: "_admin",
+        type: "address",
+      },
+    ],
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "transfer",
+    inputs: [
+      {
+        name: "_to",
+        type: "address",
+      },
+      {
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "transferFrom",
+    inputs: [
+      {
+        name: "_from",
+        type: "address",
+      },
+      {
+        name: "_to",
+        type: "address",
+      },
+      {
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "approve",
+    inputs: [
+      {
+        name: "_spender",
+        type: "address",
+      },
+      {
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "mint",
+    inputs: [
+      {
+        name: "_to",
+        type: "address",
+      },
+      {
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "burn",
+    inputs: [
+      {
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "name",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "symbol",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "decimals",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "balanceOf",
+    inputs: [
+      {
         name: "arg0",
+        type: "address",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-    gas: 1905,
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
   },
   {
+    stateMutability: "view",
+    type: "function",
+    name: "allowance",
+    inputs: [
+      {
+        name: "arg0",
+        type: "address",
+      },
+      {
+        name: "arg1",
+        type: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "totalSupply",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     name: "minter",
+    inputs: [],
     outputs: [
       {
-        type: "address",
         name: "",
+        type: "address",
       },
     ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 1781,
   },
   {
+    stateMutability: "view",
+    type: "function",
     name: "admin",
+    inputs: [],
     outputs: [
       {
+        name: "",
         type: "address",
-        name: "",
       },
     ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 1811,
   },
   {
+    stateMutability: "view",
+    type: "function",
     name: "mining_epoch",
+    inputs: [],
     outputs: [
       {
+        name: "",
         type: "int128",
-        name: "",
       },
     ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 1841,
   },
   {
+    stateMutability: "view",
+    type: "function",
     name: "start_epoch_time",
+    inputs: [],
     outputs: [
       {
-        type: "uint256",
         name: "",
+        type: "uint256",
       },
     ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-    gas: 1871,
   },
   {
-    name: "rate",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1901,
+    name: "rate",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
   },
 ];
 

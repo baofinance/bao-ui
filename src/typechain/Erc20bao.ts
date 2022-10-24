@@ -36,18 +36,17 @@ export interface Erc20baoInterface extends utils.Interface {
     "mintable_in_timeframe(uint256,uint256)": FunctionFragment;
     "set_minter(address)": FunctionFragment;
     "set_admin(address)": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "allowance(address,address)": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
-    "set_name(string,string)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
     "decimals()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "allowance(address,address)": FunctionFragment;
+    "totalSupply()": FunctionFragment;
     "minter()": FunctionFragment;
     "admin()": FunctionFragment;
     "mining_epoch()": FunctionFragment;
@@ -71,10 +70,6 @@ export interface Erc20baoInterface extends utils.Interface {
       | "set_minter(address)"
       | "set_admin"
       | "set_admin(address)"
-      | "totalSupply"
-      | "totalSupply()"
-      | "allowance"
-      | "allowance(address,address)"
       | "transfer"
       | "transfer(address,uint256)"
       | "transferFrom"
@@ -85,8 +80,6 @@ export interface Erc20baoInterface extends utils.Interface {
       | "mint(address,uint256)"
       | "burn"
       | "burn(uint256)"
-      | "set_name"
-      | "set_name(string,string)"
       | "name"
       | "name()"
       | "symbol"
@@ -95,6 +88,10 @@ export interface Erc20baoInterface extends utils.Interface {
       | "decimals()"
       | "balanceOf"
       | "balanceOf(address)"
+      | "allowance"
+      | "allowance(address,address)"
+      | "totalSupply"
+      | "totalSupply()"
       | "minter"
       | "minter()"
       | "admin"
@@ -164,22 +161,6 @@ export interface Erc20baoInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowance(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "transfer",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
@@ -227,14 +208,6 @@ export interface Erc20baoInterface extends utils.Interface {
     functionFragment: "burn(uint256)",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "set_name",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_name(string,string)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "name()", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
@@ -251,6 +224,22 @@ export interface Erc20baoInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf(address)",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "allowance",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "allowance(address,address)",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply()",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "minter", values?: undefined): string;
   encodeFunctionData(functionFragment: "minter()", values?: undefined): string;
@@ -325,19 +314,6 @@ export interface Erc20baoInterface extends utils.Interface {
     functionFragment: "set_admin(address)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "allowance(address,address)",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transfer(address,uint256)",
@@ -366,11 +342,6 @@ export interface Erc20baoInterface extends utils.Interface {
     functionFragment: "burn(uint256)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "set_name", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "set_name(string,string)",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name()", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -380,6 +351,19 @@ export interface Erc20baoInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOf(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "allowance(address,address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply()",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "minter", data: BytesLike): Result;
@@ -571,22 +555,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    allowance(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "allowance(address,address)"(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -647,18 +615,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    set_name(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "set_name(string,string)"(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     name(overrides?: CallOverrides): Promise<[string]>;
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
@@ -667,9 +623,9 @@ export interface Erc20bao extends BaseContract {
 
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
-    decimals(overrides?: CallOverrides): Promise<[BigNumber]>;
+    decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     balanceOf(
       arg0: PromiseOrValue<string>,
@@ -680,6 +636,22 @@ export interface Erc20bao extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    allowance(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     minter(overrides?: CallOverrides): Promise<[string]>;
 
@@ -762,22 +734,6 @@ export interface Erc20bao extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  allowance(
-    _owner: PromiseOrValue<string>,
-    _spender: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "allowance(address,address)"(
-    _owner: PromiseOrValue<string>,
-    _spender: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   transfer(
     _to: PromiseOrValue<string>,
     _value: PromiseOrValue<BigNumberish>,
@@ -838,18 +794,6 @@ export interface Erc20bao extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  set_name(
-    _name: PromiseOrValue<string>,
-    _symbol: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "set_name(string,string)"(
-    _name: PromiseOrValue<string>,
-    _symbol: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
@@ -858,9 +802,9 @@ export interface Erc20bao extends BaseContract {
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
 
-  decimals(overrides?: CallOverrides): Promise<BigNumber>;
+  decimals(overrides?: CallOverrides): Promise<number>;
 
-  "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   balanceOf(
     arg0: PromiseOrValue<string>,
@@ -871,6 +815,22 @@ export interface Erc20bao extends BaseContract {
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  allowance(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   minter(overrides?: CallOverrides): Promise<string>;
 
@@ -941,22 +901,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    allowance(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1017,18 +961,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    set_name(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "set_name(string,string)"(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
     "name()"(overrides?: CallOverrides): Promise<string>;
@@ -1037,9 +969,9 @@ export interface Erc20bao extends BaseContract {
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
 
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+    decimals(overrides?: CallOverrides): Promise<number>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
     balanceOf(
       arg0: PromiseOrValue<string>,
@@ -1050,6 +982,22 @@ export interface Erc20bao extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    allowance(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     minter(overrides?: CallOverrides): Promise<string>;
 
@@ -1174,22 +1122,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    allowance(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1250,18 +1182,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    set_name(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "set_name(string,string)"(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1283,6 +1203,22 @@ export interface Erc20bao extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    allowance(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     minter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1368,22 +1304,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    allowance(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowance(address,address)"(
-      _owner: PromiseOrValue<string>,
-      _spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1444,18 +1364,6 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    set_name(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "set_name(string,string)"(
-      _name: PromiseOrValue<string>,
-      _symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1477,6 +1385,22 @@ export interface Erc20bao extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    allowance(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     minter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

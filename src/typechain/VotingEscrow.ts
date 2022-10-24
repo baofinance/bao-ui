@@ -33,18 +33,23 @@ export interface VotingEscrowInterface extends utils.Interface {
     "apply_transfer_ownership()": FunctionFragment;
     "commit_smart_wallet_checker(address)": FunctionFragment;
     "apply_smart_wallet_checker()": FunctionFragment;
+    "commit_distr_contract(address)": FunctionFragment;
+    "apply_distr_contract()": FunctionFragment;
     "get_last_user_slope(address)": FunctionFragment;
     "user_point_history__ts(address,uint256)": FunctionFragment;
     "locked__end(address)": FunctionFragment;
     "checkpoint()": FunctionFragment;
     "deposit_for(address,uint256)": FunctionFragment;
     "create_lock(uint256,uint256)": FunctionFragment;
+    "create_lock_for(address,uint256,uint256)": FunctionFragment;
     "increase_amount(uint256)": FunctionFragment;
     "increase_unlock_time(uint256)": FunctionFragment;
     "withdraw()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfAt(address,uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
+    "totalSupply(uint256)": FunctionFragment;
     "totalSupplyAt(uint256)": FunctionFragment;
     "changeController(address)": FunctionFragment;
     "token()": FunctionFragment;
@@ -63,6 +68,8 @@ export interface VotingEscrowInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "future_smart_wallet_checker()": FunctionFragment;
     "smart_wallet_checker()": FunctionFragment;
+    "future_distr_contract()": FunctionFragment;
+    "distr_contract()": FunctionFragment;
     "admin()": FunctionFragment;
     "future_admin()": FunctionFragment;
   };
@@ -77,6 +84,10 @@ export interface VotingEscrowInterface extends utils.Interface {
       | "commit_smart_wallet_checker(address)"
       | "apply_smart_wallet_checker"
       | "apply_smart_wallet_checker()"
+      | "commit_distr_contract"
+      | "commit_distr_contract(address)"
+      | "apply_distr_contract"
+      | "apply_distr_contract()"
       | "get_last_user_slope"
       | "get_last_user_slope(address)"
       | "user_point_history__ts"
@@ -89,18 +100,20 @@ export interface VotingEscrowInterface extends utils.Interface {
       | "deposit_for(address,uint256)"
       | "create_lock"
       | "create_lock(uint256,uint256)"
+      | "create_lock_for"
+      | "create_lock_for(address,uint256,uint256)"
       | "increase_amount"
       | "increase_amount(uint256)"
       | "increase_unlock_time"
       | "increase_unlock_time(uint256)"
       | "withdraw"
       | "withdraw()"
-      | "balanceOf"
       | "balanceOf(address)"
+      | "balanceOf(address,uint256)"
       | "balanceOfAt"
       | "balanceOfAt(address,uint256)"
-      | "totalSupply"
       | "totalSupply()"
+      | "totalSupply(uint256)"
       | "totalSupplyAt"
       | "totalSupplyAt(uint256)"
       | "changeController"
@@ -137,6 +150,10 @@ export interface VotingEscrowInterface extends utils.Interface {
       | "future_smart_wallet_checker()"
       | "smart_wallet_checker"
       | "smart_wallet_checker()"
+      | "future_distr_contract"
+      | "future_distr_contract()"
+      | "distr_contract"
+      | "distr_contract()"
       | "admin"
       | "admin()"
       | "future_admin"
@@ -173,6 +190,22 @@ export interface VotingEscrowInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "apply_smart_wallet_checker()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "commit_distr_contract",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "commit_distr_contract(address)",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "apply_distr_contract",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "apply_distr_contract()",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -224,6 +257,22 @@ export interface VotingEscrowInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "create_lock_for",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "create_lock_for(address,uint256,uint256)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "increase_amount",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -245,12 +294,12 @@ export interface VotingEscrowInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: "balanceOf(address)",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf(address)",
-    values: [PromiseOrValue<string>]
+    functionFragment: "balanceOf(address,uint256)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOfAt",
@@ -261,12 +310,12 @@ export interface VotingEscrowInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "totalSupply",
+    functionFragment: "totalSupply()",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "totalSupply()",
-    values?: undefined
+    functionFragment: "totalSupply(uint256)",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupplyAt",
@@ -373,6 +422,22 @@ export interface VotingEscrowInterface extends utils.Interface {
     functionFragment: "smart_wallet_checker()",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "future_distr_contract",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "future_distr_contract()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "distr_contract",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "distr_contract()",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "admin", values?: undefined): string;
   encodeFunctionData(functionFragment: "admin()", values?: undefined): string;
   encodeFunctionData(
@@ -414,6 +479,22 @@ export interface VotingEscrowInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "apply_smart_wallet_checker()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "commit_distr_contract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "commit_distr_contract(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "apply_distr_contract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "apply_distr_contract()",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -462,6 +543,14 @@ export interface VotingEscrowInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "create_lock_for",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "create_lock_for(address,uint256,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "increase_amount",
     data: BytesLike
   ): Result;
@@ -479,9 +568,12 @@ export interface VotingEscrowInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOf(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "balanceOf(address,uint256)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -493,11 +585,11 @@ export interface VotingEscrowInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "totalSupply",
+    functionFragment: "totalSupply()",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "totalSupply()",
+    functionFragment: "totalSupply(uint256)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -594,6 +686,22 @@ export interface VotingEscrowInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "smart_wallet_checker()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "future_distr_contract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "future_distr_contract()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "distr_contract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "distr_contract()",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "admin", data: BytesLike): Result;
@@ -750,6 +858,24 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    commit_distr_contract(
+      addr: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "commit_distr_contract(address)"(
+      addr: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    apply_distr_contract(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "apply_distr_contract()"(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     get_last_user_slope(
       addr: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -814,6 +940,20 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    create_lock_for(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "create_lock_for(address,uint256,uint256)"(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     increase_amount(
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -842,13 +982,14 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
+    "balanceOf(address)"(
       addr: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    "balanceOf(address)"(
+    "balanceOf(address,uint256)"(
       addr: PromiseOrValue<string>,
+      _t: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -864,9 +1005,12 @@ export interface VotingEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply(uint256)"(
+      t: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     totalSupplyAt(
       _block: PromiseOrValue<BigNumberish>,
@@ -1014,6 +1158,14 @@ export interface VotingEscrow extends BaseContract {
 
     "smart_wallet_checker()"(overrides?: CallOverrides): Promise<[string]>;
 
+    future_distr_contract(overrides?: CallOverrides): Promise<[string]>;
+
+    "future_distr_contract()"(overrides?: CallOverrides): Promise<[string]>;
+
+    distr_contract(overrides?: CallOverrides): Promise<[string]>;
+
+    "distr_contract()"(overrides?: CallOverrides): Promise<[string]>;
+
     admin(overrides?: CallOverrides): Promise<[string]>;
 
     "admin()"(overrides?: CallOverrides): Promise<[string]>;
@@ -1056,6 +1208,24 @@ export interface VotingEscrow extends BaseContract {
   ): Promise<ContractTransaction>;
 
   "apply_smart_wallet_checker()"(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  commit_distr_contract(
+    addr: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "commit_distr_contract(address)"(
+    addr: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  apply_distr_contract(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "apply_distr_contract()"(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1123,6 +1293,20 @@ export interface VotingEscrow extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  create_lock_for(
+    _to: PromiseOrValue<string>,
+    _value: PromiseOrValue<BigNumberish>,
+    _unlock_time: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "create_lock_for(address,uint256,uint256)"(
+    _to: PromiseOrValue<string>,
+    _value: PromiseOrValue<BigNumberish>,
+    _unlock_time: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   increase_amount(
     _value: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1151,13 +1335,14 @@ export interface VotingEscrow extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  balanceOf(
+  "balanceOf(address)"(
     addr: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  "balanceOf(address)"(
+  "balanceOf(address,uint256)"(
     addr: PromiseOrValue<string>,
+    _t: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -1173,9 +1358,12 @@ export interface VotingEscrow extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
   "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply(uint256)"(
+    t: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   totalSupplyAt(
     _block: PromiseOrValue<BigNumberish>,
@@ -1321,6 +1509,14 @@ export interface VotingEscrow extends BaseContract {
 
   "smart_wallet_checker()"(overrides?: CallOverrides): Promise<string>;
 
+  future_distr_contract(overrides?: CallOverrides): Promise<string>;
+
+  "future_distr_contract()"(overrides?: CallOverrides): Promise<string>;
+
+  distr_contract(overrides?: CallOverrides): Promise<string>;
+
+  "distr_contract()"(overrides?: CallOverrides): Promise<string>;
+
   admin(overrides?: CallOverrides): Promise<string>;
 
   "admin()"(overrides?: CallOverrides): Promise<string>;
@@ -1357,6 +1553,20 @@ export interface VotingEscrow extends BaseContract {
     apply_smart_wallet_checker(overrides?: CallOverrides): Promise<void>;
 
     "apply_smart_wallet_checker()"(overrides?: CallOverrides): Promise<void>;
+
+    commit_distr_contract(
+      addr: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "commit_distr_contract(address)"(
+      addr: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    apply_distr_contract(overrides?: CallOverrides): Promise<void>;
+
+    "apply_distr_contract()"(overrides?: CallOverrides): Promise<void>;
 
     get_last_user_slope(
       addr: PromiseOrValue<string>,
@@ -1418,6 +1628,20 @@ export interface VotingEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    create_lock_for(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "create_lock_for(address,uint256,uint256)"(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     increase_amount(
       _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1442,13 +1666,14 @@ export interface VotingEscrow extends BaseContract {
 
     "withdraw()"(overrides?: CallOverrides): Promise<void>;
 
-    balanceOf(
+    "balanceOf(address)"(
       addr: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "balanceOf(address)"(
+    "balanceOf(address,uint256)"(
       addr: PromiseOrValue<string>,
+      _t: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1464,9 +1689,12 @@ export interface VotingEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
     "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply(uint256)"(
+      t: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     totalSupplyAt(
       _block: PromiseOrValue<BigNumberish>,
@@ -1612,6 +1840,14 @@ export interface VotingEscrow extends BaseContract {
 
     "smart_wallet_checker()"(overrides?: CallOverrides): Promise<string>;
 
+    future_distr_contract(overrides?: CallOverrides): Promise<string>;
+
+    "future_distr_contract()"(overrides?: CallOverrides): Promise<string>;
+
+    distr_contract(overrides?: CallOverrides): Promise<string>;
+
+    "distr_contract()"(overrides?: CallOverrides): Promise<string>;
+
     admin(overrides?: CallOverrides): Promise<string>;
 
     "admin()"(overrides?: CallOverrides): Promise<string>;
@@ -1698,6 +1934,24 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    commit_distr_contract(
+      addr: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "commit_distr_contract(address)"(
+      addr: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    apply_distr_contract(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "apply_distr_contract()"(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     get_last_user_slope(
       addr: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1762,6 +2016,20 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    create_lock_for(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "create_lock_for(address,uint256,uint256)"(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     increase_amount(
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1790,13 +2058,14 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    balanceOf(
+    "balanceOf(address)"(
       addr: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "balanceOf(address)"(
+    "balanceOf(address,uint256)"(
       addr: PromiseOrValue<string>,
+      _t: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1812,9 +2081,12 @@ export interface VotingEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
     "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply(uint256)"(
+      t: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     totalSupplyAt(
       _block: PromiseOrValue<BigNumberish>,
@@ -1934,6 +2206,14 @@ export interface VotingEscrow extends BaseContract {
 
     "smart_wallet_checker()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    future_distr_contract(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "future_distr_contract()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    distr_contract(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "distr_contract()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     admin(overrides?: CallOverrides): Promise<BigNumber>;
 
     "admin()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1977,6 +2257,24 @@ export interface VotingEscrow extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     "apply_smart_wallet_checker()"(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    commit_distr_contract(
+      addr: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "commit_distr_contract(address)"(
+      addr: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    apply_distr_contract(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "apply_distr_contract()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2044,6 +2342,20 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    create_lock_for(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "create_lock_for(address,uint256,uint256)"(
+      _to: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _unlock_time: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     increase_amount(
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -2072,13 +2384,14 @@ export interface VotingEscrow extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    balanceOf(
+    "balanceOf(address)"(
       addr: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "balanceOf(address)"(
+    "balanceOf(address,uint256)"(
       addr: PromiseOrValue<string>,
+      _t: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2094,9 +2407,12 @@ export interface VotingEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply(uint256)"(
+      t: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     totalSupplyAt(
       _block: PromiseOrValue<BigNumberish>,
@@ -2221,6 +2537,20 @@ export interface VotingEscrow extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     "smart_wallet_checker()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    future_distr_contract(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "future_distr_contract()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    distr_contract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "distr_contract()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

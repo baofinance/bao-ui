@@ -123,7 +123,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 820723,
   },
   {
     name: "ve_for_at",
@@ -145,7 +144,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 249417,
   },
   {
     name: "checkpoint_total_supply",
@@ -153,7 +151,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 10592405,
   },
   {
     name: "claim",
@@ -200,7 +197,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 26281905,
   },
   {
     name: "burn",
@@ -218,7 +214,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 823450,
   },
   {
     name: "commit_admin",
@@ -231,7 +226,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 37898,
   },
   {
     name: "apply_admin",
@@ -239,7 +233,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 39534,
   },
   {
     name: "toggle_allow_checkpoint_token",
@@ -247,7 +240,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 38673,
   },
   {
     name: "kill_me",
@@ -255,7 +247,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 39587,
   },
   {
     name: "recover_balance",
@@ -273,7 +264,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 7778,
   },
   {
     name: "start_time",
@@ -286,7 +276,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1541,
   },
   {
     name: "time_cursor",
@@ -299,7 +288,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1571,
   },
   {
     name: "time_cursor_of",
@@ -317,7 +305,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1816,
   },
   {
     name: "user_epoch_of",
@@ -335,7 +322,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1846,
   },
   {
     name: "last_token_time",
@@ -348,7 +334,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1661,
   },
   {
     name: "tokens_per_week",
@@ -366,7 +351,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1800,
   },
   {
     name: "voting_escrow",
@@ -379,7 +363,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1721,
   },
   {
     name: "token",
@@ -392,7 +375,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1751,
   },
   {
     name: "total_received",
@@ -405,7 +387,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1781,
   },
   {
     name: "token_last_balance",
@@ -418,7 +399,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1811,
   },
   {
     name: "ve_supply",
@@ -436,7 +416,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1950,
   },
   {
     name: "admin",
@@ -449,7 +428,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1871,
   },
   {
     name: "future_admin",
@@ -462,7 +440,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1901,
   },
   {
     name: "can_checkpoint_token",
@@ -475,7 +452,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1931,
   },
   {
     name: "emergency_return",
@@ -488,7 +464,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1961,
   },
   {
     name: "is_killed",
@@ -501,7 +476,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1991,
   },
 ];
 

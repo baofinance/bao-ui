@@ -55,7 +55,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 100038,
   },
   {
     name: "mint_many",
@@ -68,7 +67,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 408502,
   },
   {
     name: "mint_for",
@@ -85,7 +83,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 101219,
   },
   {
     name: "toggle_approve_mint",
@@ -98,7 +95,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 36726,
   },
   {
     name: "token",
@@ -111,7 +107,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1301,
   },
   {
     name: "controller",
@@ -124,7 +119,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1331,
   },
   {
     name: "minted",
@@ -146,7 +140,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1669,
   },
   {
     name: "allowed_to_mint_for",
@@ -168,7 +161,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1699,
   },
 ];
 

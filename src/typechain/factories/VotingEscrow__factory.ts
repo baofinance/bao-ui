@@ -136,7 +136,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 37597,
   },
   {
     name: "apply_transfer_ownership",
@@ -144,7 +143,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 38497,
   },
   {
     name: "commit_smart_wallet_checker",
@@ -157,7 +155,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 36307,
   },
   {
     name: "apply_smart_wallet_checker",
@@ -165,7 +162,25 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 37095,
+  },
+  {
+    name: "commit_distr_contract",
+    outputs: [],
+    inputs: [
+      {
+        type: "address",
+        name: "addr",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "apply_distr_contract",
+    outputs: [],
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     name: "get_last_user_slope",
@@ -183,7 +198,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2569,
   },
   {
     name: "user_point_history__ts",
@@ -205,7 +219,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1672,
   },
   {
     name: "locked__end",
@@ -223,7 +236,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 1593,
   },
   {
     name: "checkpoint",
@@ -231,7 +243,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 37052342,
   },
   {
     name: "deposit_for",
@@ -248,7 +259,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 74279891,
   },
   {
     name: "create_lock",
@@ -265,7 +275,26 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 74281465,
+  },
+  {
+    name: "create_lock_for",
+    outputs: [],
+    inputs: [
+      {
+        type: "address",
+        name: "_to",
+      },
+      {
+        type: "uint256",
+        name: "_value",
+      },
+      {
+        type: "uint256",
+        name: "_unlock_time",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     name: "increase_amount",
@@ -278,7 +307,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 74280830,
   },
   {
     name: "increase_unlock_time",
@@ -291,7 +319,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 74281578,
   },
   {
     name: "withdraw",
@@ -299,7 +326,6 @@ const _abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 37223566,
   },
   {
     name: "balanceOf",
@@ -313,6 +339,27 @@ const _abi = [
       {
         type: "address",
         name: "addr",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "balanceOf",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [
+      {
+        type: "address",
+        name: "addr",
+      },
+      {
+        type: "uint256",
+        name: "_t",
       },
     ],
     stateMutability: "view",
@@ -338,7 +385,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 514333,
   },
   {
     name: "totalSupply",
@@ -349,6 +395,23 @@ const _abi = [
       },
     ],
     inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "totalSupply",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [
+      {
+        type: "uint256",
+        name: "t",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -368,7 +431,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 812560,
   },
   {
     name: "changeController",
@@ -381,7 +443,6 @@ const _abi = [
     ],
     stateMutability: "nonpayable",
     type: "function",
-    gas: 36907,
   },
   {
     name: "token",
@@ -394,7 +455,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1841,
   },
   {
     name: "supply",
@@ -407,7 +467,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1871,
   },
   {
     name: "locked",
@@ -429,7 +488,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 3359,
   },
   {
     name: "epoch",
@@ -442,7 +500,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 1931,
   },
   {
     name: "point_history",
@@ -472,7 +529,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 5550,
   },
   {
     name: "user_point_history",
@@ -506,7 +562,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 6079,
   },
   {
     name: "user_point_epoch",
@@ -524,7 +579,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2175,
   },
   {
     name: "slope_changes",
@@ -542,7 +596,6 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
-    gas: 2166,
   },
   {
     name: "controller",
@@ -555,7 +608,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2081,
   },
   {
     name: "transfersEnabled",
@@ -568,7 +620,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2111,
   },
   {
     name: "name",
@@ -581,7 +632,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 8543,
   },
   {
     name: "symbol",
@@ -594,7 +644,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 7596,
   },
   {
     name: "version",
@@ -607,7 +656,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 7626,
   },
   {
     name: "decimals",
@@ -620,7 +668,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2231,
   },
   {
     name: "future_smart_wallet_checker",
@@ -633,7 +680,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2261,
   },
   {
     name: "smart_wallet_checker",
@@ -646,7 +692,30 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2291,
+  },
+  {
+    name: "future_distr_contract",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "distr_contract",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
   },
   {
     name: "admin",
@@ -659,7 +728,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2321,
   },
   {
     name: "future_admin",
@@ -672,7 +740,6 @@ const _abi = [
     inputs: [],
     stateMutability: "view",
     type: "function",
-    gas: 2351,
   },
 ];
 

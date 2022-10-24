@@ -31,17 +31,17 @@ const useLockInfo = (): LockInfo => {
 				ref: 'votingEscrow',
 				calls: [
 					{
-						method: 'balanceOf',
+						method: 'balanceOf(address)',
 						params: [account],
 					},
 					{
-						method: 'totalSupply',
+						method: 'totalSupply()',
 					},
 					{
-						method: 'supply',
+						method: 'supply()',
 					},
 					{
-						method: 'locked',
+						method: 'locked(address)',
 						params: [account],
 					},
 				],
