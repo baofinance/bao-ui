@@ -11,7 +11,6 @@ import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
-//import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
 import type { Gauge, GaugeController, Minter } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
@@ -234,7 +233,6 @@ interface RewardsProps {
 
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
-	//const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const minterContract = useContract<Minter>('Minter')
 
@@ -271,7 +269,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 					) : (
 						<Button
 							fullWidth
-							disabled={gaugeInfo && gaugeInfo.claimableTokens.gt(0)}
+							disabled={gaugeInfo && gaugeInfo.claimableTokens.lte(0)}
 							onClick={async () => {
 								const harvestTx = minterContract.mint(gauge.gaugeAddress)
 								handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV`)
@@ -292,7 +290,7 @@ interface VoteProps {
 
 export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const bao = useBao()
-	const { account, library } = useWeb3React()
+	const { library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
@@ -360,6 +358,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 								} catch (e: any) {
 									console.error('!!could not get gas limit!!', e.message)
 								}
+
 								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
 								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(val).toFixed(2)}% of your veBAO`)
 							}}
@@ -386,7 +385,7 @@ const Actions: React.FC<ActionProps> = ({ gauge, onHide, operation }) => {
 	return (
 		<div>
 			{operation === 'Stake' && <Stake gauge={gauge} max={tokenBalance} onHide={onHide} />}
-			{operation === 'Unstake' && <Unstake gauge={gauge} max={gaugeInfo.balance} onHide={onHide} />}
+			{operation === 'Unstake' && <Unstake gauge={gauge} max={gaugeInfo && gaugeInfo.balance} onHide={onHide} />}
 			{operation === 'Vote' && <Vote gauge={gauge} />}
 			{operation === 'Rewards' && <Rewards gauge={gauge} />}
 		</div>
