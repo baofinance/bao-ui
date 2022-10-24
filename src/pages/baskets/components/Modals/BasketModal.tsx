@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
@@ -8,20 +7,21 @@ import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
+import useContract from '@/hooks/base/useContract'
 import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
+import type { Dai, SimpleUniRecipe } from '@/typechain/index'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ethers, BigNumber } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
-import useContract from '@/hooks/base/useContract'
-import type { SimpleUniRecipe, Dai } from '@/typechain/index'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -68,7 +68,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					if (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) {
 						// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
 						tx = dai.approve(recipe.address, ethers.constants.MaxUint256)
-						handleTx(tx, 'Approve DAI for Baskets Recipe')
+						handleTx(tx, 'Baskets Recipe: Approve DAI')
 						break
 					}
 
@@ -80,11 +80,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					})
 				}
 
-				handleTx(tx, `Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
+				handleTx(tx, `${basket.symbol} Basket: Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
 				break
 			case 'REDEEM':
 				tx = basket.basketContract.exitPool(parseUnits(value))
-				handleTx(tx, `Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
+				handleTx(tx, `${basket.symbol} Basket: Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
 		}
 	}
 

@@ -7,23 +7,22 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
+import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 //import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
+import type { Gauge, GaugeController, Minter } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ethers, BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber, ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
-
-import useContract from '@/hooks/base/useContract'
-import type { Gauge, GaugeController, Minter } from '@/typechain/index'
-import { useWeb3React } from '@web3-react/core'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -98,7 +97,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								onClick={async () => {
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 									const tx = gauge.lpContract.approve(gaugeContract.address, ethers.constants.MaxUint256)
-									handleTx(tx, `Approve ${gauge.name}`)
+									handleTx(tx, `${gauge.name} Gauge: Approve ${gauge.name}`)
 								}}
 							>
 								Approve {gauge.name}
@@ -125,7 +124,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 									const amount = parseUnits(val.toString(), 18)
 									const stakeTx = gaugeContract['deposit(uint256)'](amount)
 
-									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${gauge.name} into gauge`, () => hideModal())
+									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${parseFloat(val).toFixed(4)} ${gauge.name}`, () => hideModal())
 								}}
 							>
 								Deposit {gauge.name}
@@ -217,7 +216,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 							onClick={async () => {
 								const amount = parseUnits(val, 18)
 								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
-								handleTx(unstakeTx, `Withdraw ${amount} ${gauge.name} from gauge`, () => hideModal())
+								handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${amount} ${gauge.name}`, () => hideModal())
 							}}
 						>
 							Withdraw {gauge.name}
@@ -275,7 +274,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 							disabled={gaugeInfo && gaugeInfo.claimableTokens.gt(0)}
 							onClick={async () => {
 								const harvestTx = minterContract.mint(gauge.gaugeAddress)
-								handleTx(harvestTx, `Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV from ${gauge.name}`)
+								handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV`)
 							}}
 						>
 							Harvest BAO
@@ -364,7 +363,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 									gasLimit,
 									gasPrice,
 								})
-								handleTx(voteTx, `${gauge.name} gauge - Voted ${parseFloat(val).toFixed(2)}% of your voting power`)
+								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(val).toFixed(2)}% of your veBAO`)
 							}}
 						>
 							Vote for {gauge.name}

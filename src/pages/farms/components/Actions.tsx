@@ -120,7 +120,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 									const lpToken = Uni_v2_lp__factory.connect(lpTokenAddress, signer)
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 									const tx = lpToken.approve(masterChefContract.address, ethers.constants.MaxUint256, signer)
-									handleTx(tx, `Approve ${tokenName}`)
+									handleTx(tx, `Farms: Approve ${tokenName}`)
 								}}
 							>
 								Approve {tokenName}
@@ -149,7 +149,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 											const refer = '0x0000000000000000000000000000000000000000'
 											const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), refer)
 
-											handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
+											handleTx(stakeTx, `Farms: Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 										}}
 									>
 										Deposit {tokenName}
@@ -162,7 +162,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 								disabled={true}
 								onClick={async () => {
 									const stakeTx = masterChefContract.deposit(pid, ethers.utils.parseUnits(val.toString(), 18), '0x00')
-									handleTx(stakeTx, `Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
+									handleTx(stakeTx, `Farms: Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`, () => hideModal())
 								}}
 							>
 								Pool Archived
@@ -284,7 +284,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 								const refer = '0x0000000000000000000000000000000000000000'
 								const amount = val ? parseUnits(val) : BigNumber.from(0)
 								const unstakeTx = masterChefContract.withdraw(pid, parseUnits(val), refer)
-								handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () => hideModal())
+								handleTx(unstakeTx, `Farms: Withdraw ${amount} ${tokenName}`, () => hideModal())
 							}}
 						>
 							Withdraw {tokenName}
@@ -343,7 +343,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							onClick={async () => {
 								const harvestTx = masterChefContract.claimReward(pid)
 
-								handleTx(harvestTx, `Harvest ${getDisplayBalance(earnings)} BAO`)
+								handleTx(harvestTx, `Farms: Harvest ${getDisplayBalance(earnings)} BAO`)
 							}}
 						>
 							Harvest BAO

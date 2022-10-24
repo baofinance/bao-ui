@@ -59,7 +59,11 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 							} else {
 								mintTx = marketContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							}
-							handleTx(mintTx, `Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`, () => onHide())
+							handleTx(
+								mintTx,
+								`Markets: Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`,
+								() => onHide(),
+							)
 						}}
 					>
 						Supply
@@ -71,7 +75,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
+							handleTx(tx, `Markets: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
@@ -86,7 +90,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							handleTx(
 								marketContract.redeemUnderlying(val.toString()),
-								`Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								`Markets: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -103,7 +107,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							handleTx(
 								marketContract.borrow(val),
-								`Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								`Markets: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => {
 									onHide()
 								},
@@ -128,7 +132,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 							} else {
 								repayTx = marketContract.repayBorrow(val)
 							}
-							handleTx(repayTx, `Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () => onHide())
+							handleTx(repayTx, `Markets: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () => onHide())
 						}}
 					>
 						Repay
@@ -140,7 +144,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `Approve ${asset.underlyingSymbol} for Markets`)
+							handleTx(tx, `Markets: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}

@@ -337,7 +337,7 @@ const Lock: React.FC = () => {
 											<>
 												{pendingTx ? (
 													<Button fullWidth disabled={true}>
-														Approving CRV
+														Approving BAO
 													</Button>
 												) : (
 													<Button
@@ -354,10 +354,10 @@ const Lock: React.FC = () => {
 																gasLimit,
 																gasPrice,
 															})
-															handleTx(tx, `Approve CRV for veCRV`)
+															handleTx(tx, `veBAO: Approve BAO`)
 														}}
 													>
-														Approve CRV
+														Approve BAO
 													</Button>
 												)}
 											</>
@@ -393,6 +393,7 @@ const Lock: React.FC = () => {
 															} catch (e: any) {
 																console.error('!!could not get gas limit!!', e.message)
 															}
+
 															const lockTx = votingEscrow.create_lock(
 																ethers.utils.parseEther(val.toString()),
 																length.toString().slice(0, 10),
@@ -401,7 +402,7 @@ const Lock: React.FC = () => {
 																	gasPrice,
 																},
 															)
-															handleTx(lockTx, `Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
+															handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}
 													>
 														Create Lock
@@ -432,7 +433,7 @@ const Lock: React.FC = () => {
 
 														handleTx(
 															lockTx,
-															`Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
+															`veBAO: Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
 																lockInfo.lockEnd.mul(1000).toNumber(),
 															).toLocaleDateString()}`,
 														)
@@ -460,8 +461,7 @@ const Lock: React.FC = () => {
 													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.mul(1000).toNumber())}
 													onClick={async () => {
 														const lockTx = votingEscrow.increase_unlock_time(length.toString().slice(0, 10))
-
-														handleTx(lockTx, `Increased lock until ${endDate.toLocaleDateString()}`)
+														handleTx(lockTx, `veBAO: Increased lock until ${endDate.toLocaleDateString()}`)
 													}}
 												>
 													Increase Lock Time
