@@ -349,16 +349,6 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							fullWidth
 							disabled={!val || !bao || isNaN(val as any)}
 							onClick={async () => {
-								const gasPrice = await library.getGasPrice()
-								console.log('gas price', gasPrice.toString())
-								let gasLimit
-								try {
-									gasLimit = await gaugeControllerContract.estimateGas.vote_for_gauge_weights(gauge.gaugeAddress, parseUnits(val).mul(100))
-									console.log('gas limit', gasLimit.toString())
-								} catch (e: any) {
-									console.error('!!could not get gas limit!!', e.message)
-								}
-
 								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
 								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(val).toFixed(2)}% of your veBAO`)
 							}}

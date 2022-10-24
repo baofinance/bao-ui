@@ -8,9 +8,7 @@ const useGaugeWeight = (lpAddress: string) => {
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
 	const fetchGaugeWeight = useCallback(async () => {
-		const weight = await gaugeController.get_gauge_weight(lpAddress, {
-			gasLimit: 100000,
-		})
+		const weight = await gaugeController.get_gauge_weight(lpAddress)
 		setWeight(weight)
 	}, [gaugeController, lpAddress])
 

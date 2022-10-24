@@ -9,7 +9,7 @@ export const useNextDistribution = () => {
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	const fetchNextDistribution = useCallback(async () => {
-		const nextFeeDistribution = await feeDistributor.last_token_time({ gasLimit: 100000 })
+		const nextFeeDistribution = await feeDistributor.last_token_time()
 		setNextDistribution(nextFeeDistribution)
 	}, [feeDistributor])
 

@@ -8,7 +8,7 @@ const useVirtualPrice = (poolContract?: Contract) => {
 	const bao = useBao()
 
 	const fetchVirtualPrice = useCallback(async () => {
-		const virtualPrice = await poolContract.get_virtual_price({ gasLimit: 100000 })
+		const virtualPrice = await poolContract.get_virtual_price()
 		setVirtualPrice(BigNumber.from(virtualPrice))
 	}, [poolContract, setVirtualPrice])
 

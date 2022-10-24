@@ -344,18 +344,9 @@ const Lock: React.FC = () => {
 														fullWidth
 														disabled={crvBalance.lte(0)}
 														onClick={async () => {
-															// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-															console.log('hi1', account)
-															const gasLimit = await crv.estimateGas.approve(account, ethers.constants.MaxUint256)
-															const gasPrice = await library.getGasPrice()
-															console.log('hi2', gasLimit.toString(), gasPrice.toString())
-															console.log(ethers.constants.MaxUint256.toString())
-
-															const approvetx = crv.approve(votingEscrow.address, ethers.constants.MaxUint256, {
-																gasLimit,
-																gasPrice,
-															})
-															handleTx(approvetx, `veBAO: Approve BAO`)
+															// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
+															const approveTx = crv.approve(votingEscrow.address, ethers.constants.MaxUint256)
+															handleTx(approveTx, `veBAO: Approve BAO`)
 														}}
 													>
 														Approve BAO
@@ -382,26 +373,9 @@ const Lock: React.FC = () => {
 													<Button
 														fullWidth
 														onClick={async () => {
-															const gasPrice = await library.getGasPrice()
-															console.log('gas price', gasPrice.toString())
-															let gasLimit
-															try {
-																gasLimit = await votingEscrow.estimateGas.create_lock(
-																	ethers.utils.parseEther(val.toString()),
-																	length.toString().slice(0, 10),
-																)
-																console.log('gas limit', gasLimit.toString())
-															} catch (e: any) {
-																console.error('!!could not get gas limit!!', e.message)
-															}
-
 															const lockTx = votingEscrow.create_lock(
 																ethers.utils.parseEther(val.toString()),
 																length.toString().slice(0, 10),
-																{
-																	gasLimit,
-																	gasPrice,
-																},
 															)
 															handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
 														}}
@@ -430,17 +404,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(crvBalance))}
 													onClick={async () => {
-														const gasPrice = await library.getGasPrice()
-														console.log('gas price', gasPrice.toString())
-														let gasLimit
-														try {
-															gasLimit = await votingEscrow.estimateGas.increase_amount(ethers.utils.parseEther(val.toString()))
-															console.log('gas limit', gasLimit.toString())
-														} catch (e: any) {
-															console.error('!!could not get gas limit!!', e.message)
-														}
-
-														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()), { gasLimit, gasPrice })
+														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 														handleTx(
 															lockTx,
 															`veBAO: Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
@@ -470,17 +434,7 @@ const Lock: React.FC = () => {
 													fullWidth
 													disabled={!bao || !endDate || length <= (lockInfo && lockInfo.lockEnd.mul(1000).toNumber())}
 													onClick={async () => {
-														const gasPrice = await library.getGasPrice()
-														console.log('gas price', gasPrice.toString())
-														let gasLimit
-														try {
-															gasLimit = await votingEscrow.estimateGas.increase_unlock_time(length.toString().slice(0, 10))
-															console.log('gas limit', gasLimit.toString())
-														} catch (e: any) {
-															console.error('!!could not get gas limit!!', e.message)
-														}
-
-														const lockTx = votingEscrow.increase_unlock_time(length.toString().slice(0, 10), { gasLimit, gasPrice })
+														const lockTx = votingEscrow.increase_unlock_time(length.toString().slice(0, 10))
 														handleTx(lockTx, `veBAO: Increased lock until ${endDate.toLocaleDateString()}`)
 													}}
 												>
