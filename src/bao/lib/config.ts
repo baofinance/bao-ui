@@ -17,6 +17,7 @@ export default {
 		uniswapFactory: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		uniswapFactoryV2: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		BAO: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
+		BAOv2: '0x313F922BE1649cEc058EC0f076664500c78bdc0b',
 		DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 		USDT: '0xdac17f958d2ee523a2206206994597c13d831ec7',
 		USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -38,6 +39,11 @@ export default {
 			1: {
 				address: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
 				abi: 'bao.json',
+			},
+		},
+		Erc20BAO: {
+			1: {
+				address: '0x313F922BE1649cEc058EC0f076664500c78bdc0b',
 			},
 		},
 		Crv: {
@@ -99,25 +105,25 @@ export default {
 		// veBAO (Currently set to Curve contracts)
 		GaugeController: {
 			1: {
-				address: '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB',
+				address: '0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f',
 				abi: 'gaugeController.json',
 			},
 		},
 		votingEscrow: {
 			1: {
-				address: '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2',
+				address: '0xc0Bb1650A8eA5dDF81998f17B5319afD656f4c11',
 				abi: 'votingEscrow.json',
 			},
 		},
 		Minter: {
 			1: {
-				address: '0xd061D61a4d941c39E5453435B6345Dc261C2fcE0',
+				address: '0x103A3b128991781EE2c8db0454cA99d67b257923',
 				abi: 'minter.json',
 			},
 		},
 		FeeDistributor: {
 			1: {
-				address: '0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc',
+				address: '0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005',
 				abi: 'feeDistributor.json',
 			},
 		},
@@ -127,10 +133,15 @@ export default {
 				abi: 'dai.json',
 			},
 		},
-		Uni_v2_lp: {
+		// Distribution
+		BaoDistribution: {
 			1: {
-				address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-				abi: 'uni_v2_lp.json',
+				address: '0x9C85258d9A00C01d00ded98065ea3840dF06f09c',
+			},
+		},
+		Swapper: {
+			1: {
+				address: '0x90c84237fDdf091b1E63f369AF122EB46000bc70',
 			},
 		},
 	},
@@ -221,32 +232,32 @@ export default {
 	gauges: [
 		{
 			gid: 1,
-			name: '3pool',
-			symbol: '3CRV',
+			name: 'baoUSD-3CRV',
+			symbol: 'baoUSD3CRV',
 			gaugeAddresses: {
-				1: '0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A',
+				1: '0x707531c9999AaeF9232C8FEfBA31FBa4cB78d84a',
 			},
 			poolAddresses: {
-				1: '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
+				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
 			},
 			lpAddresses: {
-				1: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
+				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
 			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
 			pairUrl: 'https://curve.fi/3pool',
 		},
 		{
 			gid: 2,
-			name: 'tricrypto2',
-			symbol: 'CRV3CRYPTO',
+			name: 'bSTBL-DAI',
+			symbol: 'bSTBLDAI',
 			gaugeAddresses: {
-				1: '0xDeFd8FdD20e0f34115C7018CCfb655796F6B2168',
+				1: '0x2538a10b7fFb1B78c890c870FC152b10be121f04',
 			},
 			poolAddresses: {
-				1: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
+				1: '0xa148bd19e26ff9604f6a608e22bfb7b772d0d1a3',
 			},
 			lpAddresses: {
-				1: '0xc4AD29ba4B3c580e6D59105FFf484999997675Ff',
+				1: '0x7657ceb382013f1ce9ac7b08dd8db4f28d3a7538',
 			},
 			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
 			pairUrl: 'https://curve.fi/tricrypto',

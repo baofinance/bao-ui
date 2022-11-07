@@ -1,9 +1,14 @@
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
+import useContract from '@/hooks/base/useContract'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
+import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
+import { useQuery } from '@tanstack/react-query'
+import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
@@ -112,88 +117,154 @@ const options = [
 const Distribution: React.FC = () => {
 	const [selectedOption, setSelectedOption] = useState(options[0])
 	const locks = useLockedEarnings()
+	const { pendingTx, handleTx } = useTransactionHandler()
+
+	const distribution = useContract<BaoDistribution>('BaoDistribution')
+
+	const { account, chainId } = useWeb3React()
+	const { data: merkleLeaf } = useQuery(['/api/vebao/distribution/proof', account, chainId], async () => {
+		const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
+		const leaf = await leafResponse.json()
+		return leaf
+	})
+	console.log(merkleLeaf)
+
+	const { data: distributionInfo } = useQuery(
+		['distribution info', account, chainId],
+		async () => {
+			return await distribution.distributions(account)
+		},
+		{
+			enabled: !!distribution,
+		},
+	)
+
+	// console.log('has started distrubtion', distributionInfo.dateStarted.gt(0))
 
 	return (
 		<>
-			<div className='border-b border-text-100 pb-5'>
-				<Typography variant='lg' className='text-lg font-medium leading-6 text-text-200'>
-					Select Your Distribution Method
-				</Typography>
-				<Typography variant='p' className='mt-2 text-text-100'>
-					Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once manually
-					initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please join our{' '}
-					<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-text-400'>
-						Discord
-					</a>{' '}
-					community!
-				</Typography>
-			</div>
-			<div className='flex flex-row'>
-				<div className='my-4 flex w-1/4 flex-col'>
-					<Listbox value={selectedOption} onChange={setSelectedOption}>
-						{({ open }) => (
-							<>
-								<Listbox.Label className='mb-1 text-xs text-text-200'>Select your distribution option</Listbox.Label>
-								<div className='relative'>
-									<div className='inline-flex w-full rounded-md border-none shadow-sm'>
-										<div className='inline-flex w-full rounded-md border-none shadow-sm'>
-											<div className='inline-flex w-full items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
-												<CheckIcon className='h-5 w-5' aria-hidden='true' />
-												<p className='ml-2.5 text-sm font-medium'>{selectedOption.name}</p>
-											</div>
-											<Listbox.Button
-												className={
-													(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-													'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
-												}
-											>
-												<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
-											</Listbox.Button>
-										</div>
-									</div>
-
-									<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-										<Listbox.Options className='absolute z-10 mt-2 w-72 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-primary-200 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-											{options.map(option => (
-												<Listbox.Option
-													key={option.name}
-													className={({ active }) =>
-														classNames(active ? 'bg-primary-100 text-text-400' : 'text-text-100', 'cursor-default select-none p-4 text-sm')
-													}
-													value={option}
-												>
-													{({ selected, active }) => (
-														<div className='flex flex-col'>
-															<div className='flex justify-between'>
-																<p className={selected ? 'font-semibold' : 'font-normal'}>{option.name}</p>
-																{selected ? (
-																	<span className={active ? 'text-text-100' : 'text-text-200'}>
-																		<CheckIcon className='h-5 w-5' aria-hidden='true' />
-																	</span>
-																) : null}
-															</div>
-															<p className={classNames(active ? 'text-text-100' : 'text-text-200', 'mt-2')}>{option.shortDesc}</p>
-														</div>
-													)}
-												</Listbox.Option>
-											))}
-										</Listbox.Options>
-									</Transition>
-								</div>
-							</>
-						)}
-					</Listbox>
-				</div>
-				<div className='mt-2 mb-1 flex w-full items-center justify-end gap-1'>
-					<Typography className='px-2 text-sm text-text-200'>Your Locked BAO Balance</Typography>
-					<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
-						<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-						<Typography className='font-bold'>{getDisplayBalance(locks)}</Typography>
+			{distributionInfo && distributionInfo.dateStarted.gt(0) ? (
+				<>
+					<div className='border-b border-text-100 pb-5'>
+						<Typography variant='lg' className='text-lg font-medium leading-6 text-text-200'>
+							Select Your Distribution Method
+						</Typography>
+						<Typography variant='p' className='mt-2 text-text-100'>
+							Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
+							manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please
+							join our{' '}
+							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-text-400'>
+								Discord
+							</a>{' '}
+							community!
+						</Typography>
 					</div>
-				</div>
-			</div>
-			<div className='mb-4 flex flex-row rounded bg-primary-100 p-4'>{selectedOption.desc}</div>
-			<Button fullWidth>{selectedOption.name}</Button>
+					<div className='flex flex-row'>
+						<div className='my-4 flex w-1/4 flex-col'>
+							<Listbox value={selectedOption} onChange={setSelectedOption}>
+								{({ open }) => (
+									<>
+										<Listbox.Label className='mb-1 text-xs text-text-200'>Select your distribution option</Listbox.Label>
+										<div className='relative'>
+											<div className='inline-flex w-full rounded-md border-none shadow-sm'>
+												<div className='inline-flex w-full rounded-md border-none shadow-sm'>
+													<div className='inline-flex w-full items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
+														<CheckIcon className='h-5 w-5' aria-hidden='true' />
+														<p className='ml-2.5 text-sm font-medium'>{selectedOption.name}</p>
+													</div>
+													<Listbox.Button
+														className={
+															(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
+															'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
+														}
+													>
+														<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
+													</Listbox.Button>
+												</div>
+											</div>
+
+											<Transition
+												show={open}
+												as={Fragment}
+												leave='transition ease-in duration-100'
+												leaveFrom='opacity-100'
+												leaveTo='opacity-0'
+											>
+												<Listbox.Options className='absolute z-10 mt-2 w-72 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-primary-200 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+													{options.map(option => (
+														<Listbox.Option
+															key={option.name}
+															className={({ active }) =>
+																classNames(
+																	active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+																	'cursor-default select-none p-4 text-sm',
+																)
+															}
+															value={option}
+														>
+															{({ selected, active }) => (
+																<div className='flex flex-col'>
+																	<div className='flex justify-between'>
+																		<p className={selected ? 'font-semibold' : 'font-normal'}>{option.name}</p>
+																		{selected ? (
+																			<span className={active ? 'text-text-100' : 'text-text-200'}>
+																				<CheckIcon className='h-5 w-5' aria-hidden='true' />
+																			</span>
+																		) : null}
+																	</div>
+																	<p className={classNames(active ? 'text-text-100' : 'text-text-200', 'mt-2')}>{option.shortDesc}</p>
+																</div>
+															)}
+														</Listbox.Option>
+													))}
+												</Listbox.Options>
+											</Transition>
+										</div>
+									</>
+								)}
+							</Listbox>
+						</div>
+						<div className='mt-2 mb-1 flex w-full items-center justify-end gap-1'>
+							<Typography className='px-2 text-sm text-text-200'>Your Locked BAO Balance</Typography>
+							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf.amount)}</Typography>
+							</div>
+						</div>
+					</div>
+					<div className='mb-4 flex flex-row rounded bg-primary-100 p-4'>{selectedOption.desc}</div>
+					<Button fullWidth>{selectedOption.name}</Button>
+				</>
+			) : (
+				<>
+					<div className='border-b border-text-100 pb-5'>
+						<Typography variant='lg' className='text-lg font-medium leading-6 text-text-200'>
+							Select Your Distribution Method
+						</Typography>
+						<Typography variant='p' className='mt-2 text-text-100'>
+							Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
+							manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please
+							join our{' '}
+							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-text-400'>
+								Discord
+							</a>{' '}
+							community!
+						</Typography>
+					</div>
+					<div className='flex flex-row'>
+						<Button
+							fullWidth
+							onClick={async () => {
+								const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
+
+								handleTx(startDistribution, `Start Distribution`)
+							}}
+						>
+							StartDistribution
+						</Button>
+					</div>
+				</>
+			)}
 		</>
 	)
 }

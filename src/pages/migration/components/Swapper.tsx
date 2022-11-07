@@ -25,8 +25,9 @@ const Swapper: React.FC = () => {
 
 	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
+	const baov2Balance = useTokenBalance(Config.addressMap.BAOv2)
 
- 	console.log(getDisplayBalance(inputVal))
+	console.log(getDisplayBalance(inputVal))
 
 	return (
 		<>
@@ -75,7 +76,7 @@ const Swapper: React.FC = () => {
 									<Typography variant='sm' className='text-text-200'>
 										Wallet
 									</Typography>
-									<Typography variant='sm'>{getDisplayBalance(baov1Balance)} BAO v2</Typography>
+									<Typography variant='sm'>{getDisplayBalance(baov2Balance)} BAO v2</Typography>
 								</div>
 							</div>
 							<Input
@@ -180,10 +181,7 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 		}
 	}
 
-	const isDisabled = useMemo(
-		() => typeof pendingTx === 'string' || pendingTx || !isBigNumberish(inputVal) || BigNumber.from(inputVal).gt(maxValue),
-		[pendingTx, inputVal, maxValue],
-	)
+	const isDisabled = useMemo(() => typeof pendingTx === 'string' || pendingTx || !isBigNumberish(inputVal), [pendingTx, inputVal, maxValue])
 
 	return (
 		<Button fullWidth onClick={handleClick} disabled={isDisabled}>
