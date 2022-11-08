@@ -25,7 +25,9 @@ export interface SupportedGauge {
 	gid: number
 	name: string
 	symbol: string
-	icon: string
+	type: string
+	iconA: string
+	iconB: string
 	pairUrl: string
 	gaugeAddresses: {
 		[network: number]: string

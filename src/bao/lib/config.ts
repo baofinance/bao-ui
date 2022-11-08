@@ -232,8 +232,6 @@ export default {
 	gauges: [
 		{
 			gid: 1,
-			name: 'baoUSD-3CRV',
-			symbol: 'baoUSD3CRV',
 			gaugeAddresses: {
 				1: '0x707531c9999AaeF9232C8FEfBA31FBa4cB78d84a',
 			},
@@ -243,13 +241,15 @@ export default {
 			lpAddresses: {
 				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
 			},
-			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
-			pairUrl: 'https://curve.fi/3pool',
+			name: 'baoUSD-3CRV',
+			symbol: 'baoUSD3CRV',
+			type: 'Curve LP',
+			iconA: '/images/tokens/baoUSD.png',
+			iconB: '/images/tokens/3CRV.png',
+			pairUrl: 'https://curve.fi/#/ethereum/pools/factory-v2-84',
 		},
 		{
 			gid: 2,
-			name: 'bSTBL-DAI',
-			symbol: 'bSTBLDAI',
 			gaugeAddresses: {
 				1: '0x2538a10b7fFb1B78c890c870FC152b10be121f04',
 			},
@@ -259,9 +259,31 @@ export default {
 			lpAddresses: {
 				1: '0x7657ceb382013f1ce9ac7b08dd8db4f28d3a7538',
 			},
-			icon: 'https://assets.coingecko.com/coins/images/12972/small/3pool_128.png?1603948039',
-			pairUrl: 'https://curve.fi/tricrypto',
+			name: 'bSTBL-DAI',
+			symbol: 'bSTBLDAI',
+			type: 'Curve LP',
+			iconA: '/images/tokens/bSTBL.png',
+			iconB: '/images/tokens/DAI.png',
+			pairUrl: 'https://curve.fi/#/ethereum/pools/factory-crypto-61',
 		},
+		// {
+		// 	gid: 3,
+		// 	gaugeAddresses: {
+		// 		1: '',
+		// 	},
+		// 	poolAddresses: {
+		// 		1: '',
+		// 	},
+		// 	lpAddresses: {
+		// 		1: '',
+		// 	},
+		// 	name: 'BAO-ETH',
+		// 	symbol: 'UNIV2',
+		// 	type: 'Uniswap v2 LP',
+		// 	iconA: '/images/tokens/BAO.png',
+		// 	iconB: '/images/tokens/ETH.png',
+		// 	pairUrl: '',
+		// },
 	],
 	baskets: [
 		/*{

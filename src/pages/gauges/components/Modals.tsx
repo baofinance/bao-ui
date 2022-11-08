@@ -29,9 +29,28 @@ const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, show, onHide }) => {
 						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
 							{operation}
 						</Typography>
-						<>
-							<Image className='z-10 inline-block select-none duration-200' src={gauge.icon} width={32} height={32} alt={gauge.name} />
-						</>
+						{operation !== 'Rewards' ? (
+							<>
+								<Image className='z-10 inline-block select-none duration-200' src={gauge.iconA} width={32} height={32} alt={gauge.name} />
+								{gauge.iconB !== null && (
+									<Image
+										className='z-20 -ml-2 inline-block select-none duration-200'
+										width={32}
+										height={32}
+										src={gauge.iconB}
+										alt={gauge.name}
+									/>
+								)}
+							</>
+						) : (
+							<Image
+								className='z-10 inline-block select-none duration-200'
+								src='/images/tokens/BAO.png'
+								width={32}
+								height={32}
+								alt={gauge.name}
+							/>
+						)}
 					</>
 				}
 			/>

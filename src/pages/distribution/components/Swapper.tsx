@@ -18,7 +18,7 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import useContract from '@/hooks/base/useContract'
-import type { Stabilizer, Bao } from '@/typechain/index'
+import type { Stabilizer, Bao, Swapper } from '@/typechain/index'
 
 const Swapper: React.FC = () => {
 	const [inputVal, setInputVal] = useState('')
@@ -142,11 +142,11 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const bao = useBao()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
-	const { chainId } = useWeb3React()
+	const { chainId, account } = useWeb3React()
 
-	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Stabilizer[chainId].address)
+	const inputApproval = useAllowance(Config.addressMap.BAO, Config.contracts.Swapper[chainId].address)
 
-	const ballast = useContract<Stabilizer>('Stabilizer')
+	const swapper = useContract<Swapper>('Swapper')
 	const baoContract = useContract<Bao>('Bao', Config.addressMap.BAO)
 
 	const handleClick = async () => {
@@ -155,14 +155,14 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
 			const tx = baoContract.approve(
-				ballast.address,
+				swapper.address,
 				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 			)
 
 			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(ballast.sell(parseUnits(inputVal)), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(swapper.convertV1(account, inputVal), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {

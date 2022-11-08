@@ -27,7 +27,7 @@ import { isDesktop } from 'react-device-detect'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import type { Erc20, VotingEscrow } from '@/typechain/index'
+import type { Erc20, Erc20BAO, VotingEscrow } from '@/typechain/index'
 import { formatUnits } from 'ethers/lib/utils'
 
 function addDays(numOfDays: number, date = new Date()) {
@@ -53,17 +53,17 @@ const Lock: React.FC = () => {
 			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.mul(1000).toNumber())))
 			: new Date(addDays(7, new Date()))
 	const [endDate, setEndDate] = useState(startDate)
-	const crvAddress = Config.addressMap.CRV
-	const crvBalance = useTokenBalance(crvAddress)
+	const baoAddress = Config.addressMap.BAOv2
+	const baoBalance = useTokenBalance(baoAddress)
 	const nextFeeDistribution = useNextDistribution()
-	const allowance = useAllowance(crvAddress, Config.contracts.votingEscrow[chainId].address)
+	const allowance = useAllowance(baoAddress, Config.contracts.votingEscrow[chainId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const length = endDate.setUTCHours(0, 0, 0, 0) + 604800000 - 86400000
 	// FIXME: change this to be the 'bao-finance' token once we launch the new version.
 	const baoPrice = usePrice('curve-dao-token')
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 
-	const crv = useContract<Erc20>('Erc20', Config.addressMap.CRV)
+	const baoV2 = useContract<Erc20BAO>('Erc20BAO', Config.addressMap.BAOv2)
 	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
 
 	const handleChange = useCallback(
@@ -74,20 +74,20 @@ const Lock: React.FC = () => {
 	)
 
 	const handleSelectMax = useCallback(() => {
-		setVal(getFullDisplayBalance(crvBalance))
-	}, [crvBalance, setVal])
+		setVal(getFullDisplayBalance(baoBalance))
+	}, [baoBalance, setVal])
 
 	const handleSelectHalf = useCallback(() => {
-		setVal(getFullDisplayBalance(crvBalance.div(2)))
-	}, [crvBalance])
+		setVal(getFullDisplayBalance(baoBalance.div(2)))
+	}, [baoBalance])
 
 	useEffect(() => {
 		const fetchTotalSupply = async () => {
-			const supply = await crv.totalSupply()
+			const supply = await baoV2.totalSupply()
 			setTotalSupply(supply)
 		}
-		if (crv) fetchTotalSupply()
-	}, [crv, setTotalSupply])
+		if (baoV2) fetchTotalSupply()
+	}, [baoV2, setTotalSupply])
 
 	let suppliedPercentage
 	if (lockInfo && totalSupply && totalSupply.gt(0)) {
@@ -109,7 +109,7 @@ const Lock: React.FC = () => {
 									<a>
 										<>
 											<Image src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} className='mr-1 inline' />
-											{account ? (window.screen.width > 1200 ? getDisplayBalance(crvBalance) : truncateNumber(crvBalance)) : '-'}
+											{account ? (window.screen.width > 1200 ? getDisplayBalance(baoBalance) : truncateNumber(baoBalance)) : '-'}
 										</>
 									</a>
 								</Tooltipped>
@@ -154,7 +154,7 @@ const Lock: React.FC = () => {
 										<Typography variant='sm' className='text-text-200'>
 											Bao Balance:
 										</Typography>
-										<Typography variant='sm'>{getDisplayBalance(crvBalance).toString()}</Typography>
+										<Typography variant='sm'>{getDisplayBalance(baoBalance).toString()}</Typography>
 									</div>
 									<Input
 										onSelectMax={() => handleSelectMax()}
@@ -342,10 +342,10 @@ const Lock: React.FC = () => {
 												) : (
 													<Button
 														fullWidth
-														disabled={crvBalance.lte(0)}
+														disabled={baoBalance.lte(0)}
 														onClick={async () => {
 															// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
-															const approveTx = crv.approve(votingEscrow.address, ethers.constants.MaxUint256)
+															const approveTx = baoV2.approve(votingEscrow.address, ethers.constants.MaxUint256)
 															handleTx(approveTx, `veBAO: Approve BAO`)
 														}}
 													>
@@ -402,7 +402,7 @@ const Lock: React.FC = () => {
 											) : (
 												<Button
 													fullWidth
-													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(crvBalance))}
+													disabled={!val || !bao || !endDate || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(baoBalance))}
 													onClick={async () => {
 														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 														handleTx(

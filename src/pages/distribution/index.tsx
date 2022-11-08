@@ -4,14 +4,14 @@ import { Tab } from '@headlessui/react'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-import Distribution from './components/Distribution'
+import Migration from './components/Migration'
 import Swapper from './components/Swapper'
 
-const Migration: React.FC = () => {
+const Distribution: React.FC = () => {
 	return (
 		<>
-			<NextSeo title={`Migration`} description={`Migrate your BAOv1 to BAOv2!`} />
-			<PageHeader title='Migration' />
+			<NextSeo title={`Distribution`} description={`Migrate your BAOv1 to BAOv2!`} />
+			<PageHeader title='Distribution' />
 			<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-4 text-center font-light tracking-tight'>
 				Migrate your BAOv1 to BAOv2!
 			</Typography>
@@ -45,7 +45,7 @@ const Migration: React.FC = () => {
 						<Swapper />
 					</Tab.Panel>
 					<Tab.Panel>
-						<Distribution />
+						<Migration />
 					</Tab.Panel>
 				</Tab.Panels>
 			</Tab.Group>
@@ -53,4 +53,4 @@ const Migration: React.FC = () => {
 	)
 }
 
-export default Migration
+export default Distribution

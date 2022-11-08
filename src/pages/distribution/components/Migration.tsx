@@ -2,6 +2,7 @@ import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useClaimable from '@/hooks/distribution/useClaimable'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
@@ -10,7 +11,9 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
+import { formatUnits } from 'ethers/lib/utils'
 import 'katex/dist/katex.min.css'
+import { CorporateContactJsonLd } from 'next-seo'
 import Image from 'next/future/image'
 import React, { Fragment, useState } from 'react'
 import Latex from 'react-latex-next'
@@ -114,20 +117,22 @@ const options = [
 		),
 	},
 ]
-const Distribution: React.FC = () => {
+const Migration: React.FC = () => {
 	const [selectedOption, setSelectedOption] = useState(options[0])
 	const locks = useLockedEarnings()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
+	console.log(selectedOption.id)
+
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
-	const { account, chainId } = useWeb3React()
+	const { account, chainId, library } = useWeb3React()
 	const { data: merkleLeaf } = useQuery(['/api/vebao/distribution/proof', account, chainId], async () => {
 		const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
 		const leaf = await leafResponse.json()
 		return leaf
 	})
-	console.log(merkleLeaf)
+	// console.log(merkleLeaf)
 
 	const { data: distributionInfo } = useQuery(
 		['distribution info', account, chainId],
@@ -139,7 +144,16 @@ const Distribution: React.FC = () => {
 		},
 	)
 
+	const timestamp = library.getBlock().then(block => block.timestamp)
+	console.log('Timestamp', timestamp)
+
 	// console.log('has started distrubtion', distributionInfo.dateStarted.gt(0))
+
+	const totalLockedBAO = merkleLeaf ? merkleLeaf.amount : '0'
+	const claimable = useClaimable()
+	const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
+	console.log('Claimable', formatUnits(claimable))
+	console.log('Date Started', dateStarted.toString())
 
 	return (
 		<>
@@ -228,12 +242,29 @@ const Distribution: React.FC = () => {
 							<Typography className='px-2 text-sm text-text-200'>Your Locked BAO Balance</Typography>
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf.amount)}</Typography>
+								<Typography className='font-bold'>{getDisplayBalance(totalLockedBAO * 0.001)}</Typography>
 							</div>
 						</div>
 					</div>
 					<div className='mb-4 flex flex-row rounded bg-primary-100 p-4'>{selectedOption.desc}</div>
-					<Button fullWidth>{selectedOption.name}</Button>
+					<Button
+						fullWidth
+						onClick={async () => {
+							const claim = distribution.claim()
+							const lockDistribution = distribution.lockDistribution(timestamp)
+							const endDistribution = distribution.endDistribution()
+
+							{
+								selectedOption.id === 2
+									? handleTx(claim, `Claim`)
+									: selectedOption.id === 1
+									? handleTx(lockDistribution, `Lock Distribution`)
+									: handleTx(endDistribution, `End Distribution`)
+							}
+						}}
+					>
+						{selectedOption.name}
+					</Button>
 				</>
 			) : (
 				<>
@@ -269,4 +300,4 @@ const Distribution: React.FC = () => {
 	)
 }
 
-export default Distribution
+export default Migration
