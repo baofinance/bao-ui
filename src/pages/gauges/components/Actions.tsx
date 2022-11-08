@@ -30,11 +30,9 @@ interface StakeProps {
 }
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
-	//const { library } = useWeb3React()
+	const { account, library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
-
-	const gaugeContract = useContract<Gauge>('Gauge', gauge.gaugeAddress)
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -95,8 +93,8 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								disabled={max.lte(0)}
 								onClick={async () => {
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-									const tx = gauge.lpContract.approve(gaugeContract.address, ethers.constants.MaxUint256)
-									handleTx(tx, `${gauge.name} Gauge: Approve ${gauge.name}`)
+									const tx = gauge.lpContract.approve(gauge.gaugeAddress, ethers.constants.MaxUint256)
+									handleTx(tx, `${gauge.name} Gauge: Approve ${gauge.symbol}`)
 								}}
 							>
 								Approve {gauge.name}
@@ -120,8 +118,10 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								fullWidth
 								disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
 								onClick={async () => {
-									const amount = parseUnits(val.toString(), 18)
-									const stakeTx = gaugeContract['deposit(uint256)'](amount)
+									const amount = parseUnits(val)
+									const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
+
+									console.log('amount', amount.toString())
 
 									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${parseFloat(val).toFixed(4)} ${gauge.name}`, () => hideModal())
 								}}

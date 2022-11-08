@@ -27,7 +27,7 @@ import { isDesktop } from 'react-device-detect'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import type { Erc20, Erc20BAO, VotingEscrow } from '@/typechain/index'
+import type { Erc20, Erc20bao, VotingEscrow } from '@/typechain/index'
 import { formatUnits } from 'ethers/lib/utils'
 
 function addDays(numOfDays: number, date = new Date()) {
@@ -63,7 +63,7 @@ const Lock: React.FC = () => {
 	const baoPrice = usePrice('curve-dao-token')
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 
-	const baoV2 = useContract<Erc20BAO>('Erc20BAO', Config.addressMap.BAOv2)
+	const baoV2 = useContract<Erc20bao>('Erc20bao', Config.addressMap.BAOv2)
 	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
 
 	const handleChange = useCallback(

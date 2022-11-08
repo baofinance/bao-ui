@@ -16,7 +16,7 @@ export { Dai__factory } from "./Dai__factory";
 export { DecimalWrapper__factory } from "./DecimalWrapper__factory";
 export { DefiSdk__factory } from "./DefiSdk__factory";
 export { Erc20__factory } from "./Erc20__factory";
-export { Erc20BAO__factory } from "./Erc20BAO__factory";
+export { Erc20bao__factory } from "./Erc20bao__factory";
 export { Experipie__factory } from "./Experipie__factory";
 export { FeeDistributor__factory } from "./FeeDistributor__factory";
 export { Gauge__factory } from "./Gauge__factory";

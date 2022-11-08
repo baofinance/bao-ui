@@ -2,6 +2,7 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { NavButtons } from '@/components/Button'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
+import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import Image from 'next/future/image'
 import React, { useCallback, useState } from 'react'
 import Actions from './Actions'
@@ -15,10 +16,13 @@ type GaugeModalProps = {
 const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Vote', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
+	const gaugeInfo = useGaugeInfo(gauge)
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
+
+	console.log('Gauge Info', gaugeInfo)
 
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>

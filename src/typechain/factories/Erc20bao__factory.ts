@@ -4,7 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type { Erc20BAO, Erc20BAOInterface } from "../Erc20BAO";
+import type { Erc20bao, Erc20baoInterface } from "../Erc20bao";
 
 const _abi = [
   {
@@ -457,15 +457,15 @@ const _abi = [
   },
 ];
 
-export class Erc20BAO__factory {
+export class Erc20bao__factory {
   static readonly abi = _abi;
-  static createInterface(): Erc20BAOInterface {
-    return new utils.Interface(_abi) as Erc20BAOInterface;
+  static createInterface(): Erc20baoInterface {
+    return new utils.Interface(_abi) as Erc20baoInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): Erc20BAO {
-    return new Contract(address, _abi, signerOrProvider) as Erc20BAO;
+  ): Erc20bao {
+    return new Contract(address, _abi, signerOrProvider) as Erc20bao;
   }
 }

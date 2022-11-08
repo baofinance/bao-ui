@@ -27,7 +27,7 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface Erc20BAOInterface extends utils.Interface {
+export interface Erc20baoInterface extends utils.Interface {
   functions: {
     "update_mining_parameters()": FunctionFragment;
     "start_epoch_time_write()": FunctionFragment;
@@ -466,14 +466,14 @@ export type SetAdminEvent = TypedEvent<[string], SetAdminEventObject>;
 
 export type SetAdminEventFilter = TypedEventFilter<SetAdminEvent>;
 
-export interface Erc20BAO extends BaseContract {
-  contractName: "Erc20BAO";
+export interface Erc20bao extends BaseContract {
+  contractName: "Erc20bao";
 
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: Erc20BAOInterface;
+  interface: Erc20baoInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

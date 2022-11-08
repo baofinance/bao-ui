@@ -105,23 +105,25 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 							</div>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							{rewardAPY ? (
-								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									{rewardAPY.gt(0) ? `${getDisplayBalance(rewardAPY, 18, 2)}%` : 'N/A'}
-								</Typography>
-							) : (
-								<Loader />
-							)}
+							<Typography variant='base' className='ml-2 inline-block font-medium'>
+								{getDisplayBalance(weight)}
+							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(weight)}
+								{getDisplayBalance(relativeWeight, 16)}
 							</Typography>
 						</div>
 						{isDesktop && (
 							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									{getDisplayBalance(relativeWeight, 16)}
+									{rewardAPY ? (
+										<Typography variant='base' className='ml-2 inline-block font-medium'>
+											{getDisplayBalance(rewardAPY, 18, 2)}%
+										</Typography>
+									) : (
+										<Loader />
+									)}
 								</Typography>
 							</div>
 						)}
