@@ -269,10 +269,9 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 					) : (
 						<Button
 							fullWidth
-							disabled={gaugeInfo && gaugeInfo.claimableTokens.lte(0)}
 							onClick={async () => {
 								const harvestTx = minterContract.mint(gauge.gaugeAddress)
-								handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} CRV`)
+								handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
 							}}
 						>
 							Harvest BAO
@@ -328,7 +327,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 				<div>
 					<Typography>Current Voting Power Allocated</Typography>
 					<Typography className='text-text-200'>
-						{votingPowerAllocated.gt(0) ? BigNumber.from(1000000).div(votingPowerAllocated).toNumber() : '0'}%
+						{votingPowerAllocated.gt(0) ? BigNumber.from(100000).div(votingPowerAllocated).toNumber() : '0'}%
 					</Typography>
 				</div>
 			</Modal.Body>

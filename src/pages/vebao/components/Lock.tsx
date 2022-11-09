@@ -377,7 +377,7 @@ const Lock: React.FC = () => {
 																ethers.utils.parseEther(val.toString()),
 																length.toString().slice(0, 10),
 															)
-															handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} CRV until ${endDate.toLocaleDateString()}`)
+															handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} BAO until ${endDate.toLocaleDateString()}`)
 														}}
 													>
 														Create Lock
@@ -407,7 +407,7 @@ const Lock: React.FC = () => {
 														const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 														handleTx(
 															lockTx,
-															`veBAO: Increased lock by ${parseFloat(val).toFixed(4)} CRV until ${new Date(
+															`veBAO: Increased lock by ${parseFloat(val).toFixed(4)} BAO until ${new Date(
 																lockInfo.lockEnd.mul(1000).toNumber(),
 															).toLocaleDateString()}`,
 														)

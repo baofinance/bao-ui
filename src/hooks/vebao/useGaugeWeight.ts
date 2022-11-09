@@ -3,14 +3,14 @@ import { useCallback, useEffect, useState } from 'react'
 import useContract from '@/hooks/base/useContract'
 import type { GaugeController } from '@/typechain/index'
 
-const useGaugeWeight = (lpAddress: string) => {
+const useGaugeWeight = (gaugeAddress: string) => {
 	const [weight, setWeight] = useState(BigNumber.from(0))
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
 	const fetchGaugeWeight = useCallback(async () => {
-		const weight = await gaugeController.get_gauge_weight(lpAddress)
+		const weight = await gaugeController.get_gauge_weight(gaugeAddress)
 		setWeight(weight)
-	}, [gaugeController, lpAddress])
+	}, [gaugeController, gaugeAddress])
 
 	useEffect(() => {
 		if (gaugeController) {

@@ -1,6 +1,7 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Loader, { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
+import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
 import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
@@ -8,9 +9,12 @@ import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
+import { Erc20bao } from '@/typechain/Erc20bao'
+import { GaugeController } from '@/typechain/GaugeController'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -24,7 +28,7 @@ const GaugeList: React.FC = () => {
 			<div className='flex w-full flex-row'>
 				<div className='flex w-full flex-col'>
 					{isDesktop ? (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'Relative Weight', 'APY']} />
+						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'TVL', 'APY']} />
 					) : (
 						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APY']} />
 					)}
@@ -66,7 +70,7 @@ interface GaugeListItemProps {
 }
 
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
-	const { account } = useWeb3React()
+	const { account, library } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const baoPrice = usePrice('curve-dao-token')
 	const weight = useGaugeWeight(gauge.gaugeAddress)
@@ -77,6 +81,11 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
 	const gaugeTVL = gaugeInfo ? decimate(virtualPrice.mul(gaugeInfo.totalSupply)) : BigNumber.from(0)
 	const rewardAPY = gaugeTVL.gt(0) ? decimate(baoPrice.mul(mintable)).div(gaugeTVL).mul(100) : BigNumber.from(0)
+	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
+	const baoContract = useContract<Erc20bao>('Erc20bao')
+
+	window.baov2 = baoContract
+	window.network = library
 
 	return (
 		<>
@@ -111,7 +120,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(relativeWeight, 16)}
+								${getDisplayBalance(gaugeInfo ? formatUnits(virtualPrice.mul(gaugeInfo.totalSupply)) : 0)}
 							</Typography>
 						</div>
 						{isDesktop && (
