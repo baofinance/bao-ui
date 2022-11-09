@@ -1,7 +1,6 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Loader, { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
-import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
 import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
@@ -9,8 +8,6 @@ import useGauges from '@/hooks/vebao/useGauges'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
-import { Erc20bao } from '@/typechain/Erc20bao'
-import { GaugeController } from '@/typechain/GaugeController'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -70,7 +67,7 @@ interface GaugeListItemProps {
 }
 
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
-	const { account, library } = useWeb3React()
+	const { account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const baoPrice = usePrice('curve-dao-token')
 	const weight = useGaugeWeight(gauge.gaugeAddress)
@@ -81,11 +78,6 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const virtualPrice = useVirtualPrice(gauge.poolContract)
 	const gaugeTVL = gaugeInfo ? decimate(virtualPrice.mul(gaugeInfo.totalSupply)) : BigNumber.from(0)
 	const rewardAPY = gaugeTVL.gt(0) ? decimate(baoPrice.mul(mintable)).div(gaugeTVL).mul(100) : BigNumber.from(0)
-	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
-	const baoContract = useContract<Erc20bao>('Erc20bao')
-
-	window.baov2 = baoContract
-	window.network = library
 
 	return (
 		<>

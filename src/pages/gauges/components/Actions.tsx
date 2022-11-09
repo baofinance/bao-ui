@@ -56,8 +56,6 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 		setVal('')
 	}, [onHide])
 
-	console.log('Allowance', allowance.toString())
-
 	return (
 		<>
 			<>
@@ -120,8 +118,6 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 								onClick={async () => {
 									const amount = parseUnits(val)
 									const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
-
-									console.log('amount', amount.toString())
 
 									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${parseFloat(val).toFixed(4)} ${gauge.name}`, () => hideModal())
 								}}
@@ -302,9 +298,6 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 		},
 		[setVal],
 	)
-
-	console.log('Voting Power Allocated', votingPowerAllocated.toString())
-	console.log(val)
 
 	return (
 		<>

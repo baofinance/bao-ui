@@ -16,13 +16,10 @@ type GaugeModalProps = {
 const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Vote', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
-	const gaugeInfo = useGaugeInfo(gauge)
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
-
-	console.log('Gauge Info', gaugeInfo)
 
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>

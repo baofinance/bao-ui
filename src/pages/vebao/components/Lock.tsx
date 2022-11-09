@@ -95,8 +95,6 @@ const Lock: React.FC = () => {
 		suppliedPercentage = lockSupplyPercent.div(totalSupply)
 	}
 
-	console.log('Allowance', allowance.toString())
-
 	return (
 		<>
 			<div className={`mx-auto my-4 ${isDesktop ? 'flex-flow flex gap-4' : 'flex flex-col gap-3'} justify-evenly`}>

@@ -27,8 +27,6 @@ const Swapper: React.FC = () => {
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 	const baov2Balance = useTokenBalance(Config.addressMap.BAOv2)
 
-	console.log(getDisplayBalance(inputVal))
-
 	return (
 		<>
 			<div className='border-b border-text-100 pb-5'>

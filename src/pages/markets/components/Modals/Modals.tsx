@@ -103,8 +103,6 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 		}
 	}
 
-	console.log()
-
 	const maxLabel = () => {
 		switch (operation) {
 			case MarketOperations.supply:
