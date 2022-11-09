@@ -4,7 +4,7 @@ import { Tab } from '@headlessui/react'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-import Migration from './components/Migration'
+import Migration from './components/Locked'
 import Swapper from './components/Swapper'
 
 const Distribution: React.FC = () => {
