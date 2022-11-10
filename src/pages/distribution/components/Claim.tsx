@@ -76,7 +76,7 @@ const Migration: React.FC = () => {
 				onClick={async () => {
 					const claim = distribution.claim()
 
-					handleTx(claim, `Distribution: Claim ${claimable} BAO`)
+					handleTx(claim, `Distribution: Claim ${formatUnits(claimable)} BAO`)
 				}}
 			>
 				Claim Now
