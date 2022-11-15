@@ -1,20 +1,25 @@
 import { useContext, useState, useRef, useEffect } from 'react'
 
-import { Context } from '@/contexts/Transactions'
+import { Context as TransactionsContext } from '@/contexts/Transactions'
 
-const useTransactionProvider = () => useContext(Context)
+const useTransactionProvider = () => useContext(TransactionsContext)
 
 export const useTxReceiptUpdater = (callback: (() => void) | (() => Promise<void>)) => {
 	const [firstRender, setFirstRender] = useState<boolean>(true)
-	const { transactions } = useTransactionProvider()
-	const txNumberRef = useRef<number>(0)
+	const { transactions, loaded } = useTransactionProvider()
+	const txNumberRef = useRef<number>(Object.keys(transactions).filter(tx => transactions[tx].receipt).length)
 	useEffect(() => {
 		setFirstRender(false)
+		console.log("first render off!")
 	}, [setFirstRender])
 	const txNumber = Object.keys(transactions).filter(tx => transactions[tx].receipt)
 	if (txNumber.length !== txNumberRef.current) {
 		txNumberRef.current = txNumber.length
-		if (!firstRender) callback()
+		console.log("update txNumber len")
+		if (loaded && !firstRender) {
+			console.log("callback!")
+			callback()
+		}
 	}
 }
 

@@ -5,13 +5,14 @@ import { useQuery } from '@tanstack/react-query'
 import useContract from '@/hooks/base/useContract'
 import { useBlockUpdater } from './useBlock'
 import { useTxReceiptUpdater } from './useTransactionProvider'
+import { providerKey } from '@/utils/index'
 import type { Erc20 } from '@/typechain/index'
 
 export const useEthBalance = () => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
 	const enabled = !!library && !!chainId && !!account
 	const { data: balance, refetch } = useQuery(
-		['@/hooks/base/useEthBalance', { chainId, account }],
+		['@/hooks/base/useEthBalance', { enabled }, providerKey(library, account, chainId)],
 		async () => {
 			return await library.getBalance(account)
 		},
@@ -22,7 +23,8 @@ export const useEthBalance = () => {
 	)
 
 	const _refetch = () => {
-		if (enabled) refetch()
+		// # HACKY: skip this time around the eventloop lol
+		if (enabled) setTimeout(() => refetch(), 0)
 	}
 
 	useTxReceiptUpdater(_refetch)
@@ -32,13 +34,15 @@ export const useEthBalance = () => {
 }
 
 const useTokenBalance = (tokenAddress: string) => {
-	const { chainId, account } = useWeb3React<Web3Provider>()
+	const { library, chainId, account } = useWeb3React<Web3Provider>()
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
 	const enabled = !!chainId && !!account && !!contract
 	const { data: balance, refetch } = useQuery(
-		['@/hooks/base/useBalance', { chainId, account }, tokenAddress],
+		['@/hooks/base/useTokenBalance', { enabled }, providerKey(library, account, chainId), tokenAddress],
 		async () => {
-			return await contract.balanceOf(account)
+			if (!enabled) throw new Error("not enabled")
+			const _balance = await contract.balanceOf(account)
+			return _balance
 		},
 		{
 			enabled,
@@ -47,7 +51,8 @@ const useTokenBalance = (tokenAddress: string) => {
 	)
 
 	const _refetch = () => {
-		if (enabled) refetch()
+		// # HACKY: skip this time around the eventloop lol
+		if (enabled) setTimeout(() => refetch(), 0)
 	}
 
 	useTxReceiptUpdater(_refetch)

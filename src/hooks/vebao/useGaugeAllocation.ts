@@ -1,23 +1,36 @@
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
 import useContract from '@/hooks/base/useContract'
 import type { GaugeController } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 const useGaugeAllocation = (lpAddress: string) => {
-	const [allocation, setAllocation] = useState(BigNumber.from(0))
+	const { library, account, chainId } = useWeb3React()
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
-	const fetchGaugeAllocation = useCallback(async () => {
-		const allocation = await gaugeController.callStatic['gauge_relative_weight(address)'](lpAddress)
-		setAllocation(allocation)
-	}, [gaugeController, lpAddress])
+	const enabled = !!gaugeController
+	const { data: allocation, refetch } = useQuery(
+		['@/hooks/vebao/useGaugeAllocation', providerKey(library, account, chainId), lpAddress],
+		async () => {
+			const _allocation = await gaugeController.callStatic['gauge_relative_weight(address)'](lpAddress)
+			return _allocation
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!gaugeController) return
-		fetchGaugeAllocation()
-	}, [fetchGaugeAllocation, gaugeController])
+	const _refetch = () => {
+		if (enabled) setTimeout(refetch, 0)
+	}
 
-	return allocation
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return allocation || BigNumber.from(0)
 }
 
 export default useGaugeAllocation

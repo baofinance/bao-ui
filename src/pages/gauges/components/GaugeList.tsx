@@ -69,7 +69,7 @@ interface GaugeListItemProps {
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const { account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
-	const baoPrice = usePrice('curve-dao-token')
+	const baoPrice = usePrice('bao-finance')
 	const weight = useGaugeWeight(gauge.gaugeAddress)
 	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
 	const gaugeInfo = useGaugeInfo(gauge)

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer } from 'react'
+import React, { useState, useCallback, useEffect, useReducer } from 'react'
 import { PropsWithChildren } from 'react'
 import { useWeb3React } from '@web3-react/core'
 
@@ -12,6 +12,7 @@ interface TransactionsProviderProps {
 
 const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps>> = ({ children }) => {
 	const [{ initialized, transactions }, dispatch] = useReducer(reducer, initialState)
+	const [loaded, setLoaded] = useState(false)
 	const { library } = useWeb3React()
 
 	const handleAddTransaction = useCallback(
@@ -38,8 +39,6 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 			const txs = (JSON.parse(txsRaw) as TransactionsMap) || {}
 			dispatch(setTransactions(txs))
 
-			if (!library) return
-
 			// Add receipt to any finished transactions that aren't flagged
 			for (const key of Object.keys(txs)) {
 				const tx = txs[key]
@@ -48,10 +47,11 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 					if (receipt !== null) handleTxReceipt(receipt)
 				}
 			}
+			setLoaded(true)
 		} catch (e) {
 			console.error(e)
 		}
-	}, [dispatch, handleTxReceipt, library])
+	}, [dispatch, handleTxReceipt, setLoaded, library])
 
 	useEffect(() => {
 		if (initialized) {
@@ -60,12 +60,14 @@ const TransactionsProvider: React.FC<PropsWithChildren<TransactionsProviderProps
 	}, [initialized, transactions])
 
 	useEffect(() => {
+		if (!library) return
 		fetchTransactions()
-	}, [])
+	}, [fetchTransactions, library])
 
 	return (
 		<Context.Provider
 			value={{
+				loaded,
 				transactions,
 				onAddTransaction: handleAddTransaction,
 				onTxReceipt: handleTxReceipt,
