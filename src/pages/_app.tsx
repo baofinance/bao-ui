@@ -101,20 +101,20 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 				<Web3ReactNetworkProvider getLibrary={getLibrary}>
 					<Web3ReactManager>
 						<BaoProvider>
-							<MarketsProvider>
-								<FarmsProvider>
-									<TransactionProvider>
+							<TransactionProvider>
+								<MarketsProvider>
+									<FarmsProvider>
 										<SWRConfig
 											value={{
 												fetcher,
-												refreshInterval: 300000,
+													refreshInterval: 300000,
 											}}
 										>
 											{children}
 										</SWRConfig>
-									</TransactionProvider>
-								</FarmsProvider>
-							</MarketsProvider>
+									</FarmsProvider>
+								</MarketsProvider>
+							</TransactionProvider>
 						</BaoProvider>
 					</Web3ReactManager>
 				</Web3ReactNetworkProvider>
