@@ -170,7 +170,7 @@ const Migration: React.FC = () => {
 				<div className='flex flex-col items-center'>
 					<div className='w-1/2'>
 						<div className='mb-5 border-b border-text-100 pb-5'>
-							<Typography variant='lg' className='text-xl font-medium leading-10 text-text-200'>
+							<Typography variant='xl' className='font-medium leading-10 text-text-200'>
 								Start Your Distribution
 							</Typography>
 							<Typography variant='p' className='mt-2 text-text-100 text-lg leading-normal'>
