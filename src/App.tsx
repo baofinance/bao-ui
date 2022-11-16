@@ -7,6 +7,7 @@ import fetcher from 'bao/lib/fetcher'
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { SpinnerLoader } from 'components/Loader'
+import AnnouncementBar from 'components/TopBar/components/AnnouncementBar'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
 import React, { ReactNode, Suspense, useCallback, useEffect, useState } from 'react'
@@ -65,6 +66,7 @@ const App: React.FC = () => {
 	return (
 		<Providers isDarkMode={isDarkMode}>
 			<Router>
+				<AnnouncementBar />
 				<TopBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
 				<Suspense fallback={<SpinnerLoader />}>

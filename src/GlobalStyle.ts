@@ -305,6 +305,20 @@ svg.menuIcon {
 .table {
   margin-bottom: 0px;
 }
+
+.announcement-top-bar {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.announcement-top-bar.alert-dismissible .close {
+  top: 50%;
+  transform: translateY(-55%);
+}
 `
 
 export default GlobalStyle
