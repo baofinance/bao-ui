@@ -139,7 +139,9 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	}, [basketContract, library, basket, prices, bao, lendingRegistry, mkr])
 
 	useEffect(() => {
-		if (!(library &&
+		if (
+			!(
+				library &&
 				chainId &&
 				basket &&
 				lendingRegistry &&
@@ -148,7 +150,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				basket.pieColors &&
 				prices &&
 				Object.keys(prices).length > 0
-			)) {
+			)
+		) {
 			return
 		}
 

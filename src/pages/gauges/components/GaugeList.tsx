@@ -1,14 +1,17 @@
+import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import Loader, { PageLoader } from '@/components/Loader'
+import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
-import usePrice from '@/hooks/base/usePrice'
-import useGaugeAllocation from '@/hooks/vebao/useGaugeAllocation'
+import useBao from '@/hooks/base/useBao'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useGauges from '@/hooks/vebao/useGauges'
+import useGaugeTVL from '@/hooks/vebao/useGaugeTVL'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
-import useVirtualPrice from '@/hooks/vebao/useVirtualPrice'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import useTotalWeight from '@/hooks/vebao/useTotalWeight'
+import GraphUtil from '@/utils/graph'
+import { fromDecimal, getDisplayBalance } from '@/utils/numberFormat'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
@@ -29,17 +32,15 @@ const GaugeList: React.FC = () => {
 					) : (
 						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APY']} />
 					)}
-					<>
-						{gauges.length ? (
-							gauges.map((gauge: any, i: number) => (
-								<React.Fragment key={i}>
-									<GaugeListItem gauge={gauge} />
-								</React.Fragment>
-							))
-						) : (
-							<PageLoader block />
-						)}
-					</>
+					{gauges.length ? (
+						gauges.map((gauge: any, i: number) => (
+							<React.Fragment key={i}>
+								<GaugeListItem gauge={gauge} />
+							</React.Fragment>
+						))
+					) : (
+						<PageLoader block />
+					)}
 				</div>
 			</div>
 		</>
@@ -67,17 +68,46 @@ interface GaugeListItemProps {
 }
 
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
-	const { account } = useWeb3React()
+	const { chainId, account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
-	const baoPrice = usePrice('bao-finance')
 	const weight = useGaugeWeight(gauge.gaugeAddress)
-	const relativeWeight = useGaugeAllocation(gauge.gaugeAddress)
+	const totalWeight = useTotalWeight()
+
+	// Messy but works for now
+	const relativeWeight = BigNumber.from(100)
+		.pow(18)
+		.mul(weight)
+		.div(totalWeight.eq(0) ? 1 : totalWeight)
+		.mul(100)
+
+	const { data: baoPrice } = useQuery(
+		['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
+		async () => {
+			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
+			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
+			return fromDecimal(_baoPrice)
+		},
+		{
+			enabled: !!chainId,
+			refetchOnReconnect: true,
+			refetchInterval: 1000 * 60 * 5,
+			placeholderData: BigNumber.from(0),
+		},
+	)
+
 	const gaugeInfo = useGaugeInfo(gauge)
-	const totalMintable = useMintable()
-	const mintable = totalMintable.mul(relativeWeight)
-	const virtualPrice = useVirtualPrice(gauge.poolContract)
-	const gaugeTVL = gaugeInfo ? decimate(virtualPrice.mul(gaugeInfo.totalSupply)) : BigNumber.from(0)
-	const rewardAPY = gaugeTVL.gt(0) ? decimate(baoPrice.mul(mintable)).div(gaugeTVL).mul(100) : BigNumber.from(0)
+	const mintable = useMintable()
+	const gaugeTVL = useGaugeTVL(gauge)
+
+	console.log('Mintable Rewards', formatUnits(mintable))
+	console.log('Bao Price', formatUnits(baoPrice.mul(1000)))
+	console.log('Rewards Value', formatUnits(mintable.mul(baoPrice)))
+	// console.log('Gauge Weight', weight.toString())
+	// console.log('Total Weight', totalWeight.toString())
+	// console.log('Relative Weight', relativeWeight.toString())
+	// console.log('Gauge Name', gauge.name)
+	// console.log('Working Balances', gaugeInfo?.workingSupply.toString())
+	// console.log('Mintable', formatUnits(mintable))
 
 	return (
 		<>
@@ -107,24 +137,20 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(weight)}
+								{getDisplayBalance(relativeWeight, 18, 2)}%
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								${getDisplayBalance(gaugeInfo ? formatUnits(virtualPrice.mul(gaugeInfo.totalSupply)) : 0)}
+								${gaugeTVL && getDisplayBalance(formatUnits(gaugeTVL))}
 							</Typography>
 						</div>
 						{isDesktop && (
 							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									{rewardAPY ? (
-										<Typography variant='base' className='ml-2 inline-block font-medium'>
-											{getDisplayBalance(rewardAPY, 18, 2)}%
-										</Typography>
-									) : (
-										<Loader />
-									)}
+									<Typography variant='base' className='ml-2 inline-block font-medium'>
+										{gaugeTVL && gaugeTVL.gt(0) ? baoPrice.mul(mintable).div(gaugeTVL).mul(100).toString() : 0}%
+									</Typography>
 								</Typography>
 							</div>
 						)}

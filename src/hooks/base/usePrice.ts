@@ -3,7 +3,7 @@ import { BigNumber } from 'ethers'
 import { fromDecimal } from '@/utils/numberFormat'
 
 // INFO: add to this to support new tokens
-type CoinGeckId = 'bao-finance' | 'curve-dao-token'
+type CoinGeckId = 'bao-finance' | 'curve-dao-token' | 'lp-3pool-curve' | 'dai' | 'ethereum'
 
 export const usePrice = (coinGeckoId: CoinGeckId) => {
 	const priceUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=usd`

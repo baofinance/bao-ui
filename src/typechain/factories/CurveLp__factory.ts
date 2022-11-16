@@ -4,31 +4,9 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type { Erc20bao, Erc20baoInterface } from "../Erc20bao";
+import type { CurveLp, CurveLpInterface } from "../CurveLp";
 
 const _abi = [
-  {
-    name: "Transfer",
-    inputs: [
-      {
-        name: "_from",
-        type: "address",
-        indexed: true,
-      },
-      {
-        name: "_to",
-        type: "address",
-        indexed: true,
-      },
-      {
-        name: "_value",
-        type: "uint256",
-        indexed: false,
-      },
-    ],
-    anonymous: false,
-    type: "event",
-  },
   {
     name: "Approval",
     inputs: [
@@ -52,45 +30,21 @@ const _abi = [
     type: "event",
   },
   {
-    name: "UpdateMiningParameters",
+    name: "Transfer",
     inputs: [
       {
-        name: "time",
-        type: "uint256",
-        indexed: false,
-      },
-      {
-        name: "rate",
-        type: "uint256",
-        indexed: false,
-      },
-      {
-        name: "supply",
-        type: "uint256",
-        indexed: false,
-      },
-    ],
-    anonymous: false,
-    type: "event",
-  },
-  {
-    name: "SetMinter",
-    inputs: [
-      {
-        name: "minter",
+        name: "_from",
         type: "address",
-        indexed: false,
+        indexed: true,
       },
-    ],
-    anonymous: false,
-    type: "event",
-  },
-  {
-    name: "SetAdmin",
-    inputs: [
       {
-        name: "admin",
+        name: "_to",
         type: "address",
+        indexed: true,
+      },
+      {
+        name: "_value",
+        type: "uint256",
         indexed: false,
       },
     ],
@@ -100,108 +54,7 @@ const _abi = [
   {
     stateMutability: "nonpayable",
     type: "constructor",
-    inputs: [
-      {
-        name: "_name",
-        type: "string",
-      },
-      {
-        name: "_symbol",
-        type: "string",
-      },
-      {
-        name: "_decimals",
-        type: "uint8",
-      },
-    ],
-    outputs: [],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "update_mining_parameters",
     inputs: [],
-    outputs: [],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "start_epoch_time_write",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-      },
-    ],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "future_epoch_time_write",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-      },
-    ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "available_supply",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-      },
-    ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "mintable_in_timeframe",
-    inputs: [
-      {
-        name: "start",
-        type: "uint256",
-      },
-      {
-        name: "end",
-        type: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-      },
-    ],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "set_minter",
-    inputs: [
-      {
-        name: "_minter",
-        type: "address",
-      },
-    ],
-    outputs: [],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "set_admin",
-    inputs: [
-      {
-        name: "_admin",
-        type: "address",
-      },
-    ],
     outputs: [],
   },
   {
@@ -224,6 +77,7 @@ const _abi = [
         type: "bool",
       },
     ],
+    gas: 78632,
   },
   {
     stateMutability: "nonpayable",
@@ -249,6 +103,7 @@ const _abi = [
         type: "bool",
       },
     ],
+    gas: 116616,
   },
   {
     stateMutability: "nonpayable",
@@ -270,6 +125,93 @@ const _abi = [
         type: "bool",
       },
     ],
+    gas: 39151,
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "permit",
+    inputs: [
+      {
+        name: "_owner",
+        type: "address",
+      },
+      {
+        name: "_spender",
+        type: "address",
+      },
+      {
+        name: "_value",
+        type: "uint256",
+      },
+      {
+        name: "_deadline",
+        type: "uint256",
+      },
+      {
+        name: "_v",
+        type: "uint8",
+      },
+      {
+        name: "_r",
+        type: "bytes32",
+      },
+      {
+        name: "_s",
+        type: "bytes32",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+    gas: 102221,
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "increaseAllowance",
+    inputs: [
+      {
+        name: "_spender",
+        type: "address",
+      },
+      {
+        name: "_added_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+    gas: 41711,
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "decreaseAllowance",
+    inputs: [
+      {
+        name: "_spender",
+        type: "address",
+      },
+      {
+        name: "_subtracted_value",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+    gas: 41737,
   },
   {
     stateMutability: "nonpayable",
@@ -291,12 +233,39 @@ const _abi = [
         type: "bool",
       },
     ],
+    gas: 80902,
   },
   {
     stateMutability: "nonpayable",
     type: "function",
-    name: "burn",
+    name: "mint_relative",
     inputs: [
+      {
+        name: "_to",
+        type: "address",
+      },
+      {
+        name: "frac",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+    gas: 81224,
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "burnFrom",
+    inputs: [
+      {
+        name: "_to",
+        type: "address",
+      },
       {
         name: "_value",
         type: "uint256",
@@ -308,30 +277,7 @@ const _abi = [
         type: "bool",
       },
     ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "name",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "string",
-      },
-    ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "symbol",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "string",
-      },
-    ],
+    gas: 80954,
   },
   {
     stateMutability: "view",
@@ -344,6 +290,80 @@ const _abi = [
         type: "uint8",
       },
     ],
+    gas: 630,
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "version",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+      },
+    ],
+    gas: 6287,
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "initialize",
+    inputs: [
+      {
+        name: "_name",
+        type: "string",
+      },
+      {
+        name: "_symbol",
+        type: "string",
+      },
+      {
+        name: "_pool",
+        type: "address",
+      },
+    ],
+    outputs: [],
+    gas: 259459,
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "name",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+      },
+    ],
+    gas: 13109,
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "symbol",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+      },
+    ],
+    gas: 10868,
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    name: "DOMAIN_SEPARATOR",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    gas: 2880,
   },
   {
     stateMutability: "view",
@@ -361,6 +381,7 @@ const _abi = [
         type: "uint256",
       },
     ],
+    gas: 3176,
   },
   {
     stateMutability: "view",
@@ -382,6 +403,7 @@ const _abi = [
         type: "uint256",
       },
     ],
+    gas: 3472,
   },
   {
     stateMutability: "view",
@@ -394,6 +416,7 @@ const _abi = [
         type: "uint256",
       },
     ],
+    gas: 2970,
   },
   {
     stateMutability: "view",
@@ -406,66 +429,37 @@ const _abi = [
         type: "address",
       },
     ],
+    gas: 3000,
   },
   {
     stateMutability: "view",
     type: "function",
-    name: "admin",
-    inputs: [],
-    outputs: [
+    name: "nonces",
+    inputs: [
       {
-        name: "",
+        name: "arg0",
         type: "address",
       },
     ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "mining_epoch",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "int128",
-      },
-    ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "start_epoch_time",
-    inputs: [],
     outputs: [
       {
         name: "",
         type: "uint256",
       },
     ],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    name: "rate",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-      },
-    ],
+    gas: 3296,
   },
 ];
 
-export class Erc20bao__factory {
+export class CurveLp__factory {
   static readonly abi = _abi;
-  static createInterface(): Erc20baoInterface {
-    return new utils.Interface(_abi) as Erc20baoInterface;
+  static createInterface(): CurveLpInterface {
+    return new utils.Interface(_abi) as CurveLpInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): Erc20bao {
-    return new Contract(address, _abi, signerOrProvider) as Erc20bao;
+  ): CurveLp {
+    return new Contract(address, _abi, signerOrProvider) as CurveLp;
   }
 }

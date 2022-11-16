@@ -4,7 +4,7 @@ import Multicall from '@/utils/multicall'
 import { BigNumber } from 'ethers'
 import useBao from '../base/useBao'
 import useContract from '@/hooks/base/useContract'
-import type { Erc20bao } from '@/typechain/index'
+import type { Baov2 } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
@@ -18,7 +18,7 @@ type RewardsInfo = {
 const useEpochTime = (): RewardsInfo => {
 	const { library, account, chainId } = useWeb3React()
 	const bao = useBao()
-	const token = useContract<Erc20bao>('Erc20bao', Config.contracts.Erc20bao[chainId].address)
+	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
 	const enabled = !!bao && !!token
 	const { data: epochTime, refetch } = useQuery(
