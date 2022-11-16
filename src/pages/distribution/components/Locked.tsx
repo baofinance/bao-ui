@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
@@ -61,15 +62,15 @@ const Migration: React.FC = () => {
 	useTxReceiptUpdater(refetch)
 	useBlockUpdater(refetch, 10)
 
-	console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
+	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
 
 	const totalLockedBAO = merkleLeaf ? merkleLeaf.amount : '0'
 	const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
 
-	console.log('Date Started', dateStarted.toString())
-	console.log('Merkle Leaf', merkleLeaf)
+	//console.log('Date Started', dateStarted.toString())
+	//console.log('Merkle Leaf', merkleLeaf)
 	return (
-		<>
+		<div className='pt-4'>
 			{distributionInfo && distributionInfo.dateStarted.gt(0) ? (
 				<>
 					<div className='border-b border-text-100 pb-5'>
@@ -166,36 +167,42 @@ const Migration: React.FC = () => {
 					</div>
 				</>
 			) : (
-				<>
-					<div className='border-b border-text-100 pb-5'>
-						<Typography variant='lg' className='text-lg font-medium leading-6 text-text-200'>
-							Start Your Distribution
-						</Typography>
-						<Typography variant='p' className='mt-2 text-text-100'>
-							Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
-							manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please
-							join our{' '}
-							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-text-400'>
-								Discord
-							</a>{' '}
-							community!
-						</Typography>
+				<div className='flex flex-col items-center'>
+					<div className='w-1/2'>
+						<div className='mb-5 border-b border-text-100 pb-5'>
+							<Typography variant='lg' className='text-xl font-medium leading-10 text-text-200'>
+								Start Your Distribution
+							</Typography>
+							<Typography variant='p' className='mt-2 text-text-100 text-lg leading-normal'>
+								Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
+								manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please
+								join our{' '}
+								<a
+									href='https://discord.gg/BW3P62vJXT'
+									target='_blank'
+									rel='noreferrer noopener'
+									className='font-medium hover:text-text-400'
+								>
+									Discord
+								</a>{' '}
+								community!
+							</Typography>
+						</div>
+						<div className='flex flex-col items-center'>
+							<Button
+								className='bg-primary-500'
+								onClick={async () => {
+									const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
+									handleTx(startDistribution, `Start Distribution`)
+								}}
+							>
+								Start Distribution
+							</Button>
+						</div>
 					</div>
-					<div className='flex flex-row'>
-						<Button
-							fullWidth
-							onClick={async () => {
-								const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
-
-								handleTx(startDistribution, `Start Distribution`)
-							}}
-						>
-							Start Distribution
-						</Button>
-					</div>
-				</>
+				</div>
 			)}
-		</>
+		</div>
 	)
 }
 
