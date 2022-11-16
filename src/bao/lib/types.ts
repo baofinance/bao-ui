@@ -1,4 +1,4 @@
-import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool } from '@/typechain/index'
+import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool, PoolInfo, CurveLp, CurveMetaPool } from '@/typechain/index'
 import { BigNumber } from 'ethers'
 
 export interface SupportedPool {
@@ -36,6 +36,9 @@ export interface SupportedGauge {
 		[network: number]: string
 	}
 	lpAddresses: {
+		[network: number]: string
+	}
+	poolInfoAddresses: {
 		[network: number]: string
 	}
 }
@@ -101,9 +104,11 @@ export interface ActiveSupportedGauge extends SupportedGauge {
 	gaugeAddress: string
 	poolAddress: string
 	lpAddress: string
+	poolInfoAddress: string
 	gaugeContract: Gauge
 	poolContract: GaugePool
-	lpContract: Uni_v2_lp
+	lpContract: Uni_v2_lp | CurveLp | CurveMetaPool
+	poolInfoContract: PoolInfo
 }
 
 export interface ActiveSupportedBasket extends SupportedBasket {

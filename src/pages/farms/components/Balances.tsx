@@ -1,23 +1,22 @@
-import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
-import { BigNumber } from 'ethers'
-import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import Config from '@/bao/lib/config'
 import Loader from '@/components/Loader'
 import { StatCards } from '@/components/Stats'
+import useContract from '@/hooks/base/useContract'
+import usePrice from '@/hooks/base/usePrice'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useAllEarnings from '@/hooks/farms/useAllEarnings'
 import useLockedEarnings from '@/hooks/farms/useLockedEarnings'
-import usePrice from '@/hooks/base/usePrice'
-import { getDisplayBalance, truncateNumber, decimate, exponentiate } from '@/utils/numberFormat'
-import useContract from '@/hooks/base/useContract'
 import { Bao } from '@/typechain/index'
+import { getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
+import React, { useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 
 const Balances: React.FC = () => {
 	const [totalSupply, setTotalSupply] = useState<BigNumber>()
-	const baoBalance = useTokenBalance(Config.addressMap.BAO)
-	const { account } = useWeb3React()
+	const { account, chainId } = useWeb3React()
+	const baoBalance = useTokenBalance(Config.contracts.Bao[chainId].address)
 	const baoPrice = usePrice('bao-finance')
 	const locks = useLockedEarnings()
 	const allEarnings = useAllEarnings()

@@ -24,7 +24,7 @@ interface AccountModalProps {
 }
 
 const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
-	const { account, library, deactivate } = useWeb3React()
+	const { account, chainId, deactivate } = useWeb3React()
 
 	const handleSignOutClick = useCallback(() => {
 		onHide()
@@ -32,7 +32,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 	}, [onHide, deactivate])
 
 	const { transactions, onClearTransactions } = useTransactionProvider()
-	const baoBalance = useTokenBalance(Config.addressMap.BAO)
+	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
 	const ethBalance = useEthBalance()
 	const [tx, setTx] = useState({})
 

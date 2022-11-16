@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 import useContract from '@/hooks/base/useContract'
-import type { Erc20bao } from '@/typechain/index'
+import type { Baov2 } from '@/typechain/index'
 
 type RewardsInfo = {
 	start: BigNumber
@@ -16,7 +16,7 @@ const useEpochTime = (): RewardsInfo => {
 	const [epochTime, setEpochTime] = useState<RewardsInfo | undefined>()
 	const { chainId } = useWeb3React()
 	const bao = useBao()
-	const token = useContract<Erc20bao>('Erc20bao', Config.contracts.Erc20bao[chainId].address)
+	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
 	const fetchEpochTime = useCallback(async () => {
 		const query = Multicall.createCallContext([

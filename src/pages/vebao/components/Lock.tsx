@@ -27,7 +27,7 @@ import { isDesktop } from 'react-device-detect'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import type { Erc20, Erc20bao, VotingEscrow } from '@/typechain/index'
+import type { Erc20, Baov2, VotingEscrow } from '@/typechain/index'
 import { formatUnits } from 'ethers/lib/utils'
 
 function addDays(numOfDays: number, date = new Date()) {
@@ -53,7 +53,7 @@ const Lock: React.FC = () => {
 			? lockInfo && new Date(addDays(7, new Date(lockInfo.lockEnd.mul(1000).toNumber())))
 			: new Date(addDays(7, new Date()))
 	const [endDate, setEndDate] = useState(startDate)
-	const baoAddress = Config.addressMap.BAOv2
+	const baoAddress = Config.contracts.Baov2[chainId].address
 	const baoBalance = useTokenBalance(baoAddress)
 	const nextFeeDistribution = useNextDistribution()
 	const allowance = useAllowance(baoAddress, Config.contracts.votingEscrow[chainId].address)
@@ -63,7 +63,7 @@ const Lock: React.FC = () => {
 	const baoPrice = usePrice('curve-dao-token')
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 
-	const baoV2 = useContract<Erc20bao>('Erc20bao', Config.addressMap.BAOv2)
+	const baoV2 = useContract<Baov2>('Baov2', baoAddress)
 	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
 
 	const handleChange = useCallback(

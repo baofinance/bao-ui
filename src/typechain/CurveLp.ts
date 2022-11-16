@@ -27,65 +27,62 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface Erc20baoInterface extends utils.Interface {
+export interface CurveLpInterface extends utils.Interface {
   functions: {
-    "update_mining_parameters()": FunctionFragment;
-    "start_epoch_time_write()": FunctionFragment;
-    "future_epoch_time_write()": FunctionFragment;
-    "available_supply()": FunctionFragment;
-    "mintable_in_timeframe(uint256,uint256)": FunctionFragment;
-    "set_minter(address)": FunctionFragment;
-    "set_admin(address)": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "increaseAllowance(address,uint256)": FunctionFragment;
+    "decreaseAllowance(address,uint256)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
-    "burn(uint256)": FunctionFragment;
+    "mint_relative(address,uint256)": FunctionFragment;
+    "burnFrom(address,uint256)": FunctionFragment;
+    "decimals()": FunctionFragment;
+    "version()": FunctionFragment;
+    "initialize(string,string,address)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
-    "decimals()": FunctionFragment;
+    "DOMAIN_SEPARATOR()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "minter()": FunctionFragment;
-    "admin()": FunctionFragment;
-    "mining_epoch()": FunctionFragment;
-    "start_epoch_time()": FunctionFragment;
-    "rate()": FunctionFragment;
+    "nonces(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "update_mining_parameters"
-      | "update_mining_parameters()"
-      | "start_epoch_time_write"
-      | "start_epoch_time_write()"
-      | "future_epoch_time_write"
-      | "future_epoch_time_write()"
-      | "available_supply"
-      | "available_supply()"
-      | "mintable_in_timeframe"
-      | "mintable_in_timeframe(uint256,uint256)"
-      | "set_minter"
-      | "set_minter(address)"
-      | "set_admin"
-      | "set_admin(address)"
       | "transfer"
       | "transfer(address,uint256)"
       | "transferFrom"
       | "transferFrom(address,address,uint256)"
       | "approve"
       | "approve(address,uint256)"
+      | "permit"
+      | "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+      | "increaseAllowance"
+      | "increaseAllowance(address,uint256)"
+      | "decreaseAllowance"
+      | "decreaseAllowance(address,uint256)"
       | "mint"
       | "mint(address,uint256)"
-      | "burn"
-      | "burn(uint256)"
+      | "mint_relative"
+      | "mint_relative(address,uint256)"
+      | "burnFrom"
+      | "burnFrom(address,uint256)"
+      | "decimals"
+      | "decimals()"
+      | "version"
+      | "version()"
+      | "initialize"
+      | "initialize(string,string,address)"
       | "name"
       | "name()"
       | "symbol"
       | "symbol()"
-      | "decimals"
-      | "decimals()"
+      | "DOMAIN_SEPARATOR"
+      | "DOMAIN_SEPARATOR()"
       | "balanceOf"
       | "balanceOf(address)"
       | "allowance"
@@ -94,72 +91,10 @@ export interface Erc20baoInterface extends utils.Interface {
       | "totalSupply()"
       | "minter"
       | "minter()"
-      | "admin"
-      | "admin()"
-      | "mining_epoch"
-      | "mining_epoch()"
-      | "start_epoch_time"
-      | "start_epoch_time()"
-      | "rate"
-      | "rate()"
+      | "nonces"
+      | "nonces(address)"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "update_mining_parameters",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "update_mining_parameters()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "start_epoch_time_write",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "start_epoch_time_write()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "future_epoch_time_write",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "future_epoch_time_write()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "available_supply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "available_supply()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintable_in_timeframe",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintable_in_timeframe(uint256,uint256)",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_minter",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_minter(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_admin",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_admin(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
   encodeFunctionData(
     functionFragment: "transfer",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -193,6 +128,46 @@ export interface Erc20baoInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "increaseAllowance",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "increaseAllowance(address,uint256)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "decreaseAllowance",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "decreaseAllowance(address,uint256)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "mint",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
@@ -201,20 +176,54 @@ export interface Erc20baoInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "burn",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "mint_relative",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "burn(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "mint_relative(address,uint256)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burnFrom",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burnFrom(address,uint256)",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "decimals()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
+  encodeFunctionData(functionFragment: "version()", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize(string,string,address)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "name()", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "decimals()",
+    functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "DOMAIN_SEPARATOR()",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -243,77 +252,15 @@ export interface Erc20baoInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "minter", values?: undefined): string;
   encodeFunctionData(functionFragment: "minter()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "admin", values?: undefined): string;
-  encodeFunctionData(functionFragment: "admin()", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "mining_epoch",
-    values?: undefined
+    functionFragment: "nonces",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "mining_epoch()",
-    values?: undefined
+    functionFragment: "nonces(address)",
+    values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "start_epoch_time",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "start_epoch_time()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "rate", values?: undefined): string;
-  encodeFunctionData(functionFragment: "rate()", values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "update_mining_parameters",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "update_mining_parameters()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "start_epoch_time_write",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "start_epoch_time_write()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "future_epoch_time_write",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "future_epoch_time_write()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "available_supply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "available_supply()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintable_in_timeframe",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintable_in_timeframe(uint256,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "set_minter", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "set_minter(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "set_admin", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "set_admin(address)",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transfer(address,uint256)",
@@ -332,22 +279,66 @@ export interface Erc20baoInterface extends utils.Interface {
     functionFragment: "approve(address,uint256)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "increaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "increaseAllowance(address,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "decreaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "decreaseAllowance(address,uint256)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mint(address,uint256)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "burn(uint256)",
+    functionFragment: "mint_relative",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mint_relative(address,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "burnFrom(address,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "decimals()", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "version()", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initialize(string,string,address)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name()", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals()", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_SEPARATOR",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_SEPARATOR()",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOf(address)",
@@ -368,64 +359,26 @@ export interface Erc20baoInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "minter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "minter()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "admin", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "admin()", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "mining_epoch",
+    functionFragment: "nonces(address)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "mining_epoch()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "start_epoch_time",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "start_epoch_time()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "rate", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "rate()", data: BytesLike): Result;
 
   events: {
-    "Transfer(address,address,uint256)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
-    "UpdateMiningParameters(uint256,uint256,uint256)": EventFragment;
-    "SetMinter(address)": EventFragment;
-    "SetAdmin(address)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "Transfer(address,address,uint256)"
-  ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "Approval(address,address,uint256)"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UpdateMiningParameters"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(
-    nameOrSignatureOrTopic: "UpdateMiningParameters(uint256,uint256,uint256)"
+    nameOrSignatureOrTopic: "Transfer(address,address,uint256)"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SetMinter"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SetMinter(address)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SetAdmin"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SetAdmin(address)"): EventFragment;
 }
-
-export interface TransferEventObject {
-  _from: string;
-  _to: string;
-  _value: BigNumber;
-}
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber],
-  TransferEventObject
->;
-
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
 export interface ApprovalEventObject {
   _owner: string;
@@ -439,41 +392,26 @@ export type ApprovalEvent = TypedEvent<
 
 export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
 
-export interface UpdateMiningParametersEventObject {
-  time: BigNumber;
-  rate: BigNumber;
-  supply: BigNumber;
+export interface TransferEventObject {
+  _from: string;
+  _to: string;
+  _value: BigNumber;
 }
-export type UpdateMiningParametersEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber],
-  UpdateMiningParametersEventObject
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber],
+  TransferEventObject
 >;
 
-export type UpdateMiningParametersEventFilter =
-  TypedEventFilter<UpdateMiningParametersEvent>;
+export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface SetMinterEventObject {
-  minter: string;
-}
-export type SetMinterEvent = TypedEvent<[string], SetMinterEventObject>;
-
-export type SetMinterEventFilter = TypedEventFilter<SetMinterEvent>;
-
-export interface SetAdminEventObject {
-  admin: string;
-}
-export type SetAdminEvent = TypedEvent<[string], SetAdminEventObject>;
-
-export type SetAdminEventFilter = TypedEventFilter<SetAdminEvent>;
-
-export interface Erc20bao extends BaseContract {
-  contractName: "Erc20bao";
+export interface CurveLp extends BaseContract {
+  contractName: "CurveLp";
 
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: Erc20baoInterface;
+  interface: CurveLpInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -495,66 +433,6 @@ export interface Erc20bao extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    update_mining_parameters(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "update_mining_parameters()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    start_epoch_time_write(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "start_epoch_time_write()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    future_epoch_time_write(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "future_epoch_time_write()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    available_supply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "available_supply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    mintable_in_timeframe(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "mintable_in_timeframe(uint256,uint256)"(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    set_minter(
-      _minter: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "set_minter(address)"(
-      _minter: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    set_admin(
-      _admin: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "set_admin(address)"(
-      _admin: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -593,6 +471,52 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    permit(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    increaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    decreaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     mint(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -605,13 +529,49 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    burn(
+    mint_relative(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "mint_relative(address,uint256)"(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    burnFrom(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "burn(uint256)"(
+    "burnFrom(address,uint256)"(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+
+    version(overrides?: CallOverrides): Promise<[string]>;
+
+    "version()"(overrides?: CallOverrides): Promise<[string]>;
+
+    initialize(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "initialize(string,string,address)"(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -623,9 +583,9 @@ export interface Erc20bao extends BaseContract {
 
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
-    decimals(overrides?: CallOverrides): Promise<[number]>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<[string]>;
 
     balanceOf(
       arg0: PromiseOrValue<string>,
@@ -657,82 +617,16 @@ export interface Erc20bao extends BaseContract {
 
     "minter()"(overrides?: CallOverrides): Promise<[string]>;
 
-    admin(overrides?: CallOverrides): Promise<[string]>;
+    nonces(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-    "admin()"(overrides?: CallOverrides): Promise<[string]>;
-
-    mining_epoch(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "mining_epoch()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    start_epoch_time(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "start_epoch_time()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    rate(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "rate()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+    "nonces(address)"(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
-
-  update_mining_parameters(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "update_mining_parameters()"(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  start_epoch_time_write(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "start_epoch_time_write()"(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  future_epoch_time_write(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "future_epoch_time_write()"(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  available_supply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "available_supply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  mintable_in_timeframe(
-    start: PromiseOrValue<BigNumberish>,
-    end: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "mintable_in_timeframe(uint256,uint256)"(
-    start: PromiseOrValue<BigNumberish>,
-    end: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  set_minter(
-    _minter: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "set_minter(address)"(
-    _minter: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  set_admin(
-    _admin: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "set_admin(address)"(
-    _admin: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   transfer(
     _to: PromiseOrValue<string>,
@@ -772,6 +666,52 @@ export interface Erc20bao extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  permit(
+    _owner: PromiseOrValue<string>,
+    _spender: PromiseOrValue<string>,
+    _value: PromiseOrValue<BigNumberish>,
+    _deadline: PromiseOrValue<BigNumberish>,
+    _v: PromiseOrValue<BigNumberish>,
+    _r: PromiseOrValue<BytesLike>,
+    _s: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+    _owner: PromiseOrValue<string>,
+    _spender: PromiseOrValue<string>,
+    _value: PromiseOrValue<BigNumberish>,
+    _deadline: PromiseOrValue<BigNumberish>,
+    _v: PromiseOrValue<BigNumberish>,
+    _r: PromiseOrValue<BytesLike>,
+    _s: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  increaseAllowance(
+    _spender: PromiseOrValue<string>,
+    _added_value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "increaseAllowance(address,uint256)"(
+    _spender: PromiseOrValue<string>,
+    _added_value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  decreaseAllowance(
+    _spender: PromiseOrValue<string>,
+    _subtracted_value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "decreaseAllowance(address,uint256)"(
+    _spender: PromiseOrValue<string>,
+    _subtracted_value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   mint(
     _to: PromiseOrValue<string>,
     _value: PromiseOrValue<BigNumberish>,
@@ -784,13 +724,49 @@ export interface Erc20bao extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  burn(
+  mint_relative(
+    _to: PromiseOrValue<string>,
+    frac: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "mint_relative(address,uint256)"(
+    _to: PromiseOrValue<string>,
+    frac: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  burnFrom(
+    _to: PromiseOrValue<string>,
     _value: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "burn(uint256)"(
+  "burnFrom(address,uint256)"(
+    _to: PromiseOrValue<string>,
     _value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  decimals(overrides?: CallOverrides): Promise<number>;
+
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
+
+  version(overrides?: CallOverrides): Promise<string>;
+
+  "version()"(overrides?: CallOverrides): Promise<string>;
+
+  initialize(
+    _name: PromiseOrValue<string>,
+    _symbol: PromiseOrValue<string>,
+    _pool: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "initialize(string,string,address)"(
+    _name: PromiseOrValue<string>,
+    _symbol: PromiseOrValue<string>,
+    _pool: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -802,9 +778,9 @@ export interface Erc20bao extends BaseContract {
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
 
-  decimals(overrides?: CallOverrides): Promise<number>;
+  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
+  "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
   balanceOf(
     arg0: PromiseOrValue<string>,
@@ -836,71 +812,17 @@ export interface Erc20bao extends BaseContract {
 
   "minter()"(overrides?: CallOverrides): Promise<string>;
 
-  admin(overrides?: CallOverrides): Promise<string>;
+  nonces(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  "admin()"(overrides?: CallOverrides): Promise<string>;
-
-  mining_epoch(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "mining_epoch()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  start_epoch_time(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "start_epoch_time()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  rate(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "rate()"(overrides?: CallOverrides): Promise<BigNumber>;
+  "nonces(address)"(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   callStatic: {
-    update_mining_parameters(overrides?: CallOverrides): Promise<void>;
-
-    "update_mining_parameters()"(overrides?: CallOverrides): Promise<void>;
-
-    start_epoch_time_write(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "start_epoch_time_write()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    future_epoch_time_write(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "future_epoch_time_write()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    available_supply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "available_supply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    mintable_in_timeframe(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "mintable_in_timeframe(uint256,uint256)"(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    set_minter(
-      _minter: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "set_minter(address)"(
-      _minter: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    set_admin(
-      _admin: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "set_admin(address)"(
-      _admin: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -939,6 +861,52 @@ export interface Erc20bao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    permit(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    increaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "increaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    decreaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "decreaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     mint(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -951,15 +919,51 @@ export interface Erc20bao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    burn(
+    mint_relative(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "mint_relative(address,uint256)"(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    burnFrom(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "burn(uint256)"(
+    "burnFrom(address,uint256)"(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    decimals(overrides?: CallOverrides): Promise<number>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
+
+    version(overrides?: CallOverrides): Promise<string>;
+
+    "version()"(overrides?: CallOverrides): Promise<string>;
+
+    initialize(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(string,string,address)"(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -969,9 +973,9 @@ export interface Erc20bao extends BaseContract {
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
 
-    decimals(overrides?: CallOverrides): Promise<number>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<string>;
 
     balanceOf(
       arg0: PromiseOrValue<string>,
@@ -1003,35 +1007,18 @@ export interface Erc20bao extends BaseContract {
 
     "minter()"(overrides?: CallOverrides): Promise<string>;
 
-    admin(overrides?: CallOverrides): Promise<string>;
+    nonces(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    "admin()"(overrides?: CallOverrides): Promise<string>;
-
-    mining_epoch(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "mining_epoch()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    start_epoch_time(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "start_epoch_time()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    rate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "rate()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "nonces(address)"(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   filters: {
-    "Transfer(address,address,uint256)"(
-      _from?: PromiseOrValue<string> | null,
-      _to?: PromiseOrValue<string> | null,
-      _value?: null
-    ): TransferEventFilter;
-    Transfer(
-      _from?: PromiseOrValue<string> | null,
-      _to?: PromiseOrValue<string> | null,
-      _value?: null
-    ): TransferEventFilter;
-
     "Approval(address,address,uint256)"(
       _owner?: PromiseOrValue<string> | null,
       _spender?: PromiseOrValue<string> | null,
@@ -1043,85 +1030,19 @@ export interface Erc20bao extends BaseContract {
       _value?: null
     ): ApprovalEventFilter;
 
-    "UpdateMiningParameters(uint256,uint256,uint256)"(
-      time?: null,
-      rate?: null,
-      supply?: null
-    ): UpdateMiningParametersEventFilter;
-    UpdateMiningParameters(
-      time?: null,
-      rate?: null,
-      supply?: null
-    ): UpdateMiningParametersEventFilter;
-
-    "SetMinter(address)"(minter?: null): SetMinterEventFilter;
-    SetMinter(minter?: null): SetMinterEventFilter;
-
-    "SetAdmin(address)"(admin?: null): SetAdminEventFilter;
-    SetAdmin(admin?: null): SetAdminEventFilter;
+    "Transfer(address,address,uint256)"(
+      _from?: PromiseOrValue<string> | null,
+      _to?: PromiseOrValue<string> | null,
+      _value?: null
+    ): TransferEventFilter;
+    Transfer(
+      _from?: PromiseOrValue<string> | null,
+      _to?: PromiseOrValue<string> | null,
+      _value?: null
+    ): TransferEventFilter;
   };
 
   estimateGas: {
-    update_mining_parameters(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "update_mining_parameters()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    start_epoch_time_write(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "start_epoch_time_write()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    future_epoch_time_write(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "future_epoch_time_write()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    available_supply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "available_supply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    mintable_in_timeframe(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "mintable_in_timeframe(uint256,uint256)"(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    set_minter(
-      _minter: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "set_minter(address)"(
-      _minter: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    set_admin(
-      _admin: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "set_admin(address)"(
-      _admin: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1160,6 +1081,52 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    permit(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    increaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "increaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    decreaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "decreaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     mint(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1172,13 +1139,49 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    burn(
+    mint_relative(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "mint_relative(address,uint256)"(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    burnFrom(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "burn(uint256)"(
+    "burnFrom(address,uint256)"(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    version(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "version()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "initialize(string,string,address)"(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1190,9 +1193,9 @@ export interface Erc20bao extends BaseContract {
 
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "DOMAIN_SEPARATOR()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOf(
       arg0: PromiseOrValue<string>,
@@ -1224,86 +1227,18 @@ export interface Erc20bao extends BaseContract {
 
     "minter()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    admin(overrides?: CallOverrides): Promise<BigNumber>;
+    nonces(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    "admin()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    mining_epoch(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "mining_epoch()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    start_epoch_time(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "start_epoch_time()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    rate(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "rate()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "nonces(address)"(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    update_mining_parameters(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "update_mining_parameters()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    start_epoch_time_write(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "start_epoch_time_write()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    future_epoch_time_write(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "future_epoch_time_write()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    available_supply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "available_supply()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    mintable_in_timeframe(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "mintable_in_timeframe(uint256,uint256)"(
-      start: PromiseOrValue<BigNumberish>,
-      end: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    set_minter(
-      _minter: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "set_minter(address)"(
-      _minter: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    set_admin(
-      _admin: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "set_admin(address)"(
-      _admin: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     transfer(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1342,6 +1277,52 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    permit(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
+      _owner: PromiseOrValue<string>,
+      _spender: PromiseOrValue<string>,
+      _value: PromiseOrValue<BigNumberish>,
+      _deadline: PromiseOrValue<BigNumberish>,
+      _v: PromiseOrValue<BigNumberish>,
+      _r: PromiseOrValue<BytesLike>,
+      _s: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    increaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _added_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    decreaseAllowance(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      _spender: PromiseOrValue<string>,
+      _subtracted_value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     mint(
       _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
@@ -1354,13 +1335,49 @@ export interface Erc20bao extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    burn(
+    mint_relative(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "mint_relative(address,uint256)"(
+      _to: PromiseOrValue<string>,
+      frac: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    burnFrom(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "burn(uint256)"(
+    "burnFrom(address,uint256)"(
+      _to: PromiseOrValue<string>,
       _value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "version()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    initialize(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(string,string,address)"(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _pool: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1372,9 +1389,11 @@ export interface Erc20bao extends BaseContract {
 
     "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "DOMAIN_SEPARATOR()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
       arg0: PromiseOrValue<string>,
@@ -1406,22 +1425,14 @@ export interface Erc20bao extends BaseContract {
 
     "minter()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    admin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "admin()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    mining_epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "mining_epoch()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    start_epoch_time(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "start_epoch_time()"(
+    nonces(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    rate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "rate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "nonces(address)"(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

@@ -362,7 +362,7 @@ interface ActionProps {
 
 const Actions: React.FC<ActionProps> = ({ gauge, onHide, operation }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
-	const tokenBalance = useTokenBalance(gauge.lpAddress)
+	const tokenBalance = useTokenBalance(gauge?.lpAddress)
 
 	return (
 		<div>

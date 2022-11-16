@@ -3,14 +3,14 @@ import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 import useContract from '@/hooks/base/useContract'
-import type { Erc20bao } from '@/typechain/index'
+import type { Baov2 } from '@/typechain/index'
 import useEpochTime from './useEpochTime'
 
 const useMintable = () => {
 	const [mintable, setMintable] = useState(BigNumber.from(0))
 	const { chainId } = useWeb3React()
 	const epochTime = useEpochTime()
-	const token = useContract<Erc20bao>('Erc20bao', Config.contracts.Erc20bao[chainId].address)
+	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
 	const fetchMintable = useCallback(async () => {
 		const mintable = await token.mintable_in_timeframe(epochTime.start, epochTime.future)

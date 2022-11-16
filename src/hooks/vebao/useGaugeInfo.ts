@@ -14,6 +14,7 @@ type GaugeInfo = {
 	claimableTokens: BigNumber
 	integrateFraction: BigNumber
 	lpToken: string
+	workingSupply: BigNumber
 }
 
 const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
@@ -54,6 +55,9 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 					{
 						method: 'lp_token',
 					},
+					{
+						method: 'working_supply',
+					},
 				],
 			},
 		])
@@ -68,6 +72,7 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 			claimableTokens: res[4].values[0],
 			integrateFraction: res[5].values[0],
 			lpToken: res[6].values[0],
+			workingSupply: res[7].values[0],
 		})
 	}, [bao, account, gauge])
 
