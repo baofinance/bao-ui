@@ -306,6 +306,10 @@ svg.menuIcon {
   margin-bottom: 0px;
 }
 
+.alert {
+  margin-bottom: 0px;
+}
+
 .announcement-top-bar {
   position: -webkit-sticky;
   position: -moz-sticky;
