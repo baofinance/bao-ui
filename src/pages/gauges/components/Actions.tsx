@@ -320,7 +320,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 				<div>
 					<Typography>Current Voting Power Allocated</Typography>
 					<Typography className='text-text-200'>
-						{votingPowerAllocated.gt(0) ? BigNumber.from(100000).div(votingPowerAllocated).toNumber() : '0'}%
+						{votingPowerAllocated.gt(0) ? BigNumber.from(1000000).div(votingPowerAllocated).toString() : '0'}%
 					</Typography>
 				</div>
 			</Modal.Body>

@@ -51,7 +51,7 @@ const Migration: React.FC = () => {
 			return await distribution.distributions(account)
 		},
 		{
-			enabled: !!distribution,
+			enabled: !!distribution && !!account,
 		},
 	)
 	useTxReceiptUpdater(refetch)

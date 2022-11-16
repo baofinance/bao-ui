@@ -70,7 +70,6 @@ interface GaugeListItemProps {
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const { chainId, account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
-
 	const weight = useGaugeWeight(gauge.gaugeAddress)
 	const totalWeight = useTotalWeight()
 

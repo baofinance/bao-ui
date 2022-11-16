@@ -60,7 +60,7 @@ const Lock: React.FC = () => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const length = endDate.setUTCHours(0, 0, 0, 0) + 604800000 - 86400000
 	// FIXME: change this to be the 'bao-finance' token once we launch the new version.
-	const baoPrice = usePrice('curve-dao-token')
+	const baoPrice = usePrice('bao-finance')
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 
 	const baoV2 = useContract<Baov2>('Baov2', baoAddress)
@@ -487,7 +487,7 @@ const Lock: React.FC = () => {
 									<Typography variant='sm' className='text-center text-text-200'>
 										BAO Price
 									</Typography>
-									<Badge>{baoPrice && ethers.utils.formatUnits(baoPrice)}</Badge>
+									<Badge>${baoPrice && ethers.utils.formatUnits(baoPrice)}</Badge>
 								</div>
 								<div className='text-center'>
 									<Tooltipped content='DailyFees * 365 / (Total veBAO * BAO Price) * 100'>
