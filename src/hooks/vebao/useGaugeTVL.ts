@@ -11,6 +11,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import useBasketInfo from '../baskets/useBasketInfo'
 import useBaskets from '../baskets/useBaskets'
@@ -22,6 +23,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId, account } = useWeb3React()
 	const [gaugeTVL, setGaugeTVL] = useState<BigNumber | undefined>()
 	const bao = useBao()
+	const { txSuccess } = useTransactionHandler()
 	const { transactions } = useTransactionProvider()
 	const poolInfo = usePoolInfo(gauge)
 
@@ -106,7 +108,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	useEffect(() => {
 		if (!(bao && account && gauge)) return
 		fetchGaugeTVL()
-	}, [account, bao, gauge, transactions, fetchGaugeTVL])
+	}, [account, bao, gauge, transactions, txSuccess, fetchGaugeTVL])
 
 	return gaugeTVL
 }
