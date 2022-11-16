@@ -143,7 +143,7 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 
 	const { chainId, account } = useWeb3React()
 	const baoContract = useContract<Bao>('Bao')
-	const inputApproval = useAllowance(baoContract.address, Config.contracts.Swapper[chainId].address)
+	const inputApproval = useAllowance(Config.contracts.Bao[chainId].address, Config.contracts.Swapper[chainId].address)
 
 	const swapper = useContract<Swapper>('Swapper')
 

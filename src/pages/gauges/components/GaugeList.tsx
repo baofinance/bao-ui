@@ -10,7 +10,7 @@ import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useTotalWeight from '@/hooks/vebao/useTotalWeight'
 import GraphUtil from '@/utils/graph'
-import { fromDecimal, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, fromDecimal, getDisplayBalance } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -74,9 +74,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const totalWeight = useTotalWeight()
 
 	// Messy but works for now
-	const relativeWeight = BigNumber.from(100)
-		.pow(18)
-		.mul(weight)
+	const relativeWeight = exponentiate(weight)
 		.div(totalWeight.eq(0) ? 1 : totalWeight)
 		.mul(100)
 
