@@ -58,7 +58,7 @@ const useEpochTime = (): RewardsInfo => {
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
-	console.log(epochTime)
+	//console.log(epochTime)
 
 	return epochTime
 }

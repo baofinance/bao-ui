@@ -11,7 +11,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
-import useTransactionHandler from '../base/useTransactionHandler'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import useBasketInfo from '../baskets/useBasketInfo'
 import useBaskets from '../baskets/useBaskets'
 import useComposition from '../baskets/useComposition'
@@ -20,10 +20,9 @@ import usePoolInfo from './usePoolInfo'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId, account } = useWeb3React()
-	const signerOrProvider = account ? library.getSigner() : library
 	const [gaugeTVL, setGaugeTVL] = useState<BigNumber | undefined>()
 	const bao = useBao()
-	const { txSuccess } = useTransactionHandler()
+	const { transactions } = useTransactionProvider()
 	const poolInfo = usePoolInfo(gauge)
 
 	//Get bSTBL price. Probably not the best way to do so, but it works for now.
@@ -36,7 +35,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const composition = useComposition(basket)
 	const bSTBLPrice = useNav(composition, info ? info.totalSupply : BigNumber.from(0))
 
-	const baoUSDPrice = parseUnits('1')
+	const baoUSDPrice = usePrice('bao-finance')
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')
@@ -56,35 +55,31 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		},
 	)
 
-	const poolTVL =
-		poolInfo &&
-		bSTBLPrice &&
-		(gauge.symbol === 'baoUSD3CRV'
-			? poolInfo?.token0Address === Config.addressMap.baoUSD
-				? baoUSDPrice.mul(poolInfo.token0Balance).add(threeCrvPrice.mul(poolInfo.token1Balance))
-				: baoUSDPrice.mul(poolInfo.token1Balance).add(threeCrvPrice.mul(poolInfo.token0Balance))
-			: gauge.symbol === 'bSTBLDAI'
-			? bSTBLPrice
-				? poolInfo?.token0Address === Config.addressMap.bSTBL
-					? bSTBLPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
-					: bSTBLPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
-				: BigNumber.from(0)
-			: gauge.symbol === 'BAOETH'
-			? poolInfo?.token0Address === Config.addressMap.BAO
-				? baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
-				: baoPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
-			: BigNumber.from(0))
+	const poolTVL = useMemo(() => {
+		return (
+			poolInfo &&
+			bSTBLPrice &&
+			(gauge.symbol === 'baoUSD3CRV'
+				? poolInfo?.token0Address === Config.addressMap.baoUSD
+					? baoUSDPrice.mul(poolInfo.token0Balance).add(threeCrvPrice.mul(poolInfo.token1Balance))
+					: baoUSDPrice.mul(poolInfo.token1Balance).add(threeCrvPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'bSTBLDAI'
+				? bSTBLPrice
+					? poolInfo?.token0Address === Config.addressMap.bSTBL
+						? bSTBLPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
+						: bSTBLPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
+					: BigNumber.from(0)
+				: gauge.symbol === 'BAOETH'
+				? poolInfo?.token0Address === Config.addressMap.BAO
+					? baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
+					: baoPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
+				: BigNumber.from(0))
+		)
+	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, poolInfo, threeCrvPrice])
 
-	// console.log('DAI Price', formatUnits(daiPrice))
-	// console.log('ETH Price', formatUnits(ethPrice))
-	// console.log('3CRV Price', formatUnits(threeCrvPrice))
-	// console.log('baoUSD Price', formatUnits(baoUSDPrice))
-	// console.log('bSTBL Price', formatUnits(bSTBLPrice ? bSTBLPrice : BigNumber.from(0)).toString())
-	// console.log('Baov2 Price', formatUnits(baoPrice.mul(BigNumber.from(1000))).toString())
-
-	const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, signerOrProvider)
-	const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, signerOrProvider)
 	const fetchGaugeTVL = useCallback(async () => {
+		const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
+		const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
 		const query = Multicall.createCallContext([
 			gauge.type === 'curve'
 				? {
@@ -105,28 +100,13 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		const lpPrice = poolTVL && poolTVL.div(totalSupply)
 		const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
 
-		// console.log('Gauge Name', gauge.name)
-		// console.log('Token 0 Address', poolInfo?.token0Address)
-		// console.log('Token 0 Balance', formatUnits(poolInfo?.token0Balance))
-		// console.log('Token 1 Address', poolInfo?.token1Address)
-		// console.log('Token 1 Balance', formatUnits(poolInfo?.token1Balance))
-		// console.log('Bao Price', baoPrice && formatUnits(baoPrice))
-		// console.log('ETH Price', ethPrice && formatUnits(ethPrice))
-		// console.log('Pool TVL', poolTVL && formatUnits(baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))))
-		// console.log('Total Supply', totalSupply && formatUnits(totalSupply))
-		// console.log('LP Price', formatUnits(lpPrice))
-		// console.log('Gauge Balance', formatUnits(gaugeBalance))
-		// console.log('Gauge TVL', formatUnits(gaugeTVL))
-
 		setGaugeTVL(gaugeTVL)
-	}, [curveLpContract, gauge, bao, poolTVL])
-
-	// console.log('Gauge Name', gauge.name)
+	}, [gauge, bao, library, poolTVL])
 
 	useEffect(() => {
 		if (!(bao && account && gauge)) return
 		fetchGaugeTVL()
-	}, [account, bao, gauge, txSuccess])
+	}, [account, bao, gauge, transactions, fetchGaugeTVL])
 
 	return gaugeTVL
 }

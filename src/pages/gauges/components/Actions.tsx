@@ -319,9 +319,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 				</div>
 				<div>
 					<Typography>Current Voting Power Allocated</Typography>
-					<Typography className='text-text-200'>
-						{votingPowerAllocated.gt(0) ? BigNumber.from(1000000).div(votingPowerAllocated).toString() : '0'}%
-					</Typography>
+					<Typography className='text-text-200'>{votingPowerAllocated.div(BigNumber.from(100)).toString()}%</Typography>
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
