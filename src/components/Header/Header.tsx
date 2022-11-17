@@ -63,7 +63,7 @@ const Header: FC = () => {
 							</div>
 						)}
 					</div>
-					<div className='flex items-center gap-2 flex-none ml-4'>
+					<div className='flex items-center gap-2'>
 						{!isDesktop && (
 							<Popover>
 								{({ open }) => (

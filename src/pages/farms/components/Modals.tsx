@@ -22,7 +22,7 @@ type FarmModalProps = {
 }
 
 const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
-	const operations = ['Stake', 'Unstake', 'Rewards']
+	const operations = ['Unstake', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 	const { pid } = farm
 
