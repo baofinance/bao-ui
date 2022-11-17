@@ -5,7 +5,7 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
 import useGauges from '@/hooks/vebao/useGauges'
-import useGaugeTVL from '@/hooks/vebao/useGaugeTVL'
+import useGaugeTVL, { useBoostedTVL } from '@/hooks/vebao/useGaugeTVL'
 import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
 import useMintable from '@/hooks/vebao/useMintable'
 import useTotalWeight from '@/hooks/vebao/useTotalWeight'
@@ -96,17 +96,16 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
 	const mintable = useMintable()
 	const gaugeTVL = useGaugeTVL(gauge)
-	//console.log(gaugeTVL)
-
-	//console.log('Mintable Rewards', formatUnits(mintable))
-	//console.log('Bao Price', formatUnits(baoPrice.mul(1000)))
-	//console.log('Rewards Value', formatUnits(mintable.mul(baoPrice)))
-	// console.log('Gauge Weight', weight.toString())
-	// console.log('Total Weight', totalWeight.toString())
-	// console.log('Relative Weight', relativeWeight.toString())
-	// console.log('Gauge Name', gauge.name)
-	// console.log('Working Balances', gaugeInfo?.workingSupply.toString())
-	// console.log('Mintable', formatUnits(mintable))
+	const boostedTVL = useBoostedTVL(gauge)
+	const rewardsAPY = boostedTVL ? exponentiate(baoPrice.mul(1000).mul(mintable).div(boostedTVL).mul(100)).toString() : 0
+	
+	console.log('Gauge Name', gauge?.name)
+	console.log('Bao Price', formatUnits(baoPrice.mul(1000)))
+	console.log('Mintable Rewards', formatUnits(mintable))
+	console.log('Gauge TVL', formatUnits(gaugeTVL ? decimate(gaugeTVL) : 0))
+	console.log('Boosted TVL', formatUnits(boostedTVL ? decimate(boostedTVL) : 0))
+	console.log('Rewards Value', formatUnits(decimate(baoPrice.mul(1000).mul(mintable))))
+	console.log('Rewards APY', formatUnits(rewardsAPY))
 
 	return (
 		<>
@@ -148,7 +147,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
 									<Typography variant='base' className='ml-2 inline-block font-medium'>
-										{gaugeTVL && gaugeTVL.gt(0) ? baoPrice.mul(mintable).div(gaugeTVL).mul(100).toString() : 0}%
+										{getDisplayBalance(rewardsAPY)}%
 									</Typography>
 								</Typography>
 							</div>
