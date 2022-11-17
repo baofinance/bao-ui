@@ -78,34 +78,24 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		.div(totalWeight.eq(0) ? 1 : totalWeight)
 		.mul(100)
 
-	const { data: baoPrice } = useQuery(
-		['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
-		async () => {
-			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
-			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
-			return fromDecimal(_baoPrice)
-		},
-		{
-			enabled: !!chainId,
-			refetchOnReconnect: true,
-			refetchInterval: 1000 * 60 * 5,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+	//const { data: baoPrice } = useQuery(
+	//	['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
+	//	async () => {
+	//		const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
+	//		const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
+	//		return fromDecimal(_baoPrice)
+	//	},
+	//	{
+	//		enabled: !!chainId,
+	//		refetchOnReconnect: true,
+	//		refetchInterval: 1000 * 60 * 5,
+	//		placeholderData: BigNumber.from(0),
+	//	},
+	//)
 
-	const gaugeInfo = useGaugeInfo(gauge)
-	const mintable = useMintable()
+	//const gaugeInfo = useGaugeInfo(gauge)
+	//const mintable = useMintable()
 	const gaugeTVL = useGaugeTVL(gauge)
-	const boostedTVL = useBoostedTVL(gauge)
-	const rewardsAPY = boostedTVL ? exponentiate(baoPrice.mul(1000).mul(mintable).div(boostedTVL).mul(100)).toString() : 0
-	
-	console.log('Gauge Name', gauge?.name)
-	console.log('Bao Price', formatUnits(baoPrice.mul(1000)))
-	console.log('Mintable Rewards', formatUnits(mintable))
-	console.log('Gauge TVL', formatUnits(gaugeTVL ? decimate(gaugeTVL) : 0))
-	console.log('Boosted TVL', formatUnits(boostedTVL ? decimate(boostedTVL) : 0))
-	console.log('Rewards Value', formatUnits(decimate(baoPrice.mul(1000).mul(mintable))))
-	console.log('Rewards APY', formatUnits(rewardsAPY))
 
 	return (
 		<>

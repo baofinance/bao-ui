@@ -17,7 +17,7 @@ export default {
 		uniswapFactory: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		uniswapFactoryV2: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		BAO: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-		BAOv2: '0x90c84237fDdf091b1E63f369AF122EB46000bc70',
+		BAOv2: '0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f',
 		DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 		USDT: '0xdac17f958d2ee523a2206206994597c13d831ec7',
 		USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -42,7 +42,7 @@ export default {
 		},
 		Baov2: {
 			1: {
-				address: '0x90c84237fDdf091b1E63f369AF122EB46000bc70',
+				address: '0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f',
 			},
 		},
 		Masterchef: {
@@ -90,26 +90,22 @@ export default {
 		// veBAO
 		GaugeController: {
 			1: {
-				address: '0xB9d9e972100a1dD01cd441774b45b5821e136043',
-				abi: 'gaugeController.json',
+				address: '0x707531c9999AaeF9232C8FEfBA31FBa4cB78d84a',
 			},
 		},
 		votingEscrow: {
 			1: {
-				address: '0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f',
-				abi: 'votingEscrow.json',
+				address: '0x103A3b128991781EE2c8db0454cA99d67b257923',
 			},
 		},
 		Minter: {
 			1: {
-				address: '0x707531c9999AaeF9232C8FEfBA31FBa4cB78d84a',
-				abi: 'minter.json',
+				address: '0x2538a10b7fFb1B78c890c870FC152b10be121f04',
 			},
 		},
 		FeeDistributor: {
 			1: {
-				address: '0x2538a10b7fFb1B78c890c870FC152b10be121f04',
-				abi: 'feeDistributor.json',
+				address: '0x24432a08869578aAf4d1eadA12e1e78f171b1a2b',
 			},
 		},
 		Dai: {
@@ -126,12 +122,12 @@ export default {
 		// Distribution
 		BaoDistribution: {
 			1: {
-				address: '0x103A3b128991781EE2c8db0454cA99d67b257923',
+				address: '0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005',
 			},
 		},
 		Swapper: {
 			1: {
-				address: '0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005',
+				address: '0xB9d9e972100a1dD01cd441774b45b5821e136043',
 			},
 		},
 	},
@@ -223,7 +219,7 @@ export default {
 		{
 			gid: 1,
 			gaugeAddresses: {
-				1: '0xdB05A386810c809aD5a77422eb189D36c7f24402',
+				1: '0xbf2ad38fd09F37f50f723E35dd84EEa1C282c5C9',
 			},
 			poolAddresses: {
 				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
@@ -244,7 +240,7 @@ export default {
 		{
 			gid: 2,
 			gaugeAddresses: {
-				1: '0xbf2ad38fd09F37f50f723E35dd84EEa1C282c5C9',
+				1: '0xF66CfDf074D2FFD6A4037be3A669Ed04380Aef2B',
 			},
 			poolAddresses: {
 				1: '0xa148bd19e26ff9604f6a608e22bfb7b772d0d1a3',
@@ -265,13 +261,13 @@ export default {
 		{
 			gid: 3,
 			gaugeAddresses: {
-				1: '0xF66CfDf074D2FFD6A4037be3A669Ed04380Aef2B',
+				1: '0x4ff1f64683785E0460c24A4EF78D582C2488704f',
 			},
 			poolAddresses: {
-				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3', // UPDATE!! Change to BAOv2-ETH UNIV2
+				1: '0xce75aA1E04c83761E9188049b7A6D9Ae7a3CcE6C', // UPDATE!! Change to BAOv2-ETH UNIV2
 			},
 			lpAddresses: {
-				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3', // UPDATE!! Change to BAOv2-ETH UNIV2
+				1: '0xce75aA1E04c83761E9188049b7A6D9Ae7a3CcE6C', // UPDATE!! Change to BAOv2-ETH UNIV2
 			},
 			poolInfoAddresses: {
 				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3',
@@ -281,7 +277,7 @@ export default {
 			type: 'uniswap',
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/ETH.png',
-			pairUrl: 'https://app.uniswap.org/#/add/v2/0x773330693cb7d5D233348E25809770A32483A940/ETH', // UPDATE!! Change to BAOv2-ETH UNIV2
+			pairUrl: 'https://app.uniswap.org/#/add/v2/0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f/ETH', // UPDATE!! Change to BAOv2-ETH UNIV2
 		},
 	],
 	baskets: [
