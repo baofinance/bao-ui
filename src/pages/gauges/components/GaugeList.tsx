@@ -113,8 +113,6 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	// console.log('Rewards Value', formatUnits(decimate(baoPrice.mul(1000).mul(mintable))))
 	// console.log('Rewards APY', formatUnits(rewardsAPY))
 
-	const rewardsAPY = BigNumber.from(0)
-
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowGaugeModal(true)} disabled={!account}>
