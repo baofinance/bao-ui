@@ -1,45 +1,35 @@
 /* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import useClaimable from '@/hooks/distribution/useClaimable'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
-import { useQuery } from '@tanstack/react-query'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import { formatUnits } from 'ethers/lib/utils'
 import { BigNumber } from 'ethers'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React from 'react'
 import Latex from 'react-latex-next'
+import useAccountDistribution from '@/hooks/distribution/useAccountDistribution'
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
-
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
-
-	const { account, chainId } = useWeb3React()
-	const { data: distributionInfo, refetch } = useQuery(
-		['distribution info', account, chainId],
-		async () => {
-			return await distribution.distributions(account)
-		},
-		{
-			enabled: !!distribution && !!account,
-		},
-	)
-	useTxReceiptUpdater(refetch)
-	useBlockUpdater(refetch, 10)
+	const { info: distInfo, claimable, curve: distCurve } = useAccountDistribution()
 
 	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
 
-	const claimable = useClaimable()
+	//const claimable = useClaimable()
 	//const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
 	//console.log('Claimable', formatUnits(claimable))
 	//console.log('Date Started', dateStarted.toString())
+
+	let lastClaim = 'Never!'
+	if (distInfo && !distInfo.dateStarted.eq(distInfo.lastClaim)) {
+		lastClaim = new Date(distInfo.lastClaim.mul(1000).toNumber()).toLocaleString()
+	}
 
 	return (
 		<div className='flex flex-col px-4'>
@@ -91,10 +81,36 @@ const Migration: React.FC = () => {
 			</div>
 
 			<div className='flex flex-col items-center'>
+				<div className='flex flex-col'>
+					<div className='my-5 flex w-full flex-row items-center justify-center gap-4'>
+						<div className='flex flex-col gap-2'>
+							<Typography variant='xl' className='text-md px-2 text-text-100'>
+								Claimable BAO:
+							</Typography>
+							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+								<Typography variant='base' className='font-bold'>
+									{getDisplayBalance(claimable || BigNumber.from(0))}
+								</Typography>
+							</div>
+						</div>
+						<div className='flex flex-col gap-2'>
+							<Typography variant='xl' className='text-md px-2 text-text-100'>
+								Last claim:
+							</Typography>
+							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+								<Typography variant='base' className='text-md px-2 text-text-200'>
+									{lastClaim}
+								</Typography>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div className='w-2/5 flex-1'>
 					<Button
 						className='my-4'
-						disabled={!(claimable instanceof BigNumber && claimable.gt(0))}
+						disabled={!claimable?.gt(0)}
 						fullWidth
 						onClick={async () => {
 							const claim = distribution.claim()

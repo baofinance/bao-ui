@@ -18,7 +18,7 @@ const Migration: React.FC = () => {
 					End Early
 				</Typography>
 				<Typography variant='xl' className='text-center font-bold'>
-					Receive Remaining Locked BAO at Reduced Rate
+					Unlock All Remaining BAO (after slashing fee!)
 				</Typography>
 				<Typography variant='p' className='my-5 leading-normal'>
 					Users that perform a liquid distribution can choose to end their distribution early at any time after the distribution starts. A

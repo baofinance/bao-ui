@@ -5,6 +5,7 @@ import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import useAccountDistribution from '@/hooks/distribution/useAccountDistribution'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
@@ -44,24 +45,26 @@ const Migration: React.FC = () => {
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
 	const { account, chainId } = useWeb3React()
-	const { data: merkleLeaf } = useQuery(['/api/vebao/distribution/proof', account, chainId], async () => {
-		const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
-		const leaf = await leafResponse.json()
-		return leaf
-	})
-	// console.log(merkleLeaf)
-
-	const { data: distributionInfo, refetch } = useQuery(
-		['distribution info', account, chainId],
+	const { data: merkleLeaf } = useQuery(
+		['/api/vebao/distribution/proof', account, chainId],
 		async () => {
-			return await distribution.distributions(account)
+			const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
+			if (leafResponse.status !== 200) {
+				const { error } = await leafResponse.json()
+				throw new Error(`${error.code} - ${error.message}`)
+			}
+			const leaf = await leafResponse.json()
+			return leaf
 		},
 		{
-			enabled: !!distribution && !!account,
+			retry: false,
+			enabled: !!account,
+			staleTime: Infinity,
+			cacheTime: Infinity,
 		},
 	)
-	useTxReceiptUpdater(refetch)
-	useBlockUpdater(refetch, 10)
+
+	const { info: distributionInfo, claimable, curve: distCurve } = useAccountDistribution()
 
 	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
 
@@ -72,7 +75,7 @@ const Migration: React.FC = () => {
 	//console.log('Merkle Leaf', merkleLeaf)
 	return (
 		<div className='flex flex-col items-center'>
-			<div className='w-3/5 pt-4'>
+			<div className='pt-4 md:w-4/5'>
 				{distributionInfo && distributionInfo.dateStarted.gt(0) ? (
 					<>
 						<div className='border-b border-text-100 pb-5'>
@@ -169,11 +172,20 @@ const Migration: React.FC = () => {
 									)}
 								</Listbox>
 							</div>
-							<div className='mt-2 mb-1 flex w-full items-center justify-end gap-1'>
-								<Typography className='px-2 text-sm text-text-200'>Your Locked BAO Balance</Typography>
-								<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
-									<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-									<Typography className='font-bold'>{getDisplayBalance(totalLockedBAO * 0.001)}</Typography>
+							<div className='mt-2 mb-1 flex w-full flex-col items-end justify-end gap-1'>
+								<div className='flex flex-row items-center'>
+									<Typography className='px-2 text-sm text-text-200'>Your locked BAO total</Typography>
+									<div className='flex w-auto h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+										<Typography className='font-bold'>{getDisplayBalance(distributionInfo && distributionInfo.amountOwedTotal || BigNumber.from(0))}</Typography>
+									</div>
+								</div>
+								<div className='flex flex-row items-center'>
+									<Typography className='px-2 text-sm text-text-200'>BAO unlocked so far</Typography>
+									<div className='flex w-auto h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+										<Typography className='font-bold'>{getDisplayBalance(distCurve && distCurve || BigNumber.from(0))}</Typography>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -185,28 +197,40 @@ const Migration: React.FC = () => {
 					</>
 				) : (
 					<div className='flex flex-col items-center'>
-						<div className='md:w-1/2'>
+						<div className='md:max-w-4xl'>
 							<div className='mb-5 border-b border-text-100 pb-5'>
 								<Typography variant='xl' className='font-medium leading-10 text-text-200'>
 									Start Your Distribution
 								</Typography>
 								<Typography variant='p' className='mt-2 text-lg leading-normal text-text-100'>
 									Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
-									manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions,
-									please join our{' '}
+									manually initiated by the wallet owner. Once you start your distribution, please read the instructions and descriptions on
+									each option very carefully.
+									<br />
+									<br />
+									You can read more about this process and the math behind it in depth by checking out the historical{' '}
+									<a
+										className='font-medium hover:text-text-400'
+										href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
+										target='_blank'
+										rel='noreferrer'
+									>
+										BIP-14 (BAO Improvement Proposal #14)
+									</a>{' '}
+									on our governance forums. If you have any questions, please join{' '}
 									<a
 										href='https://discord.gg/BW3P62vJXT'
 										target='_blank'
 										rel='noreferrer noopener'
 										className='font-medium hover:text-text-400'
 									>
-										Discord
+										our Discord community!
 									</a>{' '}
-									community!
 								</Typography>
 							</div>
 							<div className='flex flex-col items-center'>
 								<Button
+									disabled={!canStartDistribution}
 									className='bg-primary-500'
 									onClick={async () => {
 										const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)

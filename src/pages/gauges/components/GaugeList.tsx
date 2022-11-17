@@ -97,6 +97,8 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	//const mintable = useMintable()
 	const gaugeTVL = useGaugeTVL(gauge)
 
+	const rewardsAPY = BigNumber.from(0)
+
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowGaugeModal(true)} disabled={!account}>
