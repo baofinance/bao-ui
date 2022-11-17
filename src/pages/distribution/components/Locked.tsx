@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
@@ -79,15 +79,30 @@ const Migration: React.FC = () => {
 							<Typography variant='lg' className='text-lg font-medium leading-6 text-text-200'>
 								Select Your Distribution Method
 							</Typography>
-							<Typography variant='p' className='mt-2 text-text-100'>
-								Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
-								manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please
-								join our{' '}
-								<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-text-400'>
+							<Typography variant='p' className='mt-2 leading-normal text-text-100'>
+								Locked BAO holders have three actions they can take with their locked BAO positions, which are called "distributions". Any
+								distribution will only begin once manually initiated by the wallet owner. Please read the descriptions below very carefully.
+								You can read more about this process and the math behind it by checking out{' '}
+								<a
+									className='font-medium text-text-300 hover:text-text-400'
+									href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
+									target='_blank'
+									rel='noreferrer'
+								>
+									BIP-14
+								</a>{' '}
+								on our governance forums. If you have any questions, please join our{' '}
+								<a
+									href='https://discord.gg/BW3P62vJXT'
+									target='_blank'
+									rel='noreferrer noopener'
+									className='font-medium hover:text-text-400'
+								>
 									Discord
 								</a>{' '}
 								community!
 							</Typography>
+							<Typography variant='p' className='leading-normal'></Typography>
 						</div>
 						<div className='flex flex-row'>
 							<div className='my-4 flex w-full flex-col'>
@@ -105,7 +120,7 @@ const Migration: React.FC = () => {
 														<Listbox.Button
 															className={
 																(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-																	'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
+																'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
 															}
 														>
 															<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -127,7 +142,7 @@ const Migration: React.FC = () => {
 																className={({ active }) =>
 																	classNames(
 																		active ? 'bg-primary-100 text-text-400' : 'text-text-100',
-																		'cursor-default select-none p-4 text-sm',
+																		'cursor-pointer select-none p-4 text-sm',
 																	)
 																}
 																value={option}
@@ -175,10 +190,10 @@ const Migration: React.FC = () => {
 								<Typography variant='xl' className='font-medium leading-10 text-text-200'>
 									Start Your Distribution
 								</Typography>
-								<Typography variant='p' className='mt-2 text-text-100 text-lg leading-normal'>
+								<Typography variant='p' className='mt-2 text-lg leading-normal text-text-100'>
 									Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
-									manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions, please
-									join our{' '}
+									manually initiated by the wallet owner. Please read the descriptions below very carefully. If you have any questions,
+									please join our{' '}
 									<a
 										href='https://discord.gg/BW3P62vJXT'
 										target='_blank'

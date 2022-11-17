@@ -70,7 +70,6 @@ const Migration: React.FC = () => {
 				<div className='m-auto flex flex-col text-2xl'>
 					<Latex>{`\\(P_u = Percent \\ Unlocked \\)`}</Latex>
 					<Latex>{`\\(x = Days \\)`}</Latex>
-					<div className='h-2' />
 					<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
 				</div>
 				<Typography variant='sm' className='my-2 w-3/5 text-center text-text-200'>
@@ -90,19 +89,6 @@ const Migration: React.FC = () => {
 					</Typography>
 				</div>
 			</div>
-
-			<Typography variant='p' className='my-5 leading-normal'>
-				You can read more about this process and the math behind it by checking out{' '}
-				<a
-					className='font-medium text-text-300 hover:text-text-400'
-					href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
-					target='_blank'
-					rel='noreferrer'
-				>
-					BIP-14
-				</a>{' '}
-				on our governance forums.
-			</Typography>
 
 			<div className='flex flex-col items-center'>
 				<div className='w-2/5 flex-1'>

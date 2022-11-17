@@ -34,7 +34,7 @@ const Migration: React.FC = () => {
 					<br />
 					{'0 <= X <= 365 || (100 -.01369863013x)'}
 					<br />
-					{'365 <X <= 1095 || 95'}
+					{'365 < X <= 1095 || 95'}
 				</code>
 				<Typography variant='p' className='my-5 leading-normal'>
 					The slash function starts at the same date the address selects to start their BAO distribution. The slash function starts at 100%
@@ -63,20 +63,6 @@ const Migration: React.FC = () => {
 						In the graph above, the blue points are the state of both curves respectively. The orange point is the percentage of their total
 						distribution that the user will be able to claim if they choose to end their distribution at that point.
 					</Typography>
-
-					<Typography variant='p' className='my-5 leading-normal'>
-						You can read more about this process and the math behind it by checking out{' '}
-						<a
-							className='font-medium text-text-300 hover:text-text-400'
-							href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
-							target='_blank'
-							rel='noreferrer'
-						>
-							BIP-14
-						</a>{' '}
-						on our governance forums.
-					</Typography>
-
 				</div>
 			</div>
 
