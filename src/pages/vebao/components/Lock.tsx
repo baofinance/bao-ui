@@ -331,7 +331,7 @@ const Lock: React.FC = () => {
 							<div className='flex flex-col'>
 								{isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance))) || (lockInfo && lockInfo.balance.lte(0)) ? (
 									<div className='mt-3 flex flex-row gap-4'>
-										{allowance && allowance.lte(ethers.constants.MaxUint256) ? (
+										{allowance && allowance.lte(0) ? (
 											<>
 												{pendingTx ? (
 													<Button fullWidth disabled={true}>
@@ -340,7 +340,7 @@ const Lock: React.FC = () => {
 												) : (
 													<Button
 														fullWidth
-														disabled={baoBalance.lte(ethers.constants.MaxUint256)}
+														disabled={baoBalance.lte(0)}
 														onClick={async () => {
 															// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
 															const approveTx = baoV2.approve(votingEscrow.address, ethers.constants.MaxUint256)
