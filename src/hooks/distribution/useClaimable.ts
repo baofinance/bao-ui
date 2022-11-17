@@ -5,13 +5,19 @@ import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
 const useClaimable = () => {
-	const [claimable, setClaimable] = useState(BigNumber.from(0))
+	const [claimable, setClaimable] = useState<BigNumber | Boolean>(BigNumber.from(0))
 	const { account, library } = useWeb3React()
 	const distributionContract = useContract<BaoDistribution>('BaoDistribution')
 
 	const fetchClaimable = useCallback(async () => {
-		const claimable = await distributionContract.claimable(account, 0)
-		setClaimable(claimable)
+		try {
+			const claimable = await distributionContract.claimable(account, 0)
+			setClaimable(claimable)
+		} catch (e: any) {
+			if (e.errorSignature === 'DistributionEndedEarly()') {
+				setClaimable(false)
+			}
+		}
 	}, [account, distributionContract])
 
 	useEffect(() => {
