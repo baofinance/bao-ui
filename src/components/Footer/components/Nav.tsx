@@ -34,7 +34,7 @@ const Nav: React.FC = () => {
 				</StyledLink>
 			</Tooltipped>
 			<Tooltipped content='Documentation' placement='top'>
-				<StyledLink target='_blank' href='https://docs.bao.finance/' aria-label='Documentation'>
+				<StyledLink target='_blank' href='https://info.bao.finance/docs/' aria-label='Documentation'>
 					<FontAwesomeIcon icon={faBook} />
 				</StyledLink>
 			</Tooltipped>

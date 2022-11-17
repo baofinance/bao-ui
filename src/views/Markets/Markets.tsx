@@ -30,7 +30,7 @@ const Markets: React.FC = () => {
 							Bao Markets is currently in a soft launch. Collateral Factors for
 							synths are set low intentionally, and they will be adjusted as the
 							protocol sees usage over the coming weeks. Please be prudent,{' '}
-							<a href="https://docs.bao.finance">
+							<a href="https://info.bao.finance/docs">
 								<FontAwesomeIcon icon={faFileAlt} /> read the docs
 							</a>
 							, and{' '}
