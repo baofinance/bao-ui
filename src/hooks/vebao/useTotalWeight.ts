@@ -4,14 +4,13 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
 import { useBlockUpdater } from '../base/useBlock'
 import { useTxReceiptUpdater } from '../base/useTransactionProvider'
 
 const useTotalWeight = () => {
 	const gaugeController = useContract<GaugeController>('GaugeController')
 	const { library, account, chainId } = useWeb3React()
-	const enabled = !!chainId
+	const enabled = !!chainId && !!gaugeController
 
 	const { data: totalWeight, refetch } = useQuery(
 		['gaugeController.get_total_weight', providerKey(library, account, chainId)],
