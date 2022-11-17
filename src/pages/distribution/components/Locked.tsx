@@ -1,10 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import useAccountDistribution from '@/hooks/distribution/useAccountDistribution'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
@@ -67,9 +65,10 @@ const Migration: React.FC = () => {
 	const { info: distributionInfo, claimable, curve: distCurve } = useAccountDistribution()
 
 	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
+	//const totalLockedBAO = merkleLeaf ? merkleLeaf.amount : '0'
+	//const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
 
-	const totalLockedBAO = merkleLeaf ? merkleLeaf.amount : '0'
-	const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
+	const canStartDistribution = !!distributionInfo && !!merkleLeaf
 
 	//console.log('Date Started', dateStarted.toString())
 	//console.log('Merkle Leaf', merkleLeaf)
@@ -175,16 +174,18 @@ const Migration: React.FC = () => {
 							<div className='mt-2 mb-1 flex w-full flex-col items-end justify-end gap-1'>
 								<div className='flex flex-row items-center'>
 									<Typography className='px-2 text-sm text-text-200'>Your locked BAO total</Typography>
-									<div className='flex w-auto h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-										<Typography className='font-bold'>{getDisplayBalance(distributionInfo && distributionInfo.amountOwedTotal || BigNumber.from(0))}</Typography>
+										<Typography className='font-bold'>
+											{getDisplayBalance((distributionInfo && distributionInfo.amountOwedTotal) || BigNumber.from(0))}
+										</Typography>
 									</div>
 								</div>
 								<div className='flex flex-row items-center'>
 									<Typography className='px-2 text-sm text-text-200'>BAO unlocked so far</Typography>
-									<div className='flex w-auto h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-										<Typography className='font-bold'>{getDisplayBalance(distCurve && distCurve || BigNumber.from(0))}</Typography>
+										<Typography className='font-bold'>{getDisplayBalance((distCurve && distCurve) || BigNumber.from(0))}</Typography>
 									</div>
 								</div>
 							</div>
