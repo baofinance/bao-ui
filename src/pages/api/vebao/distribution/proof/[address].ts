@@ -27,7 +27,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	console.log('-------------------------------------------------------------------------------')
 
 	const account = snapshot.find(item => {
-		return item.address.toLowerCase() === address.toLowerCase()
+		return item.address.toLowerCase() === (address as string).toLowerCase()
 	})
 	if (!account) {
 		res.status(404).json({
