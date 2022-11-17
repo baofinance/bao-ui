@@ -18,7 +18,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
@@ -119,7 +119,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 									const amount = parseUnits(val)
 									const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
 
-									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${parseFloat(val).toFixed(4)} ${gauge.name}`, () => hideModal())
+									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
 								}}
 							>
 								Deposit {gauge.name}
@@ -211,7 +211,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 							onClick={async () => {
 								const amount = parseUnits(val, 18)
 								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
-								handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${amount} ${gauge.name}`, () => hideModal())
+								handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
 							}}
 						>
 							Withdraw {gauge.name}
