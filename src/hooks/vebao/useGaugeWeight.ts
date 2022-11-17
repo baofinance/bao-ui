@@ -20,6 +20,8 @@ const useGaugeWeight = (gaugeAddress: string) => {
 		},
 		{
 			enabled,
+			refetchOnReconnect: true,
+			placeholderData: BigNumber.from(0),
 		},
 	)
 
