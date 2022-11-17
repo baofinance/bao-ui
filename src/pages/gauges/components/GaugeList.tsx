@@ -15,7 +15,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
 
@@ -73,7 +73,9 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const totalWeight = useTotalWeight()
 
 	// Messy but works for now
-	const relativeWeight = totalWeight.gt(0) ? exponentiate(weight).div(decimate(totalWeight).div(100)) : BigNumber.from(0)
+	const relativeWeight = useMemo(() => {
+		return totalWeight.gt(0) ? exponentiate(weight).div(decimate(totalWeight).div(100)) : BigNumber.from(0)
+	}, [weight, totalWeight])
 
 	const { data: baoPrice } = useQuery(
 		['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
@@ -141,7 +143,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(relativeWeight)}%
+								{getDisplayBalance(relativeWeight, 18, 2)}%
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
