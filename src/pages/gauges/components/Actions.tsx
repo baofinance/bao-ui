@@ -365,6 +365,17 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
+							min={userSlopes ? userSlopes.power.div(100).toString() : 0}
+							max={
+								votingPowerAllocated.sub(BigNumber.from(100)).eq(0)
+									? 0
+									: userSlopes &&
+									  lockInfo &&
+									  BigNumber.from(100)
+											.sub(votingPowerAllocated.div(BigNumber.from(100)))
+											.add(userSlopes.power.div(100))
+											.toString()
+							}
 							className='relative -mr-1 h-6 w-10 min-w-0
 				appearance-none rounded border-solid border-inherit border-primary-500 bg-primary-100 pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
