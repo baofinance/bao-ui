@@ -85,7 +85,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
 		const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
 		const query = Multicall.createCallContext([
-			gauge.type === 'curve'
+			gauge.type.toLowerCase() === 'curve'
 				? {
 						contract: curveLpContract,
 						ref: gauge?.lpAddress,

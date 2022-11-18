@@ -130,7 +130,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 										{gauge.name}
 									</Typography>
 									<Typography variant='sm' className={`font-light text-text-200`}>
-										{gauge.type === 'Curve LP' ? (
+										{gauge.type.toLowerCase() === 'curve' ? (
 											<Image src='/images/tokens/CRV.png' height={12} width={12} alt='Curve' className='mr-1 inline' />
 										) : (
 											<Image src='/images/tokens/UNI.png' height={12} width={12} alt='Uniswap' className='mr-1 inline' />

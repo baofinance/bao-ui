@@ -30,7 +30,7 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 		const poolInfoContract = PoolInfo__factory.connect(poolInfoAddress, signerOrProvider)
 		const univ2LpContract = Uni_v2_lp__factory.connect(poolAddress, signerOrProvider)
 		const lpQuery = Multicall.createCallContext([
-			gauge.type === 'curve'
+			gauge.type.toLowerCase() === 'curve'
 				? {
 						contract: poolInfoContract,
 						ref: gauge.poolAddress,
@@ -50,12 +50,12 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 		const { [gauge?.poolAddress]: res0 } = Multicall.parseCallResults(await bao.multicall.call(lpQuery))
 
 		setPoolInfo({
-			token0Address: gauge?.type === 'curve' ? res0[0].values[0].toString() : res0[1].values[0].toString(),
-			token1Address: gauge?.type === 'curve' ? res0[0].values[1].toString() : res0[2].values[0].toString(),
-			token0Balance: gauge?.type === 'curve' ? res0[2].values[0].toString() : res0[0].values[0].toString(),
-			token1Balance: gauge?.type === 'curve' ? res0[2].values[1].toString() : res0[0].values[1].toString(),
-			token0Decimals: gauge?.type === 'curve' ? res0[1].values[0].toString() : 18,
-			token1Decimals: gauge?.type === 'curve' ? res0[1].values[1].toString() : 18,
+			token0Address: gauge?.type.toLowerCase() === 'curve' ? res0[0].values[0].toString() : res0[1].values[0].toString(),
+			token1Address: gauge?.type.toLowerCase() === 'curve' ? res0[0].values[1].toString() : res0[2].values[0].toString(),
+			token0Balance: gauge?.type.toLowerCase() === 'curve' ? res0[2].values[0].toString() : res0[0].values[0].toString(),
+			token1Balance: gauge?.type.toLowerCase() === 'curve' ? res0[2].values[1].toString() : res0[0].values[1].toString(),
+			token0Decimals: gauge?.type.toLowerCase() === 'curve' ? res0[1].values[0].toString() : 18,
+			token1Decimals: gauge?.type.toLowerCase() === 'curve' ? res0[1].values[1].toString() : 18,
 		})
 	}, [bao, account, gauge])
 

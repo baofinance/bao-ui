@@ -405,7 +405,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							disabled={!val || !bao || isNaN(val as any)}
 							onClick={async () => {
 								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
-								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(val).toFixed(2)}% of your veBAO`)
+								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
 							}}
 						>
 							Vote for {gauge.name}
