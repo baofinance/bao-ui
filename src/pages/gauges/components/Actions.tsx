@@ -4,6 +4,7 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
+import { StatBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
@@ -11,6 +12,8 @@ import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
+import useUserSlopes from '@/hooks/vebao/useUserSlopes'
 import useVotingPowerAllocated from '@/hooks/vebao/useVotingPowerAllocated'
 import type { Gauge, GaugeController, Minter } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
@@ -22,6 +25,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -286,11 +290,12 @@ interface VoteProps {
 export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const bao = useBao()
 	const { library } = useWeb3React()
-	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
-	//const lockInfo = useLockInfo()
+	const lockInfo = useLockInfo()
 	const votingPowerAllocated = useVotingPowerAllocated()
+	const userSlopes = useUserSlopes(gauge)
+	const [val, setVal] = useState(userSlopes ? userSlopes.power.div(100).toString() : 0)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -299,27 +304,76 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 		[setVal],
 	)
 
+	console.log(
+		'Power Remaining',
+		BigNumber.from(100)
+			.sub(votingPowerAllocated.div(BigNumber.from(100)))
+			.toString(),
+	)
+
 	return (
 		<>
-			<Modal.Body className='h-[120px]'>
-				<div className='my-4 flex h-12 flex-row'>
-					<Typography>
-						Vote{' '}
+			<Modal.Body>
+				<StatBlock
+					label='veBAO Stats'
+					stats={[
+						{
+							label: 'Total Voting Power',
+							value: `${lockInfo ? getDisplayBalance(lockInfo.balance, 18, 2) : BigNumber.from(0)}`,
+						},
+						{
+							label: 'Total Allocated',
+							value: `${votingPowerAllocated ? votingPowerAllocated.div(BigNumber.from(100)) : BigNumber.from(0)}%`,
+						},
+						{
+							label: `Allocated to ${gauge.name}`,
+							value: `${userSlopes ? userSlopes.power.div(100) : BigNumber.from(0)}%`,
+						},
+					]}
+				/>
+				<div className='mt-4'>
+					<div className='text-center'>
+						<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bold text-text-100'>
+							Vote
+						</Typography>
+					</div>
+					<div className='flex w-full items-center justify-center gap-2 rounded-md bg-primary-100'>
+						<input
+							type='range'
+							id='points'
+							defaultValue={userSlopes ? userSlopes.power.div(100).toString() : val}
+							min={userSlopes ? userSlopes.power.div(100).toString() : 0}
+							max={
+								votingPowerAllocated.sub(BigNumber.from(100)).eq(0)
+									? 0
+									: userSlopes &&
+									  lockInfo &&
+									  BigNumber.from(100)
+											.sub(votingPowerAllocated.div(BigNumber.from(100)))
+											.add(userSlopes.power.div(100))
+											.toString()
+							}
+							disabled={votingPowerAllocated.sub(BigNumber.from(100)).eq(0)}
+							value={val}
+							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0'
+							onChange={handleChange}
+							onInput={handleChange}
+						/>
 						<input
 							type='number'
-							value={val}
+							id='points'
 							onChange={handleChange}
-							className='relative h-8 w-10 min-w-0 appearance-none
-				rounded border-solid border-inherit bg-primary-400 pl-2 pr-2 text-end 
+							placeholder={val.toString()}
+							value={val}
+							className='relative -mr-1 h-6 w-10 min-w-0
+				appearance-none rounded border-solid border-inherit border-primary-500 bg-primary-100 pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
 				 duration-200 disabled:text-text-200 md:text-sm'
 						/>
-						% (of your voting power)
-					</Typography>
-				</div>
-				<div>
-					<Typography>Current Voting Power Allocated</Typography>
-					<Typography className='text-text-200'>{votingPowerAllocated.div(BigNumber.from(100)).toString()}%</Typography>
+						<Typography variant='sm' className='m-0 mr-2 rounded border-solid border-inherit border-primary-500 bg-primary-100 p-0'>
+							%
+						</Typography>
+					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Actions>

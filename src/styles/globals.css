@@ -16,6 +16,10 @@ body {
 	transition: 200ms;
 }
 
+a:hover {
+	color: #FFD84B;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
 	/* display: none; <- Crashes Chrome on hover */
@@ -55,96 +59,108 @@ input[type='number'] {
 }
 
 .react-datepicker__input-container input {
-    @apply block w-full text-base md:text-sm bg-primary-100 border border-primary-300 rounded shadow-sm
+	@apply block w-full rounded border border-primary-300 bg-primary-100 text-base shadow-sm md:text-sm;
 }
 
 .react-datepicker-popper {
-    @apply z-40 w-72 text-sm bg-primary-100 shadow px-3 py-2 border-2 border-primary-300 rounded
+	@apply z-40 w-72 rounded border-2 border-primary-300 bg-primary-100 px-3 py-2 text-sm shadow;
 }
 
 .react-datepicker-left {
-    @apply absolute left-0 right-auto top-11 transform-none !important
+	@apply absolute left-0 right-auto top-11 transform-none !important;
 }
 
 .react-datepicker-right {
-    @apply absolute right-0 left-auto top-11 transform-none !important
+	@apply absolute right-0 left-auto top-11 transform-none !important;
 }
 
 .react-datepicker__portal {
-    @apply absolute z-10 w-72 text-sm transform-none bg-white shadow px-3 py-2 top-12 right-0 border-2 border-primary-300 rounded
+	@apply absolute top-12 right-0 z-10 w-72 transform-none rounded border-2 border-primary-300 bg-white px-3 py-2 text-sm shadow;
 }
 
 .react-datepicker__month-container {
-    @apply flex flex-col
+	@apply flex flex-col;
 }
 
 .react-datepicker__month {
-    @apply flex flex-col
+	@apply flex flex-col;
 }
 
 .react-datepicker__current-month {
-    @apply ml-2.5 text-lg font-semibold text-text-200
+	@apply ml-2.5 text-lg font-semibold text-text-200;
 }
 
 .react-datepicker__week {
-    @apply flex justify-around
+	@apply flex justify-around;
 }
 
 .react-datepicker__day-names {
-    @apply flex justify-around text-text-200 font-medium text-center text-xs
+	@apply flex justify-around text-center text-xs font-medium text-text-200;
 }
 
 .react-datepicker__day-name {
-    @apply w-8 h-8 flex items-center justify-center py-1 rounded-full text-text-400
+	@apply flex h-8 w-8 items-center justify-center rounded-full py-1 text-text-400;
 }
 
 .react-datepicker__navigation {
-    @apply absolute top-2
+	@apply absolute top-2;
 }
 
 .react-datepicker__navigation--previous {
-    @apply right-12 w-8 h-8 rounded transition flex items-center justify-center hover:bg-gray-200
+	@apply right-12 flex h-8 w-8 items-center justify-center rounded transition hover:bg-gray-200;
 }
 
 .react-datepicker__navigation--next {
-    @apply right-4 w-8 h-8 rounded transition flex items-center justify-center hover:bg-gray-200
+	@apply right-4 flex h-8 w-8 items-center justify-center rounded transition hover:bg-gray-200;
 }
 
 .react-datepicker__day {
-    @apply mb-1 w-8 h-8 flex items-center justify-center py-1 text-sm leading-loose transition text-text-100 cursor-pointer
+	@apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center py-1 text-sm leading-loose text-text-100 transition;
 }
 
 .react-datepicker__day--disabled {
-    @apply cursor-not-allowed opacity-40
+	@apply cursor-not-allowed opacity-40;
 }
 
 .react-datepicker__day--outside-month {
-    @apply text-gray-300
+	@apply text-gray-300;
 }
 
 .react-datepicker__day--in-range {
-    @apply bg-gray-200
+	@apply bg-gray-200;
 }
 
 .react-datepicker__day--in-selecting-range {
 }
 
 .react-datepicker__day--selecting-range-start {
-    @apply bg-white
+	@apply bg-white;
 }
 
 .react-datepicker__day--selecting-range-end {
-    @apply bg-white
+	@apply bg-white;
 }
 
 .react-datepicker__day--selected {
-    @apply text-white bg-primary-300 border border-primary-400 rounded
+	@apply rounded border border-primary-400 bg-primary-300 text-white;
 }
 
 .react-datepicker__day--range-start {
-    @apply text-white hover:text-gray-700 hover:bg-white
+	@apply text-white hover:bg-white hover:text-gray-700;
 }
 
 .react-datepicker__day--range-end {
-    @apply text-white hover:text-gray-700 hover:bg-white
+	@apply text-white hover:bg-white hover:text-gray-700;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	input[type='range']::-webkit-slider-thumb {
+		width: 15px;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 15px;
+		cursor: ew-resize;
+		background: #FFD84B;
+		border-radius: 50%;
+	}
 }

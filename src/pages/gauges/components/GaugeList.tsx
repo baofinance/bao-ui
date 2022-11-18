@@ -95,8 +95,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
 	const mintable = useMintable()
 	const inflation = gaugeInfo ? gaugeInfo.inflationRate.mul(relativeWeight).div(BigNumber.from(1).pow(18)) : BigNumber.from(0)
-	const gaugeTVL = useGaugeTVL(gauge)
-	const boostedTVL = useBoostedTVL(gauge)
+	const { gaugeTVL, boostedTVL } = useGaugeTVL(gauge)
 	const rewardsValue = baoPrice.mul(1000).mul(mintable)
 	const rewardsAPY =
 		gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(relativeWeight.div(100)).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
@@ -148,7 +147,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								${gaugeTVL && getDisplayBalance(formatUnits(gaugeTVL))}
+								${gaugeTVL && getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
 							</Typography>
 						</div>
 						{isDesktop && (
