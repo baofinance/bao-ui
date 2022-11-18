@@ -3,7 +3,7 @@ import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import useAccountDistribution from '@/hooks/distribution/useAccountDistribution'
+import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
@@ -11,6 +11,7 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
+import { BigNumber } from 'ethers'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React, { Fragment, useState } from 'react'
@@ -42,7 +43,7 @@ const Migration: React.FC = () => {
 
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
-	const { account, chainId } = useWeb3React()
+	const { account, chainId, library } = useWeb3React()
 	const { data: merkleLeaf } = useQuery(
 		['/api/vebao/distribution/proof', account, chainId],
 		async () => {
@@ -62,11 +63,13 @@ const Migration: React.FC = () => {
 		},
 	)
 
-	const { info: distributionInfo, claimable, curve: distCurve } = useAccountDistribution()
+	const distributionInfo = useDistributionInfo()
+
+	// const { info: distributionInfo, claimable, curve: distCurve } = useDistributionInfo()
 
 	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
 	//const totalLockedBAO = merkleLeaf ? merkleLeaf.amount : '0'
-	//const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
+	const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
 
 	const canStartDistribution = !!distributionInfo && !!merkleLeaf
 
@@ -185,7 +188,9 @@ const Migration: React.FC = () => {
 									<Typography className='px-2 text-sm text-text-200'>BAO unlocked so far</Typography>
 									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-										<Typography className='font-bold'>{getDisplayBalance((distCurve && distCurve) || BigNumber.from(0))}</Typography>
+										<Typography className='font-bold'>
+											{getDisplayBalance((distributionInfo && distributionInfo.curve) || BigNumber.from(0))}
+										</Typography>
 									</div>
 								</div>
 							</div>

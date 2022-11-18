@@ -5,19 +5,19 @@ import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 //import { useWeb3React } from '@web3-react/core'
-import { formatUnits } from 'ethers/lib/utils'
+import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React from 'react'
 import Latex from 'react-latex-next'
-import useAccountDistribution from '@/hooks/distribution/useAccountDistribution'
-import { getDisplayBalance } from '@/utils/numberFormat'
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
-	const { info: distInfo, claimable, curve: distCurve } = useAccountDistribution()
+	const distributionInfo = useDistributionInfo()
 
 	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
 
@@ -27,8 +27,8 @@ const Migration: React.FC = () => {
 	//console.log('Date Started', dateStarted.toString())
 
 	let lastClaim = 'Never!'
-	if (distInfo && !distInfo.dateStarted.eq(distInfo.lastClaim)) {
-		lastClaim = new Date(distInfo.lastClaim.mul(1000).toNumber()).toLocaleString()
+	if (distributionInfo && !distributionInfo.dateStarted.eq(distributionInfo.lastClaim)) {
+		lastClaim = new Date(distributionInfo.lastClaim.mul(1000).toNumber()).toLocaleString()
 	}
 
 	return (
@@ -90,7 +90,7 @@ const Migration: React.FC = () => {
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography variant='base' className='font-bold'>
-									{getDisplayBalance(claimable || BigNumber.from(0))}
+									{getDisplayBalance(distributionInfo.claimable || BigNumber.from(0))}
 								</Typography>
 							</div>
 						</div>
@@ -110,11 +110,11 @@ const Migration: React.FC = () => {
 				<div className='w-2/5 flex-1'>
 					<Button
 						className='my-4'
-						disabled={!claimable?.gt(0)}
+						disabled={!distributionInfo.claimable?.gt(0)}
 						fullWidth
 						onClick={async () => {
 							const claim = distribution.claim()
-							handleTx(claim, `Distribution: Claim ${formatUnits(claimable as BigNumber)} BAO`)
+							handleTx(claim, `Distribution: Claim ${formatUnits(distributionInfo.claimable as BigNumber)} BAO`)
 						}}
 					>
 						Claim Now

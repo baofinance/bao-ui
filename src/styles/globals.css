@@ -16,10 +16,6 @@ body {
 	transition: 200ms;
 }
 
-a:hover {
-	color: #FFD84B;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
 	/* display: none; <- Crashes Chrome on hover */
