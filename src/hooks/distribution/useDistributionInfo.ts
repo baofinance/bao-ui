@@ -21,23 +21,23 @@ const useDistribtuionInfo = (): DistributionInfo => {
 	const { library, account, chainId } = useWeb3React()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
-	const enabled = !!account && !!distribution
+	const enabled = !!library && !!account && !!distribution
 	const { data: distributionInfo, refetch } = useQuery(
 		['@/hooks/vebao/useAccountDistribution', providerKey(library, account, chainId)],
 		async () => {
-			const info = await distribution.distributions(account)
+			const { dateStarted, dateEnded, lastClaim, amountOwedTotal } = await distribution.distributions(account)
 			const claimable = await distribution.claimable(account, 0)
-			const block = await library?.getBlock()
-			const dateStarted = info.dateStarted.mul(1000).toNumber()
-			const dateNow = block.timestamp * 1000
-			const daysDiff = Math.floor((dateNow - dateStarted) / 86400000)
-			const curve = await distribution.distCurve(info.amountOwedTotal, exponentiate(BigNumber.from(daysDiff)))
+			const block = await library.getBlock()
+			const timeStarted = dateStarted.mul(1000).toNumber()
+			const timeNow = block.timestamp * 1000
+			const daysDiff = Math.floor((timeNow - timeStarted) / 86400000)
+			const curve = await distribution.distCurve(amountOwedTotal, exponentiate(BigNumber.from(daysDiff)))
 
 			return {
-				dateStarted: info.dateStarted,
-				dateEnded: info.dateEnded,
-				lastClaim: info.lastClaim,
-				amountOwedTotal: info.amountOwedTotal,
+				dateStarted,
+				dateEnded,
+				lastClaim,
+				amountOwedTotal,
 				claimable,
 				curve,
 			}
