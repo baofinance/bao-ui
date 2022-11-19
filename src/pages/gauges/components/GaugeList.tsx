@@ -74,7 +74,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 
 	// Messy but works for now
 	const relativeWeight = useMemo(() => {
-		return totalWeight.gt(0) ? exponentiate(weight).div(decimate(totalWeight).div(100)) : BigNumber.from(0)
+		return totalWeight.gt(0) ? weight.div(decimate(totalWeight)).mul(100) : BigNumber.from(0)
 	}, [weight, totalWeight])
 
 	const { data: baoPrice } = useQuery(

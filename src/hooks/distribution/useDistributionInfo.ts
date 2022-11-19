@@ -25,6 +25,7 @@ const useDistribtuionInfo = (): DistributionInfo => {
 	const { txSuccess } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
+	const enabled = !!bao && !!account && !!distribution
 	const { data: distributionInfo, refetch } = useQuery(
 		['@/hooks/vebao/useAccountDistribution', providerKey(library, account, chainId)],
 		async () => {
@@ -46,7 +47,7 @@ const useDistribtuionInfo = (): DistributionInfo => {
 			}
 		},
 		{
-			enabled: !!bao && !!account && !!distribution,
+			enabled,
 			placeholderData: {
 				dateStarted: BigNumber.from(0),
 				dateEnded: BigNumber.from(0),
@@ -58,8 +59,11 @@ const useDistribtuionInfo = (): DistributionInfo => {
 		},
 	)
 
-	useTxReceiptUpdater(refetch)
-	useBlockUpdater(refetch, 10)
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
 	return distributionInfo
 }
