@@ -17,7 +17,7 @@ export default {
 		uniswapFactory: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		uniswapFactoryV2: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		BAO: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-		BAOv2: '0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f',
+		BAOv2: '0x398E4948e373Db819606A459456176D31C3B1F91',
 		DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 		USDT: '0xdac17f958d2ee523a2206206994597c13d831ec7',
 		USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -42,7 +42,7 @@ export default {
 		},
 		Baov2: {
 			1: {
-				address: '0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f',
+				address: '0x398E4948e373Db819606A459456176D31C3B1F91',
 			},
 		},
 		Masterchef: {
@@ -90,22 +90,22 @@ export default {
 		// veBAO
 		GaugeController: {
 			1: {
-				address: '0x707531c9999AaeF9232C8FEfBA31FBa4cB78d84a',
+				address: '0xd038A2EE73b64F30d65802Ad188F27921656f28F',
 			},
 		},
 		votingEscrow: {
 			1: {
-				address: '0x103A3b128991781EE2c8db0454cA99d67b257923',
+				address: '0xbe18A1B61ceaF59aEB6A9bC81AB4FB87D56Ba167',
 			},
 		},
 		Minter: {
 			1: {
-				address: '0x2538a10b7fFb1B78c890c870FC152b10be121f04',
+				address: '0x666432Ccb747B2220875cE185f487Ed53677faC9',
 			},
 		},
 		FeeDistributor: {
 			1: {
-				address: '0x24432a08869578aAf4d1eadA12e1e78f171b1a2b',
+				address: '0xeC1BB74f5799811c0c1Bff94Ef76Fb40abccbE4a',
 			},
 		},
 		Dai: {
@@ -122,12 +122,12 @@ export default {
 		// Distribution
 		BaoDistribution: {
 			1: {
-				address: '0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005',
+				address: '0x25C0a2F0A077F537Bd11897F04946794c2f6f1Ef',
 			},
 		},
 		Swapper: {
 			1: {
-				address: '0xB9d9e972100a1dD01cd441774b45b5821e136043',
+				address: '0x01cf58e264d7578D4C67022c58A24CbC4C4a304E',
 			},
 		},
 	},
@@ -219,7 +219,7 @@ export default {
 		{
 			gid: 1,
 			gaugeAddresses: {
-				1: '0xbf2ad38fd09F37f50f723E35dd84EEa1C282c5C9',
+				1: '0x09120eAED8e4cD86D85a616680151DAA653880F2',
 			},
 			poolAddresses: {
 				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
@@ -240,7 +240,7 @@ export default {
 		{
 			gid: 2,
 			gaugeAddresses: {
-				1: '0xF66CfDf074D2FFD6A4037be3A669Ed04380Aef2B',
+				1: '0x3E661784267F128e5f706De17Fac1Fc1c9d56f30',
 			},
 			poolAddresses: {
 				1: '0xa148bd19e26ff9604f6a608e22bfb7b772d0d1a3',
@@ -261,7 +261,7 @@ export default {
 		{
 			gid: 3,
 			gaugeAddresses: {
-				1: '0xFC4EE541377F3b6641c23CBE82F6f04388290421',
+				1: '0x6732128F9cc0c4344b2d4DC6285BCd516b7E59E6',
 			},
 			poolAddresses: {
 				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3', // UPDATE!! Change to BAOv2-ETH UNIV2

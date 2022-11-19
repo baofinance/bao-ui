@@ -27,6 +27,7 @@ import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { isDesktop } from 'react-device-detect'
+import BoostCalc from './BoostCalc'
 
 function addDays(numOfDays: number, date = new Date()) {
 	date.setDate(date.getDate() + numOfDays)
@@ -124,7 +125,7 @@ const Lock: React.FC = () => {
 		<>
 			<div className='grid grid-cols-4 gap-4'>
 				<div className='col-span-3 row-span-1 rounded border border-primary-300 bg-primary-100 p-4'>
-					{lockInfo && lockInfo.lockEnd.gt(block.timestamp) ? (
+					{(lockInfo && lockInfo.lockEnd.gt(block.timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000) < block.timestamp) ? (
 						<>
 							<Card.Header>Lock BAO for veBAO</Card.Header>
 							<Card.Body>
@@ -470,7 +471,7 @@ const Lock: React.FC = () => {
 								<>
 									<div className='-mr-1 flex h-8 items-center justify-center rounded-l bg-primary-400'>
 										<Typography variant='sm' className='ml-2 inline font-semibold'>
-											{account ? (window.screen.width > 1200 ? getDisplayBalance(baoBalance) : truncateNumber(baoBalance)) : '-'}
+											{claimableFees ? getDisplayBalance(claimableFees) : '-'}
 										</Typography>
 										<Image src='/images/tokens/baoUSD.png' alt='BAO' width={16} height={16} className='ml-1 mr-2 inline' />
 									</div>
@@ -535,7 +536,9 @@ const Lock: React.FC = () => {
 							</Typography>
 							<>
 								<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-									{new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}{' '}
+									{lockInfo && lockInfo.lockEnd.mul(1000) < block.timestamp
+										? '-'
+										: new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}
 								</Typography>
 							</>
 						</div>
@@ -606,6 +609,8 @@ const Lock: React.FC = () => {
 					</Typography>
 				</div>
 			</div>
+
+			<BoostCalc />
 		</>
 	)
 }

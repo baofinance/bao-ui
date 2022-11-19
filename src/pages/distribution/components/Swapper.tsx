@@ -18,7 +18,7 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import useContract from '@/hooks/base/useContract'
-import type { Stabilizer, Bao, Swapper } from '@/typechain/index'
+import type { Bao, Swapper } from '@/typechain/index'
 
 const Swapper: React.FC = () => {
 	const { chainId } = useWeb3React()
@@ -114,25 +114,25 @@ const Swapper: React.FC = () => {
 										pathColor: `green`,
 									})}
 								>
-						<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
-							<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full bg-primary-100'>
-								<div
-									className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
-									style={{ marginTop: '15px' }}
-								>
-									<Typography variant='sm' className='text-text-200'>
-										BAOv1 Redeemed
-									</Typography>
-									<Typography>50%</Typography>
-								</div>
-							</div>
-						</div>
+									<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
+										<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full bg-primary-100'>
+											<div
+												className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
+												style={{ marginTop: '15px' }}
+											>
+												<Typography variant='sm' className='text-text-200'>
+													BAOv1 Redeemed
+												</Typography>
+												<Typography>50%</Typography>
+											</div>
+										</div>
+									</div>
 								</CircularProgressbarWithChildren>
 							</div>
 						</Card>
 					</div>
-		</div>
-		</div>
+				</div>
+			</div>
 		</div>
 	)
 }

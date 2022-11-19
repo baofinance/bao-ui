@@ -105,7 +105,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	// console.log('Total Weight', totalWeight.toString())
 	// console.log('Relative Weight', relativeWeight.toString())
 	// console.log('Bao Price', formatUnits(baoPrice.mul(1000)))
-	// console.log('Mintable Rewards', formatUnits(mintable))
+	console.log('Mintable Rewards', formatUnits(mintable))
 	// console.log('Gauge Inflation', formatUnits(inflation))
 	// console.log('Gauge Supply', formatUnits(gaugeInfo ? gaugeInfo.totalSupply : 0))
 	// console.log('Gauge TVL', formatUnits(gaugeTVL ? decimate(gaugeTVL) : 0))
