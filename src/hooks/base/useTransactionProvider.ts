@@ -10,17 +10,19 @@ export const useTxReceiptUpdater = (callback: (() => void) | (() => Promise<void
 	const txNumberRef = useRef<number>(Object.keys(transactions).filter(tx => transactions[tx].receipt).length)
 	useEffect(() => {
 		setFirstRender(false)
-		//console.log('first render off!')
 	}, [setFirstRender])
 	const txNumber = Object.keys(transactions).filter(tx => transactions[tx].receipt)
 	if (txNumber.length !== txNumberRef.current) {
 		txNumberRef.current = txNumber.length
-		//console.log('update txNumber len')
-		if (loaded && !firstRender) {
-			//console.log('callback!')
-			callback()
-		}
 	}
+	useEffect(() => {
+		if (txNumber.length !== txNumberRef.current) {
+			if (loaded && !firstRender) {
+				console.log('tx callback')
+				callback()
+			}
+		}
+	}, [loaded, firstRender, txNumber.length, callback])
 }
 
 export default useTransactionProvider
