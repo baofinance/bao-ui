@@ -219,7 +219,7 @@ export default {
 		{
 			gid: 1,
 			gaugeAddresses: {
-				1: '0x09120eAED8e4cD86D85a616680151DAA653880F2',
+				1: '0xdC5cD6bcC9AFF0Ff964D0d7A97E5A4Dc2367Bfdf',
 			},
 			poolAddresses: {
 				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
@@ -240,7 +240,7 @@ export default {
 		{
 			gid: 2,
 			gaugeAddresses: {
-				1: '0x3E661784267F128e5f706De17Fac1Fc1c9d56f30',
+				1: '0xD525ddD05170a03772e96FFb8D8e34a0D74B8F0E',
 			},
 			poolAddresses: {
 				1: '0xa148bd19e26ff9604f6a608e22bfb7b772d0d1a3',
@@ -261,7 +261,7 @@ export default {
 		{
 			gid: 3,
 			gaugeAddresses: {
-				1: '0x6732128F9cc0c4344b2d4DC6285BCd516b7E59E6',
+				1: '0x8aC752c39Ac6c9cb7DCaA6387705273DfC57410a',
 			},
 			poolAddresses: {
 				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
