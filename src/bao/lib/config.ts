@@ -277,7 +277,7 @@ export default {
 			type: 'Uniswap',
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/ETH.png',
-			pairUrl: 'https://app.uniswap.org/#/add/v2/0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f/ETH', // UPDATE!! Change to BAOv2-ETH UNIV2
+			pairUrl: 'https://app.uniswap.org/#/add/v2/0xCe391315b414D4c7555956120461D21808A69F3A/ETH', // UPDATE!! Change to BAOv2-ETH UNIV2
 		},
 	],
 	baskets: [
