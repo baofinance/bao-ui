@@ -264,13 +264,13 @@ export default {
 				1: '0x6732128F9cc0c4344b2d4DC6285BCd516b7E59E6',
 			},
 			poolAddresses: {
-				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3', // UPDATE!! Change to BAOv2-ETH UNIV2
+				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
 			},
 			lpAddresses: {
-				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3', // UPDATE!! Change to BAOv2-ETH UNIV2
+				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
 			},
 			poolInfoAddresses: {
-				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3',
+				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
 			},
 			name: 'BAO-ETH',
 			symbol: 'BAOETH',
