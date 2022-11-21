@@ -29,8 +29,8 @@ function addDays(numOfDays: number, date = new Date()) {
 	return date
 }
 
-export const LockStats = ({ baoBalance, lockInfo, timestamp }: StatsProps) => {
-	const { account, library, chainId } = useWeb3React()
+export const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
+	const { account, chainId } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const claimableFees = useClaimableFees()
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor', Config.contracts.FeeDistributor[chainId].address)
@@ -44,7 +44,7 @@ export const LockStats = ({ baoBalance, lockInfo, timestamp }: StatsProps) => {
 				<Typography className='font-medium text-text-200'>Earned Rewards</Typography>
 				<div className='flex justify-end'>
 					<div className='-mr-1 flex h-10 items-center justify-center rounded-l bg-primary-400'>
-						<Typography className='ml-2 inline font-semibold'>${claimableFees ? getDisplayBalance(claimableFees) : '-'}</Typography>
+						<Typography className='ml-2 inline font-semibold'>${claimableFees ? getDisplayBalance(claimableFees) : 0}</Typography>
 						<Image src='/images/tokens/baoUSD.png' alt='BAO' width={16} height={16} className='ml-1 mr-2 inline' />
 					</div>
 					{pendingTx ? (
@@ -75,7 +75,7 @@ export const LockStats = ({ baoBalance, lockInfo, timestamp }: StatsProps) => {
 				<Typography className='font-medium text-text-200'>BAO Locked</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
-						<>{lockInfo && getDisplayBalance(lockInfo.lockAmount)}</>
+						<>{lockInfo ? getDisplayBalance(lockInfo.lockAmount) : '-'}</>
 					</Typography>
 				</>
 			</div>
@@ -95,7 +95,7 @@ export const LockStats = ({ baoBalance, lockInfo, timestamp }: StatsProps) => {
 				<Typography className='font-medium text-text-200'>Locked Until</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
-						{lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp)
+						{!account || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp))
 							? '-'
 							: new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}
 					</Typography>
@@ -105,8 +105,8 @@ export const LockStats = ({ baoBalance, lockInfo, timestamp }: StatsProps) => {
 	)
 }
 
-export const ProtocolStats = ({ baoBalance, lockInfo, timestamp, baoPrice }: StatsProps) => {
-	const { account, library, chainId } = useWeb3React()
+export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => {
+	const { chainId } = useWeb3React()
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
@@ -187,8 +187,8 @@ export const ProtocolStats = ({ baoBalance, lockInfo, timestamp, baoPrice }: Sta
 	)
 }
 
-export const ProtocolStatsHoriz = ({ baoBalance, lockInfo, timestamp, baoPrice }: StatsProps) => {
-	const { account, library, chainId } = useWeb3React()
+export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps) => {
+	const { account, chainId } = useWeb3React()
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
@@ -239,7 +239,7 @@ export const ProtocolStatsHoriz = ({ baoBalance, lockInfo, timestamp, baoPrice }
 						</Typography>
 					</div>
 					<Typography variant='lg' className='font-bold'>
-						{suppliedPercentage && `${getDisplayBalance(suppliedPercentage)}%`}
+						{suppliedPercentage ? `${getDisplayBalance(suppliedPercentage)}%` : '-'}
 					</Typography>
 				</div>
 				<div className='items-center justify-center text-center'>
@@ -259,7 +259,7 @@ export const ProtocolStatsHoriz = ({ baoBalance, lockInfo, timestamp, baoPrice }
 						</Typography>
 					</div>
 					<Typography variant='lg' className='font-bold'>
-						{nextFeeDistribution && nextFeeDistribution.mul(1000).lte(timestamp)
+						{account && nextFeeDistribution && nextFeeDistribution.mul(1000).lte(timestamp)
 							? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
 							: `-`}
 					</Typography>

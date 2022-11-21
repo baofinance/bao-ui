@@ -1,10 +1,9 @@
-import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
 import useContract from '@/hooks/base/useContract'
 import type { GaugeController } from '@/typechain/index'
 import { useQuery } from '@tanstack/react-query'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
+import { useCallback, useEffect, useState } from 'react'
 
 const useRelativeWeight = (gaugeAddress: string) => {
 	const [weight, setWeight] = useState(BigNumber.from(0))

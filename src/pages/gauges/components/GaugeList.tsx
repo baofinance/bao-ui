@@ -2,12 +2,12 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
-import useGaugeInfo from '@/hooks/vebao/useGaugeInfo'
-import useGauges from '@/hooks/vebao/useGauges'
-import useGaugeTVL from '@/hooks/vebao/useGaugeTVL'
-import useGaugeWeight from '@/hooks/vebao/useGaugeWeight'
-import useMintable from '@/hooks/vebao/useMintable'
-import useTotalWeight from '@/hooks/vebao/useTotalWeight'
+import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
+import useGauges from '@/hooks/gauges/useGauges'
+import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
+import useGaugeWeight from '@/hooks/gauges/useGaugeWeight'
+import useMintable from '@/hooks/gauges/useMintable'
+import useTotalWeight from '@/hooks/gauges/useTotalWeight'
 import GraphUtil from '@/utils/graph'
 import { decimate, exponentiate, fromDecimal, getDisplayBalance } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
@@ -147,7 +147,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								${gaugeTVL && getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
+								${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
 							</Typography>
 						</div>
 						{isDesktop && (
