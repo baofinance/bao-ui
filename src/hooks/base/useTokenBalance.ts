@@ -40,7 +40,7 @@ const useTokenBalance = (tokenAddress: string) => {
 	const { data: balance, refetch } = useQuery(
 		['@/hooks/base/useTokenBalance', { enabled }, providerKey(library, account, chainId), tokenAddress],
 		async () => {
-			if (!enabled) throw new Error("not enabled")
+			if (!enabled) throw new Error('not enabled')
 			const _balance = await contract.balanceOf(account)
 			return _balance
 		},

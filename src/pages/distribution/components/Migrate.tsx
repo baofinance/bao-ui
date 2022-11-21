@@ -3,7 +3,7 @@ import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
-import { getDayOffset, getWeekDiff } from '@/utils/date'
+import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import 'katex/dist/katex.min.css'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
@@ -15,7 +15,7 @@ const Migration: React.FC = () => {
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
 	const [lockTime, setLockTime] = useState<Date>(getDayOffset(new Date(), 365 * 4 - 1))
-	const min = getDayOffset(new Date(), 365 * 3 - 7)
+	const min = getDayOffset(new Date(), 365 * 3)
 	const max = getWeekDiff(min, getDayOffset(new Date(), 365 * 4 - 7))
 	const [weeks, setWeeks] = useState<number>(max)
 
@@ -76,7 +76,7 @@ const Migration: React.FC = () => {
 					className='my-4'
 					fullWidth
 					onClick={async () => {
-						const lockDistribution = distribution.lockDistribution(length.toString().slice(0, 10))
+						const lockDistribution = distribution.lockDistribution(getEpochSecondForDay(lockTime))
 						handleTx(lockDistribution, `Distribution: Migrate to veBAO`)
 					}}
 				>

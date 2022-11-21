@@ -5,8 +5,8 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import React, { useMemo } from 'react'
+import { parseUnits } from 'ethers/lib/utils'
+import { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
 type MarketStatBlockProps = {
@@ -47,11 +47,13 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				: BigNumber.from(0),
 		[balances, asset.underlyingAddress],
 	)
+
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return '0'
 		// FIXME: needs decimals
 		return getDisplayBalance(decimate(asset.price.mul(supplyBalance)))
 	}, [supplyBalance, asset.price])
+
 	const walletBalanceUsd = useMemo(() => {
 		if (!walletBalance) return
 		return getDisplayBalance(decimate(asset.price.mul(walletBalance)))
@@ -122,6 +124,7 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 				: 0,
 		[balances, asset.underlyingAddress],
 	)
+
 	const price = useMemo(() => {
 		if (!borrowBalance) return
 		return getDisplayBalance(decimate(asset.price.mul(borrowBalance)))
@@ -150,7 +153,6 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 
 const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
-
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
 	const newBorrowable = borrowable.add(change)
@@ -180,15 +182,10 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 
 const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
-
 	const change = amount ? decimate(BigNumber.from(amount).mul(asset.price)) : BigNumber.from(0)
-
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
-
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
-
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
-
 	const newBorrowable = borrowable ? borrowable.add(change.lt(0) ? change : 0) : BigNumber.from(0)
 
 	return (
@@ -203,7 +200,7 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 						)}`,
 					},
 					{
-						// FIXME: this seems broken
+						// FIXME: Fix this for when a users current borrow amount is zero
 						label: 'Debt Limit Used',
 						value: `${getDisplayBalance(
 							!borrowable.eq(0) ? exponentiate(borrow).div(borrowable).mul(100) : 0,

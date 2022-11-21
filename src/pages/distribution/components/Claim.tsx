@@ -21,7 +21,7 @@ const Migration: React.FC = () => {
 
 	let lastClaim = 'Never'
 	if (distributionInfo && !distributionInfo.dateStarted.eq(distributionInfo.lastClaim)) {
-		lastClaim = new Date(distributionInfo.lastClaim.mul(1000).toNumber()).toLocaleString()
+		lastClaim = new Date(distributionInfo.lastClaim.mul(1000).toNumber()).toDateString()
 	}
 
 	return (
@@ -82,9 +82,9 @@ const Migration: React.FC = () => {
 								</Typography>
 							</div>
 						</div>
-						<div className='flex flex-col gap-2'>
+						<div className='flex flex-col gap-2 text-center'>
 							<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
-								Last claim:
+								Last Claim:
 							</Typography>
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
 								<Typography variant='base' className='text-md px-2 font-semibold text-text-200'>

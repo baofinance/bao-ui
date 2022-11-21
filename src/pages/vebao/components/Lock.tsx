@@ -10,7 +10,7 @@ import 'rc-slider/assets/index.css'
 import React from 'react'
 import { Actions } from './Actions'
 import BoostCalc from './BoostCalc'
-import { LockStats, ProtocolStats, ProtocolStatsHoriz } from './Stats'
+import { LockStats, ProtocolStatsHoriz } from './Stats'
 
 const Lock: React.FC = () => {
 	const { library, chainId } = useWeb3React()

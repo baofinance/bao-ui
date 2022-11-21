@@ -50,7 +50,7 @@ const LiquidSwap: React.FC = () => {
 		},
 	)
 
-	const claimedBao = swapperBalance && initialSwapperBalance.sub(swapperBalance)
+	const claimedBao = swapperBalance && parseFloat(formatUnits(initialSwapperBalance.sub(swapperBalance)))
 
 	const _refetch = () => {
 		// # HACKY: skip this time around the eventloop lol
@@ -60,19 +60,20 @@ const LiquidSwap: React.FC = () => {
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
+	console.log(claimedBao.toString())
+	console.log(swapperBalance.toString())
+	console.log(claimedBao && ((claimedBao / parseFloat(formatUnits(initialSwapperBalance))) * 100).toFixed(2))
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='sm:w-4/5'>
-				<div className='border-b border-text-100 pb-5'>
-					<Typography variant='lg' className='text-lg font-bold text-text-100'>
-						Exchange Unlocked BAO
-					</Typography>
-					<Typography className='mt-2 text-text-200'>
-						All tokens, whether circulating or locked, will be converted at a supply reduction of 1,000:1, relative to the ~1 trillion
-						supply when we took the snapshot on 11/19/2022. The new initial supply will be ~1 billion BAOv2 and will increase depending upon
-						issuance from voting escrow emissions.
-					</Typography>
-				</div>
+				<Typography variant='lg' className='text-lg font-bold text-text-100'>
+					Exchange Unlocked BAO
+				</Typography>
+				<Typography className='mt-2 text-text-200'>
+					All tokens, whether circulating or locked, will be converted at a supply reduction of 1,000:1, relative to the ~1 trillion supply
+					when we took the snapshot on 11/19/2022. The new initial supply will be ~1 billion BAOv2 and will increase depending upon issuance
+					from voting escrow emissions.
+				</Typography>
 				<div className='flex flex-row gap-4'>
 					<div className='flex w-3/4 flex-col'>
 						<Card className={`mt-8 h-[300px]`}>
@@ -139,7 +140,7 @@ const LiquidSwap: React.FC = () => {
 							<Card.Header header='Migration Progress' />
 							<div className='m-auto w-[200px]'>
 								<CircularProgressbarWithChildren
-									value={claimedBao && parseFloat(formatUnits(claimedBao.div(swapperBalance).mul(100)))}
+									value={claimedBao && (claimedBao / parseFloat(formatUnits(initialSwapperBalance))) * 100}
 									strokeWidth={10}
 									styles={buildStyles({
 										strokeLinecap: 'butt',
@@ -156,7 +157,7 @@ const LiquidSwap: React.FC = () => {
 													BAOv1 Redeemed
 												</Typography>
 												<Typography>
-													{claimedBao && parseFloat(formatUnits(claimedBao.div(swapperBalance).mul(100))).toFixed(2)}%
+													{claimedBao && ((claimedBao / parseFloat(formatUnits(initialSwapperBalance))) * 100).toFixed(2)}%
 												</Typography>
 											</div>
 										</div>

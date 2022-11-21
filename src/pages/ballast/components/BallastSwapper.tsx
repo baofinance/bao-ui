@@ -30,7 +30,7 @@ const BallastSwapper: React.FC = () => {
 				Balance: {getDisplayBalance(daiBalance)} DAI
 			</Typography>
 			<Typography variant='sm' className='float-right mb-1 text-text-200'>
-				Reserves: {ballastInfo ? getDisplayBalance(ballastInfo.reserves && ballastInfo.reserves).toString() : <Loader />}{' '}
+				Reserves: {ballastInfo.reserves ? getDisplayBalance(ballastInfo.reserves).toString() : <Loader />}{' '}
 			</Typography>
 			<Input
 				onSelectMax={() => setInputVal(formatEther(daiBalance).toString())}
@@ -57,7 +57,7 @@ const BallastSwapper: React.FC = () => {
 				Balance: {getDisplayBalance(baoUSDBalance).toString()} baoUSD
 			</Typography>
 			<Typography variant='sm' className='float-right mb-1 text-text-200'>
-				Mint Limit: {ballastInfo ? getDisplayBalance(ballastInfo.supplyCap && ballastInfo.supplyCap).toString() : <Loader />}{' '}
+				Mint Limit: {ballastInfo.supplyCap ? getDisplayBalance(ballastInfo?.supplyCap && ballastInfo?.supplyCap).toString() : <Loader />}{' '}
 			</Typography>
 			<Input
 				onSelectMax={() => setInputVal(formatEther(baoUSDBalance).toString())}

@@ -218,7 +218,7 @@ export const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 									) : (
 										<Button
 											fullWidth
-											disabled={!bao || !lockTime || lockTime <= currentLockEnd || getEpochSecondForDay(lockTime) >= max}
+											disabled={!bao || !lockTime || lockTime <= currentLockEnd}
 											onClick={async () => {
 												const lockTx = votingEscrow.increase_unlock_time(getEpochSecondForDay(lockTime))
 												handleTx(lockTx, `veBAO: Increased lock until ${lockTime.toLocaleDateString()}`)

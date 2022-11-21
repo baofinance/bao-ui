@@ -107,7 +107,7 @@ const Market: NextPage<{
 					<Link href='/'>
 						<a className='hover:text-text-400'>
 							<FontAwesomeIcon className='mr-1' icon={faArrowLeft} size='sm' />
-							<Typography variant='lg' className='inline-block'>
+							<Typography variant='lg' className='inline-block font-medium'>
 								Back to Markets
 							</Typography>
 						</a>
