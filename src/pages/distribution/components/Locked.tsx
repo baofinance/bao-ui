@@ -6,6 +6,8 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useQuery } from '@tanstack/react-query'
@@ -14,10 +16,12 @@ import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
+import Link from 'next/link'
 import React, { Fragment, useState } from 'react'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
+import Config from '@/bao/lib/config'
 
 const options = [
 	{
@@ -39,7 +43,7 @@ const options = [
 
 const Migration: React.FC = () => {
 	const [selectedOption, setSelectedOption] = useState(options[0])
-	const { handleTx } = useTransactionHandler()
+	const { handleTx, pendingTx } = useTransactionHandler()
 
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
@@ -65,31 +69,25 @@ const Migration: React.FC = () => {
 
 	const distributionInfo = useDistributionInfo()
 
-	// const { info: distributionInfo, claimable, curve: distCurve } = useDistributionInfo()
+	const canStartDistribution = !!merkleLeaf
 
-	//console.log('User has started distrubtion.', distributionInfo && distributionInfo.dateStarted.gt(0))
-	//const totalLockedBAO = merkleLeaf ? merkleLeaf.amount : '0'
-	const dateStarted = distributionInfo ? distributionInfo.dateStarted : 0
+	console.log('Date Started', distributionInfo ? distributionInfo.dateStarted : 0)
+	console.log('Can Start Distribution', canStartDistribution)
 
-	const canStartDistribution = !!distributionInfo && !!merkleLeaf
-
-	//console.log('Date Started', dateStarted.toString())
-	//console.log('Merkle Leaf', merkleLeaf)
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='pt-4 md:w-4/5'>
 				{distributionInfo && distributionInfo.dateStarted.gt(0) ? (
 					<>
-						<div className='border-b border-text-100 pb-5'>
-							<Typography variant='lg' className='text-lg font-medium leading-6 text-text-200'>
+						<div className='pb-5'>
+							<Typography variant='lg' className='text-lg font-bold leading-6'>
 								Select Your Distribution Method
 							</Typography>
-							<Typography variant='p' className='mt-2 leading-normal text-text-100'>
-								Locked BAO holders have three actions they can take with their locked BAO positions, which are called "distributions". Any
-								distribution will only begin once manually initiated by the wallet owner. Please read the descriptions below very carefully.
-								You can read more about this process and the math behind it by checking out{' '}
+							<Typography variant='p' className='mt-2 leading-normal text-text-200'>
+								Locked BAO holders have three actions they can choose from with their locked positions. Please read the descriptions below
+								very carefully. You can read more about this process and the math behind it by checking out{' '}
 								<a
-									className='font-medium text-text-300 hover:text-text-400'
+									className='font-bold hover:text-text-400'
 									href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
 									target='_blank'
 									rel='noreferrer'
@@ -97,35 +95,29 @@ const Migration: React.FC = () => {
 									BIP-14
 								</a>{' '}
 								on our governance forums. If you have any questions, please join our{' '}
-								<a
-									href='https://discord.gg/BW3P62vJXT'
-									target='_blank'
-									rel='noreferrer noopener'
-									className='font-medium hover:text-text-400'
-								>
+								<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-bold hover:text-text-400'>
 									Discord
 								</a>{' '}
 								community!
 							</Typography>
-							<Typography variant='p' className='leading-normal'></Typography>
 						</div>
 						<div className='flex flex-row'>
 							<div className='my-4 flex w-full flex-col'>
 								<Listbox value={selectedOption} onChange={setSelectedOption}>
 									{({ open }) => (
 										<>
-											<Listbox.Label className='mb-1 text-xs text-text-200'>Select your distribution option</Listbox.Label>
+											<Listbox.Label className='mb-1 font-bold'>Select your distribution option</Listbox.Label>
 											<div className='relative'>
 												<div className='inline-flex w-full rounded-md border-none shadow-sm'>
 													<div className='inline-flex w-full rounded-md border-none shadow-sm'>
 														<div className='inline-flex w-full items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
 															<CheckIcon className='h-5 w-5' aria-hidden='true' />
-															<p className='ml-2.5 text-sm font-medium'>{selectedOption.name}</p>
+															<p className='ml-2.5 font-medium'>{selectedOption.name}</p>
 														</div>
 														<Listbox.Button
 															className={
 																(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-																'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
+																'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 font-medium text-text-100 hover:bg-primary-300')
 															}
 														>
 															<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -145,17 +137,14 @@ const Migration: React.FC = () => {
 															<Listbox.Option
 																key={option.name}
 																className={({ active }) =>
-																	classNames(
-																		active ? 'bg-primary-100 text-text-400' : 'text-text-100',
-																		'cursor-pointer select-none p-4 text-sm',
-																	)
+																	classNames(active ? 'bg-primary-100 text-text-400' : 'text-text-100', 'cursor-pointer select-none p-4')
 																}
 																value={option}
 															>
 																{({ selected, active }) => (
 																	<div className='flex flex-col'>
 																		<div className='flex justify-between'>
-																			<p className={selected ? 'font-semibold' : 'font-normal'}>{option.name}</p>
+																			<p className='font-semibold'>{option.name}</p>
 																			{selected ? (
 																				<span className={active ? 'text-text-100' : 'text-text-200'}>
 																					<CheckIcon className='h-5 w-5' aria-hidden='true' />
@@ -176,7 +165,7 @@ const Migration: React.FC = () => {
 							</div>
 							<div className='mt-2 mb-1 flex w-full flex-col items-end justify-end gap-1'>
 								<div className='flex flex-row items-center'>
-									<Typography className='px-2 text-sm text-text-200'>Your locked BAO total</Typography>
+									<Typography className='px-2 font-semibold text-text-100'>Total Locked BAO</Typography>
 									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 										<Typography className='font-bold'>
@@ -185,7 +174,7 @@ const Migration: React.FC = () => {
 									</div>
 								</div>
 								<div className='flex flex-row items-center'>
-									<Typography className='px-2 text-sm text-text-200'>BAO unlocked so far</Typography>
+									<Typography className='px-2 font-semibold text-text-100'>BAO Unlocked</Typography>
 									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 										<Typography className='font-bold'>
@@ -209,9 +198,9 @@ const Migration: React.FC = () => {
 									Start Your Distribution
 								</Typography>
 								<Typography className='mt-2 leading-normal text-text-200'>
-									Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
-									manually initiated by the wallet owner. Once you start your distribution, please read the instructions and descriptions on
-									each option very carefully.
+									Locked BAO holders have three actions they can choose from with their locked positions. Any distribution will only begin
+									once manually initiated by the wallet owner. Once you start your distribution, please read the instructions and
+									descriptions on each option very carefully.
 								</Typography>
 								<Typography className='mt-2 leading-normal text-text-200'>
 									You can read more in-depth about this process by checking out{' '}
@@ -235,16 +224,28 @@ const Migration: React.FC = () => {
 								</Typography>
 							</div>
 							<div className='flex flex-col items-center'>
-								<Button
-									disabled={!canStartDistribution}
-									className='bg-primary-500'
-									onClick={async () => {
-										const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
-										handleTx(startDistribution, `Start Distribution`)
-									}}
-								>
-									Start Distribution
-								</Button>
+								{pendingTx ? (
+									<Button disabled={true} className='bg-primary-500'>
+										{typeof pendingTx === 'string' ? (
+											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+												Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+											</Link>
+										) : (
+											'Pending Transaction'
+										)}
+									</Button>
+								) : (
+									<Button
+										disabled={!canStartDistribution || (distributionInfo && distributionInfo.dateStarted.gt(0))}
+										className='bg-primary-500'
+										onClick={async () => {
+											const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
+											handleTx(startDistribution, `Start Distribution`)
+										}}
+									>
+										Start Distribution
+									</Button>
+								)}
 							</div>
 						</div>
 					</div>

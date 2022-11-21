@@ -15,18 +15,18 @@ const Migration: React.FC = () => {
 		<div className='flex flex-col px-4'>
 			<div className='flex flex-col'>
 				<Typography variant='hero' className='my-3 text-center font-bold'>
-					End Early
+					End Distribution
 				</Typography>
 				<Typography variant='xl' className='text-center font-bold'>
-					Unlock All Remaining BAO (after slashing fee!)
+					End the Distribution Early
 				</Typography>
-				<Typography variant='p' className='my-5 leading-normal'>
-					Users that perform a liquid distribution can choose to end their distribution early at any time after the distribution starts. A
+				<Typography variant='p' className='my-4 leading-normal'>
+					Users that perform a liquid distribution can choose to end their distribution early at any time after their distribution starts. A
 					large slashing penalty will be applied to the tokens unlocked early, while all tokens already unlocked have no slash fee applied.
-					The slash fee is based on the slash rate function defined below which will end their distribution and allow them to receive the
+					The slash fee is based on the slash rate function defined below which will end the distribution and allow the user to receive the
 					rest of their tokens (minus slash fee) immediately.
 				</Typography>
-				<Typography variant='lg' className='mt-2 mb-2 font-bold'>
+				<Typography variant='lg' className='mt-2 mb-2 font-medium text-text-200'>
 					Slash Function
 				</Typography>
 				<code>
@@ -36,16 +36,13 @@ const Migration: React.FC = () => {
 					<br />
 					{'365 < X <= 1095 || 95'}
 				</code>
-				<Typography variant='p' className='my-5 leading-normal'>
-					The slash function starts at the same date the address selects to start their BAO distribution. The slash function starts at 100%
-					on day 0, and approaches a constant 95% slash on day 365 and thereafter. On the day that the user chooses to end their
-					distribution early, the slash function defines how much of their remaining distribution will be slashed. The user will receive the
-					remainder of this percentage of their remaining distribution immediately.
+				<Typography variant='p' className='my-4 leading-normal'>
+					The slash function starts on the date the user begins their BAO distribution. The slash function begins at 100% on day 0 and
+					approaches a constant 95% slash on day 365 and later. The slash function defines how much of their remaining distribution gets
+					slashed when a user ends their distribution early. The user will immediately receive the remainder of this percentage of their
+					remaining distribution.
 				</Typography>
 				<div className='m-auto mt-2 flex w-full flex-col items-center justify-center'>
-					<Typography variant='sm' className='mb-1 text-center text-text-200'>
-						Click the image to open a larger version of the photo.
-					</Typography>
 					<a
 						href='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/d0683e4c31a1d5cbfdf4a1a23f76325ca884ee43.gif'
 						target='_blank'
@@ -59,7 +56,7 @@ const Migration: React.FC = () => {
 							alt='Slash function'
 						/>
 					</a>
-					<Typography variant='sm' className='my-2 text-center text-text-200'>
+					<Typography variant='xs' className='my-4 w-4/5 rounded bg-background-100 p-2 text-center text-text-200'>
 						In the graph above, the blue points are the state of both curves respectively. The orange point is the percentage of their total
 						distribution that the user will be able to claim if they choose to end their distribution at that point.
 					</Typography>
@@ -79,8 +76,8 @@ const Migration: React.FC = () => {
 				</Button>
 			</div>
 
-			<Typography variant='sm' className='text-right text-text-200'>
-				* This action can be done only *once* and can NOT be reversed!
+			<Typography variant='sm' className='text-center text-text-200'>
+				* This action can be done only <b className='font-bold'>once</b> and can <b className='font-bold'>not</b> be reversed!
 			</Typography>
 		</div>
 	)
