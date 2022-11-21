@@ -204,24 +204,24 @@ const Migration: React.FC = () => {
 				) : (
 					<div className='flex flex-col items-center'>
 						<div className='md:max-w-4xl'>
-							<div className='mb-5 border-b border-text-100 pb-5'>
-								<Typography variant='xl' className='font-medium leading-10 text-text-200'>
+							<div className='mb-5 pb-5'>
+								<Typography variant='xl' className='font-bold text-text-100'>
 									Start Your Distribution
 								</Typography>
-								<Typography variant='p' className='mt-2 text-lg leading-normal text-text-100'>
+								<Typography className='mt-2 leading-normal text-text-200'>
 									Locked Bao holders have three options they can take with their locked positions. Any distribution will only begin once
 									manually initiated by the wallet owner. Once you start your distribution, please read the instructions and descriptions on
 									each option very carefully.
-									<br />
-									<br />
-									You can read more about this process and the math behind it in depth by checking out the historical{' '}
+								</Typography>
+								<Typography className='mt-2 leading-normal text-text-200'>
+									You can read more in-depth about this process by checking out{' '}
 									<a
 										className='font-medium hover:text-text-400'
 										href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
 										target='_blank'
 										rel='noreferrer'
 									>
-										BIP-14 (BAO Improvement Proposal #14)
+										BIP-14
 									</a>{' '}
 									on our governance forums. If you have any questions, please join{' '}
 									<a
