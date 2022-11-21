@@ -6,27 +6,58 @@ import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import type { Bao, Baov2, Swapper } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
 import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber, ethers } from 'ethers'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
-import { parseUnits, formatUnits } from 'ethers/lib/utils'
+import { BigNumber, ethers } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
-import useContract from '@/hooks/base/useContract'
-import type { Bao, Swapper } from '@/typechain/index'
 
 const Swapper: React.FC = () => {
-	const { chainId } = useWeb3React()
+	const { library, account, chainId } = useWeb3React()
 	const [inputVal, setInputVal] = useState('')
 
 	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.contracts.Bao[chainId].address)
 	const baov2Balance = useTokenBalance(Config.contracts.Baov2[chainId].address)
+	const swapper = useContract<Swapper>('Swapper', Config.contracts.Swapper[chainId].address)
+	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
+
+	const initialSwapperBalance = '166850344.226331394130869546'
+	const enabled = !!chainId && !!account && !!library && !!swapper && !!baoV2
+	const { data: swapperBalance, refetch } = useQuery(
+		['swapperBalance', { enabled }, providerKey(library, account, chainId)],
+		async () => {
+			if (!enabled) throw new Error('not enabled')
+			const _balance = await baoV2['balanceOf(address)'](swapper?.address)
+			return _balance
+		},
+		{
+			enabled,
+			placeholderData: BigNumber.from(1),
+		},
+	)
+
+	const _refetch = () => {
+		// # HACKY: skip this time around the eventloop lol
+		if (enabled) setTimeout(() => refetch(), 0)
+	}
+
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	console.log(swapperBalance && parseFloat(initialSwapperBalance) / parseFloat(formatUnits(swapperBalance)))
 
 	return (
 		<div className='flex flex-col items-center'>
@@ -107,7 +138,7 @@ const Swapper: React.FC = () => {
 							<Card.Header header='Migration Progress' />
 							<div className='m-auto w-[200px]'>
 								<CircularProgressbarWithChildren
-									value={50}
+									value={swapperBalance && parseFloat(initialSwapperBalance) / parseFloat(formatUnits(swapperBalance))}
 									strokeWidth={10}
 									styles={buildStyles({
 										strokeLinecap: 'butt',
@@ -123,7 +154,9 @@ const Swapper: React.FC = () => {
 												<Typography variant='sm' className='text-text-200'>
 													BAOv1 Redeemed
 												</Typography>
-												<Typography>50%</Typography>
+												<Typography>
+													{swapperBalance && (parseFloat(initialSwapperBalance) / parseFloat(formatUnits(swapperBalance))).toFixed(2)}%
+												</Typography>
 											</div>
 										</div>
 									</div>
