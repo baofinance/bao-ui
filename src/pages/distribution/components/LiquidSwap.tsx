@@ -143,7 +143,7 @@ const LiquidSwap: React.FC = () => {
 									strokeWidth={10}
 									styles={buildStyles({
 										strokeLinecap: 'butt',
-										pathColor: `#FFD84B`,
+										pathColor: `#CC9902`,
 									})}
 								>
 									<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
