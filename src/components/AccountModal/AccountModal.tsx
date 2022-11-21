@@ -1,5 +1,4 @@
-import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons'
-import { faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faCircleXmark, faClose, faExternalLinkAlt, faQuestionCircle, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 //import { utils } from 'ethers'
