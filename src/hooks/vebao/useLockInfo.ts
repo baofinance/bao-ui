@@ -8,7 +8,7 @@ import Config from '@/bao/lib/config'
 import useContract from '@/hooks/base/useContract'
 import type { VotingEscrow } from '@/typechain/index'
 
-type LockInfo = {
+export type LockInfo = {
 	balance: BigNumber
 	supply: BigNumber
 	totalSupply: BigNumber

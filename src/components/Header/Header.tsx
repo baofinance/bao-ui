@@ -115,10 +115,10 @@ const Header: FC = () => {
 						<AccountButton />
 
 						<Menu as='div' className='relative inline-block text-left'>
-							<Button size='sm' className='bg-primary-100 hover:bg-primary-300'>
+							<Menu.Button className='h-10 w-10 rounded border border-primary-300 bg-primary-200 hover:bg-primary-300'>
 								<span className='sr-only'>Open options</span>
 								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5' aria-hidden='true' />
-							</Button>
+							</Menu.Button>
 
 							<Transition
 								as={Fragment}
