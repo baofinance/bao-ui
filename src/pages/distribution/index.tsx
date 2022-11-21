@@ -1,20 +1,15 @@
 import PageHeader from '@/components/PageHeader'
-import Typography from '@/components/Typography'
 import { Tab } from '@headlessui/react'
 import { NextSeo } from 'next-seo'
 import React from 'react'
-import { isDesktop } from 'react-device-detect'
 import Migration from './components/Locked'
-import Swapper from './components/Swapper'
+import LiquidSwap from './components/LiquidSwap'
 
 const Distribution: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={`Distribution`} description={`Migrate your BAOv1 to BAOv2!`} />
 			<PageHeader title='Distribution' />
-			<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-4 text-center font-light tracking-tight'>
-				Migrate your BAOv1 to BAOv2!
-			</Typography>
 			<Tab.Group defaultIndex={0}>
 				<Tab.List className='m-auto flex w-fit flex-1 items-center justify-center gap-2 rounded bg-background-100 p-2'>
 					<Tab className='border-0 outline-0'>
@@ -42,7 +37,7 @@ const Distribution: React.FC = () => {
 				</Tab.List>
 				<Tab.Panels className='mt-4'>
 					<Tab.Panel>
-						<Swapper />
+						<LiquidSwap />
 					</Tab.Panel>
 					<Tab.Panel>
 						<Migration />
