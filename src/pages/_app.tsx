@@ -107,7 +107,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 										<SWRConfig
 											value={{
 												fetcher,
-													refreshInterval: 300000,
+												refreshInterval: 300000,
 											}}
 										>
 											{children}
