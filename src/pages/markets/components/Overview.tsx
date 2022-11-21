@@ -1,10 +1,7 @@
 import 'react-circular-progressbar/dist/styles.css'
 
-import { faInfinity } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import React from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import { isDesktop } from 'react-device-detect'
 
@@ -13,7 +10,7 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { getDisplayBalance, exponentiate, decimate } from '@/utils/numberFormat'
+import { exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export const Overview = () => {

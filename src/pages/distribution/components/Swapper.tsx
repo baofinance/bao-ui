@@ -23,6 +23,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
 
 const Swapper: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
@@ -34,7 +35,7 @@ const Swapper: React.FC = () => {
 	const swapper = useContract<Swapper>('Swapper', Config.contracts.Swapper[chainId].address)
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
-	const initialSwapperBalance = '166850344.226331394130869546'
+	const initialSwapperBalance = parseUnits('166850344.226331394130869546')
 	const enabled = !!chainId && !!account && !!library && !!swapper && !!baoV2
 	const { data: swapperBalance, refetch } = useQuery(
 		['swapperBalance', { enabled }, providerKey(library, account, chainId)],
@@ -49,6 +50,8 @@ const Swapper: React.FC = () => {
 		},
 	)
 
+	const claimedBao = swapperBalance && initialSwapperBalance.sub(swapperBalance)
+
 	const _refetch = () => {
 		// # HACKY: skip this time around the eventloop lol
 		if (enabled) setTimeout(() => refetch(), 0)
@@ -56,8 +59,6 @@ const Swapper: React.FC = () => {
 
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
-
-	console.log(swapperBalance && parseFloat(initialSwapperBalance) / parseFloat(formatUnits(swapperBalance)))
 
 	return (
 		<div className='flex flex-col items-center'>
@@ -138,11 +139,11 @@ const Swapper: React.FC = () => {
 							<Card.Header header='Migration Progress' />
 							<div className='m-auto w-[200px]'>
 								<CircularProgressbarWithChildren
-									value={swapperBalance && parseFloat(initialSwapperBalance) / parseFloat(formatUnits(swapperBalance))}
+									value={claimedBao && parseFloat(formatUnits(claimedBao.div(swapperBalance).mul(100)))}
 									strokeWidth={10}
 									styles={buildStyles({
 										strokeLinecap: 'butt',
-										pathColor: `green`,
+										pathColor: `#FFD84B`,
 									})}
 								>
 									<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
@@ -155,7 +156,7 @@ const Swapper: React.FC = () => {
 													BAOv1 Redeemed
 												</Typography>
 												<Typography>
-													{swapperBalance && (parseFloat(initialSwapperBalance) / parseFloat(formatUnits(swapperBalance))).toFixed(2)}%
+													{claimedBao && parseFloat(formatUnits(claimedBao.div(swapperBalance).mul(100))).toFixed(2)}%
 												</Typography>
 											</div>
 										</div>
