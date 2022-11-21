@@ -1,4 +1,4 @@
-import useGauges from '@/hooks/vebao/useGauges'
+import useGauges from '@/hooks/gauges/useGauges'
 import React, { PropsWithChildren } from 'react'
 import Context from './context'
 //import { ActiveSupportedGauge } from '@/bao/lib/types'
