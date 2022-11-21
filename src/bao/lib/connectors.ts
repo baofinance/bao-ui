@@ -1,25 +1,42 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { NetworkConnector } from '@web3-react/network-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { NetworkConnector } from '@web3-react/network-connector'
+
+const supportedChainIds = [1]
+
+// export const network = new NetworkConnector({
+//   defaultChainId: 1,
+//   urls: RPC,
+// })
+
+let network: NetworkConnector
 
 const RPC_URLS: { [chainId: number]: string } = {
-	1: 'https://rpc.ankr.com/eth',
+	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
 }
 
-export const injected = new InjectedConnector({ supportedChainIds: [1] })
+export const getNetworkConnector = (): NetworkConnector => {
+	if (network) {
+		return network
+	}
 
-export const network = new NetworkConnector({
-	urls: { 1: 'https://rpc.ankr.com/eth' },
-	defaultChainId: 1,
+	return (network = new NetworkConnector({
+		defaultChainId: 1,
+		urls: RPC_URLS,
+	}))
+}
+
+export const injected = new InjectedConnector({
+	supportedChainIds,
 })
 
 export const walletConnect = new WalletConnectConnector({
-	rpc: { 1: 'https://rpc.ankr.com/eth' },
+	rpc: RPC_URLS,
 })
 
 export const coinbaseWallet = new WalletLinkConnector({
-	url: 'https://rpc.ankr.com/eth',
+	url: RPC_URLS[1],
 	appName: 'bao-ui',
 	supportedChainIds: [1],
 })

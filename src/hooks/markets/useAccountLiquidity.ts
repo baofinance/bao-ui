@@ -1,85 +1,93 @@
-import Config from 'bao/lib/config'
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import BigNumber from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import { decimate } from 'utils/numberFormat'
+
+import Config from '@/bao/lib/config'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { decimate } from '@/utils/numberFormat'
+
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import { useWeb3React } from '@web3-react/core'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller } from '@/typechain/index'
 
 export type AccountLiquidity = {
-	netApy: number
-	usdSupply: number
-	usdBorrow: number
-	usdBorrowable: number
+	netApy: BigNumber
+	usdSupply: BigNumber
+	usdBorrow: BigNumber
+	usdBorrowable: BigNumber
 }
 
+// FIXME: this should be refactored to use ethers.BigNumber.. not JavaScript floats
 export const useAccountLiquidity = (): AccountLiquidity => {
 	const [accountLiquidity, setAccountLiquidity] = useState<undefined | AccountLiquidity>()
 
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 	const markets = useMarkets()
 	const supplyBalances = useSupplyBalances()
 	const borrowBalances = useBorrowBalances()
 	const { exchangeRates } = useExchangeRates()
 	const { prices: oraclePrices } = useMarketPrices()
+	const comptroller = useContract<Comptroller>('Comptroller')
 
 	const fetchAccountLiquidity = useCallback(async () => {
-		const compAccountLiqudity = await bao.getContract('comptroller').methods.getAccountLiquidity(account).call()
+		const compAccountLiqudity = await comptroller.getAccountLiquidity(account)
 
-		const prices: { [key: string]: number } = {}
+		const prices: { [key: string]: BigNumber } = {}
 		for (const key in oraclePrices) {
-			if (oraclePrices[key]) {
-				prices[key] = decimate(
-					oraclePrices[key],
-					new BigNumber(36).minus(Config.markets.find(market => market.marketAddresses[Config.networkId] === key).underlyingDecimals),
-				).toNumber()
-			}
+			const decimals = 36 - Config.markets.find(market => market.marketAddresses[chainId] === key).underlyingDecimals
+			prices[key] = decimate(oraclePrices[key], decimals)
 		}
 
-		const usdSupply = Object.entries(supplyBalances).reduce((prev: number, [, { address, balance }]) => {
-			return prev + balance * decimate(exchangeRates[address]).toNumber() * prices[address]
-		}, 0)
+		const usdSupply = Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
+			const supply = supplyBalances.find(b => b.address === addr)
+			return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(prices[addr])))
+		}, BigNumber.from(0))
 
-		const usdBorrow = Object.entries(borrowBalances).reduce((prev: number, [, { address, balance }]) => prev + balance * prices[address], 0)
+		const usdBorrow = Object.entries(borrowBalances).reduce((prev: BigNumber, [, { address, balance }]) => {
+			return prev.add(balance.mul(prices[address]))
+		}, BigNumber.from(0))
 
-		const supplyApy = markets.reduce(
-			(prev, { marketAddress, supplyApy }: ActiveSupportedMarket) =>
-				prev +
-				supplyBalances.find(balance => balance.address === marketAddress).balance *
-					decimate(exchangeRates[marketAddress]).toNumber() *
-					prices[marketAddress] *
-					supplyApy,
-			0,
-		)
+		const supplyApy = markets.reduce((prev, { marketAddress, supplyApy }: ActiveSupportedMarket) => {
+			const supplyBal = supplyBalances
+				.find(balance => balance.address === marketAddress)
+				.balance.mul(exchangeRates[marketAddress])
+				.mul(prices[marketAddress])
+				.mul(supplyApy)
+			return prev.add(supplyBal)
+		}, BigNumber.from(0))
 
-		const borrowApy = markets.reduce(
-			(prev: number, { marketAddress, supplyApy }: ActiveSupportedMarket) =>
-				prev + borrowBalances.find(balance => balance.address === marketAddress).balance * prices[marketAddress] * supplyApy,
-			0,
-		)
+		const borrowApy = markets.reduce((prev: BigNumber, { marketAddress, supplyApy }: ActiveSupportedMarket) => {
+			const apy = borrowBalances.find(balance => balance.address === marketAddress).balance
+			return prev.add(apy.mul(prices[marketAddress]).mul(supplyApy))
+		}, BigNumber.from(0))
 
 		const netApy =
-			supplyApy > borrowApy ? (supplyApy - borrowApy) / usdSupply : borrowApy > supplyApy ? (supplyApy - borrowApy) / usdBorrow : 0
+			supplyApy.gt(borrowApy) && !usdSupply.eq(0)
+				? supplyApy.sub(borrowApy).div(usdSupply)
+				: borrowApy.gt(supplyApy) && !usdBorrow.eq(0)
+				? supplyApy.sub(borrowApy).div(usdBorrow)
+				: BigNumber.from(0)
 
 		setAccountLiquidity({
 			netApy,
 			usdSupply,
 			usdBorrow,
-			usdBorrowable: decimate(compAccountLiqudity[1]).toNumber(),
+			usdBorrowable: compAccountLiqudity[1],
 		})
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [comptroller, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices, chainId])
 
 	useEffect(() => {
-		if (!(bao && account && markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices)) return
+		if (!(markets && supplyBalances && borrowBalances && exchangeRates && oraclePrices && comptroller)) return
 		fetchAccountLiquidity()
-	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices])
+	}, [transactions, bao, account, markets, supplyBalances, borrowBalances, exchangeRates, oraclePrices, fetchAccountLiquidity, comptroller])
 
 	return accountLiquidity
 }

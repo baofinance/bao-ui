@@ -1,11 +1,14 @@
 import { useWeb3React } from '@web3-react/core'
-import { getFarms, getMasterChefContract, getTotalLPWethValue, getWethContract } from 'bao/utils'
-import BigNumber from 'bignumber.js'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import { getContract } from 'utils/erc20'
-import { provider } from 'web3-core'
-import useBao from '../base/useBao'
+
+import { getTotalLPWethValue } from '@/bao/utils'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import useFarms from '@/hooks/farms/useFarms'
+
+import useContract from '@/hooks/base/useContract'
+import type { Masterchef, Weth } from '@/typechain/index'
+import { Erc20__factory } from '@/typechain/factories'
 
 export interface StakedValue {
 	tokenAmount: BigNumber
@@ -17,28 +20,28 @@ export interface StakedValue {
 
 const useAllStakedValue = (): StakedValue[] => {
 	const [balances, setBalance] = useState([] as Array<StakedValue>)
-	const { account } = useWeb3React<provider>()
-	const bao = useBao()
-	const farms = getFarms(bao)
-	const masterChefContract = getMasterChefContract(bao)
-	const wethContract = getWethContract(bao)
+	const { account, library } = useWeb3React()
+	const farms = useFarms()
+	const masterChefContract = useContract<Masterchef>('Masterchef')
+	const wethContract = useContract<Weth>('Weth')
 	const { transactions } = useTransactionProvider()
 
 	const fetchAllStakedValue = useCallback(async () => {
 		const balances: Array<StakedValue> = await Promise.all(
-			farms.map(({ pid, lpContract, tokenAddress, tokenDecimals }) =>
-				getTotalLPWethValue(masterChefContract, wethContract, lpContract, getContract(bao, tokenAddress), tokenDecimals, pid),
-			),
+			farms.map(({ pid, lpContract, tokenAddress, tokenDecimals }) => {
+				const farmContract = Erc20__factory.connect(tokenAddress, library)
+				return getTotalLPWethValue(masterChefContract, wethContract, lpContract, farmContract, tokenDecimals, pid)
+			}),
 		)
 
 		setBalance(balances)
-	}, [account, masterChefContract, bao])
+	}, [masterChefContract, library, farms, wethContract])
 
 	useEffect(() => {
-		if (account && masterChefContract && bao) {
+		if (account && masterChefContract && library) {
 			fetchAllStakedValue()
 		}
-	}, [account, transactions, masterChefContract, setBalance, bao])
+	}, [fetchAllStakedValue, account, transactions, masterChefContract, setBalance, library])
 
 	return balances
 }

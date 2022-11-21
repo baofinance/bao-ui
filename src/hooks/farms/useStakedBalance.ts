@@ -1,33 +1,27 @@
 import { useWeb3React } from '@web3-react/core'
-import { getMasterChefContract, getStaked } from 'bao/utils'
-import { BigNumber } from 'bignumber.js'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import useBao from '../base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Masterchef } from '@/typechain/index'
 
 const useStakedBalance = (pid: number) => {
-	const [balance, setBalance] = useState(new BigNumber(0))
+	const [balance, setBalance] = useState(BigNumber.from(0))
 	const { account } = useWeb3React()
-	const bao = useBao()
-	const masterChefContract = getMasterChefContract(bao)
-	const { transactions } = useTransactionProvider()
-
-	let userBalance
+	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	const fetchBalance = useCallback(async () => {
-		BigNumber.config({ DECIMAL_PLACES: 18 })
-		const balance = await getStaked(masterChefContract, pid, account)
-		userBalance = new BigNumber(balance)
-		setBalance(userBalance.decimalPlaces(18))
-	}, [account, pid, bao])
+		const { amount } = await masterChefContract.userInfo(pid, account)
+		//setBalance(userBalance.decimalPlaces(18))
+		setBalance(amount) // FIXME: this should handle decimals and formatting etc
+	}, [pid, account, masterChefContract])
 
 	useEffect(() => {
-		if (account && bao) {
-			fetchBalance()
-		}
-	}, [account, pid, setBalance, transactions, bao])
+		if (!account || !masterChefContract) return
+		fetchBalance()
+	}, [fetchBalance, account, masterChefContract])
 
-	return balance.decimalPlaces(18)
+	//return balance.decimalPlaces(18)
+	return balance // FIXME: this should handle decimals and formatting etc
 }
 
 export default useStakedBalance

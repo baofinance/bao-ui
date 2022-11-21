@@ -1,55 +1,62 @@
 import { useWeb3React } from '@web3-react/core'
-import { Bao } from 'bao'
-import Config from 'bao/lib/config'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { providerKey } from '@/utils/index'
+import { Bao } from '@/bao/Bao'
+import { getNetworkConnector } from '@/bao/lib/connectors'
+import { useBlock } from './useBlock'
 
 export interface BaoContext {
-	bao?: typeof Bao
+	bao: Bao
+	block: number
 }
 
 interface BaoProviderProps {
-	children: any
+	children: React.ReactNode
 }
 
-export const Context = createContext<BaoContext>({
-	bao: undefined,
+export const BaoContext = createContext<BaoContext>({
+	bao: null,
+	block: 0,
 })
 
-declare global {
-	interface Window {
-		baosauce: any
-		bao: any
-		ethereum?: any
-	}
-}
-
 const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }) => {
-	const wallet = useWeb3React()
-	const { library }: any = wallet
-	const [bao, setBao] = useState<any>()
+	const { library, account, chainId, active, activate, error } = useWeb3React()
 
-	// if (library) library.on('chainChanged', () => window.location.reload())
+	const triedEager = useEagerConnect()
 
-	window.bao = bao
+	useInactiveListener(!triedEager)
 
+	const block = useBlock()
+
+	// always activate the http rpc backup
 	useEffect(() => {
-		// const { ethereum: windowEth } = window
-		// if (windowEth && !ethereum) {
-		// 	// Check if user has connected to the webpage before
-		// 	const mmWeb3 = new Web3Provider(windowEth)
-		// 	mmWeb3.eth.getAccounts().then((accounts: string[]) => {
-		// 		if (accounts.length > 0) activate('injected')
-		// 	})
-		// }
+		if (triedEager && !active && !error) {
+			activate(getNetworkConnector())
+		}
+	}, [activate, active, triedEager, error])
 
-		const baoLib = new Bao(library, Config.networkId, {
-			ethereumNodeTimeout: 10000,
-		})
-		setBao(baoLib)
-		window.baosauce = baoLib
-	}, [library])
+	const { data: bao } = useQuery(
+		['@/contexts/BaoProvider/bao', providerKey(library, account, chainId)],
+		async () => {
+			return new Bao(library)
+		},
+		{
+			enabled: !!library && active && !!chainId,
+			staleTime: Infinity,
+			cacheTime: Infinity,
+			networkMode: 'always',
+		},
+	)
 
-	return <Context.Provider value={{ bao }}>{children}</Context.Provider>
+	// Wait for a valid baolib and web3 library with chain connection
+	if (bao && library && chainId) {
+		return <BaoContext.Provider value={{ bao, block }}>{children}</BaoContext.Provider>
+	} else {
+		return null
+	}
 }
 
 export default BaoProvider

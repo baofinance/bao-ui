@@ -2,76 +2,102 @@ import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-bran
 import { faBolt, faBook, faBug, faComments } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
-import styled from 'styled-components'
+import { isDesktop } from 'react-device-detect'
 import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {
 	return (
-		<StyledNav>
+		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm'}`}>
 			<Tooltipped content='Discord' placement='top'>
-				<StyledLink target='_blank' href='https://discord.gg/BW3P62vJXT' aria-label='Discord'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://discord.gg/BW3P62vJXT'
+					aria-label='Discord'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faDiscord} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Twitter' placement='top'>
-				<StyledLink target='_blank' href='https://twitter.com/BaoCommunity' aria-label='Twitter'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://twitter.com/BaoCommunity'
+					aria-label='Twitter'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faTwitter} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Medium' placement='top'>
-				<StyledLink target='_blank' href='https://medium.com/baomunity' aria-label='Medium'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://medium.com/baomunity'
+					aria-label='Medium'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faMedium} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Governance Forum' placement='top'>
-				<StyledLink target='_blank' href='https://gov.bao.finance/' aria-label='Governance Forum'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://gov.bao.finance/'
+					aria-label='Governance Forum'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faComments} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Snapshot' placement='top'>
-				<StyledLink target='_blank' href='https://snapshot.page/#/baovotes.eth' aria-label='Snapshot'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://snapshot.org/#/baovotes.eth/'
+					aria-label='Snapshot'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faBolt} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Documentation' placement='top'>
-				<StyledLink target='_blank' href='https://info.bao.finance/docs/' aria-label='Documentation'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://docs.bao.finance/'
+					aria-label='Documentation'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faBook} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='GitHub' placement='top'>
-				<StyledLink target='_blank' href='https://github.com/baofinance' aria-label='GitHub'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://github.com/baofinance'
+					aria-label='GitHub'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faGithub} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
 			<Tooltipped content='Bug Bounty Program' placement='top'>
-				<StyledLink target='_blank' href='https://www.immunefi.com/bounty/baofinance' aria-label='Bug Bounty Program'>
+				<a
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					target='_blank'
+					href='https://www.immunefi.com/bounty/baofinance'
+					aria-label='Bug Bounty Program'
+					rel='noreferrer'
+				>
 					<FontAwesomeIcon icon={faBug} />
-				</StyledLink>
+				</a>
 			</Tooltipped>
-		</StyledNav>
+		</div>
 	)
 }
-
-const StyledNav = styled.nav`
-	align-items: center;
-	display: flex;
-	font-size: 1.5rem;
-`
-
-const StyledLink = styled.a`
-	color: ${props => props.theme.color.text[100]};
-	padding-left: ${props => props.theme.spacing[3]}px;
-	padding-right: ${props => props.theme.spacing[3]}px;
-	text-decoration: none;
-
-	&:hover {
-		color: ${props => props.theme.color.text[300]};
-	}
-
-	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
-		padding-left: ${props => props.theme.spacing[2]}px;
-		padding-right: ${props => props.theme.spacing[2]}px;
-	}
-`
 
 export default Nav

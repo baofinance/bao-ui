@@ -1,9 +1,9 @@
-import { Bao } from 'bao'
-import { Context } from 'contexts/BaoProvider'
+import { Bao } from '@/bao/Bao'
 import { useContext } from 'react'
+import { BaoContext } from '@/contexts/BaoProvider'
 
 const useBao = (): Bao => {
-	const { bao }: any = useContext(Context)
+	const { bao }: BaoContext = useContext(BaoContext)
 	return bao
 }
 

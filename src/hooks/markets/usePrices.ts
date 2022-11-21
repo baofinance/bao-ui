@@ -1,13 +1,15 @@
-import Config from 'bao/lib/config'
-import fetcher from 'bao/lib/fetcher'
-import { SWR } from 'bao/lib/types'
-import BigNumber from 'bignumber.js'
-import useBlock from 'hooks/base/useBlock'
+import Config from '@/bao/lib/config'
+import fetcher from '@/bao/lib/fetcher'
+import { SWR } from '@/bao/lib/types'
+import MultiCall from '@/utils/multicall'
+import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
+import { BigNumber } from 'ethers'
 import useSWR from 'swr'
-import MultiCall from 'utils/multicall'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
+import useContract from '@/hooks/base/useContract'
+import type { MarketOracle } from '@/typechain/index'
 
 type Prices = {
 	prices: {
@@ -19,7 +21,7 @@ type Prices = {
 
 type MarketPrices = {
 	prices: {
-		[key: string]: number
+		[key: string]: BigNumber
 	}
 }
 
@@ -49,15 +51,17 @@ export const usePrices = (): SWR & Prices => {
 export const useMarketPrices = (): MarketPrices => {
 	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const [prices, setPrices] = useState<undefined | { [key: string]: number }>()
-	const block = useBlock()
+	const [prices, setPrices] = useState<{ [key: string]: BigNumber } | undefined>()
+	const oracle = useContract<MarketOracle>('MarketOracle')
+
+	const { chainId } = useWeb3React()
 
 	const fetchPrices = useCallback(async () => {
-		const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
+		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 		const multiCallContext = MultiCall.createCallContext([
 			{
 				ref: 'MarketOracle',
-				contract: bao.getContract('marketOracle'),
+				contract: oracle,
 				calls: tokens.map(token => ({
 					ref: token,
 					method: 'getUnderlyingPrice',
@@ -71,17 +75,17 @@ export const useMarketPrices = (): MarketPrices => {
 			data['MarketOracle'].reduce(
 				(_prices: { [key: string]: { usd: number } }, result: any) => ({
 					..._prices,
-					[result.ref]: new BigNumber(result.values[0].hex).toNumber(),
+					[result.ref]: result.values[0],
 				}),
 				{},
 			),
 		)
-	}, [transactions, bao])
+	}, [bao, oracle, chainId])
 
 	useEffect(() => {
-		if (!bao) return
+		if (!bao || !oracle) return
 		fetchPrices()
-	}, [transactions, bao, block])
+	}, [fetchPrices, transactions, bao, oracle])
 
 	return {
 		prices,

@@ -1,6 +1,7 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import Config from 'bao/lib/config'
-import BigNumber from 'bignumber.js'
+//import { BigNumber } from 'ethers'
+
+import Config from '@/bao/lib/config'
 
 // TODO- Move Apollo Clients to provider so that the chain can be switched
 const clients: any = Object.keys(Config.subgraphs).reduce((prev, current) => {
@@ -44,7 +45,7 @@ const getPriceHistory = async (tokenAddress: string, networkId = 1): Promise<any
 	await _querySubgraph(_getPriceHistoryQuery(tokenAddress), 'sushiExchange', networkId)
 
 // This is janky, will remove once the sushi subgraph syncs USD prices for most of our tokens
-const getPriceFromPair = async (wethPrice: BigNumber, tokenAddress: string, networkId = 1) => {
+const getPriceFromPair = async (wethPrice: number, tokenAddress: string, networkId = 1) => {
 	const data: any = await _querySubgraph(_getPriceFromPair(tokenAddress.toLowerCase()), 'sushiExchange', networkId)
 	if (!data.token) return
 
@@ -55,14 +56,14 @@ const getPriceFromPair = async (wethPrice: BigNumber, tokenAddress: string, netw
 
 	const wethPerToken = quotePair.token0.symbol.toLowerCase().includes('eth') ? quotePair.token0Price : quotePair.token1Price
 
-	return wethPrice.times(wethPerToken)
+	return wethPrice * wethPerToken
 }
 
 const getPriceFromPairMultiple = async (
-	wethPrice: BigNumber,
+	wethPrice: number,
 	tokenAddresses: string[],
 	networkId = 1,
-): Promise<Array<{ address: string; price: BigNumber }>> => {
+): Promise<Array<{ address: string; price: number }>> => {
 	const data: any = await _querySubgraph(
 		_getPriceFromPairMultiple(tokenAddresses.map(tokenAddress => tokenAddress.toLowerCase())),
 		'sushiExchange',
@@ -81,15 +82,15 @@ const getPriceFromPairMultiple = async (
 
 		prices.push({
 			address: token.id,
-			price: wethPrice.times(wethPerToken),
+			price: wethPrice * wethPerToken,
 		})
 	})
 	return prices
 }
 
-const getPrice = async (tokenAddress: string, networkId = 1): Promise<BigNumber> => {
+const getPrice = async (tokenAddress: string, networkId = 1): Promise<number> => {
 	const data: any = await getPriceHistory(tokenAddress, networkId)
-	return data.tokens[0] && new BigNumber(data.tokens[0].dayData[0].priceUSD)
+	return data.tokens[0] && parseFloat(data.tokens[0].dayData[0].priceUSD)
 }
 
 const getBaoBurned = async (): Promise<any> => {
@@ -109,150 +110,151 @@ const getMarketsInfo = async (): Promise<any> => await _querySubgraph(_getMarket
 
 const _getPriceHistoryQuery = (tokenAddress: string) =>
 	`
-  {
-    tokens(where: {id:"${tokenAddress}"}) {
-      id
-      symbol
-      name
-      dayData(orderBy:date, orderDirection:desc) {
-        date
-        priceUSD
-      }
-    }
-  }
-  `
+	{
+	tokens(where: {id:"${tokenAddress}"}) {
+		id
+		symbol
+		name
+		dayData(orderBy:date, orderDirection:desc) {
+			date
+			priceUSD
+			}
+		}
+	}
+`
 
 const _getPriceHistoryQueryMultiple = (tokenAddresses: string[], first = 100) =>
 	`
-  {
-    tokens(where: {id_in:["${tokenAddresses.map(symbol => symbol.toLowerCase()).join('","')}"]}) {
-      id
-      name
-      symbol
-      decimals
-      dayData(orderBy:date, orderDirection:desc, first: ${first}) {
-        date
-        priceUSD
-      }
-    }
-  }
-  `
+	{
+		tokens(where: {id_in:["${tokenAddresses.map(symbol => symbol.toLowerCase()).join('","')}"]}) {
+			id
+			name
+			symbol
+			decimals
+			dayData(orderBy:date, orderDirection:desc, first: ${first}) {
+				date
+				priceUSD
+			}
+		}
+	}
+`
 
 const _getPriceFromPair = (tokenAddress: string) =>
 	`
-  {
-    token(id:"${tokenAddress}"){
-      ${['basePairs', 'quotePairs'].map(
+	{
+		token(id:"${tokenAddress}"){
+			${['basePairs', 'quotePairs'].map(
 				prefix => `
-          ${prefix} {
-            token0 {
-              symbol
-            },
-            token1 {
-              symbol
-            }
-            token0Price,
-            token1Price
-          }
-          `,
+				${prefix} {
+					token0 {
+						symbol
+					},
+					token1 {
+						symbol
+					}
+					token0Price,
+					token1Price
+				}
+			`,
 			)}
-    }
-  }
-  `
+		}
+	}
+`
 
 const _getPriceFromPairMultiple = (tokenAddresses: string[]) => {
 	return `
-  {
-    tokens(where: {id_in:[${tokenAddresses.map(address => `"${address}"`).join(',')}]}){
-      id,
-      ${['basePairs', 'quotePairs'].map(
+		{
+			tokens(where: {id_in:[${tokenAddresses.map(address => `"${address}"`).join(',')}]}) {
+			id,
+			${['basePairs', 'quotePairs'].map(
 				prefix => `
-          ${prefix} {
-            token0 {
-              symbol
-            },
-            token1 {
-              symbol
-            }
-            token0Price,
-            token1Price
-          }
-          `,
+				${prefix} {
+					token0 {
+						symbol
+					},
+					token1 {
+						symbol
+					}
+					token0Price,
+					token1Price
+					}
+				`,
 			)}
-    }
-  }
-  `
+		}
+	}
+`
 }
 
 const _getBaoBurnQuery = () =>
 	`
-  {
-    burn(id:"0"){
-      burnedTokens,
-      eventCount,
-    }
-  }
-  `
+	{
+		burn(id:"0"){
+			burnedTokens,
+			eventCount,
+		}
+	}
+`
 
 const _getBaoSupplyQuery = () =>
 	`
-  {
-    tokenStats(id:"0"){
-      supply
-    }
-  }
-  `
+	{
+		tokenStats(id:"0"){
+			supply
+		}
+	}
+`
 
 const _getMarketQuery = (tokenAddress: string) =>
 	`
-  {
-    market(id:"${tokenAddress.toLowerCase()}"){
-      cash,
-      symbol,
-      collateralFactor,
-      exchangeRate,
-      interestRateModelAddress,
-      borrowRate,
-      supplyRate,
-      numberOfBorrowers,
-      numberOfSuppliers,
-      totalBorrows,
-      totalSupply,
-      reserves,
-      underlyingSymbol,
-      accrualBlockNumber,
-      reserveFactor,
-      underlyingPriceUSD,
-      underlyingDecimals
-    }
-  }
-  `
+	{
+		market(id:"${tokenAddress.toLowerCase()}"){
+			cash,
+			symbol,
+			collateralFactor,
+			exchangeRate,
+			interestRateModelAddress,
+			borrowRate,
+			supplyRate,
+			numberOfBorrowers,
+			numberOfSuppliers,
+			totalBorrows,
+			totalSupply,
+			reserves,
+			underlyingSymbol,
+			accrualBlockNumber,
+			reserveFactor,
+			underlyingPriceUSD,
+			underlyingDecimals
+		}
+	}
+`
 
 const _getMarketsQuery = () =>
 	`
-  {
-    markets {
-      cash,
-      symbol,
-      collateralFactor,
-      exchangeRate,
-      interestRateModelAddress,
-      borrowRate,
-      supplyRate,
-      numberOfBorrowers,
-      numberOfSuppliers,
-      totalBorrows,
-      totalSupply,
-      reserves,
-      underlyingSymbol,
-      accrualBlockNumber,
-      reserveFactor,
-      underlyingPriceUSD,
-      underlyingDecimals
-    }
-  }
-  `
+	{
+		markets {
+			cash,
+			symbol,
+			collateralFactor,
+			exchangeRate,
+			interestRateModelAddress,
+			borrowRate,
+			supplyRate,
+			numberOfBorrowers,
+			numberOfSuppliers,
+			totalBorrows,
+			totalSupply,
+			reserves,
+			underlyingSymbol,
+			accrualBlockNumber,
+			reserveFactor,
+			underlyingPriceUSD,
+			underlyingDecimals
+		}
+	}
+`
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
 	getPriceHistory,
 	getPriceHistoryMultiple,

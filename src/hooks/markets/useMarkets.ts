@@ -1,9 +1,10 @@
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import { Context, MarketsContext } from 'contexts/Markets'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { Context, MarketsContext } from '@/contexts/Markets'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useWeb3React } from '@web3-react/core'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller } from '@/typechain/index'
 
 export const useMarkets = (): ActiveSupportedMarket[] | undefined => {
 	const { markets }: MarketsContext = useContext(Context)
@@ -12,23 +13,20 @@ export const useMarkets = (): ActiveSupportedMarket[] | undefined => {
 
 export const useAccountMarkets = (): ActiveSupportedMarket[] | undefined => {
 	const { transactions } = useTransactionProvider()
-	const bao = useBao()
 	const markets = useMarkets()
 	const { account } = useWeb3React()
 	const [accountMarkets, setAccountMarkets] = useState<ActiveSupportedMarket[] | undefined>()
+	const comptroller = useContract<Comptroller>('Comptroller')
 
 	const fetchAccountMarkets = useCallback(async () => {
-		const comptroller = bao.getContract('comptroller')
-		const _accountMarkets = await comptroller.methods.getAssetsIn(account).call()
-
+		const _accountMarkets = await comptroller.getAssetsIn(account)
 		setAccountMarkets(_accountMarkets.map((address: string) => markets.find(({ marketAddress }) => marketAddress === address)))
-	}, [transactions, bao, markets, account])
+	}, [markets, account, comptroller])
 
 	useEffect(() => {
-		if (!(bao && markets && account)) return
-
+		if (!(markets && account && comptroller)) return
 		fetchAccountMarkets()
-	}, [transactions, bao, markets, account])
+	}, [transactions, markets, account, fetchAccountMarkets, comptroller])
 
 	return accountMarkets
 }

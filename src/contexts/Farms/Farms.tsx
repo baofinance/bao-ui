@@ -1,16 +1,38 @@
-import { getFarms } from 'bao/utils'
-import useBao from 'hooks/base/useBao'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useMemo } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import Config from '@/bao/lib/config'
+import { Uni_v2_lp__factory, Erc20__factory, Bao__factory } from '@/typechain/factories'
+
 import Context from './context'
 
 interface FarmsProps {
-	children: any
+	children: React.ReactNode
 }
 
 const Farms: React.FC<PropsWithChildren<FarmsProps>> = ({ children }) => {
-	const bao = useBao()
+	const { chainId, library, account } = useWeb3React()
 
-	const farms = getFarms(bao)
+	const farms = useMemo(() => {
+		if (!library || !chainId) return []
+		return Config.farms.map(pool => {
+			const signerOrProvider = account ? library.getSigner() : library
+			const lpAddress = pool.lpAddresses[chainId]
+			const lpContract = Uni_v2_lp__factory.connect(lpAddress, signerOrProvider)
+			const tokenAddress = pool.tokenAddresses[chainId]
+			const tokenContract = Erc20__factory.connect(lpAddress, signerOrProvider)
+			return Object.assign(pool, {
+				id: pool.symbol,
+				lpToken: pool.symbol,
+				lpAddress,
+				lpTokenAddress: lpAddress,
+				lpContract,
+				tokenAddress,
+				tokenContract,
+				earnToken: 'BAO',
+				earnTokenAddress: Config.contracts.Bao[chainId].address,
+			})
+		})
+	}, [library, account, chainId])
 
 	return (
 		<Context.Provider

@@ -1,4 +1,4 @@
-const getWithdrawalPenalty = (blocksSince: any) => {
+const getWithdrawalPenalty = (blocksSince: number) => {
 	return blocksSince <= 0
 		? 0.25
 		: blocksSince <= 274

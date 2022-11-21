@@ -1,6 +1,7 @@
-import { ContractCallContext, ContractCallResults } from 'ethereum-multicall'
+import { ContractCallResults } from 'ethereum-multicall'
 import _ from 'lodash'
-import { Contract } from 'web3-eth-contract'
+import { BigNumber as BN } from 'ethers'
+import { Contract } from '@ethersproject/contracts'
 
 interface ContractCalls {
 	contract: Contract
@@ -14,12 +15,12 @@ interface ContractCall {
 	params?: Array<any>
 }
 
-const createCallContext = (contracts: ContractCalls[]): ContractCallContext[] =>
+const createCallContext = (contracts: ContractCalls[]): any[] =>
 	_.map(contracts, (contract: ContractCalls) => {
 		return {
 			reference: contract.ref,
-			contractAddress: contract.contract.options.address,
-			abi: contract.contract.options.jsonInterface,
+			contractAddress: contract.contract.address,
+			abi: JSON.parse(contract.contract.interface.format('json') as string),
 			calls: _.map(contract.calls, call => ({
 				reference: call.ref,
 				methodName: call.method,
@@ -31,13 +32,28 @@ const createCallContext = (contracts: ContractCalls[]): ContractCallContext[] =>
 const parseCallResults = (call: ContractCallResults): any => {
 	const result: any = {}
 	_.each(Object.keys(call.results), key => {
-		result[key] = _.map(call.results[key].callsReturnContext, returnValue => ({
-			method: returnValue.methodName,
-			ref: returnValue.reference,
-			values: returnValue.returnValues,
-		}))
+		result[key] = _.map(call.results[key].callsReturnContext, returnValue => {
+			const values = returnValue.returnValues.map(x => {
+				//if (x.type === 'BigNumber') {
+				//return new BigNumber(BN.from(x).toString())
+				//} else {
+				//return x
+				//}
+				if (x.type === 'BigNumber') {
+					return BN.from(x)
+				} else {
+					return x
+				}
+			})
+			return {
+				method: returnValue.methodName,
+				ref: returnValue.reference,
+				values,
+			}
+		})
 	})
 	return result
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default { createCallContext, parseCallResults }

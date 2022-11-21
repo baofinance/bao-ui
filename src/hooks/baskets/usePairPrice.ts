@@ -1,28 +1,36 @@
-import { ActiveSupportedBasket } from '../../bao/lib/types'
+import Config from '@/bao/lib/config'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import { BigNumber } from 'bignumber.js'
-import useBao from '../base/useBao'
-import { getWethPriceLink } from '../../bao/utils'
+import { useWeb3React } from '@web3-react/core'
+
+import { ActiveSupportedBasket } from '../../bao/lib/types'
+import { getOraclePrice } from '@/bao/utils'
+import useBao from '@/hooks/base/useBao'
+import useContract from '@/hooks/base/useContract'
+import type { Uni_v2_lp, Chainoracle } from '@/typechain/index'
 
 const usePairPrice = (basket: ActiveSupportedBasket) => {
-	const [price, setPrice] = useState<BigNumber | undefined>()
+	const [price, setPrice] = useState<BigNumber>(BigNumber.from(1))
 	const bao = useBao()
 
-	const fetchPairPrice = useCallback(async () => {
-		const lpContract = bao.getNewContract('uni_v2_lp.json', basket.lpAddress)
+	const { chainId } = useWeb3React()
 
-		const wethPrice = await getWethPriceLink(bao)
-		const reserves = await lpContract.methods.getReserves().call()
+	const lpContract = useContract<Uni_v2_lp>('Uni_v2_lp', basket ? basket.lpAddress : '0x000000000000000000000000000000000000dead')
+	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
+
+	const fetchPairPrice = useCallback(async () => {
+		const wethPrice = await getOraclePrice(bao, wethOracle)
+		const reserves = await lpContract.getReserves()
 
 		// This won't always work. Should check which side of the LP the basket token is on.
-		setPrice(wethPrice.times(new BigNumber(reserves[1]).div(reserves[0])))
-	}, [basket, bao])
+		const _price = wethPrice.mul(reserves[0].div(reserves[1]))
+		setPrice(_price)
+	}, [bao, lpContract, wethOracle])
 
 	useEffect(() => {
-		if (!(basket && bao)) return
-
+		if (!basket || !bao || !lpContract || !wethOracle) return
 		fetchPairPrice()
-	}, [basket, bao])
+	}, [fetchPairPrice, basket, bao, lpContract, wethOracle])
 
 	return price
 }

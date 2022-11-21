@@ -1,37 +1,30 @@
-import { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import Web3 from 'web3'
-// import debounce from 'debounce'
+import { useContext, useRef } from 'react'
+import { BaoContext } from '@/contexts/BaoProvider'
 
-const useBlock = () => {
-	const [block, setBlock] = useState(0)
-	const { library } = useWeb3React()
-
-	useEffect(() => {
-		// const setBlockDebounced = debounce(setBlock, 300)
-		if (!library) return
-		const web3 = new Web3(library)
-
-		// const subscription = new Web3(ethereum).eth.subscribe(
-		//   'newBlockHeaders',
-		//   (error, result) => {
-		//     if (!error) {
-		//       setBlockDebounced(result.number)
-		//     }
-		//   },
-		// )
-
-		const interval = setInterval(async () => {
-			const latestBlockNumber = await web3.eth.getBlockNumber()
-			if (block !== latestBlockNumber) {
-				setBlock(latestBlockNumber)
-			}
-		}, 1000)
-
-		return () => clearInterval(interval)
-	}, [library])
-
+const useBlock = (): number => {
+	const { block } = useContext(BaoContext)
 	return block
+}
+
+/**
+ * #### Summary
+ * A hook that invokes an update callback function based on update options and ethers network state (i.e. block number)
+ *
+ * @param interval The number of blocks that should pass before calling the callback
+ * @param callback Function to call when the proper number of blocks have passed
+ * @param allowUpdate Switch the callback interval on or off
+ */
+export const useBlockUpdater = (callback: (() => void) | (() => Promise<void>), interval = 1, allowUpdate = true): void => {
+	const block = useBlock()
+	const updateNumberRef = useRef<number>(block)
+	if (allowUpdate) {
+		// number that only increases every (X * options.blockNumberInterval) blocks
+		const blockNumberFilter = block > 0 ? Math.floor(block / (interval ?? 1)) : undefined
+		if (blockNumberFilter && blockNumberFilter !== updateNumberRef.current) {
+			updateNumberRef.current = blockNumberFilter
+			callback()
+		}
+	}
 }
 
 export default useBlock

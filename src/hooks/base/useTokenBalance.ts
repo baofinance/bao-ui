@@ -1,33 +1,64 @@
-import BigNumber from 'bignumber.js'
-import { useCallback, useEffect, useState } from 'react'
+import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
-import { getBalance } from 'utils/erc20'
-import useBao from './useBao'
-import useTransactionProvider from './useTransactionProvider'
+import { BigNumber } from 'ethers'
+import { useQuery } from '@tanstack/react-query'
+import useContract from '@/hooks/base/useContract'
+import { useBlockUpdater } from './useBlock'
+import { useTxReceiptUpdater } from './useTransactionProvider'
+import { providerKey } from '@/utils/index'
+import type { Erc20 } from '@/typechain/index'
+
+export const useEthBalance = () => {
+	const { library, chainId, account } = useWeb3React<Web3Provider>()
+	const enabled = !!library && !!chainId && !!account
+	const { data: balance, refetch } = useQuery(
+		['@/hooks/base/useEthBalance', { enabled }, providerKey(library, account, chainId)],
+		async () => {
+			return await library.getBalance(account)
+		},
+		{
+			enabled,
+			placeholderData: BigNumber.from(0),
+		},
+	)
+
+	const _refetch = () => {
+		// # HACKY: skip this time around the eventloop lol
+		if (enabled) setTimeout(() => refetch(), 0)
+	}
+
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return balance ?? BigNumber.from(0)
+}
 
 const useTokenBalance = (tokenAddress: string) => {
-	const [balance, setBalance] = useState(new BigNumber(0))
-	const { account } = useWeb3React()
-	const bao = useBao()
-	const { transactions } = useTransactionProvider()
+	const { library, chainId, account } = useWeb3React<Web3Provider>()
+	const contract = useContract<Erc20>('Erc20', tokenAddress)
+	const enabled = !!chainId && !!account && !!contract
+	const { data: balance, refetch } = useQuery(
+		['@/hooks/base/useTokenBalance', { enabled }, providerKey(library, account, chainId), tokenAddress],
+		async () => {
+			if (!enabled) throw new Error('not enabled')
+			const _balance = await contract.balanceOf(account)
+			return _balance
+		},
+		{
+			enabled,
+			placeholderData: BigNumber.from(0),
+		},
+	)
 
-	const fetchBalance = useCallback(async () => {
-		if (tokenAddress === 'ETH') {
-			const ethBalance = await bao.web3.eth.getBalance(account)
-			return setBalance(new BigNumber(ethBalance))
-		}
+	const _refetch = () => {
+		// # HACKY: skip this time around the eventloop lol
+		if (enabled) setTimeout(() => refetch(), 0)
+	}
 
-		const balance = await getBalance(bao, tokenAddress, account)
-		setBalance(new BigNumber(balance))
-	}, [transactions, account, bao, tokenAddress])
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
-	useEffect(() => {
-		if (account && bao && tokenAddress) {
-			fetchBalance()
-		}
-	}, [transactions, account, bao, setBalance, tokenAddress])
-
-	return balance
+	return balance ?? BigNumber.from(0)
 }
 
 export default useTokenBalance

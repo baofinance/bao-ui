@@ -1,26 +1,29 @@
-import BigNumber from 'bignumber.js'
-import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { useCallback, useEffect, useState } from 'react'
+
 import useBlock from './useBlock'
 
-const useBlockDiff = (userInfo: any) => {
-	const { account, library } = useWeb3React()
+interface BlockDiffOptions {
+	firstDepositBlock: number
+	lastWithdrawBlock: number
+}
+
+const useBlockDiff = (options: BlockDiffOptions) => {
+	const { library } = useWeb3React()
 	const block = useBlock()
-	const [blockDiff, setBlockDiff] = useState<number | undefined>()
+	const [blockDiff, setBlockDiff] = useState<number>(0)
 
 	const fetchBlockDiff = useCallback(async () => {
-		if (!(account && library && userInfo)) return
-
-		const firstDepositBlock = new BigNumber(userInfo.firstDepositBlock)
-		const lastWithdrawBlock = new BigNumber(userInfo.lastWithdrawBlock)
-
-		const blockDiff = block - new BigNumber(firstDepositBlock.gt(lastWithdrawBlock) ? firstDepositBlock : lastWithdrawBlock).toNumber()
+		const { firstDepositBlock, lastWithdrawBlock } = options
+		const firstOrLast = firstDepositBlock > lastWithdrawBlock ? firstDepositBlock : lastWithdrawBlock
+		const blockDiff = block - firstOrLast
 		setBlockDiff(blockDiff)
-	}, [library, block, userInfo])
+	}, [block, options])
 
 	useEffect(() => {
+		if (!library || !options) return
 		fetchBlockDiff()
-	}, [library, block, userInfo])
+	}, [fetchBlockDiff, library, block, options])
 
 	return blockDiff > 0 && blockDiff
 }

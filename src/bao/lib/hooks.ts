@@ -1,31 +1,50 @@
-import { useState, useEffect } from 'react'
+import { SafeAppConnector, useSafeAppConnection } from '@gnosis.pm/safe-apps-web3-react'
 import { useWeb3React } from '@web3-react/core'
+import { useEffect, useState, useCallback } from 'react'
+import { isMobile } from 'react-device-detect'
+import { injected, getNetworkConnector } from './connectors'
 
-import { injected } from './connectors'
+declare global {
+	interface Window {
+		ethereum?: any
+	}
+}
 
 export function useEagerConnect() {
 	const { activate, active } = useWeb3React()
 
 	const [tried, setTried] = useState(false)
 
-	useEffect(() => {
-		injected.isAuthorized().then((isAuthorized: boolean) => {
-			if (isAuthorized) {
-				activate(injected, undefined, true).catch(() => {
-					setTried(true)
-				})
-			} else {
-				setTried(true)
-			}
-		})
-	}, []) // intentionally only running on mount (make sure it's only mounted once :))
+	const safeMultisigConnector = new SafeAppConnector()
+	const triedToConnectToSafe = useSafeAppConnection(safeMultisigConnector)
 
-	// if the connection worked, wait until we get confirmation of that to flip the flag
+	// try connecting to an injected connector first, then the default read-only one
+	useEffect(() => {
+		if (triedToConnectToSafe) {
+			injected.isAuthorized().then(isAuthorized => {
+				if (isAuthorized) {
+					activate(injected, undefined, true).catch(() => {
+						setTried(true)
+					})
+				} else if (isMobile && window.ethereum) {
+					activate(injected, undefined, true).catch(() => {
+						setTried(true)
+					})
+				} else {
+					activate(getNetworkConnector(), undefined, true).catch(() => {
+						setTried(true)
+					})
+				}
+			})
+		}
+	}, [triedToConnectToSafe, activate])
+
+	// wait until we get confirmation of a connection to flip the flag
 	useEffect(() => {
 		if (!tried && active) {
 			setTried(true)
 		}
-	}, [tried, active])
+	}, [active, tried])
 
 	return tried
 }
@@ -50,22 +69,16 @@ export function useInactiveListener(suppress = false) {
 					activate(injected)
 				}
 			}
-			const handleNetworkChanged = (networkId: string | number) => {
-				console.log("Handling 'networkChanged' event with payload", networkId)
-				activate(injected)
-			}
 
 			ethereum.on('connect', handleConnect)
 			ethereum.on('chainChanged', handleChainChanged)
 			ethereum.on('accountsChanged', handleAccountsChanged)
-			ethereum.on('networkChanged', handleNetworkChanged)
 
 			return () => {
 				if (ethereum.removeListener) {
 					ethereum.removeListener('connect', handleConnect)
 					ethereum.removeListener('chainChanged', handleChainChanged)
 					ethereum.removeListener('accountsChanged', handleAccountsChanged)
-					ethereum.removeListener('networkChanged', handleNetworkChanged)
 				}
 			}
 		}

@@ -1,8 +1,7 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import MultiCall from 'utils/multicall'
-import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
+import MultiCall from '@/utils/multicall'
+import useBao from '@/hooks/base/useBao'
 import { useMarkets } from './useMarkets'
 import { useWeb3React } from '@web3-react/core'
 
@@ -11,7 +10,6 @@ type Approvals = {
 }
 
 export const useApprovals = (pendingTx: string | boolean): Approvals => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const markets = useMarkets()
@@ -39,19 +37,19 @@ export const useApprovals = (pendingTx: string | boolean): Approvals => {
 
 		setApprovals(
 			Object.keys(multicallResults).reduce(
-				(approvals: { [key: string]: BigNumber }, address: any) => ({
+				(approvals: { [key: string]: BigNumber }, address: string) => ({
 					...approvals,
-					[address]: new BigNumber(multicallResults[address][0].values[0].hex),
+					[address]: BigNumber.from(multicallResults[address][0].values[0]),
 				}),
 				{},
 			),
 		)
-	}, [transactions, bao, account, markets, pendingTx])
+	}, [bao, account, markets])
 
 	useEffect(() => {
 		if (!(bao && account && markets)) return
 		fetchApprovals()
-	}, [transactions, bao, account, markets, pendingTx])
+	}, [bao, account, markets, pendingTx])
 
 	return {
 		approvals,

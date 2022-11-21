@@ -1,32 +1,37 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import { decimate } from 'utils/numberFormat'
-import useBao from '../base/useBao'
+
+import { decimate } from '@/utils/numberFormat'
+
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
+import useContract from '@/hooks/base/useContract'
+import type { Stabilizer } from '@/typechain/index'
 
+// FIXME: review decimate in here
 export const useMarketsTVL = () => {
 	const [tvl, setTvl] = useState<BigNumber | undefined>()
-	const bao = useBao()
 	const markets = useMarkets()
 	const { prices } = useMarketPrices() // TODO- use market.price instead of market prices hook
 
+	const stabilizer = useContract<Stabilizer>('Stabilizer')
+
 	const fetchTvl = useCallback(async () => {
-		const marketsTvl = markets.reduce(
-			(prev, current) =>
-				prev.plus(decimate((current.supplied - current.totalBorrows) * prices[current.marketAddress], 36 - current.underlyingDecimals)),
-			new BigNumber(0),
-		)
+		const marketsTvl = markets.reduce((prev, current) => {
+			const _tvl = BigNumber.from(current.supplied).sub(current.totalBorrows).mul(prices[current.marketAddress])
+			return prev.add(decimate(_tvl, current.underlyingDecimals))
+		}, BigNumber.from(0))
+
 		// Assume $1 for DAI - need to use oracle price
-		const ballastTvl = decimate(await bao.getContract('stabilizer').methods.supply().call())
-		setTvl(marketsTvl.plus(ballastTvl))
-	}, [markets, prices, bao])
+		const ballastTvl = await stabilizer.supply()
+		setTvl(marketsTvl.add(decimate(ballastTvl)))
+	}, [stabilizer, markets, prices])
 
 	useEffect(() => {
-		if (!(markets && prices && bao)) return
-
-		fetchTvl()
-	}, [markets, prices, bao])
+		if (markets && stabilizer && prices) {
+			fetchTvl()
+		}
+	}, [fetchTvl, markets, stabilizer, prices])
 
 	return tvl
 }

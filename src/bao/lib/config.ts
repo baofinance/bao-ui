@@ -4,7 +4,7 @@ export default {
 	networkId: 1,
 	defaultRpc: {
 		chainId: '0x1',
-		rpcUrls: ['https://rpc.ankr.com/eth'],
+		rpcUrls: [process.env.NEXT_PUBLIC_ALCHEMY_API_URL],
 		blockExplorerUrls: ['https://etherscan.io'],
 		chainName: 'Ethereum Mainnet',
 		nativeCurrency: {
@@ -17,11 +17,14 @@ export default {
 		uniswapFactory: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		uniswapFactoryV2: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
 		BAO: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
+		BAOv2: '0xCe391315b414D4c7555956120461D21808A69F3A',
 		DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 		USDT: '0xdac17f958d2ee523a2206206994597c13d831ec7',
 		USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
 		WETH: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 		DEAD: '0x000000000000000000000000000000000000dead',
+		CRV: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+		MKR: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
 		//Synths
 		baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 		// NFTs
@@ -32,73 +35,99 @@ export default {
 		bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 	},
 	contracts: {
-		bao: {
+		Bao: {
 			1: {
 				address: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-				abi: 'bao.json',
 			},
 		},
-		masterChef: {
+		Baov2: {
+			1: {
+				address: '0xCe391315b414D4c7555956120461D21808A69F3A',
+			},
+		},
+		Masterchef: {
 			1: {
 				address: '0xBD530a1c060DC600b951f16dc656E4EA451d1A2D',
-				abi: 'masterchef.json',
 			},
 		},
-		weth: {
+		Weth: {
 			1: {
 				address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-				abi: 'weth.json',
 			},
 		},
 		wethPrice: {
 			1: {
 				address: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
-				abi: 'chainoracle.json',
 			},
 		},
 		// Hard Synths
-		comptroller: {
+		Comptroller: {
 			1: {
 				address: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
-				abi: 'comptroller.json',
 			},
 		},
-		marketOracle: {
+		MarketOracle: {
 			1: {
 				address: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
-				abi: 'marketOracle.json',
 			},
 		},
-		stabilizer: {
+		Stabilizer: {
 			1: {
 				address: '0x720282BB7e721634c95F0933636DE3171dc405de',
-				abi: 'stabilizer.json',
-			},
-		},
-		// NFT
-		nft: {
-			1: {
-				address: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
-				abi: 'nft.json',
-			},
-		},
-		nft2: {
-			1: {
-				address: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
-				abi: 'nft.json',
 			},
 		},
 		// Baskets
-		recipe: {
+		SimpleUniRecipe: {
 			1: {
 				address: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
-				abi: 'simpleUniRecipe.json',
 			},
 		},
-		lendingRegistry: {
+		LendingRegistry: {
 			1: {
 				address: '0x08a2b7D713e388123dc6678168656659d297d397',
-				abi: 'lendingRegistry.json',
+			},
+		},
+		// veBAO
+		GaugeController: {
+			1: {
+				address: '0x840e75261c2934f33C8766F6eA6235330DC1D72d',
+			},
+		},
+		votingEscrow: {
+			1: {
+				address: '0x8Bf70DFE40F07a5ab715F7e888478d9D3680a2B6',
+			},
+		},
+		Minter: {
+			1: {
+				address: '0x7492Aa25Dcb4013925c199Ded466Fdf9baa6A380',
+			},
+		},
+		FeeDistributor: {
+			1: {
+				address: '0x3dCe48CfC0bEA704ec1640b34b33eC55F97D3056',
+			},
+		},
+		Dai: {
+			1: {
+				address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+			},
+		},
+		//Used for getting pool info for Curve LPs
+		PoolInfo: {
+			1: {
+				address: '0xe64608E223433E8a03a1DaaeFD8Cb638C14B552C',
+			},
+		},
+		// Distribution
+		BaoDistribution: {
+			1: {
+				address: '0x885D90A424f87D362C9369C0F3d9A2d28AF495F4',
+			},
+		},
+		Swapper: {
+			1: {
+				address: '0x235b30088E66d2D28F137b422B9349fBa51E0248',
 			},
 		},
 	},
@@ -112,6 +141,9 @@ export default {
 		baoMarkets: {
 			1: 'https://api.thegraph.com/subgraphs/name/baofinance/bao-markets',
 		},
+		curve: {
+			1: 'https://api.thegraph.com/subgraphs/name/messari/curve-finance-ethereum',
+		},
 	},
 	markets: [
 		{
@@ -124,10 +156,10 @@ export default {
 				1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 			},
 			isSynth: true,
-			icon: 'assets/img/tokens/bUSD.png',
+			icon: 'baoUSD.png',
 			coingeckoId: 'dai',
+			underlyingSymbol: 'baoUSD',
 			underlyingDecimals: 18,
-			underlyingSymbol: 'bUSD',
 		},
 		{
 			mid: 4,
@@ -138,7 +170,7 @@ export default {
 			underlyingAddresses: {
 				1: 'ETH',
 			},
-			icon: 'assets/img/tokens/ETH.png',
+			icon: 'ETH.png',
 			coingeckoId: 'weth',
 			underlyingDecimals: 18,
 		},
@@ -152,7 +184,7 @@ export default {
 			underlyingAddresses: {
 				1: 'ETH',
 			},
-			icon: 'assets/img/tokens/ETH.png',
+			icon: 'ETH.png',
 			coingeckoId: 'weth',
 			underlyingDecimals: 18,
 		},
@@ -165,7 +197,7 @@ export default {
 			underlyingAddresses: {
 				1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
 			},
-			icon: 'assets/img/tokens/USDC.png',
+			icon: 'USDC.png',
 			coingeckoId: 'usd-coin',
 			underlyingDecimals: 6,
 		},
@@ -178,9 +210,74 @@ export default {
 			underlyingAddresses: {
 				1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 			},
-			icon: 'assets/img/tokens/bSTBL.png',
+			icon: 'bSTBL.png',
 			coingeckoId: 'dai',
 			underlyingDecimals: 18,
+		},
+	],
+	gauges: [
+		{
+			gid: 1,
+			gaugeAddresses: {
+				1: '0xdC5cD6bcC9AFF0Ff964D0d7A97E5A4Dc2367Bfdf',
+			},
+			poolAddresses: {
+				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
+			},
+			lpAddresses: {
+				1: '0x0fafafd3c393ead5f5129cfc7e0e12367088c473',
+			},
+			poolInfoAddresses: {
+				1: '0x127db66e7f0b16470bec194d0f496f9fa065d0a9',
+			},
+			name: 'baoUSD-3CRV',
+			symbol: 'baoUSD3CRV',
+			type: 'Curve',
+			iconA: '/images/tokens/baoUSD.png',
+			iconB: '/images/tokens/3CRV.png',
+			pairUrl: 'https://curve.fi/#/ethereum/pools/factory-v2-84',
+		},
+		{
+			gid: 2,
+			gaugeAddresses: {
+				1: '0xD525ddD05170a03772e96FFb8D8e34a0D74B8F0E',
+			},
+			poolAddresses: {
+				1: '0xa148bd19e26ff9604f6a608e22bfb7b772d0d1a3',
+			},
+			lpAddresses: {
+				1: '0x7657ceb382013f1ce9ac7b08dd8db4f28d3a7538',
+			},
+			poolInfoAddresses: {
+				1: '0xC4F389020002396143B863F6325aA6ae481D19CE',
+			},
+			name: 'bSTBL-DAI',
+			symbol: 'bSTBLDAI',
+			type: 'Curve',
+			iconA: '/images/tokens/bSTBL.png',
+			iconB: '/images/tokens/DAI.png',
+			pairUrl: 'https://curve.fi/#/ethereum/pools/factory-crypto-61',
+		},
+		{
+			gid: 3,
+			gaugeAddresses: {
+				1: '0x8aC752c39Ac6c9cb7DCaA6387705273DfC57410a',
+			},
+			poolAddresses: {
+				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
+			},
+			lpAddresses: {
+				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
+			},
+			poolInfoAddresses: {
+				1: '0x8d7443530d6B03c35C9291F9E43b1D18B9cFa084',
+			},
+			name: 'BAO-ETH',
+			symbol: 'BAOETH',
+			type: 'Uniswap',
+			iconA: '/images/tokens/BAO.png',
+			iconB: '/images/tokens/ETH.png',
+			pairUrl: 'https://app.uniswap.org/#/add/v2/0xCe391315b414D4c7555956120461D21808A69F3A/ETH', // UPDATE!! Change to BAOv2-ETH UNIV2
 		},
 	],
 	baskets: [
@@ -193,7 +290,7 @@ export default {
       ovenAddress: '0x30DE1e1e4a42557f31F038E3B77672Afd4eAF7DF',
       symbol: 'bDEFI',
       name: 'bDEFI',
-      icon: '/bDEFI.png',
+      icon: 'bDEFI.png',
       cgIds: {
         '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B': 'convex-finance',
         '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'maker',
@@ -233,7 +330,7 @@ export default {
 			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
 			symbol: 'bSTBL',
 			name: 'bSTBL',
-			icon: 'assets/img/tokens/bSTBL.png',
+			icon: 'bSTBL.png',
 			cgIds: {
 				'0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': 'rai',
 				'0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
@@ -259,15 +356,15 @@ export default {
 				1: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
 			},
 			tokenDecimals: 18,
-			name: 'BAO-ETH UNIV2',
+			name: 'BAO-ETH',
 			symbol: 'UNIV2',
-			type: 'UNIV2',
+			type: 'Uniswap v2 LP',
 			tokenSymbol: 'BAO',
 			poolType: 'active',
-			iconA: 'BAO.png',
-			iconB: 'ETH.png',
+			iconA: '/images/tokens/BAO.png',
+			iconB: '/images/tokens/ETH.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: '#',
+			pairUrl: 'https://app.uniswap.org/#/add/v2/0x374cb8c27130e2c9e04f44303f3c8351b9de61c1/ETH',
 		},
 		{
 			pid: 200,
@@ -278,15 +375,15 @@ export default {
 				1: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
 			},
 			tokenDecimals: 18,
-			name: 'BAO-ETH SLP',
+			name: 'BAO-ETH',
 			symbol: 'SLP',
-			type: 'SLP',
+			type: 'SushiSwap LP',
 			tokenSymbol: 'BAO',
 			poolType: 'active',
-			iconA: 'BAO.png',
-			iconB: 'WETH.png',
+			iconA: '/images/tokens/BAO.png',
+			iconB: '/images/tokens/ETH.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: '#',
+			pairUrl: 'https://app.sushi.com/legacy/add/ETH/0x374CB8C27130E2c9E04F44303f3c8351B9De61C1?chainId=1',
 		},
 		{
 			pid: 201,
@@ -297,15 +394,40 @@ export default {
 				1: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
 			},
 			tokenDecimals: 18,
-			name: 'BAO-USDC SLP',
+			name: 'BAO-USDC',
 			symbol: 'SLP',
-			type: 'SLP',
+			type: 'SushiSwap LP',
 			tokenSymbol: 'BAO',
 			poolType: 'active',
-			iconA: 'BAO.png',
-			iconB: 'USDC.png',
+			iconA: '/images/tokens/BAO.png',
+			iconB: '/images/tokens/USDC.png',
 			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: '#',
+			pairUrl:
+				'https://app.sushi.com/legacy/add/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x374CB8C27130E2c9E04F44303f3c8351B9De61C1?chainId=1',
 		},
 	],
-} as Config
+	nfts: [
+		{
+			nid: 1,
+			address: {
+				1: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
+			},
+			name: 'Bao Elder NFT',
+			image: '/images/nft/baoelder.png',
+			whitelist: 'baoElderWL.ts',
+			opensea: 'BaoElder',
+			description: 'OG Bao Farmers',
+		},
+		{
+			nid: 2,
+			address: {
+				1: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
+			},
+			name: 'BaoSwap NFT',
+			image: '/images/nft/baoswap.png',
+			whitelist: 'baoSwapWL.ts',
+			opensea: 'BaoGnosis',
+			description: 'Users of Bao on Gnosis Chain',
+		},
+	],
+} as unknown as Config

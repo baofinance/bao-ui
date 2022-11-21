@@ -1,63 +1,13 @@
 import { Multicall as MC } from 'ethereum-multicall'
-import Web3 from 'web3'
-import { provider } from 'web3-core/types'
-import { Contract } from 'web3-eth-contract'
-import Config from './lib/config'
-import { Contracts } from './lib/contracts'
-
-export interface BaoOptions {
-	ethereumNodeTimeout: number
-}
+import { Provider } from '@ethersproject/providers'
 
 export class Bao {
-	public readonly networkId: number
-	public readonly contracts: Contracts
-	public readonly web3: Web3
+	public readonly provider: Provider
 	public readonly multicall: MC
 
-	constructor(provider: string | provider, networkId: number, options: BaoOptions) {
-		let realProvider
-
-		if (typeof provider === 'string') {
-			if (provider.includes('wss')) {
-				realProvider = new Web3.providers.WebsocketProvider(provider as string, {
-					timeout: options.ethereumNodeTimeout || 100000,
-				})
-			} else {
-				realProvider = new Web3.providers.HttpProvider(provider, {
-					timeout: options.ethereumNodeTimeout || 100000,
-				})
-			}
-		} else if (provider) {
-			realProvider = provider
-		} else {
-			realProvider = new Web3.providers.HttpProvider(Config.defaultRpc.rpcUrls[0])
-		}
-
-		this.networkId = networkId
-		this.web3 = new Web3(realProvider)
+	constructor(provider: Provider) {
 		this.multicall = new MC({
-			web3Instance: this.web3,
-			tryAggregate: true,
+			ethersProvider: provider,
 		})
-
-		this.contracts = new Contracts(realProvider, networkId, this.web3)
-	}
-
-	getContract(contractName: string, networkId = this.networkId): Contract {
-		return this.contracts.getContract(contractName, networkId)
-	}
-
-	getNewContract(abi: string | unknown, address?: string): Contract {
-		return this.contracts.getNewContract(abi, address)
-	}
-
-	async hasAccounts(): Promise<boolean> {
-		return (await this.web3.eth.getAccounts()).length > 0
-	}
-
-	setProvider(provider: provider, networkId: number): void {
-		this.web3.setProvider(provider)
-		this.contracts.setProvider(provider, networkId)
 	}
 }

@@ -1,5 +1,4 @@
-import { TransactionReceipt } from 'web3-core'
-import { Transaction, TransactionsMap } from './types'
+import { Transaction, TransactionReceipt, TransactionsMap } from './types'
 
 const ADD_TRANSACTION = 'ADD_TRANSACTION'
 const RECEIVE_TX_RECEIPT = 'RECEIVE_TX_RECEIPT'

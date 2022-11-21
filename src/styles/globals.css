@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+	overflow-y: scroll !important;
+}
+
+body {
+	background: url(/images/background_overlay_dark.png), radial-gradient(circle at center, #391818, #210e0e 50%) fixed;
+	margin: 0;
+	font-family: 'Rubik', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #fff8ee;
+	transition: 200ms;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
+/* Scrollbar Styling */
+/* Width */
+::-webkit-scrollbar {
+	width: 14px;
+	border-radius: 100%;
+}
+/* Track */
+::-webkit-scrollbar-track {
+	background: #391818;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #622a2a;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #562424;
+}
+
+#__next {
+	height: calc(100vh - 72px);
+}
+
+::selection {
+	background: rgba(256, 256, 256, 0.1);
+}
+
+.react-datepicker__input-container input {
+	@apply block w-full rounded border border-primary-300 bg-primary-100 text-base shadow-sm md:text-sm;
+}
+
+.react-datepicker-popper {
+	@apply z-40 w-72 rounded border-2 border-primary-300 bg-primary-100 px-3 py-2 text-sm shadow;
+}
+
+.react-datepicker-left {
+	@apply absolute left-0 right-auto top-11 transform-none !important;
+}
+
+.react-datepicker-right {
+	@apply absolute right-0 left-auto top-11 transform-none !important;
+}
+
+.react-datepicker__portal {
+	@apply absolute top-12 right-0 z-10 w-72 transform-none rounded border-2 border-primary-300 bg-white px-3 py-2 text-sm shadow;
+}
+
+.react-datepicker__month-container {
+	@apply flex flex-col;
+}
+
+.react-datepicker__month {
+	@apply flex flex-col;
+}
+
+.react-datepicker__current-month {
+	@apply ml-2.5 text-lg font-semibold text-text-200;
+}
+
+.react-datepicker__week {
+	@apply flex justify-around;
+}
+
+.react-datepicker__day-names {
+	@apply flex justify-around text-center text-xs font-medium text-text-200;
+}
+
+.react-datepicker__day-name {
+	@apply flex h-8 w-8 items-center justify-center rounded-full py-1 text-text-400;
+}
+
+.react-datepicker__navigation {
+	@apply absolute top-2;
+}
+
+.react-datepicker__navigation--previous {
+	@apply right-12 flex h-8 w-8 items-center justify-center rounded transition hover:bg-gray-200;
+}
+
+.react-datepicker__navigation--next {
+	@apply right-4 flex h-8 w-8 items-center justify-center rounded transition hover:bg-gray-200;
+}
+
+.react-datepicker__day {
+	@apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center py-1 text-sm leading-loose text-text-100 transition;
+}
+
+.react-datepicker__day--disabled {
+	@apply cursor-not-allowed opacity-40;
+}
+
+.react-datepicker__day--outside-month {
+	@apply text-gray-300;
+}
+
+.react-datepicker__day--in-range {
+	@apply bg-gray-200;
+}
+
+.react-datepicker__day--in-selecting-range {
+}
+
+.react-datepicker__day--selecting-range-start {
+	@apply bg-white;
+}
+
+.react-datepicker__day--selecting-range-end {
+	@apply bg-white;
+}
+
+.react-datepicker__day--selected {
+	@apply rounded border border-primary-400 bg-primary-300 text-white;
+}
+
+.react-datepicker__day--range-start {
+	@apply text-white hover:bg-white hover:text-gray-700;
+}
+
+.react-datepicker__day--range-end {
+	@apply text-white hover:bg-white hover:text-gray-700;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	input[type='range']::-webkit-slider-thumb {
+		width: 15px;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 15px;
+		cursor: ew-resize;
+		background: #FFD84B;
+		border-radius: 50%;
+	}
+}

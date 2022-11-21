@@ -1,4 +1,5 @@
-import { Contract } from 'web3-eth-contract'
+import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool, PoolInfo, CurveLp, CurveMetaPool } from '@/typechain/index'
+import { BigNumber } from 'ethers'
 
 export interface SupportedPool {
 	pid: number
@@ -20,9 +21,31 @@ export interface SupportedPool {
 	type: string
 }
 
+export interface SupportedGauge {
+	gid: number
+	name: string
+	symbol: string
+	type: string
+	iconA: string
+	iconB: string
+	pairUrl: string
+	gaugeAddresses: {
+		[network: number]: string
+	}
+	poolAddresses: {
+		[network: number]: string
+	}
+	lpAddresses: {
+		[network: number]: string
+	}
+	poolInfoAddresses: {
+		[network: number]: string
+	}
+}
+
 export interface SupportedBasket {
 	nid: number
-	basketAddresses?: {
+	basketAddresses: {
 		[network: number]: string
 	}
 	lpAddress: string
@@ -33,10 +56,10 @@ export interface SupportedBasket {
 	pieColors: { [asset: string]: string }
 	desc: string
 	swap?: string
-	address?: string
-	basketContract?: Contract
+	address: string
+	basketContract: Experipie
 	ovenAddress: string
-	ovenContract?: Contract
+	ovenContract?: Oven
 }
 
 export interface SupportedMarket {
@@ -54,40 +77,51 @@ export interface SupportedMarket {
 	coingeckoId: string
 	underlyingDecimals: number
 	underlyingSymbol?: string
-	supplyApy?: number
-	borrowApy?: number
-	rewardApy?: number
-	liquidity?: number
-	collateralFactor?: number
-	imfFactor?: number
-	reserveFactor?: number
-	totalBorrows?: number
-	totalReserves?: number
-	supplied?: number
+	supplyApy?: BigNumber
+	borrowApy?: BigNumber
+	rewardApy?: BigNumber
+	liquidity?: BigNumber
+	collateralFactor?: BigNumber
+	imfFactor?: BigNumber
+	reserveFactor?: BigNumber
+	totalBorrows?: BigNumber
+	totalReserves?: BigNumber
+	supplied?: BigNumber
 	borrowable?: boolean
-	liquidationIncentive?: number
+	liquidationIncentive?: BigNumber
 	borrowRestricted?: boolean
-	price?: number
+	price?: BigNumber
 }
 
 export interface FarmableSupportedPool extends SupportedPool {
 	lpAddress: string
 	tokenAddress: string
-	lpContract: Contract
-	tokenContract: Contract
+	lpContract: Uni_v2_lp
+	tokenContract: Erc20
+}
+
+export interface ActiveSupportedGauge extends SupportedGauge {
+	gaugeAddress: string
+	poolAddress: string
+	lpAddress: string
+	poolInfoAddress: string
+	gaugeContract: Gauge
+	poolContract: GaugePool
+	lpContract: Uni_v2_lp | CurveLp | CurveMetaPool
+	poolInfoContract: PoolInfo
 }
 
 export interface ActiveSupportedBasket extends SupportedBasket {
 	address: string
-	basketContract: Contract
-	ovenContract: Contract
+	basketContract: Experipie
+	ovenContract: Oven
 }
 
 export interface ActiveSupportedMarket extends SupportedMarket {
 	marketAddress: string
-	marketContract: Contract
+	marketContract: Cether | Ctoken
 	underlyingAddress: string
-	underlyingContract: Contract
+	underlyingContract?: Erc20
 }
 
 export interface RpcConfig {
@@ -111,7 +145,6 @@ export interface ContractsConfig {
 		[networkId: number]: {
 			address: string
 			abi: string
-			contract?: Contract
 		}
 	}
 }
@@ -131,6 +164,7 @@ export interface Config {
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
 	markets: SupportedMarket[]
+	gauges: SupportedGauge[]
 }
 
 export type SWR = {

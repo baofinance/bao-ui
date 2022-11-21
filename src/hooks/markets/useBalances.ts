@@ -1,40 +1,43 @@
-import Config from 'bao/lib/config'
+import { Contract } from '@ethersproject/contracts'
+import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import MultiCall from 'utils/multicall'
-import { decimate } from 'utils/numberFormat'
-import { Contract } from 'web3-eth-contract'
+import { BigNumber } from 'ethers'
+
+import Config from '@/bao/lib/config'
+//import useBlock from '@/hooks/base/useBlock'
+import MultiCall from '@/utils/multicall'
+import { Erc20__factory, Ctoken__factory } from '@/typechain/factories'
+
+import { formatUnits } from 'ethers/lib/utils'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
-import { useWeb3React } from '@web3-react/core'
-import useBlock from 'hooks/base/useBlock'
 
 export type Balance = {
 	address: string
 	symbol: string
-	balance: number
+	balance: BigNumber
+	decimals: number
 }
 
 export const useAccountBalances = (): Balance[] => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account } = useWeb3React()
-	const block = useBlock()
-	const tokens = Config.markets.map(market => market.underlyingAddresses[Config.networkId])
+	const { account, library, chainId } = useWeb3React()
+	const { transactions } = useTransactionProvider()
+	//const block = useBlock()
 
 	const [balances, setBalances] = useState<Balance[] | undefined>()
 
 	const fetchBalances = useCallback(async () => {
-		const data: Contract[] = tokens
-			.map(address => address !== 'ETH' && bao.getNewContract('erc20.json', address))
-			.filter(contract => contract)
+		const tokens = Config.markets.map(market => market.underlyingAddresses[chainId])
+		const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
-		const multicallResults = MultiCall.parseCallResults(
+		const res = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
-					data.map(
+					contracts.map(
 						contract =>
 							contract && {
-								ref: contract.options.address,
+								ref: contract.address,
 								contract,
 								calls: [{ method: 'symbol' }, { method: 'decimals' }, { method: 'balanceOf', params: [account] }],
 							},
@@ -42,44 +45,43 @@ export const useAccountBalances = (): Balance[] => {
 				),
 			),
 		)
-		const ethBalance = await bao.web3.eth.getBalance(account)
+		const ethBalance = await library.getBalance(account)
 
 		setBalances(
-			tokens.map(address => ({
-				address,
-				symbol: multicallResults[address] ? multicallResults[address][0].values[0] : 'ETH',
-				balance: multicallResults[address]
-					? decimate(multicallResults[address][2].values[0].hex, multicallResults[address][1].values[0]).toNumber()
-					: decimate(ethBalance).toNumber(),
-			})),
+			tokens.map(address => {
+				const symbol = res[address] ? res[address][0].values[0] : 'ETH'
+				const decimals = res[address] ? res[address][1].values[0] : 18
+				const balance = res[address] ? res[address][2].values[0] : ethBalance
+				// FIXME: make this .balance a bn.js for decimals or format it later in the component
+				return { address, symbol, balance, decimals }
+			}),
 		)
-	}, [transactions, bao, account])
+	}, [library, bao, account, chainId])
 
 	useEffect(() => {
-		if (!(bao && account)) return
+		if (!bao || !account || !library || !chainId) return
 
 		fetchBalances()
-	}, [transactions, bao, account, block])
+	}, [fetchBalances, bao, library, account, chainId, transactions])
 
 	return balances
 }
 
 export const useSupplyBalances = (): Balance[] => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account } = useWeb3React()
-	const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
-
+	const { account, library, chainId } = useWeb3React()
+	const { transactions } = useTransactionProvider()
 	const [balances, setBalances] = useState<Balance[] | undefined>()
 
 	const fetchBalances = useCallback(async () => {
-		const data: Contract[] = tokens.map(address => bao.getNewContract('ctoken.json', address))
+		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
+		const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
-		const multicallResults = MultiCall.parseCallResults(
+		const res = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
-					data.map(contract => ({
-						ref: contract.options.address,
+					contracts.map(contract => ({
+						ref: contract.address,
 						contract,
 						calls: [{ method: 'symbol' }, { method: 'balanceOf', params: [account] }],
 					})),
@@ -88,42 +90,42 @@ export const useSupplyBalances = (): Balance[] => {
 		)
 
 		setBalances(
-			Object.keys(multicallResults).map(address => ({
-				address,
-				symbol: multicallResults[address][0].values[0],
-				balance: decimate(
-					multicallResults[address][1].values[0].hex,
-					Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
-				).toNumber(),
-			})),
+			Object.keys(res).map(address => {
+				const decimals = Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
+				return {
+					address,
+					symbol: res[address][0].values[0],
+					balance: res[address][1].values[0],
+					decimals,
+				}
+			}),
 		)
-	}, [transactions, bao, account])
+	}, [bao, account, library, chainId])
 
 	useEffect(() => {
-		if (!(bao && account)) return
+		if (!bao || !library || !account || !chainId) return
 
 		fetchBalances()
-	}, [transactions, bao, account])
+	}, [fetchBalances, bao, library, account, chainId, transactions])
 
 	return balances
 }
 
 export const useBorrowBalances = (): Balance[] => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const { account } = useWeb3React()
-	const tokens = Config.markets.map(market => market.marketAddresses[Config.networkId])
-
+	const { account, library, chainId } = useWeb3React()
+	const { transactions } = useTransactionProvider()
 	const [balances, setBalances] = useState<Balance[] | undefined>()
 
 	const fetchBalances = useCallback(async () => {
-		const data: Contract[] = tokens.map(address => bao.getNewContract('ctoken.json', address))
+		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
+		const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
-		const multicallResults = MultiCall.parseCallResults(
+		const res = MultiCall.parseCallResults(
 			await bao.multicall.call(
 				MultiCall.createCallContext(
-					data.map(contract => ({
-						ref: contract.options.address,
+					contracts.map(contract => ({
+						ref: contract.address,
 						contract,
 						calls: [{ method: 'symbol' }, { method: 'borrowBalanceStored', params: [account] }],
 					})),
@@ -132,22 +134,22 @@ export const useBorrowBalances = (): Balance[] => {
 		)
 
 		setBalances(
-			Object.keys(multicallResults).map(address => ({
-				address,
-				symbol: multicallResults[address][0].values[0],
-				balance: decimate(
-					multicallResults[address][1].values[0].hex,
-					Config.markets.find(market => market.marketAddresses[Config.networkId] === address).underlyingDecimals, // use underlying decimals
-				).toNumber(),
-			})),
+			Object.keys(res).map(address => {
+				const decimals = Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
+				return {
+					address,
+					symbol: res[address][0].values[0],
+					balance: res[address][1].values[0],
+					decimals,
+				}
+			}),
 		)
-	}, [transactions, bao, account])
+	}, [bao, account, library, chainId])
 
 	useEffect(() => {
-		if (!(bao && account)) return
-
+		if (!bao || !account || !chainId || !library) return
 		fetchBalances()
-	}, [transactions, bao, account])
+	}, [fetchBalances, bao, account, library, chainId, transactions])
 
 	return balances
 }

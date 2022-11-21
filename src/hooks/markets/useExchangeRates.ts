@@ -1,9 +1,12 @@
-import { ActiveSupportedMarket } from 'bao/lib/types'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import MultiCall from 'utils/multicall'
+
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import MultiCall from '@/utils/multicall'
+
 import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
+import { useMarkets } from '@/hooks/markets/useMarkets'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 
 type ExchangeRates = {
 	exchangeRates: { [key: string]: BigNumber }
@@ -11,14 +14,15 @@ type ExchangeRates = {
 
 export const useExchangeRates = (): ExchangeRates => {
 	const [exchangeRates, setExchangeRates] = useState<undefined | { [key: string]: BigNumber }>()
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
+	const { transactions } = useTransactionProvider()
+	const markets = useMarkets()
 
 	const fetchExchangeRates = useCallback(async () => {
-		const tokenContracts = bao.contracts.markets.map((market: ActiveSupportedMarket) => market.marketContract)
+		const tokenContracts = markets.map((market: ActiveSupportedMarket) => market.marketContract)
 		const multiCallContext = MultiCall.createCallContext(
 			tokenContracts.map(tokenContract => ({
-				ref: tokenContract.options.address,
+				ref: tokenContract.address,
 				contract: tokenContract,
 				calls: [{ method: 'exchangeRateStored' }],
 			})),
@@ -27,19 +31,19 @@ export const useExchangeRates = (): ExchangeRates => {
 
 		setExchangeRates(
 			Object.keys(data).reduce(
-				(exchangeRate: { [key: string]: BigNumber }, address: any) => ({
+				(exchangeRate: { [key: string]: BigNumber }, address: string) => ({
 					...exchangeRate,
-					[address]: new BigNumber(data[address][0].values[0].hex),
+					[address]: data[address][0].values[0],
 				}),
 				{},
 			),
 		)
-	}, [transactions, bao])
+	}, [bao, markets])
 
 	useEffect(() => {
-		if (!bao) return
+		if (!bao || !markets) return
 		fetchExchangeRates()
-	}, [transactions, bao])
+	}, [bao, transactions, fetchExchangeRates, markets])
 
 	return {
 		exchangeRates,
