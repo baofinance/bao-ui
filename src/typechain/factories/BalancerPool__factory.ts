@@ -8,6 +8,7 @@ import type { BalancerPool, BalancerPoolInterface } from "../BalancerPool";
 
 const _abi = [
   {
+    // @ts-ignore
     inputs: [],
     payable: false,
     stateMutability: "nonpayable",

@@ -7,16 +7,18 @@ import { PageLoader } from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import classNames from 'classnames'
+import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { AccountLiquidity, useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useAccountMarkets } from '@/hooks/markets/useMarkets'
+import type { Comptroller } from '@/typechain/index'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Switch } from '@headlessui/react'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import { useWeb3React } from '@web3-react/core'
+import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -25,9 +27,6 @@ import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
-import { parseUnits, formatUnits } from 'ethers/lib/utils'
-import useContract from '@/hooks/base/useContract'
-import type { Comptroller } from '@/typechain/index'
 
 // FIXME: these components should all be using ethers.BigNumber instead of js float math
 
@@ -192,11 +191,15 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Supplied',
-								value: `${getDisplayBalance(market.supplied, market.underlyingDecimals)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(market.supplied.mul(market.price)))}`,
+								value: `${getDisplayBalance(market.supplied, market.underlyingDecimals)} ${market.underlyingSymbol} | $${getDisplayBalance(
+									decimate(market.supplied.mul(market.price)),
+								)}`,
 							},
 							{
 								label: 'Your Supply',
-								value: `${getDisplayBalance(suppliedUnderlying)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(suppliedUnderlying.mul(market.price)))}`,
+								value: `${getDisplayBalance(suppliedUnderlying)} ${market.underlyingSymbol} | $${getDisplayBalance(
+									decimate(suppliedUnderlying.mul(market.price)),
+								)}`,
 							},
 							{
 								label: 'Collateral',
@@ -341,7 +344,9 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							},
 							{
 								label: 'Your Debt',
-								value: `${getDisplayBalance(borrowed)} ${market.underlyingSymbol} | $${getDisplayBalance(decimate(borrowed.mul(market.price)))}`,
+								value: `${getDisplayBalance(borrowed)} ${market.underlyingSymbol} | $${getDisplayBalance(
+									decimate(borrowed.mul(market.price)),
+								)}`,
 							},
 							{
 								label: 'Debt Limit Remaining',

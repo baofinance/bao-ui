@@ -2,12 +2,11 @@ import { ActiveSupportedMarket } from '@/bao/lib/types'
 import { ListHeader } from '@/components/List'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Accordion, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import Image from 'next/image'
 import React, { useMemo } from 'react'
 import { isDesktop } from 'react-device-detect'
-import { exponentiate, decimate } from '@/utils/numberFormat'
 
 export const OfflineMarketList: React.FC<MarketListProps> = ({ markets }: MarketListProps) => {
 	const collateralMarkets = useMemo(() => {
@@ -71,7 +70,11 @@ const OfflineListItemCollateral: React.FC<MarketListItemProps> = ({ market }: Ma
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{`$${getDisplayBalance(decimate(market.supplied.mul(market.price)).sub(decimate(market.totalBorrows.mul(market.price))), 18, 0)}`}
+									{`$${getDisplayBalance(
+										decimate(market.supplied.mul(market.price)).sub(decimate(market.totalBorrows.mul(market.price))),
+										18,
+										0,
+									)}`}
 								</span>
 							</Typography>
 						</div>
@@ -106,7 +109,11 @@ const OfflineListItemSynth: React.FC<MarketListItemProps> = ({ market }: MarketL
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{`$${getDisplayBalance(decimate(market.supplied.mul(market.price)).sub(decimate(market.totalBorrows.mul(market.price))), 18, 0)}`}
+									{`$${getDisplayBalance(
+										decimate(market.supplied.mul(market.price)).sub(decimate(market.totalBorrows.mul(market.price))),
+										18,
+										0,
+									)}`}
 								</span>
 							</Typography>
 						</div>

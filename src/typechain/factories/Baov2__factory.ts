@@ -114,6 +114,7 @@ const _abi = [
         type: "uint8",
       },
     ],
+    // @ts-ignore
     outputs: [],
   },
   {

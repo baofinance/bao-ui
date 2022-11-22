@@ -7,7 +7,7 @@ import useBlock from '../base/useBlock'
 import useFarms from './useFarms'
 
 import useContract from '@/hooks/base/useContract'
-import type { Masterchef, Weth } from '@/typechain/index'
+import type { Masterchef } from '@/typechain/index'
 
 const useAllEarnings = () => {
 	const [balances, setBalance] = useState([] as Array<BigNumber>)

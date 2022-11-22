@@ -28,6 +28,8 @@ const _abi = [
         type: "address",
       },
     ],
+
+    // @ts-ignore
     outputs: [],
   },
   {

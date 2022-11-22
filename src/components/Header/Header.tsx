@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { FC, Fragment, ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
 import AccountButton from '../AccountButton'
-import Button from '../Button'
 import Nav from '../Nav'
 
 export interface IconProps {

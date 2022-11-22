@@ -1,20 +1,17 @@
+import Config from '@/bao/lib/config'
+import { ActiveSupportedMarket } from '@/bao/lib/types'
+import useContract from '@/hooks/base/useContract'
+import type { Comptroller } from '@/typechain/index'
+import { decimate } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-
-import Config from '@/bao/lib/config'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
-import { decimate } from '@/utils/numberFormat'
-
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useExchangeRates } from './useExchangeRates'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import useContract from '@/hooks/base/useContract'
-import type { Comptroller } from '@/typechain/index'
 
 export type AccountLiquidity = {
 	netApy: BigNumber

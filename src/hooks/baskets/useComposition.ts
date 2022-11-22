@@ -1,21 +1,17 @@
-import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
-
+import Config from '@/bao/lib/config'
 import useBao from '@/hooks/base/useBao'
+import useContract from '@/hooks/base/useContract'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import { Erc20__factory, LendingLogicKashi__factory } from '@/typechain/factories'
+import type { Experipie, LendingRegistry, Mkr } from '@/typechain/index'
 import MultiCall from '@/utils/multicall'
 import { decimate, exponentiate } from '@/utils/numberFormat'
-import Config from '@/bao/lib/config'
-import { LendingLogicKashi__factory } from '@/typechain/factories'
-import { Erc20__factory } from '@/typechain/factories'
-import useContract from '@/hooks/base/useContract'
-import type { Mkr, LendingRegistry, Experipie } from '@/typechain/index'
-
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
+import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export type BasketComponent = {
 	address: string

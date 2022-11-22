@@ -1,11 +1,10 @@
-import { useWeb3React } from '@web3-react/core'
-import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { providerKey } from '@/utils/index'
 import { Bao } from '@/bao/Bao'
 import { getNetworkConnector } from '@/bao/lib/connectors'
+import { useEagerConnect, useInactiveListener } from '@/bao/lib/hooks'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useWeb3React } from '@web3-react/core'
+import React, { createContext, PropsWithChildren, useEffect } from 'react'
 import { useBlock } from './useBlock'
 
 export interface BaoContext {

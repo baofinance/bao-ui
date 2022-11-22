@@ -6,15 +6,14 @@ import { Progress } from '@/components/ProgressBar'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
-import { getFullDisplayBalance, getDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BN from 'bignumber.js' // INFO: this is necessary for decimal display logic
-import _ from 'lodash'
+import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 type CompositionProps = {
 	composition: BasketComponent[]
@@ -97,8 +96,8 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 														</td>
 													)}
 												</tr>
-											)}
-										) || (
+											)
+										}) || (
 										<tr>
 											{['name', 'perc', 'price', 'apy', 'strategy'].map(tdClass => (
 												<td key={Math.random()} className={tdClass}>

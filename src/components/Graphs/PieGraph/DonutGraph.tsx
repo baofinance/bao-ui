@@ -1,16 +1,16 @@
 import Loader from '@/components/Loader'
+import { BasketInfo } from '@/hooks/baskets/useBasketInfo'
+import { BasketRates } from '@/hooks/baskets/useBasketRate'
+import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
 import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
 import { Text } from '@visx/text'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import _ from 'lodash'
 import { useState } from 'react'
 import { animated, interpolate, useTransition } from 'react-spring'
-import { BasketComponent } from '@/hooks/baskets/useComposition'
-import { BasketRates } from '@/hooks/baskets/useBasketRate'
-import { BasketInfo } from '@/hooks/baskets/useBasketInfo'
 
 interface AssetAllocationAmount {
 	symbol: string

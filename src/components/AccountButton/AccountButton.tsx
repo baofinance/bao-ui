@@ -1,14 +1,14 @@
-import { ethers } from 'ethers'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { getDisplayBalance } from '@/utils/numberFormat'
 //import { utils } from 'ethers'
 import { isDesktop } from 'react-device-detect'
 
-import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
+import { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 
 import AccountModal from '../AccountModal'

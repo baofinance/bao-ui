@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useMemo } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
-import { Uni_v2_lp__factory, Erc20__factory, Bao__factory } from '@/typechain/factories'
+import { Erc20__factory, Uni_v2_lp__factory } from '@/typechain/factories'
+import { useWeb3React } from '@web3-react/core'
+import React, { PropsWithChildren, useMemo } from 'react'
 
 import Context from './context'
 

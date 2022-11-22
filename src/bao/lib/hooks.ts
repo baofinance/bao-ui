@@ -1,8 +1,8 @@
 import { SafeAppConnector, useSafeAppConnection } from '@gnosis.pm/safe-apps-web3-react'
 import { useWeb3React } from '@web3-react/core'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import { injected, getNetworkConnector } from './connectors'
+import { getNetworkConnector, injected } from './connectors'
 
 declare global {
 	interface Window {

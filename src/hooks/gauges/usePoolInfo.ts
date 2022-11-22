@@ -57,7 +57,7 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 			token0Decimals: gauge?.type.toLowerCase() === 'curve' ? res0[1].values[0].toString() : 18,
 			token1Decimals: gauge?.type.toLowerCase() === 'curve' ? res0[1].values[1].toString() : 18,
 		})
-	}, [bao, account, gauge])
+	}, [account, library, gauge, chainId, bao.multicall])
 
 	useEffect(() => {
 		if (!(bao && account && gauge)) return

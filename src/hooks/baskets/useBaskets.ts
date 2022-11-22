@@ -1,8 +1,8 @@
-import { useEffect, useState, useMemo } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import { Experipie__factory, Oven__factory } from '@/typechain/factories'
+import { useWeb3React } from '@web3-react/core'
+import { useMemo } from 'react'
 
 const useBaskets = (): ActiveSupportedBasket[] => {
 	const { chainId, library, account } = useWeb3React()

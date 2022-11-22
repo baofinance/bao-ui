@@ -2,9 +2,9 @@ import Badge from '@/components/Badge'
 import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
+import useBasketRates from '@/hooks/baskets/useBasketRate'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
-import useBasketRates from '@/hooks/baskets/useBasketRate'
 import usePairPrice from '@/hooks/baskets/usePairPrice'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
@@ -12,7 +12,7 @@ import { faAngleDoubleRight, faFileContract } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
 import BasketStats from './components/BasketStats'
@@ -74,7 +74,7 @@ const Basket: NextPage<{
 					1 {basket.symbol} ={' '}
 					{rates ? (
 						<>
-							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}{' '}
+							<FontAwesomeIcon icon={faEthereum} /> {getDisplayBalance(rates.eth)} <FontAwesomeIcon icon={faAngleDoubleRight} />{' '}
 							{getDisplayBalance(rates.dai)}
 							{' DAI '}
 							<FontAwesomeIcon icon={faAngleDoubleRight} /> {`$${getDisplayBalance(rates.usd)}`}
