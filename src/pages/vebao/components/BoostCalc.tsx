@@ -1,14 +1,12 @@
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
-import { LockInfo } from '@/hooks/gauges/useLockInfo'
+import { LockInfo } from '@/hooks/vebao/useLockInfo'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import { formatUnits } from 'ethers/lib/utils'
 import Slider from 'rc-slider'
@@ -19,8 +17,6 @@ type BoostCalcProps = {
 }
 
 export const BoostCalc = ({ lockInfo }: BoostCalcProps) => {
-	const { account, chainId, library } = useWeb3React()
-	const { handleTx } = useTransactionHandler()
 	const [selectedOption, setSelectedOption] = useState('baoUSD-3CRV')
 
 	const gauges = useGauges()
