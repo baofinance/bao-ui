@@ -47,11 +47,11 @@ const Migration: React.FC = () => {
 
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
-	const { account, chainId, library } = useWeb3React()
+	const { account } = useWeb3React()
 	const { data: merkleLeaf } = useQuery(
-		['/api/vebao/distribution/proof', account, chainId],
+		['https://bao-distribution-api.herokuapp.com/', account],
 		async () => {
-			const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
+			const leafResponse = await fetch(`https://bao-distribution-api.herokuapp.com/${account}`)
 			if (leafResponse.status !== 200) {
 				const { error } = await leafResponse.json()
 				throw new Error(`${error.code} - ${error.message}`)
@@ -67,17 +67,14 @@ const Migration: React.FC = () => {
 		},
 	)
 
-	const distributionInfo = useDistributionInfo()
+	const dist = useDistributionInfo()
 
-	const canStartDistribution = !!merkleLeaf
-
-	console.log('Date Started', distributionInfo ? distributionInfo.dateStarted : 0)
-	console.log('Can Start Distribution', canStartDistribution)
+	const canStartDistribution = !!distribution && !!dist && !!merkleLeaf
 
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='pt-4 md:w-4/5'>
-				{distributionInfo && distributionInfo.dateStarted.gt(0) ? (
+				{dist && dist.dateStarted.gt(0) ? (
 					<>
 						<div className='pb-5'>
 							<Typography variant='lg' className='text-lg font-bold leading-6'>
@@ -168,18 +165,14 @@ const Migration: React.FC = () => {
 									<Typography className='px-2 font-semibold text-text-100'>Total Locked BAO</Typography>
 									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-										<Typography className='font-bold'>
-											{getDisplayBalance((distributionInfo && distributionInfo.amountOwedTotal) || BigNumber.from(0))}
-										</Typography>
+										<Typography className='font-bold'>{getDisplayBalance(dist ? dist.amountOwedTotal : BigNumber.from(0))}</Typography>
 									</div>
 								</div>
 								<div className='flex flex-row items-center'>
 									<Typography className='px-2 font-semibold text-text-100'>BAO Unlocked</Typography>
 									<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-										<Typography className='font-bold'>
-											{getDisplayBalance((distributionInfo && distributionInfo.curve) || BigNumber.from(0))}
-										</Typography>
+										<Typography className='font-bold'>{getDisplayBalance(dist ? dist.curve : BigNumber.from(0))}</Typography>
 									</div>
 								</div>
 							</div>
@@ -236,7 +229,7 @@ const Migration: React.FC = () => {
 									</Button>
 								) : (
 									<Button
-										disabled={!canStartDistribution || (distributionInfo && distributionInfo.dateStarted.gt(0))}
+										disabled={!canStartDistribution || (dist && dist.dateStarted.gt(0))}
 										className='bg-primary-500'
 										onClick={async () => {
 											const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)

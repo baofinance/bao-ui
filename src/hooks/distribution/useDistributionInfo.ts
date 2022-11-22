@@ -13,11 +13,10 @@ type DistributionInfo = {
 	dateEnded: BigNumber
 	lastClaim: BigNumber
 	amountOwedTotal: BigNumber
-	claimable: BigNumber
 	curve: BigNumber
 }
 
-const useDistribtuionInfo = (): DistributionInfo => {
+const useDistributionInfo = (): DistributionInfo => {
 	const { library, account, chainId } = useWeb3React()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
@@ -26,9 +25,8 @@ const useDistribtuionInfo = (): DistributionInfo => {
 		['@/hooks/vebao/useAccountDistribution', providerKey(library, account, chainId)],
 		async () => {
 			const { dateStarted, dateEnded, lastClaim, amountOwedTotal } = await distribution.distributions(account)
-			const claimable = await distribution.claimable(account, 0)
-			const block = await library.getBlock()
 			const timeStarted = dateStarted.mul(1000).toNumber()
+			const block = await library.getBlock()
 			const timeNow = block.timestamp * 1000
 			const daysDiff = Math.floor((timeNow - timeStarted) / 86400000)
 			const curve = await distribution.distCurve(amountOwedTotal, exponentiate(BigNumber.from(daysDiff)))
@@ -38,7 +36,6 @@ const useDistribtuionInfo = (): DistributionInfo => {
 				dateEnded,
 				lastClaim,
 				amountOwedTotal,
-				claimable,
 				curve,
 			}
 		},
@@ -49,7 +46,6 @@ const useDistribtuionInfo = (): DistributionInfo => {
 				dateEnded: BigNumber.from(0),
 				lastClaim: BigNumber.from(0),
 				amountOwedTotal: BigNumber.from(0),
-				claimable: BigNumber.from(0),
 				curve: BigNumber.from(0),
 			},
 		},
@@ -64,4 +60,4 @@ const useDistribtuionInfo = (): DistributionInfo => {
 	return distributionInfo
 }
 
-export default useDistribtuionInfo
+export default useDistributionInfo
