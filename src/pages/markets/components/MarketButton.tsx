@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/markets/useApprovals'
-import { Cether, Ctoken, Erc20 } from '@/typechain/index'
+import type { Erc20 } from '@/typechain/index'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -27,8 +28,6 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 	const { marketContract } = asset
 
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
-	const cEther = useContract<Cether>('Cether', asset.underlyingAddress)
-	const cToken = useContract<Ctoken>('Ctoken', asset.underlyingAddress)
 
 	if (pendingTx) {
 		return (
@@ -54,12 +53,14 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={async () => {
 							let mintTx
 							if (asset.underlyingAddress === 'ETH') {
-								mintTx = cEther.mint(true, {
+								// @ts-ignore
+								mintTx = marketContract.mint(true, {
 									value: val,
 								})
 								// TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							} else {
-								mintTx = cToken.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
+								// @ts-ignore
+								mintTx = marketContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							}
 							handleTx(
 								mintTx,
@@ -128,11 +129,12 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButto
 						onClick={() => {
 							let repayTx
 							if (asset.underlyingAddress === 'ETH') {
-								repayTx = cEther.repayBorrow({
+								// @ts-ignore
+								repayTx = marketContract.repayBorrow({
 									value: val,
 								})
 							} else {
-								repayTx = cToken.repayBorrow(val)
+								repayTx = marketContract.repayBorrow(val)
 							}
 							handleTx(repayTx, `Markets: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () =>
 								onHide(),
