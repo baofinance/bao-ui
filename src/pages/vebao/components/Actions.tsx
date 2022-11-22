@@ -28,7 +28,7 @@ type ActionProps = {
 	lockInfo?: LockInfo
 }
 
-export const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
+const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
 	const [val, setVal] = useState('')
@@ -251,3 +251,5 @@ export const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 		</div>
 	)
 }
+
+export default Actions

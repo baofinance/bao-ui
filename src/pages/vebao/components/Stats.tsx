@@ -29,7 +29,7 @@ function addDays(numOfDays: number, date = new Date()) {
 	return date
 }
 
-export const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
+const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 	const { account, chainId } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const claimableFees = useClaimableFees()
@@ -104,6 +104,8 @@ export const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 		</div>
 	)
 }
+
+export default LockStats
 
 export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => {
 	const { chainId } = useWeb3React()
