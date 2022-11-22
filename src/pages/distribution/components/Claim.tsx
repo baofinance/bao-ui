@@ -6,6 +6,7 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 //import { useWeb3React } from '@web3-react/core'
 import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
+import useClaimable from '@/hooks/distribution/useClaimable'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
@@ -18,6 +19,7 @@ const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 	const distributionInfo = useDistributionInfo()
+	const claimable = useClaimable()
 
 	let lastClaim = 'Never'
 	if (distributionInfo && !distributionInfo.dateStarted.eq(distributionInfo.lastClaim)) {
@@ -78,7 +80,7 @@ const Migration: React.FC = () => {
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography variant='base' className='font-semibold'>
-									{getDisplayBalance(distributionInfo.claimable || BigNumber.from(0))}
+									{getDisplayBalance(BigNumber.isBigNumber(claimable) ? claimable : BigNumber.from(0))}
 								</Typography>
 							</div>
 						</div>
@@ -98,11 +100,11 @@ const Migration: React.FC = () => {
 				<div className='w-2/5 flex-1'>
 					<Button
 						className='my-4'
-						disabled={!distributionInfo.claimable?.gt(0)}
+						disabled={!(BigNumber.isBigNumber(claimable) && claimable.gt(0))}
 						fullWidth
 						onClick={async () => {
 							const claim = distribution.claim()
-							handleTx(claim, `Distribution: Claim ${formatUnits(distributionInfo.claimable as BigNumber)} BAO`)
+							handleTx(claim, `Distribution: Claim ${formatUnits(claimable as BigNumber)} BAO`)
 						}}
 					>
 						Claim Now
