@@ -213,19 +213,14 @@ const Migration: React.FC = () => {
 						</Typography>
 
 						<Typography className='mt-2 leading-normal text-text-200'>
-							If you migrated your distribution to veBAO or locked your token distribution as veBAO, you will have a locked balance of "Vote
-							Escrowed BAO" that you can see here on our{' '}
+							If you chose to migrate your distribution to veBAO, you will have a locked balance of "Vote Escrowed BAO" (veBAO) that you can see here on our{' '}
 							<Link href='/vebao' className='font-bold hover:text-text-400'>
 								/veBAO
 							</Link>{' '}
-							page. You may then use your veBAO balance to vote on gauge weights here on our{' '}
-							<Link href='/gauges' className='font-bold hover:text-text-400'>
-								/gauges
-							</Link>{' '}
-							page once per week to affect how staked LPs get protocol rewards.
+							page. If you chose to collect your distribution rather than migrate it, you may lock it as veBAO on the same page.
 						</Typography>
 
-						<div className='flex flex-col items-start mt-2 py-2'>
+						<div className='mt-2 flex flex-col items-start py-2'>
 							<Typography className='py-2 font-semibold text-text-100'>Original Distribution Amount</Typography>
 							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
@@ -233,7 +228,7 @@ const Migration: React.FC = () => {
 							</div>
 						</div>
 
-						<div className='flex gap-5 flex-row py-2'>
+						<div className='flex flex-row gap-5 py-2'>
 							<div className='flex flex-col items-start'>
 								<Typography className='py-2 font-semibold text-text-100'>Date Started</Typography>
 								<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
