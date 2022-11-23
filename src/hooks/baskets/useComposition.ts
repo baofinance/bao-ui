@@ -88,7 +88,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				])
 				const { lendingRegistry: lendingRes } = MultiCall.parseCallResults(await bao.multicall.call(lendingQuery))
 
-				//_c.price = prices[lendingRes[0].values[0].toLowerCase()]
+				_c.price = prices[lendingRes[0].values[0].toLowerCase()]
 				_c.underlying = lendingRes[0].values[0]
 				_c.underlyingPrice = prices[_c.underlying.toLowerCase()]
 				_c.strategy = _getStrategy(lendingRes[1].values[0])
@@ -103,7 +103,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				const underlyingDecimals = await underlyingToken.decimals()
 
 				const p = prices[_c.underlying.toLowerCase()]
-				_c.price = exchangeRate.mul(p).div(BigNumber.from(10).pow(18))
+				_c.price = decimate(exchangeRate.mul(p))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
@@ -111,6 +111,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				// Here, the price is already decimated by 1e18, so we can subtract 8
 				// from the underlying token's decimals.
 				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
+			} else {
+				_c.price = prices[_c.address.toLowerCase()]
 			}
 
 			_comp.push({
