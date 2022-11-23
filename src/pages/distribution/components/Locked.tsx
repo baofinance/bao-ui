@@ -213,7 +213,8 @@ const Migration: React.FC = () => {
 						</Typography>
 
 						<Typography className='mt-2 leading-normal text-text-200'>
-							If you chose to migrate your distribution to veBAO, you will have a locked balance of "Vote Escrowed BAO" (veBAO) that you can see here on our{' '}
+							If you chose to migrate your distribution to veBAO, you will have a locked balance of "Vote Escrowed BAO" (veBAO) that you can
+							see here on our{' '}
 							<Link href='/vebao' className='font-bold hover:text-text-400'>
 								/veBAO
 							</Link>{' '}
