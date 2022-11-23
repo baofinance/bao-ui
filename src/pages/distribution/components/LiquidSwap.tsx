@@ -56,12 +56,6 @@ const LiquidSwap: React.FC = () => {
 
 	const claimedBao = swapperBalance ? initialSwapperBalance.sub(swapperBalance) : BigNumber.from(0)
 
-	console.log(baov2Balance.toString())
-
-	console.log(claimedBao.toString())
-	console.log(swapperBalance.toString())
-	console.log(claimedBao.div(initialSwapperBalance).mul(100))
-
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='sm:w-4/5'>
