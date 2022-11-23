@@ -5,7 +5,6 @@ import Input from '@/components/Input'
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBao from '@/hooks/base/useBao'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
@@ -49,20 +48,14 @@ const LiquidSwap: React.FC = () => {
 			placeholderData: BigNumber.from(1),
 		},
 	)
-
-	const claimedBao = swapperBalance && parseFloat(formatUnits(initialSwapperBalance.sub(swapperBalance)))
-
 	const _refetch = () => {
-		// # HACKY: skip this time around the eventloop lol
-		if (enabled) setTimeout(() => refetch(), 0)
+		if (enabled) refetch
 	}
-
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
-	console.log(claimedBao.toString())
-	console.log(swapperBalance.toString())
-	console.log(claimedBao && ((claimedBao / parseFloat(formatUnits(initialSwapperBalance))) * 100).toFixed(2))
+	const claimedBao = swapperBalance ? initialSwapperBalance.sub(swapperBalance) : BigNumber.from(0)
+
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='sm:w-4/5'>
@@ -85,9 +78,9 @@ const LiquidSwap: React.FC = () => {
 									<Typography variant='sm'>{getDisplayBalance(baov1Balance)} BAO v1</Typography>
 								</div>
 								<Input
-									onSelectMax={() => setInputVal(baov1Balance.toString())}
+									onSelectMax={() => setInputVal(formatUnits(baov1Balance))}
 									onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
-									value={inputVal && formatUnits(decimate(parseUnits(inputVal)))}
+									value={inputVal}
 									label={
 										<div className='flex flex-row items-center pl-2 pr-4'>
 											<div className='flex w-6 items-center justify-center'>
@@ -116,7 +109,7 @@ const LiquidSwap: React.FC = () => {
 									onSelectMax={null}
 									onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 									disabled={true}
-									value={inputVal && formatUnits(decimate(parseUnits(inputVal).mul(parseUnits('0.001')), 36))}
+									value={inputVal && formatUnits(decimate(parseUnits(inputVal).mul(parseUnits('0.001'))))}
 									label={
 										<div className='flex flex-row items-center pl-2 pr-4'>
 											<div className='flex w-6 items-center justify-center'>
@@ -131,7 +124,7 @@ const LiquidSwap: React.FC = () => {
 								<div className='h-4' />
 							</Card.Body>
 							<Card.Actions>
-								<SwapperButton inputVal={inputVal} maxValue={decimate(baov1Balance)} />
+								<SwapperButton inputVal={inputVal} maxValue={baov1Balance} />
 							</Card.Actions>
 						</Card>
 					</div>
@@ -140,7 +133,7 @@ const LiquidSwap: React.FC = () => {
 							<Card.Header header='Migration Progress' />
 							<div className='m-auto w-[200px]'>
 								<CircularProgressbarWithChildren
-									value={claimedBao && (claimedBao / parseFloat(formatUnits(initialSwapperBalance))) * 100}
+									value={parseFloat(formatUnits(claimedBao.div(initialSwapperBalance).mul(100)))}
 									strokeWidth={10}
 									styles={buildStyles({
 										strokeLinecap: 'butt',
@@ -156,9 +149,7 @@ const LiquidSwap: React.FC = () => {
 												<Typography variant='sm' className='text-text-200'>
 													BAOv1 Redeemed
 												</Typography>
-												<Typography>
-													{claimedBao && ((claimedBao / parseFloat(formatUnits(initialSwapperBalance))) * 100).toFixed(2)}%
-												</Typography>
+												<Typography>{formatUnits(claimedBao.div(initialSwapperBalance).mul(100))}%</Typography>
 											</div>
 										</div>
 									</div>
@@ -175,7 +166,6 @@ const LiquidSwap: React.FC = () => {
 export default LiquidSwap
 
 const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: SwapperButtonProps) => {
-	const bao = useBao()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const { chainId, account } = useWeb3React()
@@ -185,8 +175,6 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const swapper = useContract<Swapper>('Swapper')
 
 	const handleClick = async () => {
-		if (!bao) return
-
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
 			const tx = baoContract.approve(
@@ -197,7 +185,7 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 			return handleTx(tx, 'Migration: Approve BAOv1')
 		}
 
-		handleTx(swapper.convertV1(account, inputVal), 'Migration: Swap BAOv1 to BAOv2')
+		handleTx(swapper.convertV1(account, parseUnits(inputVal)), 'Migration: Swap BAOv1 to BAOv2')
 	}
 
 	const buttonText = () => {
@@ -216,7 +204,10 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 		}
 	}
 
-	const isDisabled = useMemo(() => typeof pendingTx === 'string' || pendingTx || !isBigNumberish(inputVal), [pendingTx, inputVal, maxValue])
+	const isDisabled = useMemo(
+		() => typeof pendingTx === 'string' || pendingTx || (inputVal && parseUnits(inputVal).gt(maxValue)),
+		[pendingTx, inputVal, maxValue],
+	)
 
 	return (
 		<Button fullWidth onClick={handleClick} disabled={isDisabled}>

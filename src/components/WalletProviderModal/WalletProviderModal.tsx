@@ -32,10 +32,10 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 
 	useEffect(() => {
 		// FIXME: need to change this when the frontend is multichain like sushi
-		if (account && chainId === Config.networkId) {
+		if (account && chainId === Config.networkId && show) {
 			onHide()
 		}
-	}, [account, chainId, onHide])
+	}, [account, chainId, onHide, show])
 
 	useEffect(() => {
 		if (activatingConnector && activatingConnector === connector) {
@@ -44,10 +44,10 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 	}, [activatingConnector, connector])
 
 	useEffect(() => {
-		if (account && active) {
+		if (account && active && show) {
 			onHide()
 		}
-	}, [account, active, onHide])
+	}, [account, active, onHide, show])
 
 	if (window.ethereum && window.ethereum.chainId !== Config.defaultRpc.chainId) {
 		window.ethereum
