@@ -133,7 +133,7 @@ const LiquidSwap: React.FC = () => {
 							<Card.Header header='Migration Progress' />
 							<div className='m-auto w-[200px]'>
 								<CircularProgressbarWithChildren
-									value={formatUnits(claimedBao.div(initialSwapperBalance).mul(100))}
+									value={parseFloat(formatUnits(claimedBao.div(initialSwapperBalance).mul(100)))}
 									strokeWidth={10}
 									styles={buildStyles({
 										strokeLinecap: 'butt',
