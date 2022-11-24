@@ -37,24 +37,23 @@ const LiquidSwap: React.FC = () => {
 	const initialSwapperBalance = parseUnits('166850344.226331394130869546')
 	const enabled = !!chainId && !!account && !!library && !!swapper && !!baoV2
 	const { data: swapperBalance, refetch } = useQuery(
-		['swapperBalance', { enabled }, providerKey(library, account, chainId)],
+		['swapperBalance', providerKey(library, account, chainId)],
 		async () => {
-			if (!enabled) throw new Error('not enabled')
 			const _balance = await baoV2['balanceOf(address)'](swapper?.address)
 			return _balance
 		},
 		{
 			enabled,
-			placeholderData: BigNumber.from(1),
+			placeholderData: BigNumber.from(0),
 		},
 	)
 	const _refetch = () => {
-		if (enabled) refetch
+		if (enabled) refetch()
 	}
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
-	const claimedBao = swapperBalance ? initialSwapperBalance.sub(swapperBalance) : BigNumber.from(0)
+	const claimedBao = initialSwapperBalance.sub(swapperBalance)
 
 	return (
 		<div className='flex flex-col items-center'>

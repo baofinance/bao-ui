@@ -4,24 +4,24 @@ import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
+import useProofs from '@/hooks/distribution/useProofs'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useQuery } from '@tanstack/react-query'
-import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { Fragment, useState } from 'react'
+import Config from '@/bao/lib/config'
+import Modal from '@/components/Modal'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
-import Config from '@/bao/lib/config'
 
 const options = [
 	{
@@ -44,32 +44,13 @@ const options = [
 const Migration: React.FC = () => {
 	const [selectedOption, setSelectedOption] = useState(options[0])
 	const { handleTx, pendingTx } = useTransactionHandler()
-
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
-
-	const { account } = useWeb3React()
-	const { data: merkleLeaf } = useQuery(
-		['https://bao-distribution-api.herokuapp.com/', account],
-		async () => {
-			const leafResponse = await fetch(`https://bao-distribution-api.herokuapp.com/${account}`)
-			if (leafResponse.status !== 200) {
-				const { error } = await leafResponse.json()
-				throw new Error(`${error.code} - ${error.message}`)
-			}
-			const leaf = await leafResponse.json()
-			return leaf
-		},
-		{
-			retry: false,
-			enabled: !!account,
-			staleTime: Infinity,
-			cacheTime: Infinity,
-		},
-	)
-
 	const dist = useDistributionInfo()
+	const merkleLeaf = useProofs()
 
-	const canStartDistribution = !!distribution && !!dist && !!merkleLeaf
+	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
+	//const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
+	//const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
 
 	let distElement
 	if (dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)) {
@@ -290,7 +271,7 @@ const Migration: React.FC = () => {
 							</Button>
 						) : (
 							<Button
-								disabled={!canStartDistribution || (dist && dist.dateStarted.gt(0))}
+								disabled={!canStartDistribution}
 								className='bg-primary-500'
 								onClick={async () => {
 									const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
@@ -307,9 +288,11 @@ const Migration: React.FC = () => {
 	}
 
 	return (
-		<div className='flex flex-col items-center'>
-			<div className='pt-4 md:w-4/5'>{distElement}</div>
-		</div>
+		<>
+			<div className='flex flex-col items-center'>
+				<div className='pt-4 md:w-4/5'>{distElement}</div>
+			</div>
+		</>
 	)
 }
 

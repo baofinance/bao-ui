@@ -14,7 +14,6 @@ const useClaimableFees = () => {
 	const { data: claimableFees, refetch } = useQuery(
 		['@/hooks/vebao/useClaimableFees', providerKey(library, account, chainId)],
 		async () => {
-			console.log(feeDistributor)
 			const _claimableFees = await feeDistributor.callStatic['claim(address)'](account)
 			return _claimableFees
 		},
