@@ -5,7 +5,7 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=true yarn build && serve .next -n",
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "build": "ANALYZE=true next build",
+    "build": "npx next build",
     "winBuild": "cross-env ANALYZE=true next build",
     "start": "next start",
     "export": "next export",
