@@ -1,29 +1,38 @@
 import useContract from '@/hooks/base/useContract'
-import type { BaoDistribution } from '@/typechain/index'
+import { useQuery } from '@tanstack/react-query'
+import type { BaoDistribution } from '@/typechain/BaoDistribution'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { providerKey } from '@/utils/index'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 const useClaimable = () => {
-	const [claimable, setClaimable] = useState<BigNumber | boolean>(BigNumber.from(0))
-	const { account, library } = useWeb3React()
-	const distributionContract = useContract<BaoDistribution>('BaoDistribution')
+	const { account, library, chainId } = useWeb3React()
+	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
-	const fetchClaimable = useCallback(async () => {
-		try {
-			const claimable = await distributionContract.claimable(account, 0)
-			setClaimable(claimable)
-		} catch (e: any) {
-			if (e.errorSignature === 'DistributionEndedEarly()') {
-				setClaimable(false)
+	const enabled = !!account && !!distribution
+	const { data: claimable, refetch } = useQuery(
+		['@/hooks/distribution/useClaimable', providerKey(library, account, chainId)],
+		async () => {
+			try {
+				const claimable = await distribution.claimable(account, 0)
+				return claimable
+			} catch (e: any) {
+				if (e.errorSignature === 'DistributionEndedEarly()') {
+					return false
+				}
 			}
-		}
-	}, [account, distributionContract])
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!account || !distributionContract) return
-		fetchClaimable()
-	}, [fetchClaimable, account, distributionContract])
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
 	return claimable
 }

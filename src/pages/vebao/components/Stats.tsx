@@ -33,7 +33,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 	const { account, chainId } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const claimableFees = useClaimableFees()
-	const feeDistributor = useContract<FeeDistributor>('FeeDistributor', Config.contracts.FeeDistributor[chainId].address)
+	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	return (
 		<div className='col-span-2 grid h-full grid-rows-6 items-center rounded border border-primary-300 bg-primary-100 p-4'>

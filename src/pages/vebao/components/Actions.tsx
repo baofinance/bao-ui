@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
@@ -7,6 +8,8 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
+import useProofs from '@/hooks/distribution/useProofs'
 import { LockInfo } from '@/hooks/vebao/useLockInfo'
 import type { Baov2, VotingEscrow } from '@/typechain/index'
 import { dateFromEpoch, getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
@@ -22,6 +25,7 @@ import Link from 'next/link'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import React, { useCallback, useState } from 'react'
+import Modal from '@/components/Modal'
 
 type ActionProps = {
 	baoBalance?: BigNumber
@@ -67,6 +71,25 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 		const block = await library?.getBlock()
 		return block
 	})
+
+	const [showModal, setShowModal] = useState(false)
+	const [seenModal, setSeenModal] = useState(false)
+
+	const modalShow = () => {
+		setShowModal(true)
+	}
+	const modalHide = () => {
+		setSeenModal(true)
+		setShowModal(false)
+	}
+
+	const dist = useDistributionInfo()
+	const merkleLeaf = useProofs()
+	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
+	const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
+	//const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
+
+	const shouldBeWarned = (canStartDistribution || canEndDistribution) && !seenModal
 
 	return (
 		<div className='col-span-2 row-span-1 rounded border border-primary-300 bg-primary-100 p-4'>
@@ -142,11 +165,15 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 												disabled={baoBalance.lte(0)}
 												onClick={async () => {
 													// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
-													const approveTx = baoV2.approve(votingEscrow.address, ethers.constants.MaxUint256)
-													handleTx(approveTx, `veBAO: Approve BAO`)
+													if (shouldBeWarned) {
+														modalShow()
+													} else {
+														const approveTx = baoV2.approve(votingEscrow.address, ethers.constants.MaxUint256)
+														handleTx(approveTx, `veBAO: Approve BAO`)
+													}
 												}}
 											>
-												Approve BAO
+												{shouldBeWarned ? 'Read Warning' : 'Approve BAO'}
 											</Button>
 										)}
 									</>
@@ -166,11 +193,15 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 											<Button
 												fullWidth
 												onClick={async () => {
-													const lockTx = votingEscrow.create_lock(ethers.utils.parseEther(val.toString()), getEpochSecondForDay(lockTime))
-													handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} BAO until ${lockTime.toLocaleDateString()}`)
+													if (shouldBeWarned) {
+														modalShow()
+													} else {
+														const lockTx = votingEscrow.create_lock(ethers.utils.parseEther(val.toString()), getEpochSecondForDay(lockTime))
+														handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} BAO until ${lockTime.toLocaleDateString()}`)
+													}
 												}}
 											>
-												Create Lock
+												{shouldBeWarned ? 'Read Warning' : 'Create Lock'}
 											</Button>
 										)}
 									</>
@@ -248,6 +279,44 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 					</Card.Body>
 				</>
 			)}
+
+			<Modal isOpen={showModal} onDismiss={modalHide}>
+				<Modal.Header
+					onClose={modalHide}
+					header={
+						<>
+							<Typography variant='h2' className='mr-1 inline-block font-semibold'>
+								Warning!
+							</Typography>
+							<Typography variant='xl' className='mb-5 font-semibold text-text-300'>
+								Locked token migration available
+							</Typography>
+						</>
+					}
+				/>
+				<Modal.Body>
+					<Typography variant='base' className='mr-1 pt-5 leading-normal'>
+						This account has a locked BAO distribution available to it! If you create a new lock instead of migrating your distribution to a
+						locked balance, you will be unable to choose the 'migrate' option for its entire length (four years) and will only be able to
+						'claim' or 'end' your token distribution.
+						<br />
+						<br />
+						For this reason, we highly recommend that you start and migrate your distribution of BAO tokens rather than creating a new lock
+						here. To re-iterate, you will have to wait the entire distribution period to lock your distribution as veBAO if you choose to
+						manually make a new lock here instead of migrating your account's distribution.
+						<br />
+						<br />
+						To take advantage of this, you should start your distribution and act on it over in the 'Locked BAO' section of the{' '}
+						<Link href='/distribution/'>
+							<a className='font-bold hover:text-text-400'>/distribution/</a>
+						</Link>{' '}
+						page.
+					</Typography>
+					<Button className='my-4' fullWidth onClick={modalHide}>
+						I understand the risk!
+					</Button>
+				</Modal.Body>
+			</Modal>
 		</div>
 	)
 }
