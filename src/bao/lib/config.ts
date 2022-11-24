@@ -332,12 +332,12 @@ export default {
 			name: 'bSTBL',
 			icon: 'bSTBL.png',
 			cgIds: {
-				'0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': 'rai',
+				'0x57Ab1ec28D129707052df4dF418D58a2D46d5f51': 'nusd',
 				'0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
 				'0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 'usd-coin',
 			},
 			pieColors: {
-				aRAI: '#1FC9A8',
+				aSUSD: '#1FC9A8',
 				aDAI: '#F5AC37',
 				aUSDC: '#2775CA',
 			},

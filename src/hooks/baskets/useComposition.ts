@@ -71,6 +71,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 						balance: await mkr.balanceOf(basket.address),
 				  }
 			_c.address = tokenComposition[i]
+			_c.price = prices[tokenComposition[i].toLowerCase()]
 
 			// Check if component is lent out. If the coin gecko prices array doesn't conclude it,
 			// the current component is a wrapped interest bearing token.
@@ -88,7 +89,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				])
 				const { lendingRegistry: lendingRes } = MultiCall.parseCallResults(await bao.multicall.call(lendingQuery))
 
-				_c.price = prices[lendingRes[0].values[0].toLowerCase()]
 				_c.underlying = lendingRes[0].values[0]
 				_c.underlyingPrice = prices[_c.underlying.toLowerCase()]
 				_c.strategy = _getStrategy(lendingRes[1].values[0])
@@ -102,8 +102,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				const underlyingToken = Erc20__factory.connect(lendingRes[0].values[0], library)
 				const underlyingDecimals = await underlyingToken.decimals()
 
-				const p = prices[_c.underlying.toLowerCase()]
-				_c.price = decimate(exchangeRate.mul(p))
+				_c.price = decimate(prices[_c.underlying.toLowerCase()].mul(exchangeRate))
 				_c.apy = apy
 
 				// Adjust price for compound's exchange rate.
@@ -111,10 +110,9 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				// Here, the price is already decimated by 1e18, so we can subtract 8
 				// from the underlying token's decimals.
 				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
-			} else {
-				_c.price = prices[_c.address.toLowerCase()]
 			}
 
+			console.log(_c.symbol, basket.pieColors[_c.symbol])
 			_comp.push({
 				..._c,
 				image: `/images/tokens/${_getImageURL(_c.symbol)}.png`,
@@ -160,12 +158,32 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 }
 
 // Strategies represented in the Lending Registry contract as bytes32 objects.
-const _getStrategy = (symbol: string) =>
-	symbol.endsWith('1') ? 'Compound' : symbol.endsWith('2') ? 'AAVE' : symbol.endsWith('3') ? 'Sushi Bar' : 'Unknown'
+const _getStrategy = (symbol: string) => {
+	if (symbol.endsWith('1')) {
+		return 'Compound'
+	} else if (symbol.endsWith('2')) {
+		return 'AAVE'
+	} else if (symbol.endsWith('3')) {
+		return 'Sushi Bar'
+	} else {
+		return 'Unknown'
+	}
+}
 
 // Special cases for image URLS, i.e. wrapped assets
 // This sucks. Should do this more dynamically.
-const _getImageURL = (symbol: string) =>
-	symbol.toLowerCase() === 'arai' ? 'RAI' : symbol.toLowerCase() === 'ausdc' ? 'USDC' : symbol.toLowerCase() === 'adai' ? 'DAI' : symbol
+const _getImageURL = (symbol: string) => {
+	switch (symbol.toLowerCase()) {
+		case 'asusd':
+			return 'SUSD'
+		case 'ausdc':
+			return 'USDC'
+		case 'adai':
+			return 'DAI'
+
+		default:
+			return undefined
+	}
+}
 
 export default useComposition

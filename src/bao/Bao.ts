@@ -8,6 +8,7 @@ export class Bao {
 	constructor(provider: Provider) {
 		this.multicall = new MC({
 			ethersProvider: provider,
+			tryAggregate: true,
 		})
 	}
 }

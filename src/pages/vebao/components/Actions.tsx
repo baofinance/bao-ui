@@ -162,12 +162,12 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 										) : (
 											<Button
 												fullWidth
-												disabled={baoBalance.lte(0)}
+												disabled={baoBalance.lte(0) && !shouldBeWarned}
 												onClick={async () => {
-													// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
 													if (shouldBeWarned) {
 														modalShow()
 													} else {
+														// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
 														const approveTx = baoV2.approve(votingEscrow.address, ethers.constants.MaxUint256)
 														handleTx(approveTx, `veBAO: Approve BAO`)
 													}
@@ -192,6 +192,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 										) : (
 											<Button
 												fullWidth
+												disabled={baoBalance.lte(0) && !shouldBeWarned}
 												onClick={async () => {
 													if (shouldBeWarned) {
 														modalShow()
@@ -312,9 +313,15 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 						</Link>{' '}
 						page.
 					</Typography>
-					<Button className='my-4' fullWidth onClick={modalHide}>
-						I understand the risk!
-					</Button>
+					<div className='flow-col my-5 flex items-center gap-3'>
+						<Link className='w-full' href='/distribution'>
+							<Button fullWidth>Go to distribution</Button>
+						</Link>
+						OR
+						<Button fullWidth onClick={modalHide}>
+							I understand the risk!
+						</Button>
+					</div>
 				</Modal.Body>
 			</Modal>
 		</div>
