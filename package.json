@@ -5,14 +5,14 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=true yarn build && serve .next -n",
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "build": "npx next build",
+    "build": "npx next build && npm run export",
     "winBuild": "cross-env ANALYZE=true next build",
-    "start": "next start",
-    "export": "next export",
-    "lint": "next lint --fix",
-    "prettier": "prettier --write 'src/**/*.{ts,tsx}'",
-    "unused": "next-unused",
-    "typechain": "typechain --glob 'src/bao/lib/abi/*.json' --target ethers-v5 --out-dir src/typechain --discriminate-types --always-generate-overloads"
+    "start": "npx next start",
+    "export": "npx next export",
+    "lint": "npx next lint --fix",
+    "prettier": "npx prettier --write 'src/**/*.{ts,tsx}'",
+    "unused": "npx next-unused",
+    "typechain": "npx typechain --glob 'src/bao/lib/abi/*.json' --target ethers-v5 --out-dir src/typechain --discriminate-types --always-generate-overloads"
   },
   "eslintConfig": {
     "extends": "next"
