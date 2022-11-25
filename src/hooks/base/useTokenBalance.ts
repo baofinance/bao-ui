@@ -24,7 +24,7 @@ export const useEthBalance = () => {
 
 	const _refetch = () => {
 		// # HACKY: skip this time around the eventloop lol
-		if (enabled) setTimeout(() => refetch(), 0)
+		if (enabled) refetch()
 	}
 
 	useTxReceiptUpdater(_refetch)
@@ -40,7 +40,6 @@ const useTokenBalance = (tokenAddress: string) => {
 	const { data: balance, refetch } = useQuery(
 		['@/hooks/base/useTokenBalance', { enabled }, providerKey(library, account, chainId), tokenAddress],
 		async () => {
-			if (!enabled) throw new Error('not enabled')
 			const _balance = await contract.balanceOf(account)
 			return _balance
 		},
@@ -51,8 +50,7 @@ const useTokenBalance = (tokenAddress: string) => {
 	)
 
 	const _refetch = () => {
-		// # HACKY: skip this time around the eventloop lol
-		if (enabled) setTimeout(() => refetch(), 0)
+		if (enabled) refetch()
 	}
 
 	useTxReceiptUpdater(_refetch)

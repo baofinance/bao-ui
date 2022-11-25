@@ -1,16 +1,15 @@
 import { Contract } from '@ethersproject/contracts'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
-
 import Config from '@/bao/lib/config'
 //import useBlock from '@/hooks/base/useBlock'
 import MultiCall from '@/utils/multicall'
 import { Erc20__factory, Ctoken__factory } from '@/typechain/factories'
-
-import { formatUnits } from 'ethers/lib/utils'
-import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
+import useBao from '@/hooks/base/useBao'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export type Balance = {
 	address: string
@@ -22,47 +21,49 @@ export type Balance = {
 export const useAccountBalances = (): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
-	const { transactions } = useTransactionProvider()
-	//const block = useBlock()
 
-	const [balances, setBalances] = useState<Balance[] | undefined>()
+	const enabled = !!bao && !!account && !!chainId
+	const { data: balances, refetch } = useQuery(
+		['@/hooks/markets/useAccountBalances', providerKey(library, account, chainId)],
+		async () => {
+			const tokens = Config.markets.map(market => market.underlyingAddresses[chainId])
+			const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
-	const fetchBalances = useCallback(async () => {
-		const tokens = Config.markets.map(market => market.underlyingAddresses[chainId])
-		const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
-
-		const res = MultiCall.parseCallResults(
-			await bao.multicall.call(
-				MultiCall.createCallContext(
-					contracts.map(
-						contract =>
-							contract && {
-								ref: contract.address,
-								contract,
-								calls: [{ method: 'symbol' }, { method: 'decimals' }, { method: 'balanceOf', params: [account] }],
-							},
+			const res = MultiCall.parseCallResults(
+				await bao.multicall.call(
+					MultiCall.createCallContext(
+						contracts.map(
+							contract =>
+								contract && {
+									ref: contract.address,
+									contract,
+									calls: [{ method: 'symbol' }, { method: 'decimals' }, { method: 'balanceOf', params: [account] }],
+								},
+						),
 					),
 				),
-			),
-		)
-		const ethBalance = await library.getBalance(account)
+			)
+			const ethBalance = await library.getBalance(account)
 
-		setBalances(
-			tokens.map(address => {
+			return tokens.map(address => {
 				const symbol = res[address] ? res[address][0].values[0] : 'ETH'
 				const decimals = res[address] ? res[address][1].values[0] : 18
 				const balance = res[address] ? res[address][2].values[0] : ethBalance
 				// FIXME: make this .balance a bn.js for decimals or format it later in the component
 				return { address, symbol, balance, decimals }
-			}),
-		)
-	}, [library, bao, account, chainId])
+			})
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!bao || !account || !library || !chainId) return
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
 
-		fetchBalances()
-	}, [fetchBalances, bao, library, account, chainId, transactions])
+	useBlockUpdater(_refetch, 10)
+	useTxReceiptUpdater(_refetch)
 
 	return balances
 }
@@ -70,27 +71,27 @@ export const useAccountBalances = (): Balance[] => {
 export const useSupplyBalances = (): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
-	const { transactions } = useTransactionProvider()
-	const [balances, setBalances] = useState<Balance[] | undefined>()
 
-	const fetchBalances = useCallback(async () => {
-		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
-		const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
+	const enabled = !!bao && !!account && !!chainId
+	const { data: balances, refetch } = useQuery(
+		['@/hooks/markets/useSupplyBalances', providerKey(library, account, chainId)],
+		async () => {
+			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
+			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
-		const res = MultiCall.parseCallResults(
-			await bao.multicall.call(
-				MultiCall.createCallContext(
-					contracts.map(contract => ({
-						ref: contract.address,
-						contract,
-						calls: [{ method: 'symbol' }, { method: 'balanceOf', params: [account] }],
-					})),
+			const res = MultiCall.parseCallResults(
+				await bao.multicall.call(
+					MultiCall.createCallContext(
+						contracts.map(contract => ({
+							ref: contract.address,
+							contract,
+							calls: [{ method: 'symbol' }, { method: 'balanceOf', params: [account] }],
+						})),
+					),
 				),
-			),
-		)
+			)
 
-		setBalances(
-			Object.keys(res).map(address => {
+			return Object.keys(res).map(address => {
 				const decimals = Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
@@ -98,15 +99,19 @@ export const useSupplyBalances = (): Balance[] => {
 					balance: res[address][1].values[0],
 					decimals,
 				}
-			}),
-		)
-	}, [bao, account, library, chainId])
+			})
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!bao || !library || !account || !chainId) return
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
 
-		fetchBalances()
-	}, [fetchBalances, bao, library, account, chainId, transactions])
+	useBlockUpdater(_refetch, 10)
+	useTxReceiptUpdater(_refetch)
 
 	return balances
 }
@@ -114,27 +119,27 @@ export const useSupplyBalances = (): Balance[] => {
 export const useBorrowBalances = (): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
-	const { transactions } = useTransactionProvider()
-	const [balances, setBalances] = useState<Balance[] | undefined>()
 
-	const fetchBalances = useCallback(async () => {
-		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
-		const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
+	const enabled = !!bao && !!account && !!chainId
+	const { data: balances, refetch } = useQuery(
+		['@/hooks/markets/useBorrowBalances', providerKey(library, account, chainId)],
+		async () => {
+			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
+			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
-		const res = MultiCall.parseCallResults(
-			await bao.multicall.call(
-				MultiCall.createCallContext(
-					contracts.map(contract => ({
-						ref: contract.address,
-						contract,
-						calls: [{ method: 'symbol' }, { method: 'borrowBalanceStored', params: [account] }],
-					})),
+			const res = MultiCall.parseCallResults(
+				await bao.multicall.call(
+					MultiCall.createCallContext(
+						contracts.map(contract => ({
+							ref: contract.address,
+							contract,
+							calls: [{ method: 'symbol' }, { method: 'borrowBalanceStored', params: [account] }],
+						})),
+					),
 				),
-			),
-		)
+			)
 
-		setBalances(
-			Object.keys(res).map(address => {
+			return Object.keys(res).map(address => {
 				const decimals = Config.markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
@@ -142,14 +147,19 @@ export const useBorrowBalances = (): Balance[] => {
 					balance: res[address][1].values[0],
 					decimals,
 				}
-			}),
-		)
-	}, [bao, account, library, chainId])
+			})
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!bao || !account || !chainId || !library) return
-		fetchBalances()
-	}, [fetchBalances, bao, account, library, chainId, transactions])
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useBlockUpdater(_refetch, 10)
+	useTxReceiptUpdater(_refetch)
 
 	return balances
 }

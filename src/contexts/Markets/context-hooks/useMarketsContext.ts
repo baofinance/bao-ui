@@ -21,7 +21,7 @@ export const BLOCKS_PER_DAY = BLOCKS_PER_SECOND * SECONDS_PER_DAY
 export const DAYS_PER_YEAR = 365
 
 // FIXME: this should be ethers.BigNumber math
-const toApy = (rate: BigNumber) => (Math.pow((rate.toNumber() / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100
+const toApy = (rate: BigNumber) => ((Math.pow((rate.toNumber() / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100).toFixed(18)
 //const toApy = (rate: BigNumber) => {
 //const n = rate.mul(BLOCKS_PER_DAY).add(1)
 //const ne = n.pow(DAYS_PER_YEAR)

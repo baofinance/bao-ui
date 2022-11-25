@@ -9,7 +9,8 @@ import { DefaultSeo } from 'next-seo'
 import React, { ReactNode } from 'react'
 import { SWRConfig } from 'swr'
 import { Web3Provider } from '@ethersproject/providers'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
+import queryClient from '@/utils/queryClient'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import fetcher from '@/bao/lib/fetcher'
@@ -81,18 +82,6 @@ function App({ Component, pageProps }: AppProps) {
 		</>
 	)
 }
-
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			staleTime: 1000 * 60 * 10, // ten minutes
-			cacheTime: 1000 * 60 * 60, // one hour
-			refetchOnReconnect: true,
-			refetchOnWindowFocus: false,
-			refetchOnMount: true,
-		},
-	},
-})
 
 const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 	return (
