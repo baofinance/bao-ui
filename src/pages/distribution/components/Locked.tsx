@@ -149,7 +149,7 @@ const Migration: React.FC = () => {
 							</div>
 						</div>
 						<div className='flex flex-row items-center'>
-							<Typography className='px-2 font-semibold text-text-100'>BAO Unlocked</Typography>
+							<Typography className='px-2 font-semibold text-text-100'>BAO Pending Claim</Typography>
 							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(dist ? dist.curve : BigNumber.from(0))}</Typography>

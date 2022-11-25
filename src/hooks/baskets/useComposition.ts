@@ -112,7 +112,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
 			}
 
-			console.log(_c.symbol, basket.pieColors[_c.symbol])
 			_comp.push({
 				..._c,
 				image: `/images/tokens/${_getImageURL(_c.symbol)}.png`,

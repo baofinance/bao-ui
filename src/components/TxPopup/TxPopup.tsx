@@ -70,7 +70,6 @@ const TxPopup: React.FC = () => {
 			pendingTxs.map(tx => {
 				if (!stxs[tx.hash]) {
 					waitTransaction(library, tx.hash).then(receipt => {
-						console.log(receipt)
 						if (receipt === null) {
 							return
 						}

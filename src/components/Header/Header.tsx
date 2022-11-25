@@ -101,7 +101,7 @@ const Header: FC = () => {
 															<MobileNavLink href='/ballast'>Ballast</MobileNavLink>
 															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
 															<MobileNavLink href='/farms'>Farms</MobileNavLink>
-															<MobileNavLink href='/vebao'>vBAO</MobileNavLink>
+															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
 															<MobileNavLink href='/gauges'>Gauges</MobileNavLink>
 															<MobileNavLink href='/distribution'>Distribution</MobileNavLink>
 														</div>

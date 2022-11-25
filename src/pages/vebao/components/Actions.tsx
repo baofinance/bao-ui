@@ -208,7 +208,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 							</div>
 						) : (
 							<div className='flex w-full flex-row gap-4'>
-								<div className='mt-3 grid w-full grid-cols-2 gap-2'>
+								<div className='mt-3 grid w-full md:grid-cols-2 gap-2'>
 									{pendingTx ? (
 										<Button disabled={true}>
 											{typeof pendingTx === 'string' ? (
