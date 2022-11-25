@@ -3,14 +3,16 @@ import fetcher from '@/bao/lib/fetcher'
 import { SWR } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
 import useSWR from 'swr'
 import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
 import useContract from '@/hooks/base/useContract'
 import type { MarketOracle } from '@/typechain/index'
 //import { parseUnits } from 'ethers/lib/utils'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 type Prices = {
 	prices: {
@@ -50,43 +52,47 @@ export const usePrices = (): SWR & Prices => {
 }
 
 export const useMarketPrices = (): MarketPrices => {
-	const { transactions } = useTransactionProvider()
 	const bao = useBao()
-	const [prices, setPrices] = useState<{ [key: string]: BigNumber } | undefined>()
 	const oracle = useContract<MarketOracle>('MarketOracle')
 
-	const { chainId } = useWeb3React()
+	const { library, account, chainId } = useWeb3React()
 
-	const fetchPrices = useCallback(async () => {
-		const tokens = Config.markets.map(market => market.marketAddresses[chainId])
-		const multiCallContext = MultiCall.createCallContext([
-			{
-				ref: 'MarketOracle',
-				contract: oracle,
-				calls: tokens.map(token => ({
-					ref: token,
-					method: 'getUnderlyingPrice',
-					params: [token],
-				})),
-			},
-		])
-		const data = MultiCall.parseCallResults(await bao.multicall.call(multiCallContext))
-
-		setPrices(
-			data['MarketOracle'].reduce(
+	const enabled = !!bao && !!oracle && !!chainId
+	const { data: prices, refetch } = useQuery(
+		['@/hooks/markets/useMarketPrices', providerKey(library, account, chainId)],
+		async () => {
+			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
+			const multiCallContext = MultiCall.createCallContext([
+				{
+					ref: 'MarketOracle',
+					contract: oracle,
+					calls: tokens.map(token => ({
+						ref: token,
+						method: 'getUnderlyingPrice',
+						params: [token],
+					})),
+				},
+			])
+			const data = MultiCall.parseCallResults(await bao.multicall.call(multiCallContext))
+			return data['MarketOracle'].reduce(
 				(_prices: { [key: string]: { usd: number } }, result: any) => ({
 					..._prices,
 					[result.ref]: result.values[0],
 				}),
 				{},
-			),
-		)
-	}, [bao, oracle, chainId])
+			)
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!bao || !oracle) return
-		fetchPrices()
-	}, [fetchPrices, transactions, bao, oracle])
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useBlockUpdater(_refetch, 10)
+	useTxReceiptUpdater(_refetch)
 
 	return {
 		prices,
