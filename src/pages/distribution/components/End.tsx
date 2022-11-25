@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
@@ -5,11 +6,25 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
-import React from 'react'
+import React, { useState } from 'react'
+import Modal from '@/components/Modal'
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
+
+	const [showModal, setShowModal] = useState(false)
+	const [seenModal, setSeenModal] = useState(false)
+
+	const modalShow = () => {
+		setShowModal(true)
+	}
+	const modalHide = () => {
+		setSeenModal(true)
+		setShowModal(false)
+	}
+
+	const shouldBeWarned = !seenModal
 
 	return (
 		<div className='flex flex-col px-4'>
@@ -68,17 +83,58 @@ const Migration: React.FC = () => {
 					className='my-4'
 					fullWidth
 					onClick={async () => {
-						const endDistribution = distribution.endDistribution()
-						handleTx(endDistribution, `Distribution: End Distribution`)
+						if (shouldBeWarned) {
+							modalShow()
+						} else {
+							const endDistribution = distribution.endDistribution()
+							handleTx(endDistribution, `Distribution: End Distribution`)
+						}
 					}}
 				>
-					End Distribution
+					{shouldBeWarned ? 'Read Warning' : 'End Distribution'}
 				</Button>
 			</div>
 
 			<Typography variant='sm' className='text-center text-text-200'>
 				* This action can be done only <b className='font-bold'>once</b> and can <b className='font-bold'>not</b> be reversed!
 			</Typography>
+
+			<Modal isOpen={showModal} onDismiss={modalHide}>
+				<Modal.Header
+					onClose={modalHide}
+					header={
+						<>
+							<Typography variant='h2' className='inline-block font-semibold'>
+								Warning!
+							</Typography>
+						</>
+					}
+				/>
+				<Modal.Body>
+					<Typography variant='xl' className='pb-5 font-semibold text-text-300'>
+						This is IRREVERSIBLE and forfeits tokens
+					</Typography>
+					<Typography variant='base' className='leading-normal'>
+						Ending your distribution early collects a slashed amount of your entire balance INSTANTLY.
+						<br />
+						<br />
+						This comes at the cost of forever forfeiting a large portion of the tokens that you would have received by instead migrating
+						once or claiming over time.
+						<br />
+						<br />
+						Ending your distribution early will cause you to be unable to take any further distribution actions.
+						<br />
+						<br />
+						Please make sure you've read the information on this page very carefully before submitting a transaction to end your
+						distribution early.
+					</Typography>
+					<div className='flow-col mt-5 flex items-center gap-3'>
+						<Button fullWidth onClick={modalHide}>
+							I understand the risk!
+						</Button>
+					</div>
+				</Modal.Body>
+			</Modal>
 		</div>
 	)
 }

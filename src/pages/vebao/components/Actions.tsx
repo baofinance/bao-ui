@@ -5,7 +5,6 @@ import Card from '@/components/Card'
 import Input from '@/components/Input'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBao from '@/hooks/base/useBao'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
@@ -33,7 +32,6 @@ type ActionProps = {
 }
 
 const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
-	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
 	const [val, setVal] = useState('')
 	const allowance = useAllowance(Config.contracts.Baov2[chainId].address, Config.contracts.votingEscrow[chainId].address)
@@ -223,7 +221,13 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 										</Button>
 									) : (
 										<Button
-											disabled={!val || !bao || !lockTime || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(baoBalance))}
+											disabled={
+												!val ||
+												!lockTime ||
+												isNaN(val as any) ||
+												parseFloat(val) > parseFloat(formatUnits(baoBalance)) ||
+												parseFloat(val) <= 0
+											}
 											onClick={async () => {
 												const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
 												handleTx(
@@ -250,7 +254,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 									) : (
 										<Button
 											fullWidth
-											disabled={!bao || !lockTime || lockTime <= currentLockEnd}
+											disabled={!lockTime || lockTime <= currentLockEnd || max <= 0}
 											onClick={async () => {
 												const lockTx = votingEscrow.increase_unlock_time(getEpochSecondForDay(lockTime))
 												handleTx(lockTx, `veBAO: Increased lock until ${lockTime.toLocaleDateString()}`)

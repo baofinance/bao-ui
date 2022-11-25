@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
@@ -8,6 +9,7 @@ import 'katex/dist/katex.min.css'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import React, { useState } from 'react'
+import Modal from '@/components/Modal'
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
@@ -23,6 +25,19 @@ const Migration: React.FC = () => {
 		setWeeks(value as number)
 		setLockTime(getDayOffset(min, (value as number) * 7))
 	}
+
+	const [showModal, setShowModal] = useState(false)
+	const [seenModal, setSeenModal] = useState(false)
+
+	const modalShow = () => {
+		setShowModal(true)
+	}
+	const modalHide = () => {
+		setSeenModal(true)
+		setShowModal(false)
+	}
+
+	const shouldBeWarned = !seenModal
 
 	return (
 		<div className='flex flex-col px-4'>
@@ -76,16 +91,50 @@ const Migration: React.FC = () => {
 					className='my-4'
 					fullWidth
 					onClick={async () => {
-						const lockDistribution = distribution.lockDistribution(getEpochSecondForDay(lockTime))
-						handleTx(lockDistribution, `Distribution: Migrate to veBAO`)
+						if (shouldBeWarned) {
+							modalShow()
+						} else {
+							const lockDistribution = distribution.lockDistribution(getEpochSecondForDay(lockTime))
+							handleTx(lockDistribution, `Distribution: Migrate to veBAO`)
+						}
 					}}
 				>
-					Migrate to veBAO
+					{shouldBeWarned ? 'Read Warning' : 'Migrate to veBAO'}
 				</Button>
 			</div>
 			<Typography variant='sm' className='m-auto text-text-200'>
 				* This action can be done only <b className='font-bold'>once</b> and can <b className='font-bold'>not</b> be reversed!
 			</Typography>
+
+			<Modal isOpen={showModal} onDismiss={modalHide}>
+				<Modal.Header
+					onClose={modalHide}
+					header={
+						<Typography variant='h2' className='inline-block font-semibold'>
+							Warning!
+						</Typography>
+					}
+				/>
+				<Modal.Body>
+					<Typography variant='xl' className='pb-5 font-semibold text-text-300'>
+						This action is IRREVERSIBLE
+					</Typography>
+					<Typography variant='base' className='leading-normal'>
+						This action converts all of the locked BAO tokens in your distribution into veBAO instantly.
+						<br />
+						<br />
+						This migration can only happen once and can never be undone.
+						<br />
+						<br />
+						If you take this action it will end your distribution and you will be unable to take any further distribution actions.
+					</Typography>
+					<div className='flow-col mt-5 flex items-center gap-3'>
+						<Button fullWidth onClick={modalHide}>
+							I understand the risk!
+						</Button>
+					</div>
+				</Modal.Body>
+			</Modal>
 		</div>
 	)
 }
