@@ -30,7 +30,7 @@ function addDays(numOfDays: number, date = new Date()) {
 }
 
 const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
-	const { account, chainId } = useWeb3React()
+	const { account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const claimableFees = useClaimableFees()
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
@@ -40,7 +40,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 			<Typography variant='xl' className='mb-4 text-center font-bold'>
 				Lock Info
 			</Typography>
-			<div className='grid md:grid-cols-2 items-center gap-1'>
+			<div className='grid items-center gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>Earned Rewards</Typography>
 				<div className='flex justify-end'>
 					<div className='-mr-1 flex h-10 items-center justify-center rounded-l bg-primary-400'>
@@ -65,13 +65,13 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					)}
 				</div>
 			</div>
-			<div className='grid md:grid-cols-2 gap-1'>
+			<div className='grid gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>veBAO APR</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>-</Typography>
 				</>
 			</div>
-			<div className='grid md:grid-cols-2 gap-1'>
+			<div className='grid gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>BAO Locked</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
@@ -79,7 +79,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					</Typography>
 				</>
 			</div>
-			<div className='grid md:grid-cols-2 gap-1'>
+			<div className='grid gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>veBAO Balance</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
@@ -91,7 +91,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					</Typography>
 				</>
 			</div>
-			<div className='grid md:grid-cols-2 gap-1'>
+			<div className='grid gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>Locked Until</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
