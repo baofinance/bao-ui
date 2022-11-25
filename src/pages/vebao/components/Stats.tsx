@@ -40,7 +40,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 			<Typography variant='xl' className='mb-4 text-center font-bold'>
 				Lock Info
 			</Typography>
-			<div className='grid grid-cols-2 items-center gap-1'>
+			<div className='grid md:grid-cols-2 items-center gap-1'>
 				<Typography className='font-medium text-text-200'>Earned Rewards</Typography>
 				<div className='flex justify-end'>
 					<div className='-mr-1 flex h-10 items-center justify-center rounded-l bg-primary-400'>
@@ -65,13 +65,13 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					)}
 				</div>
 			</div>
-			<div className='grid grid-cols-2 gap-1'>
+			<div className='grid md:grid-cols-2 gap-1'>
 				<Typography className='font-medium text-text-200'>veBAO APR</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>-</Typography>
 				</>
 			</div>
-			<div className='grid grid-cols-2 gap-1'>
+			<div className='grid md:grid-cols-2 gap-1'>
 				<Typography className='font-medium text-text-200'>BAO Locked</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
@@ -79,7 +79,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					</Typography>
 				</>
 			</div>
-			<div className='grid grid-cols-2 gap-1'>
+			<div className='grid md:grid-cols-2 gap-1'>
 				<Typography className='font-medium text-text-200'>veBAO Balance</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
@@ -91,7 +91,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					</Typography>
 				</>
 			</div>
-			<div className='grid grid-cols-2 gap-1'>
+			<div className='grid md:grid-cols-2 gap-1'>
 				<Typography className='font-medium text-text-200'>Locked Until</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
@@ -219,7 +219,7 @@ export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps
 			</Typography>
 			<div
 				className={`my-2 grid w-full grid-flow-col ${
-					isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-2 gap-2'
+					isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-3 gap-2'
 				} justify-evenly rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4`}
 			>
 				<div className='items-center justify-center text-center'>
