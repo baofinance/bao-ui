@@ -11,6 +11,8 @@ import Actions from './Actions'
 //import BoostCalc from './BoostCalc'
 import LockStats, { ProtocolStatsHoriz } from './Stats'
 import { providerKey } from '@/utils/index'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 const Lock: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
@@ -19,16 +21,23 @@ const Lock: React.FC = () => {
 
 	const baoPrice = useBaoPrice()
 
-	const { data: blockTimestamp } = useQuery(
+	const enabled = !!library
+	const { data: blockTimestamp, refetch } = useQuery(
 		['block timestamp', providerKey(library, account, chainId)],
 		async () => {
 			const block = await library.getBlock()
 			return block.timestamp as BigNumber
 		},
 		{
-			enabled: !!library,
+			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	//useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 1)
 
 	return (
 		<>
