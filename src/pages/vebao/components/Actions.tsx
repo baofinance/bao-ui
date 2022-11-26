@@ -149,7 +149,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 						</div>
 					</div>
 					<div className='flex flex-col'>
-						{isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance))) || (lockInfo && lockInfo.balance.lte(0)) ? (
+						{isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance))) || lockInfo.balance.lte(0) ? (
 							<div className='mt-3 flex flex-row gap-4'>
 								{allowance && allowance.lte(0) ? (
 									<>
@@ -209,7 +209,31 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 						) : (
 							<div className='flex w-full flex-row gap-4'>
 								<div className='mt-3 grid w-full gap-2 md:grid-cols-2'>
-									{pendingTx ? (
+									{allowance && allowance.lte(0) ? (
+										<>
+											{pendingTx ? (
+												<Button fullWidth disabled={true}>
+													Approving BAO
+												</Button>
+											) : (
+												<Button
+													fullWidth
+													disabled={baoBalance.lte(0) && !shouldBeWarned}
+													onClick={async () => {
+														if (shouldBeWarned) {
+															modalShow()
+														} else {
+															// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
+															const approveTx = baoV2.approve(votingEscrow.address, ethers.constants.MaxUint256)
+															handleTx(approveTx, `veBAO: Approve BAO`)
+														}
+													}}
+												>
+													{shouldBeWarned ? 'Read Warning' : 'Approve BAO'}
+												</Button>
+											)}
+										</>
+									) : pendingTx ? (
 										<Button disabled={true}>
 											{typeof pendingTx === 'string' ? (
 												<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>

@@ -1,6 +1,5 @@
 import '@/styles/globals.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
-
 import { Web3ReactProvider } from '@web3-react/core'
 import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
@@ -12,7 +11,6 @@ import { Web3Provider } from '@ethersproject/providers'
 import { QueryClientProvider } from '@tanstack/react-query'
 import queryClient from '@/utils/queryClient'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
 import fetcher from '@/bao/lib/fetcher'
 import Header from '@/components/Header'
 import Page from '@/components/Page'
@@ -25,7 +23,7 @@ import TransactionProvider from '@/contexts/Transactions'
 import TxPopup from '@/components/TxPopup'
 import '@/components/TxPopup/styles.css'
 
-console.log('v1.0.6')
+console.log('v1.0.7')
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
