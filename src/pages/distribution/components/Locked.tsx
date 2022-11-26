@@ -206,7 +206,7 @@ const Migration: React.FC = () => {
 							<Typography className='py-2 font-semibold text-text-100'>Original Distribution Amount</Typography>
 							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-								<Typography className='font-bold'>{getDisplayBalance(dist ? dist.amountOwedTotal : BigNumber.from(0))}</Typography>
+								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf ? merkleLeaf.amount : BigNumber.from(0))}</Typography>
 							</div>
 						</div>
 
