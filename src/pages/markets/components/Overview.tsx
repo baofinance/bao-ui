@@ -143,6 +143,10 @@ export const Overview = () => {
 				</div>
 			</div>
 
+			<Typography variant='base' className='text-text-300 text-center py-2'>
+				* WARNING! The baoUSD synthetic has a 5,000 borrow <b>minimum</b>
+			</Typography>
+
 			{!isDesktop && (
 				<div className='w-full'>
 					<div className='mt-4 flex w-full justify-center rounded border border-primary-300 bg-primary-100 p-4'>
