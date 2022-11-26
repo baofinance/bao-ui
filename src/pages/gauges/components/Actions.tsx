@@ -395,7 +395,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							}}
 						>
 							{/*Vote for {gauge.name}*/}
-							Guage voting is temporarily DISABLED
+							Gauge voting is temporarily DISABLED
 						</Button>
 					)}
 				</>
