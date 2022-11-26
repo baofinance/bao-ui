@@ -3,7 +3,6 @@ import { NavButtons } from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
@@ -32,7 +31,6 @@ export type MarketModalProps = {
 const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { operations: MarketOperations[] }) => {
 	const [operation, setOperation] = useState(operations[0])
 	const [val, setVal] = useState<string>('')
-	const bao = useBao()
 	const balances = useAccountBalances()
 	const borrowBalances = useBorrowBalances()
 	const supplyBalances = useSupplyBalances()
@@ -178,9 +176,19 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 						operation={operation}
 						asset={asset}
 						val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-						isDisabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+						isDisabled={
+							!val ||
+							(val && parseUnits(val, asset.underlyingDecimals).gt(max())) ||
+							// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
+							(val && parseUnits(val, asset.underlyingDecimals).lt(parseUnits('5000')) && operation === MarketOperations.mint)
+						}
 						onHide={hideModal}
 					/>
+					{operation === MarketOperations.mint && (
+						<Typography variant='base' className='text-center text-text-300'>
+							* Minimum mint/borrow amount: 5,000 baoUSD
+						</Typography>
+					)}
 				</Modal.Actions>
 			</Modal>
 		</>
