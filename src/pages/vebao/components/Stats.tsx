@@ -54,6 +54,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					) : (
 						<Button
 							size='sm'
+							disabled={!claimableFees || claimableFees.lte(0)}
 							onClick={async () => {
 								const harvestTx = feeDistributor['claim(address)'](account)
 								handleTx(harvestTx, `veBAO: Claim ${getDisplayBalance(claimableFees)} baoUSD`)

@@ -19,7 +19,6 @@ import type { Gauge, GaugeController, Minter } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
@@ -34,7 +33,6 @@ interface StakeProps {
 }
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
-	const { account, library } = useWeb3React()
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
@@ -62,26 +60,24 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 
 	return (
 		<>
-			<>
-				<Modal.Body className='h-[120px]'>
-					<div className='flex h-full flex-col items-center justify-center'>
-						<div className='flex w-full flex-row'>
-							<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-								<Typography variant='sm' className='text-text-200'>
-									Balance:
-								</Typography>
-								<Typography variant='sm'>
-									{fullBalance}{' '}
-									<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
-										{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
-									</a>
-								</Typography>
-							</div>
+			<Modal.Body className='h-[120px]'>
+				<div className='flex h-full flex-col items-center justify-center'>
+					<div className='flex w-full flex-row'>
+						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
+							<Typography variant='sm' className='text-text-200'>
+								Balance:
+							</Typography>
+							<Typography variant='sm'>
+								{fullBalance}{' '}
+								<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
+									{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
+								</a>
+							</Typography>
 						</div>
-						<Input onSelectMax={handleSelectMax} onChange={handleChange} value={val} max={fullBalance} symbol={gauge.name} />
 					</div>
-				</Modal.Body>
-			</>
+					<Input onSelectMax={handleSelectMax} onChange={handleChange} value={val} max={fullBalance} symbol={gauge.name} />
+				</div>
+			</Modal.Body>
 			<Modal.Actions>
 				{allowance && allowance.lte(0) ? (
 					<>
@@ -253,31 +249,30 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
-				<>
-					{pendingTx ? (
-						<Button fullWidth disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
-						</Button>
-					) : (
-						<Button
-							fullWidth
-							onClick={async () => {
-								const harvestTx = minterContract.mint(gauge.gaugeAddress)
-								handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
-							}}
-						>
-							Harvest BAO
-						</Button>
-					)}
-				</>
+				{pendingTx ? (
+					<Button fullWidth disabled={true}>
+						{typeof pendingTx === 'string' ? (
+							<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+								<a>
+									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+								</a>
+							</Link>
+						) : (
+							'Pending Transaction'
+						)}
+					</Button>
+				) : (
+					<Button
+						fullWidth
+						disabled={!gaugeInfo || !gaugeInfo.claimableTokens || gaugeInfo.claimableTokens.lte(0)}
+						onClick={async () => {
+							const harvestTx = minterContract.mint(gauge.gaugeAddress)
+							handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
+						}}
+					>
+						Harvest BAO
+					</Button>
+				)}
 			</Modal.Actions>
 		</>
 	)
@@ -288,8 +283,6 @@ interface VoteProps {
 }
 
 export const Vote: React.FC<VoteProps> = ({ gauge }) => {
-	const bao = useBao()
-	const { library } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 	const lockInfo = useLockInfo()
@@ -302,13 +295,6 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 			setVal(e.currentTarget.value)
 		},
 		[setVal],
-	)
-
-	console.log(
-		'Power Remaining',
-		BigNumber.from(100)
-			.sub(votingPowerAllocated.div(BigNumber.from(100)))
-			.toString(),
 	)
 
 	return (
@@ -402,7 +388,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 					) : (
 						<Button
 							fullWidth
-							disabled={!val || !bao || isNaN(val as any)}
+							disabled={!val || isNaN(val as any)}
 							onClick={async () => {
 								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
 								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
