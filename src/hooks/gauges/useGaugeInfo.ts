@@ -3,7 +3,6 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
-import useTransactionHandler from '../base/useTransactionHandler'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
@@ -23,8 +22,8 @@ type GaugeInfo = {
 const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 	const { library, account, chainId } = useWeb3React()
 	const bao = useBao()
-	const { txSuccess } = useTransactionHandler()
 
+	const enabled = !!bao && !!account && !!gauge
 	const { data: gaugeInfo, refetch } = useQuery(
 		['@/hooks/vebao/useGaugeInfo', providerKey(library, account, chainId), gauge.gaugeContract.address],
 		async () => {
@@ -80,12 +79,15 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 			}
 		},
 		{
-			enabled: !!bao && !!account && !!gauge,
+			enabled,
 		},
 	)
 
-	useTxReceiptUpdater(refetch)
-	useBlockUpdater(refetch, 10)
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
 	return gaugeInfo
 }

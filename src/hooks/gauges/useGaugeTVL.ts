@@ -1,7 +1,5 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { CurveLp__factory, Uni_v2_lp__factory } from '@/typechain/factories'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
@@ -9,25 +7,24 @@ import { fromDecimal } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
 import useBasketInfo from '../baskets/useBasketInfo'
 import useBaskets from '../baskets/useBaskets'
 import useComposition from '../baskets/useComposition'
 import useNav from '../baskets/useNav'
-import useGaugeInfo from './useGaugeInfo'
+//import useGaugeInfo from './useGaugeInfo'
 import usePoolInfo from './usePoolInfo'
+import { providerKey } from '@/utils/index'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId, account } = useWeb3React()
-	const [gaugeTVL, setGaugeTVL] = useState<BigNumber | undefined>()
-	const [boostedTVL, setBoostedTVL] = useState<BigNumber | undefined>()
 	const bao = useBao()
-	const { txSuccess } = useTransactionHandler()
-	const { transactions } = useTransactionProvider()
 	const poolInfo = usePoolInfo(gauge)
-	const gaugeInfo = useGaugeInfo(gauge)
+	//const gaugeInfo = useGaugeInfo(gauge)
 
 	//Get bSTBL price. Probably not the best way to do so, but it works for now.
 	const baskets = useBaskets()
@@ -81,40 +78,57 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		)
 	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, poolInfo, threeCrvPrice])
 
-	const fetchGaugeTVL = useCallback(async () => {
-		const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
-		const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
-		const query = Multicall.createCallContext([
-			gauge.type.toLowerCase() === 'curve'
-				? {
-						contract: curveLpContract,
-						ref: gauge?.lpAddress,
-						calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
-				  }
-				: {
-						contract: uniLpContract,
-						ref: gauge?.lpAddress,
-						calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
-				  },
-		])
-		const { [gauge?.lpAddress]: res0 } = Multicall.parseCallResults(await bao.multicall.call(query))
+	const tvlDataEnabled = !!gauge && !!library && !!bao && !!poolTVL
+	const { data: tvlData, refetch } = useQuery(
+		['@/hooks/gauges/useGaugeTVL', providerKey(library, account, chainId), poolTVL, gauge.gaugeAddress],
+		async () => {
+			const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
+			const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
+			const query = Multicall.createCallContext([
+				gauge.type.toLowerCase() === 'curve'
+					? {
+							contract: curveLpContract,
+							ref: gauge?.lpAddress,
+							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
+					  }
+					: {
+							contract: uniLpContract,
+							ref: gauge?.lpAddress,
+							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
+					  },
+			])
+			const { [gauge?.lpAddress]: res0 } = Multicall.parseCallResults(await bao.multicall.call(query))
 
-		const gaugeBalance = res0[0].values[0]
-		const totalSupply = res0[1].values[0]
-		const lpPrice = poolTVL && poolTVL.div(totalSupply)
-		const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
-		const boostedTVL = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.workingSupply)
+			const gaugeBalance = res0[0].values[0]
+			const totalSupply = res0[1].values[0]
+			const lpPrice = poolTVL && poolTVL.div(totalSupply)
+			const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
 
-		setGaugeTVL(gaugeTVL)
-		setBoostedTVL(boostedTVL)
-	}, [gauge, library, bao, poolTVL, gaugeInfo])
+			// FIXME: please do boosted TVL from a different hook Vital! When you see this lol. Trust me.
+			//const boostedTVL = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.workingSupply)
+			const boostedTVL = BigNumber.from(0)
 
-	useEffect(() => {
-		if (!(bao && account && gauge)) return
-		fetchGaugeTVL()
-	}, [account, bao, gauge, transactions, txSuccess, fetchGaugeTVL])
+			return {
+				gaugeTVL,
+				boostedTVL,
+			}
+		},
+		{
+			enabled: tvlDataEnabled,
+			placeholderData: {
+				gaugeTVL: undefined,
+				boostedTVL: undefined,
+			},
+		},
+	)
 
-	return { gaugeTVL, boostedTVL }
+	const _refetch = () => {
+		if (tvlDataEnabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return tvlData
 }
 
 export default useGaugeTVL

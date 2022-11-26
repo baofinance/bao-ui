@@ -60,9 +60,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 	}, [account, library, gauge, chainId, bao.multicall])
 
 	useEffect(() => {
-		if (!(bao && account && gauge)) return
+		if (!(bao && gauge)) return
 		fetchPoolInfo()
-	}, [bao, account, gauge, txSuccess])
+	}, [bao, gauge, txSuccess, fetchPoolInfo])
 
 	return poolInfo
 }
