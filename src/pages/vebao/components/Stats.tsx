@@ -96,7 +96,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 				<Typography className='font-medium text-text-200'>Locked Until</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
-						{!account || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp))
+						{!account || (lockInfo && timestamp && lockInfo.lockEnd.mul(1000).lt(timestamp))
 							? '-'
 							: new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}
 					</Typography>
@@ -170,7 +170,7 @@ export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => 
 				</Typography>
 				<>
 					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						{nextFeeDistribution && nextFeeDistribution.mul(1000).lte(timestamp)
+						{nextFeeDistribution && timestamp && nextFeeDistribution.mul(1000).lte(timestamp)
 							? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
 							: `-`}
 					</Typography>
@@ -262,7 +262,7 @@ export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps
 						</Typography>
 					</div>
 					<Typography variant='lg' className='font-bold'>
-						{account && nextFeeDistribution && nextFeeDistribution.mul(1000).lte(timestamp)
+						{account && nextFeeDistribution && timestamp && nextFeeDistribution.mul(1000).lte(timestamp)
 							? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
 							: `-`}
 					</Typography>
