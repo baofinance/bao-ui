@@ -143,7 +143,7 @@ export const Overview = () => {
 				</div>
 			</div>
 
-			<Typography variant='base' className='text-text-300 text-center py-2'>
+			<Typography variant='base' className='py-2 text-center text-text-300'>
 				* WARNING! The baoUSD synthetic has a 5,000 borrow <b>minimum</b>
 			</Typography>
 
