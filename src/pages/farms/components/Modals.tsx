@@ -138,7 +138,7 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 						{
 							label: 'Last withdraw block:',
 							value: `
-						${userInfo ? userInfo.lastWithdrawBlock === '0' ? 'Never Withdrawn' : userInfo.lastWithdrawBlock : <Loader />}
+						${userInfo ? userInfo.lastWithdrawBlock.eq(0) ? 'Never Withdrawn' : userInfo.lastWithdrawBlock.toNumber() : <Loader />}
 						`,
 						},
 					]}
