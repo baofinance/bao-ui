@@ -12,7 +12,7 @@ const useClaimable = () => {
 
 	const enabled = !!account && !!distribution
 	const { data: claimable, refetch } = useQuery(
-		['@/hooks/distribution/useClaimable', providerKey(library, account, chainId)],
+		['@/hooks/distribution/useClaimable', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			try {
 				const claimable = await distribution.claimable(account, 0)

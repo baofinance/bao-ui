@@ -24,7 +24,7 @@ export const useAccountBalances = (): Balance[] => {
 
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances, refetch } = useQuery(
-		['@/hooks/markets/useAccountBalances', providerKey(library, account, chainId)],
+		['@/hooks/markets/useAccountBalances', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const tokens = Config.markets.map(market => market.underlyingAddresses[chainId])
 			const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
@@ -61,7 +61,6 @@ export const useAccountBalances = (): Balance[] => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 
@@ -74,7 +73,7 @@ export const useSupplyBalances = (): Balance[] => {
 
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances, refetch } = useQuery(
-		['@/hooks/markets/useSupplyBalances', providerKey(library, account, chainId)],
+		['@/hooks/markets/useSupplyBalances', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
@@ -109,7 +108,6 @@ export const useSupplyBalances = (): Balance[] => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 
@@ -122,7 +120,7 @@ export const useBorrowBalances = (): Balance[] => {
 
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances, refetch } = useQuery(
-		['@/hooks/markets/useBorrowBalances', providerKey(library, account, chainId)],
+		['@/hooks/markets/useBorrowBalances', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
@@ -157,7 +155,6 @@ export const useBorrowBalances = (): Balance[] => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 

@@ -20,9 +20,9 @@ const useDistributionInfo = (): DistributionInfo => {
 	const { library, account, chainId } = useWeb3React()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
-	const enabled = !!library && !!account && !!distribution
+	const enabled = !!account && !!distribution
 	const { data: distributionInfo, refetch } = useQuery(
-		['@/hooks/vebao/useAccountDistribution', providerKey(library, account, chainId)],
+		['@/hooks/distribution/useAccountDistribution', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const { dateStarted, dateEnded, lastClaim, amountOwedTotal } = await distribution.distributions(account)
 			const timeStarted = dateStarted.mul(1000).toNumber()

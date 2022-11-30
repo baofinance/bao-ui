@@ -25,12 +25,11 @@ const useGaugeInfo = (gauge: ActiveSupportedGauge): GaugeInfo => {
 
 	const enabled = !!bao && !!account && !!gauge
 	const { data: gaugeInfo, refetch } = useQuery(
-		['@/hooks/vebao/useGaugeInfo', providerKey(library, account, chainId), gauge.gaugeContract.address],
+		['@/hooks/vebao/useGaugeInfo', providerKey(library, account, chainId), { enabled, gid: gauge.gid }],
 		async () => {
-			const gaugeContract = gauge.gaugeContract
 			const query = Multicall.createCallContext([
 				{
-					contract: gaugeContract,
+					contract: gauge.gaugeContract,
 					ref: 'gauge',
 					calls: [
 						{

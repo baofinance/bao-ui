@@ -1,3 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
+import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { BigNumber } from 'ethers'
 import { fromDecimal } from '@/utils/numberFormat'
@@ -6,13 +8,13 @@ import { fromDecimal } from '@/utils/numberFormat'
 type CoinGeckId = 'bao-finance' | 'curve-dao-token' | 'lp-3pool-curve' | 'dai' | 'ethereum'
 
 export const usePrice = (coinGeckoId: CoinGeckId) => {
-	const priceUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=usd`
+	const { library, account, chainId } = useWeb3React()
 	const { data: price } = useQuery(
-		[priceUrl],
+		['@/hooks/base/usePrice', providerKey(library, account, chainId), { coinGeckoId }],
 		async () => {
-			const res = await fetch(priceUrl)
+			const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=usd`)
 			const price: { usd: number } = (await res.json())[coinGeckoId]
-			if (!price) throw new Error(`Can't get price for ${coinGeckoId} @ ${priceUrl}`)
+			if (!price) throw new Error(`Can't get price for coinGeckoId='${coinGeckoId}'.`)
 			return fromDecimal(price.usd)
 		},
 		{

@@ -1,12 +1,14 @@
 import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
-import useTransactionProvider from '../base/useTransactionProvider'
 import Config from '@/bao/lib/config'
 import useContract from '@/hooks/base/useContract'
 import type { VotingEscrow } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export type LockInfo = {
 	balance: BigNumber
@@ -17,53 +19,58 @@ export type LockInfo = {
 }
 
 const useLockInfo = (): LockInfo => {
-	const [lockInfo, setLockInfo] = useState<LockInfo | undefined>()
 	const bao = useBao()
-	// FIXME: let us get the totalSupply and supply without needing an account.
-	const { account, chainId } = useWeb3React()
-	const { transactions } = useTransactionProvider()
+	const { library, account, chainId } = useWeb3React()
 	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
 
-	const fetchLockInfo = useCallback(async () => {
-		const query = Multicall.createCallContext([
-			{
-				contract: votingEscrow,
-				ref: 'votingEscrow',
-				calls: [
-					{
-						method: 'balanceOf(address)',
-						params: [account],
-					},
-					{
-						method: 'totalSupply()',
-					},
-					{
-						method: 'supply()',
-					},
-					{
-						method: 'locked(address)',
-						params: [account],
-					},
-				],
-			},
-		])
+	// FIXME: let us get the totalSupply and supply without needing an account.
+	const enabled = !!bao && !!account && !!votingEscrow
+	const { data: lockInfo, refetch } = useQuery(
+		['@/hooks/vebao/useLockInfo', providerKey(library, account, chainId), { enabled }],
+		async () => {
+			const query = Multicall.createCallContext([
+				{
+					contract: votingEscrow,
+					ref: 'votingEscrow',
+					calls: [
+						{
+							method: 'balanceOf(address)',
+							params: [account],
+						},
+						{
+							method: 'totalSupply()',
+						},
+						{
+							method: 'supply()',
+						},
+						{
+							method: 'locked(address)',
+							params: [account],
+						},
+					],
+				},
+			])
 
-		const { votingEscrow: res } = Multicall.parseCallResults(await bao.multicall.call(query))
+			const { votingEscrow: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 
-		setLockInfo({
-			balance: res[0].values[0],
-			supply: res[1].values[0],
-			totalSupply: res[2].values[0],
-			lockAmount: res[3].values[0],
-			lockEnd: res[3].values[1],
-		})
-	}, [bao, account, votingEscrow])
+			return {
+				balance: res[0].values[0],
+				supply: res[1].values[0],
+				totalSupply: res[2].values[0],
+				lockAmount: res[3].values[0],
+				lockEnd: res[3].values[1],
+			}
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!(bao && account && votingEscrow)) return
-
-		fetchLockInfo()
-	}, [fetchLockInfo, bao, account, transactions, votingEscrow])
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useBlockUpdater(_refetch, 10)
+	useTxReceiptUpdater(_refetch)
 
 	return lockInfo
 }

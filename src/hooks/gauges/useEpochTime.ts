@@ -20,9 +20,9 @@ const useEpochTime = (): RewardsInfo => {
 	const bao = useBao()
 	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
-	const enabled = !!bao && !!token
+	const enabled = !!bao && !!library && !!token
 	const { data: epochTime, refetch } = useQuery(
-		['@/hooks/vebao/useEpochTime', providerKey(library, account, chainId)],
+		['@/hooks/vebao/useEpochTime', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const query = Multicall.createCallContext([
 				{
@@ -52,13 +52,10 @@ const useEpochTime = (): RewardsInfo => {
 	)
 
 	const _refetch = () => {
-		if (enabled) setTimeout(refetch, 0)
+		if (enabled) refetch()
 	}
-
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
-
-	//console.log(epochTime)
 
 	return epochTime
 }

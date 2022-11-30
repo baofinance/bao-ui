@@ -20,7 +20,7 @@ export const useExchangeRates = (): ExchangeRates => {
 
 	const enabled = !!bao && !!markets && !!account
 	const { data: exchangeRates, refetch } = useQuery(
-		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId)],
+		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const tokenContracts = markets.map((market: ActiveSupportedMarket) => market.marketContract)
 			const multiCallContext = MultiCall.createCallContext(
@@ -48,7 +48,6 @@ export const useExchangeRates = (): ExchangeRates => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 

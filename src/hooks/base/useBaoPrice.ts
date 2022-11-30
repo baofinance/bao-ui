@@ -9,9 +9,9 @@ const useBaoPrice = () => {
 	const { chainId } = useWeb3React()
 
 	const { data: baoPrice } = useQuery(
-		['@/hooks/base/usePriceFromPair', { WETH: true, BAO: true }],
+		['@/hooks/base/useBaoPrice', { chainId }, { WETH: true, BAO: true }],
 		async () => {
-			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
+			const wethPrice = await GraphUtil.getPrice(Config.contracts.Weth[chainId].address)
 			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
 			return fromDecimal(_baoPrice)
 		},

@@ -13,7 +13,6 @@ import { getDisplayBalance, truncateNumber, decimate, exponentiate, fromDecimal 
 import { Switch } from '@headlessui/react'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import classNames from 'classnames'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
@@ -32,10 +31,6 @@ const FarmList: React.FC = () => {
 		[PoolType.ACTIVE]: [],
 		[PoolType.ARCHIVED]: [],
 	})
-
-	const tempAddress = '0x0000000000000000000000000000000000000000'
-
-	const userAddress = account ? account : tempAddress
 
 	const [archived, showArchived] = useState(false)
 
@@ -57,8 +52,7 @@ const FarmList: React.FC = () => {
 	)
 
 	useEffect(() => {
-		console.log('rendering')
-		if (!bao || !library || !masterChefContract || !farmsTVL) return
+		if (!bao || !account || !masterChefContract || !farmsTVL) return
 
 		const _pools: any = {
 			[PoolType.ACTIVE]: [],
@@ -84,7 +78,7 @@ const FarmList: React.FC = () => {
 									return {
 										ref: (farms.length + i).toString(),
 										method: 'userInfo',
-										params: [farm.pid, userAddress],
+										params: [farm.pid, account],
 									}
 								}) as any,
 							),
@@ -111,7 +105,7 @@ const FarmList: React.FC = () => {
 
 				setPools(_pools)
 			})
-	}, [bao, library, masterChefContract, farms, farmsTVL, baoPrice, userAddress, setPools])
+	}, [bao, library, masterChefContract, farms, farmsTVL, baoPrice, account, setPools])
 
 	return (
 		<>

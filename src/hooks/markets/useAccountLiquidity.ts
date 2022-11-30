@@ -3,7 +3,6 @@ import { ActiveSupportedMarket } from '@/bao/lib/types'
 import useContract from '@/hooks/base/useContract'
 import type { Comptroller } from '@/typechain/index'
 import { decimate } from '@/utils/numberFormat'
-import queryClient from '@/utils/queryClient'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
@@ -37,10 +36,13 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 		[
 			'@/hooks/markets/useAccountLiquidity',
 			providerKey(library, account, chainId),
-			supplyBalances,
-			borrowBalances,
-			exchangeRates,
-			oraclePrices,
+			{
+				enabled,
+				supplyBalances,
+				borrowBalances,
+				exchangeRates,
+				oraclePrices,
+			},
 		],
 		async () => {
 			const compAccountLiqudity = await comptroller.getAccountLiquidity(account)

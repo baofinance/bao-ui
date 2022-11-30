@@ -1,6 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
 //import { Signer } from 'ethers'
-import dynamic from 'next/dynamic'
 import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
 import { providerKey } from '@/utils/index'

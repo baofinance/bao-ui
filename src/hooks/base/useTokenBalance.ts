@@ -12,7 +12,7 @@ export const useEthBalance = () => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
 	const enabled = !!library && !!chainId && !!account
 	const { data: balance, refetch } = useQuery(
-		['@/hooks/base/useEthBalance', { enabled }, providerKey(library, account, chainId)],
+		['@/hooks/base/useEthBalance', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			return await library.getBalance(account)
 		},
@@ -23,10 +23,8 @@ export const useEthBalance = () => {
 	)
 
 	const _refetch = () => {
-		// # HACKY: skip this time around the eventloop lol
 		if (enabled) refetch()
 	}
-
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
@@ -38,7 +36,7 @@ const useTokenBalance = (tokenAddress: string) => {
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
 	const enabled = !!chainId && !!account && !!contract
 	const { data: balance, refetch } = useQuery(
-		['@/hooks/base/useTokenBalance', { enabled }, providerKey(library, account, chainId), tokenAddress],
+		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId), { enabled, tokenAddress }],
 		async () => {
 			const _balance = await contract.balanceOf(account)
 			return _balance
@@ -52,7 +50,6 @@ const useTokenBalance = (tokenAddress: string) => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 

@@ -23,10 +23,8 @@ type MarketButtonProps = {
 
 const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const { approvals } = useApprovals(pendingTx)
-
+	const { approvals } = useApprovals()
 	const { marketContract } = asset
-
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 
 	if (pendingTx) {

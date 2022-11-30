@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { BaoContext } from '@/contexts/BaoProvider'
 
 const useBlock = (): number => {
@@ -17,12 +17,21 @@ const useBlock = (): number => {
 export const useBlockUpdater = (callback: (() => void) | (() => Promise<void>), interval = 1, allowUpdate = true): void => {
 	const block = useBlock()
 	const updateNumberRef = useRef<number>(block)
+	const [firstRender, setFirstRender] = useState(true)
+
+	// FIXME: so it won't render every remount cuz race conditions or something
+	useEffect(() => {
+		setFirstRender(false)
+	}, [setFirstRender])
+
 	if (allowUpdate) {
 		// number that only increases every (X * options.blockNumberInterval) blocks
 		const blockNumberFilter = block > 0 ? Math.floor(block / (interval ?? 1)) : undefined
 		if (blockNumberFilter && blockNumberFilter !== updateNumberRef.current) {
 			updateNumberRef.current = blockNumberFilter
-			callback()
+			if (!firstRender) {
+				callback()
+			}
 		}
 	}
 }

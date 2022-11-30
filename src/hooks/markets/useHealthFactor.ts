@@ -20,7 +20,7 @@ const useHealthFactor = () => {
 
 	const enabled = !!bao && !!account && !!markets && !!accountLiquidity && !!prices
 	const { data: healthFactor, refetch } = useQuery(
-		['@/hooks/markets/useHealthFactor', providerKey(library, account, chainId), accountLiquidity, prices],
+		['@/hooks/markets/useHealthFactor', providerKey(library, account, chainId), { enabled, accountLiquidity, prices }],
 		async () => {
 			const usdBorrow = accountLiquidity.usdBorrow
 			const _markets = markets.filter(market => !market.isSynth)
@@ -50,13 +50,13 @@ const useHealthFactor = () => {
 		},
 		{
 			enabled,
+			placeholderData: BigNumber.from('0'),
 		},
 	)
 
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 

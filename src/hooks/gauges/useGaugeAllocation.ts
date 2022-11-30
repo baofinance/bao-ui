@@ -11,26 +11,26 @@ const useGaugeAllocation = (lpAddress: string) => {
 	const { library, account, chainId } = useWeb3React()
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
-	const enabled = !!gaugeController
+	const enabled = !!library && !!gaugeController
 	const { data: allocation, refetch } = useQuery(
-		['@/hooks/vebao/useGaugeAllocation', providerKey(library, account, chainId), lpAddress],
+		['@/hooks/vebao/useGaugeAllocation', providerKey(library, account, chainId), { enabled, lpAddress }],
 		async () => {
 			const _allocation = await gaugeController.callStatic['gauge_relative_weight(address)'](lpAddress)
 			return _allocation
 		},
 		{
 			enabled,
+			placeholderData: BigNumber.from('0'),
 		},
 	)
 
 	const _refetch = () => {
-		if (enabled) setTimeout(refetch, 0)
+		if (enabled) refetch()
 	}
-
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
-	return allocation || BigNumber.from(0)
+	return allocation
 }
 
 export default useGaugeAllocation
