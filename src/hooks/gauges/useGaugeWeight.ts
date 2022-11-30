@@ -13,7 +13,7 @@ const useGaugeWeight = (gaugeAddress: string) => {
 
 	const enabled = !!gaugeController
 	const { data: weight, refetch } = useQuery(
-		['@/hooks/vebao/useGaugeWeight', providerKey(library, account, chainId), gaugeAddress],
+		['@/hooks/vebao/useGaugeWeight', providerKey(library, account, chainId), { enabled, gaugeAddress }],
 		async () => {
 			const _weight = await gaugeController.get_gauge_weight(gaugeAddress)
 			return _weight
@@ -26,7 +26,7 @@ const useGaugeWeight = (gaugeAddress: string) => {
 	)
 
 	const _refetch = () => {
-		if (enabled) setTimeout(refetch, 0)
+		if (enabled) refetch()
 	}
 
 	useTxReceiptUpdater(_refetch)

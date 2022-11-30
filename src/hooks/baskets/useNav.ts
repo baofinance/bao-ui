@@ -3,9 +3,10 @@ import { useMemo } from 'react'
 import { decimate } from '@/utils/numberFormat'
 import { BasketComponent } from './useComposition'
 
-const useNav = (composition: BasketComponent[], supply: BigNumber) => {
+const useNav = (composition?: BasketComponent[], supply?: BigNumber) => {
 	const nav = useMemo(() => {
-		if (!composition) return null
+		if (!composition || !supply) return null
+		if (composition.length === 0 || supply.lte('0')) return BigNumber.from('0')
 		const _nav = composition
 			.reduce((prev, comp) => {
 				return prev.add(decimate(comp.price.mul(comp.balance), comp.decimals))

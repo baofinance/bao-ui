@@ -5,11 +5,13 @@ import { useWeb3React } from '@web3-react/core'
 import Config from '@/bao/lib/config'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
-import { useQuery } from '@tanstack/react-query'
 import useBao from '@/hooks/base/useBao'
 import { decimate, exponentiate, fromDecimal } from '@/utils/numberFormat'
 import { Uni_v2_lp__factory } from '@/typechain/factories'
 import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 type TVL = {
 	lpAddress: string
@@ -93,8 +95,9 @@ const useAllFarmTVL = () => {
 		})
 	}, [library, chainId, bao])
 
-	const { data: tvl } = useQuery(
-		['@/hooks/farms/useAllFarmTVL', providerKey(library, account, chainId)],
+	const enabled = !!library && !!bao
+	const { data: tvl, refetch } = useQuery(
+		['@/hooks/farms/useAllFarmTVL', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const lps = await fetchLPInfo()
 			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
@@ -150,9 +153,15 @@ const useAllFarmTVL = () => {
 			}
 		},
 		{
-			enabled: !!library && !!chainId,
+			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
 	return tvl
 }

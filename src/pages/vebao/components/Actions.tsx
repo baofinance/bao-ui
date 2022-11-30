@@ -25,6 +25,8 @@ import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import React, { useCallback, useState } from 'react'
 import Modal from '@/components/Modal'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 type ActionProps = {
 	baoBalance?: BigNumber
@@ -32,7 +34,7 @@ type ActionProps = {
 }
 
 const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
-	const { library, account, chainId } = useWeb3React()
+	const { library, chainId } = useWeb3React()
 	const [val, setVal] = useState('')
 	const allowance = useAllowance(Config.contracts.Baov2[chainId].address, Config.contracts.votingEscrow[chainId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
@@ -65,10 +67,23 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 		setLockTime(getDayOffset(currentLockEnd, (value as number) * 7))
 	}
 
-	const { data: block } = useQuery(['timestamp'], async () => {
-		const block = await library?.getBlock()
-		return block
-	})
+	const enabledTimestamp = !!library
+	const { data: timestamp, refetch: refetchTimestamp } = useQuery(
+		['library.getBlock().timestamp'],
+		async () => {
+			const block = await library.getBlock()
+			return block.timestamp
+		},
+		{
+			enabled: enabledTimestamp,
+			placeholderData: 0,
+		},
+	)
+	const _refetchTimestamp = () => {
+		if (enabledTimestamp) refetchTimestamp()
+	}
+	useTxReceiptUpdater(_refetchTimestamp)
+	useBlockUpdater(_refetchTimestamp, 10)
 
 	const [showModal, setShowModal] = useState(false)
 	const [seenModal, setSeenModal] = useState(false)
@@ -91,7 +106,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 
 	return (
 		<div className='col-span-2 row-span-1 rounded border border-primary-300 bg-primary-100 p-4'>
-			{(lockInfo && lockInfo.lockEnd.gt(block.timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000).lt(block.timestamp)) ? (
+			{(lockInfo && lockInfo.lockEnd.gt(timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp)) ? (
 				<>
 					<Typography variant='xl' className='mb-4 text-center font-bold'>
 						Lock BAO for veBAO

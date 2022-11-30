@@ -11,9 +11,9 @@ const useVotingPowerAllocated = () => {
 	const { library, account, chainId } = useWeb3React()
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
-	const enabled = !!gaugeController
+	const enabled = !!library && !!gaugeController
 	const { data: votingPower, refetch } = useQuery(
-		['@/hooks/vebao/useVotingPower', providerKey(library, account, chainId)],
+		['@/hooks/gauges/useVotingPowerAllocated', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const _votingPower = await gaugeController.vote_user_power(account)
 			return _votingPower
@@ -26,7 +26,7 @@ const useVotingPowerAllocated = () => {
 	)
 
 	const _refetch = () => {
-		if (enabled) setTimeout(refetch, 0)
+		if (enabled) refetch()
 	}
 
 	useTxReceiptUpdater(_refetch)

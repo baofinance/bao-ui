@@ -1,25 +1,32 @@
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
-import useTransactionProvider from './useTransactionProvider'
 import useContract from '@/hooks/base/useContract'
 import type { Erc20 } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 const useAllowance = (tokenAddress: string, spenderAddress: string) => {
-	const { account } = useWeb3React()
-	const { transactions } = useTransactionProvider()
-	const [allowance, setAllowance] = useState<BigNumber>(BigNumber.from(0))
+	const { library, chainId, account } = useWeb3React()
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
 
-	const fetchAllowance = useCallback(async () => {
-		const _allowance = await contract.allowance(account, spenderAddress)
-		setAllowance(_allowance)
-	}, [contract, account, spenderAddress])
+	const enabled = !!account && !!contract
+	const { data: allowance, refetch } = useQuery(
+		['@/hooks/base/useAllowance', providerKey(library, account, chainId), contract?.address, spenderAddress],
+		async () => {
+			const _allowance = await contract.allowance(account, spenderAddress)
+			return _allowance
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!contract || !account) return
-		fetchAllowance()
-	}, [contract, account, tokenAddress, spenderAddress, transactions, fetchAllowance])
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
 	return allowance
 }

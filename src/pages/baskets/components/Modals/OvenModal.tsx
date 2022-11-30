@@ -1,18 +1,17 @@
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
-
+import React, { useState } from 'react'
+import Loader from '@/components/Loader'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import { StatBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
 import useOvenInfo from '@/hooks/baskets/useOvenInfo'
+import { useEthBalance } from '@/hooks/base/useTokenBalance'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 
 type ModalProps = {
@@ -23,18 +22,8 @@ type ModalProps = {
 
 const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	const [value, setValue] = useState<string | undefined>()
-	const [ethBalance, setEthBalance] = useState<BigNumber | undefined>()
-
-	const { library } = useWeb3React()
-	const bao = useBao()
-	const { account } = useWeb3React()
-	const ovenInfo = useOvenInfo(basket, account)
-
-	useEffect(() => {
-		if (!(library && account)) return
-		// FIXME: use useBalance('ETH') from eth-hooks maybe?
-		library.getBalance(account).then((balance: any) => setEthBalance(balance))
-	}, [library, account])
+	const ovenInfo = useOvenInfo(basket)
+	const ethBalance = useEthBalance()
 
 	return basket ? (
 		<>
@@ -78,7 +67,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									<Typography variant='sm' className='text-text-200'>
 										{`Available:`}{' '}
 									</Typography>
-									<Typography variant='sm'>{`${ethBalance && getDisplayBalance(ethBalance)} ETH`}</Typography>
+									<Typography variant='sm'>{`${getDisplayBalance(ethBalance || BigNumber.from('0'))} ETH`}</Typography>
 								</div>
 							</div>
 						</div>
@@ -104,7 +93,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 			</Modal>
 		</>
 	) : (
-		<></>
+		<Loader />
 	)
 }
 

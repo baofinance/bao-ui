@@ -1,24 +1,34 @@
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useState } from 'react'
-
 import useContract from '@/hooks/base/useContract'
 import type { Masterchef } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 export const useUserFarmInfo = (pid: number) => {
-	const [userInfo, setUserInfo] = useState<any | undefined>()
-	const { account } = useWeb3React()
+	const { library, account, chainId } = useWeb3React()
+	const masterChef = useContract<Masterchef>('Masterchef')
 
-	const masterChefContract = useContract<Masterchef>('Masterchef')
+	const enabled = !!account && !!masterChef
+	const { data: userInfo, refetch } = useQuery(
+		['@/hooks/farms/useUserFarmInfo', providerKey(library, account, chainId), { enabled, pid }],
+		async () => {
+			const _userInfo = await masterChef.userInfo(pid, account)
+			return _userInfo
+		},
+		{
+			enabled,
+		},
+	)
 
-	const fetchUserInfo = useCallback(async () => {
-		const _userInfo = await masterChefContract.userInfo(pid, account)
-		setUserInfo(_userInfo)
-	}, [pid, masterChefContract, account])
-
-	useEffect(() => {
-		if (!account || !masterChefContract) return
-		fetchUserInfo()
-	}, [fetchUserInfo, masterChefContract, account])
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
 	return userInfo
 }
+
+export default useUserFarmInfo

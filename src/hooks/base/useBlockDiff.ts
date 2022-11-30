@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useState } from 'react'
-
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
 import useBlock from './useBlock'
 
 interface BlockDiffOptions {
@@ -9,21 +9,22 @@ interface BlockDiffOptions {
 }
 
 const useBlockDiff = (options: BlockDiffOptions) => {
-	const { library } = useWeb3React()
+	const { library, chainId, account } = useWeb3React()
 	const block = useBlock()
-	const [blockDiff, setBlockDiff] = useState<number>(0)
 
-	const fetchBlockDiff = useCallback(async () => {
-		const { firstDepositBlock, lastWithdrawBlock } = options
-		const firstOrLast = firstDepositBlock > lastWithdrawBlock ? firstDepositBlock : lastWithdrawBlock
-		const blockDiff = block - firstOrLast
-		setBlockDiff(blockDiff)
-	}, [block, options])
-
-	useEffect(() => {
-		if (!library || !options) return
-		fetchBlockDiff()
-	}, [fetchBlockDiff, library, block, options])
+	const enabled = !!library && !!block
+	const { data: blockDiff } = useQuery(
+		['@/hooks/base/useBlockDiff', providerKey(library, account, chainId), options, { block }],
+		async () => {
+			const { firstDepositBlock, lastWithdrawBlock } = options
+			const firstOrLast = firstDepositBlock > lastWithdrawBlock ? firstDepositBlock : lastWithdrawBlock
+			const _blockDiff = block - firstOrLast
+			return _blockDiff
+		},
+		{
+			enabled,
+		},
+	)
 
 	return blockDiff > 0 && blockDiff
 }

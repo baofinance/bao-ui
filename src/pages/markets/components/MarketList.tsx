@@ -42,18 +42,20 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 		if (!(_markets && supplyBalances)) return
 		return _markets
 			.filter(market => !market.isSynth)
-			.sort((a, b) =>
-				supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0,
-			)
+			.sort((a, b) => {
+				void a
+				return supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+			})
 	}, [_markets, supplyBalances])
 
 	const synthMarkets = useMemo(() => {
 		if (!(_markets && borrowBalances)) return
 		return _markets
 			.filter(market => market.isSynth)
-			.sort((a, b) =>
-				borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0,
-			)
+			.sort((a, b) => {
+				void a
+				return borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+			})
 	}, [_markets, borrowBalances])
 
 	return (
@@ -150,7 +152,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		<>
 			<Accordion open={isOpen || showSupplyModal} className='my-2 rounded border border-primary-300'>
 				<AccordionHeader
-					onClick={() => handleOpen()}
+					onClick={handleOpen}
 					className={`rounded border-0 bg-primary-100 p-3 hover:bg-primary-200 ${isOpen && 'rounded-b-none bg-primary-200'}`}
 				>
 					<div className='flex w-full flex-row items-center justify-center'>
@@ -307,8 +309,9 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 
 	return (
 		<>
-			<Accordion open={isOpen || showBorrowModal} onClick={() => handleOpen()} className='my-2 rounded border border-primary-300'>
+			<Accordion open={isOpen || showBorrowModal} className='my-2 rounded border border-primary-300'>
 				<AccordionHeader
+					onClick={handleOpen}
 					className={`rounded border-0 bg-primary-100 p-3 hover:bg-primary-200 ${isOpen && 'rounded-b-none bg-primary-200'}`}
 				>
 					<div className='flex w-full flex-row items-center justify-center'>
@@ -377,7 +380,14 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					</div>
 				</AccordionBody>
 			</Accordion>
-			<MarketBorrowModal asset={market} show={showBorrowModal} onHide={() => [setShowBorrowModal(false), setIsOpen(true)]} />
+			<MarketBorrowModal
+				asset={market}
+				show={showBorrowModal}
+				onHide={() => {
+					setShowBorrowModal(false)
+					setIsOpen(true)
+				}}
+			/>
 		</>
 	)
 }

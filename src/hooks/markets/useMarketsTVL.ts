@@ -1,5 +1,4 @@
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
 import { decimate } from '@/utils/numberFormat'
 import { useMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
@@ -15,12 +14,12 @@ export const useMarketsTVL = () => {
 	const { library, account, chainId } = useWeb3React()
 	const markets = useMarkets()
 	const { prices } = useMarketPrices() // TODO- use market.price instead of market prices hook
-
 	const stabilizer = useContract<Stabilizer>('Stabilizer')
 
 	const enabled = !!markets && !!stabilizer && !!prices
+	const mids = markets?.map(market => market.mid)
 	const { data: tvl, refetch } = useQuery(
-		['@/hooks/markets/useMarketsTVL', providerKey(library, account, chainId), prices],
+		['@/hooks/markets/useMarketsTVL', providerKey(library, account, chainId), { enabled, prices, mids }],
 		async () => {
 			const marketsTvl = markets.reduce((prev, current) => {
 				const _tvl = BigNumber.from(current.supplied).sub(current.totalBorrows).mul(prices[current.marketAddress])

@@ -12,14 +12,14 @@ type Approvals = {
 	approvals: { [key: string]: BigNumber }
 }
 
-export const useApprovals = (pendingTx: string | boolean): Approvals => {
+export const useApprovals = (): Approvals => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
 	const markets = useMarkets()
 
 	const enabled = !!bao && !!markets && !!account
 	const { data: approvals, refetch } = useQuery(
-		['@/hooks/markets/useApprovals', providerKey(library, account, chainId)],
+		['@/hooks/markets/useApprovals', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const multicallContext = MultiCall.createCallContext(
 				markets

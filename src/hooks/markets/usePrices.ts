@@ -54,12 +54,11 @@ export const usePrices = (): SWR & Prices => {
 export const useMarketPrices = (): MarketPrices => {
 	const bao = useBao()
 	const oracle = useContract<MarketOracle>('MarketOracle')
-
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!oracle && !!chainId
 	const { data: prices, refetch } = useQuery(
-		['@/hooks/markets/useMarketPrices', providerKey(library, account, chainId)],
+		['@/hooks/markets/useMarketPrices', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 			const multiCallContext = MultiCall.createCallContext([
@@ -90,7 +89,6 @@ export const useMarketPrices = (): MarketPrices => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
-
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 

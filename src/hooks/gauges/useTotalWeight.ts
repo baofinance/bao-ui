@@ -13,7 +13,7 @@ const useTotalWeight = () => {
 	const enabled = !!chainId && !!gaugeController
 
 	const { data: totalWeight, refetch } = useQuery(
-		['gaugeController.get_total_weight', providerKey(library, account, chainId)],
+		['@/hooks/gauges/useTotalWeight', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const weight = await gaugeController.get_total_weight()
 			return weight

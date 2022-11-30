@@ -1,28 +1,39 @@
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 export type BasketInfo = {
 	totalSupply: BigNumber
 }
 
 const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
-	const [info, setInfo] = useState<BasketInfo | undefined>()
+	const { library, account, chainId } = useWeb3React()
 
-	const fetchInfo = useCallback(async () => {
-		const supply = await basket.basketContract.totalSupply()
-		setInfo({
-			totalSupply: supply,
-		})
-	}, [basket])
+	const enabled = !!library && !!basket && !!basket.basketContract
+	const { data: basketInfo, refetch } = useQuery(
+		['@/hooks/baskets/useBasketInfo', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+		async () => {
+			const supply = await basket.basketContract.totalSupply()
+			return {
+				totalSupply: supply,
+			}
+		},
+		{
+			enabled,
+		},
+	)
 
-	useEffect(() => {
-		if (!basket) return
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
 
-		fetchInfo()
-	}, [fetchInfo, basket])
-
-	return info
+	return basketInfo
 }
 
 export default useBasketInfo

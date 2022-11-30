@@ -78,9 +78,9 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		)
 	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, poolInfo, threeCrvPrice])
 
-	const tvlDataEnabled = !!gauge && !!library && !!bao && !!poolTVL
+	const enabled = !!gauge && !!library && !!bao && !!poolTVL
 	const { data: tvlData, refetch } = useQuery(
-		['@/hooks/gauges/useGaugeTVL', providerKey(library, account, chainId), poolTVL, gauge.gaugeAddress],
+		['@/hooks/gauges/useGaugeTVL', providerKey(library, account, chainId), { enabled, gid: gauge.gid, poolTVL }],
 		async () => {
 			const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
 			const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
@@ -114,7 +114,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			}
 		},
 		{
-			enabled: tvlDataEnabled,
+			enabled,
 			placeholderData: {
 				gaugeTVL: undefined,
 				boostedTVL: undefined,
@@ -123,7 +123,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	)
 
 	const _refetch = () => {
-		if (tvlDataEnabled) refetch()
+		if (enabled) refetch()
 	}
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
