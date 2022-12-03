@@ -65,23 +65,13 @@ const FarmList: React.FC = () => {
 					{
 						ref: 'masterChef',
 						contract: masterChefContract,
-						calls: farms
-							.map((farm, i) => {
-								return {
-									ref: i.toString(),
-									method: 'getNewRewardPerBlock',
-									params: [farm.pid + 1],
-								}
-							})
-							.concat(
-								farms.map((farm, i) => {
-									return {
-										ref: (farms.length + i).toString(),
-										method: 'userInfo',
-										params: [farm.pid, account],
-									}
-								}) as any,
-							),
+						calls: farms.map((farm, i) => {
+							return {
+								ref: (farms.length + i).toString(),
+								method: 'userInfo',
+								params: [farm.pid, account],
+							}
+						}) as any,
 					},
 				]),
 			)
@@ -96,8 +86,7 @@ const FarmList: React.FC = () => {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,
 						tvl: tvlInfo.tvl,
-						stakedUSD: result.masterChef[farms.length + i].values[0].div(tvlInfo.lpStaked).mul(tvlInfo.tvl),
-						apy: baoPrice.gt(0) && farmsTVL ? baoPrice.mul(BLOCKS_PER_YEAR).mul(result.masterChef[i].values[0]).div(tvlInfo.tvl) : null,
+						stakedUSD: result.masterChef[i].values[0].div(tvlInfo.lpStaked).mul(tvlInfo.tvl),
 					}
 
 					_pools[farmWithStakedValue.poolType].push(farmWithStakedValue)
@@ -236,13 +225,9 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 							</div>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							{farm.apy ? (
-								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									{farm.apy.gt(0) ? `${getDisplayBalance(farm.apy.mul(100))}%` : 'N/A'}
-								</Typography>
-							) : (
-								<Loader />
-							)}
+							<Typography variant='base' className='ml-2 inline-block font-medium'>
+								-
+							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>

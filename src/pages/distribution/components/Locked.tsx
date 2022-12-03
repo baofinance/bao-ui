@@ -197,7 +197,7 @@ const Migration: React.FC = () => {
 							If you chose to migrate your distribution to veBAO, you will have a locked balance of "Vote Escrowed BAO" (veBAO) that you can
 							see here on our{' '}
 							<Link href='/vebao' className='font-bold hover:text-text-400'>
-								/veBAO
+								veBAO
 							</Link>{' '}
 							page. If you chose to collect your distribution rather than migrate it, you may lock it as veBAO on the same page.
 						</Typography>

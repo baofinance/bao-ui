@@ -23,7 +23,7 @@ const Balances: React.FC = () => {
 
 	const baoContract = useContract<Bao>('Bao')
 
-	const sumEarning = allEarnings.reduce((earning, acc) => {
+	const sumEarning = allEarnings?.reduce((earning, acc) => {
 		return acc.add(earning)
 	}, BigNumber.from(0))
 
@@ -33,7 +33,7 @@ const Balances: React.FC = () => {
 			value: `${account ? (window.screen.width > 1200 ? getDisplayBalance(baoBalance) : truncateNumber(baoBalance)) : '-'}`,
 		},
 		{ label: 'Locked BAO', value: `${account ? (window.screen.width > 1200 ? getDisplayBalance(locks) : truncateNumber(locks)) : '-'}` },
-		{ label: 'Pending Harvest', value: `${account ? getDisplayBalance(sumEarning) : '-'}` },
+		{ label: 'Pending Harvest', value: `${sumEarning && account ? getDisplayBalance(sumEarning) : '-'}` },
 		{
 			// FIXME: the total supply is never retrieved from the contract
 			label: 'Total BAO Supply',

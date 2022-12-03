@@ -2,13 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 
 const useProofs = () => {
-	const { account } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 
-	const enabled = !!account
 	const { data: merkleLeaf } = useQuery(
-		['@/hooks/distribution/useProofs', { enabled, account }],
+		['/api/vebao/distribution/proof', account, chainId],
 		async () => {
-			const leafResponse = await fetch(`https://bao-distribution-api.herokuapp.com/${account}`)
+			const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
 			if (leafResponse.status !== 200) {
 				const { error } = await leafResponse.json()
 				throw new Error(`${error.code} - ${error.message}`)
@@ -17,8 +16,8 @@ const useProofs = () => {
 			return leaf
 		},
 		{
-			enabled,
 			retry: false,
+			enabled: !!account,
 			staleTime: Infinity,
 			cacheTime: Infinity,
 		},
