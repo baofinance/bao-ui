@@ -22,8 +22,6 @@ import Config from '@/bao/lib/config'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
-import { useQuery } from '@tanstack/react-query'
-import { useWeb3React } from '@web3-react/core'
 
 const options = [
 	{
@@ -48,26 +46,7 @@ const Migration: React.FC = () => {
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 	const dist = useDistributionInfo()
-	const { account, chainId } = useWeb3React()
-
-	const { data: merkleLeaf } = useQuery(
-		['/api/vebao/distribution/proof', account, chainId],
-		async () => {
-			const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
-			if (leafResponse.status !== 200) {
-				const { error } = await leafResponse.json()
-				throw new Error(`${error.code} - ${error.message}`)
-			}
-			const leaf = await leafResponse.json()
-			return leaf
-		},
-		{
-			retry: false,
-			enabled: !!account,
-			staleTime: Infinity,
-			cacheTime: Infinity,
-		},
-	)
+	const merkleLeaf = useProofs()
 
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
 	//const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)

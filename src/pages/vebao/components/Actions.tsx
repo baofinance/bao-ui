@@ -3,14 +3,12 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
-import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
+import useProofs from '@/hooks/distribution/useProofs'
 import { LockInfo } from '@/hooks/vebao/useLockInfo'
 import type { Baov2, VotingEscrow } from '@/typechain/index'
 import { dateFromEpoch, getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
@@ -26,6 +24,9 @@ import Link from 'next/link'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import React, { useCallback, useState } from 'react'
+import Modal from '@/components/Modal'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 type ActionProps = {
 	baoBalance?: BigNumber
@@ -33,7 +34,7 @@ type ActionProps = {
 }
 
 const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
-	const { library, chainId, account } = useWeb3React()
+	const { library, chainId } = useWeb3React()
 	const [val, setVal] = useState('')
 	const allowance = useAllowance(Config.contracts.Baov2[chainId].address, Config.contracts.votingEscrow[chainId].address)
 	const { pendingTx, handleTx } = useTransactionHandler()
@@ -96,26 +97,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	}
 
 	const dist = useDistributionInfo()
-
-	const { data: merkleLeaf } = useQuery(
-		['/api/vebao/distribution/proof', account, chainId],
-		async () => {
-			const leafResponse = await fetch(`/api/vebao/distribution/proof/${account}/`)
-			if (leafResponse.status !== 200) {
-				const { error } = await leafResponse.json()
-				throw new Error(`${error.code} - ${error.message}`)
-			}
-			const leaf = await leafResponse.json()
-			return leaf
-		},
-		{
-			retry: false,
-			enabled: !!account,
-			staleTime: Infinity,
-			cacheTime: Infinity,
-		},
-	)
-
+	const merkleLeaf = useProofs()
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
 	const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
 	//const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
