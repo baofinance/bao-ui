@@ -9,7 +9,7 @@ const useProofs = () => {
 		['@/hooks/distribution/useProofs', { enabled, account }],
 		async () => {
 			const leafResponse = await fetch(
-				`https://bao-dist-api.herokuapp.com/https://app.bao.finance/api/vebao/distribution/proof/${account}/`,
+				`https://bao-dist-api.herokuapp.com/https://staging.app.bao.finance/api/vebao/distribution/proof/${account}/`,
 			)
 			if (leafResponse.status !== 200) {
 				const { error } = await leafResponse.json()
