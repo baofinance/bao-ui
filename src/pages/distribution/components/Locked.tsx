@@ -55,8 +55,8 @@ const Migration: React.FC = () => {
 
 	const leaves = snapshot.map(account => _keccakAbiEncode(account.address, account.amount))
 	const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
-	const leaf = _keccakAbiEncode(merkleLeaf[0].address, merkleLeaf[0].amount)
-	const proof = merkleTree.getHexProof(leaf)
+	const leaf = merkleLeaf && _keccakAbiEncode(merkleLeaf[0].address, merkleLeaf[0].amount)
+	const proof = merkleLeaf && merkleTree.getHexProof(leaf)
 
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
 	//const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
