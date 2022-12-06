@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
@@ -17,11 +18,15 @@ import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { Fragment, useState } from 'react'
-import Config from '@/bao/lib/config'
 //import Modal from '@/components/Modal'
+import { keccak256, solidityPack } from 'ethers/lib/utils'
+import MerkleTree from 'merkletreejs'
+import snapshot from 'public/snapshot.json'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
+
+const _keccakAbiEncode = (a: string, n: string): string => keccak256(solidityPack(['address', 'uint256'], [a, n]))
 
 const options = [
 	{
@@ -47,6 +52,11 @@ const Migration: React.FC = () => {
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 	const dist = useDistributionInfo()
 	const merkleLeaf = useProofs()
+
+	const leaves = snapshot.map(account => _keccakAbiEncode(account.address, account.amount))
+	const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+	const leaf = _keccakAbiEncode(merkleLeaf[0].address, merkleLeaf[0].amount)
+	const proof = merkleTree.getHexProof(leaf)
 
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
 	//const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
@@ -281,7 +291,7 @@ const Migration: React.FC = () => {
 								disabled={!canStartDistribution}
 								className='bg-primary-500'
 								onClick={async () => {
-									const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
+									const startDistribution = distribution.startDistribution(proof, merkleLeaf[0].amount)
 									handleTx(startDistribution, `Start Distribution`)
 								}}
 							>
