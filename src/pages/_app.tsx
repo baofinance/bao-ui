@@ -23,7 +23,7 @@ import TransactionProvider from '@/contexts/Transactions'
 import TxPopup from '@/components/TxPopup'
 import '@/components/TxPopup/styles.css'
 
-console.log('v1.1.6')
+console.log('v1.1.7')
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
