@@ -8,7 +8,7 @@ const useProofs = () => {
 	const { data: merkleLeaf } = useQuery(
 		['@/hooks/distribution/useProofs', { enabled, account }],
 		async () => {
-			const leafResponse = await fetch(`https://bao-dist-api.herokuapp.com/addresses?address=${account.toLowerCase()}`)
+			const leafResponse = await fetch(`https://bao-dist-api.herokuapp.com/${account.toLowerCase()}`)
 			if (leafResponse.status !== 200) {
 				const { error } = await leafResponse.json()
 				throw new Error(`${error.code} - ${error.message}`)
