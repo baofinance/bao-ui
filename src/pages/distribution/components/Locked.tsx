@@ -14,18 +14,13 @@ import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { BigNumber } from 'ethers'
-import { keccak256, solidityPack } from 'ethers/lib/utils'
 import 'katex/dist/katex.min.css'
-import MerkleTree from 'merkletreejs'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import snapshot from 'public/snapshot.json'
 import React, { Fragment, useState } from 'react'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
-
-const _keccakAbiEncode = (a: string, n: string): string => keccak256(solidityPack(['address', 'uint256'], [a, n]))
 
 const options = [
 	{
@@ -53,8 +48,6 @@ const Migration: React.FC = () => {
 	const merkleLeaf = useProofs()
 
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
-	//const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
-	//const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
 
 	let distElement
 	if (dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)) {
@@ -173,7 +166,7 @@ const Migration: React.FC = () => {
 			<div className='flex flex-col items-center'>
 				<div className='md:max-w-4xl'>
 					<div className='mb-5 pb-5'>
-						<Typography variant='xl' className='font-bold text-text-100'>
+						<Typography variant='xl' className='font-bold text-red'>
 							Your Distribution has ENDED
 						</Typography>
 						<Typography className='mt-2 leading-normal text-text-100'>
@@ -234,18 +227,6 @@ const Migration: React.FC = () => {
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-		)
-	} else if (merkleLeaf && merkleLeaf.length === 0) {
-		distElement = (
-			<div className='flex flex-col items-center'>
-				<div className='md:max-w-4xl'>
-					<div className='pb-5'>
-						<Typography variant='xl' className='font-bold text-text-100'>
-							You have no locked BAOv1 to distribute.
-						</Typography>
 					</div>
 				</div>
 			</div>

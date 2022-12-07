@@ -75,9 +75,21 @@ module.exports = {
 						transform: 'translateX(-100%)',
 					},
 				},
+				rainbowLight: {
+					'0%': {
+						backgroundPosition: '0% 50%',
+					},
+					'50%': {
+						backgroundPosition: '100% 50%',
+					},
+					'100%': {
+						backgroundPosition: '0% 50%',
+					},
+				},
 			},
 			animation: {
 				'slide-in': 'slideIn 0.3s forwards ease-out',
+				'rainbow-light': 'rainbowLight 2s linear infinite',
 			},
 			screens: {
 				'3xl': '1600px',

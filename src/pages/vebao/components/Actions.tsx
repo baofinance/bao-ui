@@ -3,10 +3,13 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
+import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
 import useProofs from '@/hooks/distribution/useProofs'
 import { LockInfo } from '@/hooks/vebao/useLockInfo'
@@ -24,9 +27,6 @@ import Link from 'next/link'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import React, { useCallback, useState } from 'react'
-import Modal from '@/components/Modal'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 type ActionProps = {
 	baoBalance?: BigNumber
@@ -102,7 +102,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
 	const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
 
-	const shouldBeWarned = (canStartDistribution || canEndDistribution) && !seenModal
+	const shouldBeWarned = canStartDistribution || canEndDistribution
 
 	return (
 		<div className='col-span-2 row-span-1 rounded border border-primary-300 bg-primary-100 p-4'>
@@ -329,41 +329,31 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 					onClose={modalHide}
 					header={
 						<>
-							<Typography variant='h2' className='mr-1 inline-block font-semibold'>
+							<Typography variant='h2' className='inline-block font-semibold text-red'>
 								Warning!
-							</Typography>
-							<Typography variant='xl' className='mb-5 font-semibold text-text-300'>
-								Locked token migration available
 							</Typography>
 						</>
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='base' className='mr-1 pt-5 leading-normal'>
-						This account has a locked BAO distribution available to it! If you create a new lock instead of migrating your distribution to a
-						locked balance, you will be unable to choose the 'migrate' option for its entire length (four years) and will only be able to
-						'claim' or 'end' your token distribution.
-						<br />
-						<br />
-						For this reason, we highly recommend that you start and migrate your distribution of BAO tokens rather than creating a new lock
-						here. To re-iterate, you will have to wait the entire distribution period to lock your distribution as veBAO if you choose to
-						manually make a new lock here instead of migrating your account's distribution.
-						<br />
-						<br />
-						To take advantage of this, you should start your distribution and act on it over in the 'Locked BAO' section of the{' '}
-						<Link href='/distribution/'>
-							<a className='font-bold hover:text-text-400'>/distribution/</a>
-						</Link>{' '}
-						page.
+					<Typography variant='xl' className='inline-block font-semibold'>
+						This account has a BAOv1 distribution!
+					</Typography>
+					<Typography variant='p' className='leading-normal'>
+						We recommend starting and migrating your distribution of BAOv1 tokens rather than creating a new veBAO lock.
+					</Typography>
+					<Typography variant='p' className='leading-normal'>
+						Users can only have one veBAO lock at a time. Although users can add to their veBAO lock, migrating a distribution can only
+						create a new lock.
+					</Typography>
+					<Typography variant='p' className='leading-normal'>
+						If you create a new veBAO lock, you will have to wait the entire distribution period (3 years), or until the lock expires, to
+						migrate your distribution.
 					</Typography>
 					<div className='flow-col my-5 flex items-center gap-3'>
 						<Link className='w-full' href='/distribution'>
-							<Button fullWidth>Go to distribution</Button>
+							<Button fullWidth>Migrate to veBAO</Button>
 						</Link>
-						OR
-						<Button fullWidth onClick={modalHide}>
-							I understand the risk!
-						</Button>
 					</div>
 				</Modal.Body>
 			</Modal>

@@ -1,15 +1,19 @@
+import Config from '@/bao/lib/config'
 import Container from '@/components/Container'
 import Logo from '@/components/Logo'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import classNames from 'classnames'
+import { BigNumber } from 'ethers'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { FC, Fragment, ReactNode } from 'react'
 import { isDesktop } from 'react-device-detect'
 import AccountButton from '../AccountButton'
+import MigrateButton from '../MigrateButton'
 import Nav from '../Nav'
 
 export interface IconProps {
@@ -50,6 +54,8 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 }
 
 const Header: FC = () => {
+	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
+
 	return (
 		<header className='fixed top-0 z-50 w-full border-b border-b-primary-300 bg-background-100'>
 			<nav>
@@ -114,6 +120,7 @@ const Header: FC = () => {
 							</Popover>
 						)}
 
+						{baov1Balance.gt(0) && <MigrateButton />}
 						<AccountButton />
 
 						<Menu as='div' className='relative inline-block text-left'>
