@@ -297,11 +297,9 @@ const Migration: React.FC = () => {
 	}
 
 	return (
-		<>
-			<div className='flex flex-col items-center'>
-				<div className='pt-4 md:w-4/5'>{distElement}</div>
-			</div>
-		</>
+		<div className='flex flex-col items-center'>
+			<div className='pt-4 md:w-4/5'>{distElement}</div>
+		</div>
 	)
 }
 

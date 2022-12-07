@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
@@ -48,6 +49,7 @@ const Migration: React.FC = () => {
 	}
 
 	const tokensToSlash = slashableTokens(distributionInfo)
+	const tokensYouGet = distributionInfo.curve.add(distributionInfo.amountOwedTotal.sub(tokensToSlash))
 
 	return (
 		<div className='flex flex-col px-4'>
@@ -78,22 +80,39 @@ const Migration: React.FC = () => {
 					The slash function starts on the date the user begins their BAO distribution. The slash function begins at 100% on day 0 and
 					approaches a constant 95% slash on day 365 and later. The slash function defines how much of their remaining distribution gets
 					slashed when a user ends their distribution early. The user will immediately receive the remainder of this percentage of their
-					remaining distribution.
+					remaining distribution. The slash function value is multiplied against your remaining distribution amount and the result is lost
+					to your forever.
 				</Typography>
 
-				<div className='flex flex-col'>
-					<div className='my-5 flex w-full flex-row items-center justify-center gap-4'>
-						<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
-							<Typography variant='base' className='text-md flex flex-row px-2 font-bold text-text-100'>
-								Tokens that will be slashed if you end your distribution early:
-							</Typography>
+				<div className='flex flex-col my-4 gap-5'>
+					<div className='flex flex-col justify-center gap-2 rounded'>
+						<Typography variant='base' className='text-md flex flex-row font-bold text-text-100'>
+							Tokens that will be slashed (lost) if you end your distribution early:
+						</Typography>
+						<div className='flex flex-row items-center gap-2'>
 							<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 							<Typography variant='base' className='font-semibold'>
 								{getDisplayBalance(tokensToSlash)}
 							</Typography>
 						</div>
 					</div>
+					<div className='flex flex-col justify-center gap-2 rounded'>
+						<Typography variant='base' className='text-md flex flex-row font-bold text-text-100'>
+							Your new distribution total (including tokens pending claim or already claimed):
+						</Typography>
+						<div className='flex flex-row items-center gap-2'>
+							<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+							<Typography variant='base' className='font-semibold'>
+								{getDisplayBalance(tokensYouGet)}
+							</Typography>
+						</div>
+					</div>
 				</div>
+
+				<Typography variant='p' className='my-4 leading-normal'>
+					If you choose this option and end your distribution early, you will instantly receive the new distribution total amount that you
+					see above, minus any tokens you've already claimed. We include any tokens that are currently pending claim, so you don't need to worry about that.
+				</Typography>
 
 				<div className='m-auto mt-2 flex w-full flex-col items-center justify-center'>
 					<a
