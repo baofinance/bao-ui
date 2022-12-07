@@ -37,8 +37,6 @@ const Migration: React.FC = () => {
 		setShowModal(false)
 	}
 
-	const shouldBeWarned = !seenModal
-
 	return (
 		<div className='flex flex-col px-4'>
 			<Typography variant='hero' className='my-3 text-center font-bold'>

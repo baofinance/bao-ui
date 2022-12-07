@@ -52,11 +52,6 @@ const Migration: React.FC = () => {
 	const dist = useDistributionInfo()
 	const merkleLeaf = useProofs()
 
-	const leaves = snapshot.map(account => _keccakAbiEncode(account.address, account.amount))
-	const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
-	const leaf = merkleLeaf && _keccakAbiEncode(merkleLeaf[0].address, merkleLeaf[0].amount)
-	const proof = merkleLeaf && merkleTree.getHexProof(leaf)
-
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
 	//const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
 	//const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
@@ -243,6 +238,18 @@ const Migration: React.FC = () => {
 				</div>
 			</div>
 		)
+	} else if (merkleLeaf && merkleLeaf.length === 0) {
+		distElement = (
+			<div className='flex flex-col items-center'>
+				<div className='md:max-w-4xl'>
+					<div className='pb-5'>
+						<Typography variant='xl' className='font-bold text-text-100'>
+							You have no locked BAOv1 to distribute.
+						</Typography>
+					</div>
+				</div>
+			</div>
+		)
 	} else {
 		distElement = (
 			<div className='flex flex-col items-center'>
@@ -277,7 +284,7 @@ const Migration: React.FC = () => {
 							<Typography className='py-2 font-semibold text-text-100'>Distribution Amount</Typography>
 							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf ? merkleLeaf[0].amount : BigNumber.from(0))}</Typography>
+								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf ? merkleLeaf.amount : BigNumber.from(0))}</Typography>
 							</div>
 						</div>
 						{pendingTx ? (
@@ -295,7 +302,7 @@ const Migration: React.FC = () => {
 								disabled={!canStartDistribution}
 								className='bg-primary-500'
 								onClick={async () => {
-									const startDistribution = distribution.startDistribution(proof, merkleLeaf[0].amount)
+									const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
 									handleTx(startDistribution, `Start Distribution`)
 								}}
 							>
