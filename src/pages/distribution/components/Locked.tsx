@@ -14,18 +14,13 @@ import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { BigNumber } from 'ethers'
-import { keccak256, solidityPack } from 'ethers/lib/utils'
 import 'katex/dist/katex.min.css'
-import MerkleTree from 'merkletreejs'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import snapshot from 'public/snapshot.json'
 import React, { Fragment, useState } from 'react'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
-
-const _keccakAbiEncode = (a: string, n: string): string => keccak256(solidityPack(['address', 'uint256'], [a, n]))
 
 const options = [
 	{
@@ -315,12 +310,19 @@ const Migration: React.FC = () => {
 		)
 	}
 
+	//return (
+	//	<>
+	//		<div className='flex flex-col items-center'>
+	//			<div className='pt-4 md:w-4/5'>{distElement}</div>
+	//		</div>
+	//	</>
+	//)
 	return (
-		<>
-			<div className='flex flex-col items-center'>
-				<div className='pt-4 md:w-4/5'>{distElement}</div>
+		<div className='flex flex-col items-center'>
+			<div className='pt-4 md:w-4/5'>
+				<End />
 			</div>
-		</>
+		</div>
 	)
 }
 

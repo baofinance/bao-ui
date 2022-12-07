@@ -8,23 +8,47 @@ import { BaoDistribution } from '@/typechain/BaoDistribution'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
+import useDistributionInfo, { DistributionInfo } from '@/hooks/distribution/useDistributionInfo'
+import { decimate } from '@/utils/numberFormat'
+import { parseUnits } from 'ethers/lib/utils'
+import { getDisplayBalance } from '@/utils/numberFormat'
+
+const slashFunction = (days: number) => {
+	let p = 0
+	if (0 <= days && days <= 365) {
+		p = 100 - 0.01369863013 * days
+	} else if (365 < days && days <= 1095) {
+		p = 95
+	}
+	return p / 100
+}
+
+const slashableTokens = (distributionInfo: DistributionInfo) => {
+	const startDate = new Date(distributionInfo.dateStarted.mul(1000).toNumber())
+	const daysSinceStart = Math.floor((Date.now() - startDate.getTime()) / (1000 * 3600 * 24))
+	const slashRate = slashFunction(daysSinceStart)
+	const tokensLeft = distributionInfo.amountOwedTotal.sub(distributionInfo.curve)
+	const tokensToSlash = decimate(tokensLeft.mul(parseUnits(slashRate.toString())))
+	return tokensToSlash
+}
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
+	const distributionInfo = useDistributionInfo()
 
 	const [showModal, setShowModal] = useState(false)
-	const [seenModal, setSeenModal] = useState(false)
+	//const [seenModal, setSeenModal] = useState(false)
 
 	const modalShow = () => {
 		setShowModal(true)
 	}
 	const modalHide = () => {
-		setSeenModal(true)
+		//setSeenModal(true)
 		setShowModal(false)
 	}
 
-	const shouldBeWarned = !seenModal
+	const tokensToSlash = slashableTokens(distributionInfo)
 
 	return (
 		<div className='flex flex-col px-4'>
@@ -33,7 +57,7 @@ const Migration: React.FC = () => {
 					End Distribution
 				</Typography>
 				<Typography variant='xl' className='text-center font-bold'>
-					End the Distribution Early
+					Receive tokens early at a cost
 				</Typography>
 				<Typography variant='p' className='my-4 leading-normal'>
 					Users that perform a liquid distribution can choose to end their distribution early at any time after their distribution starts. A
@@ -57,6 +81,23 @@ const Migration: React.FC = () => {
 					slashed when a user ends their distribution early. The user will immediately receive the remainder of this percentage of their
 					remaining distribution.
 				</Typography>
+
+				<div className='flex flex-col'>
+					<div className='my-5 flex w-full flex-row items-center justify-center gap-4'>
+						<div className='flex flex-col gap-2'>
+							<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
+								The amount of tokens this slash will cost your distribution is:
+							</Typography>
+							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
+								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+								<Typography variant='base' className='font-semibold'>
+									{getDisplayBalance(tokensToSlash)}
+								</Typography>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div className='m-auto mt-2 flex w-full flex-col items-center justify-center'>
 					<a
 						href='https://global.discourse-cdn.com/standard10/uploads/bao/original/1X/d0683e4c31a1d5cbfdf4a1a23f76325ca884ee43.gif'
@@ -116,7 +157,26 @@ const Migration: React.FC = () => {
 						By clicking the button below, you acknowledge that you've read the information on this page very carefully and understand that
 						ending your distribution is an irreversible action!
 					</Typography>
-					<div className='flow-col mt-5 flex items-center gap-3'>
+
+					<div className='flex flex-col items-center'>
+						<div className='flex flex-col'>
+							<div className='my-2 flex w-full flex-row items-center justify-center gap-4'>
+								<div className='flex flex-col gap-2'>
+									<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
+										BAO you will forfeit:
+									</Typography>
+									<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2'>
+										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+										<Typography variant='base' className='font-semibold'>
+											{getDisplayBalance(tokensToSlash)}
+										</Typography>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div className='flow-col mt-3 flex items-center gap-3'>
 						<Button
 							fullWidth
 							onClick={async () => {
