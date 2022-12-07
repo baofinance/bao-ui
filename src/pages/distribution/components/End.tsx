@@ -4,14 +4,13 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useDistributionInfo, { DistributionInfo } from '@/hooks/distribution/useDistributionInfo'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { parseUnits } from 'ethers/lib/utils'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
-import useDistributionInfo, { DistributionInfo } from '@/hooks/distribution/useDistributionInfo'
-import { decimate } from '@/utils/numberFormat'
-import { parseUnits } from 'ethers/lib/utils'
-import { getDisplayBalance } from '@/utils/numberFormat'
 
 const slashFunction = (days: number) => {
 	let p = 0
@@ -84,16 +83,14 @@ const Migration: React.FC = () => {
 
 				<div className='flex flex-col'>
 					<div className='my-5 flex w-full flex-row items-center justify-center gap-4'>
-						<div className='flex flex-col gap-2'>
-							<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
-								The amount of tokens this slash will cost your distribution is:
+						<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
+							<Typography variant='base' className='text-md flex flex-row px-2 font-bold text-text-100'>
+								Tokens that will be slashed if you end your distribution early:
 							</Typography>
-							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
-								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-								<Typography variant='base' className='font-semibold'>
-									{getDisplayBalance(tokensToSlash)}
-								</Typography>
-							</div>
+							<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
+							<Typography variant='base' className='font-semibold'>
+								{getDisplayBalance(tokensToSlash)}
+							</Typography>
 						</div>
 					</div>
 				</div>
