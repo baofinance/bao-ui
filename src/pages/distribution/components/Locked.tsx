@@ -302,6 +302,8 @@ const Migration: React.FC = () => {
 	//	</div>
 	//)
 	return (
+		// FIXME: same deal here vital!
+		// delete this return statement and uncomment the one above when done styling / before merging :)
 		<div className='flex flex-col items-center'>
 			<div className='pt-4 md:w-4/5'>
 				<End />
