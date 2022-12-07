@@ -12,7 +12,7 @@ const useBaoPrice = () => {
 		['@/hooks/base/useBaoPrice', { chainId }, { WETH: true, BAO: true }],
 		async () => {
 			const wethPrice = await GraphUtil.getPrice(Config.contracts.Weth[chainId].address)
-			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
+			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Baov2[chainId].address)
 			return fromDecimal(_baoPrice)
 		},
 		{
