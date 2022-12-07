@@ -119,7 +119,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 									const amount = parseUnits(val)
 									const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
 
-									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
+									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${getDisplayBalance(amount)} ${gauge.name}`, () => hideModal())
 								}}
 							>
 								Deposit {gauge.name}
