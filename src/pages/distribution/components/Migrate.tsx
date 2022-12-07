@@ -17,7 +17,7 @@ const Migration: React.FC = () => {
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
 	const [lockTime, setLockTime] = useState<Date>(getDayOffset(new Date(), 365 * 4 - 8))
-	const min = getDayOffset(new Date(), 365 * 3)
+	const min = getDayOffset(new Date(), 365 * 3 + 7)
 	const max = getWeekDiff(min, getDayOffset(new Date(), 365 * 4 - 14))
 	const [weeks, setWeeks] = useState<number>(max)
 
