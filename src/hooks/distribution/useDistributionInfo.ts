@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import useContract from '../base/useContract'
 
-type DistributionInfo = {
+export type DistributionInfo = {
 	dateStarted: BigNumber
 	dateEnded: BigNumber
 	lastClaim: BigNumber
