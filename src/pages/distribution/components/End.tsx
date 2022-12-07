@@ -159,10 +159,10 @@ const Migration: React.FC = () => {
 						<div className='flex flex-col'>
 							<div className='my-2 flex w-full flex-row items-center justify-center gap-4'>
 								<div className='flex flex-col gap-2'>
-									<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
-										BAO you will forfeit:
-									</Typography>
 									<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2'>
+										<Typography variant='base' className='text-md px-2 font-bold text-text-100'>
+											BAO you will forfeit due to slashing:
+										</Typography>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 										<Typography variant='base' className='font-semibold'>
 											{getDisplayBalance(tokensToSlash)}
