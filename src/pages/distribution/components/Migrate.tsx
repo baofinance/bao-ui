@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
+import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -9,7 +10,6 @@ import 'katex/dist/katex.min.css'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import React, { useState } from 'react'
-import Modal from '@/components/Modal'
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
@@ -91,15 +91,10 @@ const Migration: React.FC = () => {
 					className='my-4'
 					fullWidth
 					onClick={async () => {
-						if (shouldBeWarned) {
-							modalShow()
-						} else {
-							const lockDistribution = distribution.lockDistribution(getEpochSecondForDay(lockTime))
-							handleTx(lockDistribution, `Distribution: Migrate to veBAO`)
-						}
+						modalShow()
 					}}
 				>
-					{shouldBeWarned ? 'Read Warning' : 'Migrate to veBAO'}
+					Migrate to veBAO
 				</Button>
 			</div>
 			<Typography variant='sm' className='m-auto text-text-200'>
@@ -110,26 +105,31 @@ const Migration: React.FC = () => {
 				<Modal.Header
 					onClose={modalHide}
 					header={
-						<Typography variant='h2' className='inline-block font-semibold'>
+						<Typography variant='h2' className='font-semibold text-red'>
 							Warning!
 						</Typography>
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='xl' className='pb-5 font-semibold text-text-300'>
-						This action is IRREVERSIBLE
+					<Typography variant='xl' className='pb-2 font-semibold'>
+						This is action is irreversible!
 					</Typography>
-					<Typography variant='base' className='leading-normal'>
-						This action converts all of the locked BAO tokens in your distribution into veBAO instantly.
-						<br />
-						<br />
-						This migration can only happen once and can never be undone.
-						<br />
-						<br />
-						If you take this action it will end your distribution and you will be unable to take any further distribution actions.
+					<Typography variant='p' className='leading-normal'>
+						This action migrates all of the locked BAO tokens in your distribution into veBAO for a minimum of 3 years. This migration can
+						only happen once and can never be undone.
+					</Typography>
+					<Typography variant='p' className='leading-normal'>
+						By clicking the button below, you acknowledge that you've read the information on this page very carefully and understand that
+						migrating to veBAO is an irreversible action!
 					</Typography>
 					<div className='flow-col mt-5 flex items-center gap-3'>
-						<Button fullWidth onClick={modalHide}>
+						<Button
+							fullWidth
+							onClick={async () => {
+								const lockDistribution = distribution.lockDistribution(getEpochSecondForDay(lockTime))
+								handleTx(lockDistribution, `Distribution: Migrate to veBAO`)
+							}}
+						>
 							I understand the risk!
 						</Button>
 					</div>

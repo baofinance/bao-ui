@@ -73,14 +73,6 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 				</>
 			</div>
 			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-text-200'>BAO Locked</Typography>
-				<>
-					<Typography className='ml-1 inline text-end font-bold'>
-						<>{lockInfo ? getDisplayBalance(lockInfo.lockAmount) : '-'}</>
-					</Typography>
-				</>
-			</div>
-			<div className='grid gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>veBAO Balance</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
@@ -92,6 +84,15 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					</Typography>
 				</>
 			</div>
+			<div className='grid gap-1 md:grid-cols-2'>
+				<Typography className='font-medium text-text-200'>BAO Locked</Typography>
+				<>
+					<Typography className='ml-1 inline text-end font-bold'>
+						<>{lockInfo ? getDisplayBalance(lockInfo.lockAmount) : '-'}</>
+					</Typography>
+				</>
+			</div>
+
 			<div className='grid gap-1 md:grid-cols-2'>
 				<Typography className='font-medium text-text-200'>Locked Until</Typography>
 				<>
@@ -140,7 +141,7 @@ export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => 
 				</Typography>
 				<>
 					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						${lockInfo && baoPrice ? getDisplayBalance(decimate(lockInfo.totalSupply.mul(baoPrice.mul(1000)))) : 0}
+						${lockInfo && baoPrice ? getDisplayBalance(decimate(lockInfo.totalSupply.mul(baoPrice))) : 0}
 					</Typography>
 				</>
 			</div>
@@ -231,7 +232,7 @@ export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps
 					</div>
 					<Typography>
 						<Typography variant='lg' className='font-bold'>
-							${lockInfo && baoPrice ? getDisplayBalance(decimate(lockInfo.totalSupply.mul(baoPrice.mul(1000)))) : 0}
+							${lockInfo && baoPrice ? getDisplayBalance(decimate(lockInfo.totalSupply.mul(baoPrice))) : 0}
 						</Typography>
 					</Typography>
 				</div>

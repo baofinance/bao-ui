@@ -9,22 +9,22 @@ import Typography from '@/components/Typography'
 import { useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarkets } from '@/hooks/markets/useMarkets'
+import formatAddress from '@/utils/formatAddress'
 import GraphUtil from '@/utils/graph'
-import { formatAddress } from '@/utils/index'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft, faChartLine, faExternalLinkAlt, faLandmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import { formatUnits } from 'ethers/lib/utils'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './components/Modals/BorrowModal'
 import MarketSupplyModal from './components/Modals/SupplyModal'
 import { MarketDetails } from './components/Stats'
-import { useWeb3React } from '@web3-react/core'
-import { formatUnits } from 'ethers/lib/utils'
 
 export async function getStaticPaths() {
 	return {
@@ -96,7 +96,7 @@ const Market: NextPage<{
 	const oracleAddress = useMemo(() => {
 		if (!chainId) return
 		const address = Config.contracts.MarketOracle[chainId].address
-		return formatAddress(address)
+		return address
 	}, [chainId])
 
 	return markets && activeMarket ? (
@@ -215,7 +215,7 @@ const Market: NextPage<{
 								label: 'Price Oracle',
 								value: (
 									<a href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${oracleAddress}`} className='hover:text-text-400'>
-										{oracleAddress} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
+										{formatAddress(oracleAddress)} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								),
 							},

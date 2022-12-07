@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import Button from '@/components/Button'
+import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -7,7 +8,6 @@ import { BaoDistribution } from '@/typechain/BaoDistribution'
 import 'katex/dist/katex.min.css'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
-import Modal from '@/components/Modal'
 
 const Migration: React.FC = () => {
 	const { handleTx } = useTransactionHandler()
@@ -41,7 +41,7 @@ const Migration: React.FC = () => {
 					The slash fee is based on the slash rate function defined below which will end the distribution and allow the user to receive the
 					rest of their tokens (minus slash fee) immediately.
 				</Typography>
-				<Typography variant='lg' className='mt-2 mb-2 font-medium text-text-200'>
+				<Typography variant='lg' className='mt-2 mb-2 font-medium text-text-100'>
 					Slash Function
 				</Typography>
 				<code>
@@ -71,7 +71,7 @@ const Migration: React.FC = () => {
 							alt='Slash function'
 						/>
 					</a>
-					<Typography variant='xs' className='my-4 w-4/5 rounded bg-background-100 p-2 text-center text-text-200'>
+					<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-text-200'>
 						In the graph above, the blue points are the state of both curves respectively. The orange point is the percentage of their total
 						distribution that the user will be able to claim if they choose to end their distribution at that point.
 					</Typography>
@@ -83,53 +83,47 @@ const Migration: React.FC = () => {
 					className='my-4'
 					fullWidth
 					onClick={async () => {
-						if (shouldBeWarned) {
-							modalShow()
-						} else {
-							const endDistribution = distribution.endDistribution()
-							handleTx(endDistribution, `Distribution: End Distribution`)
-						}
+						modalShow()
 					}}
 				>
-					{shouldBeWarned ? 'Read Warning' : 'End Distribution'}
+					End Distribution
 				</Button>
 			</div>
-
-			<Typography variant='sm' className='text-center text-text-200'>
-				* This action can be done only <b className='font-bold'>once</b> and can <b className='font-bold'>not</b> be reversed!
-			</Typography>
 
 			<Modal isOpen={showModal} onDismiss={modalHide}>
 				<Modal.Header
 					onClose={modalHide}
 					header={
 						<>
-							<Typography variant='h2' className='inline-block font-semibold'>
+							<Typography variant='h2' className='inline-block font-semibold text-red'>
 								Warning!
 							</Typography>
 						</>
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='xl' className='pb-5 font-semibold text-text-300'>
-						This is IRREVERSIBLE and forfeits tokens
+					<Typography variant='xl' className='pb-2 font-semibold'>
+						This is action is irreversible and forfeits tokens!
 					</Typography>
-					<Typography variant='base' className='leading-normal'>
-						Ending your distribution early collects a slashed amount of your entire balance INSTANTLY.
-						<br />
-						<br />
-						This comes at the cost of forever forfeiting a large portion of the tokens that you would have received by instead migrating
-						once or claiming over time.
-						<br />
-						<br />
-						Ending your distribution early will cause you to be unable to take any further distribution actions.
-						<br />
-						<br />
-						Please make sure you've read the information on this page very carefully before submitting a transaction to end your
-						distribution early.
+					<Typography variant='p' className='leading-normal'>
+						End your distribution and collect a slashed amount of your locked BAO tokens instantly.
+					</Typography>
+					<Typography variant='p' className='leading-normal'>
+						Ending your distribution comes at the cost of forever forfeiting a large portion of the tokens you would have received by
+						migrating or claiming over time.
+					</Typography>
+					<Typography variant='p' className='leading-normal'>
+						By clicking the button below, you acknowledge that you've read the information on this page very carefully and understand that
+						ending your distribution is an irreversible action!
 					</Typography>
 					<div className='flow-col mt-5 flex items-center gap-3'>
-						<Button fullWidth onClick={modalHide}>
+						<Button
+							fullWidth
+							onClick={async () => {
+								const endDistribution = distribution.endDistribution()
+								handleTx(endDistribution, `Distribution: End Distribution`)
+							}}
+						>
 							I understand the risk!
 						</Button>
 					</div>

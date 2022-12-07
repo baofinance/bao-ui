@@ -7,9 +7,9 @@ import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useMarketPrices } from '@/hooks/markets/usePrices'
-import { decimate, getDisplayBalance, exponentiate, sqrt } from '@/utils/numberFormat'
-import { BigNumber, FixedNumber, utils } from 'ethers'
-import { parseUnits, formatUnits } from 'ethers/lib/utils'
+import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { BigNumber, FixedNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import React, { useCallback, useMemo, useState } from 'react'
 import MarketButton from '../MarketButton'
@@ -170,6 +170,11 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 						/>
 					</div>
 					<MarketStats operation={operation} asset={asset} amount={val} />
+					{operation === MarketOperations.mint && (
+						<Typography className='rounded bg-background-100 pt-2 text-center leading-normal text-text-200'>
+							*Minimum mint/borrow amount: 5,000 baoUSD
+						</Typography>
+					)}
 				</Modal.Body>
 				<Modal.Actions>
 					<MarketButton
@@ -184,11 +189,6 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 						}
 						onHide={hideModal}
 					/>
-					{operation === MarketOperations.mint && (
-						<Typography variant='base' className='text-center text-text-300'>
-							* Minimum mint/borrow amount: 5,000 baoUSD
-						</Typography>
-					)}
 				</Modal.Actions>
 			</Modal>
 		</>

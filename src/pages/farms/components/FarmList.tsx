@@ -1,25 +1,22 @@
 // FIXME: BROKEN this won't be used anymore as the /farms/ page is getting trashed!
 import Config from '@/bao/lib/config'
-import Loader, { PageLoader } from '@/components/Loader'
+import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import { Farm, PoolType } from '@/contexts/Farms/types'
 import useBao from '@/hooks/base/useBao'
+import useContract from '@/hooks/base/useContract'
 import useAllFarmTVL from '@/hooks/farms/useAllFarmTVL'
 import useFarms from '@/hooks/farms/useFarms'
-import { useQuery } from '@tanstack/react-query'
+import type { Masterchef } from '@/typechain/index'
 import GraphUtil from '@/utils/graph'
 import Multicall from '@/utils/multicall'
-import { getDisplayBalance, truncateNumber, decimate, exponentiate, fromDecimal } from '@/utils/numberFormat'
-import { Switch } from '@headlessui/react'
+import { fromDecimal, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import classNames from 'classnames'
 import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 import FarmModal from './Modals'
-import useContract from '@/hooks/base/useContract'
-import type { Masterchef } from '@/typechain/index'
 
 const FarmList: React.FC = () => {
 	const bao = useBao()
@@ -98,45 +95,9 @@ const FarmList: React.FC = () => {
 
 	return (
 		<>
-			{/* <Form.Check
-					inline
-					type="switch"
-					id="show-archived"
-					label="Show Staked Only"
-					checked={staked}
-					onChange={(e) => showStaked(e.currentTarget.checked)}
-				/> */}
-			<div className='flex justify-end opacity-50'>
-				<Switch.Group as='div' className='flex items-center'>
-					<Switch
-						disabled={true}
-						checked={archived}
-						onChange={showArchived}
-						className={classNames(
-							archived ? 'bg-text-100' : 'bg-text-100',
-							'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 rounded-full border-2 transition-colors duration-200 ease-in-out',
-						)}
-					>
-						<span
-							aria-hidden='true'
-							className={classNames(
-								archived ? 'translate-x-[14px]' : 'translate-x-0',
-								'pointer-events-none inline-block h-[10px] w-[10px] transform rounded-full bg-text-300 shadow ring-0 transition duration-200 ease-in-out',
-							)}
-						/>
-					</Switch>
-					<Switch.Label as='span' className='ml-3'>
-						<Typography variant='sm'>Show Archived Farms</Typography>
-					</Switch.Label>
-				</Switch.Group>
-			</div>
 			<div className='flex w-full flex-row'>
 				<div className='flex w-full flex-col'>
-					{isDesktop ? (
-						<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
-					) : (
-						<FarmListHeader headers={['Pool', 'APR', 'Staked']} />
-					)}
+					<FarmListHeader headers={['Pool', 'LP Staked', 'TVL']} />
 					{!archived ? (
 						<>
 							{pools[PoolType.ACTIVE].length ? (
@@ -203,7 +164,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 			<button className='w-full py-2' onClick={() => setShowFarmModal(true)} disabled={!account}>
 				<div className='rounded border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
 					<div className='flex w-full flex-row items-center'>
-						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
+						<div className={`mx-auto my-0 flex basis-1/3 flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 inline-block'>
 									<Image className='z-10 inline-block select-none' src={farm.iconA} alt={farm.lpToken} width={32} height={32} />
@@ -224,25 +185,18 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 								</span>
 							</div>
 						</div>
-						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								-
-							</Typography>
-						</div>
-						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
+						<div className='mx-auto my-0 flex basis-1/3 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
 								{account
 									? `$${window.screen.width > 1200 ? getDisplayBalance(farm.stakedUSD, 0) : truncateNumber(farm.stakedUSD, 0)}`
 									: '-'}
 							</Typography>
 						</div>
-						{isDesktop && (
-							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									${window.screen.width > 1200 ? getDisplayBalance(farm.tvl) : truncateNumber(farm.tvl, 0)}
-								</Typography>
-							</div>
-						)}
+						<div className='mx-auto my-0 flex basis-1/3 flex-col text-right'>
+							<Typography variant='base' className='ml-2 inline-block font-medium'>
+								${window.screen.width > 1200 ? getDisplayBalance(farm.tvl) : truncateNumber(farm.tvl, 0)}
+							</Typography>
+						</div>
 					</div>
 				</div>
 			</button>

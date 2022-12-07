@@ -13,13 +13,16 @@ import LockStats, { ProtocolStatsHoriz } from './Stats'
 import { providerKey } from '@/utils/index'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
+import usePrice from '@/hooks/base/usePrice'
 
 const Lock: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
 	const lockInfo = useLockInfo()
 	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
 
-	const baoPrice = useBaoPrice()
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	const baoPrice = usePrice('bao-finance-v2')
 
 	const enabled = !!library
 	const { data: blockTimestamp, refetch } = useQuery(

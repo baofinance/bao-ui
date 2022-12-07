@@ -41,20 +41,9 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 
-	const { data: baoPrice } = useQuery(
-		['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
-		async () => {
-			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
-			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
-			return fromDecimal(_baoPrice)
-		},
-		{
-			enabled: !!chainId,
-			refetchOnReconnect: true,
-			refetchInterval: 1000 * 60 * 5,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	const baoPrice = usePrice('bao-finance-v2')
 
 	const poolTVL = useMemo(() => {
 		return (

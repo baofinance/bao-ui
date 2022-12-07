@@ -65,7 +65,7 @@ const Migration: React.FC = () => {
 					<Latex>{`\\(x = Days \\)`}</Latex>
 					<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
 				</div>
-				<Typography variant='xs' className='my-4 w-3/5 rounded bg-background-100 p-2 text-center text-text-200'>
+				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-text-200'>
 					The forumla which determines how many tokens you may claim from your distribution at a given moment in time.
 				</Typography>
 			</div>

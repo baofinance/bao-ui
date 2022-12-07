@@ -16,6 +16,7 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { MoonLoader } from 'react-spinners'
 import Tooltipped from '../Tooltipped'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
 
 interface AccountModalProps {
 	show: boolean
@@ -24,6 +25,7 @@ interface AccountModalProps {
 
 const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 	const { account, chainId, deactivate } = useWeb3React()
+	const lockInfo = useLockInfo()
 
 	const handleSignOutClick = useCallback(() => {
 		onHide()
@@ -53,14 +55,14 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
 							} items-center rounded-full bg-primary-300`}
 						>
-							<Image src='/images/tokens/ETH.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
+							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getDisplayBalance(ethBalance)}
+								{getDisplayBalance(baoBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
-								ETH Balance
+								BAO Balance
 							</Typography>
 						</div>
 					</div>
@@ -75,10 +77,10 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getDisplayBalance(baoBalance)}
+								{getDisplayBalance(lockInfo.balance)}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
-								BAO Balance
+								veBAO Balance
 							</Typography>
 						</div>
 					</div>

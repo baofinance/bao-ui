@@ -2,6 +2,7 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
+import usePrice from '@/hooks/base/usePrice'
 import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
@@ -77,42 +78,17 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		return totalWeight.gt(0) ? exponentiate(weight).div(decimate(totalWeight)).mul(100) : BigNumber.from(0)
 	}, [weight, totalWeight])
 
-	const { data: baoPrice } = useQuery(
-		['GraphUtil.getPriceFromPair', { WETH: true, BAO: true }],
-		async () => {
-			const wethPrice = await GraphUtil.getPrice(Config.addressMap.WETH)
-			const _baoPrice = await GraphUtil.getPriceFromPair(wethPrice, Config.contracts.Bao[chainId].address)
-			return fromDecimal(_baoPrice)
-		},
-		{
-			enabled: !!chainId,
-			refetchOnReconnect: true,
-			refetchInterval: 1000 * 60 * 5,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	const baoPrice = usePrice('bao-finance-v2')
 
 	const gaugeInfo = useGaugeInfo(gauge)
 	const mintable = useMintable()
 	const inflation = gaugeInfo ? gaugeInfo.inflationRate.mul(relativeWeight).div(BigNumber.from(1).pow(18)) : BigNumber.from(0)
 	const { gaugeTVL, boostedTVL } = useGaugeTVL(gauge)
-	const rewardsValue = baoPrice.mul(1000).mul(mintable)
+	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
 	const rewardsAPY =
 		gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(relativeWeight.div(100)).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
-
-	// console.log('Gauge Name', gauge?.name)
-	// console.log('Gauge Weight', exponentiate(weight).toString())
-	// console.log('Total Weight', totalWeight.toString())
-	// console.log('Relative Weight', relativeWeight.toString())
-	// console.log('Bao Price', formatUnits(baoPrice.mul(1000)))
-	// console.log('Mintable Rewards', formatUnits(mintable))
-	// console.log('Gauge Inflation', formatUnits(inflation))
-	// console.log('Gauge Supply', formatUnits(gaugeInfo ? gaugeInfo.totalSupply : 0))
-	// console.log('Gauge TVL', formatUnits(gaugeTVL ? decimate(gaugeTVL) : 0))
-	// console.log('Working Supply', formatUnits(gaugeInfo ? gaugeInfo.workingSupply : 0))
-	// console.log('Boosted TVL', formatUnits(boostedTVL ? decimate(boostedTVL) : 0))
-	// console.log('Rewards Value', formatUnits(decimate(baoPrice.mul(1000).mul(mintable))))
-	// console.log('Rewards APY', formatUnits(rewardsAPY))
 
 	return (
 		<>
