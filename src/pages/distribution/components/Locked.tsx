@@ -318,6 +318,8 @@ const Migration: React.FC = () => {
 	//	</>
 	//)
 	return (
+		// FIXME: yo Vital pay attenion here... remove this and uncomment above
+		// when you're done testing!
 		<div className='flex flex-col items-center'>
 			<div className='pt-4 md:w-4/5'>
 				<End />
