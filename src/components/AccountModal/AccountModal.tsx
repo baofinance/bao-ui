@@ -8,7 +8,9 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
 import { getDisplayBalance } from '@/utils/numberFormat'
+import { BigNumber } from 'ethers'
 import _ from 'lodash'
 import Image from 'next/future/image'
 import Link from 'next/link'
@@ -16,7 +18,6 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import { MoonLoader } from 'react-spinners'
 import Tooltipped from '../Tooltipped'
-import useLockInfo from '@/hooks/vebao/useLockInfo'
 
 interface AccountModalProps {
 	show: boolean
@@ -77,7 +78,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='base' className='font-medium'>
-								{getDisplayBalance(lockInfo.balance)}
+								{getDisplayBalance(lockInfo ? lockInfo.balance : BigNumber.from(0))}
 							</Typography>
 							<Typography variant='sm' className='text-text-200'>
 								veBAO Balance
