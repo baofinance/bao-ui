@@ -18,7 +18,7 @@ const useBallastInfo = () => {
 
 	const enabled = !!bao && !!library && !!ballast && !!dai
 	const { data: ballastInfo, refetch } = useQuery(
-		['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), ballast?.address, dai?.address],
+		['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const ballastQueries = Multicall.createCallContext([
 				{
