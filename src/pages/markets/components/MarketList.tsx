@@ -126,6 +126,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const suppliedUnderlying = useMemo(() => {
 		const supply = supplyBalances.find(balance => balance.address === market.marketAddress)
 		if (supply === undefined) return BigNumber.from(0)
+		if (exchangeRates[market.marketAddress] === undefined) return BigNumber.from(0)
 		return decimate(supply.balance.mul(exchangeRates[market.marketAddress]))
 	}, [supplyBalances, exchangeRates, market.marketAddress])
 

@@ -16,7 +16,7 @@ export const useMarketsTVL = () => {
 	const { prices } = useMarketPrices() // TODO- use market.price instead of market prices hook
 	const stabilizer = useContract<Stabilizer>('Stabilizer')
 
-	const enabled = !!markets && !!stabilizer && !!prices
+	const enabled = markets?.length > 0 && !!stabilizer && !!prices
 	const mids = markets?.map(market => market.mid)
 	const { data: tvl, refetch } = useQuery(
 		['@/hooks/markets/useMarketsTVL', providerKey(library, account, chainId), { enabled, prices, mids }],

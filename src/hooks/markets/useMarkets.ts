@@ -19,7 +19,7 @@ export const useAccountMarkets = (): ActiveSupportedMarket[] | undefined => {
 	const { library, account, chainId } = useWeb3React()
 	const comptroller = useContract<Comptroller>('Comptroller')
 
-	const enabled = !!library && !!comptroller && !!markets
+	const enabled = markets?.length > 0 && !!library && !!comptroller
 	const mids = markets?.map(market => market.mid)
 	const { data: accountMarkets, refetch } = useQuery(
 		['@/hooks/markets/useAccountMarkets', providerKey(library, account, chainId), { enabled, mids }],

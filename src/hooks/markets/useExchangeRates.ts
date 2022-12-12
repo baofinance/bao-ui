@@ -18,9 +18,10 @@ export const useExchangeRates = (): ExchangeRates => {
 	const { library, account, chainId } = useWeb3React()
 	const markets = useMarkets()
 
-	const enabled = !!bao && !!markets && !!account
+	const enabled = markets?.length > 0 && !!bao && !!account
+	const mids = markets?.map(market => market.mid)
 	const { data: exchangeRates, refetch } = useQuery(
-		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId), { enabled }],
+		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId), { enabled, mids }],
 		async () => {
 			const tokenContracts = markets.map((market: ActiveSupportedMarket) => market.marketContract)
 			const multiCallContext = MultiCall.createCallContext(
