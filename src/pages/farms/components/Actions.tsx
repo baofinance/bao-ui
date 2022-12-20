@@ -1,33 +1,31 @@
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
-import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { PoolType } from '@/contexts/Farms/types'
 import useAllowance from '@/hooks/base/useAllowance'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
+import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useEarnings from '@/hooks/farms/useEarnings'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
+import { Uni_v2_lp__factory } from '@/typechain/factories'
+import type { Masterchef, Uni_v2_lp } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
-import { faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
-import { ethers, BigNumber } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { default as React, useCallback, useMemo, useState } from 'react'
-import { Contract } from 'ethers'
+import { default as React, useCallback, useState } from 'react'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
-import useContract from '@/hooks/base/useContract'
-import type { Uni_v2_lp, Masterchef } from '@/typechain/index'
-import { Uni_v2_lp__factory } from '@/typechain/factories'
 
 interface StakeProps {
 	lpContract: Uni_v2_lp
@@ -222,45 +220,26 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 
 	return (
 		<>
-			<Modal.Body className='h-[120px]'>
+			<Modal.Body>
+				<Typography variant='p'>
+					Due to an issue with the masterFarmer contract, users cannot withdraw their funds as they would normally. Because the withdraw
+					function is trying to call the harvest function, and rewards have ended, the transactions are failing. We are now using the
+					emergencyWithdraw function to remedy this situation, which takes a fee of 25%. Upon withdrawal, this 25% fee will be sent to the
+					treasury multisig. Guardians will refund users this fee daily. If you have any questions, please reach out on{' '}
+					<Link href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noopener noreferrer' className='font-bold hover:text-text-400'>
+						Discord
+					</Link>
+					. We are sorry for the inconvenience.
+				</Typography>
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
-						<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-							<Typography variant='sm' className='text-text-200'>
-								Fee:{' '}
-							</Typography>
-							<Typography variant='sm'>
-								{' '}
-								{fees ? `${(fees * 100).toFixed(2)}%` : <Loader />}{' '}
-								<FontAwesomeIcon
-									icon={faQuestionCircle}
-									onClick={() => setShowFeeModal(true)}
-									className='text-text-200 hover:cursor-pointer hover:text-text-400 hover:duration-200'
-								/>
-							</Typography>
-						</div>
-						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='text-text-200'>
-								Balance:
-							</Typography>
-							<Typography variant='sm'>
-								{getDisplayBalance(max)}{' '}
-								<Link href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
-									<a>
-										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
-									</a>
-								</Link>
+						<div className='mb-1 flex w-full items-center justify-center gap-1'>
+							<Typography className='text-text-200'>Staked Balance:</Typography>
+							<Typography className='font-bold'>
+								{getDisplayBalance(max)} {tokenName}
 							</Typography>
 						</div>
 					</div>
-					<Input
-						onSelectMax={handleSelectMax}
-						onSelectHalf={handleSelectHalf}
-						onChange={handleChange}
-						value={val}
-						max={formatUnits(max)}
-						symbol={tokenName}
-					/>
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
@@ -279,12 +258,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 						</Button>
 					) : (
 						<Button
-							disabled={!val || isNaN(val as any) || parseUnits(val).gt(max) || stakedBalance.eq(BigNumber.from(0))}
+							disabled={stakedBalance.eq(BigNumber.from(0))}
 							onClick={async () => {
-								const refer = '0x0000000000000000000000000000000000000000'
-								const amount = val ? parseUnits(val) : BigNumber.from(0)
-								const unstakeTx = masterChefContract.withdraw(pid, parseUnits(val), refer)
-								handleTx(unstakeTx, `Farms: Withdraw ${amount} ${tokenName}`, () => hideModal())
+								const unstakeTx = masterChefContract.emergencyWithdraw(pid)
+								handleTx(unstakeTx, `Farms: Withdraw ${getDisplayBalance(max)} ${tokenName}`, () => hideModal())
 							}}
 						>
 							Withdraw {tokenName}

@@ -22,7 +22,7 @@ type FarmModalProps = {
 }
 
 const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
-	const operations = ['Unstake', 'Rewards']
+	const operations = ['Unstake']
 	const [operation, setOperation] = useState(operations[0])
 	const { pid } = farm
 
@@ -68,9 +68,6 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 					</>
 				}
 			/>
-			<Modal.Options>
-				<NavButtons options={operations} active={operation} onClick={setOperation} />
-			</Modal.Options>
 			<Actions
 				farm={farm}
 				pid={farm.pid}
