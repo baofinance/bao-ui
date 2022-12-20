@@ -222,10 +222,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pair
 		<>
 			<Modal.Body>
 				<Typography variant='p'>
-					Due to an issue with the masterFarmer contract, users cannot withdraw their funds as they would normally. Because the withdraw
-					function is trying to call the harvest function, and rewards have ended, the transactions are failing. We are now using the
-					emergencyWithdraw function to remedy this situation, which takes a fee of 25%. Upon withdrawal, this 25% fee will be sent to the
-					treasury multisig. Guardians will refund users this fee daily. If you have any questions, please reach out on{' '}
+					Due to an issue with the masterFarmer contract, users cannot withdraw their staked assets as they would normally. Because the
+					withdraw function is trying to call the harvest function, and rewards have ended, the transactions are failing. We are now using
+					the emergencyWithdraw function to remedy this situation, which takes a fee of 25%. Upon withdrawal, this 25% fee will be sent to
+					the treasury multisig. Guardians will refund users this fee daily. If you have any questions, please reach out on{' '}
 					<Link href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noopener noreferrer' className='font-bold hover:text-text-400'>
 						Discord
 					</Link>
