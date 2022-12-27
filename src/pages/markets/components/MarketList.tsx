@@ -200,9 +200,9 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							},
 							{
 								label: 'Your Supply',
-								value: `${getDisplayBalance(suppliedUnderlying)} ${market.underlyingSymbol} | $${getDisplayBalance(
-									decimate(suppliedUnderlying.mul(market.price)),
-								)}`,
+								value: `${getDisplayBalance(suppliedUnderlying, market.underlyingDecimals)} ${
+									market.underlyingSymbol
+								} | $${getDisplayBalance(decimate(suppliedUnderlying.mul(market.price)))}`,
 							},
 							{
 								label: 'Collateral',
