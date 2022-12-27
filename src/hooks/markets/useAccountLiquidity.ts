@@ -54,7 +54,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 			}
 
 			const usdSupply = Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
-				const supply = supplyBalances.find(balance => balance.address === addr)
+				const supply = supplyBalances.find(b => b.address === addr)
 				return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(prices[addr])))
 			}, BigNumber.from(0))
 
