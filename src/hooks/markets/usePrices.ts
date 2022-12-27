@@ -32,7 +32,7 @@ export const usePrice = (coingeckoId: string) => {
 	const enabled = !!library
 
 	const { data: price, refetch } = useQuery(
-		['@/hooks/markets/usePrice', providerKey(library, account, chainId), { enabled, nids }],
+		['@/hooks/markets/usePrice', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const res = await (await fetch(url)).json()
 
