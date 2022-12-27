@@ -57,7 +57,9 @@ export const Overview = () => {
 						</Typography>
 						<Typography variant='base' className='font-medium'>
 							$
-							{`${bao && account && accountLiquidity ? getDisplayBalance(BigNumber.from(accountLiquidity.usdSupply.toString()), 6, 2) : 0}`}{' '}
+							{`${
+								bao && account && accountLiquidity ? getDisplayBalance(BigNumber.from(accountLiquidity.usdSupply.toString()), 18, 2) : 0
+							}`}{' '}
 						</Typography>
 					</div>
 				</div>
