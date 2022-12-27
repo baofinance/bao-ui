@@ -1,18 +1,16 @@
 import Config from '@/bao/lib/config'
-import fetcher from '@/bao/lib/fetcher'
-import { SWR } from '@/bao/lib/types'
+import useContract from '@/hooks/base/useContract'
+import type { MarketOracle } from '@/typechain/index'
 import MultiCall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import useSWR from 'swr'
 import useBao from '../base/useBao'
-import useContract from '@/hooks/base/useContract'
-import type { MarketOracle } from '@/typechain/index'
 //import { parseUnits } from 'ethers/lib/utils'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { providerKey } from '@/utils/index'
+import { useQuery } from '@tanstack/react-query'
+import { parseUnits } from 'ethers/lib/utils'
 
 type Prices = {
 	prices: {
@@ -28,27 +26,77 @@ type MarketPrices = {
 	}
 }
 
-export const usePrice = (coingeckoId: string): SWR & Prices => {
+export const usePrice = (coingeckoId: string) => {
+	const { library, account, chainId } = useWeb3React()
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoId}`
-	const { data, error } = useSWR(url, fetcher)
+	const enabled = !!library
 
-	return {
-		prices: data || {},
-		isLoading: !error && !data,
-		isError: error,
+	const { data: price, refetch } = useQuery(
+		['@/hooks/markets/usePrice', providerKey(library, account, chainId), { enabled, nids }],
+		async () => {
+			const res = await (await fetch(url)).json()
+
+			return Object.keys(res).reduce(
+				(prev, cur) => ({
+					...prev,
+					price: parseUnits(res[cur].usd.toString()),
+				}),
+				{},
+			)
+		},
+		{
+			enabled,
+			staleTime: 1000 * 60 * 3, // three minutes
+			cacheTime: 1000 * 60 * 10, // ten minutes
+			refetchOnReconnect: true,
+			placeholderData: BigNumber.from(0),
+		},
+	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
 	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return price
 }
 
-export const usePrices = (): SWR & Prices => {
-	const coingeckoIds = Object.values(Config.markets).map(({ coingeckoId }) => coingeckoId)
+export const usePrices = () => {
+	const { library, account, chainId } = useWeb3React()
+	const coingeckoIds: any = Object.values(Config.markets).map(({ coingeckoId }) => coingeckoId)
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoIds.join(',')}`
-	const { data, error } = useSWR(url, fetcher)
 
-	return {
-		prices: data || {},
-		isLoading: !error && !data,
-		isError: error,
+	const enabled = !!library
+	const { data: prices, refetch } = useQuery(
+		['@/hooks/markets/usePrices', providerKey(library, account, chainId), { enabled }],
+		async () => {
+			const res = await (await fetch(url)).json()
+
+			return Object.keys(res).reduce(
+				(prev, cur) => ({
+					...prev,
+					[coingeckoIds[cur].toLowerCase()]: parseUnits(res[cur].usd.toString()),
+				}),
+				{},
+			)
+		},
+		{
+			enabled,
+			staleTime: 1000 * 60 * 3, // three minutes
+			cacheTime: 1000 * 60 * 10, // ten minutes
+			refetchOnReconnect: true,
+			placeholderData: BigNumber.from(0),
+		},
+	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
 	}
+	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 10)
+
+	return prices
 }
 
 export const useMarketPrices = (): MarketPrices => {
