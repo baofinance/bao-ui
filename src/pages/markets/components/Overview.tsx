@@ -56,7 +56,8 @@ export const Overview = () => {
 							Your Collateral
 						</Typography>
 						<Typography variant='base' className='font-medium'>
-							${`${bao && account && accountLiquidity ? getDisplayBalance(accountLiquidity.usdSupply, 18, 2) : 0}`}{' '}
+							$
+							{`${bao && account && accountLiquidity ? getDisplayBalance(BigNumber.from(accountLiquidity.usdSupply.toString()), 6, 2) : 0}`}{' '}
 						</Typography>
 					</div>
 				</div>
