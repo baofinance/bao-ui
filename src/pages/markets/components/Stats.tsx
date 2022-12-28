@@ -5,7 +5,7 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
@@ -155,7 +155,7 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
-	const newBorrowable = borrowable.add(change)
+	const newBorrowable = borrowable.add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
 
 	return (
 		<div className='mt-4'>
