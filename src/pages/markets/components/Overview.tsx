@@ -87,6 +87,8 @@ export const Overview = () => {
 											<Typography>
 												{getDisplayBalance(
 													accountLiquidity && !borrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100) : 0,
+													18,
+													0,
 												)}
 												{'%'}
 											</Typography>
