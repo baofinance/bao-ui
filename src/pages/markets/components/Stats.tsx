@@ -135,7 +135,7 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 			label='Mint Info'
 			stats={[
 				{
-					label: 'APR',
+					label: 'APY',
 					value: `${getDisplayBalance(asset.borrowApy)}%`,
 				},
 				{
@@ -170,9 +170,9 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 						label: 'Debt Limit Used',
 						value: `${getDisplayBalance(
 							accountLiquidity && !borrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100) : 0,
-						)}% ➜ ${getDisplayBalance(
-							accountLiquidity && !newBorrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(newBorrowable).mul(100) : 0,
-						)}%`,
+							18,
+							2,
+						)}% ➜ ${getDisplayBalance(accountLiquidity && exponentiate(accountLiquidity.usdBorrow).div(newBorrowable).mul(100), 18, 2)}%`,
 					},
 				]}
 			/>
@@ -186,7 +186,12 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
-	const newBorrowable = borrowable ? borrowable.add(change.lt(0) ? change : 0) : BigNumber.from(0)
+	const newBorrowable = borrowable.add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
+	console.log('change', change.toString())
+	console.log('borrow', borrow.toString())
+	console.log('newBorrow', newBorrow.toString())
+	console.log('borrowable', borrowable.toString())
+	console.log('newBorrowable', newBorrowable.toString())
 
 	return (
 		<div className='mt-4'>
