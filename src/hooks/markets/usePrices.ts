@@ -11,6 +11,7 @@ import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { parseUnits } from 'ethers/lib/utils'
+import { exponentiate } from '@/utils/numberFormat'
 
 type Prices = {
 	prices: {
@@ -124,7 +125,7 @@ export const useMarketPrices = (): MarketPrices => {
 			return data['MarketOracle'].reduce(
 				(_prices: { [key: string]: { usd: number } }, result: any) => ({
 					..._prices,
-					[result.ref]: result.values[0],
+					[result.ref]: exponentiate(result.values[0]),
 				}),
 				{},
 			)
