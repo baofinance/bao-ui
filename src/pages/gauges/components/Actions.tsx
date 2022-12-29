@@ -289,7 +289,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const lockInfo = useLockInfo()
 	const votingPowerAllocated = useVotingPowerAllocated()
 	const userSlopes = useUserSlopes(gauge)
-	const [val, setVal] = useState(userSlopes ? userSlopes.power.div(100).toString() : 0)
+	const [val, setVal] = useState(
+		userSlopes && BigNumber.from(userSlopes.power) !== BigNumber.from(0) ? userSlopes.power.div(100).toString() : 0,
+	)
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 
 	const handleChange = useCallback(
@@ -343,19 +345,11 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 						<input
 							type='range'
 							id='points'
-							defaultValue={userSlopes ? userSlopes.power.div(100).toString() : val}
-							min={userSlopes ? userSlopes.power.div(100).toString() : 0}
-							max={
-								votingPowerAllocated.sub(BigNumber.from(100)).eq(0)
-									? 0
-									: userSlopes &&
-									  lockInfo &&
-									  BigNumber.from(100)
-											.sub(votingPowerAllocated.div(BigNumber.from(100)))
-											.add(userSlopes.power.div(100))
-											.toString()
+							defaultValue={
+								userSlopes && BigNumber.from(userSlopes.power) !== BigNumber.from(0) ? userSlopes.power.div(100).toString() : val
 							}
-							disabled={votingPowerAllocated.sub(BigNumber.from(100)).eq(0)}
+							min={0}
+							max={userSlopes && lockInfo && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()}
 							value={val}
 							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0'
 							onChange={handleChange}
