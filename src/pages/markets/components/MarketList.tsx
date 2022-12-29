@@ -14,7 +14,7 @@ import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } fro
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { useAccountMarkets } from '@/hooks/markets/useMarkets'
 import type { Comptroller } from '@/typechain/index'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { Switch } from '@headlessui/react'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import { useWeb3React } from '@web3-react/core'
@@ -256,9 +256,10 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							},
 							{
 								label: 'Wallet Balance',
-								value: `${getDisplayBalance(accountBalances.find(balance => balance.address === market.underlyingAddress).balance)} ${
-									market.underlyingSymbol
-								}`,
+								value: `${getDisplayBalance(
+									accountBalances.find(balance => balance.address === market.underlyingAddress).balance,
+									market.underlyingDecimals,
+								)} ${market.underlyingSymbol}`,
 							},
 						]}
 					/>
@@ -360,7 +361,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								label: '% of Your Debt',
 								value: `${getDisplayBalance(
 									accountLiquidity.usdBorrow.gt(0)
-										? borrowed.mul(market.price).div(accountLiquidity.usdBorrow).mul(100)
+										? borrowed.mul(market.price).div(decimate(accountLiquidity.usdBorrow)).mul(100)
 										: BigNumber.from(0),
 								)}%`,
 							},

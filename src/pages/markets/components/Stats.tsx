@@ -6,6 +6,7 @@ import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { CorporateContactJsonLd } from 'next-seo'
 import { useMemo } from 'react'
 import { MarketOperations } from './Modals/Modals'
 
@@ -48,6 +49,8 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 		[balances, asset.underlyingAddress],
 	)
 
+	console.log(`${asset.symbol} walletBalance`, formatUnits(walletBalance, asset.underlyingDecimals).toString())
+
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return '0'
 		// FIXME: needs decimals
@@ -69,11 +72,11 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 				},
 				{
 					label: 'Supply Balance',
-					value: `${getDisplayBalance(supplyBalance)} ${asset.underlyingSymbol} | $${supplyBalanceUsd || '~'}`,
+					value: `${getDisplayBalance(supplyBalance, asset.underlyingDecimals)} ${asset.underlyingSymbol} | $${supplyBalanceUsd || '~'}`,
 				},
 				{
 					label: 'Wallet Balance',
-					value: `${getDisplayBalance(walletBalance)} ${asset.underlyingSymbol} | $${walletBalanceUsd || '~'}`,
+					value: `${getDisplayBalance(walletBalance, asset.underlyingDecimals)} ${asset.underlyingSymbol} | $${walletBalanceUsd || '~'}`,
 				},
 			]}
 		/>
@@ -153,9 +156,15 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 
 const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity()
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
-	const newBorrowable = borrowable.add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
+	const newBorrowable = decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
+
+	// console.log('borrowable', parseFloat(formatUnits(borrowable, 36)))
+	// console.log('change', formatUnits(change, 30).toString())
+	// console.log('newBorrowable', formatUnits(newBorrowable, 18).toString())
+	// console.log('usdBorrow', accountLiquidity ? parseFloat(formatUnits(accountLiquidity.usdBorrow, 36)) : '0')
+	// console.log('usdBorrowable', accountLiquidity ? formatUnits(accountLiquidity.usdBorrowable).toString() : '0')
 
 	return (
 		<div className='mt-4'>
@@ -164,15 +173,19 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 				stats={[
 					{
 						label: 'Debt Limit',
-						value: `$${getDisplayBalance(borrowable)} ➜ $${getDisplayBalance(newBorrowable)}`,
+						value: `$${getDisplayBalance(decimate(borrowable))} ➜ $${getDisplayBalance(newBorrowable)}`,
 					},
 					{
 						label: 'Debt Limit Used',
 						value: `${getDisplayBalance(
-							accountLiquidity && !borrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100) : 0,
+							accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(decimate(borrowable)).mul(100) : 0,
 							18,
 							2,
-						)}% ➜ ${getDisplayBalance(accountLiquidity && exponentiate(accountLiquidity.usdBorrow).div(newBorrowable).mul(100), 18, 2)}%`,
+						)}% ➜ ${getDisplayBalance(
+							accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0,
+							18,
+							2,
+						)}%`,
 					},
 				]}
 			/>
@@ -185,13 +198,14 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const change = amount ? decimate(BigNumber.from(amount).mul(asset.price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
-	const newBorrowable = borrowable.add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
-	console.log('change', change.toString())
-	console.log('borrow', borrow.toString())
-	console.log('newBorrow', newBorrow.toString())
-	console.log('borrowable', borrowable.toString())
-	console.log('newBorrowable', newBorrowable.toString())
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
+	const newBorrowable = decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
+
+	// console.log('change', formatUnits(change).toString())
+	// console.log('borrow', formatUnits(borrow, 36).toString())
+	// console.log('newBorrow', formatUnits(newBorrow, 36).toString())
+	// console.log('borrowable', formatUnits(borrowable, 36).toString())
+	// console.log('newBorrowable', formatUnits(newBorrowable, 36).toString())
 
 	return (
 		<div className='mt-4'>
@@ -211,7 +225,7 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 							!borrowable.eq(0) ? exponentiate(borrow).div(borrowable).mul(100) : 0,
 							18,
 							2,
-						)}% ➜ ${getDisplayBalance(!newBorrowable.eq(0) ? exponentiate(newBorrow).div(newBorrowable).mul(100) : 0, 18, 2)}%`,
+						)}% ➜ ${getDisplayBalance(!newBorrowable.eq(0) ? newBorrow.div(newBorrowable).mul(100) : 0, 18, 2)}%`,
 					},
 				]}
 			/>
