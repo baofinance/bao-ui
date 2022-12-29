@@ -49,12 +49,9 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 
 			const prices: { [key: string]: BigNumber } = {}
 			for (const key in oraclePrices) {
-				prices[key] = decimate(oraclePrices[key])
+				const decimals = 36 - Config.markets.find(market => market.marketAddresses[chainId] === key).underlyingDecimals
+				prices[key] = decimate(oraclePrices[key], decimals)
 			}
-
-			console.log('prices', prices)
-			console.log('supplyBalances', supplyBalances)
-			console.log('exchangeRates', exchangeRates)
 
 			const usdSupply = Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
 				const supply = supplyBalances.find(balance => balance.address === addr)
