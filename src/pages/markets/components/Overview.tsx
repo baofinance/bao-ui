@@ -10,7 +10,7 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export const Overview = () => {
@@ -21,10 +21,15 @@ export const Overview = () => {
 
 	const borrowLimit =
 		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
-			? exponentiate(accountLiquidity.usdBorrow).div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
+			? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
 			: BigNumber.from(0)
 
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
+	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
+
+	console.log('usdBorrow', formatUnits(decimate(accountLiquidity.usdBorrow)).toString())
+	console.log('usdBorrowable', formatUnits(accountLiquidity.usdBorrowable).toString())
+	console.log('borrowLimit', borrowLimit.toString())
+	console.log('borrowable', formatUnits(borrowable).toString())
 
 	const healthFactorColor = (healthFactor: BigNumber) => {
 		const c = healthFactor.eq(0)
@@ -58,7 +63,9 @@ export const Overview = () => {
 						<Typography variant='base' className='font-medium'>
 							$
 							{`${
-								bao && account && accountLiquidity ? getDisplayBalance(BigNumber.from(accountLiquidity.usdSupply.toString()), 18, 2) : 0
+								bao && account && accountLiquidity
+									? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
+									: 0
 							}`}{' '}
 						</Typography>
 					</div>
@@ -68,7 +75,9 @@ export const Overview = () => {
 					<div className='flex flex-col'>
 						<div className='m-auto w-[150px]'>
 							<CircularProgressbarWithChildren
-								value={parseFloat(formatUnits(borrowLimit))}
+								value={parseFloat(
+									getDisplayBalance(accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0, 18, 0),
+								)}
 								strokeWidth={10}
 								styles={buildStyles({
 									strokeLinecap: 'butt',
@@ -86,7 +95,7 @@ export const Overview = () => {
 											</Typography>
 											<Typography>
 												{getDisplayBalance(
-													accountLiquidity && !borrowable.eq(0) ? exponentiate(accountLiquidity.usdBorrow).div(borrowable).mul(100) : 0,
+													accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0,
 													18,
 													0,
 												)}
@@ -106,7 +115,7 @@ export const Overview = () => {
 							Total Debt
 						</Typography>
 						<Typography variant='base' className='font-medium'>
-							${`${accountLiquidity ? getDisplayBalance(accountLiquidity.usdBorrow, 18, 2) : 0}`}
+							${`${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`}
 						</Typography>
 					</div>
 				</div>
