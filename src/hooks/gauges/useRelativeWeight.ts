@@ -16,12 +16,16 @@ const useRelativeWeight = (gaugeAddress: string) => {
 		['@/hooks/gauges/useRelativeWeight', providerKey(library, account, chainId), { enabled, gaugeAddress }],
 		async () => {
 			const block = await library.getBlock()
-			const _weight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp)
-			return _weight
+			const currentWeight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp)
+			const futureWeight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp + 604800)
+			return { currentWeight, futureWeight }
 		},
 		{
 			enabled,
-			placeholderData: BigNumber.from('0'),
+			placeholderData: {
+				currentWeight: BigNumber.from(0),
+				futureWeight: BigNumber.from(0),
+			},
 		},
 	)
 

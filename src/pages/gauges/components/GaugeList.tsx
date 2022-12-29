@@ -8,6 +8,7 @@ import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
 import useGaugeWeight from '@/hooks/gauges/useGaugeWeight'
 import useMintable from '@/hooks/gauges/useMintable'
+import useRelativeWeight from '@/hooks/gauges/useRelativeWeight'
 import useTotalWeight from '@/hooks/gauges/useTotalWeight'
 import GraphUtil from '@/utils/graph'
 import { decimate, exponentiate, fromDecimal, getDisplayBalance } from '@/utils/numberFormat'
@@ -72,6 +73,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const weight = useGaugeWeight(gauge.gaugeAddress)
 	const totalWeight = useTotalWeight()
+	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 
 	// Messy but works for now
 	const relativeWeight = useMemo(() => {
@@ -118,7 +120,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(relativeWeight, 18, 2)}%
+								{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>

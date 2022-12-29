@@ -12,6 +12,7 @@ import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
+import useRelativeWeight from '@/hooks/gauges/useRelativeWeight'
 import useVotingPowerAllocated from '@/hooks/gauges/useVotingPowerAllocated'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useUserSlopes from '@/hooks/vebao/useUserSlopes'
@@ -289,6 +290,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 	const votingPowerAllocated = useVotingPowerAllocated()
 	const userSlopes = useUserSlopes(gauge)
 	const [val, setVal] = useState(userSlopes ? userSlopes.power.div(100).toString() : 0)
+	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -301,6 +303,20 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 		<>
 			<Modal.Body>
 				<StatBlock
+					label='Gauge Info'
+					stats={[
+						{
+							label: 'Current Weight',
+							value: `${currentWeight ? getDisplayBalance(currentWeight.mul(100), 18, 4) : BigNumber.from(0)}%`,
+						},
+						{
+							label: 'Future Weight',
+							value: `${futureWeight ? getDisplayBalance(futureWeight.mul(100), 18, 4) : BigNumber.from(0)}%`,
+						},
+					]}
+				/>
+				<StatBlock
+					className='mt-4'
 					label='veBAO Stats'
 					stats={[
 						{

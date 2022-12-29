@@ -1,7 +1,7 @@
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-
 import Typography from '../Typography'
+import classNames from 'classnames'
 
 type Stat = {
 	label: string
@@ -11,28 +11,31 @@ type Stat = {
 type StatBlockProps = {
 	label?: string
 	stats: Stat[]
+	className?: string
 }
 
-export const StatBlock = ({ label, stats }: StatBlockProps) => (
+export const StatBlock = ({ label, stats, className = '' }: StatBlockProps) => (
 	<>
-		{label && (
-			<div className='text-center'>
-				<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bold text-text-100'>
-					{label}
-				</Typography>
-			</div>
-		)}
-		<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded bg-primary-100'>
-			{stats.map(({ label, value }) => (
-				<div className='grid grid-cols-2 break-words rounded px-2 py-2 odd:bg-primary-200' key={label}>
-					<Typography variant={`${isDesktop ? 'sm' : 'xs'}`} className='font-medium text-text-100'>
+		<div className={classNames('', className)}>
+			{label && (
+				<div className='text-center'>
+					<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bold text-text-100'>
 						{label}
 					</Typography>
-					<Typography variant={`${isDesktop ? 'sm' : 'xs'}`} className='text-end font-medium text-text-100'>
-						{value}
-					</Typography>
 				</div>
-			))}
+			)}
+			<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded bg-primary-100'>
+				{stats.map(({ label, value }) => (
+					<div className='grid grid-cols-2 break-words rounded px-2 py-2 odd:bg-primary-200' key={label}>
+						<Typography variant={`${isDesktop ? 'sm' : 'xs'}`} className='font-medium text-text-100'>
+							{label}
+						</Typography>
+						<Typography variant={`${isDesktop ? 'sm' : 'xs'}`} className='text-end font-medium text-text-100'>
+							{value}
+						</Typography>
+					</div>
+				))}
+			</div>
 		</div>
 	</>
 )
