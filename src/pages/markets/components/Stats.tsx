@@ -49,8 +49,6 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 		[balances, asset.underlyingAddress],
 	)
 
-	console.log(`${asset.symbol} walletBalance`, formatUnits(walletBalance, asset.underlyingDecimals).toString())
-
 	const supplyBalanceUsd = useMemo(() => {
 		if (!supplyBalance) return '0'
 		// FIXME: needs decimals
@@ -160,12 +158,6 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
 	const newBorrowable = decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
 
-	// console.log('borrowable', parseFloat(formatUnits(borrowable, 36)))
-	// console.log('change', formatUnits(change, 30).toString())
-	// console.log('newBorrowable', formatUnits(newBorrowable, 18).toString())
-	// console.log('usdBorrow', accountLiquidity ? parseFloat(formatUnits(accountLiquidity.usdBorrow, 36)) : '0')
-	// console.log('usdBorrowable', accountLiquidity ? formatUnits(accountLiquidity.usdBorrowable).toString() : '0')
-
 	return (
 		<div className='mt-4'>
 			<StatBlock
@@ -200,12 +192,6 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
 	const newBorrowable = decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
-
-	// console.log('change', formatUnits(change).toString())
-	// console.log('borrow', formatUnits(borrow, 36).toString())
-	// console.log('newBorrow', formatUnits(newBorrow, 36).toString())
-	// console.log('borrowable', formatUnits(borrowable, 36).toString())
-	// console.log('newBorrowable', formatUnits(newBorrowable, 36).toString())
 
 	return (
 		<div className='mt-4'>

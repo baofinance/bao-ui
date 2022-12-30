@@ -36,7 +36,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const composition = useComposition(basket)
 	const bSTBLPrice = useNav(composition, info ? info.totalSupply : BigNumber.from(0))
 
-	const baoUSDPrice = usePrice('dai')
+	const baoUSDPrice = usePrice('baousd')
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')

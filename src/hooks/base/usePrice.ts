@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers'
 import { fromDecimal } from '@/utils/numberFormat'
 
 // INFO: add to this to support new tokens
-type CoinGeckId = 'bao-finance' | 'curve-dao-token' | 'lp-3pool-curve' | 'dai' | 'ethereum'
+type CoinGeckId = 'bao-finance' | 'curve-dao-token' | 'lp-3pool-curve' | 'dai' | 'ethereum' | 'baousd'
 
 export const usePrice = (coinGeckoId: CoinGeckId) => {
 	const { library, account, chainId } = useWeb3React()

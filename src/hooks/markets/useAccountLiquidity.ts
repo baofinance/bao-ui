@@ -52,10 +52,6 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 				prices[key] = decimate(oraclePrices[key])
 			}
 
-			console.log('prices', prices)
-			console.log('supplyBalances', supplyBalances)
-			console.log('exchangeRates', exchangeRates)
-
 			const usdSupply = Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
 				const supply = supplyBalances.find(balance => balance.address === addr)
 				return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(prices[addr])))

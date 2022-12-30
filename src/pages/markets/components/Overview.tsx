@@ -26,11 +26,6 @@ export const Overview = () => {
 
 	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 
-	console.log('usdBorrow', formatUnits(decimate(accountLiquidity.usdBorrow)).toString())
-	console.log('usdBorrowable', formatUnits(accountLiquidity.usdBorrowable).toString())
-	console.log('borrowLimit', borrowLimit.toString())
-	console.log('borrowable', formatUnits(borrowable).toString())
-
 	const healthFactorColor = (healthFactor: BigNumber) => {
 		const c = healthFactor.eq(0)
 			? `${(props: any) => props.theme.color.text[100]}`

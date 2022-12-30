@@ -10,9 +10,7 @@ import Link from 'next/link'
 import FarmList from './components/FarmList'
 
 const Farms: React.FC = () => {
-	const allStakedValue = useAllStakedValue()
 
-	console.log(allStakedValue)
 	return (
 		<>
 			<NextSeo title={'Farms'} description={'Stake LP tokens to earn BAO.'} />
