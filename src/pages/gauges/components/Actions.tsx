@@ -281,9 +281,11 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 
 interface VoteProps {
 	gauge: ActiveSupportedGauge
+	tvl: BigNumber
+	rewardsValue: BigNumber
 }
 
-export const Vote: React.FC<VoteProps> = ({ gauge }) => {
+export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 	const lockInfo = useLockInfo()
@@ -293,6 +295,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 		userSlopes && BigNumber.from(userSlopes.power) !== BigNumber.from(0) ? userSlopes.power.div(100).toString() : 0,
 	)
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
+
+	const currentAPR = tvl && tvl.gt(0) ? rewardsValue.mul(currentWeight).div(tvl).mul(100).toString() : BigNumber.from(0)
+	const futureAPR = tvl && tvl.gt(0) ? rewardsValue.mul(futureWeight).div(tvl).mul(100).toString() : BigNumber.from(0)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -312,8 +317,16 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 							value: `${currentWeight ? getDisplayBalance(currentWeight.mul(100), 18, 4) : BigNumber.from(0)}%`,
 						},
 						{
+							label: 'Current APR',
+							value: `${currentAPR ? getDisplayBalance(currentAPR) : 0}%`,
+						},
+						{
 							label: 'Future Weight',
 							value: `${futureWeight ? getDisplayBalance(futureWeight.mul(100), 18, 4) : BigNumber.from(0)}%`,
+						},
+						{
+							label: 'Future APR',
+							value: `${futureAPR ? getDisplayBalance(futureAPR) : 0}%`,
 						},
 					]}
 				/>
@@ -416,10 +429,12 @@ export const Vote: React.FC<VoteProps> = ({ gauge }) => {
 interface ActionProps {
 	onHide: () => void
 	gauge: ActiveSupportedGauge
+	tvl: BigNumber
+	rewardsValue: BigNumber
 	operation: string
 }
 
-const Actions: React.FC<ActionProps> = ({ gauge, onHide, operation }) => {
+const Actions: React.FC<ActionProps> = ({ gauge, tvl, rewardsValue, onHide, operation }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
 	const tokenBalance = useTokenBalance(gauge?.lpAddress)
 
@@ -427,7 +442,7 @@ const Actions: React.FC<ActionProps> = ({ gauge, onHide, operation }) => {
 		<div>
 			{operation === 'Stake' && <Stake gauge={gauge} max={tokenBalance} onHide={onHide} />}
 			{operation === 'Unstake' && <Unstake gauge={gauge} max={gaugeInfo && gaugeInfo.balance} onHide={onHide} />}
-			{operation === 'Vote' && <Vote gauge={gauge} />}
+			{operation === 'Vote' && <Vote gauge={gauge} tvl={tvl} rewardsValue={rewardsValue} />}
 			{operation === 'Rewards' && <Rewards gauge={gauge} />}
 		</div>
 	)

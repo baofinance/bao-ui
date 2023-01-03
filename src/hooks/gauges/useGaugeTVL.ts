@@ -49,6 +49,11 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		return (
 			poolInfo &&
 			bSTBLPrice &&
+			baoUSDPrice &&
+			daiPrice &&
+			ethPrice &&
+			threeCrvPrice &&
+			baoPrice &&
 			(gauge.symbol === 'baoUSD3CRV'
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 					? baoUSDPrice.mul(poolInfo.token0Balance).add(threeCrvPrice.mul(poolInfo.token1Balance))

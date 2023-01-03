@@ -2,17 +2,20 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { NavButtons } from '@/components/Button'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
+import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useState } from 'react'
 import Actions from './Actions'
 
 type GaugeModalProps = {
 	gauge: ActiveSupportedGauge
+	tvl: BigNumber
+	rewardsValue: BigNumber
 	show: boolean
 	onHide: () => void
 }
 
-const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, show, onHide }) => {
+const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, tvl, rewardsValue, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Vote', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 
@@ -57,7 +60,7 @@ const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, show, onHide }) => {
 			<Modal.Options>
 				<NavButtons options={operations} active={operation} onClick={setOperation} />
 			</Modal.Options>
-			<Actions gauge={gauge} onHide={onHide} operation={operation} />
+			<Actions gauge={gauge} tvl={tvl} rewardsValue={rewardsValue} onHide={onHide} operation={operation} />
 		</Modal>
 	)
 }

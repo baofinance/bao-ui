@@ -29,9 +29,9 @@ const GaugeList: React.FC = () => {
 			<div className='flex w-full flex-row'>
 				<div className='flex w-full flex-col'>
 					{isDesktop ? (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'TVL', 'APY']} />
+						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'TVL', 'APR']} />
 					) : (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APY']} />
+						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APR']} />
 					)}
 					{gauges.length ? (
 						gauges.map((gauge: any, i: number) => (
@@ -75,22 +75,16 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const totalWeight = useTotalWeight()
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 
-	// Messy but works for now
-	const relativeWeight = useMemo(() => {
-		return totalWeight.gt(0) ? exponentiate(weight).div(decimate(totalWeight)).mul(100) : BigNumber.from(0)
-	}, [weight, totalWeight])
-
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	const baoPrice = usePrice('bao-finance-v2')
 
 	const gaugeInfo = useGaugeInfo(gauge)
 	const mintable = useMintable()
-	const inflation = gaugeInfo ? gaugeInfo.inflationRate.mul(relativeWeight).div(BigNumber.from(1).pow(18)) : BigNumber.from(0)
+	const inflation = gaugeInfo ? gaugeInfo.inflationRate.mul(currentWeight).div(BigNumber.from(1).pow(18)) : BigNumber.from(0)
 	const { gaugeTVL, boostedTVL } = useGaugeTVL(gauge)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
-	const rewardsAPY =
-		gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(relativeWeight.div(100)).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
+	const rewardsAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
 
 	return (
 		<>
@@ -132,7 +126,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
 									<Typography variant='base' className='ml-2 inline-block font-medium'>
-										{getDisplayBalance(rewardsAPY)}%
+										{getDisplayBalance(rewardsAPR)}%
 									</Typography>
 								</Typography>
 							</div>
@@ -140,7 +134,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 					</div>
 				</div>
 			</button>
-			<GaugeModal gauge={gauge} show={showGaugeModal} onHide={() => setShowGaugeModal(false)} />
+			<GaugeModal gauge={gauge} tvl={gaugeTVL} rewardsValue={rewardsValue} show={showGaugeModal} onHide={() => setShowGaugeModal(false)} />
 		</>
 	)
 }
