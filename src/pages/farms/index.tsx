@@ -5,12 +5,10 @@ import PageHeader from '@/components/PageHeader'
 
 import Card from '@/components/Card'
 import Typography from '@/components/Typography'
-import useAllStakedValue from '@/hooks/farms/useAllStakedValue'
 import Link from 'next/link'
 import FarmList from './components/FarmList'
 
 const Farms: React.FC = () => {
-
 	return (
 		<>
 			<NextSeo title={'Farms'} description={'Stake LP tokens to earn BAO.'} />
