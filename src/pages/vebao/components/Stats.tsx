@@ -6,6 +6,7 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useClaimableFees from '@/hooks/vebao/useClaimableFees'
 import { LockInfo } from '@/hooks/vebao/useLockInfo'
 import { useNextDistribution } from '@/hooks/vebao/useNextDistribution'
+import { VeInfo } from '@/hooks/vebao/useVeInfo'
 import { Baov2 } from '@/typechain/Baov2'
 import { FeeDistributor } from '@/typechain/FeeDistributor'
 import { decimate, exponentiate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
@@ -20,6 +21,7 @@ type StatsProps = {
 	baoBalance?: BigNumber
 	baoPrice?: BigNumber
 	lockInfo?: LockInfo
+	veInfo?: VeInfo
 	timestamp?: BigNumber
 }
 
@@ -109,7 +111,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 
 export default LockStats
 
-export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => {
+export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 	const { chainId } = useWeb3React()
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
@@ -123,14 +125,14 @@ export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => 
 	}, [baoV2, setTotalSupply])
 
 	let suppliedPercentage
-	if (lockInfo && totalSupply && totalSupply.gt(0)) {
-		const lockSupplyPercent = exponentiate(lockInfo.totalSupply.mul(100))
+	if (veInfo && totalSupply && totalSupply.gt(0)) {
+		const lockSupplyPercent = exponentiate(veInfo.totalSupply.mul(100))
 		suppliedPercentage = lockSupplyPercent.div(totalSupply)
 	}
 
 	const nextFeeDistribution = useNextDistribution()
-	const ratio = lockInfo ? parseFloat(formatUnits(lockInfo.supply)) / parseFloat(formatUnits(lockInfo.totalSupply)) : 0
-	const avgLock = lockInfo ? Math.round(ratio * 4 * 100) / 100 : 0
+	const ratio = veInfo ? parseFloat(formatUnits(veInfo.supply)) / parseFloat(formatUnits(veInfo.totalSupply)) : 0
+	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
 	return (
 		<div className='grid h-full grid-rows-6 items-center justify-end rounded border border-primary-300 bg-primary-100 p-4'>
@@ -141,7 +143,7 @@ export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => 
 				</Typography>
 				<>
 					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						${lockInfo && baoPrice ? getDisplayBalance(decimate(lockInfo.totalSupply.mul(baoPrice))) : 0}
+						${veInfo && baoPrice ? getDisplayBalance(decimate(veInfo.totalSupply.mul(baoPrice))) : 0}
 					</Typography>
 				</>
 			</div>
@@ -191,7 +193,7 @@ export const ProtocolStats = ({ lockInfo, timestamp, baoPrice }: StatsProps) => 
 	)
 }
 
-export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps) => {
+export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 	const { account, chainId } = useWeb3React()
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
@@ -205,15 +207,16 @@ export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps
 	}, [baoV2, setTotalSupply])
 
 	let suppliedPercentage
-	if (lockInfo && totalSupply && totalSupply.gt(0)) {
-		const lockSupplyPercent = exponentiate(lockInfo.totalSupply.mul(100))
+	if (veInfo && totalSupply && totalSupply.gt(0)) {
+		const lockSupplyPercent = exponentiate(veInfo.totalSupply.mul(100))
 		suppliedPercentage = lockSupplyPercent.div(totalSupply)
 	}
 
 	const nextFeeDistribution = useNextDistribution()
-	const ratio = lockInfo ? parseFloat(formatUnits(lockInfo.supply)) / parseFloat(formatUnits(lockInfo.totalSupply)) : 0
-	const avgLock = lockInfo ? Math.round(ratio * 4 * 100) / 100 : 0
+	const ratio = veInfo ? parseFloat(formatUnits(veInfo.supply)) / parseFloat(formatUnits(veInfo.totalSupply)) : 0
+	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
+	console.log('veInfo', veInfo)
 	return (
 		<div>
 			<Typography variant='xl' className='mt-4 font-bold'>
@@ -232,7 +235,7 @@ export const ProtocolStatsHoriz = ({ lockInfo, timestamp, baoPrice }: StatsProps
 					</div>
 					<Typography>
 						<Typography variant='lg' className='font-bold'>
-							${lockInfo && baoPrice ? getDisplayBalance(decimate(lockInfo.totalSupply.mul(baoPrice))) : 0}
+							${veInfo && baoPrice ? getDisplayBalance(decimate(veInfo.totalSupply.mul(baoPrice))) : 0}
 						</Typography>
 					</Typography>
 				</div>

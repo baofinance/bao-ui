@@ -12,8 +12,6 @@ import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export type LockInfo = {
 	balance: BigNumber
-	supply: BigNumber
-	totalSupply: BigNumber
 	lockAmount: BigNumber
 	lockEnd: BigNumber
 }
@@ -38,12 +36,6 @@ const useLockInfo = (): LockInfo => {
 							params: [account],
 						},
 						{
-							method: 'totalSupply()',
-						},
-						{
-							method: 'supply()',
-						},
-						{
 							method: 'locked(address)',
 							params: [account],
 						},
@@ -55,10 +47,8 @@ const useLockInfo = (): LockInfo => {
 
 			return {
 				balance: res[0].values[0],
-				supply: res[1].values[0],
-				totalSupply: res[2].values[0],
-				lockAmount: res[3].values[0],
-				lockEnd: res[3].values[1],
+				lockAmount: res[1].values[0],
+				lockEnd: res[1].values[1],
 			}
 		},
 		{

@@ -10,13 +10,13 @@ import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 const useMintable = () => {
-	const { library, account, chainId } = useWeb3React()
+	const { library, chainId } = useWeb3React()
 	const epochTime = useEpochTime()
 	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
-	const enabled = !!account && !!epochTime && !!epochTime.start && !!epochTime.future && !!token
+	const enabled = !!epochTime && !!epochTime.start && !!epochTime.future && !!token
 	const { data: mintable, refetch } = useQuery(
-		['@/hooks/gauges/useMintable', providerKey(library, account, chainId), { enabled, epochTime }],
+		['@/hooks/gauges/useMintable', providerKey(library), { enabled, epochTime }],
 		async () => {
 			const _mintable = await token.mintable_in_timeframe(epochTime.start, epochTime.future)
 			return _mintable

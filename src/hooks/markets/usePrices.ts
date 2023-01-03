@@ -9,17 +9,9 @@ import useBao from '../base/useBao'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { providerKey } from '@/utils/index'
+import { exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { parseUnits } from 'ethers/lib/utils'
-import { exponentiate } from '@/utils/numberFormat'
-
-type Prices = {
-	prices: {
-		[key: string]: {
-			usd: number
-		}
-	}
-}
 
 type MarketPrices = {
 	prices: {
@@ -28,12 +20,10 @@ type MarketPrices = {
 }
 
 export const usePrice = (coingeckoId: string) => {
-	const { library, account, chainId } = useWeb3React()
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoId}`
-	const enabled = !!library
 
-	const { data: price, refetch } = useQuery(
-		['@/hooks/markets/usePrice', providerKey(library, account, chainId), { enabled }],
+	const { data: price } = useQuery(
+		['@/hooks/markets/usePrice'],
 		async () => {
 			const res = await (await fetch(url)).json()
 
@@ -46,31 +36,26 @@ export const usePrice = (coingeckoId: string) => {
 			)
 		},
 		{
-			enabled,
-			staleTime: 1000 * 60 * 3, // three minutes
-			cacheTime: 1000 * 60 * 10, // ten minutes
+			retry: true,
+			retryDelay: 1000 * 60,
+			staleTime: 1000 * 60 * 5,
+			cacheTime: 1000 * 60 * 10,
 			refetchOnReconnect: true,
+			refetchInterval: 1000 * 60 * 5,
+			keepPreviousData: true,
 			placeholderData: BigNumber.from(0),
 		},
 	)
-
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-	useTxReceiptUpdater(_refetch)
-	useBlockUpdater(_refetch, 10)
 
 	return price
 }
 
 export const usePrices = () => {
-	const { library, account, chainId } = useWeb3React()
 	const coingeckoIds: any = Object.values(Config.markets).map(({ coingeckoId }) => coingeckoId)
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoIds.join(',')}`
 
-	const enabled = !!library
-	const { data: prices, refetch } = useQuery(
-		['@/hooks/markets/usePrices', providerKey(library, account, chainId), { enabled }],
+	const { data: prices } = useQuery(
+		['@/hooks/markets/usePrices'],
 		async () => {
 			const res = await (await fetch(url)).json()
 
@@ -83,19 +68,16 @@ export const usePrices = () => {
 			)
 		},
 		{
-			enabled,
-			staleTime: 1000 * 60 * 3, // three minutes
-			cacheTime: 1000 * 60 * 10, // ten minutes
+			retry: true,
+			retryDelay: 1000 * 60,
+			staleTime: 1000 * 60 * 5,
+			cacheTime: 1000 * 60 * 10,
 			refetchOnReconnect: true,
+			refetchInterval: 1000 * 60 * 5,
+			keepPreviousData: true,
 			placeholderData: BigNumber.from(0),
 		},
 	)
-
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-	useTxReceiptUpdater(_refetch)
-	useBlockUpdater(_refetch, 10)
 
 	return prices
 }
@@ -107,7 +89,7 @@ export const useMarketPrices = (): MarketPrices => {
 
 	const enabled = !!bao && !!oracle && !!chainId
 	const { data: prices, refetch } = useQuery(
-		['@/hooks/markets/useMarketPrices', providerKey(library, account, chainId), { enabled }],
+		['@/hooks/markets/useMarketPrices', { enabled }],
 		async () => {
 			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
 			const multiCallContext = MultiCall.createCallContext([

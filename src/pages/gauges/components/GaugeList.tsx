@@ -2,13 +2,10 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
-import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
-import useGaugeWeight from '@/hooks/gauges/useGaugeWeight'
 import useMintable from '@/hooks/gauges/useMintable'
 import useRelativeWeight from '@/hooks/gauges/useRelativeWeight'
-import useTotalWeight from '@/hooks/gauges/useTotalWeight'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -66,20 +63,13 @@ interface GaugeListItemProps {
 }
 
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
-	const { chainId, account } = useWeb3React()
+	const { account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
-	const weight = useGaugeWeight(gauge.gaugeAddress)
-	const totalWeight = useTotalWeight()
-	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
-
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
+	const { currentWeight } = useRelativeWeight(gauge.gaugeAddress)
 	const baoPrice = usePrice('bao-finance-v2')
 
-	const gaugeInfo = useGaugeInfo(gauge)
 	const mintable = useMintable()
-	const inflation = gaugeInfo ? gaugeInfo.inflationRate.mul(currentWeight).div(BigNumber.from(1).pow(18)) : BigNumber.from(0)
-	const { gaugeTVL, boostedTVL } = useGaugeTVL(gauge)
+	const { gaugeTVL } = useGaugeTVL(gauge)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
 	const rewardsAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
 

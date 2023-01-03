@@ -2,7 +2,7 @@ import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
-import { LockInfo } from '@/hooks/vebao/useLockInfo'
+import { VeInfo } from '@/hooks/vebao/useVeInfo'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
@@ -13,10 +13,10 @@ import Slider from 'rc-slider'
 import React, { Fragment, useCallback, useState } from 'react'
 
 type BoostCalcProps = {
-	lockInfo: LockInfo
+	veInfo: VeInfo
 }
 
-export const BoostCalc = ({ lockInfo }: BoostCalcProps) => {
+export const BoostCalc = ({ veInfo }: BoostCalcProps) => {
 	const [selectedOption, setSelectedOption] = useState('baoUSD-3CRV')
 
 	const gauges = useGauges()
@@ -46,7 +46,7 @@ export const BoostCalc = ({ lockInfo }: BoostCalcProps) => {
 	const [baoAmount, setBaoAmount] = useState('')
 	const [depositAmount, setDepositAmount] = useState('')
 	const veEstimate = veBaoEstimate(parseFloat(baoAmount), lockTime)
-	const totalVePower = lockInfo?.totalSupply ? parseFloat(formatUnits(lockInfo.totalSupply)) : 0
+	const totalVePower = veInfo?.totalSupply ? parseFloat(formatUnits(veInfo.totalSupply)) : 0
 	const tvl = gaugeTVL.gaugeTVL ? parseFloat(formatUnits(gaugeTVL.gaugeTVL)) : 0
 
 	const handleBaoChange = useCallback(
@@ -207,7 +207,7 @@ export const BoostCalc = ({ lockInfo }: BoostCalcProps) => {
 						<label className='text-xs text-text-200'>Boost</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>
-								{(!depositAmount && !gaugeTVL.gaugeTVL && !lockInfo) ||
+								{(!depositAmount && !gaugeTVL.gaugeTVL && !veInfo) ||
 								isNaN((parseFloat(depositAmount) * 40) / 100 + (((tvl * veEstimate) / totalVePower) * (100 - 40)) / 100)
 									? 0
 									: (parseFloat(depositAmount) * 40) / 100 + (((tvl * veEstimate) / totalVePower) * (100 - 40)) / 100}

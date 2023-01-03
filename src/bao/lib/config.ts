@@ -60,6 +60,21 @@ export default {
 				address: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
 			},
 		},
+		bSTBL: {
+			1: {
+				address: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+			},
+		},
+		baoUSD: {
+			1: {
+				address: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
+			},
+		},
+		dai: {
+			1: {
+				address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+			},
+		},
 		// Hard Synths
 		Comptroller: {
 			1: {

@@ -14,14 +14,13 @@ import { providerKey } from '@/utils/index'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import usePrice from '@/hooks/base/usePrice'
+import useVeInfo from '@/hooks/vebao/useVeInfo'
 
 const Lock: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
 	const lockInfo = useLockInfo()
+	const veInfo = useVeInfo()
 	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
-
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	const baoPrice = usePrice('bao-finance-v2')
 
 	const enabled = !!library
@@ -48,7 +47,7 @@ const Lock: React.FC = () => {
 				<Actions lockInfo={lockInfo} baoBalance={baoBalance} />
 				<LockStats baoBalance={baoBalance} lockInfo={lockInfo} timestamp={blockTimestamp} />
 			</div>
-			<ProtocolStatsHoriz baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} timestamp={blockTimestamp} />
+			<ProtocolStatsHoriz baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} veInfo={veInfo} timestamp={blockTimestamp} />
 			{/* Boost Calculator is borked, will fix soon */}
 			{/* <BoostCalc lockInfo={lockInfo} /> */}
 		</>

@@ -40,7 +40,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const mkr = useContract<Mkr>('Mkr', Config.addressMap.MKR)
 	const basketContract = useContract<Experipie>('Experipie', basket ? basket.address : null)
 
-	const enabled = !!bao && !!account && !!lendingRegistry && !!mkr && !!basketContract && !!prices
+	const enabled = !!bao && !!lendingRegistry && !!mkr && !!basketContract && !!prices
 	const { data: composition, refetch } = useQuery(
 		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
 		async () => {
