@@ -347,7 +347,6 @@ export default {
 			name: 'bSTBL',
 			icon: 'bSTBL.png',
 			cgIds: {
-				'0x57Ab1ec28D129707052df4dF418D58a2D46d5f51': 'nusd',
 				'0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
 				'0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 'usd-coin',
 			},

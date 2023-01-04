@@ -306,9 +306,6 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 		[setVal],
 	)
 
-	console.log(votingPowerAllocated.toString())
-	console.log(userSlopes ? userSlopes.power.toString() : 0)
-
 	return (
 		<>
 			<Modal.Body>
@@ -366,9 +363,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							}
 							min={0}
 							max={
-								userSlopes && lockInfo && userSlopes.power.div(100) === BigNumber.from(100)
+								userSlopes && userSlopes.power.div(100) === BigNumber.from(100)
 									? BigNumber.from(100).toString()
-									: votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
+									: userSlopes && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
 							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0'
@@ -384,9 +381,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							value={val}
 							min={0}
 							max={
-								userSlopes && lockInfo && userSlopes.power.div(100) === BigNumber.from(100)
+								userSlopes && userSlopes.power.div(100) === BigNumber.from(100)
 									? BigNumber.from(100).toString()
-									: votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
+									: userSlopes && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
 							}
 							className='relative -mr-1 h-6 w-10 min-w-0
 				appearance-none rounded border-solid border-inherit border-primary-500 bg-primary-100 pl-2 text-end 
