@@ -5,14 +5,18 @@
   display: flex;
   margin-bottom: 15px;
   position: relative;
-}
-
-.rnc__notification-item--success {
-	background-color: rgb(57 24 24 / 1);
+  background-color: rgb(57 24 24 / 1);
   border-left: 8px solid rgb(86 36 36 / 1);
 }
 
-.rnc__notification-item--danger {
-	background-color: rgb(57 24 24 / 1);
-  border-left: 8px solid rgb(86 36 36 / 1);
+.rnc__notification-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.rnc__notification-message {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 5px;
 }

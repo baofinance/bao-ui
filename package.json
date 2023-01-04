@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.1",
+    "@enzoferey/ethers-error-parser": "^0.2.3",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.1",
