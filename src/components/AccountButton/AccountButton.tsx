@@ -52,6 +52,10 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	const pendingTxs = useMemo(() => Object.keys(transactions).filter(txHash => !transactions[txHash].receipt).length, [transactions])
 
+	const vanityId = ens || ud
+	const vanityAddress = `${account.slice(0, 6)}...${account.slice(account.length - 4, account.length)}`
+	const displayId = vanityId || vanityAddress
+
 	return (
 		<>
 			{isDesktop &&
@@ -62,12 +66,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 				) : (
 					<Button onClick={() => setShowAccountModal(true)} size='sm'>
 						<div className='items-center'>
-							{ens || ud || (
-								<>
-									{account.slice(0, 6)}...
-									{account.slice(account.length - 4, account.length)}{' '}
-								</>
-							)}
+							{displayId}
 							<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 text-text-200' />
 							{getDisplayBalance(ethBalance)}
 							<FontAwesomeIcon icon={faEthereum} className='mx-1' />
