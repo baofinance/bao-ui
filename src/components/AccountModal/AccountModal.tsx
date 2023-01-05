@@ -35,7 +35,6 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 
 	const { transactions, onClearTransactions } = useTransactionProvider()
 	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
-	const ethBalance = useEthBalance()
 	const [tx, setTx] = useState({})
 
 	useEffect(() => {
