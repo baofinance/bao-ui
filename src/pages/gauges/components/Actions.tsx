@@ -306,6 +306,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 		[setVal],
 	)
 
+	console.log('Total Voting Power', votingPowerAllocated ? votingPowerAllocated.div.toString() : BigNumber.from(0))
 	console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
 
 	return (
@@ -363,10 +364,13 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							defaultValue={
 								userSlopes && BigNumber.from(userSlopes.power) !== BigNumber.from(0) ? userSlopes.power.div(100).toString() : val
 							}
+							disabled={userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)}
 							min={0}
 							max={
-								userSlopes && userSlopes.power.div(100) === BigNumber.from(100)
+								userSlopes && userSlopes.power.div(100).eq(100)
 									? BigNumber.from(100).toString()
+									: userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)
+									? BigNumber.from(0).toString()
 									: userSlopes && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
@@ -413,7 +417,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 					) : (
 						<Button
 							fullWidth
-							disabled={!val || isNaN(val as any)}
+							disabled={!val || isNaN(val as any) || (lockInfo && lockInfo.balance.eq(0))}
 							onClick={async () => {
 								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
 								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
