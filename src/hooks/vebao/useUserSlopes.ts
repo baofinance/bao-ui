@@ -5,8 +5,9 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
+import { useCallback, useEffect, useState } from 'react'
 import { useBlockUpdater } from '../base/useBlock'
-import { useTxReceiptUpdater } from '../base/useTransactionProvider'
+import useTransactionProvider, { useTxReceiptUpdater } from '../base/useTransactionProvider'
 
 type UserSlopes = {
 	slope: BigNumber
@@ -17,24 +18,18 @@ type UserSlopes = {
 const useUserSlopes = (gauge: ActiveSupportedGauge): UserSlopes => {
 	const { library, account, chainId } = useWeb3React()
 	const gaugeController = useContract<GaugeController>('GaugeController')
+	const { transactions } = useTransactionProvider()
+	const [userSlopes, setUserSlopes] = useState<UserSlopes | undefined>()
 
-	const enabled = !!library && !!gaugeController
-	const { data: userSlopes, refetch } = useQuery(
-		['@/hooks/vebao/useUserSlopes', providerKey(library, account, chainId), { enabled }],
-		async () => {
-			const { slope, power, end } = await gaugeController.vote_user_slopes(account, gauge.gaugeAddress)
-			return { slope, power, end }
-		},
-		{
-			enabled,
-		},
-	)
+	const fetchUserSlopes = useCallback(async () => {
+		const { slope, power, end } = await gaugeController.vote_user_slopes(account, gauge.gaugeAddress)
+		setUserSlopes({ slope, power, end })
+	}, [account, gaugeController, gauge])
 
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-	useTxReceiptUpdater(_refetch)
-	useBlockUpdater(_refetch, 10)
+	useEffect(() => {
+		if (!library || !chainId || !gaugeController) return
+		fetchUserSlopes()
+	}, [fetchUserSlopes, library, account, chainId, transactions, gaugeController])
 
 	return userSlopes
 }
