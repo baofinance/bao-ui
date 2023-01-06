@@ -53,7 +53,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const pendingTxs = useMemo(() => Object.keys(transactions).filter(txHash => !transactions[txHash].receipt).length, [transactions])
 
 	const vanityId = ens || ud
-	const vanityAddress = `${account.slice(0, 6)}...${account.slice(account.length - 4, account.length)}`
+	const vanityAddress = account ? `${account.slice(0, 6)}...${account.slice(account.length - 4, account.length)}` : '0x0000...abcd'
 	const displayId = vanityId || vanityAddress
 
 	return (
