@@ -306,6 +306,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 		[setVal],
 	)
 
+	console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
+
 	return (
 		<>
 			<Modal.Body>
@@ -358,7 +360,6 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 						<input
 							type='range'
 							id='points'
-							disabled={votingPowerAllocated.div(100).eq(100)}
 							defaultValue={
 								userSlopes && BigNumber.from(userSlopes.power) !== BigNumber.from(0) ? userSlopes.power.div(100).toString() : val
 							}
@@ -412,13 +413,13 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 					) : (
 						<Button
 							fullWidth
-							disabled={!val || isNaN(val as any) || votingPowerAllocated.div(100).eq(100)}
+							disabled={!val || isNaN(val as any)}
 							onClick={async () => {
 								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
 								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
 							}}
 						>
-							{votingPowerAllocated.div(100).eq(100) ? 'Voting power 100% allocated.' : `Vote for ${gauge.name}`}
+							Vote for {gauge.name}
 						</Button>
 					)}
 				</>
