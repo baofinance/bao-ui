@@ -307,8 +307,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 		[setVal],
 	)
 
-	console.log('Total Voting Power', votingPowerAllocated ? votingPowerAllocated.div.toString() : BigNumber.from(0))
-	console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
+	//console.log('Total Voting Power', votingPowerAllocated ? votingPowerAllocated.toString() : BigNumber.from(0))
+	//console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
 
 	return (
 		<>
