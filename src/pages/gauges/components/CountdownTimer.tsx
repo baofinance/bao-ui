@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { differenceInSeconds, intervalToDuration, nextThursday } from 'date-fns/fp'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHourglass } from '@fortawesome/free-solid-svg-icons'
 
 const CountdownTimer: React.FC = () => {
 	const [days, setDays] = useState(0)
@@ -31,8 +33,9 @@ const CountdownTimer: React.FC = () => {
 
 	return (
 		<div>
-			<span>
-				{days}D:{hours.toString().length < 2 ? '0' + hours : hours}H:
+			<span className='tracking-wider'>
+				<FontAwesomeIcon icon={faHourglass} size='sm' className='mr-1 mt-1 text-text-200' />
+				{days.toString().length < 2 ? '0' + days : days}D:{hours.toString().length < 2 ? '0' + hours : hours}H:
 				{minutes.toString().length < 2 ? '0' + minutes : minutes}M:{seconds.toString().length < 2 ? '0' + seconds : seconds}S
 			</span>
 		</div>
