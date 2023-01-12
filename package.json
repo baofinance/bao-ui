@@ -111,6 +111,7 @@
     "classnames": "^2.3.1",
     "cross-env": "^7.0.3",
     "d3-array": "^3.0.1",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.6",
     "eth-ui": "^1.0.1",
     "ether-swr": "^2.0.1",

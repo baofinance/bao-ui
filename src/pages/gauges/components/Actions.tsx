@@ -26,6 +26,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import CountdownTimer from './CountdownTimer'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -306,8 +307,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 		[setVal],
 	)
 
-	console.log('Total Voting Power', votingPowerAllocated ? votingPowerAllocated.div.toString() : BigNumber.from(0))
-	console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
+	//console.log('Total Voting Power', votingPowerAllocated ? votingPowerAllocated.toString() : BigNumber.from(0))
+	//console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
 
 	return (
 		<>
@@ -330,6 +331,10 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 						{
 							label: 'Future APR',
 							value: `${futureAPR ? getDisplayBalance(futureAPR) : BigNumber.from(0)}%`,
+						},
+						{
+							label: 'Voting Ends In',
+							value: <CountdownTimer />,
 						},
 					]}
 				/>
