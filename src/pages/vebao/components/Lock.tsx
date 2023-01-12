@@ -1,20 +1,19 @@
 import Config from '@/bao/lib/config'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useBaoPrice from '@/hooks/base/useBaoPrice'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
-import { useWeb3React } from '@web3-react/core'
 import { useQuery } from '@tanstack/react-query'
+import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import 'rc-slider/assets/index.css'
 import React from 'react'
 import Actions from './Actions'
 //import BoostCalc from './BoostCalc'
-import LockStats, { ProtocolStatsHoriz } from './Stats'
-import { providerKey } from '@/utils/index'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import usePrice from '@/hooks/base/usePrice'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
+import { providerKey } from '@/utils/index'
+import LockStats, { ProtocolStatsHoriz } from './Stats'
+import VotingDashboard from './VotingDashboard'
 
 const Lock: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
@@ -48,6 +47,7 @@ const Lock: React.FC = () => {
 				<LockStats baoBalance={baoBalance} lockInfo={lockInfo} timestamp={blockTimestamp} />
 			</div>
 			<ProtocolStatsHoriz baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} veInfo={veInfo} timestamp={blockTimestamp} />
+			<VotingDashboard />
 			{/* Boost Calculator is borked, will fix soon */}
 			{/* <BoostCalc lockInfo={lockInfo} /> */}
 		</>
