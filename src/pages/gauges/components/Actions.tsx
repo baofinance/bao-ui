@@ -372,7 +372,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							disabled={userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)}
 							min={0}
 							max={
-								userSlopes && userSlopes.power.div(100).eq(100)
+								(userSlopes && userSlopes.power.div(100).eq(100)) || (userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0))
 									? BigNumber.from(100).toString()
 									: userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)
 									? BigNumber.from(0).toString()
