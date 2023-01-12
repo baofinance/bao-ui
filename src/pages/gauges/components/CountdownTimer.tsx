@@ -35,8 +35,8 @@ const CountdownTimer: React.FC = () => {
 		<div>
 			<span className='tracking-wider'>
 				<FontAwesomeIcon icon={faHourglass} size='sm' className='mr-1 mt-1 text-text-200' />
-				{days.toString().length < 2 ? '0' + days : days}D:{hours.toString().length < 2 ? '0' + hours : hours}H:
-				{minutes.toString().length < 2 ? '0' + minutes : minutes}M:{seconds.toString().length < 2 ? '0' + seconds : seconds}S
+				{days.toString().padStart(2, '0')}D:{hours.toString().padStart(2, '0')}H:
+				{minutes.toString().padStart(2, '0')}M:{seconds.toString().padStart(2, '0')}S
 			</span>
 		</div>
 	)
