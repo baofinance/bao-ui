@@ -8,13 +8,13 @@ import { useAccountMarkets } from './useMarkets'
 import { useMarketPrices } from './usePrices'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
-const useHealthFactor = () => {
+const useHealthFactor = (marketName: string) => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const markets = useAccountMarkets()
-	const accountLiquidity = useAccountLiquidity()
-	const { prices } = useMarketPrices()
+	const markets = useAccountMarkets(marketName)
+	const accountLiquidity = useAccountLiquidity(marketName)
+	const { prices } = useMarketPrices(marketName)
 
 	const fetchHealthFactor = useCallback(async () => {
 		const usdBorrow = BigNumber.from(parseUnits(accountLiquidity.usdBorrow.toString()))

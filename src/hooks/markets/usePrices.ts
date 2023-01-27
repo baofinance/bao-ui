@@ -8,7 +8,6 @@ import useBao from '../base/useBao'
 //import { parseUnits } from 'ethers/lib/utils'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { providerKey } from '@/utils/index'
 import { exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { parseUnits } from 'ethers/lib/utils'
@@ -50,8 +49,8 @@ export const usePrice = (coingeckoId: string) => {
 	return price
 }
 
-export const usePrices = () => {
-	const coingeckoIds: any = Object.values(Config.markets).map(({ coingeckoId }) => coingeckoId)
+export const usePrices = (marketName: string) => {
+	const coingeckoIds: any = Object.values(Config.markets[marketName].markets).map(({ coingeckoId }) => coingeckoId)
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoIds.join(',')}`
 
 	const { data: prices } = useQuery(
@@ -82,16 +81,16 @@ export const usePrices = () => {
 	return prices
 }
 
-export const useMarketPrices = (): MarketPrices => {
+export const useMarketPrices = (marketName: string): MarketPrices => {
 	const bao = useBao()
-	const oracle = useContract<MarketOracle>('MarketOracle')
-	const { library, account, chainId } = useWeb3React()
+	const oracle = useContract<MarketOracle>('MarketOracle', Config.markets[marketName].oracle)
+	const { chainId } = useWeb3React()
 
 	const enabled = !!bao && !!oracle && !!chainId
 	const { data: prices, refetch } = useQuery(
-		['@/hooks/markets/useMarketPrices', { enabled }],
+		['@/hooks/markets/useMarketPrices', { enabled, marketName }],
 		async () => {
-			const tokens = Config.markets.map(market => market.marketAddresses[chainId])
+			const tokens = Config.markets[marketName].markets.map(market => market.marketAddresses[chainId])
 			const multiCallContext = MultiCall.createCallContext([
 				{
 					ref: 'MarketOracle',

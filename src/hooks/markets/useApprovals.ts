@@ -12,10 +12,10 @@ type Approvals = {
 	approvals: { [key: string]: BigNumber }
 }
 
-export const useApprovals = (): Approvals => {
+export const useApprovals = (marketName: string): Approvals => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets()
+	const markets = useMarkets(marketName)
 
 	const enabled = !!bao && !!markets && !!account
 	const { data: approvals, refetch } = useQuery(

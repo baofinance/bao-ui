@@ -14,18 +14,20 @@ type MarketStatBlockProps = {
 	title?: string
 	asset: ActiveSupportedMarket
 	amount?: BigNumber
+	marketName: string
 }
 
 type MarketStatProps = {
 	asset: ActiveSupportedMarket
 	amount: string
 	operation: MarketOperations
+	marketName: string
 }
 
-const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
-	const supplyBalances = useSupplyBalances()
-	const balances = useAccountBalances()
-	const { exchangeRates } = useExchangeRates()
+const SupplyDetails = ({ asset, marketName }: MarketStatBlockProps) => {
+	const supplyBalances = useSupplyBalances(marketName)
+	const balances = useAccountBalances(marketName)
+	const { exchangeRates } = useExchangeRates(marketName)
 
 	const supplyBalance = useMemo(
 		() =>
@@ -107,9 +109,9 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 	)
 }
 
-const MintDetails = ({ asset }: MarketStatBlockProps) => {
-	const borrowBalances = useBorrowBalances()
-	const balances = useAccountBalances()
+const MintDetails = ({ asset, marketName }: MarketStatBlockProps) => {
+	const borrowBalances = useBorrowBalances(marketName)
+	const balances = useAccountBalances(marketName)
 
 	const borrowBalance = useMemo(
 		() =>
@@ -152,8 +154,8 @@ const MintDetails = ({ asset }: MarketStatBlockProps) => {
 	)
 }
 
-const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
-	const accountLiquidity = useAccountLiquidity()
+const DebtLimit = ({ asset, amount, marketName }: MarketStatBlockProps) => {
+	const accountLiquidity = useAccountLiquidity(marketName)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
 	const newBorrowable = decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
@@ -185,8 +187,8 @@ const DebtLimit = ({ asset, amount }: MarketStatBlockProps) => {
 	)
 }
 
-const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
-	const accountLiquidity = useAccountLiquidity()
+const DebtLimitRemaining = ({ asset, amount, marketName }: MarketStatBlockProps) => {
+	const accountLiquidity = useAccountLiquidity(marketName)
 	const change = amount ? decimate(BigNumber.from(amount).mul(asset.price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
@@ -219,35 +221,35 @@ const DebtLimitRemaining = ({ asset, amount }: MarketStatBlockProps) => {
 	)
 }
 
-const MarketStats = ({ operation, asset, amount }: MarketStatProps) => {
+const MarketStats = ({ operation, asset, amount, marketName }: MarketStatProps) => {
 	const parsedAmount = amount ? parseUnits(amount) : BigNumber.from(0)
 	switch (operation) {
 		case MarketOperations.supply:
 			return (
 				<>
-					<SupplyDetails asset={asset} />
-					<DebtLimit asset={asset} amount={parsedAmount} />
+					<SupplyDetails asset={asset} marketName={marketName} />
+					<DebtLimit asset={asset} amount={parsedAmount} marketName={marketName} />
 				</>
 			)
 		case MarketOperations.withdraw:
 			return (
 				<>
-					<SupplyDetails asset={asset} />
-					<DebtLimit asset={asset} amount={parsedAmount.mul(-1)} />
+					<SupplyDetails asset={asset} marketName={marketName} />
+					<DebtLimit asset={asset} amount={parsedAmount.mul(-1)} marketName={marketName} />
 				</>
 			)
 		case MarketOperations.mint:
 			return (
 				<>
-					<MintDetails asset={asset} />
-					<DebtLimitRemaining asset={asset} amount={parsedAmount.mul(-1)} />
+					<MintDetails asset={asset} marketName={marketName} />
+					<DebtLimitRemaining asset={asset} amount={parsedAmount.mul(-1)} marketName={marketName} />
 				</>
 			)
 		case MarketOperations.repay:
 			return (
 				<>
-					<MintDetails asset={asset} />
-					<DebtLimitRemaining asset={asset} amount={parsedAmount} />
+					<MintDetails asset={asset} marketName={marketName} />
+					<DebtLimitRemaining asset={asset} amount={parsedAmount} marketName={marketName} />
 				</>
 			)
 	}

@@ -163,7 +163,13 @@ export interface Config {
 	subgraphs: SubgraphConfig
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
-	markets: SupportedMarket[]
+	markets: {
+		[marketName: string]: {
+			comptroller: string
+			oracle: string
+			markets: SupportedMarket[]
+		}
+	}
 	gauges: SupportedGauge[]
 }
 

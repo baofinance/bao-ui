@@ -19,11 +19,12 @@ type MarketButtonProps = {
 	val: BigNumber
 	isDisabled: boolean
 	onHide: () => void
+	marketName: string
 }
 
-const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
+const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const { approvals } = useApprovals()
+	const { approvals } = useApprovals(marketName)
 	const { marketContract } = asset
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 

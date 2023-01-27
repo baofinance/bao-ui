@@ -26,17 +26,18 @@ export type MarketModalProps = {
 	asset: ActiveSupportedMarket
 	show: boolean
 	onHide: () => void
+	marketName: string
 }
 
-const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { operations: MarketOperations[] }) => {
+const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModalProps & { operations: MarketOperations[] }) => {
 	const [operation, setOperation] = useState(operations[0])
 	const [val, setVal] = useState<string>('')
-	const balances = useAccountBalances()
-	const borrowBalances = useBorrowBalances()
-	const supplyBalances = useSupplyBalances()
-	const accountLiquidity = useAccountLiquidity()
-	const { exchangeRates } = useExchangeRates()
-	const { prices } = useMarketPrices()
+	const balances = useAccountBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
+	const accountLiquidity = useAccountLiquidity(marketName)
+	const { exchangeRates } = useExchangeRates(marketName)
+	const { prices } = useMarketPrices(marketName)
 
 	const supply = useMemo(
 		() =>
@@ -62,7 +63,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 	}
 
 	let withdrawable = BigNumber.from(0)
-	if (_imfFactor.gt(asset.collateralFactor)) {
+	if (_imfFactor.gt(asset.collateralFactor) && asset.price.gt(0)) {
 		if (asset.collateralFactor.mul(asset.price).gt(0)) {
 			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(asset.collateralFactor.mul(asset.price)))
 		} else {
@@ -81,7 +82,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
 			//Broken
 			case MarketOperations.mint:
-				return prices && accountLiquidity
+				return prices && accountLiquidity && asset.price.gt(0)
 					? BigNumber.from(
 							FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
 								FixedNumber.from(formatUnits(asset.price)),
@@ -169,8 +170,8 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 							}
 						/>
 					</div>
-					<MarketStats operation={operation} asset={asset} amount={val} />
-					{operation === MarketOperations.mint && (
+					<MarketStats operation={operation} asset={asset} amount={val} marketName={marketName} />
+					{operation === MarketOperations.mint && marketName === 'baoUSD' && (
 						<Typography className='rounded bg-background-100 pt-2 text-center leading-normal text-text-200'>
 							*Minimum mint/borrow amount: 5,000 baoUSD
 						</Typography>
@@ -178,6 +179,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 				</Modal.Body>
 				<Modal.Actions>
 					<MarketButton
+						marketName={marketName}
 						operation={operation}
 						asset={asset}
 						val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
@@ -185,7 +187,7 @@ const MarketModal = ({ operations, asset, show, onHide }: MarketModalProps & { o
 							!val ||
 							(val && parseUnits(val, asset.underlyingDecimals).gt(max())) ||
 							// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
-							(val && parseUnits(val, asset.underlyingDecimals).lt(parseUnits('5000')) && operation === MarketOperations.mint)
+							(val && marketName === 'baoUSD' && parseUnits(val, asset.underlyingDecimals).lt(parseUnits('5000')) && operation === MarketOperations.mint)
 						}
 						onHide={hideModal}
 					/>

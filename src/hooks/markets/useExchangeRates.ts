@@ -13,15 +13,15 @@ type ExchangeRates = {
 	exchangeRates: { [key: string]: BigNumber }
 }
 
-export const useExchangeRates = (): ExchangeRates => {
+export const useExchangeRates = (marketName: string): ExchangeRates => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets()
+	const markets = useMarkets(marketName)
 
 	const enabled = markets?.length > 0 && !!bao && !!account
 	const mids = markets?.map(market => market.mid)
 	const { data: exchangeRates, refetch } = useQuery(
-		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId), { enabled, mids }],
+		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, marketName }],
 		async () => {
 			const tokenContracts = markets.map((market: ActiveSupportedMarket) => market.marketContract)
 			const multiCallContext = MultiCall.createCallContext(

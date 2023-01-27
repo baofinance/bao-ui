@@ -10,10 +10,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const useMarketsTVL = () => {
+export const useMarketsTVL = (marketName: string) => {
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets()
-	const { prices } = useMarketPrices() // TODO- use market.price instead of market prices hook
+	const markets = useMarkets(marketName)
+	const { prices } = useMarketPrices(marketName) // TODO- use market.price instead of market prices hook
 	const stabilizer = useContract<Stabilizer>('Stabilizer')
 
 	const enabled = markets?.length > 0 && !!stabilizer && !!prices

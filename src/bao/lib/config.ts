@@ -160,76 +160,144 @@ export default {
 			1: 'https://api.thegraph.com/subgraphs/name/messari/curve-finance-ethereum',
 		},
 	},
-	markets: [
-		{
-			mid: 1,
-			symbol: 'bdUSD',
-			marketAddresses: {
-				1: '0xc0601094C0C88264Ba285fEf0a1b00eF13e79347',
-			},
-			underlyingAddresses: {
-				1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
-			},
-			isSynth: true,
-			icon: 'baoUSD.png',
-			coingeckoId: 'dai',
-			underlyingSymbol: 'baoUSD',
-			underlyingDecimals: 18,
+	markets: {
+		baoUSD: {
+			comptroller: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
+			oracle: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
+			stabilizer: '0x720282BB7e721634c95F0933636DE3171dc405de',
+			markets: [
+				{
+					mid: 1,
+					symbol: 'bdUSD',
+					marketAddresses: {
+						1: '0xc0601094C0C88264Ba285fEf0a1b00eF13e79347',
+					},
+					underlyingAddresses: {
+						1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
+					},
+					isSynth: true,
+					icon: 'baoUSD.png',
+					coingeckoId: 'dai',
+					underlyingSymbol: 'baoUSD',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 4,
+					symbol: 'bdETH',
+					marketAddresses: {
+						1: '0xF635fdF9B36b557bD281aa02fdfaeBEc04CD084A',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 2,
+					symbol: 'bdETH',
+					archived: true,
+					marketAddresses: {
+						1: '0xe7a52262C1934951207c5fc7A944A82D283C83e5',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 3,
+					symbol: 'bdUSDC',
+					marketAddresses: {
+						1: '0x7749f9f3206A49d4c47b60db05716409dC3A4149',
+					},
+					underlyingAddresses: {
+						1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+					},
+					icon: 'USDC.png',
+					coingeckoId: 'usd-coin',
+					underlyingDecimals: 6,
+				},
+				{
+					mid: 5,
+					symbol: 'bdSTBL',
+					marketAddresses: {
+						1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
+					},
+					underlyingAddresses: {
+						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+					},
+					icon: 'bSTBL.png',
+					coingeckoId: 'dai',
+					underlyingDecimals: 18,
+				},
+			],
 		},
-		{
-			mid: 4,
-			symbol: 'bdETH',
-			marketAddresses: {
-				1: '0xF635fdF9B36b557bD281aa02fdfaeBEc04CD084A',
-			},
-			underlyingAddresses: {
-				1: 'ETH',
-			},
-			icon: 'ETH.png',
-			coingeckoId: 'weth',
-			underlyingDecimals: 18,
+		baoETH: {
+			comptroller: '0x01cf58e264d7578D4C67022c58A24CbC4C4a304E',
+			oracle: '0xeC1BB74f5799811c0c1Bff94Ef76Fb40abccbE4a',
+			stabilizer: '0x1eB5C49630E08e95Ba7f139BcF4B9BA171C9a8C7',
+			markets: [
+				{
+					mid: 1,
+					symbol: 'bdbaoETH',
+					marketAddresses: {
+						1: '0x09120eAED8e4cD86D85a616680151DAA653880F2',
+					},
+					underlyingAddresses: {
+						1: '0xF6a8aD553b265405526030c2102fda2bDcdDC177',
+					},
+					isSynth: true,
+					icon: 'baoUSD.png',
+					coingeckoId: 'dai',
+					underlyingSymbol: 'baoETH',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 2,
+					symbol: 'bdEther',
+					marketAddresses: {
+						1: '0x3E661784267F128e5f706De17Fac1Fc1c9d56f30',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 3,
+					symbol: 'bdbETH',
+					marketAddresses: {
+						1: '0x6732128F9cc0c4344b2d4DC6285BCd516b7E59E6',
+					},
+					underlyingAddresses: {
+						1: '0xa1e3F062CE5825c1e19207cd93CEFdaD82A8A631',
+					},
+					icon: 'bETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 6,
+					symbol: 'bdbSTBL',
+					marketAddresses: {
+						1: '0x15Ff10fCc8A1a50bFbE07847A22664801eA79E0f',
+					},
+					underlyingAddresses: {
+						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+					},
+					icon: 'bSTBL.png',
+					coingeckoId: 'dai',
+					underlyingDecimals: 18,
+				},
+			],
 		},
-		{
-			mid: 2,
-			symbol: 'bdETH',
-			archived: true,
-			marketAddresses: {
-				1: '0xe7a52262C1934951207c5fc7A944A82D283C83e5',
-			},
-			underlyingAddresses: {
-				1: 'ETH',
-			},
-			icon: 'ETH.png',
-			coingeckoId: 'weth',
-			underlyingDecimals: 18,
-		},
-		{
-			mid: 3,
-			symbol: 'bdUSDC',
-			marketAddresses: {
-				1: '0x7749f9f3206A49d4c47b60db05716409dC3A4149',
-			},
-			underlyingAddresses: {
-				1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-			},
-			icon: 'USDC.png',
-			coingeckoId: 'usd-coin',
-			underlyingDecimals: 6,
-		},
-		{
-			mid: 5,
-			symbol: 'bdSTBL',
-			marketAddresses: {
-				1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
-			},
-			underlyingAddresses: {
-				1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
-			},
-			icon: 'bSTBL.png',
-			coingeckoId: 'dai',
-			underlyingDecimals: 18,
-		},
-	],
+	},
 	gauges: [
 		{
 			gid: 1,

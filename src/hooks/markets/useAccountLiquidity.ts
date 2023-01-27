@@ -22,14 +22,14 @@ export type AccountLiquidity = {
 }
 
 // FIXME: this should be refactored to use ethers.BigNumber.. not JavaScript floats
-export const useAccountLiquidity = (): AccountLiquidity => {
+export const useAccountLiquidity = (marketName: string): AccountLiquidity => {
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets()
-	const supplyBalances = useSupplyBalances()
-	const borrowBalances = useBorrowBalances()
-	const { exchangeRates } = useExchangeRates()
-	const { prices: oraclePrices } = useMarketPrices()
-	const comptroller = useContract<Comptroller>('Comptroller')
+	const markets = useMarkets(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+	const { exchangeRates } = useExchangeRates(marketName)
+	const { prices: oraclePrices } = useMarketPrices(marketName)
+	const comptroller = useContract<Comptroller>('Comptroller', Config.markets[marketName].comptroller)
 
 	const enabled = !!comptroller && !!account && !!markets && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!oraclePrices
 	const { data: accountLiquidity, refetch } = useQuery(
@@ -42,6 +42,7 @@ export const useAccountLiquidity = (): AccountLiquidity => {
 				borrowBalances,
 				exchangeRates,
 				oraclePrices,
+				marketName,
 			},
 		],
 		async () => {

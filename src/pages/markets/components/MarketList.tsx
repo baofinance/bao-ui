@@ -27,16 +27,18 @@ import { isDesktop } from 'react-device-detect'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
+import { useMarkets } from '@/hooks/markets/useMarkets'
 
 // FIXME: these components should all be using ethers.BigNumber instead of js float math
 
-export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: MarketListProps) => {
-	const accountBalances = useAccountBalances()
-	const accountMarkets = useAccountMarkets()
-	const accountLiquidity = useAccountLiquidity()
-	const supplyBalances = useSupplyBalances()
-	const borrowBalances = useBorrowBalances()
-	const { exchangeRates } = useExchangeRates()
+export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketListProps) => {
+	const _markets = useMarkets(marketName)
+	const accountBalances = useAccountBalances(marketName)
+	const accountMarkets = useAccountMarkets(marketName)
+	const accountLiquidity = useAccountLiquidity(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+	const { exchangeRates } = useExchangeRates(marketName)
 
 	const collateralMarkets = useMemo(() => {
 		if (!(_markets && supplyBalances)) return
@@ -77,6 +79,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 						{collateralMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemCollateral
 								market={market}
+								marketName={marketName}
 								accountBalances={accountBalances}
 								accountMarkets={accountMarkets}
 								supplyBalances={supplyBalances}
@@ -94,6 +97,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 						{synthMarkets.map((market: ActiveSupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
+								marketName={marketName}
 								accountLiquidity={accountLiquidity}
 								accountBalances={accountBalances}
 								borrowBalances={borrowBalances}
@@ -112,6 +116,7 @@ export const MarketList: React.FC<MarketListProps> = ({ markets: _markets }: Mar
 
 const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	market,
+	marketName,
 	accountBalances,
 	accountMarkets,
 	supplyBalances,
@@ -121,7 +126,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const { account } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
-	const comptroller = useContract<Comptroller>('Comptroller')
+	const comptroller = useContract<Comptroller>('Comptroller', Config.markets[marketName].comptroller)
 
 	const suppliedUnderlying = useMemo(() => {
 		const supply = supplyBalances.find(balance => balance.address === market.marketAddress)
@@ -136,10 +141,10 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 		return borrow.balance
 	}, [market, borrowBalances])
 
-	const isInMarket = useMemo(
-		() => accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress),
-		[accountMarkets, market.marketAddress],
-	)
+	const isInMarket = useMemo(() => {
+		console.log(accountMarkets)
+		return accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress)
+	}, [accountMarkets, market.marketAddress])
 
 	const [isChecked, setIsChecked] = useState(!!isInMarket)
 	const [isOpen, setIsOpen] = useState(false)
@@ -263,7 +268,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							},
 						]}
 					/>
-					<MarketDetails asset={market} title='Market Details' />
+					<MarketDetails asset={market} title='Market Details' marketName={marketName} />
 					<div className={`mt-4 flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-2'}`}>
 						<div className='flex w-full flex-col'>
 							<Button fullWidth onClick={() => setShowSupplyModal(true)}>
@@ -279,6 +284,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 				</AccordionBody>
 			</Accordion>
 			<MarketSupplyModal
+				marketName={marketName}
 				asset={market}
 				show={showSupplyModal}
 				onHide={() => {
@@ -292,6 +298,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 
 const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	market,
+	marketName,
 	accountLiquidity,
 	accountBalances,
 	borrowBalances,
@@ -367,7 +374,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							},
 						]}
 					/>
-					<MarketDetails asset={market} title='Market Details' />
+					<MarketDetails asset={market} title='Market Details' marketName={marketName} />
 					<div className={`mt-4 flex ${isDesktop ? 'flex-row' : 'flex-col'} gap-4`}>
 						<div className='flex w-full flex-col'>
 							<Button fullWidth onClick={() => setShowBorrowModal(true)}>
@@ -383,6 +390,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 				</AccordionBody>
 			</Accordion>
 			<MarketBorrowModal
+				marketName={marketName}
 				asset={market}
 				show={showBorrowModal}
 				onHide={() => {
@@ -398,10 +406,12 @@ export default MarketList
 
 type MarketListProps = {
 	markets: ActiveSupportedMarket[]
+	marketName: string
 }
 
 type MarketListItemProps = {
 	market: ActiveSupportedMarket
+	marketName: string
 	accountBalances?: Balance[]
 	accountMarkets?: ActiveSupportedMarket[]
 	accountLiquidity?: AccountLiquidity

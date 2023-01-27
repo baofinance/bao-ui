@@ -39,23 +39,25 @@ export async function getStaticPaths() {
 }
 
 // `getStaticPaths` requires using `getStaticProps`
-export async function getStaticProps({ params }: { params: { market: string } }) {
-	const { market } = params
+export async function getStaticProps({ params }: { params: { market: string, name: string } }) {
+	const { market, name } = params
 
 	return {
 		props: {
 			marketId: market,
+			marketName: name,
 		},
 	}
 }
 
 const Market: NextPage<{
 	marketId: string
-}> = ({ marketId }) => {
-	const markets = useMarkets()
-	const supplyBalances = useSupplyBalances()
-	const borrowBalances = useBorrowBalances()
-	const { exchangeRates } = useExchangeRates()
+	marketName: string
+}> = ({ marketId, marketName }) => {
+	const markets = useMarkets(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+	const { exchangeRates } = useExchangeRates(marketName)
 	const { chainId } = useWeb3React()
 
 	const [marketInfo, setMarketInfo] = useState<any | undefined>()
@@ -187,7 +189,7 @@ const Market: NextPage<{
 			</div>
 			<>
 				<div className='mb-4 rounded border border-primary-300 bg-primary-100 p-4'>
-					<MarketDetails asset={activeMarket} />
+					<MarketDetails asset={activeMarket} marketName={marketName} />
 					<StatBlock
 						stats={[
 							{
@@ -223,22 +225,22 @@ const Market: NextPage<{
 					/>
 				</div>
 			</>
-			<ActionButton market={activeMarket} />
+			<ActionButton market={activeMarket} marketName={marketName} />
 		</>
 	) : (
 		<PageLoader block />
 	)
 }
 
-const ActionButton = ({ market }: { market: ActiveSupportedMarket }) => {
+const ActionButton = ({ market, marketName }: { market: ActiveSupportedMarket, marketName: string }) => {
 	const [showModal, setShowModal] = useState(false)
 
 	return (
 		<>
 			{market.isSynth ? (
-				<MarketBorrowModal asset={market} show={showModal} onHide={() => setShowModal(false)} />
+				<MarketBorrowModal asset={market} show={showModal} onHide={() => setShowModal(false)} marketName={marketName} />
 			) : (
-				<MarketSupplyModal asset={market} show={showModal} onHide={() => setShowModal(false)} />
+				<MarketSupplyModal asset={market} show={showModal} onHide={() => setShowModal(false)} marketName={marketName} />
 			)}
 			<Button fullWidth onClick={() => setShowModal(true)}>
 				{market.isSynth ? 'Mint / Repay' : 'Supply / Withdraw'}

@@ -1,14 +1,13 @@
 import PageHeader from '@/components/PageHeader'
-import { useMarkets } from '@/hooks/markets/useMarkets'
 import { useWeb3React } from '@web3-react/core'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import MarketList from './markets/components/MarketList'
 import OfflineMarketList from './markets/components/OfflineMarketList'
 import Overview from './markets/components/Overview'
+import { Context, MarketsContext } from '@/contexts/Markets'
 
 const Markets: React.FC = () => {
-	const markets = useMarkets()
 	const { account } = useWeb3React()
 
 	return (
@@ -17,11 +16,13 @@ const Markets: React.FC = () => {
 			<PageHeader title='Markets' />
 			{account ? (
 				<>
-					<Overview />
-					<MarketList markets={markets} />
+					<Overview marketName='baoUSD' />
+					<MarketList marketName='baoUSD' />
+					<Overview marketName='baoETH' />
+					<MarketList marketName='baoETH' />
 				</>
 			) : (
-				<OfflineMarketList markets={markets} />
+				<OfflineMarketList marketName='baoUSD' />
 			)}
 		</>
 	)

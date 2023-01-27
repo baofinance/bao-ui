@@ -10,14 +10,14 @@ import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
-export const Overview = () => {
+export const Overview = ({ marketName }: {marketName: string}) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const accountLiquidity = useAccountLiquidity()
-	const healthFactor = useHealthFactor()
+	const accountLiquidity = useAccountLiquidity(marketName)
+	const healthFactor = useHealthFactor(marketName)
 
 	const borrowLimit =
 		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
