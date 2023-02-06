@@ -14,7 +14,7 @@ import type { Cether, Comptroller, Ctoken, MarketOracle } from '@/typechain/inde
 
 type Cmarket = Cether | Ctoken
 
-export const SECONDS_PER_BLOCK = 2
+export const SECONDS_PER_BLOCK = 12
 export const SECONDS_PER_DAY = 24 * 60 * 60
 export const BLOCKS_PER_SECOND = 1 / SECONDS_PER_BLOCK
 export const BLOCKS_PER_DAY = BLOCKS_PER_SECOND * SECONDS_PER_DAY
