@@ -18,8 +18,8 @@ const Markets: React.FC = () => {
 				<>
 					<Overview marketName='baoUSD' />
 					<MarketList marketName='baoUSD' />
-					<Overview marketName='baoETH' />
-					<MarketList marketName='baoETH' />
+					{/* <Overview marketName='baoETH' />
+					<MarketList marketName='baoETH' /> */}
 				</>
 			) : (
 				<OfflineMarketList marketName='baoUSD' />
