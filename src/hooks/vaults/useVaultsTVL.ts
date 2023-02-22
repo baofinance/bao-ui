@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { decimate } from '@/utils/numberFormat'
-import { useMarkets } from './useMarkets'
-import { useMarketPrices } from './usePrices'
+import { useVaults } from './useVaults'
+import { useVaultPrices } from './usePrices'
 import useContract from '@/hooks/base/useContract'
 import type { Stabilizer } from '@/typechain/index'
 import { useWeb3React } from '@web3-react/core'
@@ -10,25 +10,25 @@ import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const useMarketsTVL = (marketName: string) => {
+export const useVaultsTVL = (vaultName: string) => {
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets(marketName)
-	const { prices } = useMarketPrices(marketName) // TODO- use market.price instead of market prices hook
+	const vaults = useVaults(vaultName)
+	const { prices } = useVaultPrices(vaultName) // TODO- use vault.price instead of vault prices hook
 	const stabilizer = useContract<Stabilizer>('Stabilizer')
 
-	const enabled = markets?.length > 0 && !!stabilizer && !!prices
-	const mids = markets?.map(market => market.mid)
+	const enabled = vaults?.length > 0 && !!stabilizer && !!prices
+	const mids = vaults?.map(vault => vault.mid)
 	const { data: tvl, refetch } = useQuery(
-		['@/hooks/markets/useMarketsTVL', providerKey(library, account, chainId), { enabled, prices, mids }],
+		['@/hooks/vaults/useVaultsTVL', providerKey(library, account, chainId), { enabled, prices, mids }],
 		async () => {
-			const marketsTvl = markets.reduce((prev, current) => {
-				const _tvl = BigNumber.from(current.supplied).sub(current.totalBorrows).mul(prices[current.marketAddress])
+			const vaultsTvl = vaults.reduce((prev, current) => {
+				const _tvl = BigNumber.from(current.supplied).sub(current.totalBorrows).mul(prices[current.vaultAddress])
 				return prev.add(decimate(_tvl, current.underlyingDecimals))
 			}, BigNumber.from(0))
 
 			// Assume $1 for DAI - need to use oracle price
 			const ballastTvl = await stabilizer.supply()
-			return marketsTvl.add(decimate(ballastTvl))
+			return vaultsTvl.add(decimate(ballastTvl))
 		},
 		{
 			enabled,

@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import useContract from '@/hooks/base/useContract'
 import type { Comptroller } from '@/typechain/index'
 import { decimate } from '@/utils/numberFormat'
@@ -7,8 +7,8 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useBorrowBalances, useSupplyBalances } from './useBalances'
 import { useExchangeRates } from './useExchangeRates'
-import { useMarkets } from './useMarkets'
-import { useMarketPrices } from './usePrices'
+import { useVaults } from './useVaults'
+import { useVaultPrices } from './usePrices'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
@@ -22,19 +22,19 @@ export type AccountLiquidity = {
 }
 
 // FIXME: this should be refactored to use ethers.BigNumber.. not JavaScript floats
-export const useAccountLiquidity = (marketName: string): AccountLiquidity => {
+export const useAccountLiquidity = (vaultName: string): AccountLiquidity => {
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets(marketName)
-	const supplyBalances = useSupplyBalances(marketName)
-	const borrowBalances = useBorrowBalances(marketName)
-	const { exchangeRates } = useExchangeRates(marketName)
-	const { prices: oraclePrices } = useMarketPrices(marketName)
-	const comptroller = useContract<Comptroller>('Comptroller', Config.markets[marketName].comptroller)
+	const vaults = useVaults(vaultName)
+	const supplyBalances = useSupplyBalances(vaultName)
+	const borrowBalances = useBorrowBalances(vaultName)
+	const { exchangeRates } = useExchangeRates(vaultName)
+	const { prices: oraclePrices } = useVaultPrices(vaultName)
+	const comptroller = useContract<Comptroller>('Comptroller', Config.vaults[vaultName].comptroller)
 
-	const enabled = !!comptroller && !!account && !!markets && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!oraclePrices
+	const enabled = !!comptroller && !!account && !!vaults && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!oraclePrices
 	const { data: accountLiquidity, refetch } = useQuery(
 		[
-			'@/hooks/markets/useAccountLiquidity',
+			'@/hooks/vaults/useAccountLiquidity',
 			providerKey(library, account, chainId),
 			{
 				enabled,
@@ -42,7 +42,7 @@ export const useAccountLiquidity = (marketName: string): AccountLiquidity => {
 				borrowBalances,
 				exchangeRates,
 				oraclePrices,
-				marketName,
+				vaultName,
 			},
 		],
 		async () => {
@@ -62,18 +62,18 @@ export const useAccountLiquidity = (marketName: string): AccountLiquidity => {
 				return prev.add(balance.mul(prices[address]))
 			}, BigNumber.from(0))
 
-			const supplyApy = markets.reduce((prev, { marketAddress, supplyApy }: ActiveSupportedMarket) => {
+			const supplyApy = vaults.reduce((prev, { vaultAddress, supplyApy }: ActiveSupportedVault) => {
 				const supplyBal = supplyBalances
-					.find(balance => balance.address === marketAddress)
-					.balance.mul(exchangeRates[marketAddress])
-					.mul(prices[marketAddress])
+					.find(balance => balance.address === vaultAddress)
+					.balance.mul(exchangeRates[vaultAddress])
+					.mul(prices[vaultAddress])
 					.mul(supplyApy)
 				return prev.add(supplyBal)
 			}, BigNumber.from(0))
 
-			const borrowApy = markets.reduce((prev: BigNumber, { marketAddress, supplyApy }: ActiveSupportedMarket) => {
-				const apy = borrowBalances.find(balance => balance.address === marketAddress).balance
-				return prev.add(apy.mul(prices[marketAddress]).mul(supplyApy))
+			const borrowApy = vaults.reduce((prev: BigNumber, { vaultAddress, supplyApy }: ActiveSupportedVault) => {
+				const apy = borrowBalances.find(balance => balance.address === vaultAddress).balance
+				return prev.add(apy.mul(prices[vaultAddress]).mul(supplyApy))
 			}, BigNumber.from(0))
 
 			const netApy =

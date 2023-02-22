@@ -23,7 +23,7 @@ export type BasketRates = {
 const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
+	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe', basket.recipeAddress)
 	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
 
 	const enabled = !!bao && !!library && !!recipe && !!wethOracle

@@ -18,7 +18,7 @@ import Web3ReactManager from '@/components/Web3ReactManager'
 import SEO from '@/bao/lib/seo'
 import BaoProvider from '@/contexts/BaoProvider'
 import FarmsProvider from '@/contexts/Farms'
-import MarketsProvider from '@/contexts/Markets'
+import VaultsProvider from '@/contexts/Vaults'
 import TransactionProvider from '@/contexts/Transactions'
 import TxPopup from '@/components/TxPopup'
 import '@/components/TxPopup/styles.css'
@@ -58,14 +58,14 @@ function App({ Component, pageProps }: AppProps) {
 				<meta
 					key='twitter:description'
 					name='twitter:description'
-					content='Lend and borrow synthetics with Bao Markets and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
+					content='Lend and borrow synthetics with Bao Vaults and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
 				/>
 				<meta property='og:type' content='website' />
 				<meta property='og:url' content='app.bao.finance' />
 				<meta property='og:title' content='Bao Finance - Deliciously wrapped finance!' />
 				<meta
 					property='og:description'
-					content='Lend and borrow synthetics with Bao Markets and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
+					content='Lend and borrow synthetics with Bao Vaults and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
 				/>
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />{' '}
 			</Head>
@@ -91,7 +91,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 					<Web3ReactManager>
 						<BaoProvider>
 							<TransactionProvider>
-								<MarketsProvider>
+								<VaultsProvider>
 									<FarmsProvider>
 										<SWRConfig
 											value={{
@@ -102,7 +102,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 											{children}
 										</SWRConfig>
 									</FarmsProvider>
-								</MarketsProvider>
+								</VaultsProvider>
 							</TransactionProvider>
 						</BaoProvider>
 					</Web3ReactManager>

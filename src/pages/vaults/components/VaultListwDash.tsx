@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button, { NavButtons } from '@/components/Button'
 import Card from '@/components/Card'
@@ -15,12 +15,12 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
-import { AccountLiquidity, useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
-import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
-import useHealthFactor from '@/hooks/markets/useHealthFactor'
-import { useAccountMarkets, useMarkets } from '@/hooks/markets/useMarkets'
-import { useMarketPrices } from '@/hooks/markets/usePrices'
+import { AccountLiquidity, useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
+import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
+import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
+import useHealthFactor from '@/hooks/vaults/useHealthFactor'
+import { useVaultPrices } from '@/hooks/vaults/usePrices'
+import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
 import type { Comptroller } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
@@ -37,56 +37,56 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import MarketButton from './MarketButton'
-import MarketBorrowModal from './Modals/BorrowModal'
-import MarketSupplyModal from './Modals/SupplyModal'
-import { MarketDetails } from './Stats'
+import VaultBorrowModal from './Modals/BorrowModal'
+import VaultSupplyModal from './Modals/SupplyModal'
+import { VaultDetails } from './Stats'
+import VaultButton from './VaultButton'
 
 // FIXME: these components should all be using ethers.BigNumber instead of js float math
 
-export const MarketList = ({ marketName }: MarketListProps) => {
+export const VaultList = ({ vaultName }: VaultListProps) => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
-	const _markets = useMarkets(marketName)
-	const accountBalances = useAccountBalances(marketName)
-	const accountMarkets = useAccountMarkets(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName)
-	const supplyBalances = useSupplyBalances(marketName)
-	const borrowBalances = useBorrowBalances(marketName)
-	const { exchangeRates } = useExchangeRates(marketName)
-	const balances = useAccountBalances(marketName)
-	const { prices } = useMarketPrices(marketName)
+	const _vaults = useVaults(vaultName)
+	const accountBalances = useAccountBalances(vaultName)
+	const accountVaults = useAccountVaults(vaultName)
+	const accountLiquidity = useAccountLiquidity(vaultName)
+	const supplyBalances = useSupplyBalances(vaultName)
+	const borrowBalances = useBorrowBalances(vaultName)
+	const { exchangeRates } = useExchangeRates(vaultName)
+	const balances = useAccountBalances(vaultName)
+	const { prices } = useVaultPrices(vaultName)
 
 	const [val, setVal] = useState<string>('')
 	const operations = ['Mint', 'Repay']
 	const [operation, setOperation] = useState(operations[0])
 
-	const collateralMarkets = useMemo(() => {
-		if (!(_markets && supplyBalances)) return
-		return _markets
-			.filter(market => !market.isSynth)
+	const collateralVaults = useMemo(() => {
+		if (!(_vaults && supplyBalances)) return
+		return _vaults
+			.filter(vault => !vault.isSynth)
 			.sort((a, b) => {
 				void a
-				return supplyBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+				return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
 			})
-	}, [_markets, supplyBalances])
+	}, [_vaults, supplyBalances])
 
-	const synthMarkets = useMemo(() => {
-		if (!(_markets && borrowBalances)) return
-		return _markets
-			.filter(market => market.isSynth)
+	const synthVaults = useMemo(() => {
+		if (!(_vaults && borrowBalances)) return
+		return _vaults
+			.filter(vault => vault.isSynth)
 			.sort((a, b) => {
 				void a
-				return borrowBalances.find(balance => balance.address.toLowerCase() === b.marketAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+				return borrowBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
 			})
-	}, [_markets, borrowBalances])
+	}, [_vaults, borrowBalances])
 
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
 
 	const borrowed = useMemo(
-		() => synthMarkets && borrowBalances.find(balance => balance.address === synthMarkets[0].marketAddress).balance,
-		[borrowBalances, synthMarkets],
+		() => synthVaults && borrowBalances.find(balance => balance.address === synthVaults[0].vaultAddress).balance,
+		[borrowBalances, synthVaults],
 	)
 
 	const handleOpen = () => {
@@ -94,11 +94,10 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 		showBorrowModal && setIsOpen(true)
 	}
 
-	const accountBal =
-		synthMarkets && accountBalances && accountBalances.find(balance => balance.address === synthMarkets[0].underlyingAddress)
+	const accountBal = synthVaults && accountBalances && accountBalances.find(balance => balance.address === synthVaults[0].underlyingAddress)
 	const accountBalance = accountBal !== undefined ? accountBal.balance : BigNumber.from(0)
 
-	const healthFactor = useHealthFactor(marketName)
+	const healthFactor = useHealthFactor(vaultName)
 
 	const borrowLimit =
 		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
@@ -119,7 +118,7 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 	const { data: maxMintable } = useQuery(
 		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
 		async () => {
-			const _maxMintable = await synthMarkets[0].underlyingContract.balanceOf(synthMarkets[0].marketAddress)
+			const _maxMintable = await synthVaults[0].underlyingContract.balanceOf(synthVaults[0].vaultAddress)
 			return _maxMintable
 		},
 		{
@@ -130,56 +129,56 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 	const supply = useMemo(
 		() =>
 			supplyBalances &&
-			synthMarkets &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === synthMarkets[0].marketAddress.toLowerCase()) &&
+			synthVaults &&
+			supplyBalances.find(balance => balance.address.toLowerCase() === synthVaults[0].vaultAddress.toLowerCase()) &&
 			exchangeRates &&
-			synthMarkets &&
-			exchangeRates[synthMarkets[0].marketAddress]
+			synthVaults &&
+			exchangeRates[synthVaults[0].vaultAddress]
 				? decimate(
 						supplyBalances
-							.find(balance => balance.address.toLowerCase() === synthMarkets[0].marketAddress.toLowerCase())
-							.balance.mul(exchangeRates[synthMarkets[0].marketAddress]),
+							.find(balance => balance.address.toLowerCase() === synthVaults[0].vaultAddress.toLowerCase())
+							.balance.mul(exchangeRates[synthVaults[0].vaultAddress]),
 				  )
 				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, synthMarkets],
+		[supplyBalances, exchangeRates, synthVaults],
 	)
 
-	let _imfFactor = synthMarkets && synthMarkets[0].imfFactor
+	let _imfFactor = synthVaults && synthVaults[0].imfFactor
 	if (accountLiquidity) {
 		const _sqrt = sqrt(supply)
 		const num = exponentiate(parseUnits('1.1'))
-		const denom = synthMarkets && decimate(synthMarkets[0].imfFactor.mul(_sqrt).add(parseUnits('1')))
-		_imfFactor = synthMarkets && num.div(denom)
+		const denom = synthVaults && decimate(synthVaults[0].imfFactor.mul(_sqrt).add(parseUnits('1')))
+		_imfFactor = synthVaults && num.div(denom)
 	}
 
 	let withdrawable = BigNumber.from(0)
-	if (synthMarkets && _imfFactor.gt(synthMarkets[0].collateralFactor) && synthMarkets[0].price.gt(0)) {
-		if (synthMarkets[0].collateralFactor.mul(synthMarkets[0].price).gt(0)) {
+	if (synthVaults && _imfFactor.gt(synthVaults[0].collateralFactor) && synthVaults[0].price.gt(0)) {
+		if (synthVaults[0].collateralFactor.mul(synthVaults[0].price).gt(0)) {
 			withdrawable =
 				accountLiquidity &&
-				exponentiate(accountLiquidity.usdBorrowable).div(decimate(synthMarkets[0].collateralFactor.mul(synthMarkets[0].price)))
+				exponentiate(accountLiquidity.usdBorrowable).div(decimate(synthVaults[0].collateralFactor.mul(synthVaults[0].price)))
 		} else {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(synthMarkets[0].price))
+			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(synthVaults[0].price))
 		}
 	}
 
 	const max = () => {
 		switch (operation) {
 			case 'Mint':
-				return prices && accountLiquidity && synthMarkets[0].price.gt(0)
+				return prices && accountLiquidity && synthVaults[0].price.gt(0)
 					? BigNumber.from(
 							FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
-								FixedNumber.from(formatUnits(synthMarkets[0].price)),
+								FixedNumber.from(formatUnits(synthVaults[0].price)),
 							),
 					  )
 					: BigNumber.from(0)
 			case 'Repay':
 				if (borrowBalances && balances) {
 					const borrowBalance = borrowBalances.find(
-						_balance => _balance.address.toLowerCase() === synthMarkets[0].marketAddress.toLowerCase(),
+						_balance => _balance.address.toLowerCase() === synthVaults[0].vaultAddress.toLowerCase(),
 					).balance
 					const walletBalance = balances.find(
-						_balance => _balance.address.toLowerCase() === synthMarkets[0].underlyingAddress.toLowerCase(),
+						_balance => _balance.address.toLowerCase() === synthVaults[0].underlyingAddress.toLowerCase(),
 					).balance
 					return walletBalance.lt(borrowBalance) ? walletBalance : borrowBalance
 				} else {
@@ -204,28 +203,28 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 		[setVal],
 	)
 
-	const change = val ? decimate(BigNumber.from(val).mul(synthMarkets[0].price)) : BigNumber.from(0)
+	const change = val ? decimate(BigNumber.from(val).mul(synthVaults[0].price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 	const newBorrowable =
-		synthMarkets && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - synthMarkets[0].underlyingDecimals))))
+		synthVaults && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - synthVaults[0].underlyingDecimals))))
 
 	const synthBalance = useMemo(
 		() =>
-			synthMarkets && balances && balances.find(_balance => _balance.address === synthMarkets[0].underlyingAddress)
-				? balances.find(_balance => _balance.address === synthMarkets[0].underlyingAddress).balance
+			synthVaults && balances && balances.find(_balance => _balance.address === synthVaults[0].underlyingAddress)
+				? balances.find(_balance => _balance.address === synthVaults[0].underlyingAddress).balance
 				: 0,
-		[balances, synthMarkets],
+		[balances, synthVaults],
 	)
 
 	return (
 		<>
-			{collateralMarkets &&
-			synthMarkets &&
+			{collateralVaults &&
+			synthVaults &&
 			accountBalances &&
 			accountLiquidity &&
-			accountMarkets &&
+			accountVaults &&
 			supplyBalances &&
 			borrowBalances &&
 			exchangeRates ? (
@@ -236,18 +235,18 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 					<div className='mb-4 flex w-full flex-row gap-4 rounded border-0 bg-primary-100 p-3'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
-								src={`/images/tokens/${synthMarkets[0].icon}`}
-								alt={`${synthMarkets[0].underlyingSymbol}`}
+								src={`/images/tokens/${synthVaults[0].icon}`}
+								alt={`${synthVaults[0].underlyingSymbol}`}
 								width={32}
 								height={32}
 								className='inline-block select-none'
 							/>
 							<span className='inline-block text-left align-middle'>
-								<Typography className='ml-2 text-lg font-bold leading-5'>{synthMarkets[0].underlyingSymbol}</Typography>
+								<Typography className='ml-2 text-lg font-bold leading-5'>{synthVaults[0].underlyingSymbol}</Typography>
 							</span>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-row items-center justify-end text-end align-middle'>
-							<Typography className='ml-2 inline-block !text-lg leading-5'>{getDisplayBalance(synthMarkets[0].borrowApy)}%</Typography>
+							<Typography className='ml-2 inline-block !text-lg leading-5'>{getDisplayBalance(synthVaults[0].borrowApy)}%</Typography>
 							<Typography className='ml-1 inline-block !text-lg text-text-100'>APY</Typography>
 						</div>
 					</div>
@@ -274,7 +273,7 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 											},
 											{
 												label: 'Your Debt',
-												value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synthMarkets[0].underlyingSymbol}`,
+												value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synthVaults[0].underlyingSymbol}`,
 											},
 											{
 												label: 'Your Debt USD',
@@ -331,23 +330,23 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 													<Typography variant='sm' className='text-text-200'>
 														{`${maxLabel()}:`}
 													</Typography>
-													<Typography variant='sm'>{`${getDisplayBalance(max(), synthMarkets[0].underlyingDecimals)} ${
-														synthMarkets[0].underlyingSymbol
+													<Typography variant='sm'>{`${getDisplayBalance(max(), synthVaults[0].underlyingDecimals)} ${
+														synthVaults[0].underlyingSymbol
 													}`}</Typography>
 												</div>
 											</div>
 											<Input
 												value={val}
 												onChange={handleChange}
-												onSelectMax={() => setVal(formatUnits(max(), synthMarkets[0].underlyingDecimals))}
+												onSelectMax={() => setVal(formatUnits(max(), synthVaults[0].underlyingDecimals))}
 												label={
 													<div className='flex flex-row items-center pl-2 pr-4'>
 														<div className='flex w-6 justify-center'>
 															<Image
-																src={`/images/tokens/${synthMarkets[0].icon}`}
+																src={`/images/tokens/${synthVaults[0].icon}`}
 																width={32}
 																height={32}
-																alt={synthMarkets[0].symbol}
+																alt={synthVaults[0].symbol}
 																className='block h-6 w-6 align-middle'
 															/>
 														</div>
@@ -357,18 +356,18 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 										</div>
 									</Card.Body>
 									<Card.Actions>
-										<MarketButton
-											marketName={marketName}
+										<VaultButton
+											vaultName={vaultName}
 											operation={operation}
-											asset={synthMarkets[0]}
-											val={val ? parseUnits(val, synthMarkets[0].underlyingDecimals) : BigNumber.from(0)}
+											asset={synthVaults[0]}
+											val={val ? parseUnits(val, synthVaults[0].underlyingDecimals) : BigNumber.from(0)}
 											isDisabled={
 												!val ||
-												(val && parseUnits(val, synthMarkets[0].underlyingDecimals).gt(max())) ||
+												(val && parseUnits(val, synthVaults[0].underlyingDecimals).gt(max())) ||
 												// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
 												(val &&
-													marketName === 'baoUSD' &&
-													parseUnits(val, synthMarkets[0].underlyingDecimals).lt(parseUnits('5000')) &&
+													vaultName === 'baoUSD' &&
+													parseUnits(val, synthVaults[0].underlyingDecimals).lt(parseUnits('5000')) &&
 													operation === 'Mint')
 											}
 										/>
@@ -383,18 +382,18 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 						label='Vault Info'
 						stats={[
 							{
-								label: `Current ${synthMarkets[0].underlyingSymbol} Price`,
-								value: `$${getDisplayBalance(synthMarkets[0].price)}`,
+								label: `Current ${synthVaults[0].underlyingSymbol} Price`,
+								value: `$${getDisplayBalance(synthVaults[0].price)}`,
 							},
 							{
 								label: 'Total Debt',
-								value: `${getDisplayBalance(synthMarkets[0].totalBorrows)} ${synthMarkets[0].underlyingSymbol}`,
+								value: `${getDisplayBalance(synthVaults[0].totalBorrows)} ${synthVaults[0].underlyingSymbol}`,
 							},
 							{
 								label: 'Total Debt USD',
 								value: `$${getDisplayBalance(
-									decimate(synthMarkets[0].totalBorrows.mul(synthMarkets[0].price)),
-									synthMarkets[0].underlyingDecimals,
+									decimate(synthVaults[0].totalBorrows.mul(synthVaults[0].price)),
+									synthVaults[0].underlyingDecimals,
 								)}`,
 							},
 							{
@@ -407,7 +406,7 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 							},
 							{
 								label: 'Max Mintable',
-								value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${synthMarkets[0].underlyingSymbol}`,
+								value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${synthVaults[0].underlyingSymbol}`,
 							},
 						]}
 					/>
@@ -417,23 +416,23 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 							Supply
 						</Typography>
 						<ListHeader headers={['Asset', 'Wallet', 'Underlying APY', 'Liquidity']} className='mr-10' />
-						{collateralMarkets.map((market: ActiveSupportedMarket) => (
-							<MarketListItemCollateral
-								market={market}
-								marketName={marketName}
+						{collateralVaults.map((vault: ActiveSupportedVault) => (
+							<VaultListItemCollateral
+								vault={vault}
+								vaultName={vaultName}
 								accountBalances={accountBalances}
-								accountMarkets={accountMarkets}
+								accountVaults={accountVaults}
 								supplyBalances={supplyBalances}
 								borrowBalances={borrowBalances}
 								exchangeRates={exchangeRates}
-								key={market.marketAddress}
+								key={vault.vaultAddress}
 							/>
 						))}
 					</div>
 
-					<MarketBorrowModal
-						marketName={marketName}
-						asset={synthMarkets[0]}
+					<VaultBorrowModal
+						vaultName={vaultName}
+						asset={synthVaults[0]}
 						show={showBorrowModal}
 						onHide={() => {
 							setShowBorrowModal(false)
@@ -448,39 +447,39 @@ export const MarketList = ({ marketName }: MarketListProps) => {
 	)
 }
 
-const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
-	market,
-	marketName,
+const VaultListItemCollateral: React.FC<VaultListItemProps> = ({
+	vault,
+	vaultName,
 	accountBalances,
-	accountMarkets,
+	accountVaults,
 	supplyBalances,
 	borrowBalances,
 	exchangeRates,
-}: MarketListItemProps) => {
+}: VaultListItemProps) => {
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const { account } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
-	const comptroller = useContract<Comptroller>('Comptroller', Config.markets[marketName].comptroller)
+	const comptroller = useContract<Comptroller>('Comptroller', Config.vaults[vaultName].comptroller)
 
 	const suppliedUnderlying = useMemo(() => {
-		const supply = supplyBalances.find(balance => balance.address === market.marketAddress)
+		const supply = supplyBalances.find(balance => balance.address === vault.vaultAddress)
 		if (supply === undefined) return BigNumber.from(0)
-		if (exchangeRates[market.marketAddress] === undefined) return BigNumber.from(0)
-		return decimate(supply.balance.mul(exchangeRates[market.marketAddress]))
-	}, [supplyBalances, exchangeRates, market.marketAddress])
+		if (exchangeRates[vault.vaultAddress] === undefined) return BigNumber.from(0)
+		return decimate(supply.balance.mul(exchangeRates[vault.vaultAddress]))
+	}, [supplyBalances, exchangeRates, vault.vaultAddress])
 
 	const borrowed = useMemo(() => {
-		const borrow = borrowBalances.find(balance => balance.address === market.marketAddress)
+		const borrow = borrowBalances.find(balance => balance.address === vault.vaultAddress)
 		if (borrow === undefined) return BigNumber.from(0)
 		return borrow.balance
-	}, [market, borrowBalances])
+	}, [vault, borrowBalances])
 
-	const isInMarket = useMemo(() => {
-		console.log(accountMarkets)
-		return accountMarkets && accountMarkets.find(_market => _market.marketAddress === market.marketAddress)
-	}, [accountMarkets, market.marketAddress])
+	const isInVault = useMemo(() => {
+		console.log(accountVaults)
+		return accountVaults && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
+	}, [accountVaults, vault.vaultAddress])
 
-	const [isChecked, setIsChecked] = useState(!!isInMarket)
+	const [isChecked, setIsChecked] = useState(!!isInVault)
 	const [isOpen, setIsOpen] = useState(false)
 
 	const handleOpen = () => {
@@ -517,35 +516,35 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
-								src={`/images/tokens/${market.icon}`}
-								alt={`${market.underlyingSymbol}`}
+								src={`/images/tokens/${vault.icon}`}
+								alt={`${vault.underlyingSymbol}`}
 								width={24}
 								height={24}
 								className='inline-block select-none'
 							/>
 							<span className='inline-block text-left align-middle'>
-								<Typography className='ml-2 font-medium leading-5'>{market.underlyingSymbol}</Typography>
+								<Typography className='ml-2 font-medium leading-5'>{vault.underlyingSymbol}</Typography>
 							</span>
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
 							<Typography className='ml-2 font-medium leading-5'>
 								{account
 									? getDisplayBalance(
-											accountBalances.find(balance => balance.address === market.underlyingAddress).balance,
-											market.underlyingDecimals,
+											accountBalances.find(balance => balance.address === vault.underlyingAddress).balance,
+											vault.underlyingDecimals,
 									  )
 									: '-'}
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
 							<Typography className='ml-2 font-medium leading-5'>
-								{market.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
+								{vault.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
 							</Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
 								<span className='inline-block align-middle'>
-									{`$${getDisplayBalance(decimate(market.supplied.mul(market.price).sub(market.totalBorrows.mul(market.price)), 18))}`}
+									{`$${getDisplayBalance(decimate(vault.supplied.mul(vault.price).sub(vault.totalBorrows.mul(vault.price)), 18))}`}
 								</span>
 							</Typography>
 						</div>
@@ -557,15 +556,15 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Supplied',
-								value: `${getDisplayBalance(market.supplied, market.underlyingDecimals)} ${market.underlyingSymbol} | $${getDisplayBalance(
-									decimate(market.supplied.mul(market.price)),
+								value: `${getDisplayBalance(vault.supplied, vault.underlyingDecimals)} ${vault.underlyingSymbol} | $${getDisplayBalance(
+									decimate(vault.supplied.mul(vault.price)),
 								)}`,
 							},
 							{
 								label: 'Your Supply',
-								value: `${getDisplayBalance(suppliedUnderlying, market.underlyingDecimals)} ${
-									market.underlyingSymbol
-								} | $${getDisplayBalance(decimate(suppliedUnderlying.mul(market.price)))}`,
+								value: `${getDisplayBalance(suppliedUnderlying, vault.underlyingDecimals)} ${vault.underlyingSymbol} | $${getDisplayBalance(
+									decimate(suppliedUnderlying.mul(vault.price)),
+								)}`,
 							},
 							{
 								label: 'Collateral',
@@ -574,7 +573,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 										content={
 											<>
 												<Typography variant='sm' className='font-semibold'>
-													{isInMarket ? 'Exit' : 'Enter'} Market w/ Supplied Collateral
+													{isInVault ? 'Exit' : 'Enter'} Vault w/ Supplied Collateral
 												</Typography>
 												<Badge className='m-2 bg-red font-semibold'>WARNING</Badge>
 												<Typography variant='sm'>
@@ -586,30 +585,30 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 										<Switch
 											checked={isChecked}
 											disabled={
-												(isInMarket && borrowed.gt(0)) ||
-												supplyBalances.find(balance => balance.address === market.marketAddress).balance.eq(0)
+												(isInVault && borrowed.gt(0)) ||
+												supplyBalances.find(balance => balance.address === vault.vaultAddress).balance.eq(0)
 											}
 											onChange={setIsChecked}
 											onClick={(event: { stopPropagation: () => void }) => {
 												event.stopPropagation()
-												if (isInMarket) {
-													handleTx(comptroller.exitMarket(market.marketAddress), `Exit Market (${market.underlyingSymbol})`)
+												if (isInVault) {
+													handleTx(comptroller.exitMarket(vault.vaultAddress), `Exit Vault (${vault.underlyingSymbol})`)
 												} else {
 													handleTx(
-														comptroller.enterMarkets([market.marketAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
-														`Enter Market (${market.underlyingSymbol})`,
+														comptroller.enterMarkets([vault.vaultAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
+														`Enter Vault (${vault.underlyingSymbol})`,
 													)
 												}
 											}}
 											className={classNames(
-												!isInMarket && borrowed.eq(0) ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
+												!isInVault && borrowed.eq(0) ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
 												'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
 											)}
 										>
 											<span
 												aria-hidden='true'
 												className={classNames(
-													isInMarket ? 'translate-x-[14px]' : 'translate-x-0',
+													isInVault ? 'translate-x-[14px]' : 'translate-x-0',
 													'pointer-events-none inline-block h-[10px] w-[10px] transform rounded-full bg-text-300 shadow ring-0 transition duration-200 ease-in-out',
 												)}
 											/>
@@ -620,13 +619,13 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							{
 								label: 'Wallet Balance',
 								value: `${getDisplayBalance(
-									accountBalances.find(balance => balance.address === market.underlyingAddress).balance,
-									market.underlyingDecimals,
-								)} ${market.underlyingSymbol}`,
+									accountBalances.find(balance => balance.address === vault.underlyingAddress).balance,
+									vault.underlyingDecimals,
+								)} ${vault.underlyingSymbol}`,
 							},
 						]}
 					/>
-					<MarketDetails asset={market} title='Market Details' marketName={marketName} />
+					<VaultDetails asset={vault} title='Vault Details' vaultName={vaultName} />
 					<div className={`mt-4 flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-2'}`}>
 						<div className='flex w-full flex-col'>
 							<Button fullWidth onClick={() => setShowSupplyModal(true)} className='!p-2 !text-base'>
@@ -634,16 +633,16 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 							</Button>
 						</div>
 						<div className='flex w-full flex-col'>
-							<Link href={`/markets/${market.underlyingSymbol}`}>
+							<Link href={`/vaults/${vault.underlyingSymbol}`}>
 								<Button fullWidth text='Details' />
 							</Link>
 						</div>
 					</div>
 				</AccordionBody>
 			</Accordion>
-			<MarketSupplyModal
-				marketName={marketName}
-				asset={market}
+			<VaultSupplyModal
+				vaultName={vaultName}
+				asset={vault}
 				show={showSupplyModal}
 				onHide={() => {
 					setShowSupplyModal(false)
@@ -654,24 +653,24 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 	)
 }
 
-const MarketListItemSynth: React.FC<MarketListItemProps> = ({
-	market,
-	marketName,
+const VaultListItemSynth: React.FC<VaultListItemProps> = ({
+	vault,
+	vaultName,
 	accountLiquidity,
 	accountBalances,
 	borrowBalances,
-}: MarketListItemProps) => {
+}: VaultListItemProps) => {
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
 
-	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === market.marketAddress).balance, [borrowBalances, market])
+	const borrowed = useMemo(() => borrowBalances.find(balance => balance.address === vault.vaultAddress).balance, [borrowBalances, vault])
 
 	const handleOpen = () => {
 		!isOpen ? setIsOpen(true) : setIsOpen(false)
 		showBorrowModal && setIsOpen(true)
 	}
 
-	const accountBal = accountBalances.find(balance => balance.address === market.underlyingAddress)
+	const accountBal = accountBalances.find(balance => balance.address === vault.underlyingAddress)
 	const accountBalance = accountBal !== undefined ? accountBal.balance : BigNumber.from(0)
 
 	return (
@@ -684,18 +683,18 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 							<Image
-								src={`/images/tokens/${market.icon}`}
-								alt={`${market.underlyingSymbol}`}
+								src={`/images/tokens/${vault.icon}`}
+								alt={`${vault.underlyingSymbol}`}
 								width={32}
 								height={32}
 								className='inline-block select-none'
 							/>
 							<span className='inline-block text-left align-middle'>
-								<Typography className='ml-2 font-medium leading-5'>{market.underlyingSymbol}</Typography>
+								<Typography className='ml-2 font-medium leading-5'>{vault.underlyingSymbol}</Typography>
 							</span>
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
-							<Typography className='ml-2 font-medium leading-5'>{getDisplayBalance(market.borrowApy)}% </Typography>
+							<Typography className='ml-2 font-medium leading-5'>{getDisplayBalance(vault.borrowApy)}% </Typography>
 						</div>
 						<div className='mx-auto my-0 flex w-full flex-col items-end'>
 							<Typography className='ml-2 font-medium leading-5'>
@@ -710,12 +709,12 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						stats={[
 							{
 								label: 'Total Debt',
-								value: `$${getDisplayBalance(decimate(market.totalBorrows.mul(market.price)), market.underlyingDecimals)}`,
+								value: `$${getDisplayBalance(decimate(vault.totalBorrows.mul(vault.price)), vault.underlyingDecimals)}`,
 							},
 							{
 								label: 'Your Debt',
-								value: `${getDisplayBalance(borrowed)} ${market.underlyingSymbol} | $${getDisplayBalance(
-									decimate(borrowed.mul(market.price)),
+								value: `${getDisplayBalance(borrowed)} ${vault.underlyingSymbol} | $${getDisplayBalance(
+									decimate(borrowed.mul(vault.price)),
 								)}`,
 							},
 							{
@@ -726,13 +725,13 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								label: '% of Your Debt',
 								value: `${getDisplayBalance(
 									accountLiquidity.usdBorrow.gt(0)
-										? borrowed.mul(market.price).div(decimate(accountLiquidity.usdBorrow)).mul(100)
+										? borrowed.mul(vault.price).div(decimate(accountLiquidity.usdBorrow)).mul(100)
 										: BigNumber.from(0),
 								)}%`,
 							},
 						]}
 					/>
-					<MarketDetails asset={market} title='Market Details' marketName={marketName} />
+					<VaultDetails asset={vault} title='Vault Details' vaultName={vaultName} />
 					<div className={`mt-4 flex ${isDesktop ? 'flex-row' : 'flex-col'} gap-4`}>
 						<div className='flex w-full flex-col'>
 							<Button fullWidth onClick={() => setShowBorrowModal(true)}>
@@ -740,16 +739,16 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							</Button>
 						</div>
 						<div className='flex w-full flex-col'>
-							<Link href={`/markets/${market.underlyingSymbol}`}>
+							<Link href={`/vaults/${vault.underlyingSymbol}`}>
 								<Button fullWidth text='Details' />
 							</Link>
 						</div>
 					</div>
 				</AccordionBody>
 			</Accordion>
-			<MarketBorrowModal
-				marketName={marketName}
-				asset={market}
+			<VaultBorrowModal
+				vaultName={vaultName}
+				asset={vault}
 				show={showBorrowModal}
 				onHide={() => {
 					setShowBorrowModal(false)
@@ -760,18 +759,17 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	)
 }
 
-export default MarketList
+export default VaultList
 
-type MarketListProps = {
-	markets: ActiveSupportedMarket[]
-	marketName: string
+type VaultListProps = {
+	vaultName: string
 }
 
-type MarketListItemProps = {
-	market: ActiveSupportedMarket
-	marketName: string
+type VaultListItemProps = {
+	vault: ActiveSupportedVault
+	vaultName: string
 	accountBalances?: Balance[]
-	accountMarkets?: ActiveSupportedMarket[]
+	accountVaults?: ActiveSupportedVault[]
 	accountLiquidity?: AccountLiquidity
 	supplyBalances?: Balance[]
 	borrowBalances?: Balance[]

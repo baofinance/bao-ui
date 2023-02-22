@@ -8,16 +8,16 @@ import { isDesktop } from 'react-device-detect'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
-import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import useHealthFactor from '@/hooks/markets/useHealthFactor'
+import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
+import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
-export const Overview = ({ marketName }: { marketName: string }) => {
+export const Overview = ({ vaultName }: { vaultName: string }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const accountLiquidity = useAccountLiquidity(marketName)
-	const healthFactor = useHealthFactor(marketName)
+	const accountLiquidity = useAccountLiquidity(vaultName)
+	const healthFactor = useHealthFactor(vaultName)
 
 	const borrowLimit =
 		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)

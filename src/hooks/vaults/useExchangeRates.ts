@@ -1,8 +1,8 @@
 import { BigNumber } from 'ethers'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
 import useBao from '../base/useBao'
-import { useMarkets } from '@/hooks/markets/useMarkets'
+import { useVaults } from '@/hooks/vaults/useVaults'
 import { useWeb3React } from '@web3-react/core'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
@@ -13,17 +13,17 @@ type ExchangeRates = {
 	exchangeRates: { [key: string]: BigNumber }
 }
 
-export const useExchangeRates = (marketName: string): ExchangeRates => {
+export const useExchangeRates = (vaultName: string): ExchangeRates => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets(marketName)
+	const vaults = useVaults(vaultName)
 
-	const enabled = markets?.length > 0 && !!bao && !!account
-	const mids = markets?.map(market => market.mid)
+	const enabled = vaults?.length > 0 && !!bao && !!account
+	const mids = vaults?.map(vault => vault.mid)
 	const { data: exchangeRates, refetch } = useQuery(
-		['@/hooks/markets/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, marketName }],
+		['@/hooks/vaults/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, vaultName }],
 		async () => {
-			const tokenContracts = markets.map((market: ActiveSupportedMarket) => market.marketContract)
+			const tokenContracts = vaults.map((vault: ActiveSupportedVault) => vault.vaultContract)
 			const multiCallContext = MultiCall.createCallContext(
 				tokenContracts.map(tokenContract => ({
 					ref: tokenContract.address,

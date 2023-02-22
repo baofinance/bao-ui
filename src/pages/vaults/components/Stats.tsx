@@ -1,47 +1,46 @@
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import { StatBlock } from '@/components/Stats'
-import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
-import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
+import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
+import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
+import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { CorporateContactJsonLd } from 'next-seo'
 import { useMemo } from 'react'
-import { MarketOperations } from './Modals/Modals'
+import { VaultOperations } from './Modals/Modals'
 
-type MarketStatBlockProps = {
+type VaultStatBlockProps = {
 	title?: string
-	asset: ActiveSupportedMarket
+	asset: ActiveSupportedVault
 	amount?: BigNumber
-	marketName: string
+	vaultName: string
 }
 
-type MarketStatProps = {
-	asset: ActiveSupportedMarket
+type VaultStatProps = {
+	asset: ActiveSupportedVault
 	amount: string
-	operation: MarketOperations
-	marketName: string
+	operation: VaultOperations
+	vaultName: string
 }
 
-const SupplyDetails = ({ asset, marketName }: MarketStatBlockProps) => {
-	const supplyBalances = useSupplyBalances(marketName)
-	const balances = useAccountBalances(marketName)
-	const { exchangeRates } = useExchangeRates(marketName)
+const SupplyDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
+	const supplyBalances = useSupplyBalances(vaultName)
+	const balances = useAccountBalances(vaultName)
+	const { exchangeRates } = useExchangeRates(vaultName)
 
 	const supplyBalance = useMemo(
 		() =>
 			supplyBalances &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()) &&
+			supplyBalances.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()) &&
 			exchangeRates &&
-			exchangeRates[asset.marketAddress]
+			exchangeRates[asset.vaultAddress]
 				? decimate(
 						supplyBalances
-							.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase())
-							.balance.mul(exchangeRates[asset.marketAddress]),
+							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
+							.balance.mul(exchangeRates[asset.vaultAddress]),
 				  )
 				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, asset.marketAddress],
+		[supplyBalances, exchangeRates, asset.vaultAddress],
 	)
 	const walletBalance = useMemo(
 		() =>
@@ -83,7 +82,7 @@ const SupplyDetails = ({ asset, marketName }: MarketStatBlockProps) => {
 	)
 }
 
-export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
+export const VaultDetails = ({ asset, title }: VaultStatBlockProps) => {
 	return (
 		<StatBlock
 			label={title}
@@ -109,16 +108,16 @@ export const MarketDetails = ({ asset, title }: MarketStatBlockProps) => {
 	)
 }
 
-const MintDetails = ({ asset, marketName }: MarketStatBlockProps) => {
-	const borrowBalances = useBorrowBalances(marketName)
-	const balances = useAccountBalances(marketName)
+const MintDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
+	const borrowBalances = useBorrowBalances(vaultName)
+	const balances = useAccountBalances(vaultName)
 
 	const borrowBalance = useMemo(
 		() =>
-			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress)
-				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.marketAddress).balance
+			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.vaultAddress)
+				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.vaultAddress).balance
 				: 0,
-		[borrowBalances, asset.marketAddress],
+		[borrowBalances, asset.vaultAddress],
 	)
 	const walletBalance = useMemo(
 		() =>
@@ -154,8 +153,8 @@ const MintDetails = ({ asset, marketName }: MarketStatBlockProps) => {
 	)
 }
 
-const DebtLimit = ({ asset, amount, marketName }: MarketStatBlockProps) => {
-	const accountLiquidity = useAccountLiquidity(marketName)
+const DebtLimit = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
+	const accountLiquidity = useAccountLiquidity(vaultName)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
 	const newBorrowable = decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
@@ -187,8 +186,8 @@ const DebtLimit = ({ asset, amount, marketName }: MarketStatBlockProps) => {
 	)
 }
 
-const DebtLimitRemaining = ({ asset, amount, marketName }: MarketStatBlockProps) => {
-	const accountLiquidity = useAccountLiquidity(marketName)
+const DebtLimitRemaining = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
+	const accountLiquidity = useAccountLiquidity(vaultName)
 	const change = amount ? decimate(BigNumber.from(amount).mul(asset.price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
@@ -221,38 +220,38 @@ const DebtLimitRemaining = ({ asset, amount, marketName }: MarketStatBlockProps)
 	)
 }
 
-const MarketStats = ({ operation, asset, amount, marketName }: MarketStatProps) => {
+const VaultStats = ({ operation, asset, amount, vaultName }: VaultStatProps) => {
 	const parsedAmount = amount ? parseUnits(amount) : BigNumber.from(0)
 	switch (operation) {
-		case MarketOperations.supply:
+		case VaultOperations.supply:
 			return (
 				<>
-					<SupplyDetails asset={asset} marketName={marketName} />
-					<DebtLimit asset={asset} amount={parsedAmount} marketName={marketName} />
+					<SupplyDetails asset={asset} vaultName={vaultName} />
+					<DebtLimit asset={asset} amount={parsedAmount} vaultName={vaultName} />
 				</>
 			)
-		case MarketOperations.withdraw:
+		case VaultOperations.withdraw:
 			return (
 				<>
-					<SupplyDetails asset={asset} marketName={marketName} />
-					<DebtLimit asset={asset} amount={parsedAmount.mul(-1)} marketName={marketName} />
+					<SupplyDetails asset={asset} vaultName={vaultName} />
+					<DebtLimit asset={asset} amount={parsedAmount.mul(-1)} vaultName={vaultName} />
 				</>
 			)
-		case MarketOperations.mint:
+		case VaultOperations.mint:
 			return (
 				<>
-					<MintDetails asset={asset} marketName={marketName} />
-					<DebtLimitRemaining asset={asset} amount={parsedAmount.mul(-1)} marketName={marketName} />
+					<MintDetails asset={asset} vaultName={vaultName} />
+					<DebtLimitRemaining asset={asset} amount={parsedAmount.mul(-1)} vaultName={vaultName} />
 				</>
 			)
-		case MarketOperations.repay:
+		case VaultOperations.repay:
 			return (
 				<>
-					<MintDetails asset={asset} marketName={marketName} />
-					<DebtLimitRemaining asset={asset} amount={parsedAmount} marketName={marketName} />
+					<MintDetails asset={asset} vaultName={vaultName} />
+					<DebtLimitRemaining asset={asset} amount={parsedAmount} vaultName={vaultName} />
 				</>
 			)
 	}
 }
 
-export default MarketStats
+export default VaultStats

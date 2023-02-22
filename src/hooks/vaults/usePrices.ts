@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import useContract from '@/hooks/base/useContract'
-import type { MarketOracle } from '@/typechain/index'
+import type { VaultOracle } from '@/typechain/index'
 import MultiCall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -12,7 +12,7 @@ import { exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { parseUnits } from 'ethers/lib/utils'
 
-type MarketPrices = {
+type VaultPrices = {
 	prices: {
 		[key: string]: BigNumber
 	}
@@ -22,7 +22,7 @@ export const usePrice = (coingeckoId: string) => {
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoId}`
 
 	const { data: price } = useQuery(
-		['@/hooks/markets/usePrice'],
+		['@/hooks/vaults/usePrice'],
 		async () => {
 			const res = await (await fetch(url)).json()
 
@@ -49,12 +49,12 @@ export const usePrice = (coingeckoId: string) => {
 	return price
 }
 
-export const usePrices = (marketName: string) => {
-	const coingeckoIds: any = Object.values(Config.markets[marketName].markets).map(({ coingeckoId }) => coingeckoId)
+export const usePrices = (vaultName: string) => {
+	const coingeckoIds: any = Object.values(Config.vaults[vaultName].vaults).map(({ coingeckoId }) => coingeckoId)
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoIds.join(',')}`
 
 	const { data: prices } = useQuery(
-		['@/hooks/markets/usePrices'],
+		['@/hooks/vaults/usePrices'],
 		async () => {
 			const res = await (await fetch(url)).json()
 
@@ -81,20 +81,20 @@ export const usePrices = (marketName: string) => {
 	return prices
 }
 
-export const useMarketPrices = (marketName: string): MarketPrices => {
+export const useVaultPrices = (vaultName: string): VaultPrices => {
 	const bao = useBao()
 	const { chainId } = useWeb3React()
 
-	const oracle = useContract<MarketOracle>('MarketOracle', Config.markets[marketName].oracle)
+	const oracle = useContract<VaultOracle>('VaultOracle', Config.vaults[vaultName].oracle)
 
 	const enabled = !!bao && !!oracle && !!chainId
 	const { data: prices, refetch } = useQuery(
-		['@/hooks/markets/useMarketPrices', { enabled, marketName }],
+		['@/hooks/vaults/useVaultPrices', { enabled, vaultName }],
 		async () => {
-			const tokens = Config.markets[marketName].markets.map(market => market.marketAddresses[chainId])
+			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.vaultAddresses[chainId])
 			const multiCallContext = MultiCall.createCallContext([
 				{
-					ref: 'MarketOracle',
+					ref: 'VaultOracle',
 					contract: oracle,
 					calls: tokens.map(token => ({
 						ref: token,
@@ -104,7 +104,7 @@ export const useMarketPrices = (marketName: string): MarketPrices => {
 				},
 			])
 			const data = MultiCall.parseCallResults(await bao.multicall.call(multiCallContext))
-			return data['MarketOracle'].reduce(
+			return data['VaultOracle'].reduce(
 				(_prices: { [key: string]: { usd: number } }, result: any) => ({
 					..._prices,
 					[result.ref]: exponentiate(result.values[0]),

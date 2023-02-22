@@ -1,57 +1,57 @@
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import { NavButtons } from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import { useAccountLiquidity } from '@/hooks/markets/useAccountLiquidity'
-import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/markets/useBalances'
-import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
-import { useMarketPrices } from '@/hooks/markets/usePrices'
+import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
+import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
+import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
+import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import React, { useCallback, useMemo, useState } from 'react'
-import MarketButton from '../MarketButton'
-import MarketStats from '../Stats'
+import VaultButton from '../VaultButton'
+import VaultStats from '../Stats'
 
-export enum MarketOperations {
+export enum VaultOperations {
 	supply = 'Supply',
 	withdraw = 'Withdraw',
 	mint = 'Mint',
 	repay = 'Repay',
 }
 
-export type MarketModalProps = {
-	asset: ActiveSupportedMarket
+export type VaultModalProps = {
+	asset: ActiveSupportedVault
 	show: boolean
 	onHide: () => void
-	marketName: string
+	vaultName: string
 }
 
-const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModalProps & { operations: MarketOperations[] }) => {
+const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalProps & { operations: VaultOperations[] }) => {
 	const [operation, setOperation] = useState(operations[0])
 	const [val, setVal] = useState<string>('')
-	const balances = useAccountBalances(marketName)
-	const borrowBalances = useBorrowBalances(marketName)
-	const supplyBalances = useSupplyBalances(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName)
-	const { exchangeRates } = useExchangeRates(marketName)
-	const { prices } = useMarketPrices(marketName)
+	const balances = useAccountBalances(vaultName)
+	const borrowBalances = useBorrowBalances(vaultName)
+	const supplyBalances = useSupplyBalances(vaultName)
+	const accountLiquidity = useAccountLiquidity(vaultName)
+	const { exchangeRates } = useExchangeRates(vaultName)
+	const { prices } = useVaultPrices(vaultName)
 
 	const supply = useMemo(
 		() =>
 			supplyBalances &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase()) &&
+			supplyBalances.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()) &&
 			exchangeRates &&
-			exchangeRates[asset.marketAddress]
+			exchangeRates[asset.vaultAddress]
 				? decimate(
 						supplyBalances
-							.find(balance => balance.address.toLowerCase() === asset.marketAddress.toLowerCase())
-							.balance.mul(exchangeRates[asset.marketAddress]),
+							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
+							.balance.mul(exchangeRates[asset.vaultAddress]),
 				  )
 				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, asset.marketAddress],
+		[supplyBalances, exchangeRates, asset.vaultAddress],
 	)
 
 	let _imfFactor = asset.imfFactor
@@ -73,15 +73,15 @@ const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModa
 
 	const max = () => {
 		switch (operation) {
-			case MarketOperations.supply:
+			case VaultOperations.supply:
 				return balances
 					? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
 					: BigNumber.from(0)
 			//Broken
-			case MarketOperations.withdraw:
+			case VaultOperations.withdraw:
 				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
 			//Broken
-			case MarketOperations.mint:
+			case VaultOperations.mint:
 				return prices && accountLiquidity && asset.price.gt(0)
 					? BigNumber.from(
 							FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
@@ -89,11 +89,9 @@ const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModa
 							),
 					  )
 					: BigNumber.from(0)
-			case MarketOperations.repay:
+			case VaultOperations.repay:
 				if (borrowBalances && balances) {
-					const borrowBalance = borrowBalances.find(
-						_balance => _balance.address.toLowerCase() === asset.marketAddress.toLowerCase(),
-					).balance
+					const borrowBalance = borrowBalances.find(_balance => _balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()).balance
 					const walletBalance = balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
 					return walletBalance.lt(borrowBalance) ? walletBalance : borrowBalance
 				} else {
@@ -104,13 +102,13 @@ const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModa
 
 	const maxLabel = () => {
 		switch (operation) {
-			case MarketOperations.supply:
+			case VaultOperations.supply:
 				return 'Wallet'
-			case MarketOperations.withdraw:
+			case VaultOperations.withdraw:
 				return 'Withdrawable'
-			case MarketOperations.mint:
+			case VaultOperations.mint:
 				return 'Max Mint'
-			case MarketOperations.repay:
+			case VaultOperations.repay:
 				return 'Max Repay'
 		}
 	}
@@ -170,11 +168,11 @@ const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModa
 							}
 						/>
 					</div>
-					<MarketStats operation={operation} asset={asset} amount={val} marketName={marketName} />
+					<VaultStats operation={operation} asset={asset} amount={val} vaultName={vaultName} />
 				</Modal.Body>
 				<Modal.Actions>
-					<MarketButton
-						marketName={marketName}
+					<VaultButton
+						vaultName={vaultName}
 						operation={operation}
 						asset={asset}
 						val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
@@ -183,9 +181,9 @@ const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModa
 							(val && parseUnits(val, asset.underlyingDecimals).gt(max())) ||
 							// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
 							(val &&
-								marketName === 'baoUSD' &&
+								vaultName === 'baoUSD' &&
 								parseUnits(val, asset.underlyingDecimals).lt(parseUnits('5000')) &&
-								operation === MarketOperations.mint)
+								operation === VaultOperations.mint)
 						}
 						onHide={hideModal}
 					/>
@@ -195,4 +193,4 @@ const MarketModal = ({ operations, asset, show, onHide, marketName }: MarketModa
 	)
 }
 
-export default MarketModal
+export default VaultModal

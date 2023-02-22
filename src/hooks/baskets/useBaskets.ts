@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
-import { Experipie__factory, Oven__factory } from '@/typechain/factories'
+import { Experipie__factory, Oven__factory, SimpleUniRecipe__factory } from '@/typechain/factories'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 
@@ -14,8 +14,9 @@ const useBaskets = (): ActiveSupportedBasket[] => {
 		const bs = Config.baskets.map(basket => {
 			const address = basket.basketAddresses[chainId]
 			const basketContract = Experipie__factory.connect(address, signerOrProvider)
+			const recipeContract = SimpleUniRecipe__factory.connect(basket.recipeAddress, signerOrProvider)
 			const ovenContract = Oven__factory.connect(basket.ovenAddress, signerOrProvider)
-			return Object.assign(basket, { address, basketContract, ovenContract })
+			return Object.assign(basket, { address, basketContract, recipeContract, ovenContract })
 		})
 
 		return bs

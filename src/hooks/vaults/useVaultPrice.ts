@@ -1,4 +1,4 @@
-import { MarketOracle } from '@/typechain/MarketOracle'
+import { VaultOracle } from '@/typechain/VaultOracle'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -7,15 +7,15 @@ import { useBlockUpdater } from '../base/useBlock'
 import useContract from '../base/useContract'
 import { useTxReceiptUpdater } from '../base/useTransactionProvider'
 
-export const useMarketPrice = (address: string) => {
+export const useVaultPrice = (address: string) => {
 	const bao = useBao()
-	const oracle = useContract<MarketOracle>('MarketOracle')
+	const oracle = useContract<VaultOracle>('VaultOracle')
 	const { chainId } = useWeb3React()
 
 	const enabled = !!bao && !!oracle && !!chainId
 
 	const { data: price, refetch } = useQuery(
-		['@/hooks/markets/useMarketPrice', { enabled }],
+		['@/hooks/vaults/useVaultPrice', { enabled }],
 		async () => {
 			const _price = await oracle.getUnderlyingPrice(address)
 			return _price

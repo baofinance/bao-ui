@@ -3,16 +3,16 @@ import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 //import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import { decimate, exponentiate } from '@/utils/numberFormat'
 import { parseUnits } from 'ethers/lib/utils'
 //import { BigNumber } from 'ethers'
 import useContract from '@/hooks/base/useContract'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { Cether__factory, Ctoken__factory, Erc20__factory, Comptroller__factory, MarketOracle__factory } from '@/typechain/factories'
-import type { Cether, Comptroller, Ctoken, MarketOracle } from '@/typechain/index'
+import { Cether__factory, Ctoken__factory, Erc20__factory, Comptroller__factory, VaultOracle__factory } from '@/typechain/factories'
+import type { Cether, Comptroller, Ctoken, VaultOracle } from '@/typechain/index'
 
-type Cmarket = Cether | Ctoken
+type Cvault = Cether | Ctoken
 
 export const SECONDS_PER_BLOCK = 12
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -30,37 +30,37 @@ const toApy = (rate: BigNumber) => ((Math.pow((rate.toNumber() / 1e18) * BLOCKS_
 //return apy
 //}
 
-export const useMarketsContext = (): { [marketName: string]: ActiveSupportedMarket[] } | undefined => {
+export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[] } | undefined => {
 	const { library, account, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
-	const [markets, setMarkets] = useState<{ [marketName: string]: ActiveSupportedMarket[] }>({})
+	const [vaults, setVaults] = useState<{ [vaultName: string]: ActiveSupportedVault[] }>({})
 
-	const fetchMarkets = useCallback(
-		async (marketName: string) => {
+	const fetchVaults = useCallback(
+		async (vaultName: string) => {
 			const signerOrProvider = account ? library.getSigner() : library
-			const _markets = Config.markets[marketName].markets
-				.filter(market => !market.archived) // TODO- add in option to view archived markets
-				.map(market => {
-					const marketAddress = market.marketAddresses[chainId]
-					const underlyingAddress = market.underlyingAddresses[chainId]
-					let marketContract
-					if (underlyingAddress === 'ETH') marketContract = Cether__factory.connect(marketAddress, signerOrProvider)
-					else marketContract = Ctoken__factory.connect(marketAddress, signerOrProvider)
+			const _vaults = Config.vaults[vaultName].vaults
+				.filter(vault => !vault.archived) // TODO- add in option to view archived vaults
+				.map(vault => {
+					const vaultAddress = vault.vaultAddresses[chainId]
+					const underlyingAddress = vault.underlyingAddresses[chainId]
+					let vaultContract
+					if (underlyingAddress === 'ETH') vaultContract = Cether__factory.connect(vaultAddress, signerOrProvider)
+					else vaultContract = Ctoken__factory.connect(vaultAddress, signerOrProvider)
 					let underlyingContract
 					if (underlyingAddress !== 'ETH') underlyingContract = Erc20__factory.connect(underlyingAddress, signerOrProvider)
-					return Object.assign(market, {
-						marketAddress,
-						marketContract,
+					return Object.assign(vault, {
+						vaultAddress,
+						vaultContract,
 						underlyingAddress,
 						underlyingContract,
 					})
 				})
 
-			const comptroller = Comptroller__factory.connect(Config.markets[marketName].comptroller, signerOrProvider)
-			const oracle = MarketOracle__factory.connect(Config.markets[marketName].oracle, signerOrProvider)
+			const comptroller = Comptroller__factory.connect(Config.vaults[vaultName].comptroller, signerOrProvider)
+			const oracle = VaultOracle__factory.connect(Config.vaults[vaultName].oracle, signerOrProvider)
 
-			const contracts: Cmarket[] = _markets.map((market: ActiveSupportedMarket) => {
-				return market.marketContract
+			const contracts: Cvault[] = _vaults.map((vault: ActiveSupportedVault) => {
+				return vault.vaultContract
 			})
 
 			// FIXME: this should be one multicall per contract instead of HELLA ethereum rpc calls
@@ -71,7 +71,7 @@ export const useMarketsContext = (): { [marketName: string]: ActiveSupportedMark
 				supplyRates,
 				borrowRates,
 				cashes,
-				marketsInfo,
+				vaultsInfo,
 				totalSupplies,
 				exchangeRates,
 				borrowState,
@@ -92,17 +92,17 @@ export const useMarketsContext = (): { [marketName: string]: ActiveSupportedMark
 				Promise.all(contracts.map(contract => contract.callStatic.exchangeRateCurrent())),
 				Promise.all(contracts.map(contract => comptroller.callStatic.compBorrowState(contract.address))),
 				Promise.all(contracts.map(contract => contract.symbol())),
-				Promise.all(_markets.map(market => (market.underlyingContract ? market.underlyingContract.symbol() : 'ETH'))),
+				Promise.all(_vaults.map(vault => (vault.underlyingContract ? vault.underlyingContract.symbol() : 'ETH'))),
 				comptroller.callStatic.liquidationIncentiveMantissa(),
-				Promise.all(contracts.map(market => comptroller.callStatic.borrowRestricted(market.address))),
-				Promise.all(contracts.map(market => oracle.callStatic.getUnderlyingPrice(market.address))),
+				Promise.all(contracts.map(vault => comptroller.callStatic.borrowRestricted(vault.address))),
+				Promise.all(contracts.map(vault => oracle.callStatic.getUnderlyingPrice(vault.address))),
 			])
 
 			const supplyApys: BigNumber[] = supplyRates.map((rate: BigNumber) => parseUnits(toApy(rate).toString()))
 			const borrowApys: BigNumber[] = borrowRates.map((rate: BigNumber) => parseUnits(toApy(rate).toString()))
 
-			const newMarkets: ActiveSupportedMarket[] = contracts.map((contract, i) => {
-				const marketConfig = _markets.find(market => market.marketAddresses[chainId] === contract.address)
+			const newVaults: ActiveSupportedVault[] = contracts.map((contract, i) => {
+				const vaultConfig = _vaults.find(vault => vault.vaultAddresses[chainId] === contract.address)
 				return {
 					symbol: symbols[i],
 					underlyingSymbol: underlyingSymbols[i],
@@ -111,20 +111,20 @@ export const useMarketsContext = (): { [marketName: string]: ActiveSupportedMark
 					liquidity: cashes[i],
 					totalReserves: totalReserves[i],
 					totalBorrows: totalBorrows[i],
-					collateralFactor: marketsInfo[i][1],
-					imfFactor: marketsInfo[i][2],
+					collateralFactor: vaultsInfo[i][1],
+					imfFactor: vaultsInfo[i][2],
 					reserveFactor: reserveFactors[i],
 					supplied: decimate(exchangeRates[i].mul(totalSupplies[i])),
 					borrowable: borrowState[i][1] > 0,
 					liquidationIncentive: decimate(liquidationIncentive.mul(10).sub(exponentiate(1))),
 					borrowRestricted: borrowRestricted[i],
 					price: prices[i],
-					...marketConfig,
+					...vaultConfig,
 				}
 			})
 
-			setMarkets((ms: any) => {
-				ms[marketName] = newMarkets
+			setVaults((ms: any) => {
+				ms[vaultName] = newVaults
 				return ms
 			})
 		},
@@ -133,9 +133,9 @@ export const useMarketsContext = (): { [marketName: string]: ActiveSupportedMark
 
 	useEffect(() => {
 		if (!library || !chainId) return
-		fetchMarkets('baoUSD')
-		fetchMarkets('baoETH')
-	}, [fetchMarkets, library, account, chainId, transactions])
+		fetchVaults('baoUSD')
+		fetchVaults('baoETH')
+	}, [fetchVaults, library, account, chainId, transactions])
 
-	return markets
+	return vaults
 }

@@ -18,15 +18,15 @@ export type Balance = {
 	decimals: number
 }
 
-export const useAccountBalances = (marketName: string): Balance[] => {
+export const useAccountBalances = (vaultName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances, refetch } = useQuery(
-		['@/hooks/markets/useAccountBalances', providerKey(library, account, chainId), { enabled, marketName }],
+		['@/hooks/vaults/useAccountBalances', providerKey(library, account, chainId), { enabled, vaultName }],
 		async () => {
-			const tokens = Config.markets[marketName].markets.map(market => market.underlyingAddresses[chainId])
+			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.underlyingAddresses[chainId])
 			const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -67,15 +67,15 @@ export const useAccountBalances = (marketName: string): Balance[] => {
 	return balances
 }
 
-export const useSupplyBalances = (marketName: string): Balance[] => {
+export const useSupplyBalances = (vaultName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances, refetch } = useQuery(
-		['@/hooks/markets/useSupplyBalances', providerKey(library, account, chainId), { enabled, marketName }],
+		['@/hooks/vaults/useSupplyBalances', providerKey(library, account, chainId), { enabled, vaultName }],
 		async () => {
-			const tokens = Config.markets[marketName].markets.map(market => market.marketAddresses[chainId])
+			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.vaultAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -91,7 +91,7 @@ export const useSupplyBalances = (marketName: string): Balance[] => {
 			)
 
 			return Object.keys(res).map(address => {
-				const decimals = Config.markets[marketName].markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
+				const decimals = Config.vaults[vaultName].vaults.find(vault => vault.vaultAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
 					symbol: res[address][0].values[0],
@@ -114,15 +114,15 @@ export const useSupplyBalances = (marketName: string): Balance[] => {
 	return balances
 }
 
-export const useBorrowBalances = (marketName: string): Balance[] => {
+export const useBorrowBalances = (vaultName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances, refetch } = useQuery(
-		['@/hooks/markets/useBorrowBalances', providerKey(library, account, chainId), { enabled, marketName }],
+		['@/hooks/vaults/useBorrowBalances', providerKey(library, account, chainId), { enabled, vaultName }],
 		async () => {
-			const tokens = Config.markets[marketName].markets.map(market => market.marketAddresses[chainId])
+			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.vaultAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -138,7 +138,7 @@ export const useBorrowBalances = (marketName: string): Balance[] => {
 			)
 
 			return Object.keys(res).map(address => {
-				const decimals = Config.markets[marketName].markets.find(market => market.marketAddresses[chainId] === address).underlyingDecimals
+				const decimals = Config.vaults[vaultName].vaults.find(vault => vault.vaultAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
 					symbol: res[address][0].values[0],

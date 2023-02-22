@@ -1,15 +1,13 @@
-import React from 'react'
+import VaultModal, { VaultModalProps, VaultOperations } from './Modals'
 
-import MarketModal, { MarketModalProps, MarketOperations } from './Modals'
-
-export const MarketSupplyModal = ({ show, onHide, asset, marketName }: MarketModalProps) => (
-	<MarketModal
-		operations={[MarketOperations.supply, MarketOperations.withdraw]}
+export const VaultSupplyModal = ({ show, onHide, asset, vaultName }: VaultModalProps) => (
+	<VaultModal
+		operations={[VaultOperations.supply, VaultOperations.withdraw]}
 		asset={asset}
 		show={show}
 		onHide={onHide}
-		marketName={marketName}
+		vaultName={vaultName}
 	/>
 )
 
-export default MarketSupplyModal
+export default VaultSupplyModal

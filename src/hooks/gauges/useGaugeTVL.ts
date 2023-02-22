@@ -18,7 +18,7 @@ import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { providerKey } from '@/utils/index'
 import usePoolInfo from './usePoolInfo'
 import { exponentiate } from '@/utils/numberFormat'
-import { useMarketPrice } from '../markets/useMarketPrice'
+import { useVaultPrice } from '../vaults/useVaultPrice'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId } = useWeb3React()
@@ -34,8 +34,8 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	}, [baskets])
 	const info = useBasketInfo(basket)
 	const composition = useComposition(basket)
-	const bSTBLPrice = useMarketPrice(Config.markets['baoUSD'].markets[4].marketAddresses[chainId])
-	const baoUSDPrice = useMarketPrice(Config.markets['baoUSD'].markets[0].marketAddresses[chainId])
+	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].vaults[4].vaultAddresses[chainId])
+	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].vaults[0].vaultAddresses[chainId])
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')

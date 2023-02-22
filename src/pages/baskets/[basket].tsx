@@ -22,7 +22,7 @@ import Description from './components/Description'
 
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { basket: 'bSTBL' } }],
+		paths: [{ params: { basket: 'bSTBL' } }, { params: { basket: 'bETH' } }],
 		fallback: false, // can also be true or 'blocking'
 	}
 }

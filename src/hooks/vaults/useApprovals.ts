@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import MultiCall from '@/utils/multicall'
 import useBao from '@/hooks/base/useBao'
-import { useMarkets } from './useMarkets'
+import { useVaults } from './useVaults'
 import { useWeb3React } from '@web3-react/core'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
@@ -12,26 +12,26 @@ type Approvals = {
 	approvals: { [key: string]: BigNumber }
 }
 
-export const useApprovals = (marketName: string): Approvals => {
+export const useApprovals = (vaultName: string): Approvals => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const markets = useMarkets(marketName)
+	const vaults = useVaults(vaultName)
 
-	const enabled = !!bao && !!markets && !!account
+	const enabled = !!bao && !!vaults && !!account
 	const { data: approvals, refetch } = useQuery(
-		['@/hooks/markets/useApprovals', providerKey(library, account, chainId), { enabled }],
+		['@/hooks/vaults/useApprovals', providerKey(library, account, chainId), { enabled }],
 		async () => {
 			const multicallContext = MultiCall.createCallContext(
-				markets
+				vaults
 					.map(
-						market =>
-							market.underlyingAddress !== 'ETH' && {
-								ref: market.underlyingAddress,
-								contract: market.underlyingContract,
+						vault =>
+							vault.underlyingAddress !== 'ETH' && {
+								ref: vault.underlyingAddress,
+								contract: vault.underlyingContract,
 								calls: [
 									{
 										method: 'allowance',
-										params: [account, market.marketAddress],
+										params: [account, vault.vaultAddress],
 									},
 								],
 							},

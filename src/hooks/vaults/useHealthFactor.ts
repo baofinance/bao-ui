@@ -4,26 +4,26 @@ import { useCallback, useEffect, useState } from 'react'
 import Multicall from '@/utils/multicall'
 import useBao from '../base/useBao'
 import { useAccountLiquidity } from './useAccountLiquidity'
-import { useAccountMarkets } from './useMarkets'
-import { useMarketPrices } from './usePrices'
+import { useAccountVaults } from './useVaults'
+import { useVaultPrices } from './usePrices'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
-const useHealthFactor = (marketName: string) => {
+const useHealthFactor = (vaultName: string) => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const markets = useAccountMarkets(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName)
-	const { prices } = useMarketPrices(marketName)
+	const vaults = useAccountVaults(vaultName)
+	const accountLiquidity = useAccountLiquidity(vaultName)
+	const { prices } = useVaultPrices(vaultName)
 
 	const fetchHealthFactor = useCallback(async () => {
 		const usdBorrow = BigNumber.from(parseUnits(accountLiquidity.usdBorrow.toString()))
-		const _markets = markets.filter(market => !market.isSynth)
+		const _vaults = vaults.filter(vault => !vault.isSynth)
 
 		const balanceQuery = Multicall.createCallContext(
-			_markets.map(market => ({
-				contract: market.marketContract,
-				ref: market.marketAddress,
+			_vaults.map(vault => ({
+				contract: vault.vaultContract,
+				ref: vault.vaultAddress,
 				calls: [{ method: 'balanceOfUnderlying', params: [account] }],
 			})),
 		)
@@ -31,11 +31,11 @@ const useHealthFactor = (marketName: string) => {
 
 		if (Object.keys(balanceRes).length === 0) return setHealthFactor(BigNumber.from(0))
 
-		const collateralSummation = _markets.reduce((prev, cur) => {
+		const collateralSummation = _vaults.reduce((prev, cur) => {
 			return prev.add(
-				BigNumber.from(prices[cur.marketAddress])
+				BigNumber.from(prices[cur.vaultAddress])
 					.div(BigNumber.from(10).pow(36 - cur.underlyingDecimals))
-					.mul(parseUnits(balanceRes[cur.marketAddress][0].values[0].toString()))
+					.mul(parseUnits(balanceRes[cur.vaultAddress][0].values[0].toString()))
 					.div(BigNumber.from(10).pow(cur.underlyingDecimals))
 					.mul(parseUnits(cur.collateralFactor.toString())),
 			)
@@ -47,13 +47,13 @@ const useHealthFactor = (marketName: string) => {
 		} catch {
 			setHealthFactor(BigNumber.from(0))
 		}
-	}, [markets, accountLiquidity, bao, account, prices])
+	}, [vaults, accountLiquidity, bao, account, prices])
 
 	useEffect(() => {
-		if (!(markets && accountLiquidity && bao && account && prices)) return
+		if (!(vaults && accountLiquidity && bao && account && prices)) return
 
 		fetchHealthFactor()
-	}, [markets, accountLiquidity, bao, account, prices, fetchHealthFactor])
+	}, [vaults, accountLiquidity, bao, account, prices, fetchHealthFactor])
 
 	return healthFactor
 }

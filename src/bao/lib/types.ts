@@ -8,9 +8,10 @@ import {
 	Experipie,
 	Gauge,
 	GaugePool,
-	MarketOracle,
+	VaultOracle,
 	Oven,
 	PoolInfo,
+	SimpleUniRecipe,
 	Stabilizer,
 	Uni_v2_lp,
 } from '@/typechain/index'
@@ -73,14 +74,16 @@ export interface SupportedBasket {
 	swap?: string
 	address: string
 	basketContract: Experipie
+	recipeAddress: string
+	recipeContract: SimpleUniRecipe
 	ovenAddress: string
 	ovenContract?: Oven
 }
 
-export interface SupportedMarket {
-	mid: number
+export interface SupportedVault {
+	vid: number
 	archived?: boolean
-	marketAddresses: {
+	vaultAddresses: {
 		[network: number]: string
 	}
 	underlyingAddresses: {
@@ -130,12 +133,13 @@ export interface ActiveSupportedGauge extends SupportedGauge {
 export interface ActiveSupportedBasket extends SupportedBasket {
 	address: string
 	basketContract: Experipie
+	recipeContract: SimpleUniRecipe
 	ovenContract: Oven
 }
 
-export interface ActiveSupportedMarket extends SupportedMarket {
-	marketAddress: string
-	marketContract: Cether | Ctoken
+export interface ActiveSupportedVault extends SupportedVault {
+	vaultAddress: string
+	vaultContract: Cether | Ctoken
 	underlyingAddress: string
 	underlyingContract?: Erc20
 }
@@ -179,13 +183,13 @@ export interface Config {
 	subgraphs: SubgraphConfig
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
-	markets: {
-		[marketName: string]: {
+	vaults: {
+		[vaultName: string]: {
 			vid: number
 			comptroller: string
 			oracle: string
 			ballast: string
-			markets: SupportedMarket[]
+			vaults: SupportedVault[]
 		}
 	}
 	gauges: SupportedGauge[]

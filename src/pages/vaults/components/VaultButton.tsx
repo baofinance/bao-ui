@@ -1,31 +1,31 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import Config from '@/bao/lib/config'
-import { ActiveSupportedMarket } from '@/bao/lib/types'
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useApprovals } from '@/hooks/markets/useApprovals'
+import { useApprovals } from '@/hooks/vaults/useApprovals'
 import type { Erc20 } from '@/typechain/index'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
-import { MarketOperations } from './Modals/Modals'
+import { VaultOperations } from './Modals/Modals'
 
-type MarketButtonProps = {
-	operation: MarketOperations
-	asset: ActiveSupportedMarket
+type VaultButtonProps = {
+	operation: VaultOperations
+	asset: ActiveSupportedVault
 	val: BigNumber
 	isDisabled: boolean
 	onHide?: () => void
-	marketName: string
+	vaultName: string
 }
 
-const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }: MarketButtonProps) => {
+const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: VaultButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
-	const { approvals } = useApprovals(marketName)
-	const { marketContract } = asset
+	const { approvals } = useApprovals(vaultName)
+	const { vaultContract } = asset
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 
 	if (pendingTx) {
@@ -44,7 +44,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 		)
 	} else {
 		switch (operation) {
-			case MarketOperations.supply:
+			case VaultOperations.supply:
 				return approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth
@@ -53,17 +53,17 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 							let mintTx
 							if (asset.underlyingAddress === 'ETH') {
 								// @ts-ignore
-								mintTx = marketContract.mint(true, {
+								mintTx = vaultContract.mint(true, {
 									value: val,
 								})
 								// TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							} else {
 								// @ts-ignore
-								mintTx = marketContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
+								mintTx = vaultContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 							}
 							handleTx(
 								mintTx,
-								`Markets: Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`,
+								`Vaults: Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -76,23 +76,23 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 						disabled={!approvals}
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `Markets: Approve ${asset.underlyingSymbol}`)
+							const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
+							handleTx(tx, `Vaults: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
 					</Button>
 				)
 
-			case MarketOperations.withdraw:
+			case VaultOperations.withdraw:
 				return (
 					<Button
 						fullWidth
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
-								marketContract.redeemUnderlying(val.toString()),
-								`Markets: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								vaultContract.redeemUnderlying(val.toString()),
+								`Vaults: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -101,15 +101,15 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 					</Button>
 				)
 
-			case MarketOperations.mint:
+			case VaultOperations.mint:
 				return (
 					<Button
 						fullWidth
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
-								marketContract.borrow(val),
-								`Markets: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								vaultContract.borrow(val),
+								`Vaults: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => {
 									onHide()
 								},
@@ -120,7 +120,7 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 					</Button>
 				)
 
-			case MarketOperations.repay:
+			case VaultOperations.repay:
 				return approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth
@@ -129,13 +129,13 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 							let repayTx
 							if (asset.underlyingAddress === 'ETH') {
 								// @ts-ignore
-								repayTx = marketContract.repayBorrow({
+								repayTx = vaultContract.repayBorrow({
 									value: val,
 								})
 							} else {
-								repayTx = marketContract.repayBorrow(val)
+								repayTx = vaultContract.repayBorrow(val)
 							}
-							handleTx(repayTx, `Markets: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () =>
+							handleTx(repayTx, `Vaults: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () =>
 								onHide(),
 							)
 						}}
@@ -148,8 +148,8 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 						disabled={!approvals}
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							const tx = erc20.approve(marketContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `Markets: Approve ${asset.underlyingSymbol}`)
+							const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
+							handleTx(tx, `Vaults: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}
@@ -159,4 +159,4 @@ const MarketButton = ({ operation, asset, val, isDisabled, onHide, marketName }:
 	}
 }
 
-export default MarketButton
+export default VaultButton

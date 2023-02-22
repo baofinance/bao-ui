@@ -81,7 +81,7 @@ export default {
 				address: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
 			},
 		},
-		MarketOracle: {
+		VaultOracle: {
 			1: {
 				address: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
 			},
@@ -92,11 +92,6 @@ export default {
 			},
 		},
 		// Baskets
-		SimpleUniRecipe: {
-			1: {
-				address: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
-			},
-		},
 		LendingRegistry: {
 			1: {
 				address: '0x08a2b7D713e388123dc6678168656659d297d397',
@@ -160,17 +155,17 @@ export default {
 			1: 'https://api.thegraph.com/subgraphs/name/messari/curve-finance-ethereum',
 		},
 	},
-	markets: {
+	vaults: {
 		baoUSD: {
 			vid: 1,
 			comptroller: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
 			oracle: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
 			stabilizer: '0x720282BB7e721634c95F0933636DE3171dc405de',
-			markets: [
+			vaults: [
 				{
 					mid: 1,
 					symbol: 'bdUSD',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xc0601094C0C88264Ba285fEf0a1b00eF13e79347',
 					},
 					underlyingAddresses: {
@@ -186,7 +181,7 @@ export default {
 					mid: 3,
 					symbol: 'bdUSDC',
 					archived: true,
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0x7749f9f3206A49d4c47b60db05716409dC3A4149',
 					},
 					underlyingAddresses: {
@@ -200,7 +195,7 @@ export default {
 					mid: 5,
 					isBasket: true,
 					symbol: 'bdSTBL',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
 					},
 					underlyingAddresses: {
@@ -213,7 +208,7 @@ export default {
 				{
 					mid: 4,
 					symbol: 'bdETH',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xF635fdF9B36b557bD281aa02fdfaeBEc04CD084A',
 					},
 					underlyingAddresses: {
@@ -227,7 +222,7 @@ export default {
 					mid: 2,
 					symbol: 'bdETH',
 					archived: true,
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xe7a52262C1934951207c5fc7A944A82D283C83e5',
 					},
 					underlyingAddresses: {
@@ -244,11 +239,11 @@ export default {
 			comptroller: '0x8e8C327AD3Fa97092cdAba70efCf82DaC3081fa1',
 			oracle: '0xbCb0a842aF60c6F09827F34841d3A8770995c6e0',
 			stabilizer: '0xC137fa40Ff0cb53ff157e1dCafc7262877069219',
-			markets: [
+			vaults: [
 				{
 					mid: 1,
 					symbol: 'bdbaoETH',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xe853E5c1eDF8C51E81bAe81D742dd861dF596DE7',
 					},
 					underlyingAddresses: {
@@ -263,7 +258,7 @@ export default {
 				{
 					mid: 2,
 					symbol: 'bdEther',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',
 					},
 					underlyingAddresses: {
@@ -276,7 +271,7 @@ export default {
 				{
 					mid: 3,
 					symbol: 'bdbETH',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xf7548a6e9DAf2e4689CEDD8A08189d0D6f3Ee91b',
 					},
 					underlyingAddresses: {
@@ -289,7 +284,7 @@ export default {
 				{
 					mid: 6,
 					symbol: 'bdbSTBL',
-					marketAddresses: {
+					vaultAddresses: {
 						1: '0xb0f8Fe96b4880adBdEDE0dDF446bd1e7EF122C4e',
 					},
 					underlyingAddresses: {
@@ -374,6 +369,7 @@ export default {
 				1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 			},
 			lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
+			recipeAddress: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
 			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
 			symbol: 'bSTBL',
 			name: 'bSTBL',
@@ -396,6 +392,7 @@ export default {
 				1: '0xa1e3f062ce5825c1e19207cd93cefdad82a8a631',
 			},
 			lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
+			recipeAddress: '0xeb8f1bc07a6f85df460f0dde4d9b70002ea7bffd',
 			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
 			symbol: 'bETH',
 			name: 'bETH',
