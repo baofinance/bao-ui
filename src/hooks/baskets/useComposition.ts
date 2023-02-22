@@ -59,6 +59,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			)
 			const tokenInfo = MultiCall.parseCallResults(await bao.multicall.call(tokensQuery))
 
+			console.log(tokenInfo)
+
 			const _comp: BasketComponent[] = []
 			for (let i = 0; i < tokenComposition.length; i++) {
 				const _c: any = tokenInfo[tokenComposition[i]]

@@ -18,7 +18,7 @@ const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
 		<>
 			<ListHeader headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']} />
-			{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}
+			<div className='flex flex-col gap-4'>{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}</div>
 		</>
 	)
 }

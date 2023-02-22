@@ -27,12 +27,14 @@ export default {
 		MKR: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
 		//Synths
 		baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
+		baoETH: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
 		// NFTs
 		baoElder: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
 		baoSwap: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
 		//Baskets
 		bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
 		bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+		bETH: '0xa1e3f062ce5825c1e19207cd93cefdad82a8a631',
 	},
 	contracts: {
 		Bao: {
@@ -92,6 +94,11 @@ export default {
 			},
 		},
 		// Baskets
+		SimpleUniRecipe: {
+			1: {
+				address: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
+			},
+		},
 		LendingRegistry: {
 			1: {
 				address: '0x08a2b7D713e388123dc6678168656659d297d397',
@@ -389,10 +396,10 @@ export default {
 		{
 			nid: 2,
 			basketAddresses: {
-				1: '0xa1e3f062ce5825c1e19207cd93cefdad82a8a631',
+				1: '0xa1e3F062CE5825c1e19207cd93CEFdaD82A8A631',
 			},
 			lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
-			recipeAddress: '0xeb8f1bc07a6f85df460f0dde4d9b70002ea7bffd',
+			recipeAddress: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
 			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
 			symbol: 'bETH',
 			name: 'bETH',

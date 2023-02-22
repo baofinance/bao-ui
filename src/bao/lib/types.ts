@@ -11,6 +11,8 @@ import {
 	VaultOracle,
 	Oven,
 	PoolInfo,
+	BStblRecipe,
+	BEthRecipe,
 	SimpleUniRecipe,
 	Stabilizer,
 	Uni_v2_lp,
