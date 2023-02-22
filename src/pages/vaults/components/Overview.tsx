@@ -13,7 +13,7 @@ import useHealthFactor from '@/hooks/markets/useHealthFactor'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
-export const Overview = ({ marketName }: {marketName: string}) => {
+export const Overview = ({ marketName }: { marketName: string }) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const accountLiquidity = useAccountLiquidity(marketName)

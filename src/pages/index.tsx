@@ -12,18 +12,11 @@ const Markets: React.FC = () => {
 
 	return (
 		<>
-			<NextSeo title={'Markets'} description={'Provide different collateral types to mint synthetics like baoUSD.'} />
-			<PageHeader title='Markets' />
-			{account ? (
-				<>
-					<Overview marketName='baoUSD' />
-					<MarketList marketName='baoUSD' />
-					{/* <Overview marketName='baoETH' />
-					<MarketList marketName='baoETH' /> */}
-				</>
-			) : (
-				<OfflineMarketList marketName='baoUSD' />
-			)}
+			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
+			<PageHeader title='Vaults' />
+			<>
+				<MarketList marketName='baoUSD' />
+			</>
 		</>
 	)
 }

@@ -28,18 +28,13 @@ import { MarketDetails } from './components/Stats'
 
 export async function getStaticPaths() {
 	return {
-		paths: [
-			{ params: { market: 'ETH' } },
-			{ params: { market: 'USDC' } },
-			{ params: { market: 'bSTBL' } },
-			{ params: { market: 'baoUSD' } },
-		],
+		paths: [{ params: { market: 'baoUSD' } }, { params: { market: 'baoETH' } }],
 		fallback: false, // can also be true or 'blocking'
 	}
 }
 
 // `getStaticPaths` requires using `getStaticProps`
-export async function getStaticProps({ params }: { params: { market: string, name: string } }) {
+export async function getStaticProps({ params }: { params: { market: string; name: string } }) {
 	const { market, name } = params
 
 	return {
@@ -232,7 +227,7 @@ const Market: NextPage<{
 	)
 }
 
-const ActionButton = ({ market, marketName }: { market: ActiveSupportedMarket, marketName: string }) => {
+const ActionButton = ({ market, marketName }: { market: ActiveSupportedMarket; marketName: string }) => {
 	const [showModal, setShowModal] = useState(false)
 
 	return (

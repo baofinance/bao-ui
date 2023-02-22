@@ -83,8 +83,9 @@ export const usePrices = (marketName: string) => {
 
 export const useMarketPrices = (marketName: string): MarketPrices => {
 	const bao = useBao()
-	const oracle = useContract<MarketOracle>('MarketOracle', Config.markets[marketName].oracle)
 	const { chainId } = useWeb3React()
+
+	const oracle = useContract<MarketOracle>('MarketOracle', Config.markets[marketName].oracle)
 
 	const enabled = !!bao && !!oracle && !!chainId
 	const { data: prices, refetch } = useQuery(

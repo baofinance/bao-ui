@@ -162,6 +162,7 @@ export default {
 	},
 	markets: {
 		baoUSD: {
+			vid: 1,
 			comptroller: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
 			oracle: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
 			stabilizer: '0x720282BB7e721634c95F0933636DE3171dc405de',
@@ -179,6 +180,34 @@ export default {
 					icon: 'baoUSD.png',
 					coingeckoId: 'dai',
 					underlyingSymbol: 'baoUSD',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 3,
+					symbol: 'bdUSDC',
+					archived: true,
+					marketAddresses: {
+						1: '0x7749f9f3206A49d4c47b60db05716409dC3A4149',
+					},
+					underlyingAddresses: {
+						1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+					},
+					icon: 'USDC.png',
+					coingeckoId: 'usd-coin',
+					underlyingDecimals: 6,
+				},
+				{
+					mid: 5,
+					isBasket: true,
+					symbol: 'bdSTBL',
+					marketAddresses: {
+						1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
+					},
+					underlyingAddresses: {
+						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+					},
+					icon: 'bSTBL.png',
+					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 				},
 				{
@@ -208,47 +237,22 @@ export default {
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
 				},
-				{
-					mid: 3,
-					symbol: 'bdUSDC',
-					marketAddresses: {
-						1: '0x7749f9f3206A49d4c47b60db05716409dC3A4149',
-					},
-					underlyingAddresses: {
-						1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-					},
-					icon: 'USDC.png',
-					coingeckoId: 'usd-coin',
-					underlyingDecimals: 6,
-				},
-				{
-					mid: 5,
-					symbol: 'bdSTBL',
-					marketAddresses: {
-						1: '0xE0a55c00E6510F4F7df9af78b116B7f8E705cA8F',
-					},
-					underlyingAddresses: {
-						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
-					},
-					icon: 'bSTBL.png',
-					coingeckoId: 'dai',
-					underlyingDecimals: 18,
-				},
 			],
 		},
 		baoETH: {
-			comptroller: '0x01cf58e264d7578D4C67022c58A24CbC4C4a304E',
-			oracle: '0xeC1BB74f5799811c0c1Bff94Ef76Fb40abccbE4a',
-			stabilizer: '0x1eB5C49630E08e95Ba7f139BcF4B9BA171C9a8C7',
+			vid: 2,
+			comptroller: '0x8e8C327AD3Fa97092cdAba70efCf82DaC3081fa1',
+			oracle: '0xbCb0a842aF60c6F09827F34841d3A8770995c6e0',
+			stabilizer: '0xC137fa40Ff0cb53ff157e1dCafc7262877069219',
 			markets: [
 				{
 					mid: 1,
 					symbol: 'bdbaoETH',
 					marketAddresses: {
-						1: '0x09120eAED8e4cD86D85a616680151DAA653880F2',
+						1: '0xe853E5c1eDF8C51E81bAe81D742dd861dF596DE7',
 					},
 					underlyingAddresses: {
-						1: '0xF6a8aD553b265405526030c2102fda2bDcdDC177',
+						1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
 					},
 					isSynth: true,
 					icon: 'baoUSD.png',
@@ -260,7 +264,7 @@ export default {
 					mid: 2,
 					symbol: 'bdEther',
 					marketAddresses: {
-						1: '0x3E661784267F128e5f706De17Fac1Fc1c9d56f30',
+						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',
 					},
 					underlyingAddresses: {
 						1: 'ETH',
@@ -273,10 +277,10 @@ export default {
 					mid: 3,
 					symbol: 'bdbETH',
 					marketAddresses: {
-						1: '0x6732128F9cc0c4344b2d4DC6285BCd516b7E59E6',
+						1: '0xf7548a6e9DAf2e4689CEDD8A08189d0D6f3Ee91b',
 					},
 					underlyingAddresses: {
-						1: '0xa1e3F062CE5825c1e19207cd93CEFdaD82A8A631',
+						1: '0xa1e3f062ce5825c1e19207cd93cefdad82a8a631',
 					},
 					icon: 'bETH.png',
 					coingeckoId: 'weth',
@@ -286,7 +290,7 @@ export default {
 					mid: 6,
 					symbol: 'bdbSTBL',
 					marketAddresses: {
-						1: '0x15Ff10fCc8A1a50bFbE07847A22664801eA79E0f',
+						1: '0xb0f8Fe96b4880adBdEDE0dDF446bd1e7EF122C4e',
 					},
 					underlyingAddresses: {
 						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
@@ -364,46 +368,6 @@ export default {
 		},
 	],
 	baskets: [
-		/*{
-      nid: 1,
-      basketAddresses: {
-        1: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
-      },
-      lpAddress: '0x84e5bf858Ee50bE323143dF88f2089827834b9cE',
-      ovenAddress: '0x30DE1e1e4a42557f31F038E3B77672Afd4eAF7DF',
-      symbol: 'bDEFI',
-      name: 'bDEFI',
-      icon: 'bDEFI.png',
-      cgIds: {
-        '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B': 'convex-finance',
-        '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'maker',
-        '0xd533a949740bb3306d119cc777fa900ba034cd52': 'curve-dao-token',
-        '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': 'aave',
-        '0x5a98fcbea516cf06857215779fd812ca3bef1b32': 'lido-dao',
-        '0xc00e94cb662c3520282e6f5717214004a7f26888':
-          'compound-governance-token',
-        '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2': 'sushi',
-        '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e': 'yearn-finance',
-        '0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D': 'liquity',
-        '0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0': 'frax-share',
-        '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': 'uniswap',
-        '0xba100000625a3754423978a60c9317c58a424e3D': 'balancer',
-      },
-      pieColors: {
-        aYFI: '#006AE3',
-        MKR: '#63C3B2',
-        CVX: '#3A3A3A',
-        cAAVE: '#926BA8',
-        LDO: '#00A3FF',
-        LQTY: '#1442CC',
-        UNI: '#FF047CFF',
-        FXS: '#393835',
-        cCOMP: '#00D395',
-        xSUSHI: '#ea3fb4',
-        BAL: '#1E1E1E',
-        aCRV: '#F7E103',
-      },
-    },*/
 		{
 			nid: 1,
 			basketAddresses: {
@@ -424,6 +388,27 @@ export default {
 				aUSDC: '#2775CA',
 			},
 			desc: 'Low risk stablecoin basket',
+			swap: 'https://curve.fi/factory-crypto/61',
+		},
+		{
+			nid: 2,
+			basketAddresses: {
+				1: '0xa1e3f062ce5825c1e19207cd93cefdad82a8a631',
+			},
+			lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
+			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
+			symbol: 'bETH',
+			name: 'bETH',
+			icon: 'bETH.png',
+			cgIds: {
+				'0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0': 'wrapped-steth',
+				'0xae78736cd615f374d3085123a210448e74fc6393': 'rocket-pool-eth',
+			},
+			pieColors: {
+				wstETH: '#3AA4FF',
+				rETH: '#F8AE8D',
+			},
+			desc: 'Liquid staked ETH basket',
 			swap: 'https://curve.fi/factory-crypto/61',
 		},
 	],

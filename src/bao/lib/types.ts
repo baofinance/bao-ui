@@ -1,4 +1,19 @@
-import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool, PoolInfo, CurveLp, CurveMetaPool } from '@/typechain/index'
+import {
+	Cether,
+	Comptroller,
+	Ctoken,
+	CurveLp,
+	CurveMetaPool,
+	Erc20,
+	Experipie,
+	Gauge,
+	GaugePool,
+	MarketOracle,
+	Oven,
+	PoolInfo,
+	Stabilizer,
+	Uni_v2_lp,
+} from '@/typechain/index'
 import { BigNumber } from 'ethers'
 
 export interface SupportedPool {
@@ -72,6 +87,7 @@ export interface SupportedMarket {
 		[network: number]: string
 	}
 	isSynth: boolean
+	isBasket: boolean
 	symbol: string
 	icon: string
 	coingeckoId: string
@@ -165,8 +181,10 @@ export interface Config {
 	baskets: SupportedBasket[]
 	markets: {
 		[marketName: string]: {
+			vid: number
 			comptroller: string
 			oracle: string
+			ballast: string
 			markets: SupportedMarket[]
 		}
 	}

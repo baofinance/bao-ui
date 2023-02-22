@@ -100,7 +100,7 @@ type NavButtonProps = {
 
 export const NavButtons = ({ options, active, onClick, className }: NavButtonProps) => {
 	return (
-		<div className='mt-2 flex w-full cursor-pointer gap-2'>
+		<div className='flex w-full cursor-pointer gap-2'>
 			{options.map((option: string) => (
 				<Button
 					size='md'

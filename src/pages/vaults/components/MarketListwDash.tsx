@@ -1,7 +1,9 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedMarket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
-import Button from '@/components/Button'
+import Button, { NavButtons } from '@/components/Button'
+import Card from '@/components/Card'
+import Input from '@/components/Input'
 import { ListHeader } from '@/components/List'
 import { PageLoader } from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
@@ -18,9 +20,10 @@ import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } fro
 import { useExchangeRates } from '@/hooks/markets/useExchangeRates'
 import useHealthFactor from '@/hooks/markets/useHealthFactor'
 import { useAccountMarkets, useMarkets } from '@/hooks/markets/useMarkets'
+import { useMarketPrices } from '@/hooks/markets/usePrices'
 import type { Comptroller } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Switch } from '@headlessui/react'
@@ -28,19 +31,20 @@ import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/re
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
-import { BigNumber } from 'ethers'
+import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import MarketButton from './MarketButton'
 import MarketBorrowModal from './Modals/BorrowModal'
 import MarketSupplyModal from './Modals/SupplyModal'
 import { MarketDetails } from './Stats'
 
 // FIXME: these components should all be using ethers.BigNumber instead of js float math
 
-export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketListProps) => {
+export const MarketList = ({ marketName }: MarketListProps) => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const _markets = useMarkets(marketName)
@@ -50,6 +54,12 @@ export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketList
 	const supplyBalances = useSupplyBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
 	const { exchangeRates } = useExchangeRates(marketName)
+	const balances = useAccountBalances(marketName)
+	const { prices } = useMarketPrices(marketName)
+
+	const [val, setVal] = useState<string>('')
+	const operations = ['Mint', 'Repay']
+	const [operation, setOperation] = useState(operations[0])
 
 	const collateralMarkets = useMemo(() => {
 		if (!(_markets && supplyBalances)) return
@@ -95,8 +105,6 @@ export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketList
 			? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
 			: BigNumber.from(0)
 
-	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
-
 	const healthFactorColor = (healthFactor: BigNumber) => {
 		const c = healthFactor.eq(0)
 			? `${(props: any) => props.theme.color.text[100]}`
@@ -117,6 +125,98 @@ export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketList
 		{
 			placeholderData: BigNumber.from(0),
 		},
+	)
+
+	const supply = useMemo(
+		() =>
+			supplyBalances &&
+			synthMarkets &&
+			supplyBalances.find(balance => balance.address.toLowerCase() === synthMarkets[0].marketAddress.toLowerCase()) &&
+			exchangeRates &&
+			synthMarkets &&
+			exchangeRates[synthMarkets[0].marketAddress]
+				? decimate(
+						supplyBalances
+							.find(balance => balance.address.toLowerCase() === synthMarkets[0].marketAddress.toLowerCase())
+							.balance.mul(exchangeRates[synthMarkets[0].marketAddress]),
+				  )
+				: BigNumber.from(0),
+		[supplyBalances, exchangeRates, synthMarkets],
+	)
+
+	let _imfFactor = synthMarkets && synthMarkets[0].imfFactor
+	if (accountLiquidity) {
+		const _sqrt = sqrt(supply)
+		const num = exponentiate(parseUnits('1.1'))
+		const denom = synthMarkets && decimate(synthMarkets[0].imfFactor.mul(_sqrt).add(parseUnits('1')))
+		_imfFactor = synthMarkets && num.div(denom)
+	}
+
+	let withdrawable = BigNumber.from(0)
+	if (synthMarkets && _imfFactor.gt(synthMarkets[0].collateralFactor) && synthMarkets[0].price.gt(0)) {
+		if (synthMarkets[0].collateralFactor.mul(synthMarkets[0].price).gt(0)) {
+			withdrawable =
+				accountLiquidity &&
+				exponentiate(accountLiquidity.usdBorrowable).div(decimate(synthMarkets[0].collateralFactor.mul(synthMarkets[0].price)))
+		} else {
+			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(synthMarkets[0].price))
+		}
+	}
+
+	const max = () => {
+		switch (operation) {
+			case 'Mint':
+				return prices && accountLiquidity && synthMarkets[0].price.gt(0)
+					? BigNumber.from(
+							FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
+								FixedNumber.from(formatUnits(synthMarkets[0].price)),
+							),
+					  )
+					: BigNumber.from(0)
+			case 'Repay':
+				if (borrowBalances && balances) {
+					const borrowBalance = borrowBalances.find(
+						_balance => _balance.address.toLowerCase() === synthMarkets[0].marketAddress.toLowerCase(),
+					).balance
+					const walletBalance = balances.find(
+						_balance => _balance.address.toLowerCase() === synthMarkets[0].underlyingAddress.toLowerCase(),
+					).balance
+					return walletBalance.lt(borrowBalance) ? walletBalance : borrowBalance
+				} else {
+					return BigNumber.from(0)
+				}
+		}
+	}
+
+	const maxLabel = () => {
+		switch (operation) {
+			case 'Mint':
+				return 'Max Mint'
+			case 'Repay':
+				return 'Max Repay'
+		}
+	}
+
+	const handleChange = useCallback(
+		(e: React.FormEvent<HTMLInputElement>) => {
+			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
+		},
+		[setVal],
+	)
+
+	const change = val ? decimate(BigNumber.from(val).mul(synthMarkets[0].price)) : BigNumber.from(0)
+	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
+	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
+	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
+	const newBorrowable =
+		synthMarkets && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - synthMarkets[0].underlyingDecimals))))
+
+	const synthBalance = useMemo(
+		() =>
+			synthMarkets && balances && balances.find(_balance => _balance.address === synthMarkets[0].underlyingAddress)
+				? balances.find(_balance => _balance.address === synthMarkets[0].underlyingAddress).balance
+				: 0,
+		[balances, synthMarkets],
 	)
 
 	return (
@@ -152,6 +252,132 @@ export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketList
 						</div>
 					</div>
 
+					{account && (
+						<>
+							<div className='flex w-full flex-row'>
+								<Typography variant='lg' className='m-auto mb-2 justify-center font-bold'>
+									Dashboard
+								</Typography>
+							</div>
+							<div className='mb-4 flex flex-row gap-4'>
+								<div className='flex w-1/2 flex-col'>
+									<StatBlock
+										className='mb-4'
+										stats={[
+											{
+												label: 'Your Collateral USD',
+												value: `$${
+													bao && account && accountLiquidity
+														? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
+														: 0
+												}`,
+											},
+											{
+												label: 'Your Debt',
+												value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synthMarkets[0].underlyingSymbol}`,
+											},
+											{
+												label: 'Your Debt USD',
+												value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
+											},
+											{
+												label: 'Debt Limit Remaining',
+												value: `$${getDisplayBalance(
+													accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0),
+												)} ➜ $${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0))}`,
+											},
+											{
+												// FIXME: Fix this for when a users current borrow amount is zero
+												label: 'Debt Limit Used',
+												value: `${getDisplayBalance(
+													!borrowable.eq(0) ? exponentiate(borrow).div(borrowable).mul(100) : 0,
+													18,
+													2,
+												)}% ➜ ${getDisplayBalance(!newBorrowable.eq(0) ? newBorrow.div(newBorrowable).mul(100) : 0, 18, 2)}%`,
+											},
+											{
+												label: `Debt Health`,
+												value: `${
+													healthFactor &&
+													healthFactor &&
+													(healthFactor.lte(0) ? (
+														'-'
+													) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
+														<p>
+															{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
+														</p>
+													) : (
+														getDisplayBalance(healthFactor)
+													))
+												}`,
+											},
+										]}
+									/>
+								</div>
+								<div className='flex w-1/2 flex-col'>
+									<Card.Options className='mt-0'>
+										<NavButtons options={operations} active={operation} onClick={setOperation} />
+									</Card.Options>
+									<Card.Body>
+										<div className='mb-4 flex flex-col items-center justify-center'>
+											<div className='flex w-full flex-row'>
+												<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+													<Typography variant='sm' className='text-text-200'>
+														Wallet:
+													</Typography>
+													<Typography variant='sm'>{`${getDisplayBalance(synthBalance)}`}</Typography>
+												</div>
+												<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
+													<Typography variant='sm' className='text-text-200'>
+														{`${maxLabel()}:`}
+													</Typography>
+													<Typography variant='sm'>{`${getDisplayBalance(max(), synthMarkets[0].underlyingDecimals)} ${
+														synthMarkets[0].underlyingSymbol
+													}`}</Typography>
+												</div>
+											</div>
+											<Input
+												value={val}
+												onChange={handleChange}
+												onSelectMax={() => setVal(formatUnits(max(), synthMarkets[0].underlyingDecimals))}
+												label={
+													<div className='flex flex-row items-center pl-2 pr-4'>
+														<div className='flex w-6 justify-center'>
+															<Image
+																src={`/images/tokens/${synthMarkets[0].icon}`}
+																width={32}
+																height={32}
+																alt={synthMarkets[0].symbol}
+																className='block h-6 w-6 align-middle'
+															/>
+														</div>
+													</div>
+												}
+											/>
+										</div>
+									</Card.Body>
+									<Card.Actions>
+										<MarketButton
+											marketName={marketName}
+											operation={operation}
+											asset={synthMarkets[0]}
+											val={val ? parseUnits(val, synthMarkets[0].underlyingDecimals) : BigNumber.from(0)}
+											isDisabled={
+												!val ||
+												(val && parseUnits(val, synthMarkets[0].underlyingDecimals).gt(max())) ||
+												// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
+												(val &&
+													marketName === 'baoUSD' &&
+													parseUnits(val, synthMarkets[0].underlyingDecimals).lt(parseUnits('5000')) &&
+													operation === 'Mint')
+											}
+										/>
+									</Card.Actions>
+								</div>
+							</div>
+						</>
+					)}
+
 					<StatBlock
 						className='mb-4'
 						label='Vault Info'
@@ -185,59 +411,6 @@ export const MarketList: React.FC<MarketListProps> = ({ marketName }: MarketList
 							},
 						]}
 					/>
-					{account && (
-						<StatBlock
-							className='mb-4'
-							label='User Info'
-							stats={[
-								{
-									label: 'Your Collateral USD',
-									value: `$${
-										bao && account && accountLiquidity
-											? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
-											: 0
-									}`,
-								},
-								{
-									label: 'Your Debt',
-									value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synthMarkets[0].underlyingSymbol}`,
-								},
-								{
-									label: 'Your Debt USD',
-									value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
-								},
-								{
-									label: 'Debt Limit Used',
-									value: `${getDisplayBalance(
-										accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0,
-										18,
-										0,
-									)}
-								%`,
-								},
-								{
-									label: 'Debt Limit Remaining',
-									value: `$${getDisplayBalance(accountLiquidity.usdBorrowable)}`,
-								},
-								{
-									label: `Debt Health`,
-									value: `${
-										healthFactor &&
-										healthFactor &&
-										(healthFactor.lte(0) ? (
-											'-'
-										) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
-											<p>
-												{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
-											</p>
-										) : (
-											getDisplayBalance(healthFactor)
-										))
-									}`,
-								},
-							]}
-						/>
-					)}
 
 					<div className='flex w-full flex-col'>
 						<Typography variant='lg' className='text-center font-bold'>
