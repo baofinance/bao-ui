@@ -1,7 +1,7 @@
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import React, { useState } from 'react'
 import Loader from '@/components/Loader'
 import { ActiveSupportedBasket } from '@/bao/lib/types'

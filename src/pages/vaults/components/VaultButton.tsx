@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { VaultOperations } from './Modals/Modals'
 
 type VaultButtonProps = {
-	operation: VaultOperations
+	operation: string
 	asset: ActiveSupportedVault
 	val: BigNumber
 	isDisabled: boolean
@@ -44,7 +44,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 		)
 	} else {
 		switch (operation) {
-			case VaultOperations.supply:
+			case 'Supply':
 				return approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth
@@ -84,7 +84,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 					</Button>
 				)
 
-			case VaultOperations.withdraw:
+			case 'Withdraw':
 				return (
 					<Button
 						fullWidth
@@ -101,7 +101,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 					</Button>
 				)
 
-			case VaultOperations.mint:
+			case 'Mint':
 				return (
 					<Button
 						fullWidth
@@ -120,7 +120,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 					</Button>
 				)
 
-			case VaultOperations.repay:
+			case 'Repay':
 				return approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth

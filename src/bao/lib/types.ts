@@ -112,6 +112,7 @@ export interface SupportedVault {
 	liquidationIncentive?: BigNumber
 	borrowRestricted?: boolean
 	price?: BigNumber
+	desc?: string
 }
 
 export interface FarmableSupportedPool extends SupportedPool {

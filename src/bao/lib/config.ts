@@ -183,6 +183,7 @@ export default {
 					coingeckoId: 'dai',
 					underlyingSymbol: 'baoUSD',
 					underlyingDecimals: 18,
+					desc: 'Synthetic USD',
 				},
 				{
 					mid: 3,
@@ -261,19 +262,7 @@ export default {
 					coingeckoId: 'dai',
 					underlyingSymbol: 'baoETH',
 					underlyingDecimals: 18,
-				},
-				{
-					mid: 2,
-					symbol: 'bdEther',
-					vaultAddresses: {
-						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',
-					},
-					underlyingAddresses: {
-						1: 'ETH',
-					},
-					icon: 'ETH.png',
-					coingeckoId: 'weth',
-					underlyingDecimals: 18,
+					desc: 'Synthetic ETH',
 				},
 				{
 					mid: 3,
@@ -287,6 +276,7 @@ export default {
 					icon: 'bETH.png',
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
+					isBasket: true,
 				},
 				{
 					mid: 6,
@@ -299,6 +289,20 @@ export default {
 					},
 					icon: 'bSTBL.png',
 					coingeckoId: 'dai',
+					underlyingDecimals: 18,
+					isBasket: true,
+				},
+				{
+					mid: 2,
+					symbol: 'bdEther',
+					vaultAddresses: {
+						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
 					underlyingDecimals: 18,
 				},
 			],
