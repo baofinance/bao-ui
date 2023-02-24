@@ -168,7 +168,7 @@ export default {
 			comptroller: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
 			oracle: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
 			stabilizer: '0x720282BB7e721634c95F0933636DE3171dc405de',
-			vaults: [
+			markets: [
 				{
 					mid: 1,
 					symbol: 'bdUSD',
@@ -247,7 +247,7 @@ export default {
 			comptroller: '0x8e8C327AD3Fa97092cdAba70efCf82DaC3081fa1',
 			oracle: '0xbCb0a842aF60c6F09827F34841d3A8770995c6e0',
 			stabilizer: '0xC137fa40Ff0cb53ff157e1dCafc7262877069219',
-			vaults: [
+			markets: [
 				{
 					mid: 1,
 					symbol: 'bdbaoETH',

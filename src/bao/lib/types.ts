@@ -192,7 +192,7 @@ export interface Config {
 			comptroller: string
 			oracle: string
 			ballast: string
-			vaults: SupportedVault[]
+			markets: SupportedVault[]
 		}
 	}
 	gauges: SupportedGauge[]

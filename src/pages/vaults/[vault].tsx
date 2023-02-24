@@ -45,18 +45,17 @@ import { VaultDetails } from './components/Stats'
 import VaultButton from './components/VaultButton'
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { vault: 'bSTBL' } }, { params: { vault: 'bETH' } }],
+		paths: [{ params: { vault: 'baoUSD' } }, { params: { vault: 'baoETH' } }],
 		fallback: false, // can also be true or 'blocking'
 	}
 }
 
-export async function getStaticProps({ params }: { params: { vault: string; name: string } }) {
-	const { vault, name } = params
+export async function getStaticProps({ params }: { params: any }) {
+	const { vault } = params
 
 	return {
 		props: {
 			vaultId: vault,
-			vaultName: name,
 		},
 	}
 }
@@ -466,7 +465,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const { account } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
-	const comptroller = useContract<Comptroller>('Comptroller', Config.vaults[vaultName].comptroller)
+	const comptroller = useContract<Comptroller>('Comptroller', vaultName && Config.vaults[vaultName].comptroller)
 
 	const suppliedUnderlying = useMemo(() => {
 		const supply = supplyBalances.find(balance => balance.address === vault.vaultAddress)

@@ -26,7 +26,7 @@ export const useAccountBalances = (vaultName: string): Balance[] => {
 	const { data: balances, refetch } = useQuery(
 		['@/hooks/vaults/useAccountBalances', providerKey(library, account, chainId), { enabled, vaultName }],
 		async () => {
-			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.underlyingAddresses[chainId])
+			const tokens = Config.vaults[vaultName].markets.map(vault => vault.underlyingAddresses[chainId])
 			const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -75,7 +75,7 @@ export const useSupplyBalances = (vaultName: string): Balance[] => {
 	const { data: balances, refetch } = useQuery(
 		['@/hooks/vaults/useSupplyBalances', providerKey(library, account, chainId), { enabled, vaultName }],
 		async () => {
-			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.vaultAddresses[chainId])
+			const tokens = Config.vaults[vaultName].markets.map(vault => vault.vaultAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -91,7 +91,7 @@ export const useSupplyBalances = (vaultName: string): Balance[] => {
 			)
 
 			return Object.keys(res).map(address => {
-				const decimals = Config.vaults[vaultName].vaults.find(vault => vault.vaultAddresses[chainId] === address).underlyingDecimals
+				const decimals = Config.vaults[vaultName].markets.find(vault => vault.vaultAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
 					symbol: res[address][0].values[0],
@@ -122,7 +122,7 @@ export const useBorrowBalances = (vaultName: string): Balance[] => {
 	const { data: balances, refetch } = useQuery(
 		['@/hooks/vaults/useBorrowBalances', providerKey(library, account, chainId), { enabled, vaultName }],
 		async () => {
-			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.vaultAddresses[chainId])
+			const tokens = Config.vaults[vaultName].markets.map(vault => vault.vaultAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -138,7 +138,7 @@ export const useBorrowBalances = (vaultName: string): Balance[] => {
 			)
 
 			return Object.keys(res).map(address => {
-				const decimals = Config.vaults[vaultName].vaults.find(vault => vault.vaultAddresses[chainId] === address).underlyingDecimals
+				const decimals = Config.vaults[vaultName].markets.find(vault => vault.vaultAddresses[chainId] === address).underlyingDecimals
 				return {
 					address,
 					symbol: res[address][0].values[0],

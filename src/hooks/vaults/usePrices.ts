@@ -50,7 +50,7 @@ export const usePrice = (coingeckoId: string) => {
 }
 
 export const usePrices = (vaultName: string) => {
-	const coingeckoIds: any = Object.values(Config.vaults[vaultName].vaults).map(({ coingeckoId }) => coingeckoId)
+	const coingeckoIds: any = Object.values(Config.vaults[vaultName].markets).map(({ coingeckoId }) => coingeckoId)
 	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoIds.join(',')}`
 
 	const { data: prices } = useQuery(
@@ -91,7 +91,7 @@ export const useVaultPrices = (vaultName: string): VaultPrices => {
 	const { data: prices, refetch } = useQuery(
 		['@/hooks/vaults/useVaultPrices', { enabled, vaultName }],
 		async () => {
-			const tokens = Config.vaults[vaultName].vaults.map(vault => vault.vaultAddresses[chainId])
+			const tokens = Config.vaults[vaultName].markets.map(vault => vault.vaultAddresses[chainId])
 			const multiCallContext = MultiCall.createCallContext([
 				{
 					ref: 'VaultOracle',
