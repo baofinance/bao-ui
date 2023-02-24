@@ -55,7 +55,7 @@ export async function getStaticProps({ params }: { params: any }) {
 
 	return {
 		props: {
-			vaultId: vault,
+			vaultName: vault,
 		},
 	}
 }
