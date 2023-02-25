@@ -4,33 +4,25 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  DecimalWrapper,
-  DecimalWrapperInterface,
-} from "../DecimalWrapper";
+import type { SaddleLp, SaddleLpInterface } from "../SaddleLp";
 
 const _abi = [
   {
     inputs: [
       {
         internalType: "string",
-        name: "_name",
+        name: "name_",
         type: "string",
       },
       {
         internalType: "string",
-        name: "_symbol",
+        name: "symbol_",
         type: "string",
       },
       {
-        internalType: "address",
-        name: "_underlying",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_conversion",
-        type: "uint256",
+        internalType: "uint8",
+        name: "decimals_",
+        type: "uint8",
       },
     ],
     stateMutability: "nonpayable",
@@ -67,17 +59,17 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "dst",
+        name: "previousOwner",
         type: "address",
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "wad",
-        type: "uint256",
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
       },
     ],
-    name: "Deposit",
+    name: "OwnershipTransferred",
     type: "event",
   },
   {
@@ -103,25 +95,6 @@ const _abi = [
       },
     ],
     name: "Transfer",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "src",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "wad",
-        type: "uint256",
-      },
-    ],
-    name: "Withdrawal",
     type: "event",
   },
   {
@@ -192,16 +165,34 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "conversion",
-    outputs: [
+    inputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "amount",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    name: "burn",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "burnFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -244,19 +235,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "deposit",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "spender",
         type: "address",
@@ -279,6 +257,48 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "merkleProof",
+        type: "bytes32[]",
+      },
+    ],
+    name: "mint",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "mintedAmounts",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "name",
     outputs: [
@@ -286,6 +306,39 @@ const _abi = [
         internalType: "string",
         name: "",
         type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "swap",
+    outputs: [
+      {
+        internalType: "contract ISwapGuarded",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -371,42 +424,29 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "underlying",
-    outputs: [
+    inputs: [
       {
-        internalType: "contract IERC20",
-        name: "",
+        internalType: "address",
+        name: "newOwner",
         type: "address",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "withdraw",
+    name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
 ];
 
-export class DecimalWrapper__factory {
+export class SaddleLp__factory {
   static readonly abi = _abi;
-  static createInterface(): DecimalWrapperInterface {
-    return new utils.Interface(_abi) as DecimalWrapperInterface;
+  static createInterface(): SaddleLpInterface {
+    return new utils.Interface(_abi) as SaddleLpInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): DecimalWrapper {
-    return new Contract(address, _abi, signerOrProvider) as DecimalWrapper;
+  ): SaddleLp {
+    return new Contract(address, _abi, signerOrProvider) as SaddleLp;
   }
 }
