@@ -237,8 +237,10 @@ const Vault: NextPage<{
 				borrowBalances &&
 				exchangeRates ? (
 					<>
-						<div className='mb-4 flex h-fit w-fit flex-row gap-4 rounded border-0 bg-primary-100 p-3'>
-							<FontAwesomeIcon icon={faArrowLeft} />
+						<div className='mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 bg-primary-100 p-3'>
+							<Link href='/'>
+								<FontAwesomeIcon icon={faArrowLeft} />
+							</Link>
 						</div>
 						<div className='mb-4 flex w-full flex-row gap-4 rounded border-0 bg-primary-100 p-3'>
 							<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
@@ -481,9 +483,8 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	}, [vault, borrowBalances])
 
 	const isInVault = useMemo(() => {
-		console.log(accountVaults)
-		return accountVaults && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
-	}, [accountVaults, vault.vaultAddress])
+		return accountVaults && vault && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
+	}, [accountVaults, vault])
 
 	const [isChecked, setIsChecked] = useState(!!isInVault)
 	const [isOpen, setIsOpen] = useState(false)

@@ -18,7 +18,7 @@ const useHealthFactor = (vaultName: string) => {
 
 	const fetchHealthFactor = useCallback(async () => {
 		const usdBorrow = BigNumber.from(parseUnits(accountLiquidity.usdBorrow.toString()))
-		const _vaults = vaults.filter(vault => !vault.isSynth)
+		const _vaults = vaults.filter(vault => !vault?.isSynth)
 
 		const balanceQuery = Multicall.createCallContext(
 			_vaults.map(vault => ({
