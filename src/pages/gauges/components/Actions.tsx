@@ -307,8 +307,9 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 		[setVal],
 	)
 
-	//console.log('Total Voting Power', votingPowerAllocated ? votingPowerAllocated.toString() : BigNumber.from(0))
-	//console.log(`${gauge.name}`, userSlopes ? userSlopes.power.toString() : BigNumber.from(0))
+	console.log('Total Power Allocated', votingPowerAllocated ? votingPowerAllocated.div(100).toString() : BigNumber.from(0))
+	console.log(`${gauge.name}`, userSlopes ? userSlopes.power.div(100).toString() : BigNumber.from(0).toString())
+	console.log('Voting Power Available', userSlopes && BigNumber.from(100).sub(userSlopes.power.div(100)).toString())
 
 	return (
 		<>
@@ -372,11 +373,13 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							disabled={userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)}
 							min={0}
 							max={
-								(userSlopes && userSlopes.power.div(100).eq(100)) || (userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0))
+								userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0)
 									? BigNumber.from(100).toString()
 									: userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)
 									? BigNumber.from(0).toString()
-									: userSlopes && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
+									: userSlopes && votingPowerAllocated.div(100).gt(0)
+									? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
+									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
 							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0 disabled:cursor-not-allowed'
@@ -390,12 +393,6 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
-							min={0}
-							max={
-								userSlopes && userSlopes.power.div(100) === BigNumber.from(100)
-									? BigNumber.from(100).toString()
-									: userSlopes && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toString()
-							}
 							className='relative -mr-1 h-6 w-10 min-w-0
 				appearance-none rounded border-solid border-inherit border-primary-500 bg-primary-100 pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
