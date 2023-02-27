@@ -17,7 +17,7 @@ export const useVaultsTVL = (vaultName: string) => {
 	const stabilizer = useContract<Stabilizer>('Stabilizer')
 
 	const enabled = vaults?.length > 0 && !!stabilizer && !!prices
-	const mids = vaults?.map(vault => vault.mid)
+	const mids = vaults?.map(vault => vault.vid)
 	const { data: tvl, refetch } = useQuery(
 		['@/hooks/vaults/useVaultsTVL', providerKey(library, account, chainId), { enabled, prices, mids }],
 		async () => {

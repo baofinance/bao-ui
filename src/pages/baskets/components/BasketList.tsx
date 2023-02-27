@@ -52,7 +52,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 								return (
 									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
 										<span className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
-											<Image src={component.image} alt={component.symbol} height={32} width={32} />
+											<Image src={`/images/tokens/${component.symbol}.png`} alt={component.symbol} height={32} width={32} />
 										</span>
 									</Tooltipped>
 								)
@@ -61,7 +61,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<Loader />
 						)}
 					</div>
-					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
+					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center text-right'>
 						<span className='inline-block'>
 							{rates ? (
 								<>

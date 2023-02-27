@@ -16,7 +16,6 @@ import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 export type BasketRates = {
 	eth: BigNumber
-	dai: BigNumber
 	usd: BigNumber
 }
 
@@ -38,7 +37,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 					ref: 'recipe',
 					calls: [
 						{
-							method: 'getPriceEth',
+							method: 'getPriceUSD',
 							params,
 						},
 						{
@@ -50,9 +49,9 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 			])
 			const { recipe: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 			return {
-				eth: res[0].values[0],
-				dai: res[1].values[0],
-				usd: decimate(wethPrice.mul(res[0].values[0]).mul(100)),
+				dai: res[0].values[0],
+				eth: res[1].values[0],
+				usd: decimate(wethPrice.mul(res[1].values[0]).mul(100)),
 			}
 		},
 		{

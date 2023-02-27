@@ -28,7 +28,7 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface SimpleUniRecipeInterface extends utils.Interface {
+export interface SimpleUniRecipeETHInterface extends utils.Interface {
   functions: {
     "bake(address,uint256,uint256)": FunctionFragment;
     "basketRegistry()": FunctionFragment;
@@ -276,14 +276,14 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface SimpleUniRecipe extends BaseContract {
-  contractName: "SimpleUniRecipe";
+export interface SimpleUniRecipeETH extends BaseContract {
+  contractName: "SimpleUniRecipeETH";
 
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: SimpleUniRecipeInterface;
+  interface: SimpleUniRecipeETHInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

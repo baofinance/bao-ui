@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  SimpleUniRecipe,
-  SimpleUniRecipeInterface,
-} from "../SimpleUniRecipe";
+  SimpleUniRecipeETH,
+  SimpleUniRecipeETHInterface,
+} from "../SimpleUniRecipeETH";
 
 const _abi = [
   {
@@ -283,15 +283,15 @@ const _abi = [
   },
 ];
 
-export class SimpleUniRecipe__factory {
+export class SimpleUniRecipeETH__factory {
   static readonly abi = _abi;
-  static createInterface(): SimpleUniRecipeInterface {
-    return new utils.Interface(_abi) as SimpleUniRecipeInterface;
+  static createInterface(): SimpleUniRecipeETHInterface {
+    return new utils.Interface(_abi) as SimpleUniRecipeETHInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): SimpleUniRecipe {
-    return new Contract(address, _abi, signerOrProvider) as SimpleUniRecipe;
+  ): SimpleUniRecipeETH {
+    return new Contract(address, _abi, signerOrProvider) as SimpleUniRecipeETH;
   }
 }

@@ -96,7 +96,7 @@ export default {
 		// Baskets
 		SimpleUniRecipe: {
 			1: {
-				address: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
+				address: '0x600e353fa3414abdd08b5f20b20b4cd701823b9b',
 			},
 		},
 		LendingRegistry: {
@@ -380,7 +380,7 @@ export default {
 				1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 			},
 			lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
-			recipeAddress: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
+			recipeAddress: '0x600e353fa3414abdd08b5f20b20b4cd701823b9b',
 			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
 			symbol: 'bSTBL',
 			name: 'bSTBL',
@@ -403,7 +403,7 @@ export default {
 				1: '0xa1e3F062CE5825c1e19207cd93CEFdaD82A8A631',
 			},
 			lpAddress: '0x562385758925CF0f1Cf3363124Fa9dED981d67e3',
-			recipeAddress: '0xac0fE9F363c160c281c81DdC49d0AA8cE04C02Eb',
+			recipeAddress: '0x600e353fa3414abdd08b5f20b20b4cd701823b9b',
 			ovenAddress: '0x3F32068Fc7fff8d3218251561cd77EE2FefCb1A3',
 			symbol: 'bETH',
 			name: 'bETH',
@@ -415,6 +415,10 @@ export default {
 			pieColors: {
 				wstETH: '#3AA4FF',
 				rETH: '#F8AE8D',
+			},
+			llamaId: {
+				wstETH: '747c1d2a-c668-4682-b9f9-296708a3dd90',
+				rETH: 'd4b3c522-6127-4b89-bedf-83641cdcd2eb',
 			},
 			desc: 'Liquid staked ETH basket',
 			swap: 'https://curve.fi/factory-crypto/61',

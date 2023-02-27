@@ -22,9 +22,9 @@ export const useAccountVaults = (vaultName: string): ActiveSupportedVault[] | un
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = vaults?.length > 0 && !!library
-	const mids = vaults?.map(vault => vault.mid)
+	const vids = vaults?.map(vault => vault.vid)
 	const { data: accountVaults, refetch } = useQuery(
-		['@/hooks/vaults/useAccountVaults', providerKey(library, account, chainId), { enabled, mids, vaultName }],
+		['@/hooks/vaults/useAccountVaults', providerKey(library, account, chainId), { enabled, vids, vaultName }],
 		async () => {
 			const comptroller = Comptroller__factory.connect(Config.vaults[vaultName].comptroller, library)
 			const _accountVaults = await comptroller.getAssetsIn(account)

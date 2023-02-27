@@ -4,14 +4,16 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  SimpleUniRecipe,
-  SimpleUniRecipeInterface,
-} from "../SimpleUniRecipe";
+import type { UniSwapRecipe, UniSwapRecipeInterface } from "../UniSwapRecipe";
 
 const _abi = [
   {
     inputs: [
+      {
+        internalType: "address",
+        name: "_weth",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_lendingRegistry",
@@ -22,19 +24,28 @@ const _abi = [
         name: "_pieRegistry",
         type: "address",
       },
-      {
-        internalType: "address",
-        name: "_uniV3Router",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_uniOracle",
-        type: "address",
-      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_hop",
+        type: "address",
+      },
+    ],
+    name: "HopUpdated",
+    type: "event",
   },
   {
     anonymous: false,
@@ -59,7 +70,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_basket",
+        name: "_inputToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_outputToken",
         type: "address",
       },
       {
@@ -106,21 +122,85 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_basket",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "customHops",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_assetIn",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_assetOut",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "_amountOut",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_ammIndex",
         type: "uint256",
       },
     ],
-    name: "getPrice",
-    outputs: [
+    name: "dexSwap",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_assetIn",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_assetOut",
+        type: "address",
+      },
       {
         internalType: "uint256",
-        name: "_price",
+        name: "_amountOut",
         type: "uint256",
+      },
+    ],
+    name: "getBestPrice",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "price",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "ammIndex",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct UniSwapRecipe.BestPrice",
+        name: "",
+        type: "tuple",
       },
     ],
     stateMutability: "nonpayable",
@@ -130,20 +210,25 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_basket",
+        name: "_inputToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_outputToken",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "_outputAmount",
         type: "uint256",
       },
     ],
-    name: "getPriceUSD",
+    name: "getPrice",
     outputs: [
       {
         internalType: "uint256",
-        name: "_price",
+        name: "",
         type: "uint256",
       },
     ],
@@ -199,30 +284,78 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_basket",
+        internalType: "address payable",
+        name: "_to",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "_mintAmount",
+        name: "_amount",
         type: "uint256",
       },
     ],
-    name: "toBasket",
-    outputs: [
+    name: "saveEth",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
       {
-        internalType: "uint256",
-        name: "inputAmountUsed",
-        type: "uint256",
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_to",
+        type: "address",
       },
       {
         internalType: "uint256",
-        name: "outputAmount",
+        name: "_amount",
         type: "uint256",
       },
     ],
-    stateMutability: "payable",
+    name: "saveToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_hop",
+        type: "address",
+      },
+    ],
+    name: "setCustomHop",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_outputAsset",
+        type: "address",
+      },
+      {
+        internalType: "uint16",
+        name: "_Fee",
+        type: "uint16",
+      },
+    ],
+    name: "setUniPoolMapping",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -252,46 +385,29 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "uniV2Router",
+    outputs: [
       {
-        internalType: "address",
-        name: "_newOracle",
+        internalType: "contract IUniRouter",
+        name: "",
         type: "address",
       },
     ],
-    name: "updateUniOracle",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_newRouter",
-        type: "address",
-      },
-    ],
-    name: "updateUniRouter",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];
 
-export class SimpleUniRecipe__factory {
+export class UniSwapRecipe__factory {
   static readonly abi = _abi;
-  static createInterface(): SimpleUniRecipeInterface {
-    return new utils.Interface(_abi) as SimpleUniRecipeInterface;
+  static createInterface(): UniSwapRecipeInterface {
+    return new utils.Interface(_abi) as UniSwapRecipeInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): SimpleUniRecipe {
-    return new Contract(address, _abi, signerOrProvider) as SimpleUniRecipe;
+  ): UniSwapRecipe {
+    return new Contract(address, _abi, signerOrProvider) as UniSwapRecipe;
   }
 }

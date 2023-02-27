@@ -19,7 +19,7 @@ export const useExchangeRates = (vaultName: string): ExchangeRates => {
 	const vaults = useVaults(vaultName)
 
 	const enabled = vaults?.length > 0 && !!bao && !!account
-	const mids = vaults?.map(vault => vault.mid)
+	const mids = vaults?.map(vault => vault.vid)
 	const { data: exchangeRates, refetch } = useQuery(
 		['@/hooks/vaults/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, vaultName }],
 		async () => {

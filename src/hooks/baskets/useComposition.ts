@@ -98,7 +98,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 					_c.underlying = lendingRes[0].values[0]
 					_c.underlyingPrice = prices[_c.underlying.toLowerCase()]
-					_c.strategy = _getStrategy(lendingRes[1].values[0])
+					_c.strategy = _c.symbol === 'wstETH' ? 'Lido' : _c.symbol === 'rETH' ? 'Rocket Pool' : _getStrategy(lendingRes[1].values[0])
 
 					// Get Exchange Rate
 					const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
