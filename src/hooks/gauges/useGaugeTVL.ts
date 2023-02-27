@@ -59,7 +59,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 					? baoPrice && ethPrice && baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
 					: baoPrice && ethPrice && baoPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
 				: gauge.symbol === 'saddle-FRAXBP-baoUSD'
-				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 					? baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
 					: baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
 				: BigNumber.from(0))
