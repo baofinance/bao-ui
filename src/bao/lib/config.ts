@@ -300,13 +300,13 @@ export default {
 				1: '0xFaf18D150fd1f031D1C7aCCb0a1cd93E67149597',
 			},
 			poolAddresses: {
-				1: '0x67e07A06425E862C6eC922A9a54Bcb10BC97720d',
+				1: '0x29ccdfc668569c2351c070255a2716ffb2bc8fb1',
 			},
 			lpAddresses: {
 				1: '0x67e07A06425E862C6eC922A9a54Bcb10BC97720d',
 			},
 			poolInfoAddresses: {
-				1: '0x67e07A06425E862C6eC922A9a54Bcb10BC97720d',
+				1: '0x29ccdfc668569c2351c070255a2716ffb2bc8fb1',
 			},
 			name: 'baoUSD-FRAXBP',
 			symbol: 'saddle-FRAXBP-baoUSD',
