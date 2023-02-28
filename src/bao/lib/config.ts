@@ -370,7 +370,28 @@ export default {
 			type: 'Uniswap',
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/ETH.png',
-			pairUrl: 'https://app.uniswap.org/#/add/v2/0xCe391315b414D4c7555956120461D21808A69F3A/ETH', // UPDATE!! Change to BAOv2-ETH UNIV2
+			pairUrl: 'https://app.uniswap.org/#/add/v2/0xCe391315b414D4c7555956120461D21808A69F3A/ETH',
+		},
+		{
+			gid: 4,
+			gaugeAddresses: {
+				1: '0xFaf18D150fd1f031D1C7aCCb0a1cd93E67149597',
+			},
+			poolAddresses: {
+				1: '0x29ccdfc668569c2351c070255a2716ffb2bc8fb1',
+			},
+			lpAddresses: {
+				1: '0x67e07A06425E862C6eC922A9a54Bcb10BC97720d',
+			},
+			poolInfoAddresses: {
+				1: '0x29ccdfc668569c2351c070255a2716ffb2bc8fb1',
+			},
+			name: 'baoUSD-FRAXBP',
+			symbol: 'saddle-FRAXBP-baoUSD',
+			type: 'Saddle',
+			iconA: '/images/tokens/baoUSD.png',
+			iconB: '/images/tokens/saddleLPtoken.png',
+			pairUrl: 'https://saddle.exchange/#/pools/baoUSD-FRAXBP/deposit',
 		},
 	],
 	baskets: [

@@ -1,6 +1,6 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { CurveLp__factory, Uni_v2_lp__factory } from '@/typechain/factories'
+import { CurveLp__factory, SaddleLp__factory, Uni_v2_lp__factory } from '@/typechain/factories'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
@@ -58,6 +58,10 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
 					? baoPrice && ethPrice && baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
 					: baoPrice && ethPrice && baoPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'saddle-FRAXBP-baoUSD'
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
+					? baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
+					: baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
 				: BigNumber.from(0))
 		)
 	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, poolInfo, threeCrvPrice])
@@ -68,6 +72,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 		async () => {
 			const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
 			const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
+			const saddleLpContract = SaddleLp__factory.connect(gauge.lpAddress, library)
 			const query = Multicall.createCallContext([
 				gauge.type.toLowerCase() === 'curve'
 					? {
@@ -75,8 +80,14 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 							ref: gauge?.lpAddress,
 							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
 					  }
-					: {
+					: gauge.type.toLowerCase() === 'uniswap'
+					? {
 							contract: uniLpContract,
+							ref: gauge?.lpAddress,
+							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
+					  }
+					: {
+							contract: saddleLpContract,
 							ref: gauge?.lpAddress,
 							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
 					  },
