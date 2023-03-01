@@ -1,6 +1,7 @@
 import PageHeader from '@/components/PageHeader'
 import { NextSeo } from 'next-seo'
 import React from 'react'
+import BoostCalc from './components/BoostCalc'
 import Lock from './components/Lock'
 
 const veBAO: React.FC = () => {
@@ -10,6 +11,7 @@ const veBAO: React.FC = () => {
 			<PageHeader title='veBAO' />
 
 			<Lock />
+			<BoostCalc />
 		</>
 	)
 }

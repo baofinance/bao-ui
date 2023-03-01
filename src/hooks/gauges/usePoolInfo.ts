@@ -51,12 +51,12 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 					  }
 					: {
 							contract: saddlePoolContract,
-							ref: gauge.lpAddress,
+							ref: gauge.poolAddress,
 							calls: [
-								{ method: 'getToken', params: [0] },
-								{ method: 'getTokenBalance', params: [0] },
-								{ method: 'getToken', params: [1] },
-								{ method: 'getTokenBalance', params: [1] },
+								{ method: 'getToken', params: ['0'] },
+								{ method: 'getTokenBalance', params: ['0'] },
+								{ method: 'getToken', params: ['1'] },
+								{ method: 'getTokenBalance', params: ['1'] },
 							],
 					  },
 			])

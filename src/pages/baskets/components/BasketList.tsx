@@ -27,7 +27,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 
-	console.log(composition)
+	console.log(basket.symbol, composition)
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
@@ -52,7 +52,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 								return (
 									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
 										<span className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
-											<Image src={`/images/tokens/${component.symbol}.png`} alt={component.symbol} height={32} width={32} />
+											<Image src={component.image} alt={component.symbol} height={32} width={32} />
 										</span>
 									</Tooltipped>
 								)

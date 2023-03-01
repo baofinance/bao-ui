@@ -1,6 +1,9 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { CurveLp__factory, SaddleLp__factory, Uni_v2_lp__factory } from '@/typechain/factories'
+import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
@@ -8,32 +11,13 @@ import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
-import useBasketInfo from '../baskets/useBasketInfo'
-import useBaskets from '../baskets/useBaskets'
-import useComposition from '../baskets/useComposition'
-import useNav from '../baskets/useNav'
-//import useGaugeInfo from './useGaugeInfo'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { providerKey } from '@/utils/index'
-import usePoolInfo from './usePoolInfo'
-import { exponentiate } from '@/utils/numberFormat'
 import { useVaultPrice } from '../vaults/useVaultPrice'
+import usePoolInfo from './usePoolInfo'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId } = useWeb3React()
 	const bao = useBao()
 	const poolInfo = usePoolInfo(gauge)
-	//const gaugeInfo = useGaugeInfo(gauge)
-
-	//Get bSTBL price. Probably not the best way to do so, but it works for now.
-	const baskets = useBaskets()
-	const basket = useMemo(() => {
-		if (!baskets) return
-		return baskets.find(basket => basket.symbol === 'bSTBL')
-	}, [baskets])
-	const info = useBasketInfo(basket)
-	const composition = useComposition(basket)
 	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[4].vaultAddresses[chainId])
 	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].markets[0].vaultAddresses[chainId])
 	const daiPrice = usePrice('dai')

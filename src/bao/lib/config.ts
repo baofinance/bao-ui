@@ -437,10 +437,6 @@ export default {
 				wstETH: '#3AA4FF',
 				rETH: '#F8AE8D',
 			},
-			llamaId: {
-				wstETH: '747c1d2a-c668-4682-b9f9-296708a3dd90',
-				rETH: 'd4b3c522-6127-4b89-bedf-83641cdcd2eb',
-			},
 			desc: 'Liquid staked ETH basket',
 			swap: 'https://curve.fi/factory-crypto/61',
 		},

@@ -1,22 +1,22 @@
-import { BigNumber, ethers } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import Multicall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
-import { decimate } from '@/utils/numberFormat'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import { getOraclePrice } from '@/bao/utils'
-import useBao from '../base/useBao'
-import useContract from '@/hooks/base/useContract'
-import type { SimpleUniRecipe, Chainoracle } from '@/typechain/index'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
+import useContract from '@/hooks/base/useContract'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import type { Chainoracle, SimpleUniRecipe } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
+import Multicall from '@/utils/multicall'
+import { decimate } from '@/utils/numberFormat'
+import { useQuery } from '@tanstack/react-query'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber, ethers } from 'ethers'
+import useBao from '../base/useBao'
 
 export type BasketRates = {
 	eth: BigNumber
 	usd: BigNumber
+	dai: BigNumber
 }
 
 const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {

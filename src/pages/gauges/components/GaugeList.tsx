@@ -73,6 +73,8 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
 	const rewardsAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
 
+	console.log(gauge.symbol, gaugeTVL)
+
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowGaugeModal(true)} disabled={!account}>
