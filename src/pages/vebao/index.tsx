@@ -3,6 +3,7 @@ import { NextSeo } from 'next-seo'
 import React from 'react'
 import BoostCalc from './components/BoostCalc'
 import Lock from './components/Lock'
+import VotingDashboard from './components/VotingDashboard'
 
 const veBAO: React.FC = () => {
 	return (
@@ -11,6 +12,7 @@ const veBAO: React.FC = () => {
 			<PageHeader title='veBAO' />
 
 			<Lock />
+			<VotingDashboard />
 			<BoostCalc />
 		</>
 	)
