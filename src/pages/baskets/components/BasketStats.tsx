@@ -26,7 +26,7 @@ type BasketStatsProps = {
 }
 
 const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, info, pairPrice }) => {
-	const nav = useNav(composition, info ? info.totalSupply : BigNumber.from(0))
+	const nav = useNav(composition, info ? info.totalSupply : BigNumber.from(1))
 
 	let premium = null
 	let premiumColor = 'white'

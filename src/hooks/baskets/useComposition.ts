@@ -11,7 +11,7 @@ import { decimate, exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import fetchSushiApy from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
@@ -127,10 +127,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			}
 
 			const marketCap = _comp.reduce((prev, comp) => {
-				const balance = exponentiate(comp.balance)
-				const price = formatUnits(comp.price)
-				console.log(balance.toString(), price)
-				return prev.add(decimate(comp.balance, comp.decimals).mul(comp.price))
+				const balance = parseFloat(formatUnits(comp.balance, comp.decimals))
+				const price = parseFloat(formatUnits(comp.price))
+				console.log(balance, price)
+				return prev.add(parseUnits((balance * price).toString()))
 			}, BigNumber.from(0))
 
 			// Assign allocation percentages
