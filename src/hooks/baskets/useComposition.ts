@@ -11,6 +11,7 @@ import { decimate, exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import fetchSushiApy from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
@@ -58,8 +59,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 					})),
 			)
 			const tokenInfo = MultiCall.parseCallResults(await bao.multicall.call(tokensQuery))
-
-			console.log(tokenInfo)
 
 			const _comp: BasketComponent[] = []
 			for (let i = 0; i < tokenComposition.length; i++) {
@@ -128,7 +127,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			}
 
 			const marketCap = _comp.reduce((prev, comp) => {
-				return prev.add(decimate(comp.balance, comp.decimals).mul(comp.price.toString()))
+				const balance = exponentiate(comp.balance)
+				const price = formatUnits(comp.price)
+				console.log(balance.toString(), price)
+				return prev.add(decimate(comp.balance, comp.decimals).mul(comp.price))
 			}, BigNumber.from(0))
 
 			// Assign allocation percentages
@@ -151,6 +153,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
+	console.log('composition', composition)
 	return composition
 }
 
@@ -172,15 +175,11 @@ const _getStrategy = (symbol: string) => {
 const _getImageURL = (symbol: string) => {
 	switch (symbol.toLowerCase()) {
 		case 'asusd':
-			return 'aSUSD'
+			return 'SUSD'
 		case 'ausdc':
-			return 'aUSDC'
+			return 'USDC'
 		case 'adai':
-			return 'aDAI'
-		case 'wsteth':
-			return 'wstETH'
-		case 'reth':
-			return 'rETH'
+			return 'DAI'
 
 		default:
 			return undefined
