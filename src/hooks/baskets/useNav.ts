@@ -10,10 +10,10 @@ const useNav = (composition?: BasketComponent[], supply?: BigNumber) => {
 		if (composition.length === 0 || supply.lte('0')) return BigNumber.from('1')
 		const _nav = composition
 			.reduce((prev, comp) => {
-				const balance = parseFloat(formatUnits(comp.balance))
+				const balance = parseFloat(formatUnits(comp.balance, comp.decimals))
 				const price = parseFloat(formatUnits(comp.price))
 
-				return prev.add(parseUnits(formatUnits(balance * price, comp.decimals).toString()))
+				return prev.add(parseUnits((balance * price).toString()))
 			}, BigNumber.from(0))
 			.div(decimate(supply).lte(0) ? BigNumber.from(1) : decimate(supply))
 		return _nav
