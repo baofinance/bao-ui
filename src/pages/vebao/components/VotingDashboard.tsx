@@ -21,40 +21,42 @@ import { isDesktop } from 'react-device-detect'
 
 const VotingList: React.FC = () => {
 	const gauges = useGauges()
+	const [userSlopes, setUserSlopes] = useState<any>([])
+	const votingPowerAllocated = useVotingPowerAllocated()
 
 	return (
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='flex w-full flex-col'>
-					<div className='flex w-full flex-row items-center'>
+					<div className='mb-2 flex w-full flex-row items-center'>
 						<div className={`mx-auto my-0 flex basis-[20%] flex-col text-center`}>
-							<Typography variant='xs' className='flex w-full flex-col px-2 pb-0 text-left text-text-200'>
+							<Typography variant='xs' className='flex w-full flex-col pb-0 text-left text-text-200'>
 								Gauge Name
 							</Typography>
 						</div>
 						<div className={`mx-auto my-0 flex basis-[40%] flex-col text-center `}>
-							<Typography variant='xs' className='flex w-full flex-col px-2 pb-0 text-center text-text-200'>
+							<Typography variant='xs' className='flex w-full flex-col pb-0 text-center text-text-200'>
 								{' '}
 							</Typography>
 						</div>
-						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-left`}>
-							<Typography variant='xs' className='flex w-full flex-col px-2 pb-0 text-right text-text-200'>
+						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-right`}>
+							<Typography variant='xs' className='flex w-full flex-col pb-0 text-right text-text-200'>
 								Current Weight
 							</Typography>
 						</div>
-						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-left`}>
-							<Typography variant='xs' className='flex w-full flex-col px-2 pb-0 text-right text-text-200'>
+						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-right`}>
+							<Typography variant='xs' className='flex w-full flex-col pb-0 text-right text-text-200'>
 								Current APR
 							</Typography>
 						</div>
-						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-left`}>
-							<Typography variant='xs' className='flex w-full flex-col px-2 pb-0 text-right text-text-200'>
-								Projected Weight
+						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-right`}>
+							<Typography variant='xs' className='flex w-full flex-col pb-0 text-right text-text-200'>
+								Future Weight
 							</Typography>
 						</div>
-						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-left`}>
-							<Typography variant='xs' className='flex w-full flex-col px-2 pb-0 text-right text-text-200'>
-								Projected APR
+						<div className={`mx-auto my-0 flex basis-[10%] flex-col text-right`}>
+							<Typography variant='xs' className='flex w-full flex-col pb-0 text-right text-text-200'>
+								Future APR
 							</Typography>
 						</div>
 					</div>
@@ -111,7 +113,7 @@ const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
 
 	return (
 		<>
-			<div className='p-2'>
+			<div className='rounded border-b-2 border-primary-300 p-2 last:border-b-0'>
 				<div className='flex w-full flex-row items-center'>
 					<div className={`mx-auto my-0 flex basis-[20%] flex-col text-left`}>
 						<div className='mx-0 my-auto inline-block h-full items-center'>
@@ -125,9 +127,11 @@ const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
 								</Typography>
 								<Typography variant='sm' className={`font-light text-text-200`}>
 									{gauge.type.toLowerCase() === 'curve' ? (
-										<Image src='/images/tokens/CRV.png' height={12} width={12} alt='Curve' className='mr-1 inline' />
+										<Image src='/images/platforms/Curve.png' height={12} width={12} alt='Curve' className='mr-1 inline' />
+									) : gauge.type.toLowerCase() === 'uniswap' ? (
+										<Image src='/images/platforms/Uniswap.png' height={12} width={12} alt='Uniswap' className='mr-1 inline' />
 									) : (
-										<Image src='/images/tokens/UNI.png' height={12} width={12} alt='Uniswap' className='mr-1 inline' />
+										<Image src='/images/platforms/Saddle.png' height={12} width={12} alt='Saddle' className='mr-1 inline' />
 									)}
 									{gauge.type}
 								</Typography>
@@ -144,7 +148,7 @@ const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
 										? 0
 										: userSlopes && votingPowerAllocated.div(100).sub(userSlopes.power.div(100)).toNumber()
 								}
-								value={BigNumber.from(val).toNumber()}
+								value={BigNumber.from(userSlopes ? userSlopes.power.div(100) : val).toNumber()}
 								onChange={onSliderChange}
 								handleStyle={{
 									backgroundColor: '#FFD84B',
@@ -167,7 +171,7 @@ const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
 								disabled={true}
 								onChange={handleChange}
 								placeholder={val.toString()}
-								value={val}
+								value={BigNumber.from(userSlopes ? userSlopes.power.div(100) : val).toNumber()}
 								min={0}
 								max={
 									userSlopes && userSlopes.power.div(100) === BigNumber.from(100)
@@ -186,29 +190,25 @@ const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
 						</div>
 					</div>
 					<div className='mx-auto my-0 flex basis-[10%] flex-col text-right'>
-						<Typography variant='base' className='ml-2 inline-block'>
+						<Typography variant='sm' className='ml-2 inline-block'>
 							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
 					<div className='mx-auto my-0 flex basis-[10%] flex-col text-right'>
-						<Typography variant='base' className='ml-2 inline-block'>
+						<Typography variant='sm' className='ml-2 inline-block'>
+							{getDisplayBalance(currentAPR)}%
+						</Typography>
+					</div>
+					<div className='mx-auto my-0 flex basis-[10%] flex-col text-right'>
+						<Typography variant='sm' className='ml-2 inline-block'>
 							{getDisplayBalance(futureWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
-					{isDesktop && (
-						<>
-							<div className='mx-auto my-0 flex basis-[10%] flex-col text-right'>
-								<Typography variant='base' className='ml-2 inline-block'>
-									{getDisplayBalance(currentAPR)}%
-								</Typography>
-							</div>
-							<div className='mx-auto my-0 flex basis-[10%] flex-col text-right'>
-								<Typography variant='base' className='ml-2 inline-block'>
-									{getDisplayBalance(futureAPR)}%
-								</Typography>
-							</div>
-						</>
-					)}
+					<div className='mx-auto my-0 flex basis-[10%] flex-col text-right'>
+						<Typography variant='sm' className='ml-2 inline-block'>
+							{getDisplayBalance(futureAPR)}%
+						</Typography>
+					</div>
 				</div>
 			</div>
 		</>
@@ -223,7 +223,7 @@ const VotingDashboard: React.FC = () => {
 			<Typography variant='xl' className='mt-4 font-bold'>
 				Voting Dashboard
 			</Typography>
-			<div className='my-2 rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4'>
+			<div className='mt-2 mb-4 rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4'>
 				<div className={`grid w-full grid-flow-col ${isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-3 gap-2'} justify-evenly`}>
 					<div className='items-center justify-center text-center'>
 						<div className='text-center'>
@@ -238,11 +238,11 @@ const VotingDashboard: React.FC = () => {
 					<div className='items-center justify-center text-center'>
 						<div className='text-center'>
 							<Typography variant='xs' className='text-text-200'>
-								Your Voting Power Allocated
+								Total Voting Power Allocated
 							</Typography>
 						</div>
 						<Typography variant='lg' className='font-bold'>
-							{getDisplayBalance(votingPowerAllocated)}%
+							{(votingPowerAllocated ? votingPowerAllocated.div(BigNumber.from(100)) : BigNumber.from(0)).toString()}%
 						</Typography>
 					</div>
 				</div>

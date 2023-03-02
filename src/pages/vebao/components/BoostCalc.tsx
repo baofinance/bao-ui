@@ -1,7 +1,9 @@
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
+import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
@@ -12,9 +14,6 @@ import classNames from 'classnames'
 import { formatUnits } from 'ethers/lib/utils'
 import Slider from 'rc-slider'
 import React, { Fragment, useCallback, useState } from 'react'
-import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
-import { BigNumber } from 'ethers'
-import useLockInfo from '@/hooks/vebao/useLockInfo'
 
 export const BoostCalc = () => {
 	const { account } = useWeb3React()
@@ -229,16 +228,14 @@ export const BoostCalc = () => {
 							/>
 						</div>
 					</div>
-					<div>
-						<Button onClick={calc}>Calculate</Button>
-					</div>
-					<div>
+					<div className='col-span-2'> </div>
+					<div className='col-span-2'>
 						<label className='text-xs text-text-200'>Gauge Liquidity</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>${gaugeTVL.gaugeTVL ? getDisplayBalance(decimate(gaugeTVL.gaugeTVL)) : '0'}</Typography>
 						</div>
 					</div>
-					<div>
+					<div className='col-span-2'>
 						<label className='text-xs text-text-200'>veBAO</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>
@@ -248,10 +245,15 @@ export const BoostCalc = () => {
 							</Typography>
 						</div>
 					</div>
-					<div>
+					<div className='col-span-1'>
+						<Button onClick={calc} className='w-full'>
+							Calculate
+						</Button>
+					</div>
+					<div className='col-span-1 text-right'>
 						<label className='text-xs text-text-200'>Boost</label>
-						<div className='flex h-8 gap-2 rounded-md'>
-							<Typography>{Math.min(boost < 0 ? 2.5 : boost, 2.5).toFixed(2)}x</Typography>
+						<div className='flex h-8 w-full gap-2 rounded-md'>
+							<Typography className='w-full !text-right'>{`${Math.min(boost < 0 ? 2.5 : boost, 2.5).toFixed(2)}`}x</Typography>
 						</div>
 					</div>
 				</div>
