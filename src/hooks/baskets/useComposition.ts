@@ -129,7 +129,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			const marketCap = _comp.reduce((prev, comp) => {
 				const balance = parseFloat(formatUnits(comp.balance, comp.decimals))
 				const price = parseFloat(formatUnits(comp.price))
-				console.log(balance, price)
 				return prev.add(parseUnits((balance * price).toString()))
 			}, BigNumber.from(0))
 
@@ -153,7 +152,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
-	console.log('composition', composition)
 	return composition
 }
 

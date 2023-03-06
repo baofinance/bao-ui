@@ -420,7 +420,7 @@ const Vault: NextPage<{
 
 						<div className='flex w-full flex-col'>
 							<Typography variant='lg' className='text-center font-bold'>
-								Supply
+								Collateral
 							</Typography>
 							<ListHeader headers={['Asset', 'Wallet', 'Underlying APY', 'Liquidity']} className='mr-10' />
 							{collateral.map((vault: ActiveSupportedVault) => (

@@ -1,21 +1,18 @@
 import { BigNumber } from 'ethers'
-import { useMemo } from 'react'
-import { decimate } from '@/utils/numberFormat'
-import { BasketComponent } from './useComposition'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { useMemo } from 'react'
+import { BasketComponent } from './useComposition'
 
 const useNav = (composition?: BasketComponent[], supply?: BigNumber) => {
 	const nav = useMemo(() => {
 		if (!composition || !supply) return null
 		if (composition.length === 0 || supply.lte('0')) return BigNumber.from('1')
-		const _nav = composition
-			.reduce((prev, comp) => {
-				const balance = parseFloat(formatUnits(comp.balance, comp.decimals))
-				const price = parseFloat(formatUnits(comp.price))
-
-				return prev.add(parseUnits((balance * price).toString()))
-			}, BigNumber.from(0))
-			.div(decimate(supply).lte(0) ? BigNumber.from(1) : decimate(supply))
+		const totalVal = composition.reduce((prev, comp) => {
+			const balance = parseFloat(formatUnits(comp.balance, comp.decimals))
+			const price = parseFloat(formatUnits(comp.price))
+			return prev.add(parseUnits((balance * price).toString()))
+		}, BigNumber.from(0))
+		const _nav = parseFloat(formatUnits(totalVal)) / parseFloat(formatUnits(supply))
 		return _nav
 	}, [composition, supply])
 

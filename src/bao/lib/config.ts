@@ -34,7 +34,7 @@ export default {
 		//Baskets
 		bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
 		bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
-		bETH: '0xa1e3f062ce5825c1e19207cd93cefdad82a8a631',
+		bETH: '0xa1e3F062CE5825c1e19207cd93CEFdaD82A8A631',
 	},
 	contracts: {
 		Bao: {
