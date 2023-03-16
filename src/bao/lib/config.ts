@@ -184,6 +184,7 @@ export default {
 					underlyingSymbol: 'baoUSD',
 					underlyingDecimals: 18,
 					desc: 'Synthetic USD',
+					minimumBorrow: 5000,
 				},
 				{
 					mid: 3,
@@ -265,7 +266,7 @@ export default {
 					desc: 'Synthetic ETH',
 				},
 				{
-					mid: 3,
+					mid: 2,
 					symbol: 'bdbETH',
 					vaultAddresses: {
 						1: '0xf7548a6e9DAf2e4689CEDD8A08189d0D6f3Ee91b',
@@ -279,7 +280,7 @@ export default {
 					isBasket: true,
 				},
 				{
-					mid: 6,
+					mid: 3,
 					symbol: 'bdbSTBL',
 					vaultAddresses: {
 						1: '0xb0f8Fe96b4880adBdEDE0dDF446bd1e7EF122C4e',
@@ -293,7 +294,7 @@ export default {
 					isBasket: true,
 				},
 				{
-					mid: 2,
+					mid: 4,
 					symbol: 'bdEther',
 					vaultAddresses: {
 						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',

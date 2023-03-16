@@ -112,7 +112,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 							)}
 						</div>
 						<div className='mx-auto my-0 flex w-full items-center justify-center'>
-							<Typography variant='sm' className='m-0 font-semibold leading-5'>
+							<Typography variant='sm' className='m-0 font-semibold'>
 								{collateral ? '0 - ' + getDisplayBalance(maxAPY, 0, 2) + '%' : <Loader />}
 							</Typography>
 						</div>

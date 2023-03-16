@@ -213,7 +213,7 @@ const Vault: NextPage<{
 	const change = val ? decimate(BigNumber.from(val).mul(synth.price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
+	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 	const newBorrowable = synth && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - synth.underlyingDecimals))))
 
 	const synthBalance = useMemo(
@@ -237,7 +237,7 @@ const Vault: NextPage<{
 				borrowBalances &&
 				exchangeRates ? (
 					<>
-						<div className='mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 bg-primary-100 p-3 duration-200 hover:bg-primary-200'>
+						<div className='mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 bg-primary-100 p-3'>
 							<Link href='/'>
 								<FontAwesomeIcon icon={faArrowLeft} />
 							</Link>
@@ -260,179 +260,183 @@ const Vault: NextPage<{
 								<Typography className='ml-1 inline-block !text-lg text-text-100'>APY</Typography>
 							</div>
 						</div>
+
 						{account && (
 							<>
-								<div className='mb-4 flex flex-row gap-4 rounded'>
-									<StatBlock
-										className='flex basis-1/2 flex-col'
-										label='Vault Info'
-										stats={[
-											{
-												label: `Current ${synth.underlyingSymbol} Price`,
-												value: `$${getDisplayBalance(synth.price)}`,
-											},
-											{
-												label: 'Total Debt',
-												value: `${getDisplayBalance(synth.totalBorrows)} ${synth.underlyingSymbol}`,
-											},
-											{
-												label: 'Total Debt USD',
-												value: `$${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}`,
-											},
-											{
-												label: 'Total Collateral USD',
-												value: `-`,
-											},
-											{
-												label: 'Minimum Borrow',
-												value: `${synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'} ${
-													synth.minimumBorrow ? synth.underlyingSymbol : ''
-												}`,
-											},
-											{
-												label: 'Max Mintable',
-												value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${synth.underlyingSymbol}`,
-											},
-										]}
-									/>
-									<StatBlock
-										className='flex basis-1/2 flex-col'
-										label='User Info'
-										stats={[
-											{
-												label: 'Your Collateral USD',
-												value: `$${
-													bao && account && accountLiquidity
-														? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
-														: 0
-												}`,
-											},
-											{
-												label: 'Your Debt',
-												value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synth.underlyingSymbol}`,
-											},
-											{
-												label: 'Your Debt USD',
-												value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
-											},
-											{
-												label: 'Debt Limit Remaining',
-												value: `$${getDisplayBalance(
-													accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0),
-												)} ➜ $${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0))}`,
-											},
-											{
-												// FIXME: Fix this for when a users current borrow amount is zero
-												label: 'Debt Limit Used',
-												value: `${getDisplayBalance(
-													accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(decimate(borrowable)).mul(100) : 0,
-													18,
-													2,
-												)}% ➜ ${getDisplayBalance(
-													accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0,
-													18,
-													2,
-												)}%`,
-											},
-											{
-												label: `Debt Health`,
-												value: `${
-													healthFactor &&
-													healthFactor &&
-													(healthFactor.lte(0) ? (
-														'-'
-													) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
-														<p>
-															{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
-														</p>
-													) : (
-														getDisplayBalance(healthFactor)
-													))
-												}`,
-											},
-										]}
-									/>
+								<div className='flex w-full flex-row'>
+									<Typography variant='lg' className='m-auto mb-2 justify-center font-bold'>
+										Dashboard
+									</Typography>
+								</div>
+								<div className='mb-4 flex flex-row gap-4'>
+									<div className='flex w-1/2 flex-col'>
+										<StatBlock
+											className='mb-4'
+											stats={[
+												{
+													label: 'Your Collateral USD',
+													value: `$${
+														bao && account && accountLiquidity
+															? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
+															: 0
+													}`,
+												},
+												{
+													label: 'Your Debt',
+													value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synth.underlyingSymbol}`,
+												},
+												{
+													label: 'Your Debt USD',
+													value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
+												},
+												{
+													label: 'Debt Limit Remaining',
+													value: `$${getDisplayBalance(
+														accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0),
+													)} ➜ $${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0))}`,
+												},
+												{
+													// FIXME: Fix this for when a users current borrow amount is zero
+													label: 'Debt Limit Used',
+													value: `${getDisplayBalance(
+														!borrowable.eq(0) ? exponentiate(borrow).div(borrowable).mul(100) : 0,
+														18,
+														2,
+													)}% ➜ ${getDisplayBalance(!newBorrowable.eq(0) ? newBorrow.div(newBorrowable).mul(100) : 0, 18, 2)}%`,
+												},
+												{
+													label: `Debt Health`,
+													value: `${
+														healthFactor &&
+														healthFactor &&
+														(healthFactor.lte(0) ? (
+															'-'
+														) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
+															<p>
+																{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
+															</p>
+														) : (
+															getDisplayBalance(healthFactor)
+														))
+													}`,
+												},
+											]}
+										/>
+									</div>
+									<div className='flex w-1/2 flex-col'>
+										<Card.Options className='mt-0'>
+											<NavButtons options={operations} active={operation} onClick={setOperation} />
+										</Card.Options>
+										<Card.Body>
+											<div className='mb-4 flex flex-col items-center justify-center'>
+												<div className='flex w-full flex-row'>
+													<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+														<Typography variant='sm' className='text-text-200'>
+															Wallet:
+														</Typography>
+														<Typography variant='sm'>{`${getDisplayBalance(synthBalance)}`}</Typography>
+													</div>
+													<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
+														<Typography variant='sm' className='text-text-200'>
+															{`${maxLabel()}:`}
+														</Typography>
+														<Typography variant='sm'>{`${getDisplayBalance(max(), synth.underlyingDecimals)} ${
+															synth.underlyingSymbol
+														}`}</Typography>
+													</div>
+												</div>
+												<Input
+													value={val}
+													onChange={handleChange}
+													onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
+													label={
+														<div className='flex flex-row items-center pl-2 pr-4'>
+															<div className='flex w-6 justify-center'>
+																<Image
+																	src={`/images/tokens/${synth.icon}`}
+																	width={32}
+																	height={32}
+																	alt={synth.symbol}
+																	className='block h-6 w-6 align-middle'
+																/>
+															</div>
+														</div>
+													}
+												/>
+											</div>
+										</Card.Body>
+										<Card.Actions>
+											<VaultButton
+												vaultName={vaultName}
+												operation={operation}
+												asset={synth}
+												val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
+												isDisabled={
+													!val ||
+													(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
+													// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
+													(val &&
+														vaultName === 'baoUSD' &&
+														parseUnits(val, synth.underlyingDecimals).lt(parseUnits('5000')) &&
+														operation === 'Mint')
+												}
+											/>
+										</Card.Actions>
+									</div>
 								</div>
 							</>
 						)}
-						<div className='flex flex-row gap-4'>
-							<div className='flex basis-1/2 flex-col'>
-								<Typography variant='lg' className='text-center font-bold'>
-									Collateral
-								</Typography>
-								<ListHeader headers={['Asset', 'Wallet', 'Underlying APY', 'Liquidity']} className='mr-10' />
-								{collateral.map((vault: ActiveSupportedVault) => (
-									<CollateralItem
-										vault={vault}
-										vaultName={vaultName}
-										accountBalances={accountBalances}
-										accountVaults={accountVaults}
-										supplyBalances={supplyBalances}
-										borrowBalances={borrowBalances}
-										exchangeRates={exchangeRates}
-										key={vault.vaultAddress}
-									/>
-								))}
-							</div>
-							<div className='mt-8 flex w-1/2 flex-col'>
-								<Card.Options className='mt-0'>
-									<NavButtons options={operations} active={operation} onClick={setOperation} />
-								</Card.Options>
-								<Card.Body>
-									<div className='mb-4 flex flex-col items-center justify-center'>
-										<div className='flex w-full flex-row'>
-											<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-												<Typography variant='sm' className='text-text-200'>
-													Wallet:
-												</Typography>
-												<Typography variant='sm'>{`${getDisplayBalance(synthBalance)}`}</Typography>
-											</div>
-											<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-												<Typography variant='sm' className='text-text-200'>
-													{`${maxLabel()}:`}
-												</Typography>
-												<Typography variant='sm'>{`${getDisplayBalance(max(), synth.underlyingDecimals)} ${
-													synth.underlyingSymbol
-												}`}</Typography>
-											</div>
-										</div>
-										<Input
-											value={val}
-											onChange={handleChange}
-											onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
-											label={
-												<div className='flex flex-row items-center pl-2 pr-4'>
-													<div className='flex w-6 justify-center'>
-														<Image
-															src={`/images/tokens/${synth.icon}`}
-															width={32}
-															height={32}
-															alt={synth.symbol}
-															className='block h-6 w-6 align-middle'
-														/>
-													</div>
-												</div>
-											}
-										/>
-									</div>
-									<VaultButton
-										vaultName={vaultName}
-										operation={operation}
-										asset={synth}
-										val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
-										isDisabled={
-											!val ||
-											(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
-											// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
-											(val &&
-												vaultName === 'baoUSD' &&
-												parseUnits(val, synth.underlyingDecimals).lt(parseUnits('5000')) &&
-												operation === 'Mint')
-										}
-									/>
-								</Card.Body>
-							</div>
+
+						<StatBlock
+							className='mb-4'
+							label='Vault Info'
+							stats={[
+								{
+									label: `Current ${synth.underlyingSymbol} Price`,
+									value: `$${getDisplayBalance(synth.price)}`,
+								},
+								{
+									label: 'Total Debt',
+									value: `${getDisplayBalance(synth.totalBorrows)} ${synth.underlyingSymbol}`,
+								},
+								{
+									label: 'Total Debt USD',
+									value: `$${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}`,
+								},
+								{
+									label: 'Total Collateral USD',
+									value: `-`,
+								},
+								{
+									label: 'Minimum Borrow',
+									value: `5000 baoUSD`,
+								},
+								{
+									label: 'Max Mintable',
+									value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${synth.underlyingSymbol}`,
+								},
+							]}
+						/>
+
+						<div className='flex w-full flex-col'>
+							<Typography variant='lg' className='text-center font-bold'>
+								Collateral
+							</Typography>
+							<ListHeader headers={['Asset', 'Wallet', 'Underlying APY', 'Liquidity']} className='mr-10' />
+							{collateral.map((vault: ActiveSupportedVault) => (
+								<CollateralItem
+									vault={vault}
+									vaultName={vaultName}
+									accountBalances={accountBalances}
+									accountVaults={accountVaults}
+									supplyBalances={supplyBalances}
+									borrowBalances={borrowBalances}
+									exchangeRates={exchangeRates}
+									key={vault.vaultAddress}
+								/>
+							))}
 						</div>
+
 						<VaultBorrowModal
 							vaultName={vaultName}
 							asset={synth}
@@ -500,8 +504,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	const avgBasketAPY =
 		composition &&
 		(composition
-			.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
-			.map(component => {
+			.map(function (component) {
 				return component.apy
 			})
 			.reduce(function (a, b) {

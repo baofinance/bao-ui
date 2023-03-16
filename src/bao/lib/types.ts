@@ -1,6 +1,5 @@
 import {
 	Cether,
-	Comptroller,
 	Ctoken,
 	CurveLp,
 	CurveMetaPool,
@@ -8,13 +7,9 @@ import {
 	Experipie,
 	Gauge,
 	GaugePool,
-	VaultOracle,
 	Oven,
 	PoolInfo,
-	BStblRecipe,
-	BEthRecipe,
 	SimpleUniRecipe,
-	Stabilizer,
 	Uni_v2_lp,
 } from '@/typechain/index'
 import { BigNumber } from 'ethers'
@@ -71,6 +66,7 @@ export interface SupportedBasket {
 	name: string
 	icon: string
 	cgIds: { [address: string]: string }
+	llamaPools: { [address: string]: string }
 	pieColors: { [asset: string]: string }
 	desc: string
 	swap?: string
@@ -113,6 +109,7 @@ export interface SupportedVault {
 	borrowRestricted?: boolean
 	price?: BigNumber
 	desc?: string
+	minimumBorrow?: number
 }
 
 export interface FarmableSupportedPool extends SupportedPool {

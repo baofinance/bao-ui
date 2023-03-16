@@ -16,13 +16,18 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import Slider from 'rc-slider'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 
 const VotingList: React.FC = () => {
 	const gauges = useGauges()
 	const [userSlopes, setUserSlopes] = useState<any>([])
 	const votingPowerAllocated = useVotingPowerAllocated()
+	const [sliderValues, setSliderValues] = useState<number[]>([])
+
+	const childToParent = (childData: React.SetStateAction<number[]>) => {
+		setSliderValues(childData)
+	}
 
 	return (
 		<>
@@ -63,7 +68,7 @@ const VotingList: React.FC = () => {
 					{gauges.length ? (
 						gauges.map((gauge: any, i: number) => (
 							<React.Fragment key={i}>
-								<VotingListItem gauge={gauge} />
+								<VotingListItem gauge={gauge} childToParent={childToParent} />
 							</React.Fragment>
 						))
 					) : (
@@ -77,9 +82,10 @@ const VotingList: React.FC = () => {
 
 interface VotingListItemProps {
 	gauge: ActiveSupportedGauge
+	childToParent: any
 }
 
-const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
+const VotingListItem: React.FC<VotingListItemProps> = ({ gauge, childToParent }) => {
 	const { account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
@@ -109,7 +115,12 @@ const VotingListItem: React.FC<VotingListItemProps> = ({ gauge }) => {
 
 	const onSliderChange = (value: number | number[]) => {
 		setVal(value as number)
+		childToParent(val)
 	}
+
+	useEffect(() => {
+		childToParent(val)
+	}, [val, childToParent])
 
 	return (
 		<>
