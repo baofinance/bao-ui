@@ -14,6 +14,8 @@ import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 export const useVaults = (vaultName: string): ActiveSupportedVault[] | undefined => {
 	const { vaults }: VaultsContext = useContext(Context)
 	//if (vaultName === undefined || !vaults[vaultName]) return undefined
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	//@ts-ignore
 	return vaults[vaultName]
 }
 

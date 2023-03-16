@@ -388,7 +388,13 @@ export const Dashboard = () => {
 				{/* Start of Voting Slider Section */}
 				<div className={`mx-auto my-0 mt-4 flex basis-[40%] flex-col text-left`}>
 					<div className='flex w-full items-center justify-center gap-2 rounded-md'>
-						<Slider
+						<input
+							type='range'
+							id='points'
+							defaultValue={
+								userSlopes && BigNumber.from(userSlopes.power) !== BigNumber.from(0) ? userSlopes.power.div(100).toString() : val
+							}
+							disabled={userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)}
 							min={0}
 							max={
 								userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0)
@@ -399,22 +405,10 @@ export const Dashboard = () => {
 									? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
-							disabled={userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)}
 							value={val}
-							onChange={onVotingSliderChange}
-							handleStyle={{
-								backgroundColor: '#FFD84B',
-								borderColor: '#FFD84B',
-								boxShadow: 'none',
-								opacity: 1,
-							}}
-							trackStyle={{
-								backgroundColor: '#CC9902',
-								borderColor: '#CC9902',
-							}}
-							railStyle={{
-								backgroundColor: '#622a2a',
-							}}
+							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0 disabled:cursor-not-allowed'
+							onChange={handleChange}
+							onInput={handleChange}
 						/>
 
 						<input
