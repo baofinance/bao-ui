@@ -22,7 +22,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 	}
 
 	const navigation = [
-		['0', 'Markets', '/'],
+		['0', 'Vaults', '/'],
 		['1', 'Ballast', '/ballast'],
 		['2', 'Baskets', '/baskets'],
 		['3', 'veBAO', '/vebao'],

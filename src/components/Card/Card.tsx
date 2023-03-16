@@ -5,9 +5,11 @@ import classNames from 'classnames'
 import CardActions, { CardActionsProps } from './Actions'
 import CardBody, { CardBodyProps } from './Body'
 import CardHeader, { CardHeaderProps } from './Header'
+import CardOptions, { CardOptionsProps } from './Options'
 
 type CardType<P> = FC<P> & {
 	Header: FC<CardHeaderProps>
+	Options: FC<CardOptionsProps>
 	Body: FC<CardBodyProps>
 	Actions: FC<CardActionsProps>
 }
@@ -33,6 +35,7 @@ const Card: CardType<CardProps> = ({ children, className }) => {
 }
 
 Card.Header = CardHeader
+Card.Options = CardOptions
 Card.Body = CardBody
 Card.Actions = CardActions
 

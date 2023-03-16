@@ -67,7 +67,13 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 													<td className='p-2 text-center'>
 														<Tooltipped content={component.symbol} placement='left'>
 															<a>
-																<Image src={component.image} width={32} height={32} alt={component.symbol} className='inline' />
+																<Image
+																	src={`/images/tokens/${component.symbol}.png`}
+																	width={32}
+																	height={32}
+																	alt={component.symbol}
+																	className='inline'
+																/>
 															</a>
 														</Tooltipped>
 													</td>

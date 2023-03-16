@@ -45,11 +45,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const { handleTx, pendingTx } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
-	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe')
+	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe', basket.recipeAddress)
 	const dai = useContract<Dai>('Dai')
 
 	// Get DAI approval
-	const daiAllowance = useAllowance(Config.addressMap.DAI, Config.contracts.SimpleUniRecipe[chainId].address)
+	const daiAllowance = useAllowance(Config.addressMap.DAI, basket.recipeAddress)
 
 	// Get Basket & DAI balances
 	const basketBalance = useTokenBalance(basket.address)

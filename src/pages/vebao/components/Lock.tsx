@@ -48,8 +48,6 @@ const Lock: React.FC = () => {
 				<LockStats baoBalance={baoBalance} lockInfo={lockInfo} timestamp={blockTimestamp} />
 			</div>
 			<ProtocolStatsHoriz baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} veInfo={veInfo} timestamp={blockTimestamp} />
-			{/* Boost Calculator is borked, will fix soon */}
-			{/* <BoostCalc lockInfo={lockInfo} /> */}
 		</>
 	)
 }

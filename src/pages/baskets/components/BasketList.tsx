@@ -18,7 +18,7 @@ const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
 		<>
 			<ListHeader headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']} />
-			{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}
+			<div className='flex flex-col gap-4'>{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}</div>
 		</>
 	)
 }
@@ -26,6 +26,8 @@ const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
+
+	console.log(basket.symbol, composition)
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
@@ -50,7 +52,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 								return (
 									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
 										<span className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
-											<Image src={component.image} alt={component.symbol} height={32} width={32} />
+											<Image src={`/images/tokens/${component.symbol}.png`} alt={component.symbol} height={32} width={32} />
 										</span>
 									</Tooltipped>
 								)
@@ -59,7 +61,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<Loader />
 						)}
 					</div>
-					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
+					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center text-right'>
 						<span className='inline-block'>
 							{rates ? (
 								<>

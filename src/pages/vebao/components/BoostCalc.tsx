@@ -1,27 +1,31 @@
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
+import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
-import { VeInfo } from '@/hooks/vebao/useVeInfo'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
+import useVeInfo from '@/hooks/vebao/useVeInfo'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
+import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import { formatUnits } from 'ethers/lib/utils'
 import Slider from 'rc-slider'
 import React, { Fragment, useCallback, useState } from 'react'
 
-type BoostCalcProps = {
-	veInfo: VeInfo
-}
-
-export const BoostCalc = ({ veInfo }: BoostCalcProps) => {
+export const BoostCalc = () => {
+	const { account } = useWeb3React()
+	const [boost, setBoost] = useState(1)
 	const [selectedOption, setSelectedOption] = useState('baoUSD-3CRV')
+	const veInfo = useVeInfo()
+	const lockInfo = useLockInfo()
 
 	const gauges = useGauges()
 
 	const gauge = gauges.length ? gauges.find(gauge => gauge.name === selectedOption) : gauges.find(gauge => gauge.name === 'baoUSD-3CRV')
+	const gaugeInfo = useGaugeInfo(gauge)
 
 	const WEEK = 7 * 86400
 	const MAXTIME = 4 * 365 * 86400
@@ -62,6 +66,44 @@ export const BoostCalc = ({ veInfo }: BoostCalcProps) => {
 		},
 		[setDepositAmount],
 	)
+
+	const calc = async () => {
+		const [_, boost] = await updateLiquidityLimit(depositAmount, veEstimate, totalVePower, tvl)
+		setBoost(boost)
+	}
+
+	const updateLiquidityLimit = async (depositAmount: string, veEstimate: number, totalVePower: number, tvl: number) => {
+		const l = parseFloat(depositAmount) * 1e18
+		const working_balances = gaugeInfo && account ? parseFloat(depositAmount) * 1e18 : 1 * 1e18 //determine workingBalance of depositAmount
+		const working_supply = gaugeInfo && parseFloat(formatUnits(gaugeInfo.workingSupply))
+		const L = tvl + l
+		const lim = (l * 40) / 100
+		const veBAO = veEstimate * 1e18
+		const limplus = lim + (L * veBAO * 60) / (totalVePower * 1e20)
+		const limfinal = Math.min(l, limplus)
+
+		const old_bal = working_balances
+		const noboost_lim = (l * 40) / 100
+		const noboost_supply = working_supply + noboost_lim - old_bal
+		const _working_supply = working_supply + limfinal - old_bal
+		const boost = limfinal / _working_supply / (noboost_lim / noboost_supply)
+
+		console.log('l', l)
+		console.log('working_balances', working_balances)
+		console.log('working_supply', working_supply)
+		console.log('L', L)
+		console.log('lim', lim)
+		console.log('veBAO', veBAO)
+		console.log('limplus', limplus)
+		console.log('limfinal', limfinal)
+		console.log('old_bal', old_bal)
+		console.log('noboost_lim', noboost_lim)
+		console.log('noboost_supply', noboost_supply)
+		console.log('_working_supply', _working_supply)
+		console.log('boost', boost)
+
+		return [_working_supply, boost]
+	}
 
 	return (
 		<>
@@ -161,8 +203,8 @@ export const BoostCalc = ({ veInfo }: BoostCalcProps) => {
 						</div>
 					</div>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-200'>Locked For</label>
-						<div className='px-2'>
+						<label className='text-xs text-text-100'>Locked until {new Date(lockTime).toDateString()}</label>
+						<div className='pr-2'>
 							<Slider
 								defaultValue={min}
 								min={min}
@@ -186,32 +228,32 @@ export const BoostCalc = ({ veInfo }: BoostCalcProps) => {
 							/>
 						</div>
 					</div>
-					<div>
-						<Button>Calculate</Button>
-					</div>
-					<div>
+					<div className='col-span-2'> </div>
+					<div className='col-span-2'>
 						<label className='text-xs text-text-200'>Gauge Liquidity</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>${gaugeTVL.gaugeTVL ? getDisplayBalance(decimate(gaugeTVL.gaugeTVL)) : '0'}</Typography>
 						</div>
 					</div>
-					<div>
+					<div className='col-span-2'>
 						<label className='text-xs text-text-200'>veBAO</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>
-								{isNaN(veBaoEstimate(parseFloat(baoAmount), lockTime)) ? 0 : veBaoEstimate(parseFloat(baoAmount), lockTime).toFixed(2)}
+								{isNaN(veBaoEstimate(parseFloat(baoAmount), lockTime))
+									? 0
+									: veBaoEstimate(parseFloat(baoAmount), lockTime).toLocaleString()}
 							</Typography>
 						</div>
 					</div>
-					<div>
+					<div className='col-span-1'>
+						<Button onClick={calc} className='w-full'>
+							Calculate
+						</Button>
+					</div>
+					<div className='col-span-1 text-right'>
 						<label className='text-xs text-text-200'>Boost</label>
-						<div className='flex h-8 gap-2 rounded-md'>
-							<Typography>
-								{(!depositAmount && !gaugeTVL.gaugeTVL && !veInfo) ||
-								isNaN((parseFloat(depositAmount) * 40) / 100 + (((tvl * veEstimate) / totalVePower) * (100 - 40)) / 100)
-									? 0
-									: (parseFloat(depositAmount) * 40) / 100 + (((tvl * veEstimate) / totalVePower) * (100 - 40)) / 100}
-							</Typography>
+						<div className='flex h-8 w-full gap-2 rounded-md'>
+							<Typography className='w-full !text-right'>{`${Math.min(boost < 0 ? 2.5 : boost, 2.5).toFixed(2)}`}x</Typography>
 						</div>
 					</div>
 				</div>

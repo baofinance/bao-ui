@@ -91,6 +91,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "basketRegistry",
+    outputs: [
+      {
+        internalType: "contract IPieRegistry",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -127,7 +140,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "getPriceEth",
+    name: "getPriceUSD",
     outputs: [
       {
         internalType: "uint256",
@@ -136,6 +149,32 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lendingRegistry",
+    outputs: [
+      {
+        internalType: "contract ILendingRegistry",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "oracle",
+    outputs: [
+      {
+        internalType: "contract uniOracle",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -201,6 +240,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "uniRouter",
+    outputs: [
+      {
+        internalType: "contract uniV3Router",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -218,11 +270,6 @@ const _abi = [
       {
         internalType: "address",
         name: "_newRouter",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_oracle",
         type: "address",
       },
     ],

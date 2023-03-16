@@ -1,4 +1,17 @@
-import { Experipie, Oven, Erc20, Uni_v2_lp, Cether, Ctoken, Gauge, GaugePool, PoolInfo, CurveLp, CurveMetaPool } from '@/typechain/index'
+import {
+	Cether,
+	Ctoken,
+	CurveLp,
+	CurveMetaPool,
+	Erc20,
+	Experipie,
+	Gauge,
+	GaugePool,
+	Oven,
+	PoolInfo,
+	SimpleUniRecipe,
+	Uni_v2_lp,
+} from '@/typechain/index'
 import { BigNumber } from 'ethers'
 
 export interface SupportedPool {
@@ -53,25 +66,29 @@ export interface SupportedBasket {
 	name: string
 	icon: string
 	cgIds: { [address: string]: string }
+	llamaPools: { [address: string]: string }
 	pieColors: { [asset: string]: string }
 	desc: string
 	swap?: string
 	address: string
 	basketContract: Experipie
+	recipeAddress: string
+	recipeContract: SimpleUniRecipe
 	ovenAddress: string
 	ovenContract?: Oven
 }
 
-export interface SupportedMarket {
-	mid: number
+export interface SupportedVault {
+	vid: number
 	archived?: boolean
-	marketAddresses: {
+	vaultAddresses: {
 		[network: number]: string
 	}
 	underlyingAddresses: {
 		[network: number]: string
 	}
 	isSynth: boolean
+	isBasket: boolean
 	symbol: string
 	icon: string
 	coingeckoId: string
@@ -91,6 +108,8 @@ export interface SupportedMarket {
 	liquidationIncentive?: BigNumber
 	borrowRestricted?: boolean
 	price?: BigNumber
+	desc?: string
+	minimumBorrow?: number
 }
 
 export interface FarmableSupportedPool extends SupportedPool {
@@ -114,12 +133,13 @@ export interface ActiveSupportedGauge extends SupportedGauge {
 export interface ActiveSupportedBasket extends SupportedBasket {
 	address: string
 	basketContract: Experipie
+	recipeContract: SimpleUniRecipe
 	ovenContract: Oven
 }
 
-export interface ActiveSupportedMarket extends SupportedMarket {
-	marketAddress: string
-	marketContract: Cether | Ctoken
+export interface ActiveSupportedVault extends SupportedVault {
+	vaultAddress: string
+	vaultContract: Cether | Ctoken
 	underlyingAddress: string
 	underlyingContract?: Erc20
 }
@@ -163,7 +183,15 @@ export interface Config {
 	subgraphs: SubgraphConfig
 	farms: SupportedPool[]
 	baskets: SupportedBasket[]
-	markets: SupportedMarket[]
+	vaults: {
+		[vaultName: string]: {
+			vid: number
+			comptroller: string
+			oracle: string
+			ballast: string
+			markets: SupportedVault[]
+		}
+	}
 	gauges: SupportedGauge[]
 }
 

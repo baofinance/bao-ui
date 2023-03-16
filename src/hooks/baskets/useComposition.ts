@@ -1,19 +1,20 @@
 import Config from '@/bao/lib/config'
 import useBao from '@/hooks/base/useBao'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { Erc20__factory, LendingLogicKashi__factory } from '@/typechain/factories'
 import type { Experipie, LendingRegistry, Mkr } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
 import MultiCall from '@/utils/multicall'
 import { decimate, exponentiate } from '@/utils/numberFormat'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import fetchSushiApy from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 export type BasketComponent = {
 	address: string
@@ -96,7 +97,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 					_c.underlying = lendingRes[0].values[0]
 					_c.underlyingPrice = prices[_c.underlying.toLowerCase()]
-					_c.strategy = _getStrategy(lendingRes[1].values[0])
+					_c.strategy =
+						_c.symbol.toLowerCase() === 'wsteth' ? 'Lido' : _c.symbol === 'reth' ? 'Rocket Pool' : _getStrategy(lendingRes[1].values[0])
 
 					// Get Exchange Rate
 					const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
@@ -125,7 +127,9 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 			}
 
 			const marketCap = _comp.reduce((prev, comp) => {
-				return prev.add(decimate(comp.balance, comp.decimals).mul(comp.price.toString()))
+				const balance = parseFloat(formatUnits(comp.balance, comp.decimals))
+				const price = parseFloat(formatUnits(comp.price))
+				return prev.add(parseUnits((balance * price).toString()))
 			}, BigNumber.from(0))
 
 			// Assign allocation percentages

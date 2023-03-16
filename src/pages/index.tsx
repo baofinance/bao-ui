@@ -1,30 +1,22 @@
 import PageHeader from '@/components/PageHeader'
-import { useMarkets } from '@/hooks/markets/useMarkets'
-import { useWeb3React } from '@web3-react/core'
+import Typography from '@/components/Typography'
+import VaultList from '@/pages/vaults/components/VaultList'
 import { NextSeo } from 'next-seo'
 import React from 'react'
-import MarketList from './markets/components/MarketList'
-import OfflineMarketList from './markets/components/OfflineMarketList'
-import Overview from './markets/components/Overview'
+import { isDesktop } from 'react-device-detect'
 
-const Markets: React.FC = () => {
-	const markets = useMarkets()
-	const { account } = useWeb3React()
-
+const Vaults: React.FC = () => {
 	return (
 		<>
-			<NextSeo title={'Markets'} description={'Provide different collateral types to mint synthetics like baoUSD.'} />
-			<PageHeader title='Markets' />
-			{account ? (
-				<>
-					<Overview />
-					<MarketList markets={markets} />
-				</>
-			) : (
-				<OfflineMarketList markets={markets} />
-			)}
+			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
+			<PageHeader title='Vaults' />
+			<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-4 font-light tracking-tight'>
+				Bao Vaults allow users to mint synthetic price-stable assets with our yield bearing Bao Baskets or ETH as collateral. Mint instantly
+				and on your terms!
+			</Typography>
+			<VaultList />
 		</>
 	)
 }
 
-export default Markets
+export default Vaults

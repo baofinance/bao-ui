@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// @ts-nocheck
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";

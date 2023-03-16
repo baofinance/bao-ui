@@ -16,6 +16,7 @@ import type { BasketComponent } from '@/hooks/baskets/useComposition'
 import type { BasketRates } from '@/hooks/baskets/useBasketRate'
 import type { BasketInfo } from '@/hooks/baskets/useBasketInfo'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 type BasketStatsProps = {
 	basket: ActiveSupportedBasket
@@ -26,13 +27,16 @@ type BasketStatsProps = {
 }
 
 const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, info, pairPrice }) => {
-	const nav = useNav(composition, info ? info.totalSupply : BigNumber.from(0))
+	const nav = useNav(composition, info ? info.totalSupply : BigNumber.from(1))
 
 	let premium = null
 	let premiumColor = 'white'
 	if (nav && pairPrice && rates) {
-		premium = new BN(nav.toString()).minus(rates.usd.toString()).div(rates.usd.toString()).times(100)
-		premiumColor = premium.isNegative() ? 'red' : 'green'
+		console.log(nav.toString(), formatUnits(rates.usd))
+		premium =
+			((parseFloat(nav.toString()) - parseFloat(formatUnits(rates.usd.toString()))) / parseFloat(formatUnits(rates.usd.toString()))) * 100
+		console.log('premium', premium.toString())
+		premiumColor = premium < 0 ? 'red' : 'green'
 	}
 
 	let marketCap
@@ -75,7 +79,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 							placement='top'
 						/>
 					</div>
-					<Badge className='font-semibold'>{nav ? `$${getDisplayBalance(nav)}` : <Loader />}</Badge>
+					<Badge className='font-semibold'>{nav ? `$${parseFloat(nav.toString()).toFixed(2)}` : <Loader />}</Badge>
 				</Card.Body>
 			</Card>
 			<Card>
