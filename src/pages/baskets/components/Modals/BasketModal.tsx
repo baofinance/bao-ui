@@ -184,27 +184,25 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 								disabled={operation === 'MINT'}
 								label={
 									<div className='flex flex-row items-center'>
-										{operation === 'MINT' &&
-											basket.symbol.toLowerCase() ===
-												'bstbl' && (
-													<>
-														<Tooltipped content={`Swap input currency to ${mintOption === MintOption.DAI ? 'ETH' : 'DAI'}`}>
-															<Button
-																size='xs'
-																onClick={() => {
-																	// Clear input values
-																	setValue('')
-																	setSecondaryValue('')
-																	// Swap mint option
-																	setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
-																}}
-																className='mr-1'
-															>
-																<FontAwesomeIcon icon={faSync} />
-															</Button>
-														</Tooltipped>
-													</>,
-												)}
+										{operation === 'MINT' && basket.symbol.toLowerCase() === 'bstbl' && (
+											<>
+												<Tooltipped content={`Swap input currency to ${mintOption === MintOption.DAI ? 'ETH' : 'DAI'}`}>
+													<Button
+														size='xs'
+														onClick={() => {
+															// Clear input values
+															setValue('')
+															setSecondaryValue('')
+															// Swap mint option
+															setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
+														}}
+														className='mr-1'
+													>
+														<FontAwesomeIcon icon={faSync} />
+													</Button>
+												</Tooltipped>
+											</>
+										)}
 										<div className='flex flex-row items-center pl-2 pr-4'>
 											<div className='flex w-6 justify-center'>
 												{operation === 'MINT' ? (
