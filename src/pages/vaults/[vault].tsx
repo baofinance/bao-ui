@@ -210,7 +210,7 @@ const Vault: NextPage<{
 		[setVal],
 	)
 
-	const change = val ? decimate(BigNumber.from(val).mul(synth.price)) : BigNumber.from(0)
+	const change = val ? decimate(parseUnits(val).mul(synth.price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
