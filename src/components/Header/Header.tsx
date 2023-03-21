@@ -2,6 +2,9 @@ import Config from '@/bao/lib/config'
 import Container from '@/components/Container'
 import Logo from '@/components/Logo'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
+import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
+import useProofs from '@/hooks/distribution/useProofs'
+import useUserFarmInfo from '@/hooks/farms/useUserFarmInfo'
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -56,6 +59,14 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 const Header: FC = () => {
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
+	const merkleLeaf = useProofs()
+	const dist = useDistributionInfo()
+	const canStartDistribution = !!merkleLeaf && !!dist && !!dist.dateEnded.eq(0)
+
+	const farm1Balance = useUserFarmInfo(0)
+	const farm2Balance = useUserFarmInfo(200)
+	const farm3Balance = useUserFarmInfo(201)
+
 	return (
 		<header className='fixed top-0 z-50 w-full border-b border-b-primary-300 bg-background-100'>
 			<nav>
@@ -103,13 +114,15 @@ const Header: FC = () => {
 														className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-background-100 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
 													>
 														<div className='space-y-4'>
-															<MobileNavLink href='/'>Markets</MobileNavLink>
+															<MobileNavLink href='/'>Vaults</MobileNavLink>
 															<MobileNavLink href='/ballast'>Ballast</MobileNavLink>
 															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
-															<MobileNavLink href='/farms'>Farms</MobileNavLink>
 															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
 															<MobileNavLink href='/gauges'>Gauges</MobileNavLink>
-															<MobileNavLink href='/distribution'>Distribution</MobileNavLink>
+															{canStartDistribution && <MobileNavLink href='/distribution'>Distribution</MobileNavLink>}
+															{(farm1Balance?.amount.gt(0) || farm2Balance?.amount.gt(0) || farm3Balance?.amount.gt(0)) && (
+																<MobileNavLink href='/farms'>Farms</MobileNavLink>
+															)}
 														</div>
 													</Popover.Panel>
 												</>
