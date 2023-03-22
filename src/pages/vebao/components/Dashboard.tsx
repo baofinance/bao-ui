@@ -25,6 +25,13 @@ import classNames from 'classnames'
 import { formatUnits } from 'ethers/lib/utils'
 import Slider from 'rc-slider'
 import React, { Fragment, useCallback, useState } from 'react'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { GaugeController } from '@/typechain/GaugeController'
+import useContract from '@/hooks/base/useContract'
+import Config from '@/bao/lib/config'
 
 export const Dashboard = () => {
 	const { account } = useWeb3React()
@@ -56,6 +63,9 @@ export const Dashboard = () => {
 		setWeeks(value as number)
 		setLockTime(getDayOffset(currentLockEnd, (value as number) * 7))
 	}
+
+	const { pendingTx, handleTx } = useTransactionHandler()
+	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 
 	const { gaugeTVL } = useGaugeTVL(gauge)
 	const [baoAmount, setBaoAmount] = useState('')
@@ -406,7 +416,7 @@ export const Dashboard = () => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0 disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-full bg-primary-400 accent-text-400 disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -426,7 +436,30 @@ export const Dashboard = () => {
 						<Typography variant='base' className='m-0 rounded border-solid border-inherit border-primary-500 bg-primary-100 p-0 font-bold'>
 							%
 						</Typography>
-						<Button className='ml-4 w-[20%]'>Vote</Button>
+						<>
+							{pendingTx ? (
+								<Button className='ml-8 w-[20%]' disabled={true}>
+									{typeof pendingTx === 'string' ? (
+										<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
+											Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+										</Link>
+									) : (
+										'Pending Transaction'
+									)}
+								</Button>
+							) : (
+								<Button
+									className='ml-8 w-[20%]'
+									disabled={!val || isNaN(val as any) || (lockInfo && lockInfo.balance.eq(0))}
+									onClick={async () => {
+										const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
+										handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
+									}}
+								>
+									Vote
+								</Button>
+							)}
+						</>
 					</div>
 				</div>
 				{/* End of Voting Slider Section */}
