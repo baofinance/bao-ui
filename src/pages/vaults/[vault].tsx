@@ -478,11 +478,11 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 		return borrow.balance
 	}, [vault, borrowBalances])
 
-	const isInVault = useMemo(() => {
-		return accountVaults && vault && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
-	}, [accountVaults, vault])
+	// const isInVault = useMemo(() => {
+	// 	return accountVaults && vault && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
+	// }, [accountVaults, vault])
 
-	const [isChecked, setIsChecked] = useState(!!isInVault)
+	// const [isChecked, setIsChecked] = useState(!!isInVault)
 	const [isOpen, setIsOpen] = useState(false)
 
 	const handleOpen = () => {
@@ -570,56 +570,56 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 									decimate(suppliedUnderlying.mul(vault.price)),
 								)}`,
 							},
-							{
-								label: 'Collateral',
-								value: (
-									<Tooltipped
-										content={
-											<>
-												<Typography variant='sm' className='font-semibold'>
-													{isInVault ? 'Exit' : 'Enter'} Vault w/ Supplied Collateral
-												</Typography>
-												<Badge className='m-2 bg-red font-semibold'>WARNING</Badge>
-												<Typography variant='sm'>
-													Any supplied assets that are flagged as collateral can be seized if you are liquidated.
-												</Typography>
-											</>
-										}
-									>
-										<Switch
-											checked={isChecked}
-											disabled={
-												(isInVault && borrowed.gt(0)) ||
-												supplyBalances.find(balance => balance.address === vault.vaultAddress).balance.eq(0)
-											}
-											onChange={setIsChecked}
-											onClick={(event: { stopPropagation: () => void }) => {
-												event.stopPropagation()
-												if (isInVault) {
-													handleTx(comptroller.exitMarket(vault.vaultAddress), `Exit Vault (${vault.underlyingSymbol})`)
-												} else {
-													handleTx(
-														comptroller.enterMarkets([vault.vaultAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
-														`Enter Vault (${vault.underlyingSymbol})`,
-													)
-												}
-											}}
-											className={classNames(
-												!isInVault && borrowed.eq(0) ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
-												'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
-											)}
-										>
-											<span
-												aria-hidden='true'
-												className={classNames(
-													isInVault ? 'translate-x-[14px]' : 'translate-x-0',
-													'pointer-events-none inline-block h-[10px] w-[10px] transform rounded-full bg-text-300 shadow ring-0 transition duration-200 ease-in-out',
-												)}
-											/>
-										</Switch>
-									</Tooltipped>
-								),
-							},
+							// {
+							// 	label: 'Collateral',
+							// 	value: (
+							// 		<Tooltipped
+							// 			content={
+							// 				<>
+							// 					<Typography variant='sm' className='font-semibold'>
+							// 						{isInVault ? 'Exit' : 'Enter'} Vault w/ Supplied Collateral
+							// 					</Typography>
+							// 					<Badge className='m-2 bg-red font-semibold'>WARNING</Badge>
+							// 					<Typography variant='sm'>
+							// 						Any supplied assets that are flagged as collateral can be seized if you are liquidated.
+							// 					</Typography>
+							// 				</>
+							// 			}
+							// 		>
+							// 			<Switch
+							// 				checked={isChecked}
+							// 				disabled={
+							// 					(isInVault && borrowed.gt(0)) ||
+							// 					supplyBalances.find(balance => balance.address === vault.vaultAddress).balance.eq(0)
+							// 				}
+							// 				onChange={setIsChecked}
+							// 				onClick={(event: { stopPropagation: () => void }) => {
+							// 					event.stopPropagation()
+							// 					if (isInVault) {
+							// 						handleTx(comptroller.exitMarket(vault.vaultAddress), `Exit Vault (${vault.underlyingSymbol})`)
+							// 					} else {
+							// 						handleTx(
+							// 							comptroller.enterMarkets([vault.vaultAddress], Config.addressMap.DEAD), // Use dead as a placeholder param for `address borrower`, it will be unused
+							// 							`Enter Vault (${vault.underlyingSymbol})`,
+							// 						)
+							// 					}
+							// 				}}
+							// 				className={classNames(
+							// 					!isInVault && borrowed.eq(0) ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
+							// 					'border-transparent relative inline-flex h-[14px] w-[28px] flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out',
+							// 				)}
+							// 			>
+							// 				<span
+							// 					aria-hidden='true'
+							// 					className={classNames(
+							// 						isInVault ? 'translate-x-[14px]' : 'translate-x-0',
+							// 						'pointer-events-none inline-block h-[10px] w-[10px] transform rounded-full bg-text-300 shadow ring-0 transition duration-200 ease-in-out',
+							// 					)}
+							// 				/>
+							// 			</Switch>
+							// 		</Tooltipped>
+							// 	),
+							// },
 							{
 								label: 'Wallet Balance',
 								value: `${getDisplayBalance(
@@ -629,6 +629,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 							},
 						]}
 					/>
+					<div className='mt-4' />
 					<VaultDetails asset={vault} title='Vault Details' vaultName={vaultName} />
 					<div className={`mt-4 flex ${isDesktop ? 'flex-row gap-4' : 'flex-col gap-2'}`}>
 						<div className='flex w-full flex-col'>
