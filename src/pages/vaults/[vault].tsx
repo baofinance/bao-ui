@@ -1,6 +1,5 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import Badge from '@/components/Badge'
 import Button, { NavButtons } from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
@@ -26,11 +25,9 @@ import { providerKey } from '@/utils/index'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Switch } from '@headlessui/react'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
-import classNames from 'classnames'
 import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { NextPage } from 'next'
@@ -63,8 +60,7 @@ export async function getStaticProps({ params }: { params: any }) {
 const Vault: NextPage<{
 	vaultName: string
 }> = ({ vaultName }) => {
-	const bao = useBao()
-	const { account, library, chainId } = useWeb3React()
+	const { account } = useWeb3React()
 	const _vaults = useVaults(vaultName)
 	const accountBalances = useAccountBalances(vaultName)
 	const accountVaults = useAccountVaults(vaultName)
@@ -96,48 +92,6 @@ const Vault: NextPage<{
 
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
-
-	const borrowed = useMemo(
-		() => synth && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,
-		[borrowBalances, synth],
-	)
-
-	const handleOpen = () => {
-		!isOpen ? setIsOpen(true) : setIsOpen(false)
-		showBorrowModal && setIsOpen(true)
-	}
-
-	const accountBal = synth && accountBalances && accountBalances.find(balance => balance.address === synth.underlyingAddress)
-	const accountBalance = accountBal !== undefined ? accountBal.balance : BigNumber.from(0)
-
-	const healthFactor = useHealthFactor(vaultName)
-
-	const borrowLimit =
-		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
-			? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
-			: BigNumber.from(0)
-
-	const healthFactorColor = (healthFactor: BigNumber) => {
-		const c = healthFactor.eq(0)
-			? `${(props: any) => props.theme.color.text[100]}`
-			: healthFactor.lte(parseUnits('1.25'))
-			? '#e32222'
-			: healthFactor.lt(parseUnits('1.55'))
-			? '#ffdf19'
-			: '#45be31'
-		return c
-	}
-
-	const { data: maxMintable } = useQuery(
-		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
-		async () => {
-			const _maxMintable = await synth.underlyingContract.balanceOf(synth.vaultAddress)
-			return _maxMintable
-		},
-		{
-			placeholderData: BigNumber.from(0),
-		},
-	)
 
 	const supply = useMemo(
 		() =>
@@ -210,12 +164,6 @@ const Vault: NextPage<{
 		[setVal],
 	)
 
-	const change = val ? decimate(parseUnits(val).mul(synth.price)) : BigNumber.from(0)
-	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
-	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
-	const newBorrowable = synth && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - synth.underlyingDecimals))))
-
 	const synthBalance = useMemo(
 		() =>
 			synth && balances && balances.find(_balance => _balance.address === synth.underlyingAddress)
@@ -262,117 +210,12 @@ const Vault: NextPage<{
 						</div>
 						{account && (
 							<>
-								<div className='mb-4 flex flex-row gap-4 rounded'>
-									<StatBlock
-										className='flex basis-1/2 flex-col'
-										label='Vault Info'
-										stats={[
-											{
-												label: `Current ${synth.underlyingSymbol} Price`,
-												value: `$${getDisplayBalance(synth.price)}`,
-											},
-											{
-												label: 'Total Debt',
-												value: `${getDisplayBalance(synth.totalBorrows)} ${synth.underlyingSymbol}`,
-											},
-											{
-												label: 'Total Debt USD',
-												value: `$${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}`,
-											},
-											{
-												label: 'Total Collateral USD',
-												value: `-`,
-											},
-											{
-												label: 'Minimum Borrow',
-												value: `${synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'} ${
-													synth.minimumBorrow ? synth.underlyingSymbol : ''
-												}`,
-											},
-											{
-												label: 'Max Mintable',
-												value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${synth.underlyingSymbol}`,
-											},
-										]}
-									/>
-									<StatBlock
-										className='flex basis-1/2 flex-col'
-										label='User Info'
-										stats={[
-											{
-												label: 'Your Collateral USD',
-												value: `$${
-													bao && account && accountLiquidity
-														? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
-														: 0
-												}`,
-											},
-											{
-												label: 'Your Debt',
-												value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synth.underlyingSymbol}`,
-											},
-											{
-												label: 'Your Debt USD',
-												value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
-											},
-											{
-												label: 'Debt Limit Remaining',
-												value: `$${getDisplayBalance(
-													accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0),
-												)} ➜ $${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0))}`,
-											},
-											{
-												// FIXME: Fix this for when a users current borrow amount is zero
-												label: 'Debt Limit Used',
-												value: `${getDisplayBalance(
-													accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(decimate(borrowable)).mul(100) : 0,
-													18,
-													2,
-												)}% ➜ ${getDisplayBalance(
-													accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0,
-													18,
-													2,
-												)}%`,
-											},
-											{
-												label: `Debt Health`,
-												value: `${
-													healthFactor &&
-													healthFactor &&
-													(healthFactor.lte(0) ? (
-														'-'
-													) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
-														<p>
-															{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
-														</p>
-													) : (
-														getDisplayBalance(healthFactor)
-													))
-												}`,
-											},
-										]}
-									/>
-								</div>
+								<VaultStats asset={synth} amount={val} vaultName={vaultName} />
 							</>
 						)}
 						<div className='flex flex-row gap-4'>
 							<div className='flex basis-1/2 flex-col'>
-								<Typography variant='lg' className='text-center font-bold'>
-									Collateral
-								</Typography>
-								<ListHeader headers={['Asset', 'Wallet', 'Underlying APY', 'Liquidity']} className='mr-10' />
-								{collateral.map((vault: ActiveSupportedVault) => (
-									<CollateralItem
-										vault={vault}
-										vaultName={vaultName}
-										accountBalances={accountBalances}
-										accountVaults={accountVaults}
-										supplyBalances={supplyBalances}
-										borrowBalances={borrowBalances}
-										exchangeRates={exchangeRates}
-										key={vault.vaultAddress}
-									/>
-								))}
+								<CollateralList collateral={collateral} vaultName={vaultName} />
 							</div>
 							<div className='mt-8 flex w-1/2 flex-col'>
 								<Card.Options className='mt-0'>
@@ -451,6 +294,40 @@ const Vault: NextPage<{
 	)
 }
 
+type CollateralListProps = {
+	collateral: ActiveSupportedVault[]
+	vaultName: string
+}
+
+export const CollateralList: React.FC<CollateralListProps> = ({ collateral, vaultName }: CollateralListProps) => {
+	const accountBalances = useAccountBalances(vaultName)
+	const accountVaults = useAccountVaults(vaultName)
+	const supplyBalances = useSupplyBalances(vaultName)
+	const borrowBalances = useBorrowBalances(vaultName)
+	const { exchangeRates } = useExchangeRates(vaultName)
+
+	return (
+		<>
+			<Typography variant='lg' className='text-center font-bold'>
+				Collateral
+			</Typography>
+			<ListHeader headers={['Asset', 'Wallet', 'Underlying APY', 'Liquidity']} className='mr-10' />
+			{collateral.map((vault: ActiveSupportedVault) => (
+				<CollateralItem
+					vault={vault}
+					vaultName={vaultName}
+					accountBalances={accountBalances}
+					accountVaults={accountVaults}
+					supplyBalances={supplyBalances}
+					borrowBalances={borrowBalances}
+					exchangeRates={exchangeRates}
+					key={vault.vaultAddress}
+				/>
+			))}
+		</>
+	)
+}
+
 const CollateralItem: React.FC<CollateralItemProps> = ({
 	vault,
 	vaultName,
@@ -464,6 +341,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	const { account } = useWeb3React()
 	const { handleTx } = useTransactionHandler()
 	const comptroller = useContract<Comptroller>('Comptroller', vaultName && Config.vaults[vaultName].comptroller)
+	const vaultAddress = vault && vault.vaultAddress
 
 	const suppliedUnderlying = useMemo(() => {
 		const supply = supplyBalances.find(balance => balance.address === vault.vaultAddress)
@@ -483,6 +361,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	// }, [accountVaults, vault])
 
 	// const [isChecked, setIsChecked] = useState(!!isInVault)
+
 	const [isOpen, setIsOpen] = useState(false)
 
 	const handleOpen = () => {
@@ -655,6 +534,176 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 				}}
 			/>
 		</>
+	)
+}
+
+type VaultStatProps = {
+	title?: string
+	asset: ActiveSupportedVault
+	amount?: string
+	vaultName: string
+}
+
+const VaultStats: React.FC<VaultStatProps> = ({ title, asset, amount, vaultName }: VaultStatProps) => {
+	const bao = useBao()
+	const { account, library, chainId } = useWeb3React()
+	const borrowBalances = useBorrowBalances(vaultName)
+	const balances = useAccountBalances(vaultName)
+	const accountLiquidity = useAccountLiquidity(vaultName)
+
+	const borrowBalance = useMemo(
+		() =>
+			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.vaultAddress)
+				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.vaultAddress).balance
+				: 0,
+		[borrowBalances, asset.vaultAddress],
+	)
+
+	const walletBalance = useMemo(
+		() =>
+			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
+				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
+				: 0,
+		[balances, asset.underlyingAddress],
+	)
+
+	const price = useMemo(() => {
+		if (!borrowBalance) return
+		return getDisplayBalance(decimate(asset.price.mul(borrowBalance)))
+	}, [borrowBalance, asset.price])
+
+	const { data: maxMintable } = useQuery(
+		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
+		async () => {
+			const _maxMintable = await asset.underlyingContract.balanceOf(asset.vaultAddress)
+			return _maxMintable
+		},
+		{
+			placeholderData: BigNumber.from(0),
+		},
+	)
+
+	const borrowed = useMemo(
+		() => asset && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
+		[borrowBalances, asset],
+	)
+
+	const change = amount ? decimate(parseUnits(amount).mul(asset.price)) : BigNumber.from(0)
+	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
+	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
+	const newBorrowable = asset && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
+
+	const healthFactor = useHealthFactor(vaultName)
+
+	const borrowLimit =
+		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
+			? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
+			: BigNumber.from(0)
+
+	const healthFactorColor = (healthFactor: BigNumber) => {
+		const c = healthFactor.eq(0)
+			? `${(props: any) => props.theme.color.text[100]}`
+			: healthFactor.lte(parseUnits('1.25'))
+			? '#e32222'
+			: healthFactor.lt(parseUnits('1.55'))
+			? '#ffdf19'
+			: '#45be31'
+		return c
+	}
+
+	return (
+		<div className='mb-4 flex flex-row gap-4 rounded'>
+			<StatBlock
+				className='flex basis-1/2 flex-col'
+				label='Vault Info'
+				stats={[
+					{
+						label: `Current ${asset.underlyingSymbol} Price`,
+						value: `$${getDisplayBalance(asset.price)}`,
+					},
+					{
+						label: 'Total Debt',
+						value: `${getDisplayBalance(asset.totalBorrows)} ${asset.underlyingSymbol}`,
+					},
+					{
+						label: 'Total Debt USD',
+						value: `$${getDisplayBalance(decimate(asset.totalBorrows.mul(asset.price)), asset.underlyingDecimals)}`,
+					},
+					{
+						label: 'Total Collateral USD',
+						value: `-`,
+					},
+					{
+						label: 'Minimum Borrow',
+						value: `${asset.minimumBorrow ? asset.minimumBorrow.toLocaleString() : '-'} ${
+							asset.minimumBorrow ? asset.underlyingSymbol : ''
+						}`,
+					},
+					{
+						label: 'Max Mintable',
+						value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${asset.underlyingSymbol}`,
+					},
+				]}
+			/>
+			<StatBlock
+				className='flex basis-1/2 flex-col'
+				label='User Info'
+				stats={[
+					{
+						label: 'Your Collateral USD',
+						value: `$${
+							bao && account && accountLiquidity
+								? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
+								: 0
+						}`,
+					},
+					{
+						label: 'Your Debt',
+						value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${asset.underlyingSymbol}`,
+					},
+					{
+						label: 'Your Debt USD',
+						value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
+					},
+					{
+						label: 'Debt Limit Remaining',
+						value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0))} ➜ $${getDisplayBalance(
+							accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0),
+						)}`,
+					},
+					{
+						// FIXME: Fix this for when a users current borrow amount is zero
+						label: 'Debt Limit Used',
+						value: `${getDisplayBalance(
+							accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(decimate(borrowable)).mul(100) : 0,
+							18,
+							2,
+						)}% ➜ ${getDisplayBalance(
+							accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0,
+							18,
+							2,
+						)}%`,
+					},
+					{
+						label: `Debt Health`,
+						value: `${
+							healthFactor &&
+							healthFactor &&
+							(healthFactor.lte(0) ? (
+								'-'
+							) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
+								<p>
+									{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
+								</p>
+							) : (
+								getDisplayBalance(healthFactor)
+							))
+						}`,
+					},
+				]}
+			/>
+		</div>
 	)
 }
 
