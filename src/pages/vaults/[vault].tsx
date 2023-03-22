@@ -669,7 +669,7 @@ const VaultStats: React.FC<VaultStatProps> = ({ title, asset, amount, vaultName 
 					{
 						label: 'Debt Limit Remaining',
 						value: `$${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0))} ➜ $${getDisplayBalance(
-							accountLiquidity ? accountLiquidity.usdBorrowable.add(change) : BigNumber.from(0),
+							accountLiquidity ? accountLiquidity.usdBorrowable.sub(change) : BigNumber.from(0),
 						)}`,
 					},
 					{
