@@ -1,12 +1,14 @@
+import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
+import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
 import useMintable from '@/hooks/gauges/useMintable'
 import useRelativeWeight from '@/hooks/gauges/useRelativeWeight'
-import { getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
@@ -14,6 +16,11 @@ import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
+import useUserSlopes from '@/hooks/vebao/useUserSlopes'
+import useVeInfo from '@/hooks/vebao/useVeInfo'
+import useVotingPowerAllocated from '@/hooks/gauges/useVotingPowerAllocated'
+import useDepositAmount from '@/hooks/gauges/useDepositAmount'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -72,6 +79,79 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const { gaugeTVL } = useGaugeTVL(gauge)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
 	const rewardsAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
+
+	const gaugeInfo = useGaugeInfo(gauge)
+	const veInfo = useVeInfo()
+	const userSlopes = useUserSlopes(gauge)
+
+	const WEEK = 7 * 86400
+	const MAXTIME = 4 * 365 * 86400
+
+	const veBaoEstimate = (amount: number, unlockDate: Date, currentUnlockDate: Date | undefined = undefined) => {
+		const rounded = Math.floor(getEpochSecondForDay(unlockDate) / WEEK) * WEEK
+		return ((rounded - (currentUnlockDate ? +currentUnlockDate : +new Date()) / 1000) / MAXTIME) * amount
+	}
+
+	const lockInfo = useLockInfo()
+	const veEstimate = veInfo ? parseFloat(formatUnits(lockInfo.balance)) : 0
+	const totalVePower = veInfo ? parseFloat(formatUnits(veInfo.totalSupply)) : 0
+	const tvl = formatUnits(gaugeTVL ? decimate(gaugeTVL) : BigNumber.from(0))
+	const votingPowerAllocated = useVotingPowerAllocated()
+	const depositAmount = useDepositAmount(gauge)
+
+	const [boost, setBoost] = useState(1)
+	const calc = async () => {
+		const [_, boost] = await updateLiquidityLimit(
+			formatUnits(decimate(depositAmount.depositAmount)),
+			veEstimate,
+			totalVePower,
+			parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0)))),
+		)
+		setBoost(boost)
+	}
+
+	if (account) {
+		calc
+	}
+
+	console.log('depositAmount', formatUnits(decimate(depositAmount.depositAmount)))
+	console.log('power', veEstimate)
+	console.log('totalPower', totalVePower)
+	console.log('tvl', parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0)))))
+	console.log('boost', boost)
+
+	const updateLiquidityLimit = async (depositAmount: string, veEstimate: number, totalVePower: number, tvl: number) => {
+		const l = parseFloat(depositAmount) * 1e18
+		const working_balances = gaugeInfo && account ? parseFloat(depositAmount) * 1e18 : 1 * 1e18 //determine workingBalance of depositAmount
+		const working_supply = gaugeInfo && parseFloat(formatUnits(gaugeInfo.workingSupply))
+		const L = tvl + l
+		const lim = (l * 40) / 100
+		const veBAO = veEstimate * 1e18
+		const limplus = lim + (L * veBAO * 60) / (totalVePower * 1e20)
+		const limfinal = Math.min(l, limplus)
+
+		const old_bal = working_balances
+		const noboost_lim = (l * 40) / 100
+		const noboost_supply = working_supply + noboost_lim - old_bal
+		const _working_supply = working_supply + limfinal - old_bal
+		const boost = limfinal / _working_supply / (noboost_lim / noboost_supply)
+
+		// console.log('l', l)
+		// console.log('working_balances', working_balances)
+		// console.log('working_supply', working_supply)
+		// console.log('L', L)
+		// console.log('lim', lim)
+		// console.log('veBAO', veBAO)
+		// console.log('limplus', limplus)
+		// console.log('limfinal', limfinal)
+		// console.log('old_bal', old_bal)
+		// console.log('noboost_lim', noboost_lim)
+		// console.log('noboost_supply', noboost_supply)
+		// console.log('_working_supply', _working_supply)
+		// console.log('boost', boost)
+
+		return [_working_supply, boost]
+	}
 
 	console.log(gauge.symbol, gaugeTVL)
 

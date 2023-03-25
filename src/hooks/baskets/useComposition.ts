@@ -8,11 +8,13 @@ import type { Experipie, LendingRegistry, Mkr } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import MultiCall from '@/utils/multicall'
 import { decimate, exponentiate } from '@/utils/numberFormat'
+import { token } from '@sushiswap/sushi-data/typings/exchange'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
+import fetchStEthApy, { useStEthApy } from './strategies/useStEthApy'
 import fetchSushiApy from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
 
@@ -42,6 +44,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const basketContract = useContract<Experipie>('Experipie', basket ? basket.address : null)
 
 	const enabled = !!bao && !!lendingRegistry && !!mkr && !!basketContract && !!prices
+
+	const lidoApy = useStEthApy()
+	console.log('lidoApy', lidoApy ? lidoApy.toString() : '0')
+
 	const { data: composition, refetch } = useQuery(
 		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
 		async () => {
@@ -97,8 +103,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 					_c.underlying = lendingRes[0].values[0]
 					_c.underlyingPrice = prices[_c.underlying.toLowerCase()]
-					_c.strategy =
-						_c.symbol.toLowerCase() === 'wsteth' ? 'Lido' : _c.symbol === 'reth' ? 'Rocket Pool' : _getStrategy(lendingRes[1].values[0])
+					_c.strategy = _getStrategy(lendingRes[1].values[0])
 
 					// Get Exchange Rate
 					const logicAddress = await lendingRegistry.protocolToLogic(lendingRes[1].values[0])
@@ -117,6 +122,16 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 					// Here, the price is already decimated by 1e18, so we can subtract 8
 					// from the underlying token's decimals.
 					if (_c.strategy === 'Compound') _c.price = decimate(_c.price, underlyingDecimals - 8)
+				}
+
+				if (_c.symbol === 'wstETH') {
+					_c.apy = await lidoApy
+					_c.strategy = 'LIDO'
+				}
+
+				if (_c.symbol === 'rETH') {
+					_c.apy = await lidoApy
+					_c.strategy = 'ROCKET POOL'
 				}
 
 				_comp.push({
