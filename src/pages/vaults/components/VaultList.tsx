@@ -20,7 +20,7 @@ import { isDesktop } from 'react-device-detect'
 export const VaultList: React.FC = () => {
 	return (
 		<>
-			<ListHeader headers={['Vault Name', 'Collateral Assets', 'Collateral vAPR', 'Borrow vAPR']} />
+			<ListHeader headers={['Vault Name', 'Collateral Assets', 'Borrow vAPR']} />
 			<div className='flex flex-col gap-4'>
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />
@@ -50,28 +50,28 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 			})
 	}, [_vaults, supplyBalances])
 
-	const baskets = useBaskets()
-	const basket = useMemo(() => {
-		if (!baskets) return
-		return baskets.find(basket => basket.symbol === 'bSTBL')
-	}, [baskets])
-	const info = useBasketInfo(basket)
-	const composition = useComposition(basket)
-	const avgBasketAPY =
-		composition &&
-		(composition
-			.map(function (component) {
-				return component.apy
-			})
-			.reduce(function (a, b) {
-				return a + parseFloat(formatUnits(b))
-			}, 0) /
-			composition.length) *
-			100
+	// const baskets = useBaskets()
+	// const basket = useMemo(() => {
+	// 	if (!baskets) return
+	// 	return baskets.find(basket => basket.symbol === 'bSTBL')
+	// }, [baskets])
+	// const info = useBasketInfo(basket)
+	// const composition = useComposition(basket)
+	// const avgBasketAPY =
+	// 	composition &&
+	// 	(composition
+	// 		.map(function (component) {
+	// 			return component.apy
+	// 		})
+	// 		.reduce(function (a, b) {
+	// 			return a + parseFloat(formatUnits(b))
+	// 		}, 0) /
+	// 		composition.length) *
+	// 		100
 
-	const allCollateralAPY = collateral && collateral.map(() => avgBasketAPY && avgBasketAPY)
-	const maxAPY = allCollateralAPY ? Math.max(...allCollateralAPY) : 0
-	const minAPY = allCollateralAPY ? Math.min(...allCollateralAPY) : 0
+	// const allCollateralAPY = collateral && collateral.map(() => avgBasketAPY && avgBasketAPY)
+	// const maxAPY = allCollateralAPY ? Math.max(...allCollateralAPY) : 0
+	// const minAPY = allCollateralAPY ? Math.min(...allCollateralAPY) : 0
 
 	return (
 		synth && (
@@ -111,11 +111,11 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 								<Loader />
 							)}
 						</div>
-						<div className='mx-auto my-0 flex w-full items-center justify-center'>
+						{/* <div className='mx-auto my-0 flex w-full items-center justify-center'>
 							<Typography variant='sm' className='m-0 font-semibold'>
 								{collateral ? '0 - ' + getDisplayBalance(maxAPY, 0, 2) + '%' : <Loader />}
 							</Typography>
-						</div>
+						</div> */}
 
 						<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
 							<span className='inline-block'>

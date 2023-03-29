@@ -34,7 +34,7 @@ import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import VaultBorrowModal from './components/Modals/BorrowModal'
 import VaultSupplyModal from './components/Modals/SupplyModal'
@@ -370,24 +370,24 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	}
 
 	const baskets = useBaskets()
-	const basket = useMemo(() => {
-		if (!baskets) return
-		return baskets.find(basket => basket.symbol === 'bSTBL')
-	}, [baskets])
-	const info = useBasketInfo(basket)
-	const composition = useComposition(basket)
+	const basket =
+		vault.isBasket === true && baskets && baskets.find(basket => basket.address.toLowerCase() === vault.underlyingAddress.toLowerCase())
+	console.log(basket && basket)
+
+	const composition = useComposition(vault.isBasket === true && basket && basket)
 	const avgBasketAPY =
-		composition &&
-		(composition
-			.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
-			.map(component => {
-				return component.apy
-			})
-			.reduce(function (a, b) {
-				return a + parseFloat(formatUnits(b))
-			}, 0) /
-			composition.length) *
-			100
+		vault.isBasket && composition
+			? (composition
+					.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
+					.map(component => {
+						return component.apy
+					})
+					.reduce(function (a, b) {
+						return a + parseFloat(formatUnits(b))
+					}, 0) /
+					composition.length) *
+			  100
+			: 0
 
 	return (
 		<>

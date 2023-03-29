@@ -434,6 +434,10 @@ export default {
 				'0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0': 'wrapped-steth',
 				'0xae78736cd615f374d3085123a210448e74fc6393': 'rocket-pool-eth',
 			},
+			llamaIds: {
+				'0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0': '747c1d2a-c668-4682-b9f9-296708a3dd90',
+				'0xae78736cd615f374d3085123a210448e74fc6393': 'd4b3c522-6127-4b89-bedf-83641cdcd2eb',
+			},
 			pieColors: {
 				wstETH: '#3AA4FF',
 				rETH: '#F8AE8D',
