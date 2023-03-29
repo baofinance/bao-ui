@@ -20,19 +20,19 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const bao = useBao()
 	const poolInfo = usePoolInfo(gauge)
 	const gaugeInfo = useGaugeInfo(gauge)
-	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[4].vaultAddresses[chainId])
+	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[2].vaultAddresses[chainId])
 	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].markets[0].vaultAddresses[chainId])
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
 
-	// console.log('bSTBLPrice', bSTBLPrice?.toString())
-	// console.log('baoUSDPrice', baoUSDPrice?.toString())
-	// console.log('daiPrice', daiPrice?.toString())
-	// console.log('ethPrice', ethPrice?.toString())
-	// console.log('threeCrvPrice', threeCrvPrice?.toString())
-	// console.log('baoPrice', baoPrice?.toString())
+	console.log('bSTBLPrice', bSTBLPrice?.toString())
+	console.log('baoUSDPrice', baoUSDPrice?.toString())
+	console.log('daiPrice', daiPrice?.toString())
+	console.log('ethPrice', ethPrice?.toString())
+	console.log('threeCrvPrice', threeCrvPrice?.toString())
+	console.log('baoPrice', baoPrice?.toString())
 
 	const poolTVL = useMemo(() => {
 		return (
