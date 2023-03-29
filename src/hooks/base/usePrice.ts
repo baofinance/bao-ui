@@ -8,16 +8,16 @@ export const usePrice = (coingeckoId: string) => {
 	const { data: price } = useQuery(
 		['@/hooks/base/usePrice', { coingeckoId }],
 		async () => {
-			const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd`)
-			const price: { usd: number } = (await res.json())[coingeckoId]
+			const res = await fetch(`https://bao-price-api.herokuapp.com/api/price?id=${coingeckoId}`)
+			const price = await res.json()
 			if (!price) throw new Error(`Can't get price for coinGeckoId='${coingeckoId}'.`)
-			return fromDecimal(price.usd)
+			return fromDecimal(price.price)
 		},
 		{
 			retry: true,
 			retryDelay: 1000 * 60,
-			staleTime: 1000 * 60 * 5,
-			cacheTime: 1000 * 60 * 10,
+			staleTime: 1000 * 60 * 60,
+			cacheTime: 1000 * 60 * 120,
 			refetchOnReconnect: true,
 			refetchInterval: 1000 * 60 * 5,
 			keepPreviousData: true,

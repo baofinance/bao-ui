@@ -12,18 +12,27 @@ import { useMemo } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
 import { useVaultPrice } from '../vaults/useVaultPrice'
+import useGaugeInfo from './useGaugeInfo'
 import usePoolInfo from './usePoolInfo'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId } = useWeb3React()
 	const bao = useBao()
 	const poolInfo = usePoolInfo(gauge)
+	const gaugeInfo = useGaugeInfo(gauge)
 	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[4].vaultAddresses[chainId])
 	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].markets[0].vaultAddresses[chainId])
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
+
+	console.log('bSTBLPrice', bSTBLPrice?.toString())
+	console.log('baoUSDPrice', baoUSDPrice?.toString())
+	console.log('daiPrice', daiPrice?.toString())
+	console.log('ethPrice', ethPrice?.toString())
+	console.log('threeCrvPrice', threeCrvPrice?.toString())
+	console.log('baoPrice', baoPrice?.toString())
 
 	const poolTVL = useMemo(() => {
 		return (
@@ -82,6 +91,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			const totalSupply = res0[1].values[0]
 			const lpPrice = poolTVL && poolTVL.div(totalSupply)
 			const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
+			const depositAmount = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.balance)
 
 			// FIXME: please do boosted TVL from a different hook Vital! When you see this lol. Trust me.
 			//const boostedTVL = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.workingSupply)
@@ -89,14 +99,14 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 
 			return {
 				gaugeTVL,
-				boostedTVL,
+				depositAmount,
 			}
 		},
 		{
 			enabled,
 			placeholderData: {
 				gaugeTVL: BigNumber.from(0),
-				boostedTVL: BigNumber.from(0),
+				depositAmount: BigNumber.from(0),
 			},
 		},
 	)
