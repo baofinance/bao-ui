@@ -112,13 +112,15 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		return boost
 	}, [account, depositAmount, gaugeInfo, totalVePower, tvl, veEstimate])
 
-	// console.log('depositAmount', depositAmount ? formatUnits(decimate(depositAmount)) : '0')
-	// console.log('power', veEstimate)
-	// console.log('totalPower', totalVePower)
-	// console.log('tvl', parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0)))))
-	// console.log('boost', boost)
-	// console.log(gauge.symbol, gaugeTVL)
-	// console.log('rewards apr', rewardsAPR)
+	console.log('-----------------')
+	console.log(gauge.symbol, gaugeTVL.toString())
+	console.log('depositAmount', depositAmount ? formatUnits(decimate(depositAmount)) : '0')
+	console.log('power', veEstimate)
+	console.log('totalPower', totalVePower)
+	console.log('tvl', parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0)))))
+	console.log('boost', boost)
+	console.log('rewards apr', rewardsAPR)
+	console.log('boosted apr', parseFloat(rewardsAPR.toString()) * boost)
 
 	return (
 		<>
@@ -156,7 +158,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
 								<Typography variant='base' className='ml-2 inline-block font-medium'>
 									<Typography variant='base' className='ml-2 inline-block font-medium'>
-										{getDisplayBalance(rewardsAPR)}%
+										{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
 									</Typography>
 								</Typography>
 							</div>

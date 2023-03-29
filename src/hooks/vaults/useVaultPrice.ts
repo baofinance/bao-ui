@@ -14,7 +14,6 @@ export const useVaultPrice = (address: string) => {
 
 	const enabled = !!bao && !!oracle && !!chainId
 
-	console.log('address', address)
 	const { data: price, refetch } = useQuery(
 		['@/hooks/vaults/useVaultPrice', { enabled }],
 		async () => {
