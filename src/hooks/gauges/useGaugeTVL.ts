@@ -27,12 +27,12 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
 
-	console.log('bSTBLPrice', bSTBLPrice?.toString())
-	console.log('baoUSDPrice', baoUSDPrice?.toString())
-	console.log('daiPrice', daiPrice?.toString())
-	console.log('ethPrice', ethPrice?.toString())
-	console.log('threeCrvPrice', threeCrvPrice?.toString())
-	console.log('baoPrice', baoPrice?.toString())
+	// console.log('bSTBLPrice', bSTBLPrice?.toString())
+	// console.log('baoUSDPrice', baoUSDPrice?.toString())
+	// console.log('daiPrice', daiPrice?.toString())
+	// console.log('ethPrice', ethPrice?.toString())
+	// console.log('threeCrvPrice', threeCrvPrice?.toString())
+	// console.log('baoPrice', baoPrice?.toString())
 
 	const poolTVL = useMemo(() => {
 		return (
