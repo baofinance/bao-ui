@@ -93,10 +93,6 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
 			const depositAmount = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.balance)
 
-			// FIXME: please do boosted TVL from a different hook Vital! When you see this lol. Trust me.
-			//const boostedTVL = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.workingSupply)
-			const boostedTVL = BigNumber.from(0)
-
 			return {
 				gaugeTVL,
 				depositAmount,
