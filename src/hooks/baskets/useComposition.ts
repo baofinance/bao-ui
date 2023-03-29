@@ -125,12 +125,12 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				}
 
 				if (_c.symbol === 'wstETH') {
-					_c.apy = await lidoApy
+					_c.apy = BigNumber.from('53300000000000000')
 					_c.strategy = 'LIDO'
 				}
 
 				if (_c.symbol === 'rETH') {
-					_c.apy = await lidoApy
+					_c.apy = BigNumber.from('46700000000000000')
 					_c.strategy = 'ROCKET POOL'
 				}
 
@@ -139,6 +139,8 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 					image: `/images/tokens/${_getImageURL(_c.symbol)}.png`,
 					color: basket.pieColors[_c.symbol],
 				})
+
+				console.log(_c.symbol, _c.apy.toString())
 			}
 
 			const marketCap = _comp.reduce((prev, comp) => {
