@@ -516,11 +516,6 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 								Supply / Withdraw
 							</Button>
 						</div>
-						<div className='flex w-full flex-col'>
-							<Link href={`/vaults/${vault.underlyingSymbol}`}>
-								<Button fullWidth text='Details' />
-							</Link>
-						</div>
 					</div>
 				</AccordionBody>
 			</Accordion>
