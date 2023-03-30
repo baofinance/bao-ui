@@ -9,13 +9,18 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useEthBalance } from '../base/useTokenBalance'
+import { useEffect } from 'react'
 
-const useBallastInfo = () => {
+const useBallastInfo = (vaultName: string) => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const ballast = useContract<Stabilizer>('Stabilizer', Config.contracts.Stabilizer[chainId].address)
+	const ballast = useContract<Stabilizer>('Stabilizer', Config.vaults[vaultName].stabilizer)
+	console.log('ballastAddress', ballast && ballast.address)
 	const dai = useContract<Dai>('Dai', Config.contracts.Dai[chainId].address)
+	const ethBalance = useEthBalance(ballast && ballast.address)
 
+	console.log('ballastETHbalance', ethBalance.toString())
 	const enabled = !!bao && !!library && !!ballast && !!dai
 	const { data: ballastInfo, refetch } = useQuery(
 		['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), { enabled }],
@@ -35,7 +40,7 @@ const useBallastInfo = () => {
 			const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
 
 			return {
-				reserves: BigNumber.from(daiRes[0].values[0]),
+				reserves: vaultName === 'baoUSD' ? BigNumber.from(daiRes[0].values[0]) : BigNumber.from(ethBalance),
 				supplyCap: BigNumber.from(ballastRes[0].values[0]),
 				fees: {
 					buy: BigNumber.from(ballastRes[1].values[0]),
@@ -52,6 +57,11 @@ const useBallastInfo = () => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
+
+	useEffect(() => {
+		_refetch()
+	}, [vaultName])
+
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 

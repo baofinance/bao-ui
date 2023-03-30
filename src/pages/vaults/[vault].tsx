@@ -4,12 +4,14 @@ import Button, { NavButtons } from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
 import { ListHeader } from '@/components/List'
-import { PageLoader } from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
+import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import useBao from '@/hooks/base/useBao'
 import useContract from '@/hooks/base/useContract'
+import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
 import useBaskets from '@/hooks/baskets/useBaskets'
@@ -23,19 +25,20 @@ import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
 import type { Comptroller } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, FixedNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import BallastButton from './components/BallastButton'
 import VaultBorrowModal from './components/Modals/BorrowModal'
 import VaultSupplyModal from './components/Modals/SupplyModal'
 import { VaultDetails } from './components/Stats'
@@ -72,7 +75,7 @@ const Vault: NextPage<{
 	const { prices } = useVaultPrices(vaultName)
 
 	const [val, setVal] = useState<string>('')
-	const operations = ['Mint', 'Repay']
+	const operations = ['Mint', 'Repay', 'Ballast']
 	const [operation, setOperation] = useState(operations[0])
 
 	const collateral = useMemo(() => {
@@ -172,6 +175,79 @@ const Vault: NextPage<{
 		[balances, synth],
 	)
 
+	// Ballast
+	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
+	const [inputVal, setInputVal] = useState('')
+	const ethBalance = useEthBalance()
+	const daiBalance = useTokenBalance(Config.addressMap.DAI)
+	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
+	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
+	const ballastInfo = useBallastInfo(vaultName)
+
+	const aInput = (
+		<>
+			<Typography variant='sm' className='float-left mb-1'>
+				Balance: {vaultName === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(ethBalance)} ETH`}
+			</Typography>
+			<Typography variant='sm' className='float-right mb-1 text-text-200'>
+				Reserves: {ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}{' '}
+			</Typography>
+			<Input
+				onSelectMax={() => setInputVal(formatEther(vaultName === 'baoUSD' ? daiBalance : ethBalance).toString())}
+				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
+				// Fee calculation not ideal, fix.
+				value={
+					swapDirection && ballastInfo && inputVal ? (parseFloat(inputVal) - parseFloat(inputVal) * (100 / 10000)).toString() : inputVal
+				}
+				disabled={swapDirection}
+				label={
+					<div className='flex flex-row items-center pl-2 pr-4'>
+						<div className='flex w-6 justify-center'>
+							<Image
+								src={`/images/tokens/${vaultName === 'baoUSD' ? 'DAI' : 'ETH'}.png`}
+								height={32}
+								width={32}
+								alt={vaultName === 'baoUSD' ? 'DAI' : 'ETH'}
+							/>
+						</div>
+					</div>
+				}
+			/>
+		</>
+	)
+
+	const bInput = (
+		<>
+			<Typography variant='sm' className='float-left mb-1'>
+				Balance: {vaultName === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
+			</Typography>
+			<Typography variant='sm' className='float-right mb-1 text-text-200'>
+				Mint Limit: {ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}{' '}
+			</Typography>
+			<Input
+				onSelectMax={() => setInputVal(formatEther(vaultName === 'baoUSD' ? baoUSDBalance : baoETHBalance).toString())}
+				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
+				// Fee calculation not ideal, fix.
+				value={
+					!swapDirection && ballastInfo && inputVal ? (parseFloat(inputVal) - parseFloat(inputVal) * (100 / 10000)).toString() : inputVal
+				}
+				disabled={!swapDirection}
+				label={
+					<div className='flex flex-row items-center pl-2 pr-4'>
+						<div className='flex w-6 justify-center'>
+							<Image
+								src={`/images/tokens/${vaultName === 'baoUSD' ? 'baoUSD' : 'baoETH'}.png`}
+								height={32}
+								width={32}
+								alt={vaultName === 'baoUSD' ? 'baoUSD' : 'baoETH'}
+							/>
+						</div>
+					</div>
+				}
+			/>
+		</>
+	)
+
 	return (
 		<>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
@@ -221,59 +297,94 @@ const Vault: NextPage<{
 								<Card.Options className='mt-0'>
 									<NavButtons options={operations} active={operation} onClick={setOperation} />
 								</Card.Options>
-								<Card.Body>
-									<div className='mb-4 flex flex-col items-center justify-center'>
-										<div className='flex w-full flex-row'>
-											<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-												<Typography variant='sm' className='text-text-200'>
-													Wallet:
-												</Typography>
-												<Typography variant='sm'>{`${getDisplayBalance(synthBalance)}`}</Typography>
-											</div>
-											<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-												<Typography variant='sm' className='text-text-200'>
-													{`${maxLabel()}:`}
-												</Typography>
-												<Typography variant='sm'>{`${getDisplayBalance(max(), synth.underlyingDecimals)} ${
-													synth.underlyingSymbol
-												}`}</Typography>
-											</div>
-										</div>
-										<Input
-											value={val}
-											onChange={handleChange}
-											onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
-											label={
-												<div className='flex flex-row items-center pl-2 pr-4'>
-													<div className='flex w-6 justify-center'>
-														<Image
-															src={`/images/tokens/${synth.icon}`}
-															width={32}
-															height={32}
-															alt={synth.symbol}
-															className='block h-6 w-6 align-middle'
-														/>
+								{operation !== 'Ballast' ? (
+									<>
+										<Card.Body>
+											<div className='mb-4 flex flex-col items-center justify-center'>
+												<div className='flex w-full flex-row'>
+													<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+														<Typography variant='sm' className='text-text-200'>
+															Wallet:
+														</Typography>
+														<Typography variant='sm'>{`${getDisplayBalance(synthBalance)}`}</Typography>
+													</div>
+													<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
+														<Typography variant='sm' className='text-text-200'>
+															{`${maxLabel()}:`}
+														</Typography>
+														<Typography variant='sm'>{`${getDisplayBalance(max(), synth.underlyingDecimals)} ${
+															synth.underlyingSymbol
+														}`}</Typography>
 													</div>
 												</div>
-											}
-										/>
-									</div>
-									<VaultButton
-										vaultName={vaultName}
-										operation={operation}
-										asset={synth}
-										val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
-										isDisabled={
-											!val ||
-											(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
-											// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
-											(val &&
-												vaultName === 'baoUSD' &&
-												parseUnits(val, synth.underlyingDecimals).lt(parseUnits('5000')) &&
-												operation === 'Mint')
-										}
-									/>
-								</Card.Body>
+												<Input
+													value={val}
+													onChange={handleChange}
+													onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
+													label={
+														<div className='flex flex-row items-center pl-2 pr-4'>
+															<div className='flex w-6 justify-center'>
+																<Image
+																	src={`/images/tokens/${synth.icon}`}
+																	width={32}
+																	height={32}
+																	alt={synth.symbol}
+																	className='block h-6 w-6 align-middle'
+																/>
+															</div>
+														</div>
+													}
+												/>
+											</div>
+											<VaultButton
+												vaultName={vaultName}
+												operation={operation}
+												asset={synth}
+												val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
+												isDisabled={
+													!val ||
+													(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
+													// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
+													(val &&
+														vaultName === 'baoUSD' &&
+														parseUnits(val, synth.underlyingDecimals).lt(parseUnits('5000')) &&
+														operation === 'Mint')
+												}
+											/>
+										</Card.Body>
+									</>
+								) : (
+									<>
+										<Card.Body>
+											{swapDirection ? bInput : aInput}
+											<div className='mt-4 block select-none text-center'>
+												<span
+													className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-primary-300 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
+													onClick={() => setSwapDirection(!swapDirection)}
+												>
+													<FontAwesomeIcon icon={faSync} size='xs' className='m-auto' />
+													<Typography variant='xs' className='inline'>
+														Fee: {ballastInfo ? `${(100 / 10000) * 100}%` : <Loader />}
+													</Typography>
+												</span>
+											</div>
+											{swapDirection ? aInput : bInput}
+											<div className='h-4' />
+										</Card.Body>
+										<Card.Actions>
+											<BallastButton
+												swapDirection={swapDirection}
+												inputVal={inputVal}
+												maxValues={{
+													buy: vaultName === 'baoUSD' ? daiBalance : ethBalance,
+													sell: vaultName === 'baoUSD' ? baoUSDBalance : baoETHBalance,
+												}}
+												supplyCap={ballastInfo ? ballastInfo.supplyCap : BigNumber.from(0)}
+												reserves={ballastInfo ? ballastInfo.reserves : BigNumber.from(0)}
+											/>
+										</Card.Actions>
+									</>
+								)}
 							</div>
 						</div>
 						<VaultBorrowModal

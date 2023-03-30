@@ -8,13 +8,13 @@ import { useTxReceiptUpdater } from './useTransactionProvider'
 import { providerKey } from '@/utils/index'
 import type { Erc20 } from '@/typechain/index'
 
-export const useEthBalance = () => {
+export const useEthBalance = (address?: string) => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
 	const enabled = !!library && !!chainId && !!account
 	const { data: balance, refetch } = useQuery(
 		['@/hooks/base/useEthBalance', providerKey(library, account, chainId), { enabled }],
 		async () => {
-			return await library.getBalance(account)
+			return await library.getBalance(address ? address : account)
 		},
 		{
 			enabled,

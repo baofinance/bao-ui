@@ -23,10 +23,9 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 
 	const navigation = [
 		['0', 'Vaults', '/'],
-		['1', 'Ballast', '/ballast'],
-		['2', 'Baskets', '/baskets'],
-		['3', 'veBAO', '/vebao'],
-		['4', 'Gauges', '/gauges'],
+		['1', 'Baskets', '/baskets'],
+		['2', 'veBAO', '/vebao'],
+		['3', 'Gauges', '/gauges'],
 	]
 
 	const merkleLeaf = useProofs()

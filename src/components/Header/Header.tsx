@@ -115,7 +115,6 @@ const Header: FC = () => {
 													>
 														<div className='space-y-4'>
 															<MobileNavLink href='/'>Vaults</MobileNavLink>
-															<MobileNavLink href='/ballast'>Ballast</MobileNavLink>
 															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
 															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
 															<MobileNavLink href='/gauges'>Gauges</MobileNavLink>

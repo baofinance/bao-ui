@@ -190,6 +190,7 @@ export interface Config {
 			comptroller: string
 			oracle: string
 			ballast: string
+			stabilizer: string
 			markets: SupportedVault[]
 		}
 	}
