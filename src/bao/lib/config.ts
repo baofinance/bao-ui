@@ -36,6 +36,10 @@ export default {
 		bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 		bETH: '0xa1e3F062CE5825c1e19207cd93CEFdaD82A8A631',
 	},
+	llamaIds: {
+		wstETH: '747c1d2a-c668-4682-b9f9-296708a3dd90',
+		rETH: 'd4b3c522-6127-4b89-bedf-83641cdcd2eb',
+	},
 	contracts: {
 		Bao: {
 			1: {
@@ -433,10 +437,6 @@ export default {
 			cgIds: {
 				'0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0': 'wrapped-steth',
 				'0xae78736cd615f374d3085123a210448e74fc6393': 'rocket-pool-eth',
-			},
-			llamaIds: {
-				'0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0': '747c1d2a-c668-4682-b9f9-296708a3dd90',
-				'0xae78736cd615f374d3085123a210448e74fc6393': 'd4b3c522-6127-4b89-bedf-83641cdcd2eb',
 			},
 			pieColors: {
 				wstETH: '#3AA4FF',

@@ -179,6 +179,7 @@ export interface Config {
 	networkId: number
 	defaultRpc: RpcConfig
 	addressMap: AddressMapConfig
+	llamaIds: AddressMapConfig
 	contracts: ContractsConfig
 	subgraphs: SubgraphConfig
 	farms: SupportedPool[]

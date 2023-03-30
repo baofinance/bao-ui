@@ -14,6 +14,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
+import useLlama from '../baskets/useLlamaYield'
 import fetchStEthApy, { useStEthApy } from './strategies/useStEthApy'
 import fetchSushiApy from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
@@ -45,8 +46,11 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 	const enabled = !!bao && !!lendingRegistry && !!mkr && !!basketContract && !!prices
 
-	const lidoApy = useStEthApy()
-	console.log('lidoApy', lidoApy ? lidoApy.toString() : '0')
+	const lidoAPY = useLlama(Config.llamaIds.wstETH)
+	const rocketAPY = useLlama(Config.llamaIds.rETH)
+
+	console.log(parseUnits(lidoAPY.toString()).toString())
+	console.log(parseUnits(rocketAPY.toString()).toString())
 
 	const { data: composition, refetch } = useQuery(
 		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
@@ -125,12 +129,12 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 				}
 
 				if (_c.symbol === 'wstETH') {
-					_c.apy = BigNumber.from('53300000000000000')
+					_c.apy = parseUnits(lidoAPY.toString(), 16)
 					_c.strategy = 'LIDO'
 				}
 
 				if (_c.symbol === 'rETH') {
-					_c.apy = BigNumber.from('46700000000000000')
+					_c.apy = parseUnits(rocketAPY.toString(), 16)
 					_c.strategy = 'ROCKET POOL'
 				}
 
