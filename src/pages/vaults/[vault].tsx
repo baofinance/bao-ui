@@ -373,6 +373,7 @@ const Vault: NextPage<{
 										</Card.Body>
 										<Card.Actions>
 											<BallastButton
+												vaultName={vaultName}
 												swapDirection={swapDirection}
 												inputVal={inputVal}
 												maxValues={{
