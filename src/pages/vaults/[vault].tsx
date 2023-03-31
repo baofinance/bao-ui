@@ -656,6 +656,8 @@ const VaultStats: React.FC<VaultStatProps> = ({ asset, amount, vaultName }: Vaul
 
 	const healthFactor = useHealthFactor(vaultName)
 
+	console.log('healthFactor', healthFactor && healthFactor.toString())
+
 	return (
 		<div className='mb-4 flex flex-row gap-4 rounded'>
 			<StatBlock
@@ -733,16 +735,7 @@ const VaultStats: React.FC<VaultStatProps> = ({ asset, amount, vaultName }: Vaul
 						label: `Debt Health`,
 						value: `${
 							healthFactor &&
-							healthFactor &&
-							(healthFactor.lte(0) ? (
-								'-'
-							) : parseFloat(formatUnits(healthFactor)) > 10000 ? (
-								<p>
-									{'>'} 10000 <Tooltipped content={`Your health factor is ${formatUnits(healthFactor)}.`} />
-								</p>
-							) : (
-								getDisplayBalance(healthFactor)
-							))
+							(healthFactor.lte(BigNumber.from(0)) ? '-' : healthFactor.gt(parseUnits('10000')) ? '∞' : getDisplayBalance(healthFactor))
 						}`,
 					},
 				]}
