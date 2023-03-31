@@ -1,5 +1,3 @@
-import { SWRConfig } from 'swr'
-import fetcher from '@/bao/lib/fetcher'
 import '@/styles/globals.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { Web3ReactProvider } from '@web3-react/core'
@@ -92,16 +90,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 						<BaoProvider>
 							<TransactionProvider>
 								<VaultsProvider>
-									<FarmsProvider>
-										<SWRConfig
-											value={{
-												fetcher,
-												refreshInterval: 300000,
-											}}
-										>
-											{children}
-										</SWRConfig>
-									</FarmsProvider>{' '}
+									<FarmsProvider>{children}</FarmsProvider>
 								</VaultsProvider>
 							</TransactionProvider>
 						</BaoProvider>

@@ -8625,11 +8625,6 @@ eth-ui@^1.0.1:
     vue "^2.5.11"
     vue-router "^3.1.6"
 
-ether-swr@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/ether-swr/-/ether-swr-2.0.1.tgz#76175d8a1f4758545cdfa03410c2d134bc97e947"
-  integrity sha512-FWck86RyNU4giiJeLyWzT/xPGYuTA8G2yFioSRON20aL3urbUbTqv0krh1yWvgQ+JZX4/cqnB92GiRQr0zkNzQ==
-
 ethereum-bloom-filters@^1.0.6:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/ethereum-bloom-filters/-/ethereum-bloom-filters-1.0.10.tgz#3ca07f4aed698e75bd134584850260246a5fed8a"
@@ -15921,11 +15916,6 @@ svgo@^1.0.0, svgo@^1.2.2:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
-
-swr@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-1.3.0.tgz#c6531866a35b4db37b38b72c45a63171faf9f4e8"
-  integrity sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==
 
 symbol-observable@^4.0.0:
   version "4.0.0"
