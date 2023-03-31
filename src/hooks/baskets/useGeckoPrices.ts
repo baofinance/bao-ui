@@ -51,8 +51,6 @@ const useGeckoPrices = (): Prices => {
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
 
-	console.log('useGeckoPrices', prices)
-
 	return prices
 }
 

@@ -9,9 +9,7 @@ import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
-import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
 import { AccountLiquidity, useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
@@ -21,9 +19,8 @@ import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
-import type { Comptroller } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
-import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
@@ -42,6 +39,7 @@ import VaultBorrowModal from './components/Modals/BorrowModal'
 import VaultSupplyModal from './components/Modals/SupplyModal'
 import { VaultDetails } from './components/Stats'
 import VaultButton from './components/VaultButton'
+
 export async function getStaticPaths() {
 	return {
 		paths: [{ params: { vault: 'baoUSD' } }, { params: { vault: 'baoETH' } }],
@@ -94,40 +92,6 @@ const Vault: NextPage<{
 
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
-
-	const supply = useMemo(
-		() =>
-			supplyBalances &&
-			synth &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === synth.vaultAddress.toLowerCase()) &&
-			exchangeRates &&
-			synth &&
-			exchangeRates[synth.vaultAddress]
-				? decimate(
-						supplyBalances
-							.find(balance => balance.address.toLowerCase() === synth.vaultAddress.toLowerCase())
-							.balance.mul(exchangeRates[synth.vaultAddress]),
-				  )
-				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, synth],
-	)
-
-	let _imfFactor = synth && synth.imfFactor
-	if (accountLiquidity) {
-		const _sqrt = sqrt(supply)
-		const num = exponentiate(parseUnits('1.1'))
-		const denom = synth && decimate(synth.imfFactor.mul(_sqrt).add(parseUnits('1')))
-		_imfFactor = synth && num.div(denom)
-	}
-
-	let withdrawable = BigNumber.from(0)
-	if (synth && _imfFactor.gt(synth.collateralFactor) && synth.price.gt(0)) {
-		if (synth.collateralFactor.mul(synth.price).gt(0)) {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(synth.collateralFactor.mul(synth.price)))
-		} else {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(synth.price))
-		}
-	}
 
 	const borrowed = useMemo(
 		() => synth && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,
@@ -468,16 +432,11 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	vault,
 	vaultName,
 	accountBalances,
-	accountVaults,
 	supplyBalances,
-	borrowBalances,
 	exchangeRates,
 }: CollateralItemProps) => {
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const { account } = useWeb3React()
-	const { handleTx } = useTransactionHandler()
-	const comptroller = useContract<Comptroller>('Comptroller', vaultName && Config.vaults[vaultName].comptroller)
-	const vaultAddress = vault && vault.vaultAddress
 
 	const suppliedUnderlying = useMemo(() => {
 		const supply = supplyBalances.find(balance => balance.address === vault.vaultAddress)
@@ -486,12 +445,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 		return decimate(supply.balance.mul(exchangeRates[vault.vaultAddress]))
 	}, [supplyBalances, exchangeRates, vault.vaultAddress])
 
-	const borrowed = useMemo(() => {
-		const borrow = borrowBalances.find(balance => balance.address === vault.vaultAddress)
-		if (borrow === undefined) return BigNumber.from(0)
-		return borrow.balance
-	}, [vault, borrowBalances])
-
+	// FIXME: Causes crash
 	// const isInVault = useMemo(() => {
 	// 	return accountVaults && vault && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
 	// }, [accountVaults, vault])
@@ -674,33 +628,11 @@ type VaultStatProps = {
 	vaultName: string
 }
 
-const VaultStats: React.FC<VaultStatProps> = ({ title, asset, amount, vaultName }: VaultStatProps) => {
+const VaultStats: React.FC<VaultStatProps> = ({ asset, amount, vaultName }: VaultStatProps) => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const borrowBalances = useBorrowBalances(vaultName)
-	const balances = useAccountBalances(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
-
-	const borrowBalance = useMemo(
-		() =>
-			borrowBalances && borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.vaultAddress)
-				? borrowBalances.find(_borrowBalance => _borrowBalance.address === asset.vaultAddress).balance
-				: 0,
-		[borrowBalances, asset.vaultAddress],
-	)
-
-	const walletBalance = useMemo(
-		() =>
-			balances && balances.find(_balance => _balance.address === asset.underlyingAddress)
-				? balances.find(_balance => _balance.address === asset.underlyingAddress).balance
-				: 0,
-		[balances, asset.underlyingAddress],
-	)
-
-	const price = useMemo(() => {
-		if (!borrowBalance) return
-		return getDisplayBalance(decimate(asset.price.mul(borrowBalance)))
-	}, [borrowBalance, asset.price])
 
 	const { data: maxMintable } = useQuery(
 		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
@@ -719,28 +651,10 @@ const VaultStats: React.FC<VaultStatProps> = ({ title, asset, amount, vaultName 
 	)
 
 	const change = amount ? decimate(parseUnits(amount).mul(asset.price)) : BigNumber.from(0)
-	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
-	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
 	const newBorrowable = asset && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
 
 	const healthFactor = useHealthFactor(vaultName)
-
-	const borrowLimit =
-		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
-			? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
-			: BigNumber.from(0)
-
-	const healthFactorColor = (healthFactor: BigNumber) => {
-		const c = healthFactor.eq(0)
-			? `${(props: any) => props.theme.color.text[100]}`
-			: healthFactor.lte(parseUnits('1.25'))
-			? '#e32222'
-			: healthFactor.lt(parseUnits('1.55'))
-			? '#ffdf19'
-			: '#45be31'
-		return c
-	}
 
 	return (
 		<div className='mb-4 flex flex-row gap-4 rounded'>

@@ -1,16 +1,15 @@
 import Config from '@/bao/lib/config'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import type { VaultOracle } from '@/typechain/index'
 import MultiCall from '@/utils/multicall'
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import useBao from '../base/useBao'
-//import { parseUnits } from 'ethers/lib/utils'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
+import useBao from '../base/useBao'
 
 type VaultPrices = {
 	prices: {

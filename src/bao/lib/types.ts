@@ -196,8 +196,3 @@ export interface Config {
 	}
 	gauges: SupportedGauge[]
 }
-
-export type SWR = {
-	isLoading?: boolean
-	isError?: any
-}

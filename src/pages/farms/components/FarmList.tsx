@@ -78,7 +78,6 @@ const FarmList: React.FC = () => {
 				for (let i = 0; i < farms.length; i++) {
 					const farm = farms[i]
 					const tvlInfo = farmsTVL.tvls.find((fTVL: any) => fTVL.lpAddress.toLowerCase() === farm.lpAddress.toLowerCase())
-					const BLOCKS_PER_YEAR = 2336000
 					const farmWithStakedValue = {
 						...farm,
 						poolType: farm.poolType || PoolType.ACTIVE,

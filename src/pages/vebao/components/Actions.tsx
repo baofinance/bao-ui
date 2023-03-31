@@ -100,7 +100,6 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const dist = useDistributionInfo()
 	const canStartDistribution = !!merkleLeaf && !!dist && dist.dateStarted.eq(0) && dist.dateEnded.eq(0)
 	const canEndDistribution = !!merkleLeaf && !!dist && dist.dateStarted.gt(0) && dist.dateEnded.eq(0)
-	const distributionEnded = !!merkleLeaf && !!dist && dist.dateEnded.gt(0)
 
 	const shouldBeWarned = canStartDistribution || canEndDistribution
 

@@ -12,7 +12,7 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { Bao, Baov2, Swapper } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
-import { decimate, getDisplayBalance, isBigNumberish } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useQuery } from '@tanstack/react-query'
@@ -21,14 +21,13 @@ import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
-import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
 const LiquidSwap: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
 	const [inputVal, setInputVal] = useState('')
 
-	// FIXME: maybe this should be an ethers.BigNumber
 	const baov1Balance = useTokenBalance(Config.contracts.Bao[chainId].address)
 	const baov2Balance = useTokenBalance(Config.contracts.Baov2[chainId].address)
 	const swapper = useContract<Swapper>('Swapper', Config.contracts.Swapper[chainId].address)
@@ -176,10 +175,7 @@ const SwapperButton: React.FC<SwapperButtonProps> = ({ inputVal, maxValue }: Swa
 	const handleClick = async () => {
 		// BAOv1->BAOv2
 		if (!inputApproval.gt(0)) {
-			const tx = baoContract.approve(
-				swapper.address,
-				ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-			)
+			const tx = baoContract.approve(swapper.address, ethers.constants.MaxUint256)
 
 			return handleTx(tx, 'Migration: Approve BAOv1')
 		}

@@ -6,12 +6,10 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { DefaultSeo } from 'next-seo'
 import React, { ReactNode } from 'react'
-import { SWRConfig } from 'swr'
 import { Web3Provider } from '@ethersproject/providers'
 import { QueryClientProvider } from '@tanstack/react-query'
 import queryClient from '@/utils/queryClient'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import fetcher from '@/bao/lib/fetcher'
 import Header from '@/components/Header'
 import Page from '@/components/Page'
 import Web3ReactManager from '@/components/Web3ReactManager'
@@ -92,16 +90,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 						<BaoProvider>
 							<TransactionProvider>
 								<VaultsProvider>
-									<FarmsProvider>
-										<SWRConfig
-											value={{
-												fetcher,
-												refreshInterval: 300000,
-											}}
-										>
-											{children}
-										</SWRConfig>
-									</FarmsProvider>
+									<FarmsProvider>{children}</FarmsProvider>
 								</VaultsProvider>
 							</TransactionProvider>
 						</BaoProvider>

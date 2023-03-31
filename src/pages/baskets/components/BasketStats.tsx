@@ -1,22 +1,19 @@
-import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
-import React from 'react'
-import { isDesktop } from 'react-device-detect'
-import BN from 'bignumber.js' // INFO: use bignumber.js because the premium can be negative
+import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Card from '@/components/Card'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
-import useNav from '@/hooks/baskets/useNav'
-import { getDisplayBalance, decimate, exponentiate } from '@/utils/numberFormat'
-//import { formatUnits, parseUnits } from 'ethers/lib/utils'
-
-import type { BasketComponent } from '@/hooks/baskets/useComposition'
-import type { BasketRates } from '@/hooks/baskets/useBasketRate'
 import type { BasketInfo } from '@/hooks/baskets/useBasketInfo'
-import { ActiveSupportedBasket } from '@/bao/lib/types'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import type { BasketRates } from '@/hooks/baskets/useBasketRate'
+import type { BasketComponent } from '@/hooks/baskets/useComposition'
+import useNav from '@/hooks/baskets/useNav'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { faAngleDoubleDown, faAngleDoubleUp, faCoins, faHandHoldingUsd, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { BigNumber } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
+import React from 'react'
+import { isDesktop } from 'react-device-detect'
 
 type BasketStatsProps = {
 	basket: ActiveSupportedBasket

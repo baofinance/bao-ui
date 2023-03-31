@@ -11,7 +11,6 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import Link from 'next/link'
-import { VaultOperations } from './Modals/Modals'
 
 type VaultButtonProps = {
 	operation: string

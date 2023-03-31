@@ -1,19 +1,18 @@
+import { ActiveSupportedBasket } from '@/bao/lib/types'
+import Button from '@/components/Button'
+import Input from '@/components/Input'
+import Loader from '@/components/Loader'
+import Modal from '@/components/Modal'
+import { StatBlock } from '@/components/Stats'
+import Typography from '@/components/Typography'
+import { useEthBalance } from '@/hooks/base/useTokenBalance'
+import useOvenInfo from '@/hooks/baskets/useOvenInfo'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
-import Loader from '@/components/Loader'
-import { ActiveSupportedBasket } from '@/bao/lib/types'
-import Button from '@/components/Button'
-import Input from '@/components/Input'
-import Modal from '@/components/Modal'
-import { StatBlock } from '@/components/Stats'
-import Typography from '@/components/Typography'
-import useOvenInfo from '@/hooks/baskets/useOvenInfo'
-import { useEthBalance } from '@/hooks/base/useTokenBalance'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { useWeb3React } from '@web3-react/core'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -22,7 +21,6 @@ type ModalProps = {
 }
 
 const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
-	const { account } = useWeb3React()
 	const [value, setValue] = useState<string | undefined>()
 	const ovenInfo = useOvenInfo(basket)
 	const ethBalance = useEthBalance()

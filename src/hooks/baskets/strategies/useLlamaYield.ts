@@ -1,7 +1,5 @@
-import { decimate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 
 // INFO: add to this to support new tokens
 

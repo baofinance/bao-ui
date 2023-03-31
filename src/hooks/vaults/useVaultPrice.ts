@@ -1,3 +1,4 @@
+import Config from '@/bao/lib/config'
 import { VaultOracle } from '@/typechain/VaultOracle'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
@@ -7,9 +8,9 @@ import { useBlockUpdater } from '../base/useBlock'
 import useContract from '../base/useContract'
 import { useTxReceiptUpdater } from '../base/useTransactionProvider'
 
-export const useVaultPrice = (address: string) => {
+export const useVaultPrice = (address: string, vaultName: string) => {
 	const bao = useBao()
-	const oracle = useContract<VaultOracle>('VaultOracle')
+	const oracle = useContract<VaultOracle>('VaultOracle', Config.vaults[vaultName].oracle)
 	const { chainId } = useWeb3React()
 
 	const enabled = !!bao && !!oracle && !!chainId
@@ -18,6 +19,8 @@ export const useVaultPrice = (address: string) => {
 		['@/hooks/vaults/useVaultPrice', { enabled }],
 		async () => {
 			const _price = await oracle.getUnderlyingPrice(address)
+
+			console.log('price', _price.toString())
 			return _price
 		},
 		{

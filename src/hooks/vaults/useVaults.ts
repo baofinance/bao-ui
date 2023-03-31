@@ -1,19 +1,16 @@
+import Config from '@/bao/lib/config'
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import { Context, VaultsContext } from '@/contexts/Vaults'
-import Config from '@/bao/lib/config'
-import { useContext } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import useContract from '@/hooks/base/useContract'
-import type { Comptroller } from '@/typechain/index'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { Comptroller__factory } from '@/typechain/factories'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useWeb3React } from '@web3-react/core'
+import { useContext } from 'react'
 
 export const useVaults = (vaultName: string): ActiveSupportedVault[] | undefined => {
 	const { vaults }: VaultsContext = useContext(Context)
-	//if (vaultName === undefined || !vaults[vaultName]) return undefined
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	//@ts-ignore
 	return vaults[vaultName]

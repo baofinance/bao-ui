@@ -1,13 +1,10 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import useContract from '@/hooks/base/useContract'
 import type { GaugeController } from '@/typechain/index'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import { useBlockUpdater } from '../base/useBlock'
-import useTransactionProvider, { useTxReceiptUpdater } from '../base/useTransactionProvider'
+import useTransactionProvider from '../base/useTransactionProvider'
 
 type UserSlopes = {
 	slope: BigNumber

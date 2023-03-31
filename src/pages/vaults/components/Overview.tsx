@@ -1,17 +1,15 @@
-import 'react-circular-progressbar/dist/styles.css'
-
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
-import { isDesktop } from 'react-device-detect'
-
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
+import { isDesktop } from 'react-device-detect'
 
 export const Overview = ({ vaultName }: { vaultName: string }) => {
 	const bao = useBao()

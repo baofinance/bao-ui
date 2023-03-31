@@ -14,7 +14,6 @@ import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber, FixedNumber } from 'ethers'
 import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
@@ -39,7 +38,6 @@ export type VaultModalProps = {
 }
 
 const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalProps & { operations: VaultOperations[] }) => {
-	const { library, account } = useWeb3React()
 	const [operation, setOperation] = useState(operations[0])
 	const [val, setVal] = useState<string>('')
 	const balances = useAccountBalances(vaultName)

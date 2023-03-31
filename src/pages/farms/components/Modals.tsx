@@ -1,19 +1,17 @@
-import { NavButtons } from '@/components/Button'
 import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import { FeeBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
-//import { useWeb3React } from '@web3-react/core'
 import useBlockDiff from '@/hooks/base/useBlockDiff'
+import useContract from '@/hooks/base/useContract'
 import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
+import type { Erc20 } from '@/typechain/index'
 import Image from 'next/future/image'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Actions from './Actions'
 import { FarmWithStakedValue } from './FarmList'
-import useContract from '@/hooks/base/useContract'
-import type { Erc20 } from '@/typechain/index'
 
 type FarmModalProps = {
 	farm: FarmWithStakedValue

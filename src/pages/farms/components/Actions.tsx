@@ -5,14 +5,11 @@ import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { PoolType } from '@/contexts/Farms/types'
 import useAllowance from '@/hooks/base/useAllowance'
-import useBlockDiff from '@/hooks/base/useBlockDiff'
 import useContract from '@/hooks/base/useContract'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useEarnings from '@/hooks/farms/useEarnings'
-import useFees from '@/hooks/farms/useFees'
 import useStakedBalance from '@/hooks/farms/useStakedBalance'
-import { useUserFarmInfo } from '@/hooks/farms/useUserFarmInfo'
 import { Uni_v2_lp__factory } from '@/typechain/factories'
 import type { Masterchef, Uni_v2_lp } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
@@ -184,30 +181,11 @@ interface UnstakeProps {
 	onHide: () => void
 }
 
-export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, pairUrl = '', onHide }) => {
+export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHide }) => {
 	const [val, setVal] = useState('')
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const stakedBalance = useStakedBalance(pid)
-
-	const handleChange = useCallback(
-		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
-		},
-		[setVal],
-	)
-
-	const handleSelectMax = useCallback(() => {
-		setVal(getFullDisplayBalance(max))
-	}, [setVal, max])
-
-	const handleSelectHalf = useCallback(() => {
-		setVal(formatUnits(max.div(2)))
-	}, [max])
-
-	const userInfo = useUserFarmInfo(pid)
-	const blockDiff = useBlockDiff(userInfo)
-	const fees = useFees(blockDiff)
 
 	const masterChefContract = useContract<Masterchef>('Masterchef')
 

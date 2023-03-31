@@ -10,7 +10,6 @@ import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortaweso
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import classNames from 'classnames'
-import { BigNumber } from 'ethers'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { FC, Fragment, ReactNode } from 'react'

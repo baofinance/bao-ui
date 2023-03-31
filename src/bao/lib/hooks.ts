@@ -3,10 +3,11 @@ import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { getNetworkConnector, injected } from './connectors'
+import { MetaMaskInpageProvider } from '@metamask/providers'
 
 declare global {
 	interface Window {
-		ethereum?: any
+		ethereum?: MetaMaskInpageProvider
 	}
 }
 

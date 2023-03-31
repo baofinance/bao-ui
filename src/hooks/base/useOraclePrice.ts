@@ -1,5 +1,4 @@
 import { Chainoracle } from '@/typechain/Chainoracle'
-import { MarketOracle } from '@/typechain/MarketOracle'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'

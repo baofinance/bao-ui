@@ -1,12 +1,12 @@
+import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
-import Multicall from '@/utils/multicall'
 import useBao from '../base/useBao'
 import { useAccountLiquidity } from './useAccountLiquidity'
-import { useAccountVaults } from './useVaults'
 import { useVaultPrices } from './usePrices'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { useAccountVaults } from './useVaults'
 
 const useHealthFactor = (vaultName: string) => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()

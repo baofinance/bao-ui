@@ -31,7 +31,7 @@ const GaugeList: React.FC = () => {
 						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APR']} />
 					)}
 					{gauges.length ? (
-						gauges.map((gauge: any, i: number) => (
+						gauges.map((gauge: ActiveSupportedGauge, i: number) => (
 							<React.Fragment key={i}>
 								<GaugeListItem gauge={gauge} />
 							</React.Fragment>

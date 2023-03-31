@@ -3,19 +3,13 @@ import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useBasketInfo from '@/hooks/baskets/useBasketInfo'
-import useBaskets from '@/hooks/baskets/useBaskets'
-import useComposition from '@/hooks/baskets/useComposition'
 import { useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useVaults } from '@/hooks/vaults/useVaults'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { isDesktop } from 'react-device-detect'
-
-// FIXME: these components should all be using ethers.BigNumber instead of js float math
 
 export const VaultList: React.FC = () => {
 	return (
@@ -50,6 +44,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 			})
 	}, [_vaults, supplyBalances])
 
+	// FIXME: this is a hack to get the average APY of the basket
 	// const baskets = useBaskets()
 	// const basket = useMemo(() => {
 	// 	if (!baskets) return
@@ -111,11 +106,14 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 								<Loader />
 							)}
 						</div>
-						{/* <div className='mx-auto my-0 flex w-full items-center justify-center'>
+						{/* 
+						FIXME: this is a placeholder for the APY range
+						<div className='mx-auto my-0 flex w-full items-center justify-center'>
 							<Typography variant='sm' className='m-0 font-semibold'>
 								{collateral ? '0 - ' + getDisplayBalance(maxAPY, 0, 2) + '%' : <Loader />}
 							</Typography>
-						</div> */}
+						</div> 
+						*/}
 
 						<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
 							<span className='inline-block'>

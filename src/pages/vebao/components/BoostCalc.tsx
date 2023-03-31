@@ -3,7 +3,6 @@ import Typography from '@/components/Typography'
 import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
-import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
@@ -20,7 +19,6 @@ export const BoostCalc = () => {
 	const [boost, setBoost] = useState(1)
 	const [selectedOption, setSelectedOption] = useState('baoUSD-3CRV')
 	const veInfo = useVeInfo()
-	const lockInfo = useLockInfo()
 
 	const gauges = useGauges()
 
@@ -133,7 +131,7 @@ export const BoostCalc = () => {
 										>
 											<Listbox.Options className='absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y divide-primary-500 overflow-hidden rounded-md border border-primary-500 bg-primary-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
-													gauges.map((gauge: any, i: number) => (
+													gauges.map((gauge: any) => (
 														<Listbox.Option
 															key={gauge.name}
 															className={({ active }) =>
@@ -144,7 +142,7 @@ export const BoostCalc = () => {
 															}
 															value={gauge.name}
 														>
-															{({ selected, active }) => (
+															{({ selected }) => (
 																<div className='flex justify-between'>
 																	{selected ? (
 																		<span className={`mr-1 text-text-400`}>

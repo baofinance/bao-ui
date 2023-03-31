@@ -1,7 +1,5 @@
-import React from 'react'
-import { isDesktop } from 'react-device-detect'
-import Typography from '../Typography'
 import classNames from 'classnames'
+import Typography from '../Typography'
 
 type Stat = {
 	label: string

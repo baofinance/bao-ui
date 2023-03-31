@@ -1,14 +1,13 @@
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber, ethers } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import React, { useMemo } from 'react'
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Loader from '@/components/Loader'
 import useAllowance from '@/hooks/base/useAllowance'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useContract from '@/hooks/base/useContract'
-import type { Stabilizer, Dai, Erc20 } from '@/typechain/index'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import type { Dai, Erc20, Stabilizer } from '@/typechain/index'
+import { BigNumber, ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
+import React, { useMemo } from 'react'
 
 const BallastButton: React.FC<BallastButtonProps> = ({
 	vaultName,

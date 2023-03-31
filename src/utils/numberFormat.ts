@@ -1,7 +1,7 @@
+import type { BigNumberish } from '@ethersproject/bignumber'
 import BN from 'bignumber.js'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import type { BigNumberish } from '@ethersproject/bignumber'
+import { parseUnits } from 'ethers/lib/utils'
 
 export const getDisplayBalance = (balance: BigNumberish | BN, decimals = 18, precision?: number): string => {
 	const n = new BN(balance.toString()).div(new BN(10).pow(decimals))
