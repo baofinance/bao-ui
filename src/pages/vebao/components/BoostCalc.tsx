@@ -88,20 +88,6 @@ export const BoostCalc = () => {
 		const _working_supply = working_supply + limfinal - old_bal
 		const boost = limfinal / _working_supply / (noboost_lim / noboost_supply)
 
-		console.log('l', l)
-		console.log('working_balances', working_balances)
-		console.log('working_supply', working_supply)
-		console.log('L', L)
-		console.log('lim', lim)
-		console.log('veBAO', veBAO)
-		console.log('limplus', limplus)
-		console.log('limfinal', limfinal)
-		console.log('old_bal', old_bal)
-		console.log('noboost_lim', noboost_lim)
-		console.log('noboost_supply', noboost_supply)
-		console.log('_working_supply', _working_supply)
-		console.log('boost', boost)
-
 		return [_working_supply, boost]
 	}
 

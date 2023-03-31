@@ -1,25 +1,22 @@
-import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
 import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
-import useGauges from '@/hooks/gauges/useGauges'
 import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
+import useGauges from '@/hooks/gauges/useGauges'
 import useMintable from '@/hooks/gauges/useMintable'
 import useRelativeWeight from '@/hooks/gauges/useRelativeWeight'
+import useLockInfo from '@/hooks/vebao/useLockInfo'
+import useVeInfo from '@/hooks/vebao/useVeInfo'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
-import useUserSlopes from '@/hooks/vebao/useUserSlopes'
-import useVeInfo from '@/hooks/vebao/useVeInfo'
-import useVotingPowerAllocated from '@/hooks/gauges/useVotingPowerAllocated'
-import useLockInfo from '@/hooks/vebao/useLockInfo'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -81,16 +78,11 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 
 	const gaugeInfo = useGaugeInfo(gauge)
 	const veInfo = useVeInfo()
-	const userSlopes = useUserSlopes(gauge)
-
-	const WEEK = 7 * 86400
-	const MAXTIME = 4 * 365 * 86400
 
 	const lockInfo = useLockInfo()
 	const veEstimate = lockInfo ? parseFloat(formatUnits(lockInfo.balance)) : 0
 	const totalVePower = veInfo ? parseFloat(formatUnits(veInfo.totalSupply)) : 0
 	const tvl = parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0))))
-	const votingPowerAllocated = useVotingPowerAllocated()
 
 	const boost = useMemo(() => {
 		const amount = depositAmount ? formatUnits(decimate(depositAmount)) : '0'
@@ -111,16 +103,6 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 
 		return boost
 	}, [account, depositAmount, gaugeInfo, totalVePower, tvl, veEstimate])
-
-	console.log('-----------------')
-	console.log(gauge.symbol, gaugeTVL.toString())
-	console.log('depositAmount', depositAmount ? formatUnits(decimate(depositAmount)) : '0')
-	console.log('power', veEstimate)
-	console.log('totalPower', totalVePower)
-	console.log('tvl', parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0)))))
-	console.log('boost', boost)
-	console.log('rewards apr', rewardsAPR)
-	console.log('boosted apr', parseFloat(rewardsAPR.toString()) * boost)
 
 	return (
 		<>

@@ -11,14 +11,14 @@ export const usePrice = (coingeckoId: string) => {
 			const res = await fetch(`https://bao-price-api.herokuapp.com/api/price?id=${coingeckoId}`)
 			const price = await res.json()
 			if (!price) throw new Error(`Can't get price for coinGeckoId='${coingeckoId}'.`)
-			return fromDecimal(price.price)
+			return fromDecimal(price.price[coingeckoId].usd)
 		},
 		{
 			retry: true,
 			retryDelay: 1000 * 60,
 			staleTime: 1000 * 60 * 60,
 			cacheTime: 1000 * 60 * 120,
-			refetchOnReconnect: true,
+			refetchOnReconnect: false,
 			refetchInterval: 1000 * 60 * 5,
 			keepPreviousData: true,
 			placeholderData: BigNumber.from(0),

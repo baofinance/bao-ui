@@ -32,10 +32,8 @@ const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, i
 	let premium = null
 	let premiumColor = 'white'
 	if (nav && pairPrice && rates) {
-		console.log(nav.toString(), formatUnits(rates.usd))
 		premium =
 			((parseFloat(nav.toString()) - parseFloat(formatUnits(rates.usd.toString()))) / parseFloat(formatUnits(rates.usd.toString()))) * 100
-		console.log('premium', premium.toString())
 		premiumColor = premium < 0 ? 'red' : 'green'
 	}
 

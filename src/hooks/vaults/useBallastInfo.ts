@@ -1,22 +1,20 @@
 import Config from '@/bao/lib/config'
+import useBao from '@/hooks/base/useBao'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import useContract from '@/hooks/base/useContract'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { Dai, Stabilizer, Weth } from '@/typechain/index'
+import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import useBao from '@/hooks/base/useBao'
-import useContract from '@/hooks/base/useContract'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useEthBalance } from '../base/useTokenBalance'
 import { useEffect } from 'react'
 
 const useBallastInfo = (vaultName: string) => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
 	const ballast = useContract<Stabilizer>('Stabilizer', Config.vaults[vaultName].stabilizer)
-	console.log('ballastAddress', ballast && ballast.address)
 	const dai = useContract<Dai>('Dai', Config.contracts.Dai[chainId].address)
 	const weth = useContract<Weth>('Weth', Config.contracts.Weth[chainId].address)
 

@@ -27,8 +27,6 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 	const composition = useComposition(basket)
 	const rates = useBasketRates(basket)
 
-	console.log(basket.symbol, composition)
-
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
 			<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200'>

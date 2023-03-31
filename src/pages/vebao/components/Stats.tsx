@@ -216,7 +216,6 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 	const ratio = veInfo ? parseFloat(formatUnits(veInfo.supply)) / parseFloat(formatUnits(veInfo.totalSupply)) : 0
 	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
-	console.log('veInfo', veInfo)
 	return (
 		<div>
 			<Typography variant='xl' className='mt-4 font-bold'>

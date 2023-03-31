@@ -1,16 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-//import { Contract } from '@ethersproject/contracts'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import { decimate, exponentiate } from '@/utils/numberFormat'
 import { parseUnits } from 'ethers/lib/utils'
-//import { BigNumber } from 'ethers'
-import useContract from '@/hooks/base/useContract'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { Cether__factory, Ctoken__factory, Erc20__factory, Comptroller__factory, VaultOracle__factory } from '@/typechain/factories'
-import type { Cether, Comptroller, Ctoken, VaultOracle } from '@/typechain/index'
+import type { Cether, Ctoken } from '@/typechain/index'
 
 type Cvault = Cether | Ctoken
 
@@ -20,15 +17,7 @@ export const BLOCKS_PER_SECOND = 1 / SECONDS_PER_BLOCK
 export const BLOCKS_PER_DAY = BLOCKS_PER_SECOND * SECONDS_PER_DAY
 export const DAYS_PER_YEAR = 365
 
-// FIXME: this should be ethers.BigNumber math
 const toApy = (rate: BigNumber) => ((Math.pow((rate.toNumber() / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100).toFixed(18)
-//const toApy = (rate: BigNumber) => {
-//const n = rate.mul(BLOCKS_PER_DAY).add(1)
-//const ne = n.pow(DAYS_PER_YEAR)
-//const apy = ne.sub(1).mul(100)
-//console.log(formatUnits(apy, 36), n.toString())
-//return apy
-//}
 
 export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[] } | undefined => {
 	const { library, account, chainId } = useWeb3React()

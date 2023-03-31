@@ -19,7 +19,7 @@ type VaultPrices = {
 }
 
 export const usePrice = (coingeckoId: string) => {
-	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoId}`
+	const url = `https://bao-price-api.herokuapp.com/api/price?id=${coingeckoId}`
 
 	const { data: price } = useQuery(
 		['@/hooks/vaults/usePrice'],
@@ -29,7 +29,7 @@ export const usePrice = (coingeckoId: string) => {
 			return Object.keys(res).reduce(
 				(prev, cur) => ({
 					...prev,
-					price: parseUnits(res[cur].usd.toString()),
+					price: parseUnits(res.price[cur].usd.toString()),
 				}),
 				{},
 			)
@@ -37,9 +37,9 @@ export const usePrice = (coingeckoId: string) => {
 		{
 			retry: true,
 			retryDelay: 1000 * 60,
-			staleTime: 1000 * 60 * 5,
-			cacheTime: 1000 * 60 * 10,
-			refetchOnReconnect: true,
+			staleTime: 1000 * 60 * 60,
+			cacheTime: 1000 * 60 * 120,
+			refetchOnReconnect: false,
 			refetchInterval: 1000 * 60 * 5,
 			keepPreviousData: true,
 			placeholderData: BigNumber.from(0),
@@ -51,7 +51,7 @@ export const usePrice = (coingeckoId: string) => {
 
 export const usePrices = (vaultName: string) => {
 	const coingeckoIds: any = Object.values(Config.vaults[vaultName].markets).map(({ coingeckoId }) => coingeckoId)
-	const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=${coingeckoIds.join(',')}`
+	const url = `https://bao-price-api.herokuapp.com/api/price?id=${coingeckoIds.join(',')}`
 
 	const { data: prices } = useQuery(
 		['@/hooks/vaults/usePrices'],
@@ -61,7 +61,7 @@ export const usePrices = (vaultName: string) => {
 			return Object.keys(res).reduce(
 				(prev, cur) => ({
 					...prev,
-					[coingeckoIds[cur].toLowerCase()]: parseUnits(res[cur].usd.toString()),
+					[coingeckoIds[cur].toLowerCase()]: parseUnits(res.price[cur].usd.toString()),
 				}),
 				{},
 			)
@@ -69,8 +69,8 @@ export const usePrices = (vaultName: string) => {
 		{
 			retry: true,
 			retryDelay: 1000 * 60,
-			staleTime: 1000 * 60 * 5,
-			cacheTime: 1000 * 60 * 10,
+			staleTime: 1000 * 60 * 60,
+			cacheTime: 1000 * 60 * 120,
 			refetchOnReconnect: true,
 			refetchInterval: 1000 * 60 * 5,
 			keepPreviousData: true,

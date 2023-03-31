@@ -27,12 +27,12 @@ const useGeckoPrices = (): Prices => {
 			}, {})
 
 			const idsToQuery = Object.keys(allCgIds).join(',')
-			const res = await (await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${idsToQuery}&vs_currencies=usd`)).json()
+			const res = await (await fetch(`https://bao-price-api.herokuapp.com/api/price?id=${idsToQuery}`)).json()
 
-			return Object.keys(res).reduce(
+			return Object.keys(res.price).reduce(
 				(prev, cur) => ({
 					...prev,
-					[allCgIds[cur].toLowerCase()]: parseUnits(res[cur].usd.toString()),
+					[allCgIds[cur].toLowerCase()]: parseUnits(res.price[cur].usd.toString()),
 				}),
 				{},
 			)
@@ -50,6 +50,8 @@ const useGeckoPrices = (): Prices => {
 	}
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
+
+	console.log('useGeckoPrices', prices)
 
 	return prices
 }

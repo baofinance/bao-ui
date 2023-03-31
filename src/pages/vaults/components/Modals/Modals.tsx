@@ -149,8 +149,6 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
 	const ballastInfo = useBallastInfo(vaultName)
 
-	console.log('borrowed', borrowed.toString())
-
 	const aInput = (
 		<>
 			<Typography variant='sm' className='float-left mb-1'>

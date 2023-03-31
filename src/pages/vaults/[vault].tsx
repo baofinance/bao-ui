@@ -155,9 +155,6 @@ const Vault: NextPage<{
 		}
 	}
 
-	const walletBalance = useTokenBalance(synth && synth.underlyingAddress)
-	console.log('walletBalance', walletBalance.toString())
-
 	const maxLabel = () => {
 		switch (operation) {
 			case 'Mint':
@@ -511,7 +508,6 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 	const baskets = useBaskets()
 	const basket =
 		vault.isBasket === true && baskets && baskets.find(basket => basket.address.toLowerCase() === vault.underlyingAddress.toLowerCase())
-	console.log(basket && basket)
 
 	const composition = useComposition(vault.isBasket === true && basket && basket)
 	const avgBasketAPY =

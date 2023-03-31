@@ -49,9 +49,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const lidoAPY = useLlama(Config.llamaIds.wstETH)
 	const rocketAPY = useLlama(Config.llamaIds.rETH)
 
-	console.log(parseUnits(lidoAPY.toString()).toString())
-	console.log(parseUnits(rocketAPY.toString()).toString())
-
 	const { data: composition, refetch } = useQuery(
 		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
 		async () => {
@@ -143,8 +140,6 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 					image: `/images/tokens/${_getImageURL(_c.symbol)}.png`,
 					color: basket.pieColors[_c.symbol],
 				})
-
-				console.log(_c.symbol, _c.apy.toString())
 			}
 
 			const marketCap = _comp.reduce((prev, comp) => {
