@@ -296,6 +296,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 						</Modal.Body>
 						<Modal.Actions>
 							<BallastButton
+								vaultName={vaultName}
 								swapDirection={swapDirection}
 								inputVal={inputVal}
 								maxValues={{

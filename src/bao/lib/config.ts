@@ -81,22 +81,6 @@ export default {
 				address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 			},
 		},
-		// Hard Synths
-		Comptroller: {
-			1: {
-				address: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
-			},
-		},
-		VaultOracle: {
-			1: {
-				address: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
-			},
-		},
-		Stabilizer: {
-			1: {
-				address: '0x720282BB7e721634c95F0933636DE3171dc405de',
-			},
-		},
 		// Baskets
 		SimpleUniRecipe: {
 			1: {

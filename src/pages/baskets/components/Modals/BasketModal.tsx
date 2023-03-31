@@ -37,7 +37,7 @@ enum MintOption {
 
 // TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
 const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal }) => {
-	const { chainId } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 	const [value, setValue] = useState<string | undefined>('0')
 	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
 	const [mintOption, setMintOption] = useState<MintOption>(basket.symbol === 'bstbl' ? MintOption.DAI : MintOption.ETH)

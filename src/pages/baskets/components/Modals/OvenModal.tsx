@@ -13,6 +13,7 @@ import Typography from '@/components/Typography'
 import useOvenInfo from '@/hooks/baskets/useOvenInfo'
 import { useEthBalance } from '@/hooks/base/useTokenBalance'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -21,6 +22,7 @@ type ModalProps = {
 }
 
 const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
+	const { account } = useWeb3React()
 	const [value, setValue] = useState<string | undefined>()
 	const ovenInfo = useOvenInfo(basket)
 	const ethBalance = useEthBalance()

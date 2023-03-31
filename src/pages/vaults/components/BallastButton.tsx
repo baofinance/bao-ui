@@ -19,15 +19,13 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	reserves,
 }: BallastButtonProps) => {
 	const { handleTx } = useTransactionHandler()
-
-	const { chainId } = useWeb3React()
-
-	const daiApproval = useAllowance(Config.addressMap.DAI, Config.contracts.Stabilizer[chainId].address)
-	const baoUSDApproval = useAllowance(Config.addressMap.baoUSD, Config.contracts.Stabilizer[chainId].address)
-	const baoETHApproval = useAllowance(Config.addressMap.baoETH, Config.contracts.Stabilizer[chainId].address)
-
 	const ballast = useContract<Stabilizer>('Stabilizer', Config.vaults[vaultName].stabilizer)
-	const dai = useContract<Dai>('Dai')
+	const daiApproval = useAllowance(Config.addressMap.DAI, ballast.address)
+	const wethApproval = useAllowance(Config.addressMap.WETH, ballast.address)
+	const baoUSDApproval = useAllowance(Config.addressMap.baoUSD, ballast.address)
+	const baoETHApproval = useAllowance(Config.addressMap.baoETH, ballast.address)
+	const dai = useContract<Dai>('Dai', Config.addressMap.DAI)
+	const weth = useContract<Dai>('Weth', Config.addressMap.WETH)
 	const baoUSD = useContract<Erc20>('Erc20', Config.addressMap.baoUSD)
 	const baoETH = useContract<Erc20>('Erc20', Config.addressMap.baoETH)
 
@@ -45,7 +43,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 		if (isDisabled) return
 		if (swapDirection) {
 			// baoUSD->DAI
-			if (!baoUSDApproval.gt(0) || !baoETHApproval.gt(0)) {
+			if (vaultName === 'baoUSD' ? !baoUSDApproval.gt(0) : !baoETHApproval.gt(0)) {
 				const tx = (vaultName === 'baoUSD' ? baoUSD : baoETH).approve(
 					ballast.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
@@ -59,23 +57,23 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			)
 		} else {
 			// DAI->baoUSD
-			if (!daiApproval.gt(0) && vaultName === 'baoUSD') {
-				const tx = dai.approve(
+			if (vaultName === 'baoUSD' ? !daiApproval.gt(0) : !wethApproval.gt(0)) {
+				const tx = (vaultName === 'baoUSD' ? dai : weth).approve(
 					ballast.address,
 					ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 				)
-				return handleTx(tx, `Ballast: Approve ${vaultName === 'baoUSD' ? 'DAI' : 'ETH'}`)
+				return handleTx(tx, `Ballast: Approve ${vaultName === 'baoUSD' ? 'DAI' : 'WETH'}`)
 			}
 
 			handleTx(
 				ballast.buy(parseUnits(inputVal).toString()),
-				`Ballast: Swap ${vaultName === 'baoUSD' ? 'DAI for baoUSD' : 'ETH for baoETH'}`,
+				`Ballast: Swap ${vaultName === 'baoUSD' ? 'DAI for baoUSD' : 'WETH for baoETH'}`,
 			)
 		}
 	}
 
 	const buttonText = () => {
-		if (!(daiApproval && baoUSDApproval)) return <Loader />
+		if (!(daiApproval && baoUSDApproval && wethApproval)) return <Loader />
 		if (vaultName === 'baoUSD')
 			if (swapDirection) {
 				return baoUSDApproval.gt(0) ? 'Swap baoUSD for DAI' : 'Approve baoUSD'
@@ -86,7 +84,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			if (swapDirection) {
 				return baoETHApproval.gt(0) ? 'Swap baoETH for ETH' : 'Approve baoETH'
 			} else {
-				return 'Swap ETH for baoETH'
+				return wethApproval.gt(0) ? 'Swap WETH for baoETH' : 'Approve WETH'
 			}
 	}
 

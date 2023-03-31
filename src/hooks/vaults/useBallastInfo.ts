@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { Dai, Stabilizer } from '@/typechain/index'
+import { Dai, Stabilizer, Weth } from '@/typechain/index'
 import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
@@ -18,9 +18,8 @@ const useBallastInfo = (vaultName: string) => {
 	const ballast = useContract<Stabilizer>('Stabilizer', Config.vaults[vaultName].stabilizer)
 	console.log('ballastAddress', ballast && ballast.address)
 	const dai = useContract<Dai>('Dai', Config.contracts.Dai[chainId].address)
-	const ethBalance = useEthBalance(ballast && ballast.address)
+	const weth = useContract<Weth>('Weth', Config.contracts.Weth[chainId].address)
 
-	console.log('ballastETHbalance', ethBalance.toString())
 	const enabled = !!bao && !!library && !!ballast && !!dai
 	const { data: ballastInfo, refetch } = useQuery(
 		['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), { enabled }],
@@ -36,11 +35,16 @@ const useBallastInfo = (vaultName: string) => {
 					contract: dai,
 					calls: [{ method: 'balanceOf', params: [ballast.address] }],
 				},
+				{
+					ref: 'WETH',
+					contract: weth,
+					calls: [{ method: 'balanceOf', params: [ballast.address] }],
+				},
 			])
-			const { Ballast: ballastRes, DAI: daiRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
+			const { Ballast: ballastRes, DAI: daiRes, WETH: wethRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
 
 			return {
-				reserves: vaultName === 'baoUSD' ? BigNumber.from(daiRes[0].values[0]) : BigNumber.from(ethBalance),
+				reserves: vaultName === 'baoUSD' ? BigNumber.from(daiRes[0].values[0]) : BigNumber.from(wethRes[0].values[0]),
 				supplyCap: BigNumber.from(ballastRes[0].values[0]),
 				fees: {
 					buy: BigNumber.from(ballastRes[1].values[0]),

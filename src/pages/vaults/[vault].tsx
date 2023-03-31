@@ -8,16 +8,15 @@ import Loader, { PageLoader } from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import useBao from '@/hooks/base/useBao'
 import useContract from '@/hooks/base/useContract'
 import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import useBasketInfo from '@/hooks/baskets/useBasketInfo'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
 import { AccountLiquidity, useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { Balance, useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
+import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
@@ -36,7 +35,7 @@ import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import BallastButton from './components/BallastButton'
 import VaultBorrowModal from './components/Modals/BorrowModal'
@@ -178,7 +177,7 @@ const Vault: NextPage<{
 	// Ballast
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
 	const [inputVal, setInputVal] = useState('')
-	const ethBalance = useEthBalance()
+	const wethBalance = useTokenBalance(Config.addressMap.WETH)
 	const daiBalance = useTokenBalance(Config.addressMap.DAI)
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
@@ -186,14 +185,24 @@ const Vault: NextPage<{
 
 	const aInput = (
 		<>
-			<Typography variant='sm' className='float-left mb-1'>
-				Balance: {vaultName === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(ethBalance)} ETH`}
-			</Typography>
-			<Typography variant='sm' className='float-right mb-1 text-text-200'>
-				Reserves: {ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}{' '}
-			</Typography>
+			<div className='flex w-full flex-row'>
+				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+					<Typography variant='sm' className='text-text-200'>
+						Balance:
+					</Typography>
+					<Typography variant='sm'>
+						{vaultName === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(wethBalance)} WETH`}
+					</Typography>
+				</div>
+				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
+					<Typography variant='sm' className='text-text-200'>
+						Reserves:
+					</Typography>
+					<Typography variant='sm'>{ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}</Typography>
+				</div>
+			</div>
 			<Input
-				onSelectMax={() => setInputVal(formatEther(vaultName === 'baoUSD' ? daiBalance : ethBalance).toString())}
+				onSelectMax={() => setInputVal(formatEther(vaultName === 'baoUSD' ? daiBalance : wethBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				// Fee calculation not ideal, fix.
 				value={
@@ -204,10 +213,10 @@ const Vault: NextPage<{
 					<div className='flex flex-row items-center pl-2 pr-4'>
 						<div className='flex w-6 justify-center'>
 							<Image
-								src={`/images/tokens/${vaultName === 'baoUSD' ? 'DAI' : 'ETH'}.png`}
+								src={`/images/tokens/${vaultName === 'baoUSD' ? 'DAI' : 'WETH'}.png`}
 								height={32}
 								width={32}
-								alt={vaultName === 'baoUSD' ? 'DAI' : 'ETH'}
+								alt={vaultName === 'baoUSD' ? 'DAI' : 'WETH'}
 							/>
 						</div>
 					</div>
@@ -218,12 +227,22 @@ const Vault: NextPage<{
 
 	const bInput = (
 		<>
-			<Typography variant='sm' className='float-left mb-1'>
-				Balance: {vaultName === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
-			</Typography>
-			<Typography variant='sm' className='float-right mb-1 text-text-200'>
-				Mint Limit: {ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}{' '}
-			</Typography>
+			<div className='flex w-full flex-row'>
+				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
+					<Typography variant='sm' className='text-text-200'>
+						Balance:
+					</Typography>
+					<Typography variant='sm'>
+						{vaultName === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
+					</Typography>
+				</div>
+				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
+					<Typography variant='sm' className='text-text-200'>
+						Mint Limit:
+					</Typography>
+					<Typography variant='sm'>{ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}</Typography>
+				</div>
+			</div>
 			<Input
 				onSelectMax={() => setInputVal(formatEther(vaultName === 'baoUSD' ? baoUSDBalance : baoETHBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
@@ -377,7 +396,7 @@ const Vault: NextPage<{
 												swapDirection={swapDirection}
 												inputVal={inputVal}
 												maxValues={{
-													buy: vaultName === 'baoUSD' ? daiBalance : ethBalance,
+													buy: vaultName === 'baoUSD' ? daiBalance : wethBalance,
 													sell: vaultName === 'baoUSD' ? baoUSDBalance : baoETHBalance,
 												}}
 												supplyCap={ballastInfo ? ballastInfo.supplyCap : BigNumber.from(0)}
