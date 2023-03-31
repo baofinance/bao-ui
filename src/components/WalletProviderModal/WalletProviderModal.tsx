@@ -1,16 +1,17 @@
 import Config from '@/bao/lib/config'
 import { coinbaseWallet, injected, walletConnect } from '@/bao/lib/connectors'
 import Button from '@/components/Button'
+import { MetaMaskInpageProvider } from '@metamask/providers'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
-import React, { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Modal from '../Modal'
 import Typography from '../Typography'
 
 declare global {
 	interface Window {
-		ethereum?: any
+		ethereum?: MetaMaskInpageProvider
 	}
 }
 
