@@ -39,8 +39,8 @@ const useGeckoPrices = (): Prices => {
 		},
 		{
 			enabled,
-			staleTime: 1000 * 60 * 3, // three minutes
-			cacheTime: 1000 * 60 * 10, // ten minutes
+			staleTime: 1000 * 60 * 60,
+			cacheTime: 1000 * 60 * 120,
 			refetchOnReconnect: true,
 		},
 	)
