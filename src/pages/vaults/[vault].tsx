@@ -656,8 +656,6 @@ const VaultStats: React.FC<VaultStatProps> = ({ asset, amount, vaultName }: Vaul
 
 	const healthFactor = useHealthFactor(vaultName)
 
-	console.log('healthFactor', healthFactor && healthFactor.toString())
-
 	return (
 		<div className='mb-4 flex flex-row gap-4 rounded'>
 			<StatBlock

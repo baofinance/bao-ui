@@ -20,7 +20,6 @@ export const useVaultPrice = (address: string, vaultName: string) => {
 		async () => {
 			const _price = await oracle.getUnderlyingPrice(address)
 
-			console.log('price', _price.toString())
 			return _price
 		},
 		{
