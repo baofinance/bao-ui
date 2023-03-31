@@ -14,7 +14,6 @@ import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import useLlama from './strategies/useLlamaYield'
-import fetchSushiApy from './strategies/useSushiBarApy'
 import useGeckoPrices from './useGeckoPrices'
 
 export type BasketComponent = {
@@ -114,7 +113,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 					_c.price = decimate(prices[_c.underlying.toLowerCase()].mul(exchangeRate))
 
 					// xSushi APY can't be found on-chain, check for special case
-					_c.apy = _c.strategy === 'Sushi Bar' ? await fetchSushiApy() : await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
+					_c.apy = await logicContract.getAPRFromUnderlying(lendingRes[0].values[0])
 
 					// Adjust price for compound's exchange rate.
 					// wrapped balance * exchange rate / 10 ** (18 - 8 + underlyingDecimals)
