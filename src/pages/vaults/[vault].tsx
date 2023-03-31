@@ -10,7 +10,7 @@ import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useContract from '@/hooks/base/useContract'
-import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
+import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
@@ -129,6 +129,11 @@ const Vault: NextPage<{
 		}
 	}
 
+	const borrowed = useMemo(
+		() => synth && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,
+		[borrowBalances, synth],
+	)
+
 	const max = () => {
 		switch (operation) {
 			case 'Mint':
@@ -149,6 +154,9 @@ const Vault: NextPage<{
 				}
 		}
 	}
+
+	const walletBalance = useTokenBalance(synth && synth.underlyingAddress)
+	console.log('walletBalance', walletBalance.toString())
 
 	const maxLabel = () => {
 		switch (operation) {
@@ -365,8 +373,8 @@ const Vault: NextPage<{
 													(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
 													// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
 													(val &&
-														vaultName === 'baoUSD' &&
-														parseUnits(val, synth.underlyingDecimals).lt(parseUnits('5000')) &&
+														borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
+														parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
 														operation === 'Mint')
 												}
 											/>

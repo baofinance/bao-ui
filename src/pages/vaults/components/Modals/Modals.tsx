@@ -5,13 +5,12 @@ import Input from '@/components/Input'
 import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
+import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
-import BallastButton from '../BallastButton'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,6 +19,7 @@ import { BigNumber, FixedNumber } from 'ethers'
 import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
+import BallastButton from '../BallastButton'
 import VaultStats from '../Stats'
 import VaultButton from '../VaultButton'
 
@@ -80,6 +80,11 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(asset.price))
 		}
 	}
+
+	const borrowed = useMemo(
+		() => asset && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
+		[borrowBalances, asset],
+	)
 
 	const max = () => {
 		switch (operation) {
@@ -143,6 +148,8 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
 	const ballastInfo = useBallastInfo(vaultName)
+
+	console.log('borrowed', borrowed.toString())
 
 	const aInput = (
 		<>
@@ -266,10 +273,10 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 								isDisabled={
 									!val ||
 									(val && parseUnits(val, asset.underlyingDecimals).gt(max())) ||
-									// FIXME: temporarily limit minting/borrowing to 5k baoUSD.
+									// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
 									(val &&
-										vaultName === 'baoUSD' &&
-										parseUnits(val, asset.underlyingDecimals).lt(parseUnits('5000')) &&
+										borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
+										parseUnits(val, asset.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
 										operation === VaultOperations.mint)
 								}
 								onHide={hideModal}
