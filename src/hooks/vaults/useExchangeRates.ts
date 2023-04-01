@@ -8,6 +8,7 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useEffect } from 'react'
 
 type ExchangeRates = {
 	exchangeRates: { [key: string]: BigNumber }
@@ -23,7 +24,7 @@ export const useExchangeRates = (vaultName: string): ExchangeRates => {
 	const { data: exchangeRates, refetch } = useQuery(
 		['@/hooks/vaults/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, vaultName }],
 		async () => {
-			const tokenContracts = vaults.map((vault: ActiveSupportedVault) => vault.vaultContract)
+			const tokenContracts = vaults?.map((vault: ActiveSupportedVault) => vault.vaultContract)
 			const multiCallContext = MultiCall.createCallContext(
 				tokenContracts.map(tokenContract => ({
 					ref: tokenContract.address,
@@ -49,6 +50,11 @@ export const useExchangeRates = (vaultName: string): ExchangeRates => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
+
+	useEffect(() => {
+		_refetch()
+	}, [vaultName])
+
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 

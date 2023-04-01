@@ -7,6 +7,7 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useEffect } from 'react'
 
 type Approvals = {
 	approvals: { [key: string]: BigNumber }
@@ -56,6 +57,10 @@ export const useApprovals = (vaultName: string): Approvals => {
 	const _refetch = () => {
 		if (enabled) refetch()
 	}
+
+	useEffect(() => {
+		_refetch()
+	}, [vaultName])
 
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
