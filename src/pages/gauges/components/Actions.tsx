@@ -359,7 +359,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							Vote
 						</Typography>
 					</div>
-					<div className='flex w-full items-center justify-center gap-2 rounded-md bg-primary-100'>
+					<div className='flex w-full items-center justify-center gap-2 rounded-md'>
 						<input
 							type='range'
 							id='points'
@@ -378,7 +378,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='form-range border-r-1 h-6 w-full appearance-none rounded-md rounded-r-none border-background-100 bg-primary-300 p-2 focus:shadow-none focus:outline-none focus:ring-0 disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-full bg-primary-400 accent-text-400 disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -390,11 +390,11 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							placeholder={val.toString()}
 							value={val}
 							className='relative -mr-1 h-6 w-10 min-w-0
-				appearance-none rounded border-solid border-inherit border-primary-500 bg-primary-100 pl-2 text-end 
+				appearance-none rounded border-solid border-inherit bg-background-100 pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
 				 duration-200 disabled:text-text-100 md:text-sm'
 						/>
-						<Typography variant='sm' className='m-0 mr-2 rounded border-solid border-inherit border-primary-500 bg-primary-100 p-0'>
+						<Typography variant='sm' className='m-0 mr-2 rounded border-solid border-inherit p-0'>
 							%
 						</Typography>
 					</div>
