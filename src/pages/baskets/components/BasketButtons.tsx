@@ -37,7 +37,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 				</div>
 				<div>
 					<a href={`${swapLink}`} target='_blank' rel='noreferrer'>
-						<Button fullWidth text='Swap' />
+						<Button fullWidth text='Swap' disabled={basket.name === 'bETH'} />
 					</a>
 				</div>
 			</div>
