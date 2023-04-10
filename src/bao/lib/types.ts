@@ -74,6 +74,7 @@ export interface SupportedBasket {
 	basketContract: Experipie
 	recipeAddress: string
 	recipeContract: SimpleUniRecipe
+	recipeVersion: number
 	ovenAddress: string
 	ovenContract?: Oven
 }

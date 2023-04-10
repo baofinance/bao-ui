@@ -28,27 +28,37 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface RecipeInterface extends utils.Interface {
+export interface Recipev2Interface extends utils.Interface {
   functions: {
     "bake(address,uint256,uint256)": FunctionFragment;
+    "basketRegistry()": FunctionFragment;
     "getPrice(address,uint256)": FunctionFragment;
-    "getPriceEth(address,uint256)": FunctionFragment;
+    "getPriceUSD(address,uint256)": FunctionFragment;
+    "lendingRegistry()": FunctionFragment;
+    "oracle()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "toBasket(address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "uniRouter()": FunctionFragment;
     "updateUniOracle(address)": FunctionFragment;
-    "updateUniRouter(address,address)": FunctionFragment;
+    "updateUniRouter(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "bake"
       | "bake(address,uint256,uint256)"
+      | "basketRegistry"
+      | "basketRegistry()"
       | "getPrice"
       | "getPrice(address,uint256)"
-      | "getPriceEth"
-      | "getPriceEth(address,uint256)"
+      | "getPriceUSD"
+      | "getPriceUSD(address,uint256)"
+      | "lendingRegistry"
+      | "lendingRegistry()"
+      | "oracle"
+      | "oracle()"
       | "owner"
       | "owner()"
       | "renounceOwnership"
@@ -57,10 +67,12 @@ export interface RecipeInterface extends utils.Interface {
       | "toBasket(address,uint256)"
       | "transferOwnership"
       | "transferOwnership(address)"
+      | "uniRouter"
+      | "uniRouter()"
       | "updateUniOracle"
       | "updateUniOracle(address)"
       | "updateUniRouter"
-      | "updateUniRouter(address,address)"
+      | "updateUniRouter(address)"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -80,6 +92,14 @@ export interface RecipeInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "basketRegistry",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "basketRegistry()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getPrice",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
@@ -88,13 +108,23 @@ export interface RecipeInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getPriceEth",
+    functionFragment: "getPriceUSD",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getPriceEth(address,uint256)",
+    functionFragment: "getPriceUSD(address,uint256)",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "lendingRegistry",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lendingRegistry()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "oracle", values?: undefined): string;
+  encodeFunctionData(functionFragment: "oracle()", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner()", values?: undefined): string;
   encodeFunctionData(
@@ -121,6 +151,11 @@ export interface RecipeInterface extends utils.Interface {
     functionFragment: "transferOwnership(address)",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(functionFragment: "uniRouter", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "uniRouter()",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "updateUniOracle",
     values: [PromiseOrValue<string>]
@@ -131,16 +166,24 @@ export interface RecipeInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateUniRouter",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateUniRouter(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "updateUniRouter(address)",
+    values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(functionFragment: "bake", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "bake(address,uint256,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "basketRegistry",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "basketRegistry()",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
@@ -149,13 +192,23 @@ export interface RecipeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getPriceEth",
+    functionFragment: "getPriceUSD",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getPriceEth(address,uint256)",
+    functionFragment: "getPriceUSD(address,uint256)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "lendingRegistry",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lendingRegistry()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "oracle", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "oracle()", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner()", data: BytesLike): Result;
   decodeFunctionResult(
@@ -179,6 +232,11 @@ export interface RecipeInterface extends utils.Interface {
     functionFragment: "transferOwnership(address)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "uniRouter", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "uniRouter()",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "updateUniOracle",
     data: BytesLike
@@ -192,7 +250,7 @@ export interface RecipeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateUniRouter(address,address)",
+    functionFragment: "updateUniRouter(address)",
     data: BytesLike
   ): Result;
 
@@ -218,14 +276,14 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface Recipe extends BaseContract {
-  contractName: "Recipe";
+export interface Recipev2 extends BaseContract {
+  contractName: "Recipev2";
 
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: RecipeInterface;
+  interface: Recipev2Interface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -261,6 +319,10 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    basketRegistry(overrides?: CallOverrides): Promise<[string]>;
+
+    "basketRegistry()"(overrides?: CallOverrides): Promise<[string]>;
+
     getPrice(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
@@ -273,17 +335,25 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getPriceEth(
+    getPriceUSD(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "getPriceEth(address,uint256)"(
+    "getPriceUSD(address,uint256)"(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    lendingRegistry(overrides?: CallOverrides): Promise<[string]>;
+
+    "lendingRegistry()"(overrides?: CallOverrides): Promise<[string]>;
+
+    oracle(overrides?: CallOverrides): Promise<[string]>;
+
+    "oracle()"(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -319,6 +389,10 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    uniRouter(overrides?: CallOverrides): Promise<[string]>;
+
+    "uniRouter()"(overrides?: CallOverrides): Promise<[string]>;
+
     updateUniOracle(
       _newOracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -331,13 +405,11 @@ export interface Recipe extends BaseContract {
 
     updateUniRouter(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "updateUniRouter(address,address)"(
+    "updateUniRouter(address)"(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -356,6 +428,10 @@ export interface Recipe extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  basketRegistry(overrides?: CallOverrides): Promise<string>;
+
+  "basketRegistry()"(overrides?: CallOverrides): Promise<string>;
+
   getPrice(
     _basket: PromiseOrValue<string>,
     _amount: PromiseOrValue<BigNumberish>,
@@ -368,17 +444,25 @@ export interface Recipe extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getPriceEth(
+  getPriceUSD(
     _basket: PromiseOrValue<string>,
     _amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "getPriceEth(address,uint256)"(
+  "getPriceUSD(address,uint256)"(
     _basket: PromiseOrValue<string>,
     _amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  lendingRegistry(overrides?: CallOverrides): Promise<string>;
+
+  "lendingRegistry()"(overrides?: CallOverrides): Promise<string>;
+
+  oracle(overrides?: CallOverrides): Promise<string>;
+
+  "oracle()"(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -414,6 +498,10 @@ export interface Recipe extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  uniRouter(overrides?: CallOverrides): Promise<string>;
+
+  "uniRouter()"(overrides?: CallOverrides): Promise<string>;
+
   updateUniOracle(
     _newOracle: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -426,13 +514,11 @@ export interface Recipe extends BaseContract {
 
   updateUniRouter(
     _newRouter: PromiseOrValue<string>,
-    _oracle: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "updateUniRouter(address,address)"(
+  "updateUniRouter(address)"(
     _newRouter: PromiseOrValue<string>,
-    _oracle: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -461,6 +547,10 @@ export interface Recipe extends BaseContract {
       }
     >;
 
+    basketRegistry(overrides?: CallOverrides): Promise<string>;
+
+    "basketRegistry()"(overrides?: CallOverrides): Promise<string>;
+
     getPrice(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
@@ -473,17 +563,25 @@ export interface Recipe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getPriceEth(
+    getPriceUSD(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getPriceEth(address,uint256)"(
+    "getPriceUSD(address,uint256)"(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    lendingRegistry(overrides?: CallOverrides): Promise<string>;
+
+    "lendingRegistry()"(overrides?: CallOverrides): Promise<string>;
+
+    oracle(overrides?: CallOverrides): Promise<string>;
+
+    "oracle()"(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -525,6 +623,10 @@ export interface Recipe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    uniRouter(overrides?: CallOverrides): Promise<string>;
+
+    "uniRouter()"(overrides?: CallOverrides): Promise<string>;
+
     updateUniOracle(
       _newOracle: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -537,13 +639,11 @@ export interface Recipe extends BaseContract {
 
     updateUniRouter(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "updateUniRouter(address,address)"(
+    "updateUniRouter(address)"(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -574,6 +674,10 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    basketRegistry(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "basketRegistry()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getPrice(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
@@ -586,17 +690,25 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getPriceEth(
+    getPriceUSD(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "getPriceEth(address,uint256)"(
+    "getPriceUSD(address,uint256)"(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    lendingRegistry(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lendingRegistry()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    oracle(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "oracle()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -632,6 +744,10 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    uniRouter(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "uniRouter()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     updateUniOracle(
       _newOracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -644,13 +760,11 @@ export interface Recipe extends BaseContract {
 
     updateUniRouter(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "updateUniRouter(address,address)"(
+    "updateUniRouter(address)"(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -670,6 +784,12 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    basketRegistry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "basketRegistry()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getPrice(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
@@ -682,17 +802,27 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getPriceEth(
+    getPriceUSD(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "getPriceEth(address,uint256)"(
+    "getPriceUSD(address,uint256)"(
       _basket: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    lendingRegistry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "lendingRegistry()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    oracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "oracle()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -728,6 +858,10 @@ export interface Recipe extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    uniRouter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "uniRouter()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     updateUniOracle(
       _newOracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -740,13 +874,11 @@ export interface Recipe extends BaseContract {
 
     updateUniRouter(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "updateUniRouter(address,address)"(
+    "updateUniRouter(address)"(
       _newRouter: PromiseOrValue<string>,
-      _oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

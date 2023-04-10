@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  SimpleUniRecipe,
-  SimpleUniRecipeInterface,
-} from "../SimpleUniRecipe";
+import type { Recipev2, Recipev2Interface } from "../Recipev2";
 
 const _abi = [
   {
@@ -283,15 +280,15 @@ const _abi = [
   },
 ];
 
-export class SimpleUniRecipe__factory {
+export class Recipev2__factory {
   static readonly abi = _abi;
-  static createInterface(): SimpleUniRecipeInterface {
-    return new utils.Interface(_abi) as SimpleUniRecipeInterface;
+  static createInterface(): Recipev2Interface {
+    return new utils.Interface(_abi) as Recipev2Interface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): SimpleUniRecipe {
-    return new Contract(address, _abi, signerOrProvider) as SimpleUniRecipe;
+  ): Recipev2 {
+    return new Contract(address, _abi, signerOrProvider) as Recipev2;
   }
 }
