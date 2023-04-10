@@ -3,9 +3,9 @@ import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import { useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useVaults } from '@/hooks/vaults/useVaults'
 import { getDisplayBalance } from '@/utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
@@ -24,25 +24,16 @@ export const VaultList: React.FC = () => {
 }
 
 export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultListProps) => {
+	const { account } = useWeb3React()
 	const _vaults = useVaults(vaultName)
 
-	const borrowBalances = useBorrowBalances(vaultName)
-	const supplyBalances = useSupplyBalances(vaultName)
-
 	const synth = useMemo(() => {
-		if (!(_vaults && borrowBalances)) return
-		return _vaults.find(vault => vault.isSynth)
-	}, [_vaults, borrowBalances])
+		return _vaults?.find(vault => vault.isSynth)
+	}, [_vaults])
 
 	const collateral = useMemo(() => {
-		if (!(_vaults && supplyBalances)) return
-		return _vaults
-			.filter(vault => !vault.isSynth)
-			.sort((a, b) => {
-				void a
-				return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
-			})
-	}, [_vaults, supplyBalances])
+		return _vaults?.filter(vault => !vault.isSynth)
+	}, [_vaults])
 
 	// FIXME: this is a hack to get the average APY of the basket
 	// const baskets = useBaskets()
@@ -71,7 +62,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 	return (
 		synth && (
 			<Link href={`/vaults/${vaultName}`} key={vaultName}>
-				<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200'>
+				<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200' disabled={!account}>
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
