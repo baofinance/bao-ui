@@ -189,8 +189,8 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 														size='xs'
 														onClick={() => {
 															// Clear input values
-															setValue('')
-															setSecondaryValue('')
+															setValue('0')
+															setSecondaryValue('0')
 															// Swap mint option
 															setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
 														}}
