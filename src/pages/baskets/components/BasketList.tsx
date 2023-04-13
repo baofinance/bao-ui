@@ -28,7 +28,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
-			<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200'>
+			<button className='w-full rounded border text-transparent-200 bg-primary-100 p-4 py-2 hover:bg-primary-200'>
 				<div className='flex w-full flex-row'>
 					<div className='flex w-full'>
 						<div className='my-auto'>
@@ -36,7 +36,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<span className='inline-block text-left align-middle'>
 								<Typography className='ml-2 font-bold'>{basket.symbol}</Typography>
 								{isDesktop && (
-									<Typography variant='sm' className={`ml-2 font-light text-text-200`}>
+									<Typography variant='sm' className={`ml-2 font-light text-baoRed`}>
 										{basket.desc}
 									</Typography>
 								)}

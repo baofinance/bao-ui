@@ -38,9 +38,9 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 	return accountLiquidity ? (
 		<>
 			<div className={`mx-auto my-4 grid items-center justify-evenly ${isDesktop ? 'grid-cols-5' : 'grid-cols-2'} gap-4`}>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-text-200'>
+						<Typography variant='sm' className='text-baoRed'>
 							Net APY
 						</Typography>
 						<Typography variant='base' className='font-semibold'>
@@ -48,9 +48,9 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-text-200'>
+						<Typography variant='sm' className='text-baoRed'>
 							Your Collateral
 						</Typography>
 						<Typography variant='base' className='font-medium'>
@@ -83,7 +83,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 											className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
 											style={{ marginTop: '15px' }}
 										>
-											<Typography variant='sm' className='text-text-200'>
+											<Typography variant='sm' className='text-baoRed'>
 												Debt Limit
 											</Typography>
 											<Typography>
@@ -102,9 +102,9 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 					</div>
 				)}
 
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-text-200'>
+						<Typography variant='sm' className='text-baoRed'>
 							Total Debt
 						</Typography>
 						<Typography variant='base' className='font-medium'>
@@ -112,9 +112,9 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border border-primary-300 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-text-200'>
+						<Typography variant='sm' className='text-baoRed'>
 							Health Factor{' '}
 							<Tooltipped content='Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated.' />
 						</Typography>
@@ -152,10 +152,10 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 
 			{!isDesktop && (
 				<div className='w-full'>
-					<div className='mt-4 flex w-full justify-center rounded border border-primary-300 bg-primary-100 p-4'>
+					<div className='mt-4 flex w-full justify-center rounded border text-transparent-200 bg-primary-100 p-4'>
 						<div className='flex w-full flex-row items-center justify-center text-sm font-medium'>
 							<div className='flex flex-row items-center gap-2'>
-								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-text-200'>
+								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-baoRed'>
 									Debt Limit
 								</Typography>
 								<Typography variant='sm' className='m-0 ml-2'>

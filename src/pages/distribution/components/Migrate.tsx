@@ -95,7 +95,7 @@ const Migration: React.FC = () => {
 					Migrate to veBAO
 				</Button>
 			</div>
-			<Typography variant='sm' className='m-auto text-text-200'>
+			<Typography variant='sm' className='m-auto text-baoRed'>
 				* This action can be done only <b className='font-bold'>once</b> and can <b className='font-bold'>not</b> be reversed!
 			</Typography>
 

@@ -138,17 +138,17 @@ export const Dashboard = () => {
 			<Typography variant='xl' className='mt-4 mb-2 font-bold'>
 				Voting Dashboard
 			</Typography>
-			<div className={`w-full justify-evenly gap-4 rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4`}>
+			<div className={`w-full justify-evenly gap-4 rounded border text-transparent-200 bg-primary-100 bg-opacity-80 p-4`}>
 				<div className='grid grid-cols-3 gap-4'>
 					<div className='col-span-1'>
-						<label className='text-xs text-text-200'>Select Gauge</label>
+						<label className='text-xs text-baoRed'>Select Gauge</label>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
 							{({ open }) => (
 								<>
 									<div>
 										<div className='inline-flex rounded-md border-none shadow-sm'>
 											<div className='inline-flex rounded-md border-none shadow-sm'>
-												<div className='inline-flex items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
+												<div className='inline-flex items-center rounded-l-md border text-transparent-200 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
 													{selectedOption === '' ? (
 														<Typography>Select a gauge</Typography>
 													) : (
@@ -173,7 +173,7 @@ export const Dashboard = () => {
 																<Typography variant='sm' className='font-bold'>
 																	{gauge.name}
 																</Typography>
-																<Typography variant='xs' className={`font-light text-text-200`}>
+																<Typography variant='xs' className={`font-light text-baoRed`}>
 																	{gauge.type.toLowerCase() === 'curve' ? (
 																		<Image src='/images/platforms/Curve.png' height={12} width={12} alt='Curve' className='mr-1 inline' />
 																	) : gauge.type.toLowerCase() === 'uniswap' ? (
@@ -195,8 +195,8 @@ export const Dashboard = () => {
 												</div>
 												<Listbox.Button
 													className={
-														(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-														'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
+														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
+														'inline-flex items-center rounded-l-none rounded-r-md border text-transparent-200 bg-primary-200 p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -217,7 +217,7 @@ export const Dashboard = () => {
 															key={gauge.name}
 															className={({ active }) =>
 																classNames(
-																	active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+																	active ? 'bg-primary-100 text-baoRed' : 'text-baoWhite',
 																	'cursor-pointer select-none p-2 text-sm',
 																)
 															}
@@ -245,7 +245,7 @@ export const Dashboard = () => {
 																		<Typography variant='sm' className='font-bold'>
 																			{gauge.name}
 																		</Typography>
-																		<Typography variant='xs' className={`font-light text-text-200`}>
+																		<Typography variant='xs' className={`font-light text-baoRed`}>
 																			{gauge.type.toLowerCase() === 'curve' ? (
 																				<Image
 																					src='/images/platforms/Curve.png'
@@ -291,7 +291,7 @@ export const Dashboard = () => {
 					<div className='col-span-1 mt-6 flex items-center justify-center text-center align-middle'>
 						<div className='m-auto'>
 							<div className='text-center'>
-								<Typography variant='xs' className='text-text-200'>
+								<Typography variant='xs' className='text-baoRed'>
 									Voting Period Ends
 								</Typography>
 							</div>
@@ -303,7 +303,7 @@ export const Dashboard = () => {
 					<div className='col-span-1 mt-6 flex items-center justify-center text-center align-middle'>
 						<div className='m-auto align-middle'>
 							<div className='text-center'>
-								<Typography variant='xs' className='text-text-200'>
+								<Typography variant='xs' className='text-baoRed'>
 									Total Voting Power Allocated
 								</Typography>
 							</div>
@@ -318,7 +318,7 @@ export const Dashboard = () => {
 				<div className='mt-8 grid grid-cols-6 gap-4'>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='xs' className='text-baoRed'>
 								Gauge TVL
 							</Typography>
 						</div>
@@ -328,7 +328,7 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='xs' className='text-baoRed'>
 								Total veBAO Allocated
 							</Typography>
 						</div>
@@ -338,7 +338,7 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='xs' className='text-baoRed'>
 								Current Weight
 							</Typography>
 						</div>
@@ -348,7 +348,7 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='xs' className='text-baoRed'>
 								Current APR
 							</Typography>
 						</div>
@@ -358,7 +358,7 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='xs' className='text-baoRed'>
 								Future Weight
 							</Typography>
 						</div>
@@ -368,7 +368,7 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='xs' className='text-baoRed'>
 								Future APR
 							</Typography>
 						</div>
@@ -414,7 +414,7 @@ export const Dashboard = () => {
 							className='relative -mr-1 h-6 w-12
 				appearance-none rounded border-solid border-inherit bg-primary-100 pl-2 text-end 
 				align-middle font-bold outline-none outline outline-2 outline-offset-2
-				 transition-all duration-200 disabled:text-text-100 md:text-sm'
+				 transition-all duration-200 disabled:text-baoWhite md:text-sm'
 						/>
 						<Typography variant='base' className='m-0 rounded border-solid border-inherit border-primary-500 bg-primary-100 p-0 font-bold'>
 							%
@@ -453,22 +453,22 @@ export const Dashboard = () => {
 				</Typography>
 				<div className='mt-4 grid grid-cols-6 gap-4'>
 					<div className='col-span-2'>
-						<label className='text-sm text-text-200'>Deposit Amount</label>
+						<label className='text-sm text-baoRed'>Deposit Amount</label>
 						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
 							<input
 								type='number'
-								className='rounded border border-primary-500 bg-primary-300 px-2 py-1 outline-none'
+								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
 								value={depositAmount}
 								onChange={handleDepositChange}
 							/>
 						</div>
 					</div>
 					<div className='col-span-2'>
-						<label className='text-sm text-text-200'>BAO Tokens</label>
+						<label className='text-sm text-baoRed'>BAO Tokens</label>
 						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
 							<input
 								type='number'
-								className='rounded border border-primary-500 bg-primary-300 px-2 py-1 outline-none'
+								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
 								value={baoAmount}
 								onChange={handleBaoChange}
 							/>
@@ -476,8 +476,8 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-2'>
 						<div className='w-full'>
-							<label className='float-left mb-2 text-sm text-text-200'>Lock until</label>
-							<label className='float-right mb-2 text-sm text-text-100'>{new Date(lockTime).toDateString()}</label>
+							<label className='float-left mb-2 text-sm text-baoRed'>Lock until</label>
+							<label className='float-right mb-2 text-sm text-baoWhite'>{new Date(lockTime).toDateString()}</label>
 						</div>
 						<div className='p-4'>
 							<Slider
@@ -507,7 +507,7 @@ export const Dashboard = () => {
 						<Button onClick={calc}>Calculate</Button>
 					</div>
 					<div className='col-span-2 justify-center text-center'>
-						<label className='text-sm text-text-200'>veBAO</label>
+						<label className='text-sm text-baoRed'>veBAO</label>
 						<div className='flex h-8 gap-2 rounded-md !text-center font-bold'>
 							<Typography className='inline-block w-full !text-center font-bold'>
 								{isNaN(veBaoEstimate(parseFloat(baoAmount), lockTime))
@@ -517,11 +517,11 @@ export const Dashboard = () => {
 						</div>
 					</div>
 					<div className='col-span-2 h-12 text-center'>
-						<label className='text-sm text-text-200'>Boost</label>
+						<label className='text-sm text-baoRed'>Boost</label>
 						<div className='flex w-full gap-2 rounded-md'>
 							<Typography className='inline-block w-full !text-center font-bold'>
 								{`${Math.min(boost < 0 ? 2.5 : boost, 2.5).toFixed(2)}`}
-								<Typography className='inline-block text-text-400'>x</Typography>
+								<Typography className='inline-block text-baoRed'>x</Typography>
 							</Typography>
 						</div>
 					</div>

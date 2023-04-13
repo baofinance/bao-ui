@@ -8,11 +8,7 @@ interface ContainerProps {
 	className?: string
 }
 
-const Container = ({ children, className }: ContainerProps) => (
-	<div className={classNames(`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${isDesktop ? 'min-w-[1200px]' : 'min-w-full'}`, className)}>
-		{children}
-	</div>
-)
+const Container = ({ children, className }: ContainerProps) => <div className={classNames(`p-32`, className)}>{children}</div>
 
 export default Container
 

@@ -37,7 +37,7 @@ export const Web3ReactManager = ({ children }: { children: JSX.Element }) => {
 	if (!active && networkError) {
 		return (
 			<div className='flex h-80 items-center justify-center'>
-				<div className='text-text-200'>
+				<div className='text-baoRed'>
 					<p>Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device</p>
 				</div>
 			</div>

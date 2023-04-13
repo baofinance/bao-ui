@@ -49,7 +49,7 @@ const Migration: React.FC = () => {
 						alt='Distribution function'
 					/>
 				</div>
-				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-text-200'>
+				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-baoRed'>
 					This graph shows how someone's distribution of locked BAO tokens will unlock over time following.
 				</Typography>
 				<Typography variant='p' className='mt-2 leading-normal'>
@@ -65,7 +65,7 @@ const Migration: React.FC = () => {
 					<Latex>{`\\(x = Days \\)`}</Latex>
 					<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
 				</div>
-				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-text-200'>
+				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-baoRed'>
 					The forumla which determines how many tokens you may claim from your distribution at a given moment in time.
 				</Typography>
 			</div>
@@ -74,7 +74,7 @@ const Migration: React.FC = () => {
 				<div className='flex flex-col'>
 					<div className='my-5 flex w-full flex-row items-center justify-center gap-4'>
 						<div className='flex flex-col gap-2'>
-							<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
+							<Typography variant='lg' className='text-md px-2 font-bold text-baoWhite'>
 								Claimable BAO:
 							</Typography>
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
@@ -85,11 +85,11 @@ const Migration: React.FC = () => {
 							</div>
 						</div>
 						<div className='flex flex-col gap-2 text-center'>
-							<Typography variant='lg' className='text-md px-2 font-bold text-text-100'>
+							<Typography variant='lg' className='text-md px-2 font-bold text-baoWhite'>
 								Last Claim:
 							</Typography>
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
-								<Typography variant='base' className='text-md px-2 font-semibold text-text-200'>
+								<Typography variant='base' className='text-md px-2 font-semibold text-baoRed'>
 									{lastClaim}
 								</Typography>
 							</div>
@@ -112,7 +112,7 @@ const Migration: React.FC = () => {
 				</div>
 			</div>
 
-			<Typography variant='sm' className='m-auto text-text-200'>
+			<Typography variant='sm' className='m-auto text-baoRed'>
 				* This action is meant to be done multiple times over three years
 			</Typography>
 		</div>

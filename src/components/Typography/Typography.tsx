@@ -7,7 +7,7 @@ import classNames from 'classnames'
 export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'p' | 'sm' | 'xs' | 'xxs'
 
 const VARIANTS = {
-	hero: 'text-hero leading-[4rem] font-bold',
+	hero: 'text-hero leading-[4rem] font-bakbak uppercase',
 	h1: 'text-4xl leading-[46px] font-semibold',
 	h2: 'text-3xl tracking-[-0.02em] font-semibold',
 	h3: 'text-2xl leading-7 tracking-[-0.01em] font-semibold',

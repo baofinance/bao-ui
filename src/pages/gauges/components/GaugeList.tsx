@@ -107,7 +107,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowGaugeModal(true)} disabled={!account}>
-				<div className='rounded border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
+				<div className='rounded border text-transparent-200 bg-primary-100 p-4 hover:bg-primary-200'>
 					<div className='flex w-full flex-row items-center'>
 						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
@@ -119,7 +119,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 									<Typography variant='base' className='font-bold'>
 										{gauge.name}
 									</Typography>
-									<Typography variant='sm' className={`font-light text-text-200`}>
+									<Typography variant='sm' className={`font-light text-baoRed`}>
 										<Image src={`/images/platforms/${gauge.type}.png`} height={12} width={12} alt='Curve' className='mr-1 inline' />
 										{gauge.type}
 									</Typography>

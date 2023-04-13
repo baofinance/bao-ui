@@ -104,7 +104,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const shouldBeWarned = canStartDistribution || canEndDistribution
 
 	return (
-		<div className='col-span-2 row-span-1 rounded border border-primary-300 bg-primary-100 p-4'>
+		<div className='col-span-2 row-span-1 rounded border text-transparent-200 bg-primary-100 p-4'>
 			{(lockInfo && lockInfo.lockEnd.gt(timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp)) ? (
 				<>
 					<Typography variant='xl' className='mb-4 text-center font-bold'>
@@ -113,7 +113,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 					<div className='flex flex-row gap-3'>
 						<div className='flex w-full flex-col'>
 							<div className='mb-1 flex w-full items-center gap-1'>
-								<Typography variant='sm' className='text-text-200'>
+								<Typography variant='sm' className='text-baoRed'>
 									Bao Balance:
 								</Typography>
 								<Typography variant='sm'>{getDisplayBalance(baoBalance)}</Typography>
@@ -132,7 +132,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 								}
 							/>
 							<div className='float-left mt-2 flex w-full items-center gap-1'>
-								<Typography variant='sm' className='text-text-200'>
+								<Typography variant='sm' className='text-baoRed'>
 									Lock Length
 								</Typography>
 							</div>

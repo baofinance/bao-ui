@@ -71,18 +71,18 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 					<div className='flex h-full flex-col items-center justify-center'>
 						<div className='flex w-full flex-row'>
 							<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-								<Typography variant='sm' className='text-text-200'>
+								<Typography variant='sm' className='text-baoRed'>
 									Fee:
 								</Typography>
 								<Typography variant='sm'>0.75%</Typography>
 							</div>
 							<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-								<Typography variant='sm' className='text-text-200'>
+								<Typography variant='sm' className='text-baoRed'>
 									Balance:
 								</Typography>
 								<Typography variant='sm'>
 									{getDisplayBalance(max).toString()}{' '}
-									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
+									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
 								</Typography>
@@ -204,7 +204,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHi
 					withdraw function is trying to call the harvest function, and rewards have ended, the transactions are failing. We are now using
 					the emergencyWithdraw function to remedy this situation, which takes a fee of 25%. Upon withdrawal, this 25% fee will be sent to
 					the treasury multisig. Guardians will refund users this fee on a frequent basis. If you have any questions, please reach out on{' '}
-					<Link href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noopener noreferrer' className='font-bold hover:text-text-400'>
+					<Link href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noopener noreferrer' className='font-bold hover:text-baoRed'>
 						Discord
 					</Link>
 					. We are sorry for the inconvenience.
@@ -212,7 +212,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHi
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='mb-1 flex w-full items-center justify-center gap-1'>
-							<Typography className='text-text-200'>Staked Balance:</Typography>
+							<Typography className='text-baoRed'>Staked Balance:</Typography>
 							<Typography className='font-bold'>
 								{getDisplayBalance(max)} {tokenName}
 							</Typography>
@@ -266,7 +266,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 			<Modal.Body className='h-[120px]'>
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex items-center justify-center'>
-						<div className='flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border-0 bg-primary-300'>
+						<div className='flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border-0 bg-transparent-100'>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={32} height={32} className='m-auto' />
 						</div>
 						<div className='ml-2'>

@@ -45,7 +45,7 @@ const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
 					target='_blank'
 					rel='noreferrer'
 					href={`https://etherscan.io/tx/${hash}`}
-					className='text-text-400 visited:text-text-300 hover:text-text-300'
+					className='text-baoRed visited:text-text-300 hover:text-text-300'
 				>
 					{hash.slice(0, 6)}...{hash.slice(-5, -1)} - View on Explorer
 					<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 hover:text-text-300' size='xs' />

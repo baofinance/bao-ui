@@ -66,7 +66,7 @@ const Migration: React.FC = () => {
 					The slash fee is based on the slash rate function defined below which will end the distribution and allow the user to receive the
 					rest of their tokens (minus slash fee) immediately.
 				</Typography>
-				<Typography variant='lg' className='mt-2 mb-2 font-medium text-text-100'>
+				<Typography variant='lg' className='mt-2 mb-2 font-medium text-baoWhite'>
 					Slash Function
 				</Typography>
 				<code>
@@ -86,7 +86,7 @@ const Migration: React.FC = () => {
 
 				<div className='flex flex-col my-4 gap-5'>
 					<div className='flex flex-col justify-center gap-2 rounded'>
-						<Typography variant='base' className='text-md flex flex-row font-bold text-text-100'>
+						<Typography variant='base' className='text-md flex flex-row font-bold text-baoWhite'>
 							Tokens that will be slashed (lost) if you end your distribution early:
 						</Typography>
 						<div className='flex flex-row items-center gap-2'>
@@ -97,7 +97,7 @@ const Migration: React.FC = () => {
 						</div>
 					</div>
 					<div className='flex flex-col justify-center gap-2 rounded'>
-						<Typography variant='base' className='text-md flex flex-row font-bold text-text-100'>
+						<Typography variant='base' className='text-md flex flex-row font-bold text-baoWhite'>
 							Your new distribution total (including tokens pending claim or already claimed):
 						</Typography>
 						<div className='flex flex-row items-center gap-2'>
@@ -128,7 +128,7 @@ const Migration: React.FC = () => {
 							alt='Slash function'
 						/>
 					</a>
-					<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-text-200'>
+					<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-baoRed'>
 						In the graph above, the blue points are the state of both curves respectively. The orange point is the percentage of their total
 						distribution that the user will be able to claim if they choose to end their distribution at that point.
 					</Typography>
@@ -179,7 +179,7 @@ const Migration: React.FC = () => {
 							<div className='my-2 flex w-full flex-row items-center justify-center gap-4'>
 								<div className='flex flex-col gap-2'>
 									<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2'>
-										<Typography variant='base' className='text-md px-2 font-bold text-text-100'>
+										<Typography variant='base' className='text-md px-2 font-bold text-baoWhite'>
 											BAO you will forfeit due to slashing:
 										</Typography>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />

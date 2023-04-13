@@ -7,13 +7,12 @@ html {
 }
 
 body {
-	background: url(/images/background_overlay_dark.png), radial-gradient(circle at center, #391818, #210e0e 50%) fixed;
+	background: url(/images/bao-background.webp) fixed;
+	font-family: 'Inter', sans-serif;
+	color: #faf2e3;
 	margin: 0;
-	font-family: 'Rubik', sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	color: #fff8ee;
-	transition: 200ms;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 input::-webkit-outer-spin-button,
@@ -61,15 +60,15 @@ input[type='number'] {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-	background: #391818;
+	background: #e21a53;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-	background: #622a2a;
+	background: #1e2022;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-	background: #562424;
+	background: #1e2022;
 }
 
 #__next {
@@ -81,11 +80,11 @@ input[type='number'] {
 }
 
 .react-datepicker__input-container input {
-	@apply block w-full rounded border border-primary-300 bg-primary-100 text-base shadow-sm md:text-sm;
+	@apply block w-full rounded border bg-transparent-100 text-base text-transparent-200 shadow-sm md:text-sm;
 }
 
 .react-datepicker-popper {
-	@apply z-40 w-72 rounded border-2 border-primary-300 bg-primary-100 px-3 py-2 text-sm shadow;
+	@apply z-40 w-72 rounded border-2 bg-transparent-100 px-3 py-2 text-sm text-transparent-200 shadow;
 }
 
 .react-datepicker-left {
@@ -97,7 +96,7 @@ input[type='number'] {
 }
 
 .react-datepicker__portal {
-	@apply absolute top-12 right-0 z-10 w-72 transform-none rounded border-2 border-primary-300 bg-white px-3 py-2 text-sm shadow;
+	@apply absolute top-12 right-0 z-10 w-72 transform-none rounded border-2 border-transparent-200 bg-baoWhite px-3 py-2 text-sm shadow;
 }
 
 .react-datepicker__month-container {
@@ -109,7 +108,7 @@ input[type='number'] {
 }
 
 .react-datepicker__current-month {
-	@apply ml-2.5 text-lg font-semibold text-text-200;
+	@apply ml-2.5 text-lg font-semibold text-baoRed;
 }
 
 .react-datepicker__week {
@@ -117,11 +116,11 @@ input[type='number'] {
 }
 
 .react-datepicker__day-names {
-	@apply flex justify-around text-center text-xs font-medium text-text-200;
+	@apply flex justify-around text-center text-xs font-medium text-baoRed;
 }
 
 .react-datepicker__day-name {
-	@apply flex h-8 w-8 items-center justify-center rounded-full py-1 text-text-400;
+	@apply flex h-8 w-8 items-center justify-center rounded-full py-1 text-baoRed;
 }
 
 .react-datepicker__navigation {
@@ -137,7 +136,7 @@ input[type='number'] {
 }
 
 .react-datepicker__day {
-	@apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center py-1 text-sm leading-loose text-text-100 transition;
+	@apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center py-1 text-sm leading-loose text-baoWhite transition;
 }
 
 .react-datepicker__day--disabled {
@@ -164,7 +163,7 @@ input[type='number'] {
 }
 
 .react-datepicker__day--selected {
-	@apply rounded border border-primary-400 bg-primary-300 text-white;
+	@apply rounded border bg-transparent-100 text-transparent-200 text-white;
 }
 
 .react-datepicker__day--range-start {
@@ -184,5 +183,73 @@ input[type='number'] {
 		cursor: ew-resize;
 		background: #ffd84b;
 		border-radius: 50%;
+	}
+}
+
+.app-layer {
+	display: flex;
+	position: relative;
+	/* Setting the size of the upper layer to 80% of the screen size*/
+	min-height: 80vh;
+	width: 80vw;
+	justify-content: space-between;
+	margin-top: 10vh;
+	margin-left: 10vw;
+
+	/*the alpha value controls the transparency*/
+	background: #1e202280;
+
+	/* This controls the blurring effect*/
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(25px);
+
+	/*Adding the shadow*/
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
+
+	/* Adding our borders*/
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	z-index: 4;
+}
+
+.stroke {
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke-color: #e21a53;
+	-webkit-text-stroke-width: 1.5px;
+}
+
+.iconAnim {
+	fill: #ff0000;
+}
+
+.iconAnim:hover {
+	filter: hue-rotate(0deg);
+	animation: iconColor 5s infinite linear;
+}
+
+@keyframes iconColor {
+	12.5% {
+		fill: hue-rotate(20deg);
+	}
+	25% {
+		fill: hue-rotate(40deg);
+	}
+	37.5% {
+		fill: hue-rotate(60deg);
+	}
+	50% {
+		fill: hue-rotate(80deg);
+	}
+	62.5% {
+		fill: hue-rotate(100deg);
+	}
+	75% {
+		fill: hue-rotate(120deg);
+	}
+	87.5% {
+		fill: hue-rotate(140deg);
+	}
+	100% {
+		fill: hue-rotate(160deg);
 	}
 }

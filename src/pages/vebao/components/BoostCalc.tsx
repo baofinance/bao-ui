@@ -96,26 +96,26 @@ export const BoostCalc = () => {
 					Boost Calculator
 				</Typography>
 				<div
-					className={`my-2 grid w-full grid-cols-8 justify-evenly gap-4 rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4`}
+					className={`my-2 grid w-full grid-cols-8 justify-evenly gap-4 rounded border text-transparent-200 bg-primary-100 bg-opacity-80 p-4`}
 				>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-200'>Select a gauge</label>
+						<label className='text-xs text-baoRed'>Select a gauge</label>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
 							{({ open }) => (
 								<>
 									<div>
 										<div className='inline-flex rounded-md border-none shadow-sm'>
 											<div className='inline-flex rounded-md border-none shadow-sm'>
-												<div className='inline-flex h-8 items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
-													<span className={`mr-1 text-text-400`}>
+												<div className='inline-flex h-8 items-center rounded-l-md border text-transparent-200 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
+													<span className={`mr-1 text-baoRed`}>
 														<CheckIcon className='h-5 w-5' aria-hidden='true' />
 													</span>
 													<p className='ml-2.5 text-sm font-medium'>{selectedOption === '' ? 'Select a gauge' : selectedOption}</p>
 												</div>
 												<Listbox.Button
 													className={
-														(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-														'inline-flex h-8 items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
+														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
+														'inline-flex h-8 items-center rounded-l-none rounded-r-md border text-transparent-200 bg-primary-200 p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -136,7 +136,7 @@ export const BoostCalc = () => {
 															key={gauge.name}
 															className={({ active }) =>
 																classNames(
-																	active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+																	active ? 'bg-primary-100 text-baoRed' : 'text-baoWhite',
 																	'cursor-pointer select-none p-2 text-sm',
 																)
 															}
@@ -145,7 +145,7 @@ export const BoostCalc = () => {
 															{({ selected }) => (
 																<div className='flex justify-between'>
 																	{selected ? (
-																		<span className={`mr-1 text-text-400`}>
+																		<span className={`mr-1 text-baoRed`}>
 																			<CheckIcon className='h-5 w-5' aria-hidden='true' />
 																		</span>
 																	) : null}
@@ -165,29 +165,29 @@ export const BoostCalc = () => {
 						</Listbox>
 					</div>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-200'>Deposit Amount</label>
+						<label className='text-xs text-baoRed'>Deposit Amount</label>
 						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
 							<input
 								type='number'
-								className='rounded border border-primary-500 bg-primary-300 px-2 py-1 outline-none'
+								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
 								value={depositAmount}
 								onChange={handleDepositChange}
 							/>
 						</div>
 					</div>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-200'>BAO Tokens</label>
+						<label className='text-xs text-baoRed'>BAO Tokens</label>
 						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
 							<input
 								type='number'
-								className='rounded border border-primary-500 bg-primary-300 px-2 py-1 outline-none'
+								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
 								value={baoAmount}
 								onChange={handleBaoChange}
 							/>
 						</div>
 					</div>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-100'>Locked until {new Date(lockTime).toDateString()}</label>
+						<label className='text-xs text-baoWhite'>Locked until {new Date(lockTime).toDateString()}</label>
 						<div className='pr-2'>
 							<Slider
 								defaultValue={min}
@@ -214,13 +214,13 @@ export const BoostCalc = () => {
 					</div>
 					<div className='col-span-2'> </div>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-200'>Gauge Liquidity</label>
+						<label className='text-xs text-baoRed'>Gauge Liquidity</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>${gaugeTVL.gaugeTVL ? getDisplayBalance(decimate(gaugeTVL.gaugeTVL)) : '0'}</Typography>
 						</div>
 					</div>
 					<div className='col-span-2'>
-						<label className='text-xs text-text-200'>veBAO</label>
+						<label className='text-xs text-baoRed'>veBAO</label>
 						<div className='flex h-8 gap-2 rounded-md'>
 							<Typography>
 								{isNaN(veBaoEstimate(parseFloat(baoAmount), lockTime))
@@ -235,7 +235,7 @@ export const BoostCalc = () => {
 						</Button>
 					</div>
 					<div className='col-span-1 text-right'>
-						<label className='text-xs text-text-200'>Boost</label>
+						<label className='text-xs text-baoRed'>Boost</label>
 						<div className='flex h-8 w-full gap-2 rounded-md'>
 							<Typography className='w-full !text-right'>{`${Math.min(boost < 0 ? 2.5 : boost, 2.5).toFixed(2)}`}x</Typography>
 						</div>

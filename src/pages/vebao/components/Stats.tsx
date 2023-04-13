@@ -38,12 +38,12 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	return (
-		<div className='col-span-2 grid h-full grid-rows-6 items-center rounded border border-primary-300 bg-primary-100 p-4'>
+		<div className='col-span-2 grid h-full grid-rows-6 items-center rounded border text-transparent-200 bg-primary-100 p-4'>
 			<Typography variant='xl' className='mb-4 text-center font-bold'>
 				Lock Info
 			</Typography>
 			<div className='grid items-center gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-text-200'>Earned Rewards</Typography>
+				<Typography className='font-medium text-baoRed'>Earned Rewards</Typography>
 				<div className='flex justify-end'>
 					<div className='-mr-1 flex h-10 items-center justify-center rounded-l bg-primary-400'>
 						<Typography className='ml-2 inline font-semibold'>${claimableFees ? getDisplayBalance(claimableFees) : 0}</Typography>
@@ -69,13 +69,13 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 				</div>
 			</div>
 			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-text-200'>veBAO APR</Typography>
+				<Typography className='font-medium text-baoRed'>veBAO APR</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>-</Typography>
 				</>
 			</div>
 			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-text-200'>veBAO Balance</Typography>
+				<Typography className='font-medium text-baoRed'>veBAO Balance</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
 						{account && !isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance)))
@@ -87,7 +87,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 				</>
 			</div>
 			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-text-200'>BAO Locked</Typography>
+				<Typography className='font-medium text-baoRed'>BAO Locked</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
 						<>{lockInfo ? getDisplayBalance(lockInfo.lockAmount) : '-'}</>
@@ -96,7 +96,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 			</div>
 
 			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-text-200'>Locked Until</Typography>
+				<Typography className='font-medium text-baoRed'>Locked Until</Typography>
 				<>
 					<Typography className='ml-1 inline text-end font-bold'>
 						{!account || (lockInfo && timestamp && lockInfo.lockEnd.mul(1000).lt(timestamp))
@@ -135,10 +135,10 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
 	return (
-		<div className='grid h-full grid-rows-6 items-center justify-end rounded border border-primary-300 bg-primary-100 p-4'>
+		<div className='grid h-full grid-rows-6 items-center justify-end rounded border text-transparent-200 bg-primary-100 p-4'>
 			<Typography className='mb-4 text-center font-bold'>Protocol Statistics</Typography>
 			<div className='grid grid-cols-2 items-center gap-1'>
-				<Typography variant='sm' className='text-text-200'>
+				<Typography variant='sm' className='text-baoRed'>
 					Total Value Locked
 				</Typography>
 				<>
@@ -148,7 +148,7 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 				</>
 			</div>
 			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-text-200'>
+				<Typography variant='sm' className='text-baoRed'>
 					Percentage of BAO Locked
 				</Typography>
 				<>
@@ -158,7 +158,7 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 				</>
 			</div>
 			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-text-200'>
+				<Typography variant='sm' className='text-baoRed'>
 					Average Lock Time
 				</Typography>
 				<>
@@ -168,7 +168,7 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 				</>
 			</div>
 			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-text-200'>
+				<Typography variant='sm' className='text-baoRed'>
 					Next Distribution
 				</Typography>
 				<>
@@ -180,7 +180,7 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 				</>
 			</div>
 			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-text-200'>
+				<Typography variant='sm' className='text-baoRed'>
 					Average Weekly Earnings
 				</Typography>
 				<>
@@ -224,11 +224,11 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 			<div
 				className={`my-2 grid w-full grid-flow-col ${
 					isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-3 gap-2'
-				} justify-evenly rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4`}
+				} justify-evenly rounded border text-transparent-200 bg-primary-100 bg-opacity-80 p-4`}
 			>
 				<div className='items-center justify-center text-center'>
 					<div className='text-center'>
-						<Typography variant='xs' className='text-text-200'>
+						<Typography variant='xs' className='text-baoRed'>
 							Total Value Locked
 						</Typography>
 					</div>
@@ -240,7 +240,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 				</div>
 				<div className='items-center justify-center text-center'>
 					<div className='text-center'>
-						<Typography variant='xs' className='text-text-200'>
+						<Typography variant='xs' className='text-baoRed'>
 							Percentage of BAO Locked
 						</Typography>
 					</div>
@@ -250,7 +250,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 				</div>
 				<div className='items-center justify-center text-center'>
 					<div className='text-center'>
-						<Typography variant='xs' className='text-text-200'>
+						<Typography variant='xs' className='text-baoRed'>
 							Average Lock Time
 						</Typography>
 					</div>
@@ -260,7 +260,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 				</div>
 				<div className='items-center justify-center text-center'>
 					<div className='text-center'>
-						<Typography variant='xs' className='text-text-200'>
+						<Typography variant='xs' className='text-baoRed'>
 							Next Distribution
 						</Typography>
 					</div>
@@ -272,7 +272,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 				</div>
 				<div className='items-center justify-center text-center'>
 					<div className='text-center'>
-						<Typography variant='xs' className='text-text-200'>
+						<Typography variant='xs' className='text-baoRed'>
 							Average Weekly Earnings
 						</Typography>
 					</div>

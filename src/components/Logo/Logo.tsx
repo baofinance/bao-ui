@@ -6,7 +6,7 @@ const Logo: React.FC = () => {
 	return (
 		<Link href='/'>
 			<div className='m-0 flex items-center justify-center p-0 '>
-				<Image src={`/images/icons/icon-72.png`} width={32} height={32} className='align-middle' alt='Bao' />
+				<Image src={`/images/icons/bao-icon.svg`} width={32} height={32} className='icon align-middle' alt='Bao' />
 			</div>
 		</Link>
 	)

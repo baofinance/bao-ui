@@ -64,22 +64,25 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 						Connect <FontAwesomeIcon icon={faLink} className='ml-1' />
 					</Button>
 				) : (
-					<Button onClick={() => setShowAccountModal(true)} size='sm'>
-						<div className='items-center'>
-							{displayId}
-							<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 text-text-200' />
+					<>
+						<Button onClick={() => setShowAccountModal(true)} size='sm'>
+							<div className='items-center'>
+								{displayId}
+								{pendingTxs > 0 && (
+									<>
+										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 -mt-1 text-baoRed' />
+										<Loader />
+										<span className='ml-2'>{pendingTxs}</span>
+										<FontAwesomeIcon icon={faReceipt} className='mx-2 -mt-1 text-baoRed' />
+									</>
+								)}
+							</div>
+						</Button>
+						<Button onClick={() => setShowAccountModal(true)} size='sm' className='ml-4'>
 							{getDisplayBalance(ethBalance)}
 							<FontAwesomeIcon icon={faEthereum} className='mx-1' />
-							{pendingTxs > 0 && (
-								<>
-									<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 -mt-1 text-text-200' />
-									<Loader />
-									<span className='ml-2'>{pendingTxs}</span>
-									<FontAwesomeIcon icon={faReceipt} className='mx-2 -mt-1 text-text-200' />
-								</>
-							)}
-						</div>
-					</Button>
+						</Button>
+					</>
 				))}
 
 			{!isDesktop &&

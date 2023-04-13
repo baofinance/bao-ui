@@ -10,10 +10,10 @@ import Loader from '../Loader'
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const Size = {
-	xs: 'text-xs rounded px-2 h-8',
-	sm: 'text-sm rounded px-3 h-10',
-	md: 'text-base rounded px-4 h-12',
-	lg: 'text-lg rounded px-6 h-16',
+	xs: 'rounded px-2 h-8',
+	sm: 'rounded px-4 h-10',
+	md: 'rounded px-6 h-12',
+	lg: 'rounded px-8 h-16',
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -32,7 +32,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		const ButtonChild = useMemo(() => {
 			if (href) {
 				return (
-					<a href={href} target='_blank' rel='noreferrer' className='hover:text-text-100 focus:text-text-100'>
+					<a href={href} target='_blank' rel='noreferrer' className='hover:text-baoWhite focus:text-baoWhite'>
 						{text}
 					</a>
 				)
@@ -45,12 +45,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		const buttonText = pendingTx ? (
 			typeof pendingTx === 'string' ? (
-				<a
-					href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-					target='_blank'
-					rel='noreferrer'
-					className='hover:text-text-100 focus:text-text-100'
-				>
+				<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer' className='text-baoWhite'>
 					Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 				</a>
 			) : (
@@ -71,8 +66,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					`relative items-center justify-center gap-1 overflow-hidden border font-semibold`,
-					'border-primary-300 bg-primary-200 duration-200 hover:bg-primary-300',
+					`relative items-center justify-center gap-1 overflow-hidden font-bakbak`,
+					'bg-transparent-100 duration-200 hover:bg-baoRed',
 					className,
 				)}
 			>
@@ -105,7 +100,7 @@ export const NavButtons = ({ options, active, onClick, className }: NavButtonPro
 				<Button
 					size='md'
 					key={option}
-					className={classNames(`${option === active && '!bg-primary-300'} w-full`, className)}
+					className={classNames(`${option === active && '!bg-transparent-100'} w-full`, className)}
 					onClick={() => onClick(option)}
 				>
 					{option}

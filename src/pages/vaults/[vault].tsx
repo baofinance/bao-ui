@@ -156,7 +156,7 @@ const Vault: NextPage<{
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-					<Typography variant='sm' className='text-text-200'>
+					<Typography variant='sm' className='text-baoRed'>
 						Balance:
 					</Typography>
 					<Typography variant='sm'>
@@ -164,7 +164,7 @@ const Vault: NextPage<{
 					</Typography>
 				</div>
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-					<Typography variant='sm' className='text-text-200'>
+					<Typography variant='sm' className='text-baoRed'>
 						Reserves:
 					</Typography>
 					<Typography variant='sm'>{ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}</Typography>
@@ -198,7 +198,7 @@ const Vault: NextPage<{
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-					<Typography variant='sm' className='text-text-200'>
+					<Typography variant='sm' className='text-baoRed'>
 						Balance:
 					</Typography>
 					<Typography variant='sm'>
@@ -206,7 +206,7 @@ const Vault: NextPage<{
 					</Typography>
 				</div>
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-					<Typography variant='sm' className='text-text-200'>
+					<Typography variant='sm' className='text-baoRed'>
 						Mint Limit:
 					</Typography>
 					<Typography variant='sm'>{ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}</Typography>
@@ -269,7 +269,7 @@ const Vault: NextPage<{
 							</div>
 							<div className='mx-auto my-0 flex w-full flex-row items-center justify-end text-end align-middle'>
 								<Typography className='ml-2 inline-block !text-lg leading-5'>{getDisplayBalance(synth.borrowApy)}%</Typography>
-								<Typography className='ml-1 inline-block !text-lg text-text-100'>APY</Typography>
+								<Typography className='ml-1 inline-block !text-lg text-baoWhite'>APY</Typography>
 							</div>
 						</div>
 						{account && (
@@ -291,13 +291,13 @@ const Vault: NextPage<{
 											<div className='mb-4 flex flex-col items-center justify-center'>
 												<div className='flex w-full flex-row'>
 													<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-														<Typography variant='sm' className='text-text-200'>
+														<Typography variant='sm' className='text-baoRed'>
 															Wallet:
 														</Typography>
 														<Typography variant='sm'>{`${getDisplayBalance(synthBalance)}`}</Typography>
 													</div>
 													<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-														<Typography variant='sm' className='text-text-200'>
+														<Typography variant='sm' className='text-baoRed'>
 															{`${maxLabel()}:`}
 														</Typography>
 														<Typography variant='sm'>{`${getDisplayBalance(max(), synth.underlyingDecimals)} ${
@@ -347,7 +347,7 @@ const Vault: NextPage<{
 											{swapDirection ? bInput : aInput}
 											<div className='mt-4 block select-none text-center'>
 												<span
-													className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-primary-300 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
+													className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-transparent-100 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
 													onClick={() => setSwapDirection(!swapDirection)}
 												>
 													<FontAwesomeIcon icon={faSync} size='xs' className='m-auto' />
@@ -480,7 +480,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 
 	return (
 		<>
-			<Accordion open={isOpen || showSupplyModal} className='my-2 rounded border border-primary-300'>
+			<Accordion open={isOpen || showSupplyModal} className='my-2 rounded border text-transparent-200'>
 				<AccordionHeader
 					onClick={handleOpen}
 					className={`rounded border-0 bg-primary-100 p-2 hover:bg-primary-200 ${isOpen && 'rounded-b-none bg-primary-200'}`}

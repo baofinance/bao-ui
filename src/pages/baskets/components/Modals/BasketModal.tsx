@@ -122,7 +122,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			<Modal isOpen={show} onDismiss={hide}>
 				<Modal.Header
 					header={
-						<div className='mx-0 my-auto flex h-full items-center gap-2 text-text-100'>
+						<div className='mx-0 my-auto flex h-full items-center gap-2 text-baoWhite'>
 							{operation === 'MINT' ? 'Mint' : 'Redeem'} {basket.symbol}
 							<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 						</div>
@@ -149,7 +149,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Typography variant='sm' className='text-center'>
 								<b className='font-medium'>NOTE:</b> When you redeem {basket.name}, you will receive the underlying tokens. Alternatively,
 								you can swap {basket.name}{' '}
-								<a href={`${swapLink}`} target='blank' className='font-semibold hover:text-text-400'>
+								<a href={`${swapLink}`} target='blank' className='font-semibold hover:text-baoRed'>
 									here
 								</a>
 								.{' '}
@@ -163,7 +163,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						<div className='flex h-full flex-col items-center justify-center'>
 							<div className='flex w-full flex-row'>
 								<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-									<Typography variant='sm' className='text-text-200'>
+									<Typography variant='sm' className='text-baoRed'>
 										{`Available:`}
 									</Typography>
 									<Typography variant='sm'>

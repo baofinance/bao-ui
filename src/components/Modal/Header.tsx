@@ -19,7 +19,7 @@ const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack
 				<div className='flex flex-col items-center gap-1'>
 					<Typography variant='xl' className='font-semibold'>
 						{onBack && (
-							<FontAwesomeIcon icon={faArrowLeft} onClick={onBack} size='sm' className='mr-2 cursor-pointer hover:text-text-400' />
+							<FontAwesomeIcon icon={faArrowLeft} onClick={onBack} size='sm' className='mr-2 cursor-pointer hover:text-baoRed' />
 						)}
 						{header ? header : children}
 					</Typography>
@@ -28,7 +28,7 @@ const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack
 			</div>
 			<div className='absolute top-0 right-0 hidden pt-4 pr-6 sm:block'>
 				{onClose && (
-					<button className='rounded-md bg-primary-100 outline-none hover:text-text-400' onClick={onClose}>
+					<button className='rounded-md bg-primary-100 outline-none hover:text-baoRed' onClick={onClose}>
 						<FontAwesomeIcon icon={faClose} className='h-6 w-6' />
 					</button>
 				)}

@@ -62,15 +62,20 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 	return (
 		synth && (
 			<Link href={`/vaults/${vaultName}`} key={vaultName}>
-				<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200' disabled={!account}>
+				<button
+					className='hover:bg-primary-200 w-full rounded bg-transparent-100 p-4 py-2 text-baoWhite hover:bg-baoBlack'
+					disabled={!account}
+				>
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
 								<Image src={`/images/tokens/${vaultName}.png`} alt={vaultName} className={`inline-block`} height={32} width={32} />
 								<span className='inline-block text-left align-middle'>
-									<Typography className='ml-2 font-bold'>{vaultName}</Typography>
+									<Typography variant='lg' className='ml-2 font-bakbak'>
+										{vaultName}
+									</Typography>
 									{isDesktop && (
-										<Typography variant='sm' className={`ml-2 font-light text-text-200`}>
+										<Typography variant='base' className={`ml-2 text-baoRed`}>
 											{synth.desc}
 										</Typography>
 									)}

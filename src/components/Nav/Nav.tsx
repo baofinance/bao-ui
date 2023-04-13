@@ -22,10 +22,10 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 	}
 
 	const navigation = [
-		['0', 'Vaults', '/'],
-		['1', 'Baskets', '/baskets'],
+		['0', 'VAULTS', '/vaults'],
+		['1', 'BASKETS', '/baskets'],
 		['2', 'veBAO', '/vebao'],
-		['3', 'Gauges', '/gauges'],
+		['3', 'GAUGES', '/gauges'],
 	]
 
 	const merkleLeaf = useProofs()
@@ -42,14 +42,14 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 				<Link
 					href={href}
 					key={name}
-					className='relative -my-2 -mx-3 rounded px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -my-2 -mx-3 rounded px-3 py-2 font-bakbak transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(index as any)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
 					<AnimatePresence>
 						{hoveredIndex === index && (
 							<motion.span
-								className={`absolute inset-0 rounded bg-primary-100`}
+								className={`absolute inset-0 rounded bg-baoRed`}
 								layoutId='hoverBackground'
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1, transition: { duration: 0.15 } }}
@@ -60,21 +60,21 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 							/>
 						)}
 					</AnimatePresence>
-					<span className={`relative z-10 ${isActive && 'bg-primary-100'}`}>{name}</span>
+					<span className={`relative z-10 ${isActive && 'bg-baoRed'}`}>{name}</span>
 				</Link>
 			))}
 			{canStartDistribution && (
 				<Link
 					href='/distribution'
 					key='Distribution'
-					className='relative -my-2 -mx-3 rounded px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -my-2 -mx-3 rounded px-3 py-2 font-bakbak transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(6)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
 					<AnimatePresence>
 						{hoveredIndex === 6 && (
 							<motion.span
-								className={`absolute inset-0 rounded bg-primary-100`}
+								className={`absolute inset-0 rounded bg-baoRed`}
 								layoutId='hoverBackground'
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1, transition: { duration: 0.15 } }}
@@ -85,21 +85,21 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 							/>
 						)}
 					</AnimatePresence>
-					<span className={`relative z-10 ${isActive && 'bg-primary-100'}`}>Distribution</span>
+					<span className={`relative z-10 ${isActive && 'bg-baoRed'}`}>DISTRIBUTION</span>
 				</Link>
 			)}
 			{(farm1Balance?.amount.gt(0) || farm2Balance?.amount.gt(0) || farm3Balance?.amount.gt(0)) && (
 				<Link
 					href='/farms'
 					key='Farms'
-					className='relative -my-2 -mx-3 rounded px-3 py-2 text-sm font-medium transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -my-2 -mx-3 rounded px-3 py-2 font-bakbak transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(5)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
 					<AnimatePresence>
 						{hoveredIndex === 5 && (
 							<motion.span
-								className={`absolute inset-0 rounded bg-primary-100`}
+								className={`absolute inset-0 rounded bg-baoRed`}
 								layoutId='hoverBackground'
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1, transition: { duration: 0.15 } }}
@@ -110,7 +110,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 							/>
 						)}
 					</AnimatePresence>
-					<span className={`relative z-10 ${isActive && 'bg-primary-100'}`}>Old Farms</span>
+					<span className={`relative z-10 ${isActive && 'bg-baoRed'}`}>FARMS</span>
 				</Link>
 			)}
 		</>

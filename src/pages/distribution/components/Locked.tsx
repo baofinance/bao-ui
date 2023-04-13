@@ -57,11 +57,11 @@ const Migration: React.FC = () => {
 					<Typography variant='lg' className='text-lg font-bold leading-6'>
 						Select Your Distribution Method
 					</Typography>
-					<Typography variant='p' className='mt-2 leading-normal text-text-100'>
+					<Typography variant='p' className='mt-2 leading-normal text-baoWhite'>
 						Locked BAO holders have three actions they can choose from with their locked positions. Please read the descriptions below very
 						carefully. You can read more about this process and the math behind it by checking out{' '}
 						<a
-							className='font-bold hover:text-text-400'
+							className='font-bold hover:text-baoRed'
 							href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
 							target='_blank'
 							rel='noreferrer'
@@ -69,7 +69,7 @@ const Migration: React.FC = () => {
 							BIP-14
 						</a>{' '}
 						on our governance forums. If you have any questions, please join our{' '}
-						<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-bold hover:text-text-400'>
+						<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-bold hover:text-baoRed'>
 							Discord
 						</a>{' '}
 						community!
@@ -84,14 +84,14 @@ const Migration: React.FC = () => {
 									<div className='relative'>
 										<div className='inline-flex w-full rounded-md border-none shadow-sm'>
 											<div className='inline-flex w-full rounded-md border-none shadow-sm'>
-												<div className='inline-flex w-full items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
+												<div className='inline-flex w-full items-center rounded-l-md border text-transparent-200 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
 													<CheckIcon className='h-5 w-5' aria-hidden='true' />
 													<p className='ml-2.5 font-medium'>{selectedOption.name}</p>
 												</div>
 												<Listbox.Button
 													className={
-														(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-														'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 font-medium text-text-100 hover:bg-primary-300')
+														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
+														'inline-flex items-center rounded-l-none rounded-r-md border text-transparent-200 bg-primary-200 p-2 font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -111,7 +111,7 @@ const Migration: React.FC = () => {
 													<Listbox.Option
 														key={option.name}
 														className={({ active }) =>
-															classNames(active ? 'bg-primary-100 text-text-400' : 'text-text-100', 'cursor-pointer select-none p-4')
+															classNames(active ? 'bg-primary-100 text-baoRed' : 'text-baoWhite', 'cursor-pointer select-none p-4')
 														}
 														value={option}
 													>
@@ -120,12 +120,12 @@ const Migration: React.FC = () => {
 																<div className='flex justify-between'>
 																	<p className='font-semibold'>{option.name}</p>
 																	{selected ? (
-																		<span className={active ? 'text-text-100' : 'text-text-200'}>
+																		<span className={active ? 'text-baoWhite' : 'text-baoRed'}>
 																			<CheckIcon className='h-5 w-5' aria-hidden='true' />
 																		</span>
 																	) : null}
 																</div>
-																<p className={classNames(active ? 'text-text-100' : 'text-text-200', 'mt-2')}>{option.shortDesc}</p>
+																<p className={classNames(active ? 'text-baoWhite' : 'text-baoRed', 'mt-2')}>{option.shortDesc}</p>
 															</div>
 														)}
 													</Listbox.Option>
@@ -139,15 +139,15 @@ const Migration: React.FC = () => {
 					</div>
 					<div className='mb-4 flex w-full flex-col items-end justify-end gap-2'>
 						<div className='flex flex-row items-center'>
-							<Typography className='px-2 font-semibold text-text-100'>Total Locked BAO</Typography>
-							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+							<Typography className='px-2 font-semibold text-baoWhite'>Total Locked BAO</Typography>
+							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border text-transparent-200 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(dist ? dist.amountOwedTotal : BigNumber.from(0))}</Typography>
 							</div>
 						</div>
 						<div className='flex flex-row items-center'>
-							<Typography className='px-2 font-semibold text-text-100'>BAO Pending Claim</Typography>
-							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+							<Typography className='px-2 font-semibold text-baoWhite'>BAO Pending Claim</Typography>
+							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border text-transparent-200 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(dist ? dist.curve : BigNumber.from(0))}</Typography>
 							</div>
@@ -169,14 +169,14 @@ const Migration: React.FC = () => {
 						<Typography variant='xl' className='font-bold text-red'>
 							Your Distribution has ENDED
 						</Typography>
-						<Typography className='mt-2 leading-normal text-text-100'>
+						<Typography className='mt-2 leading-normal text-baoWhite'>
 							The tokens for your distribution have all been given out to you, according to the options that you chose. There's nothing left
 							for you to do on this page except review how your distribution went!
 						</Typography>
-						<Typography className='mt-2 leading-normal text-text-100'>
+						<Typography className='mt-2 leading-normal text-baoWhite'>
 							You can read more about this process and the math behind it by checking out{' '}
 							<a
-								className='font-bold hover:text-text-400'
+								className='font-bold hover:text-baoRed'
 								href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
 								target='_blank'
 								rel='noreferrer'
@@ -184,16 +184,16 @@ const Migration: React.FC = () => {
 								BIP-14
 							</a>{' '}
 							on our governance forums. If you have any questions, please join our{' '}
-							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-bold hover:text-text-400'>
+							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-bold hover:text-baoRed'>
 								Discord
 							</a>{' '}
 							community!
 						</Typography>
 
-						<Typography className='mt-2 leading-normal text-text-100'>
+						<Typography className='mt-2 leading-normal text-baoWhite'>
 							If you chose to migrate your distribution to veBAO, you will have a locked balance of "Vote Escrowed BAO" (veBAO) that you can
 							see here on our{' '}
-							<Link href='/vebao' className='font-bold hover:text-text-400'>
+							<Link href='/vebao' className='font-bold hover:text-baoRed'>
 								veBAO
 							</Link>{' '}
 							page. If you chose to collect your distribution rather than migrate it, you may lock it as veBAO on the same page.
@@ -201,28 +201,28 @@ const Migration: React.FC = () => {
 
 						<div className='flex w-auto flex-row justify-center gap-5 py-2'>
 							<div className='flex min-w-[160px] flex-col'>
-								<Typography variant='sm' className='py-1 font-medium text-text-200'>
+								<Typography variant='sm' className='py-1 font-medium text-baoRed'>
 									Distribution Amount
 								</Typography>
-								<div className='flex h-8 w-auto flex-row items-center justify-start gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+								<div className='flex h-8 w-auto flex-row items-center justify-start gap-2 rounded border text-transparent-200 bg-primary-100 px-2 py-4'>
 									<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 									<Typography className='font-semibold'>{getDisplayBalance(dist ? dist.amountOwedTotal : BigNumber.from(0))}</Typography>
 								</div>
 							</div>
 							<div className='flex flex-col'>
-								<Typography variant='sm' className='py-1 font-medium text-text-200'>
+								<Typography variant='sm' className='py-1 font-medium text-baoRed'>
 									Date Started
 								</Typography>
-								<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+								<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border text-transparent-200 bg-primary-100 px-2 py-4'>
 									<Typography className='font-semibold'>{new Date(dist.dateStarted.mul(1000).toNumber()).toLocaleString()}</Typography>
 								</div>
 							</div>
 
 							<div className='flex flex-col'>
-								<Typography variant='sm' className='py-1 font-medium text-text-200'>
+								<Typography variant='sm' className='py-1 font-medium text-baoRed'>
 									Date Ended
 								</Typography>
-								<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+								<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border text-transparent-200 bg-primary-100 px-2 py-4'>
 									<Typography className='font-semibold'>{new Date(dist.dateEnded.mul(1000).toNumber()).toLocaleString()}</Typography>
 								</div>
 							</div>
@@ -236,18 +236,18 @@ const Migration: React.FC = () => {
 			<div className='flex flex-col items-center'>
 				<div className='md:max-w-4xl'>
 					<div className='pb-5'>
-						<Typography variant='xl' className='font-bold text-text-100'>
+						<Typography variant='xl' className='font-bold text-baoWhite'>
 							Start Your Distribution
 						</Typography>
-						<Typography className='mt-2 leading-normal text-text-200'>
+						<Typography className='mt-2 leading-normal text-baoRed'>
 							Locked BAO holders have three actions they can choose from with their locked positions. Any distribution will only begin once
 							manually initiated by the wallet owner. Once you start your distribution, please read the instructions and descriptions on
 							each option very carefully.
 						</Typography>
-						<Typography className='mt-2 leading-normal text-text-200'>
+						<Typography className='mt-2 leading-normal text-baoRed'>
 							You can read more in-depth about this process by checking out{' '}
 							<a
-								className='font-medium hover:text-text-400'
+								className='font-medium hover:text-baoRed'
 								href='https://gov.bao.finance/t/bip-14-token-migration-distribution/1140'
 								target='_blank'
 								rel='noreferrer'
@@ -255,15 +255,15 @@ const Migration: React.FC = () => {
 								BIP-14
 							</a>{' '}
 							on our governance forums. If you have any questions, please join{' '}
-							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-text-400'>
+							<a href='https://discord.gg/BW3P62vJXT' target='_blank' rel='noreferrer noopener' className='font-medium hover:text-baoRed'>
 								our Discord community!
 							</a>{' '}
 						</Typography>
 					</div>
 					<div className='flex flex-col items-center'>
 						<div className='mt-2 mb-5 flex flex-col items-center'>
-							<Typography className='py-2 font-semibold text-text-100'>Distribution Amount</Typography>
-							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border border-primary-400 bg-primary-100 px-2 py-4'>
+							<Typography className='py-2 font-semibold text-baoWhite'>Distribution Amount</Typography>
+							<div className='flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border text-transparent-200 bg-primary-100 px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf ? merkleLeaf.amount : BigNumber.from(0))}</Typography>
 							</div>

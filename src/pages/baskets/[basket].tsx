@@ -64,7 +64,7 @@ const Basket: NextPage<{
 						target='_blank'
 						rel='noreferrer'
 					>
-						<FontAwesomeIcon icon={faFileContract} className='hover:text-text-400' />
+						<FontAwesomeIcon icon={faFileContract} className='hover:text-baoRed' />
 					</a>
 				</Tooltipped>
 			</div>

@@ -53,7 +53,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						<div
 							className={`flex ${
 								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
-							} items-center rounded-full bg-primary-300`}
+							} items-center rounded-full bg-transparent-100`}
 						>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
@@ -61,7 +61,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Typography variant='base' className='font-medium'>
 								{getDisplayBalance(baoBalance)}
 							</Typography>
-							<Typography variant='sm' className='text-text-200'>
+							<Typography variant='sm' className='text-baoRed'>
 								BAO Balance
 							</Typography>
 						</div>
@@ -71,7 +71,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						<div
 							className={`flex ${
 								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
-							} items-center rounded-full bg-primary-300`}
+							} items-center rounded-full bg-transparent-100`}
 						>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
@@ -79,21 +79,21 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Typography variant='base' className='font-medium'>
 								{getDisplayBalance(lockInfo ? lockInfo.balance : BigNumber.from(0))}
 							</Typography>
-							<Typography variant='sm' className='text-text-200'>
+							<Typography variant='sm' className='text-baoRed'>
 								veBAO Balance
 							</Typography>
 						</div>
 					</div>
 				</div>
 				<>
-					<div className='mt-4 flex-1 rounded border border-primary-300 bg-primary-100 pb-3'>
-						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium text-text-100'>
-							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-text-200' />
+					<div className='mt-4 flex-1 rounded border text-transparent-200 bg-primary-100 pb-3'>
+						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium text-baoWhite'>
+							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-baoRed' />
 						</Typography>
 
 						{Object.keys(transactions).length > 0 && (
 							<button
-								className='float-right m-3 rounded border-0 bg-primary-300 px-2 py-1 font-medium hover:bg-primary-400'
+								className='float-right m-3 rounded border-0 bg-transparent-100 px-2 py-1 font-medium hover:bg-primary-400'
 								onClick={() => {
 									onClearTransactions()
 								}}
@@ -119,7 +119,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 											)}
 											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
 												<a>
-													<Typography variant='sm' className='text-end text-text-100 hover:text-text-400'>
+													<Typography variant='sm' className='text-end text-baoWhite hover:text-baoRed'>
 														{transactions[txHash].description}
 														<Tooltipped content='View on Etherscan'>
 															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1' size='sm' />
@@ -132,7 +132,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							</>
 						) : (
 							<div className='flex w-full items-center px-3 py-1'>
-								<Typography variant='sm' className='text-end font-normal text-text-200'>
+								<Typography variant='sm' className='text-end font-normal text-baoRed'>
 									Completed transactions will show here...
 								</Typography>
 							</div>

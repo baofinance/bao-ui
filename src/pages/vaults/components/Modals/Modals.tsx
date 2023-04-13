@@ -152,7 +152,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 			<Typography variant='sm' className='float-left mb-1'>
 				Balance: {vaultName === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(ethBalance)} ETH`}
 			</Typography>
-			<Typography variant='sm' className='float-right mb-1 text-text-200'>
+			<Typography variant='sm' className='float-right mb-1 text-baoRed'>
 				Reserves: {ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}{' '}
 			</Typography>
 			<Input
@@ -184,7 +184,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 			<Typography variant='sm' className='float-left mb-1'>
 				Balance: {vaultName === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
 			</Typography>
-			<Typography variant='sm' className='float-right mb-1 text-text-200'>
+			<Typography variant='sm' className='float-right mb-1 text-baoRed'>
 				Mint Limit: {ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}{' '}
 			</Typography>
 			<Input
@@ -215,7 +215,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 		<>
 			<Modal isOpen={show} onDismiss={hideModal}>
 				<Modal.Header onClose={hideModal}>
-					<div className='mx-0 my-auto flex h-full items-center text-text-100'>
+					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
 							{operation}
 						</Typography>
@@ -231,7 +231,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 							<div className='mb-4 flex h-full flex-col items-center justify-center'>
 								<div className='flex w-full flex-row'>
 									<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-										<Typography variant='sm' className='text-text-200'>
+										<Typography variant='sm' className='text-baoRed'>
 											{`${maxLabel()}:`}
 										</Typography>
 										<Typography variant='sm'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${
@@ -285,7 +285,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 							{swapDirection ? bInput : aInput}
 							<div className='mt-4 block select-none text-center'>
 								<span
-									className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-primary-300 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
+									className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-transparent-100 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
 									onClick={() => setSwapDirection(!swapDirection)}
 								>
 									<FontAwesomeIcon icon={faSync} size='xs' className='m-auto' />

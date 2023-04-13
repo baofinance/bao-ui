@@ -57,10 +57,10 @@ const LiquidSwap: React.FC = () => {
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='sm:w-4/5'>
-				<Typography variant='lg' className='text-lg font-bold text-text-100'>
+				<Typography variant='lg' className='text-lg font-bold text-baoWhite'>
 					Exchange Unlocked BAO
 				</Typography>
-				<Typography className='mt-2 text-text-200'>
+				<Typography className='mt-2 text-baoRed'>
 					All tokens, whether circulating or locked, will be converted at a supply reduction of 1,000:1, relative to the ~1 trillion supply
 					when we took the snapshot on 11/19/2022. The new initial supply will be ~1 billion BAOv2 and will increase depending upon issuance
 					from voting escrow emissions.
@@ -70,7 +70,7 @@ const LiquidSwap: React.FC = () => {
 						<Card className={`mt-8 h-[300px]`}>
 							<Card.Body>
 								<div className='mt-2 mb-1 flex w-full items-center justify-end gap-1'>
-									<Typography variant='sm' className='text-text-200'>
+									<Typography variant='sm' className='text-baoRed'>
 										Wallet
 									</Typography>
 									<Typography variant='sm'>{getDisplayBalance(baov1Balance)} BAO v1</Typography>
@@ -91,13 +91,13 @@ const LiquidSwap: React.FC = () => {
 									}
 								/>
 								<div className='mt-4 block select-none text-center'>
-									<span className='mb-2 rounded-full border-none bg-primary-300 p-2 text-lg'>
+									<span className='mb-2 rounded-full border-none bg-transparent-100 p-2 text-lg'>
 										<FontAwesomeIcon icon={faArrowDown} size='sm' className='m-auto' />
 									</span>
 								</div>
 								<div className='flex w-full flex-row'>
 									<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-										<Typography variant='sm' className='text-text-200'>
+										<Typography variant='sm' className='text-baoRed'>
 											Wallet
 										</Typography>
 										<Typography variant='sm'>{getDisplayBalance(baov2Balance)} BAO v2</Typography>
@@ -144,7 +144,7 @@ const LiquidSwap: React.FC = () => {
 												className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
 												style={{ marginTop: '15px' }}
 											>
-												<Typography variant='sm' className='text-text-200'>
+												<Typography variant='sm' className='text-baoRed'>
 													BAOv1 Redeemed
 												</Typography>
 												<Typography>{formatUnits(claimedBao.div(initialSwapperBalance).mul(100))}%</Typography>

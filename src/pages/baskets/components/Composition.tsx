@@ -35,10 +35,10 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 						Allocation Breakdown
 					</Typography>
 					<div className='m-auto flex gap-2'>
-						<Button size='xs' onClick={() => setDisplayType('TABLE')} className={`${displayType === 'TABLE' && '!bg-primary-300'} h-8 w-8`}>
+						<Button size='xs' onClick={() => setDisplayType('TABLE')} className={`${displayType === 'TABLE' && '!bg-transparent-100'} h-8 w-8`}>
 							<FontAwesomeIcon icon={faTable} size='xs' />
 						</Button>
-						<Button size='xs' onClick={() => setDisplayType('PIE')} className={`${displayType === 'PIE' && '!bg-primary-300'} h-8 w-8`}>
+						<Button size='xs' onClick={() => setDisplayType('PIE')} className={`${displayType === 'PIE' && '!bg-transparent-100'} h-8 w-8`}>
 							<FontAwesomeIcon icon={faChartPie} size='xs' />
 						</Button>
 					</div>
@@ -46,7 +46,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 			</div>
 			{displayType === 'TABLE' ? (
 				<>
-					<div className='rounded border border-primary-300 bg-primary-200'>
+					<div className='rounded border text-transparent-200 bg-primary-200'>
 						<table className='w-full'>
 							<thead>
 								<tr className='rounded-t-lg bg-primary-100'>
@@ -85,12 +85,12 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 														/>
 													</td>
 													<td className='p-2 text-center'>
-														<Badge className='bg-primary-300 font-semibold'>${getDisplayBalance(component.price)}</Badge>
+														<Badge className='bg-transparent-100 font-semibold'>${getDisplayBalance(component.price)}</Badge>
 													</td>
 													<td className='p-2 text-center'>
 														<Tooltipped content={component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(8)}%` : '-'}>
 															<a>
-																<Badge className='bg-primary-300 font-semibold'>
+																<Badge className='bg-transparent-100 font-semibold'>
 																	{component.apy ? `${getDisplayBalance(component.apy.mul(100))}%` : '-'}
 																</Badge>
 															</a>
@@ -98,7 +98,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 													</td>
 													{isDesktop && (
 														<td className='p-2 text-center'>
-															<Badge className='bg-primary-300 font-semibold'>{component.strategy || 'None'}</Badge>
+															<Badge className='bg-transparent-100 font-semibold'>{component.strategy || 'None'}</Badge>
 														</td>
 													)}
 												</tr>
@@ -123,7 +123,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 					</div>
 				</>
 			) : (
-				<div className='rounded border border-primary-300 bg-primary-100'>
+				<div className='rounded border text-transparent-200 bg-primary-100'>
 					<div className='flex flex-row justify-center'>
 						<div className='flex flex-col'>
 							<DonutGraph width={250} height={250} composition={composition} basket={basketId} rates={rates} info={info} />

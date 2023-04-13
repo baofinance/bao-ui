@@ -49,7 +49,7 @@ export interface MobileNavLinkProps {
 
 const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...props }) => {
 	return (
-		<Popover.Button as={Link} href={href} target={target} className='block text-base leading-7 tracking-tight text-text-100' {...props}>
+		<Popover.Button as={Link} href={href} target={target} className='block text-base leading-7 tracking-tight text-baoWhite' {...props}>
 			{children}
 		</Popover.Button>
 	)
@@ -67,24 +67,23 @@ const Header: FC = () => {
 	const farm3Balance = useUserFarmInfo(201)
 
 	return (
-		<header className='fixed top-0 z-50 w-full border-b border-b-primary-300 bg-background-100'>
+		<header className='fixed top-0 z-50 w-full'>
 			<nav>
-				<Container className='relative z-50 flex max-w-full justify-between py-4'>
+				<div className='relative z-50 flex max-w-full justify-between py-8 px-8'>
 					<div className='relative z-10 flex items-center gap-8'>
 						<Logo />
-						{isDesktop && (
-							<div className='flex gap-8'>
-								<Nav />
-							</div>
-						)}
 					</div>
 					<div className='flex items-center gap-2'>
-						{!isDesktop && (
+						{isDesktop ? (
+							<div className='mr-8 flex gap-8'>
+								<Nav />
+							</div>
+						) : (
 							<Popover>
 								{({ open }) => (
 									<>
 										<Popover.Button
-											className='relative z-10 -mr-2 inline-flex items-center rounded stroke-text-100 p-2 outline-none hover:bg-primary-100/50 [&:not(:focus-visible)]:focus:outline-none'
+											className='stroke-text-100 relative z-10 -mr-2 inline-flex items-center rounded p-2 outline-none hover:bg-baoRed/50 [&:not(:focus-visible)]:focus:outline-none'
 											aria-label='Toggle site navigation'
 										>
 											{({ open }) => (open ? <ChevronUpIcon className='h-6 w-6' /> : <MenuIcon className='h-6 w-6' />)}
@@ -98,7 +97,7 @@ const Header: FC = () => {
 														initial={{ opacity: 0 }}
 														animate={{ opacity: 1 }}
 														exit={{ opacity: 0 }}
-														className='fixed inset-0 z-0 bg-background-100/60 backdrop-blur'
+														className='bg-background-100/60 fixed inset-0 z-0 backdrop-blur'
 													/>
 													<Popover.Panel
 														static
@@ -110,16 +109,16 @@ const Header: FC = () => {
 															y: -32,
 															transition: { duration: 0.2 },
 														}}
-														className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-background-100 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
+														className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-baoRed px-6 pb-6 pt-32'
 													>
 														<div className='space-y-4'>
-															<MobileNavLink href='/'>Vaults</MobileNavLink>
-															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
+															<MobileNavLink href='/vaults'>VAULTS</MobileNavLink>
+															<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
 															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
-															<MobileNavLink href='/gauges'>Gauges</MobileNavLink>
-															{canStartDistribution && <MobileNavLink href='/distribution'>Distribution</MobileNavLink>}
+															<MobileNavLink href='/gauges'>GAUGES</MobileNavLink>
+															{canStartDistribution && <MobileNavLink href='/distribution'>DISTRIBUTION</MobileNavLink>}
 															{(farm1Balance?.amount.gt(0) || farm2Balance?.amount.gt(0) || farm3Balance?.amount.gt(0)) && (
-																<MobileNavLink href='/farms'>Farms</MobileNavLink>
+																<MobileNavLink href='/farms'>FARMS</MobileNavLink>
 															)}
 														</div>
 													</Popover.Panel>
@@ -135,9 +134,9 @@ const Header: FC = () => {
 						<AccountButton />
 
 						<Menu as='div' className='relative inline-block text-left'>
-							<Menu.Button className='h-10 w-10 rounded border border-primary-300 bg-primary-200 hover:bg-primary-300'>
+							<Menu.Button className='h-10 w-10 rounded'>
 								<span className='sr-only'>Open options</span>
-								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5' aria-hidden='true' />
+								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5 text-baoRed' aria-hidden='true' />
 							</Menu.Button>
 
 							<Transition
@@ -149,7 +148,7 @@ const Header: FC = () => {
 								leaveFrom='transform opacity-100 scale-100'
 								leaveTo='transform opacity-0 scale-95'
 							>
-								<Menu.Items className='absolute right-0 z-10 mt-2 w-fit origin-top-right rounded-md border border-primary-300 bg-background-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+								<Menu.Items className='absolute right-0 z-10 mt-2 w-fit origin-top-right rounded-md border border-transparent-100 bg-transparent-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 									<div className='py-1'>
 										<Menu.Item>
 											{({ active }) => (
@@ -159,7 +158,7 @@ const Header: FC = () => {
 													aria-label='Documentation'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -175,7 +174,7 @@ const Header: FC = () => {
 													aria-label='Governance Forums'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -191,7 +190,7 @@ const Header: FC = () => {
 													aria-label='Snapshot'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -207,7 +206,7 @@ const Header: FC = () => {
 													aria-label='Discord'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -223,7 +222,7 @@ const Header: FC = () => {
 													aria-label='GitHub'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -239,7 +238,7 @@ const Header: FC = () => {
 													aria-label='Immunefi'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -255,7 +254,7 @@ const Header: FC = () => {
 													aria-label='Twitter'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -271,7 +270,7 @@ const Header: FC = () => {
 													aria-label='Medium'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -284,7 +283,7 @@ const Header: FC = () => {
 							</Transition>
 						</Menu>
 					</div>
-				</Container>
+				</div>
 			</nav>
 		</header>
 	)
