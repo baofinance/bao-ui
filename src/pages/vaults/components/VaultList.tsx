@@ -63,7 +63,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 		synth && (
 			<Link href={`/vaults/${vaultName}`} key={vaultName}>
 				<button
-					className='hover:bg-primary-200 w-full rounded bg-transparent-100 p-4 py-2 text-baoWhite hover:bg-baoBlack'
+					className='hover:bg-primary-200 w-full rounded bg-transparent-100 px-4 py-2 text-baoWhite hover:bg-baoBlack'
 					disabled={!account}
 				>
 					<div className='flex w-full flex-row'>
@@ -75,7 +75,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 										{vaultName}
 									</Typography>
 									{isDesktop && (
-										<Typography variant='base' className={`ml-2 text-baoRed`}>
+										<Typography variant='base' className={`ml-2 font-semibold text-baoRed`}>
 											{synth.desc}
 										</Typography>
 									)}

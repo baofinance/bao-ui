@@ -8,7 +8,7 @@ interface ContainerProps {
 	className?: string
 }
 
-const Container = ({ children, className }: ContainerProps) => <div className={classNames(`p-32`, className)}>{children}</div>
+const Container = ({ children, className }: ContainerProps) => <div className={classNames(`py-32 px-8`, className)}>{children}</div>
 
 export default Container
 

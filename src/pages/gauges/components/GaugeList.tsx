@@ -17,30 +17,23 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
+import { ListHeader } from '@/components/List'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
 
 	return (
 		<>
-			<div className='flex w-full flex-row'>
-				<div className='flex w-full flex-col'>
-					{isDesktop ? (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'TVL', 'APR']} />
-					) : (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APR']} />
-					)}
-					{gauges.length ? (
-						gauges.map((gauge: ActiveSupportedGauge, i: number) => (
-							<React.Fragment key={i}>
-								<GaugeListItem gauge={gauge} />
-							</React.Fragment>
-						))
-					) : (
-						<PageLoader block />
-					)}
-				</div>
-			</div>
+			<ListHeader headers={['Gauge Name', 'Gauge Weight', 'TVL', 'APR']} />
+			{gauges.length ? (
+				gauges.map((gauge: ActiveSupportedGauge, i: number) => (
+					<React.Fragment key={i}>
+						<GaugeListItem gauge={gauge} />
+					</React.Fragment>
+				))
+			) : (
+				<PageLoader block />
+			)}
 		</>
 	)
 }
@@ -107,7 +100,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowGaugeModal(true)} disabled={!account}>
-				<div className='rounded border text-transparent-200 bg-primary-100 p-4 hover:bg-primary-200'>
+				<div className='rounded bg-transparent-100 px-4 py-2 text-baoWhite hover:bg-baoBlack'>
 					<div className='flex w-full flex-row items-center'>
 						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
@@ -116,11 +109,11 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 									<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={32} height={32} />
 								</div>
 								<span className='inline-block text-left align-middle'>
-									<Typography variant='base' className='font-bold'>
+									<Typography variant='lg' className='font-bakbak'>
 										{gauge.name}
 									</Typography>
-									<Typography variant='sm' className={`font-light text-baoRed`}>
-										<Image src={`/images/platforms/${gauge.type}.png`} height={12} width={12} alt='Curve' className='mr-1 inline' />
+									<Typography variant='base' className={`flex align-middle font-semibold text-baoRed`}>
+										<Image src={`/images/platforms/${gauge.type}.png`} height={16} width={16} alt={gauge.type} className='mr-1 inline' />
 										{gauge.type}
 									</Typography>
 								</span>

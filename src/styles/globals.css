@@ -207,7 +207,7 @@ input[type='number'] {
 	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
 
 	/* Adding our borders*/
-	border-radius: 10px;
+	border-radius: 3rem;
 	border: 1px solid rgba(255, 255, 255, 0.18);
 	z-index: 4;
 }
