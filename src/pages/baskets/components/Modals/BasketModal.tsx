@@ -91,7 +91,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			return true
 		}
 		if (operation === 'MINT') {
-			const _val = value && parseUnits(value)
 			const daiOrEth = mintOption === MintOption.DAI ? daiBalance : ethBalance
 			const walletBallance = operation === 'MINT' ? daiOrEth : basketBalance
 			let canParseValue = true
@@ -100,10 +99,11 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			} catch {
 				canParseValue = false
 			}
+			console.log('daiAllowance', daiAllowance)
 			return (
 				mintOption === MintOption.DAI &&
 				daiAllowance &&
-				(daiAllowance.eq(0) || daiAllowance.lt(_val)) &&
+				(daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) &&
 				canParseValue &&
 				(parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance))
 			)
