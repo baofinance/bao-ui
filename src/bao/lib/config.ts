@@ -82,11 +82,6 @@ export default {
 			},
 		},
 		// Baskets
-		SimpleUniRecipe: {
-			1: {
-				address: '0x600e353fa3414abdd08b5f20b20b4cd701823b9b',
-			},
-		},
 		LendingRegistry: {
 			1: {
 				address: '0x08a2b7D713e388123dc6678168656659d297d397',
