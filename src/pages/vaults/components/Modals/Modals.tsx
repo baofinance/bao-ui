@@ -285,7 +285,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 							{swapDirection ? bInput : aInput}
 							<div className='mt-4 block select-none text-center'>
 								<span
-									className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-transparent-100 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
+									className='hover:bg-primary-400 m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-transparent-100 p-2 text-lg hover:cursor-pointer'
 									onClick={() => setSwapDirection(!swapDirection)}
 								>
 									<FontAwesomeIcon icon={faSync} size='xs' className='m-auto' />

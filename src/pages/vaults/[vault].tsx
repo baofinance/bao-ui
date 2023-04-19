@@ -6,7 +6,6 @@ import Input from '@/components/Input'
 import { ListHeader } from '@/components/List'
 import Loader, { PageLoader } from '@/components/Loader'
 import { StatBlock } from '@/components/Stats'
-import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
@@ -23,16 +22,19 @@ import { providerKey } from '@/utils/index'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Listbox, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Accordion, AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
+import classNames from 'classnames'
 import { BigNumber, FixedNumber } from 'ethers'
 import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import BallastButton from './components/BallastButton'
 import VaultBorrowModal from './components/Modals/BorrowModal'
@@ -117,6 +119,12 @@ const Vault: NextPage<{
 					return BigNumber.from(0)
 				}
 		}
+	}
+
+	const depositMax = () => {
+		return balances
+			? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
+			: BigNumber.from(0)
 	}
 
 	const maxLabel = () => {
@@ -236,6 +244,42 @@ const Vault: NextPage<{
 		</>
 	)
 
+	const [selectedOption, setSelectedOption] = useState('ETH')
+	const asset =
+		collateral &&
+		(collateral.length
+			? collateral.find(asset => asset.underlyingSymbol === selectedOption)
+			: collateral.find(asset => asset.underlyingSymbol === 'ETH'))
+
+	const baskets = useBaskets()
+	const basket =
+		asset &&
+		asset.isBasket === true &&
+		baskets &&
+		baskets.find(basket => basket.address.toLowerCase() === asset.underlyingAddress.toLowerCase())
+
+	const composition = useComposition(asset && basket && asset.isBasket === true && basket)
+	const avgBasketAPY =
+		asset && asset.isBasket && composition
+			? (composition
+					.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
+					.map(component => {
+						return component.apy
+					})
+					.reduce(function (a, b) {
+						return a + parseFloat(formatUnits(b))
+					}, 0) /
+					composition.length) *
+			  100
+			: 0
+
+	const suppliedUnderlying = useMemo(() => {
+		const supply = supplyBalances && asset && supplyBalances.find(balance => balance.address === asset.vaultAddress)
+		const supplyBalance = supply && supply.balance && (supply.balance === undefined ? BigNumber.from(0) : supply.balance)
+		if (exchangeRates && asset && exchangeRates[asset.vaultAddress] === undefined) return BigNumber.from(0)
+		return supplyBalance && exchangeRates && decimate(supplyBalance.mul(exchangeRates[asset.vaultAddress]))
+	}, [supplyBalances, exchangeRates, asset])
+
 	return (
 		<>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
@@ -249,12 +293,12 @@ const Vault: NextPage<{
 				borrowBalances &&
 				exchangeRates ? (
 					<>
-						<div className='mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 bg-primary-100 p-3 duration-200 hover:bg-primary-200'>
+						<div className='bg-primary-100 hover:bg-primary-200 mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 p-3 duration-200'>
 							<Link href='/'>
 								<FontAwesomeIcon icon={faArrowLeft} />
 							</Link>
 						</div>
-						<div className='mb-4 flex w-full flex-row gap-4 rounded border-0 bg-primary-100 p-3'>
+						<div className='bg-primary-100 mb-4 flex w-full flex-row gap-4 rounded border-0 p-3'>
 							<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 								<Image
 									src={`/images/tokens/${synth.icon}`}
@@ -272,15 +316,246 @@ const Vault: NextPage<{
 								<Typography className='ml-1 inline-block !text-lg text-baoWhite'>APY</Typography>
 							</div>
 						</div>
-						{account && (
-							<>
-								<VaultStats asset={synth} amount={val} vaultName={vaultName} />
-							</>
-						)}
-						<div className='flex flex-row gap-4'>
-							<div className='flex basis-1/2 flex-col'>
-								<CollateralList collateral={collateral} vaultName={vaultName} />
+
+						<Typography variant='xl' className='font-bakbak text-3xl'>
+							Deposit Collateral
+						</Typography>
+						<div className='grid w-full grid-cols-6 rounded-lg'>
+							<div className='col-span-3'>
+								<div className='flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
+									<Listbox value={selectedOption} onChange={setSelectedOption}>
+										{({ open }) => (
+											<>
+												<div>
+													<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
+														<div className='m-1 flex w-36 rounded-full border-none bg-baoWhite bg-opacity-5 p-1 hover:bg-transparent-300'>
+															<div className='w-full py-2 text-baoWhite'>
+																{selectedOption === '' ? (
+																	<Typography>Select a collateral</Typography>
+																) : (
+																	<div className='h-full items-start'>
+																		<div className='mr-2 inline-block'>
+																			<Image
+																				className='z-10 inline-block select-none'
+																				src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
+																				alt={asset && asset.underlyingSymbol}
+																				width={24}
+																				height={24}
+																			/>
+																		</div>
+																		<span className='inline-block text-left align-middle'>
+																			<Typography variant='lg' className='font-bakbak'>
+																				{asset && asset.underlyingSymbol}
+																			</Typography>
+																		</span>
+																	</div>
+																)}
+															</div>
+															<div className='my-auto mr-3 w-auto justify-end text-end'>
+																<ChevronDownIcon className='h-5 w-5 text-baoRed' aria-hidden='true' />
+															</div>
+														</div>
+													</Listbox.Button>
+
+													<Transition
+														show={open}
+														as={Fragment}
+														leave='transition ease-in duration-100'
+														leaveFrom='opacity-100'
+														leaveTo='opacity-0'
+													>
+														<Listbox.Options className='absolute z-10 ml-3 -mt-1 w-auto origin-top-right overflow-hidden rounded-lg bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+															<div className='grid grid-cols-6 p-2'>
+																<div className='col-span-2'>
+																	<Typography variant='lg' className='font-bakbak'>
+																		Asset
+																	</Typography>
+																</div>
+																<div className='col-span-2'>
+																	<Typography variant='lg' className='text-center font-bakbak'>
+																		APY
+																	</Typography>
+																</div>
+																<div className='col-span-2'>
+																	<Typography variant='lg' className='text-right font-bakbak'>
+																		Balance
+																	</Typography>
+																</div>
+															</div>
+															{collateral.length ? (
+																collateral.map((asset: ActiveSupportedVault) => (
+																	<Listbox.Option
+																		key={asset.underlyingSymbol}
+																		className={({ active }) =>
+																			classNames(
+																				active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
+																				'cursor-pointer select-none rounded-lg border border-baoBlack p-4 text-sm',
+																			)
+																		}
+																		value={asset.underlyingSymbol}
+																	>
+																		{({ selected, active }) => (
+																			<div className='mx-0 my-auto grid h-full grid-cols-6 items-center gap-4'>
+																				<div className='col-span-2'>
+																					<Image
+																						className='z-10 inline-block select-none'
+																						src={`/images/tokens/${asset.underlyingSymbol}.png`}
+																						alt={asset.underlyingSymbol}
+																						width={24}
+																						height={24}
+																					/>
+																					<span className='ml-2 inline-block text-left align-middle'>
+																						<Typography variant='lg' className='font-bakbak'>
+																							{asset.underlyingSymbol}
+																						</Typography>
+																					</span>
+																				</div>
+																				<div className='col-span-2'>
+																					<Typography variant='lg' className='text-center align-middle font-bakbak'>
+																						{asset.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
+																					</Typography>
+																				</div>
+																				<div className='col-span-2'>
+																					<Typography variant='lg' className='text-right align-middle font-bakbak'>
+																						{account
+																							? getDisplayBalance(
+																									accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
+																									asset.underlyingDecimals,
+																							  )
+																							: '-'}
+																					</Typography>
+																				</div>
+																			</div>
+																		)}
+																	</Listbox.Option>
+																))
+															) : (
+																<Typography>Select a collateral</Typography>
+															)}
+														</Listbox.Options>
+													</Transition>
+												</div>
+											</>
+										)}
+									</Listbox>
+									<Input
+										value={val}
+										onChange={handleChange}
+										onSelectMax={() => setVal(formatUnits(depositMax(), asset.underlyingDecimals))}
+										className='mt-1'
+									/>
+									<div className='w-64 p-1'>
+										<VaultButton
+											vaultName={vaultName}
+											operation={'Supply'}
+											asset={asset}
+											val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+											isDisabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(depositMax()))}
+										/>
+									</div>
+								</div>
+								<StatBlock
+									label=''
+									stats={[
+										{
+											label: 'Total Supplied',
+											value: `${getDisplayBalance(asset.supplied, asset.underlyingDecimals)} ${
+												asset.underlyingSymbol
+											} | $${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}`,
+										},
+										{
+											label: 'Your Supply',
+											value: `${getDisplayBalance(suppliedUnderlying, asset.underlyingDecimals)} ${
+												asset.underlyingSymbol
+											} | $${getDisplayBalance(decimate(suppliedUnderlying.mul(asset.price)))}`,
+										},
+										{
+											label: 'Wallet Balance',
+											value: `${getDisplayBalance(
+												accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
+												asset.underlyingDecimals,
+											)} ${asset.underlyingSymbol}`,
+										},
+										{
+											label: 'Collateral Factor',
+											value: `${getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%`,
+										},
+										{
+											label: 'Initial Margin Factor',
+											value: `${getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%`,
+										},
+										{
+											label: 'Reserve Factor',
+											value: `${getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%`,
+										},
+										{
+											label: 'Total Reserves',
+											value: `$${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}`,
+										},
+									]}
+								/>
+								<div>OPEN POSITIONS</div>
 							</div>
+
+							<div className='col-span-3'>
+								<div className='flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
+									<div>
+										<div className='m-1 flex w-36 justify-center rounded-full border-none bg-baoWhite bg-opacity-5 p-1'>
+											<div className='justify-center py-2 text-baoWhite'>
+												<div className='m-auto h-full justify-center'>
+													<div className='mr-2 inline-block'>
+														<Image
+															className='z-10 inline-block select-none'
+															src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+															alt={synth && synth.underlyingSymbol}
+															width={24}
+															height={24}
+														/>
+													</div>
+													<span className='inline-block text-left align-middle'>
+														<Typography variant='lg' className='font-bakbak'>
+															{synth && synth.underlyingSymbol}
+														</Typography>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<Input
+										value={val}
+										onChange={handleChange}
+										onSelectMax={() => setVal(formatUnits(depositMax(), asset.underlyingDecimals))}
+										className='mt-1'
+									/>
+									<div className='w-64 p-1'>
+										<VaultButton
+											vaultName={vaultName}
+											operation={'Mint'}
+											asset={asset}
+											val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+											isDisabled={
+												!val ||
+												(val && parseUnits(val, asset.underlyingDecimals).gt(max())) ||
+												// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
+												(val &&
+													borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
+													parseUnits(val, asset.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
+													operation === 'Mint')
+											}
+										/>
+									</div>
+								</div>
+
+								{account && (
+									<>
+										<VaultStats asset={synth} amount={val} vaultName={vaultName} />
+									</>
+								)}
+							</div>
+						</div>
+
+						<div className='flex flex-row gap-4'>
 							<div className='mt-8 flex w-1/2 flex-col'>
 								<Card.Options className='mt-0'>
 									<NavButtons options={operations} active={operation} onClick={setOperation} />
@@ -347,7 +622,7 @@ const Vault: NextPage<{
 											{swapDirection ? bInput : aInput}
 											<div className='mt-4 block select-none text-center'>
 												<span
-													className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-transparent-100 p-2 text-lg hover:cursor-pointer hover:bg-primary-400'
+													className='hover:bg-primary-400 m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-transparent-100 p-2 text-lg hover:cursor-pointer'
 													onClick={() => setSwapDirection(!swapDirection)}
 												>
 													<FontAwesomeIcon icon={faSync} size='xs' className='m-auto' />
@@ -483,7 +758,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 			<Accordion open={isOpen || showSupplyModal} className='my-2 rounded border text-transparent-200'>
 				<AccordionHeader
 					onClick={handleOpen}
-					className={`rounded border-0 bg-primary-100 p-2 hover:bg-primary-200 ${isOpen && 'rounded-b-none bg-primary-200'}`}
+					className={`bg-primary-100 hover:bg-primary-200 rounded border-0 p-2 ${isOpen && 'bg-primary-200 rounded-b-none'}`}
 				>
 					<div className='flex w-full flex-row items-center justify-center'>
 						<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
@@ -522,7 +797,7 @@ const CollateralItem: React.FC<CollateralItemProps> = ({
 						</div>
 					</div>
 				</AccordionHeader>
-				<AccordionBody className='rounded-b-lg bg-primary-100 p-3'>
+				<AccordionBody className='bg-primary-100 rounded-b-lg p-3'>
 					<StatBlock
 						label='Supply Details'
 						stats={[
@@ -657,7 +932,7 @@ const VaultStats: React.FC<VaultStatProps> = ({ asset, amount, vaultName }: Vaul
 	const healthFactor = useHealthFactor(vaultName)
 
 	return (
-		<div className='mb-4 flex flex-row gap-4 rounded'>
+		<div className='mb-4 flex flex-col gap-4 rounded'>
 			<StatBlock
 				className='flex basis-1/2 flex-col'
 				label='Vault Info'

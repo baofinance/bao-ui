@@ -29,11 +29,11 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 
 	if (pendingTx) {
 		return (
-			<Button fullWidth disabled={true}>
+			<Button fullWidth disabled={true} className='!rounded-full'>
 				{typeof pendingTx === 'string' ? (
 					<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank'>
 						<a>
-							Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
+							Pending <FontAwesomeIcon icon={faExternalLinkAlt} />
 						</a>
 					</Link>
 				) : (
@@ -47,6 +47,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 				return approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth
+						className='!rounded-full'
 						disabled={isDisabled}
 						onClick={async () => {
 							let mintTx
@@ -72,6 +73,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 				) : (
 					<Button
 						fullWidth
+						className='!rounded-full'
 						disabled={!approvals}
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
@@ -79,7 +81,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 							handleTx(tx, `Vaults: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
-						Approve {asset.underlyingSymbol}
+						Approve
 					</Button>
 				)
 
@@ -87,6 +89,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 				return (
 					<Button
 						fullWidth
+						className='!rounded-full'
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
@@ -104,6 +107,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 				return (
 					<Button
 						fullWidth
+						className='!rounded-full'
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(

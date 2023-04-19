@@ -138,7 +138,7 @@ export const Dashboard = () => {
 			<Typography variant='xl' className='mt-4 mb-2 font-bold'>
 				Voting Dashboard
 			</Typography>
-			<div className={`w-full justify-evenly gap-4 rounded border text-transparent-200 bg-primary-100 bg-opacity-80 p-4`}>
+			<div className={`bg-primary-100 w-full justify-evenly gap-4 rounded border bg-opacity-80 p-4 text-transparent-200`}>
 				<div className='grid grid-cols-3 gap-4'>
 					<div className='col-span-1'>
 						<label className='text-xs text-baoRed'>Select Gauge</label>
@@ -148,7 +148,7 @@ export const Dashboard = () => {
 									<div>
 										<div className='inline-flex rounded-md border-none shadow-sm'>
 											<div className='inline-flex rounded-md border-none shadow-sm'>
-												<div className='inline-flex items-center rounded-l-md border text-transparent-200 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
+												<div className='bg-primary-100 inline-flex items-center rounded-l-md border py-2 pl-3 pr-4 text-transparent-200 text-white shadow-sm'>
 													{selectedOption === '' ? (
 														<Typography>Select a gauge</Typography>
 													) : (
@@ -196,7 +196,7 @@ export const Dashboard = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'inline-flex items-center rounded-l-none rounded-r-md border text-transparent-200 bg-primary-200 p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
+														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 text-sm font-medium text-transparent-200 text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -210,7 +210,7 @@ export const Dashboard = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y divide-primary-500 overflow-hidden rounded-md border border-primary-500 bg-primary-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='divide-primary-500 border-primary-500 bg-primary-100 absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y overflow-hidden rounded-md border shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
 													gauges.map((gauge: any, i: number) => (
 														<Listbox.Option
@@ -399,7 +399,7 @@ export const Dashboard = () => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='h-2 w-full appearance-none rounded-full bg-primary-400 accent-text-400 disabled:cursor-not-allowed'
+							className='bg-primary-400 accent-text-400 h-2 w-full appearance-none rounded-full disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -411,12 +411,12 @@ export const Dashboard = () => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
-							className='relative -mr-1 h-6 w-12
-				appearance-none rounded border-solid border-inherit bg-primary-100 pl-2 text-end 
+							className='bg-primary-100 relative -mr-1 h-6
+				w-12 appearance-none rounded border-solid border-inherit pl-2 text-end 
 				align-middle font-bold outline-none outline outline-2 outline-offset-2
 				 transition-all duration-200 disabled:text-baoWhite md:text-sm'
 						/>
-						<Typography variant='base' className='m-0 rounded border-solid border-inherit border-primary-500 bg-primary-100 p-0 font-bold'>
+						<Typography variant='base' className='border-primary-500 bg-primary-100 m-0 rounded border-solid border-inherit p-0 font-bold'>
 							%
 						</Typography>
 						<>
@@ -454,10 +454,10 @@ export const Dashboard = () => {
 				<div className='mt-4 grid grid-cols-6 gap-4'>
 					<div className='col-span-2'>
 						<label className='text-sm text-baoRed'>Deposit Amount</label>
-						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
+						<div className='bg-primary-100 flex h-8 gap-2 rounded-md'>
 							<input
 								type='number'
-								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
+								className='border-primary-500 rounded border bg-transparent-100 px-2 py-1 outline-none'
 								value={depositAmount}
 								onChange={handleDepositChange}
 							/>
@@ -465,10 +465,10 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-2'>
 						<label className='text-sm text-baoRed'>BAO Tokens</label>
-						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
+						<div className='bg-primary-100 flex h-8 gap-2 rounded-md'>
 							<input
 								type='number'
-								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
+								className='border-primary-500 rounded border bg-transparent-100 px-2 py-1 outline-none'
 								value={baoAmount}
 								onChange={handleBaoChange}
 							/>

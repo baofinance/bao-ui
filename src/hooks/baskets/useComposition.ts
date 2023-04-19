@@ -47,7 +47,7 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const rocketAPY = useLlama(Config.llamaIds.rETH)
 
 	const { data: composition, refetch } = useQuery(
-		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket && basket.nid }],
 		async () => {
 			const tokenComposition: string[] = await basketContract.getTokens()
 			const tokensQuery = MultiCall.createCallContext(
