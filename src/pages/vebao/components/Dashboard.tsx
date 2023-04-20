@@ -117,15 +117,15 @@ export const Dashboard = () => {
 	const updateLiquidityLimit = async (depositAmount: string, veEstimate: number, totalVePower: number, tvl: number) => {
 		console.log(gauge.symbol, 'depositAmount', depositAmount)
 		const l = parseFloat(depositAmount) * 1e18
+		const lim = (l * 40) / 100
 		console.log(gauge.symbol, 'l', l)
 		const working_balances = gaugeInfo && account ? parseFloat(depositAmount) * 1e18 : 1 * 1e18 //determine workingBalance of depositAmount
 		console.log(gauge.symbol, 'working_balances', working_balances)
-		const working_supply = gaugeInfo && parseFloat(formatUnits(gaugeInfo.workingSupply))
+		const working_supply = gaugeInfo && parseFloat(gaugeInfo.workingSupply.toString())
 		console.log(gauge.symbol, 'working_supply', working_supply)
 		console.log(gauge.symbol, 'tvl', tvl)
 		const L = tvl + l
 		console.log(gauge.symbol, 'L', L)
-		const lim = (l * 40) / 100
 		console.log(gauge.symbol, 'lim', lim)
 		console.log(gauge.symbol, 'veEstimate', veEstimate)
 		const veBAO = veEstimate * 1e18

@@ -89,9 +89,9 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		console.log(gauge.symbol, '_depositAmount', _depositAmount)
 		const l = parseFloat(_depositAmount) * 1e18
 		console.log(gauge.symbol, 'l', l)
-		const working_balances = gaugeInfo && account ? parseFloat(_depositAmount) * 1e18 : 1 * 1e18 //determine workingBalance of depositAmount
+		const working_balances = gaugeInfo && account ? parseFloat(gaugeInfo.workingBalance.toString()) : 1 * 1e18 //determine workingBalance of depositAmount
 		console.log(gauge.symbol, 'working_balances', working_balances)
-		const working_supply = gaugeInfo && parseFloat(formatUnits(gaugeInfo.workingSupply))
+		const working_supply = gaugeInfo && parseFloat(gaugeInfo.workingSupply.toString())
 		console.log(gauge.symbol, 'working_supply', working_supply)
 		console.log(gauge.symbol, 'tvl', tvl)
 		const L = tvl * 1e18 + l
