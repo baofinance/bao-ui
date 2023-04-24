@@ -25,7 +25,7 @@ import { useRouter } from 'next/router'
 import Loader from '@/components/Loader/Loader'
 import Container from '@/components/Container'
 
-console.log('v1.3.1')
+console.log('v2.0.0')
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)

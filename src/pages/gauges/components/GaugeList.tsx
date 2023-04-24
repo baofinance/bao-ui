@@ -1,4 +1,5 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
+import { ListHeader } from '@/components/List'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
@@ -17,7 +18,6 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
-import { ListHeader } from '@/components/List'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -78,21 +78,37 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const tvl = parseFloat(formatUnits(decimate(gaugeTVL ? gaugeTVL : BigNumber.from(0))))
 
 	const boost = useMemo(() => {
-		const amount = depositAmount ? formatUnits(decimate(depositAmount)) : '0'
-		const l = parseFloat(amount) * 1e18
-		const working_balances = gaugeInfo && account ? parseFloat(amount) * 1e18 : 1 * 1e18 //determine workingBalance of depositAmount
-		const working_supply = gaugeInfo && parseFloat(formatUnits(gaugeInfo.workingSupply))
-		const L = tvl + l
+		const _depositAmount = depositAmount ? formatUnits(decimate(depositAmount)) : '0'
+		console.log(gauge.symbol, '_depositAmount', _depositAmount)
+		const l = parseFloat(_depositAmount) * 1e18
+		console.log(gauge.symbol, 'l', l)
+		const working_balances = gaugeInfo && account ? parseFloat(gaugeInfo.workingBalance.toString()) : 1 * 1e18 //determine workingBalance of depositAmount
+		console.log(gauge.symbol, 'working_balances', working_balances)
+		const working_supply = gaugeInfo && parseFloat(gaugeInfo.workingSupply.toString())
+		console.log(gauge.symbol, 'working_supply', working_supply)
+		console.log(gauge.symbol, 'tvl', tvl)
+		const L = tvl * 1e18 + l
+		console.log(gauge.symbol, 'L', L)
 		const lim = (l * 40) / 100
+		console.log(gauge.symbol, 'lim', lim)
+		console.log(gauge.symbol, 'veEstimate', veEstimate)
 		const veBAO = veEstimate * 1e18
+		console.log(gauge.symbol, 'veBAO', veBAO)
+		console.log(gauge.symbol, 'totalVePower', totalVePower)
 		const limplus = lim + (L * veBAO * 60) / (totalVePower * 1e20)
+		console.log(gauge.symbol, 'limplus', limplus)
 		const limfinal = Math.min(l, limplus)
-
+		console.log(gauge.symbol, 'limfinal', limfinal)
 		const old_bal = working_balances
+		console.log(gauge.symbol, 'old_bal', old_bal)
 		const noboost_lim = (l * 40) / 100
+		console.log(gauge.symbol, 'noboost_lim', noboost_lim)
 		const noboost_supply = working_supply + noboost_lim - old_bal
+		console.log(gauge.symbol, 'noboost_supply', noboost_supply)
 		const _working_supply = working_supply + limfinal - old_bal
+		console.log(gauge.symbol, '_working_supply', _working_supply)
 		const boost = limfinal / _working_supply / (noboost_lim / noboost_supply)
+		console.log(gauge.symbol, 'boost', boost)
 
 		return boost
 	}, [account, depositAmount, gaugeInfo, totalVePower, tvl, veEstimate])
