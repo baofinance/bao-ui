@@ -17,7 +17,7 @@ export const StatBlock = ({ label, stats, className = '' }: StatBlockProps) => (
 		<div className={classNames('', className)}>
 			{label && (
 				<div className='text-center'>
-					<Typography variant='lg' className='mb-3 font-bold text-baoWhite'>
+					<Typography variant='xl' className='p-4 text-center font-bakbak'>
 						{label}
 					</Typography>
 				</div>
@@ -28,7 +28,7 @@ export const StatBlock = ({ label, stats, className = '' }: StatBlockProps) => (
 						<Typography variant='base' className=' font-medium text-baoWhite'>
 							{label}
 						</Typography>
-						<Typography variant='base' className='text-end text-baoWhite'>
+						<Typography variant='base' className='text-end font-bold text-baoWhite'>
 							{value}
 						</Typography>
 					</div>

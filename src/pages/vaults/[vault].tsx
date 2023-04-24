@@ -319,10 +319,6 @@ const Vault: NextPage<{
 								</Badge>
 							</div>
 						</div>
-
-						<Typography variant='xl' className='font-bakbak text-3xl'>
-							Deposit Collateral
-						</Typography>
 						<div className='grid w-full grid-cols-6 gap-16 rounded-lg'>
 							<div className='col-span-3'>
 								<div className='flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
@@ -995,7 +991,6 @@ const VaultStats: React.FC<VaultStatProps> = ({ asset, amount, vaultName }: Vaul
 		<div className='mb-4 flex flex-col gap-4 rounded'>
 			<StatBlock
 				className='flex basis-1/2 flex-col'
-				label='Vault Info'
 				stats={[
 					{
 						label: `Current ${asset.underlyingSymbol} Price`,
