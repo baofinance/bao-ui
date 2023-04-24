@@ -461,7 +461,7 @@ const Vault: NextPage<{
 											label: 'Total Supplied',
 											value: `${getDisplayBalance(asset.supplied, asset.underlyingDecimals)} ${
 												asset.underlyingSymbol
-											} | $${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}`,
+											}  <Badge>$${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}</Badge>`,
 										},
 										{
 											label: 'Your Supply',
