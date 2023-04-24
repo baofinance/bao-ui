@@ -90,7 +90,7 @@ export const DepositCard = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Deposit
 			</Typography>
-			<Card className='glassmorphic-card'>
+			<Card className='border-0 bg-opacity-0 shadow-none'>
 				<Card.Header>
 					<div className='m-4 flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
