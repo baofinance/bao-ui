@@ -41,6 +41,7 @@ import VaultBorrowModal from './components/Modals/BorrowModal'
 import VaultSupplyModal from './components/Modals/SupplyModal'
 import { VaultDetails } from './components/Stats'
 import VaultButton from './components/VaultButton'
+import Badge from '@/components/Badge'
 
 export async function getStaticPaths() {
 	return {
@@ -312,15 +313,17 @@ const Vault: NextPage<{
 								</span>
 							</div>
 							<div className='mx-auto my-0 flex w-full flex-row items-center justify-end text-end align-middle'>
-								<Typography className='ml-2 inline-block !text-lg leading-5'>{getDisplayBalance(synth.borrowApy)}%</Typography>
-								<Typography className='ml-1 inline-block !text-lg text-baoWhite'>APY</Typography>
+								<Badge className='rounded-full bg-baoRed align-middle'>
+									<Typography className='ml-2 inline-block font-bold leading-5'>{getDisplayBalance(synth.borrowApy)}%</Typography>
+									<Typography className='ml-1 inline-block font-bold leading-5 text-baoWhite'>APY</Typography>
+								</Badge>
 							</div>
 						</div>
 
 						<Typography variant='xl' className='font-bakbak text-3xl'>
 							Deposit Collateral
 						</Typography>
-						<div className='grid w-full grid-cols-6 rounded-lg'>
+						<div className='grid w-full grid-cols-6 gap-16 rounded-lg'>
 							<div className='col-span-3'>
 								<div className='flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
 									<Listbox value={selectedOption} onChange={setSelectedOption}>
@@ -454,43 +457,100 @@ const Vault: NextPage<{
 										/>
 									</div>
 								</div>
+								<Typography variant='xl' className='p-4 text-center font-bakbak'>
+									Collateral Info
+								</Typography>
 								<StatBlock
 									label=''
 									stats={[
 										{
 											label: 'Total Supplied',
-											value: `${getDisplayBalance(asset.supplied, asset.underlyingDecimals)} ${
-												asset.underlyingSymbol
-											}  <Badge>$${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}</Badge>`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														{getDisplayBalance(asset.supplied, asset.underlyingDecimals)} {asset.underlyingSymbol}
+													</Typography>
+													<Badge className='ml-2 inline-block rounded-full bg-baoRed align-middle'>
+														${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}
+													</Badge>
+												</>
+											),
 										},
 										{
 											label: 'Your Supply',
-											value: `${getDisplayBalance(suppliedUnderlying, asset.underlyingDecimals)} ${
-												asset.underlyingSymbol
-											} | $${getDisplayBalance(decimate(suppliedUnderlying.mul(asset.price)))}`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														{getDisplayBalance(suppliedUnderlying, asset.underlyingDecimals)}
+														{asset.underlyingSymbol}
+													</Typography>
+													<Badge className='ml-2 inline-block rounded-full bg-baoRed align-middle'>
+														${getDisplayBalance(decimate(suppliedUnderlying.mul(asset.price)))}
+													</Badge>
+												</>
+											),
 										},
 										{
 											label: 'Wallet Balance',
-											value: `${getDisplayBalance(
-												accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
-												asset.underlyingDecimals,
-											)} ${asset.underlyingSymbol}`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														{getDisplayBalance(
+															accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
+															asset.underlyingDecimals,
+														)}{' '}
+														{asset.underlyingSymbol}
+													</Typography>
+													<Badge className='ml-2 inline-block rounded-full bg-baoRed align-middle'>
+														$
+														{getDisplayBalance(
+															decimate(
+																accountBalances.find(balance => balance.address === asset.underlyingAddress).balance.mul(asset.price),
+															),
+														)}
+													</Badge>
+												</>
+											),
 										},
 										{
 											label: 'Collateral Factor',
-											value: `${getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														{getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%
+													</Typography>
+												</>
+											),
 										},
 										{
 											label: 'Initial Margin Factor',
-											value: `${getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%
+													</Typography>
+												</>
+											),
 										},
 										{
 											label: 'Reserve Factor',
-											value: `${getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														{getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%
+													</Typography>
+												</>
+											),
 										},
 										{
 											label: 'Total Reserves',
-											value: `$${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}`,
+											value: (
+												<>
+													<Typography className='inline-block align-middle font-bold'>
+														${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}
+													</Typography>
+												</>
+											),
 										},
 									]}
 								/>
