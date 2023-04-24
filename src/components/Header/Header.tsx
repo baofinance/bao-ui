@@ -67,9 +67,9 @@ const Header: FC = () => {
 	const farm3Balance = useUserFarmInfo(201)
 
 	return (
-		<header className='fixed top-0 z-50 w-full'>
+		<header className='glassmorphic-card top-0 z-50 w-full'>
 			<nav>
-				<div className='relative z-50 flex max-w-full justify-between py-8 px-8'>
+				<div className='relative z-50 flex max-w-full justify-between py-4 px-8'>
 					<div className='relative z-10 flex items-center gap-8'>
 						<Logo />
 					</div>

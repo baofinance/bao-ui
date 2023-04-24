@@ -23,7 +23,7 @@ type VaultStatProps = {
 	vaultName: string
 }
 
-const SupplyDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
+export const SupplyDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
 	const supplyBalances = useSupplyBalances(vaultName)
 	const balances = useAccountBalances(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
@@ -108,7 +108,7 @@ export const VaultDetails = ({ asset, title }: VaultStatBlockProps) => {
 	)
 }
 
-const MintDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
+export const MintDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
 	const borrowBalances = useBorrowBalances(vaultName)
 	const balances = useAccountBalances(vaultName)
 
@@ -153,7 +153,7 @@ const MintDetails = ({ asset, vaultName }: VaultStatBlockProps) => {
 	)
 }
 
-const DebtLimit = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
+export const DebtLimit = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
 	const change = amount ? decimate(asset.collateralFactor.mul(amount).mul(asset.price), 36) : BigNumber.from(0)
@@ -186,7 +186,7 @@ const DebtLimit = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
 	)
 }
 
-const DebtLimitRemaining = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
+export const DebtLimitRemaining = ({ asset, amount, vaultName }: VaultStatBlockProps) => {
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const change = amount ? decimate(BigNumber.from(amount).mul(asset.price)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)

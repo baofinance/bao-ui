@@ -195,7 +195,12 @@ input[type='number'] {
 	justify-content: space-between;
 	margin-top: 10vh;
 	margin-left: 10vw;
+	z-index: 4;
+}
 
+.glassmorphic-card {
+	/* Setting the size of the upper layer to 80% of the screen size*/
+	justify-content: space-between;
 	/*the alpha value controls the transparency*/
 	background: #1e202280;
 
