@@ -80,12 +80,11 @@ const Vault: NextPage<{
 			<>
 				{collateral && synth && accountBalances && accountLiquidity && accountVaults && supplyBalances && exchangeRates ? (
 					<>
-						{' '}
-						<Link href='/vaults'>
-							<div className='glassmorphic-card mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 p-3 duration-200 hover:bg-baoRed'>
+						<div className='glassmorphic-card mb-4 mt-6 flex h-fit w-fit flex-row gap-4 rounded border-0 p-3 duration-200 hover:bg-baoRed'>
+							<Link href='/vaults'>
 								<FontAwesomeIcon icon={faArrowLeft} />
-							</div>
-						</Link>
+							</Link>
+						</div>
 						<div className='bg-primary-100 mb-4 flex w-full flex-row gap-4 rounded border-0 p-4'>
 							<div className='mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 								<Image

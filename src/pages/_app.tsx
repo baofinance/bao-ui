@@ -98,13 +98,13 @@ function App({ Component, pageProps }: AppProps) {
 				<DefaultSeo {...SEO} />
 				<main>
 					<TxPopup />
+					<Header />
 					<Page>
-						<Header />
 						<Container>
 							<Component {...pageProps} />
 						</Container>
-						<Footer />
 					</Page>
+					<Footer />
 				</main>
 			</Providers>
 		</>
