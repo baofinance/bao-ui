@@ -189,8 +189,8 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 														size='xs'
 														onClick={() => {
 															// Clear input values
-															setValue('')
-															setSecondaryValue('')
+															setValue('0')
+															setSecondaryValue('0')
 															// Swap mint option
 															setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
 														}}
@@ -228,7 +228,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 												parseUnits(e.currentTarget.value)
 											} catch {
 												setValue('0')
-												setSecondaryValue('')
+												setSecondaryValue('0')
 												return
 											}
 											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
