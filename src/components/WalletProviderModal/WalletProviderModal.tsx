@@ -93,7 +93,9 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 						>
 							<div className='flex h-full items-center'>
 								<Image className='inline-block' src={`/images/wallets/${name}.png`} alt={name} width={32} height={32} />
-								<Typography className='ml-2 inline-block font-semibold'>{activating ? 'Connecting...' : `${name}`}</Typography>
+								<Typography variant='lg' className='ml-2 inline-block'>
+									{activating ? 'Connecting...' : `${name}`}
+								</Typography>
 							</div>
 						</Button>
 					)

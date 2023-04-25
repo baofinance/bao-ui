@@ -63,7 +63,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 		synth && (
 			<Link href={`/vaults/${vaultName}`} key={vaultName}>
 				<button
-					className='hover:bg-primary-200 w-full rounded bg-transparent-100 px-4 py-2 text-baoWhite hover:bg-baoBlack'
+					className='hover:bg-primary-200 glassmorphic-card w-full rounded border border-baoWhite border-opacity-20 bg-baoBlack bg-opacity-80 px-4 py-2 text-baoWhite hover:bg-baoRed'
 					disabled={!account}
 				>
 					<div className='flex w-full flex-row'>
@@ -75,7 +75,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 										{vaultName}
 									</Typography>
 									{isDesktop && (
-										<Typography variant='base' className={`ml-2 font-semibold text-baoRed`}>
+										<Typography variant='sm' className={`ml-2 text-baoWhite`}>
 											{synth.desc}
 										</Typography>
 									)}
@@ -115,7 +115,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 							<span className='inline-block'>
 								{synth ? (
 									<>
-										<Typography variant='sm' className='m-0 font-semibold leading-5'>
+										<Typography variant='base' className='m-0 font-bold leading-5'>
 											{getDisplayBalance(synth.borrowApy)}%
 										</Typography>
 									</>

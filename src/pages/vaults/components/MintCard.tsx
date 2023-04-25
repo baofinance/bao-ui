@@ -78,13 +78,13 @@ export const MintCard = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Mint
 			</Typography>
-			<Card className='border-0 bg-opacity-0 shadow-none'>
+			<Card className='glassmorphic-card'>
 				<Card.Header>
-					<div className='m-4 flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
+					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5 p-1 pb-0.5'>
 						<div>
 							<div className='m-1 flex w-36 justify-center rounded-full border-none bg-baoWhite bg-opacity-5 p-1'>
 								<div className='justify-center py-2 text-baoWhite'>
-									<div className='m-auto h-full justify-center'>
+									<div className='h-full justify-center'>
 										<div className='mr-2 inline-block'>
 											<Image
 												className='z-10 inline-block select-none'
@@ -103,14 +103,13 @@ export const MintCard = ({
 								</div>
 							</div>
 						</div>
-
 						<Input
 							value={val}
 							onChange={handleChange}
 							onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
-							className='mt-1'
+							className='my-1'
 						/>
-						<div className='w-64 p-1'>
+						<div className='p-1'>
 							<VaultButton
 								vaultName={vaultName}
 								operation={'Mint'}

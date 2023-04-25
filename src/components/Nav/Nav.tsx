@@ -42,7 +42,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 				<Link
 					href={href}
 					key={name}
-					className='relative -my-2 -mx-3 rounded px-3 py-2 font-bakbak transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -mx-3 -my-2 rounded px-3 py-2 font-bakbak text-xl transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(index as any)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
@@ -67,7 +67,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 				<Link
 					href='/distribution'
 					key='Distribution'
-					className='relative -my-2 -mx-3 rounded px-3 py-2 font-bakbak transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -mx-3 -my-2 rounded px-3 py-2 font-bakbak text-xl transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(6)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
@@ -92,7 +92,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 				<Link
 					href='/farms'
 					key='Farms'
-					className='relative -my-2 -mx-3 rounded px-3 py-2 font-bakbak transition-colors delay-150 hover:delay-[0ms]'
+					className='relative -mx-3 -my-2 rounded px-3 py-2 font-bakbak text-xl transition-colors delay-150 hover:delay-[0ms]'
 					onMouseEnter={() => setHoveredIndex(5)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
@@ -110,7 +110,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
 							/>
 						)}
 					</AnimatePresence>
-					<span className={`relative z-10 ${isActive && 'bg-baoRed'}`}>FARMS</span>
+					<span className={`relative z-10 text-xl ${isActive && 'bg-baoRed'}`}>FARMS</span>
 				</Link>
 			)}
 		</>

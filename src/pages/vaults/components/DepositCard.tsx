@@ -90,9 +90,9 @@ export const DepositCard = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Deposit
 			</Typography>
-			<Card className='border-0 bg-opacity-0 shadow-none'>
+			<Card className='glassmorphic-card'>
 				<Card.Header>
-					<div className='m-4 flex w-full gap-4 rounded-full border border-baoRed bg-baoWhite bg-opacity-5 p-1'>
+					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5 p-1 pb-0.5'>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
 							{({ open }) => (
 								<>
@@ -114,7 +114,7 @@ export const DepositCard = ({
 																/>
 															</div>
 															<span className='inline-block text-left align-middle'>
-																<Typography variant='lg' className='font-bakbak'>
+																<Typography variant='xl' className='font-bakbak'>
 																	{asset && asset.underlyingSymbol}
 																</Typography>
 															</span>
@@ -134,7 +134,7 @@ export const DepositCard = ({
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 ml-3 -mt-1 w-auto origin-top-right overflow-hidden rounded-lg bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 -mt-1 ml-3 w-auto origin-top-right overflow-hidden rounded-lg bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												<div className='grid grid-cols-6 p-2'>
 													<div className='col-span-2'>
 														<Typography variant='lg' className='font-bakbak'>
@@ -212,9 +212,9 @@ export const DepositCard = ({
 							value={val}
 							onChange={handleChange}
 							onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
-							className='mt-1'
+							className='my-1'
 						/>
-						<div className='w-64 p-1'>
+						<div className='p-1'>
 							<VaultButton
 								vaultName={vaultName}
 								operation={'Supply'}
