@@ -190,35 +190,32 @@ input[type='number'] {
 	display: flex;
 	position: relative;
 	/* Setting the size of the upper layer to 80% of the screen size*/
-	min-height: 80vh;
+	min-height: 70vh;
 	width: 80vw;
 	justify-content: space-between;
-	margin-top: 10vh;
 	margin-left: 10vw;
 	z-index: 4;
 }
 
 .glassmorphic-card {
-	/* Setting the size of the upper layer to 80% of the screen size*/
 	justify-content: space-between;
-	/*the alpha value controls the transparency*/
 	background: #1e202280;
-
-	/* This controls the blurring effect*/
 	backdrop-filter: blur(25px);
 	-webkit-backdrop-filter: blur(25px);
-
-	/*Adding the shadow*/
 	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
-
-	/* Adding our borders*/
 	border-radius: 3rem;
-	border: 1px solid rgba(255, 255, 255, 0.18);
+	border: 1px solid #faf2e318;
 }
 
 .stroke {
 	-webkit-text-fill-color: transparent;
 	-webkit-text-stroke-color: #e21a53;
+	-webkit-text-stroke-width: 1.5px;
+}
+
+.stroke-white {
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke-color: #faf2e3;
 	-webkit-text-stroke-width: 1.5px;
 }
 

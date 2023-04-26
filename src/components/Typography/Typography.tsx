@@ -8,13 +8,13 @@ export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'bas
 
 const VARIANTS = {
 	hero: 'text-hero leading-[4rem] font-bakbak uppercase',
-	h1: 'text-4xl leading-[46px] font-semibold',
-	h2: 'text-3xl tracking-[-0.02em] font-semibold',
-	h3: 'text-2xl leading-7 tracking-[-0.01em] font-semibold',
-	xl: 'text-xl leading-6 font-medium',
+	h1: 'text-4xl leading-[46px]',
+	h2: 'text-3xl tracking-[-0.02em]',
+	h3: 'text-2xl leading-7 tracking-[-0.01em]',
+	xl: 'text-xl leading-6',
 	lg: 'text-lg leading-6',
 	base: 'text-base leading-5',
-	p: 'text-base leading-5 my-2 font-light',
+	p: 'text-base leading-5 my-2',
 	sm: 'text-sm leading-5',
 	xs: 'text-xs leading-4',
 	xxs: 'text-[0.625rem] leading-[1.2]',

@@ -1,35 +1,36 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
+import Badge from '@/components/Badge'
+import Card from '@/components/Card/Card'
 import Input from '@/components/Input'
+import { StatBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
+import useBao from '@/hooks/base/useBao'
 import { AccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useBorrowBalances } from '@/hooks/vaults/useBalances'
+import useHealthFactor from '@/hooks/vaults/useHealthFactor'
+import { providerKey } from '@/utils/index'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
-import { DebtLimitRemaining, MintDetails } from './Stats'
 import VaultButton from './VaultButton'
-import { StatBlock } from '@/components/Stats'
-import useBao from '@/hooks/base/useBao'
-import { useQuery } from '@tanstack/react-query'
-import { providerKey } from '@/utils/index'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
-import useHealthFactor from '@/hooks/vaults/useHealthFactor'
-import Card from '@/components/Card/Card'
 
 export const MintCard = ({
 	vaultName,
 	synth,
 	prices,
 	accountLiquidity,
+	collateral,
 }: {
 	vaultName: string
 	prices: any
 	accountLiquidity: AccountLiquidity
 	synth: ActiveSupportedVault
+	collateral: ActiveSupportedVault[]
 }) => {
-	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const [val, setVal] = useState<string>('')
 	const borrowBalances = useBorrowBalances(vaultName)
@@ -44,12 +45,6 @@ export const MintCard = ({
 			placeholderData: BigNumber.from(0),
 		},
 	)
-
-	const change = val ? decimate(parseUnits(val).mul(synth.price)) : BigNumber.from(0)
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
-	const newBorrowable = synth && decimate(borrowable).add(BigNumber.from(parseUnits(formatUnits(change, 36 - synth.underlyingDecimals))))
-
-	const healthFactor = useHealthFactor(vaultName)
 
 	const borrowed = useMemo(
 		() => synth && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,
@@ -73,16 +68,19 @@ export const MintCard = ({
 		[setVal],
 	)
 
+	const vaultTVLs = collateral.map(vault => ({ tvl: vault.liquidity.mul(vault.price) }))
+	const totalCollateral = useMemo(() => vaultTVLs.reduce((acc, curr) => acc.add(curr.tvl), BigNumber.from(0)), [vaultTVLs])
+
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Mint
 			</Typography>
-			<Card className='glassmorphic-card'>
-				<Card.Header>
-					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5 p-1 pb-0.5'>
+			<Card className='glassmorphic-card p-4'>
+				<Card.Body>
+					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
 						<div>
-							<div className='m-1 flex w-36 justify-center rounded-full border-none bg-baoWhite bg-opacity-5 p-1'>
+							<div className='m-2 flex w-32 justify-center rounded-full border-none bg-baoWhite bg-opacity-5 p-1'>
 								<div className='justify-center py-2 text-baoWhite'>
 									<div className='h-full justify-center'>
 										<div className='mr-2 inline-block'>
@@ -109,7 +107,7 @@ export const MintCard = ({
 							onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
 							className='my-1'
 						/>
-						<div className='p-1'>
+						<div className='m-1 mr-3'>
 							<VaultButton
 								vaultName={vaultName}
 								operation={'Mint'}
@@ -126,97 +124,73 @@ export const MintCard = ({
 							/>
 						</div>
 					</div>
-				</Card.Header>
-				<Card.Body>
-					{account && (
-						<>
-							<div className='mb-4 flex flex-col gap-4 rounded'>
-								<StatBlock
-									className='flex basis-1/2 flex-col'
-									stats={[
-										{
-											label: `Current ${synth.underlyingSymbol} Price`,
-											value: `$${getDisplayBalance(synth.price)}`,
-										},
-										{
-											label: 'Total Debt',
-											value: `${getDisplayBalance(synth.totalBorrows)} ${synth.underlyingSymbol}`,
-										},
-										{
-											label: 'Total Debt USD',
-											value: `$${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}`,
-										},
-										{
-											label: 'Total Collateral USD',
-											value: `-`,
-										},
-										{
-											label: 'Minimum Borrow',
-											value: `${synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'} ${
-												synth.minimumBorrow ? synth.underlyingSymbol : ''
-											}`,
-										},
-										{
-											label: 'Max Mintable',
-											value: `${getDisplayBalance(maxMintable ? maxMintable : 0)} ${synth.underlyingSymbol}`,
-										},
-									]}
-								/>
-								{/* <StatBlock
-									className='flex basis-1/2 flex-col'
-									label='User Info'
-									stats={[
-										{
-											label: 'Your Collateral USD',
-											value: `$${
-												bao && account && accountLiquidity
-													? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
-													: 0
-											}`,
-										},
-										{
-											label: 'Your Debt',
-											value: `${accountLiquidity ? getDisplayBalance(borrowed) : 0} ${synth.underlyingSymbol}`,
-										},
-										{
-											label: 'Your Debt USD',
-											value: `$${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`,
-										},
-										{
-											label: 'Debt Limit Remaining',
-											value: `$${getDisplayBalance(
-												accountLiquidity ? accountLiquidity.usdBorrowable : BigNumber.from(0),
-											)} ➜ $${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.sub(change) : BigNumber.from(0))}`,
-										},
-										{
-											// FIXME: Fix this for when a users current borrow amount is zero
-											label: 'Debt Limit Used',
-											value: `${getDisplayBalance(
-												accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(decimate(borrowable)).mul(100) : 0,
-												18,
-												2,
-											)}% ➜ ${getDisplayBalance(
-												accountLiquidity && !newBorrowable.eq(0) ? accountLiquidity.usdBorrow.div(newBorrowable).mul(100) : 0,
-												18,
-												2,
-											)}%`,
-										},
-										{
-											label: `Debt Health`,
-											value: `${
-												healthFactor &&
-												(healthFactor.lte(BigNumber.from(0))
-													? '-'
-													: healthFactor.gt(parseUnits('10000'))
-													? '∞'
-													: getDisplayBalance(healthFactor))
-											}`,
-										},
-									]}
-								/> */}
-							</div>
-						</>
-					)}
+					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite text-opacity-50'>
+						Vault Info
+					</Typography>
+					<div className='flex flex-col gap-4 rounded'>
+						<StatBlock
+							className='flex basis-1/2 flex-col'
+							stats={[
+								{
+									label: `Current ${synth.underlyingSymbol} Price`,
+									value: (
+										<>
+											<Typography className='inline-block align-middle font-bold'>${getDisplayBalance(synth.price)}</Typography>
+										</>
+									),
+								},
+								{
+									label: 'Total Debt',
+									value: (
+										<>
+											<Typography className='inline-block align-middle font-bold'>{getDisplayBalance(synth.totalBorrows)}</Typography>
+											<Image
+												className='z-10 ml-1 inline-block select-none'
+												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												alt={synth && synth.underlyingSymbol}
+												width={16}
+												height={16}
+											/>
+											<Badge className='ml-2 inline-block rounded-full bg-baoRed align-middle'>
+												${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}
+											</Badge>
+										</>
+									),
+								},
+								{
+									label: 'Total Collateral',
+									value: (
+										<>
+											<Typography className='inline-block align-middle font-bold'>
+												${getDisplayBalance(decimate(totalCollateral))}
+											</Typography>
+										</>
+									),
+								},
+								{
+									label: 'Minimum Mint',
+									value: (
+										<>
+											<Typography className='inline-block align-middle font-bold'>
+												{synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'}{' '}
+												{synth.minimumBorrow ? synth.underlyingSymbol : ''}
+											</Typography>
+										</>
+									),
+								},
+								{
+									label: 'Max Mintable',
+									value: (
+										<>
+											<Typography className='inline-block align-middle font-bold'>
+												{getDisplayBalance(maxMintable ? maxMintable : 0)} {synth.underlyingSymbol}
+											</Typography>
+										</>
+									),
+								},
+							]}
+						/>
+					</div>
 				</Card.Body>
 			</Card>
 		</>

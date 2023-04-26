@@ -67,7 +67,7 @@ const Header: FC = () => {
 	const farm3Balance = useUserFarmInfo(201)
 
 	return (
-		<header className='glassmorphic-card z-50 mx-8 my-8 w-auto'>
+		<header className='glassmorphic-card z-50 mx-[10vh] my-8 w-auto'>
 			<nav>
 				<div className='relative z-50 flex max-w-full justify-between px-8 py-4'>
 					<div className='relative z-10 flex items-center gap-8'>
@@ -133,7 +133,7 @@ const Header: FC = () => {
 						{baov1Balance.gt(0) && <MigrateButton />}
 						<AccountButton />
 
-						<Menu as='div' className='relative inline-block text-left'>
+						<Menu as='div' className='relative !z-[9999] inline-block text-left'>
 							<Menu.Button className='h-10 w-10 rounded'>
 								<span className='sr-only'>Open options</span>
 								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5 text-baoRed' aria-hidden='true' />
@@ -148,8 +148,8 @@ const Header: FC = () => {
 								leaveFrom='transform opacity-100 scale-100'
 								leaveTo='transform opacity-0 scale-95'
 							>
-								<Menu.Items className='absolute right-0 !z-50 mt-2 w-fit origin-top-right rounded-md border border-transparent-100 bg-baoBlack shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-									<div className='py-1'>
+								<Menu.Items className='absolute right-0 !z-[9999] mt-2 w-fit origin-top-right rounded-md border border-transparent-100 bg-baoBlack shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+									<div className='z-[9999] py-1'>
 										<Menu.Item>
 											{({ active }) => (
 												<a

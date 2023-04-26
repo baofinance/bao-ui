@@ -24,11 +24,11 @@ export const StatBlock = ({ label, stats, className = '' }: StatBlockProps) => (
 			)}
 			<div className='realtive bg-primary-100 flex min-h-fit min-w-fit flex-1 flex-col rounded'>
 				{stats.map(({ label, value }) => (
-					<div className='odd:bg-primary-200 grid grid-cols-2 break-words rounded px-3 py-3' key={label}>
-						<Typography variant='base' className=' font-medium text-baoWhite'>
+					<div className='odd:bg-primary-200 grid grid-cols-2 break-words rounded px-3 py-3 last:pb-1' key={label}>
+						<Typography variant='base' className='my-auto align-middle font-medium text-baoWhite'>
 							{label}
 						</Typography>
-						<Typography variant='base' className='text-end font-bold text-baoWhite'>
+						<Typography variant='base' className='my-auto text-end font-bold text-baoWhite'>
 							{value}
 						</Typography>
 					</div>

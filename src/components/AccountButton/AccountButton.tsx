@@ -96,7 +96,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 								<>
 									<div>
 										<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
-											<div className='m-1 flex w-fit rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5 px-4 py-2 hover:border-baoRed hover:bg-transparent-300'>
+											<div className='m-1 flex w-fit rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5 px-4 py-2 duration-300 hover:border-baoRed hover:bg-transparent-300'>
 												<div className='w-full text-baoWhite'>
 													<div className='h-full items-start'>
 														<span className='inline-block text-left align-middle'>
@@ -131,14 +131,14 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 														className={({ active }) =>
 															classNames(
 																active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																'cursor-pointer select-none rounded-lg border border-baoBlack border-opacity-0 p-2 text-sm',
+																'cursor-pointer select-none rounded-lg border border-baoBlack border-opacity-0 p-2',
 															)
 														}
 														value={symbol}
 													>
 														{({ selected, active }) => (
-															<div className='mx-0 my-auto items-center gap-4'>
-																<span className='inline-block text-left align-middle'>
+															<div className='mx-0 my-auto items-end gap-4 text-right'>
+																<span className='inline-block text-right align-middle'>
 																	<Typography variant='xl' className='font-bakbak'>
 																		{getDisplayBalance(balance)}
 																	</Typography>
