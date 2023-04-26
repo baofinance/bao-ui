@@ -105,7 +105,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({
 
 	return (
 		<>
-			<div className='glassmorphic-card my-4 p-4'>
+			<div className='glassmorphic-card my-4 p-2'>
 				<div className='grid w-full grid-cols-12 items-center justify-center px-2'>
 					<div className='items-left col-span-3 m-auto ml-0 text-start align-middle'>
 						<Image

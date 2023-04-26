@@ -17,6 +17,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
 import VaultButton from './VaultButton'
+import Tooltipped from '@/components/Tooltipped'
 
 export const MintCard = ({
 	vaultName,
@@ -140,7 +141,14 @@ export const MintCard = ({
 									label: 'Total Debt',
 									value: (
 										<>
-											<Typography className='inline-block align-middle font-bold'>{getDisplayBalance(synth.totalBorrows)}</Typography>
+											<Tooltipped
+												content={`$${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}`}
+												key={synth.underlyingSymbol}
+												placement='top'
+												className='rounded-full bg-baoRed'
+											>
+												<Typography className='inline-block align-middle font-bold'>{getDisplayBalance(synth.totalBorrows)}</Typography>
+											</Tooltipped>
 											<Image
 												className='z-10 ml-1 inline-block select-none'
 												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
@@ -148,9 +156,6 @@ export const MintCard = ({
 												width={16}
 												height={16}
 											/>
-											<Badge className='ml-2 inline-block rounded-full bg-baoRed align-middle'>
-												${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}
-											</Badge>
 										</>
 									),
 								},

@@ -1,5 +1,6 @@
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
+import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
@@ -151,7 +152,7 @@ export const Dashboard = () => {
 
 	return (
 		<div>
-			<Typography variant='xl' className='mt-4 mb-2 font-bold'>
+			<Typography variant='xl' className='mb-2 mt-4 font-bold'>
 				Voting Dashboard
 			</Typography>
 			<div className={`bg-primary-100 w-full justify-evenly gap-4 rounded border bg-opacity-80 p-4 text-transparent-200`}>
@@ -212,7 +213,7 @@ export const Dashboard = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 text-sm font-medium text-transparent-200 text-baoWhite hover:bg-transparent-100')
+														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 text-sm font-medium text-baoWhite text-transparent-200 hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -438,13 +439,7 @@ export const Dashboard = () => {
 						<>
 							{pendingTx ? (
 								<Button className='ml-8 w-[20%]' disabled={true}>
-									{typeof pendingTx === 'string' ? (
-										<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-											Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-										</Link>
-									) : (
-										'Pending Transaction'
-									)}
+									<Loader />
 								</Button>
 							) : (
 								<Button
@@ -464,7 +459,7 @@ export const Dashboard = () => {
 				{/* End of Voting Slider Section */}
 				<div className='m-4' />
 				{/* Start of BoostCalc Section */}
-				<Typography variant='xl' className='mt-4 mb-2 font-bold'>
+				<Typography variant='xl' className='mb-2 mt-4 font-bold'>
 					Boost Calculator
 				</Typography>
 				<div className='mt-4 grid grid-cols-6 gap-4'>

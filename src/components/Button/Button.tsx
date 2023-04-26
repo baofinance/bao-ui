@@ -43,17 +43,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		const isDisabled = useMemo(() => typeof pendingTx === 'string' || pendingTx || disabled === true, [disabled, pendingTx])
 
-		const buttonText = pendingTx ? (
-			typeof pendingTx === 'string' ? (
-				<a href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noreferrer' className='text-baoWhite'>
-					Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-				</a>
-			) : (
-				'Pending Transaction'
-			)
-		) : (
-			children
-		)
+		const buttonText = pendingTx ? <Loader /> : children
 
 		return (
 			<button

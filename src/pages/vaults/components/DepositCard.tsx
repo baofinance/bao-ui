@@ -17,6 +17,7 @@ import Image from 'next/future/image'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
 import VaultButton from './VaultButton'
 import Card from '@/components/Card/Card'
+import Tooltipped from '@/components/Tooltipped'
 
 export const DepositCard = ({
 	vaultName,
@@ -221,9 +222,16 @@ export const DepositCard = ({
 								label: 'Total Supplied',
 								value: (
 									<>
-										<Typography className='inline-block align-middle font-bold'>
-											{getDisplayBalance(asset.supplied, asset.underlyingDecimals)}
-										</Typography>
+										<Tooltipped
+											content={`$${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}`}
+											key={asset.underlyingSymbol}
+											placement='top'
+											className='rounded-full bg-baoRed'
+										>
+											<Typography className='inline-block align-middle'>
+												{getDisplayBalance(asset.supplied, asset.underlyingDecimals)}
+											</Typography>
+										</Tooltipped>
 										<Image
 											className='z-10 ml-1 inline-block select-none'
 											src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
@@ -231,9 +239,6 @@ export const DepositCard = ({
 											width={16}
 											height={16}
 										/>
-										<Badge className='ml-2 inline-block rounded-full bg-baoRed align-middle'>
-											${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}
-										</Badge>
 									</>
 								),
 							},

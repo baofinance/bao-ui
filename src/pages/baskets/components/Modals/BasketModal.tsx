@@ -3,6 +3,7 @@ import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
+import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
@@ -284,15 +285,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						onClick={handleOperation}
 					>
 						{pendingTx ? (
-							typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)
+							<Loader />
 						) : operation === 'MINT' &&
 						  mintOption === MintOption.DAI &&
 						  daiAllowance &&

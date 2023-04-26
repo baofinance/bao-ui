@@ -23,6 +23,7 @@ import Link from 'next/link'
 import { default as React, useCallback, useState } from 'react'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
+import Loader from '@/components/Loader'
 
 interface StakeProps {
 	lpContract: Uni_v2_lp
@@ -128,13 +129,7 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 							<>
 								{pendingTx ? (
 									<Button fullWidth disabled={true}>
-										{typeof pendingTx === 'string' ? (
-											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-												Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-											</Link>
-										) : (
-											'Pending Transaction'
-										)}
+										<Loader />
 									</Button>
 								) : (
 									<Button
@@ -224,15 +219,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHi
 				<>
 					{pendingTx ? (
 						<Button disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
+							<Loader />
 						</Button>
 					) : (
 						<Button
@@ -281,15 +268,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 				<>
 					{pendingTx ? (
 						<Button fullWidth disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
+							<Loader />
 						</Button>
 					) : (
 						<Button

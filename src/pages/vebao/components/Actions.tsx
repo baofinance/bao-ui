@@ -3,6 +3,7 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
+import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
@@ -104,7 +105,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const shouldBeWarned = canStartDistribution || canEndDistribution
 
 	return (
-		<div className='col-span-2 row-span-1 rounded border text-transparent-200 bg-primary-100 p-4'>
+		<div className='bg-primary-100 col-span-2 row-span-1 rounded border p-4 text-transparent-200'>
 			{(lockInfo && lockInfo.lockEnd.gt(timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp)) ? (
 				<>
 					<Typography variant='xl' className='mb-4 text-center font-bold'>
@@ -193,13 +194,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 									<>
 										{pendingTx ? (
 											<Button fullWidth disabled={true}>
-												{typeof pendingTx === 'string' ? (
-													<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-														Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-													</Link>
-												) : (
-													'Pending Transaction'
-												)}
+												<Loader />
 											</Button>
 										) : (
 											<Button
@@ -249,13 +244,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 										</>
 									) : pendingTx ? (
 										<Button disabled={true}>
-											{typeof pendingTx === 'string' ? (
-												<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-													Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-												</Link>
-											) : (
-												'Pending Transaction'
-											)}
+											<Loader />
 										</Button>
 									) : (
 										<Button
@@ -281,13 +270,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 									)}
 									{pendingTx ? (
 										<Button fullWidth disabled={true}>
-											{typeof pendingTx === 'string' ? (
-												<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-													Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-												</Link>
-											) : (
-												'Pending Transaction'
-											)}
+											<Loader />
 										</Button>
 									) : (
 										<Button

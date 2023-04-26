@@ -2,6 +2,7 @@
 import Config from '@/bao/lib/config'
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Button from '@/components/Button'
+import Loader from '@/components/Loader'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/vaults/useApprovals'
@@ -30,15 +31,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 	if (pendingTx) {
 		return (
 			<Button fullWidth disabled={true} className='!rounded-full'>
-				{typeof pendingTx === 'string' ? (
-					<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank'>
-						<a>
-							Pending <FontAwesomeIcon icon={faExternalLinkAlt} />
-						</a>
-					</Link>
-				) : (
-					'Pending Transaction'
-				)}
+				<Loader />
 			</Button>
 		)
 	} else {

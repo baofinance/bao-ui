@@ -27,6 +27,7 @@ import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import CountdownTimer from './CountdownTimer'
+import Loader from '@/components/Loader'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -105,13 +106,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 					<>
 						{pendingTx ? (
 							<Button fullWidth disabled={true}>
-								{typeof pendingTx === 'string' ? (
-									<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</Link>
-								) : (
-									'Pending Transaction'
-								)}
+								<Loader />
 							</Button>
 						) : (
 							<Button
@@ -195,15 +190,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 				<>
 					{pendingTx ? (
 						<Button disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
+							<Loader />
 						</Button>
 					) : (
 						<Button
@@ -253,15 +240,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 			<Modal.Actions>
 				{pendingTx ? (
 					<Button fullWidth disabled={true}>
-						{typeof pendingTx === 'string' ? (
-							<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-								<a>
-									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-								</a>
-							</Link>
-						) : (
-							'Pending Transaction'
-						)}
+						<Loader />
 					</Button>
 				) : (
 					<Button
@@ -378,7 +357,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='h-2 w-full appearance-none rounded-full bg-primary-400 accent-text-400 disabled:cursor-not-allowed'
+							className='bg-primary-400 accent-text-400 h-2 w-full appearance-none rounded-full disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -389,8 +368,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
-							className='relative -mr-1 h-6 w-10 min-w-0
-				appearance-none rounded border-solid border-inherit bg-background-100 pl-2 text-end 
+							className='bg-background-100 relative -mr-1 h-6 w-10
+				min-w-0 appearance-none rounded border-solid border-inherit pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
 				 duration-200 disabled:text-baoWhite md:text-sm'
 						/>
@@ -404,13 +383,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 				<>
 					{pendingTx ? (
 						<Button fullWidth disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
+							<Loader />
 						</Button>
 					) : (
 						<Button

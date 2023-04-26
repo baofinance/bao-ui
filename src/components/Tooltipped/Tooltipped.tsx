@@ -19,7 +19,10 @@ const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement, c
 			content={content}
 			placement={placement}
 			offset={10}
-			className={classNames('z-[9999] max-w-xs rounded border border-baoWhite border-opacity-20 bg-baoBlack px-2 py-1 text-center', className)}
+			className={classNames(
+				'z-[9999] max-w-xs rounded border border-baoWhite border-opacity-20 bg-baoBlack px-2 py-1 text-center',
+				className,
+			)}
 		>
 			{children || (
 				<span>
