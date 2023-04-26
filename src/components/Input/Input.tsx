@@ -42,15 +42,15 @@ const Input: React.FC<InputProps> = ({
 					value={value}
 					onChange={onChange}
 					className='relative
-				w-full min-w-0 appearance-none rounded rounded-r-none border-solid border-inherit bg-baoBlack px-1 py-2
-				pl-4 text-start align-middle text-base outline-none outline
-				 outline-2 outline-offset-2 transition-all duration-200 disabled:text-baoRed'
+				w-full min-w-0 appearance-none rounded rounded-r-none border-solid border-inherit bg-baoBlack py-3 pl-4
+				text-start align-middle text-base text-baoWhite outline-none outline outline-2 outline-offset-2
+				 transition-all duration-200 disabled:text-opacity-50'
 				/>
 				{!disabled && (
 					<>
 						{onSelectMax && (
-							<div className='flex h-full items-center justify-center rounded-l-none rounded-r-lg bg-baoBlack py-2 pl-0 pr-2'>
-								<Button onClick={onSelectMax} className='!rounded-full border border-baoRed !p-2' size='xs'>
+							<div className='flex h-full items-center justify-center rounded-l-none rounded-r-lg bg-baoBlack'>
+								<Button onClick={onSelectMax} className='mr-4 !rounded-full border border-baoRed !px-2' size='xs'>
 									<Typography variant='base' className='font-bakbak font-normal text-baoWhite'>
 										MAX
 									</Typography>

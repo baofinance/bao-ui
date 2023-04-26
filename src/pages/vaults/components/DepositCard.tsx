@@ -198,12 +198,9 @@ export const DepositCard = ({
 								</div>
 							)}
 						</Listbox>
-						<Input
-							value={val}
-							onChange={handleChange}
-							onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
-							className='my-1'
-						/>
+						<div className='m-auto'>
+							<Input value={val} onChange={handleChange} onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))} />
+						</div>
 						<div className='m-1 mr-3'>
 							<VaultButton
 								vaultName={vaultName}

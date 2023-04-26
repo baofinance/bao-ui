@@ -1,35 +1,22 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import Badge from '@/components/Badge'
-import Input from '@/components/Input'
-import { StatBlock } from '@/components/Stats'
+import Button from '@/components/Button'
+import { ListHeader } from '@/components/List'
+import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
+import { AccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { Balance } from '@/hooks/vaults/useBalances'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { Listbox, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
-import classNames from 'classnames'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { Fragment, useCallback, useMemo, useState } from 'react'
-import VaultButton from './VaultButton'
-import Card from '@/components/Card/Card'
-import { ListHeader } from '@/components/List'
-import Accordion, { AccordionBody, AccordionHeader } from '@material-tailwind/react/components/Accordion'
-import { VaultDetails } from './Stats'
-import Button from '@/components/Button'
-import { isDesktop } from 'react-device-detect'
-import VaultSupplyModal from './Modals/SupplyModal'
-import { AccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import Tooltipped from '@/components/Tooltipped'
+import React, { useCallback, useMemo, useState } from 'react'
 
 export const Positions = ({
 	vaultName,
 	collateral,
-	balances,
 	supplyBalances,
 	exchangeRates,
 	accountBalances,
@@ -37,7 +24,6 @@ export const Positions = ({
 	borrowBalances,
 }: {
 	vaultName: string
-	balances: Balance[]
 	supplyBalances: Balance[]
 	collateral: ActiveSupportedVault[]
 	exchangeRates: any
@@ -45,62 +31,10 @@ export const Positions = ({
 	accountVaults: ActiveSupportedVault[]
 	borrowBalances: Balance[]
 }) => {
-	const { account } = useWeb3React()
-	const [val, setVal] = useState<string>('')
-	const [selectedOption, setSelectedOption] = useState('ETH')
-
-	const asset =
-		collateral &&
-		(collateral.length
-			? collateral.find(asset => asset.underlyingSymbol === selectedOption)
-			: collateral.find(asset => asset.underlyingSymbol === 'ETH'))
-
-	const baskets = useBaskets()
-	const basket =
-		asset &&
-		asset.isBasket === true &&
-		baskets &&
-		baskets.find(basket => basket.address.toLowerCase() === asset.underlyingAddress.toLowerCase())
-
-	const composition = useComposition(asset && basket && asset.isBasket === true && basket)
-	const avgBasketAPY =
-		asset && asset.isBasket && composition
-			? (composition
-					.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
-					.map(component => {
-						return component.apy
-					})
-					.reduce(function (a, b) {
-						return a + parseFloat(formatUnits(b))
-					}, 0) /
-					composition.length) *
-			  100
-			: 0
-
-	const suppliedUnderlying = useMemo(() => {
-		const supply = supplyBalances && asset && supplyBalances.find(balance => balance.address === asset.vaultAddress)
-		const supplyBalance = supply && supply.balance && (supply.balance === undefined ? BigNumber.from(0) : supply.balance)
-		if (exchangeRates && asset && exchangeRates[asset.vaultAddress] === undefined) return BigNumber.from(0)
-		return supplyBalance && exchangeRates && decimate(supplyBalance.mul(exchangeRates[asset.vaultAddress]))
-	}, [supplyBalances, exchangeRates, asset])
-
-	const max = () => {
-		return balances
-			? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
-			: BigNumber.from(0)
-	}
-
-	const handleChange = useCallback(
-		(e: React.FormEvent<HTMLInputElement>) => {
-			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
-		},
-		[setVal],
-	)
-
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
-				Open Positions
+				Your Collateral
 			</Typography>
 			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite text-opacity-50' />
 			{collateral.map((vault: ActiveSupportedVault) => (
