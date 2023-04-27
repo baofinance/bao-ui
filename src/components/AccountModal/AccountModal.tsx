@@ -58,7 +58,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='base' className='font-medium'>
+							<Typography variant='base' className='font-bold'>
 								{getDisplayBalance(baoBalance)}
 							</Typography>
 							<Typography variant='sm' className='text-baoRed'>
@@ -76,7 +76,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='base' className='font-medium'>
+							<Typography variant='base' className='font-bold'>
 								{getDisplayBalance(lockInfo ? lockInfo.balance : BigNumber.from(0))}
 							</Typography>
 							<Typography variant='sm' className='text-baoRed'>
@@ -86,20 +86,21 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 					</div>
 				</div>
 				<>
-					<div className='mt-4 flex-1 rounded border text-transparent-200 bg-primary-100 pb-3'>
-						<Typography variant='base' className='float-left mt-2 px-3 py-2 font-medium text-baoWhite'>
-							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-baoRed' />
+					<div className='mt-4 flex-1 rounded border border-baoWhite border-opacity-20 bg-baoBlack bg-opacity-5 pb-3 text-baoWhite'>
+						<Typography variant='lg' className='float-left mt-2 px-3 py-2 font-bakbak'>
+							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-baoRed' size='sm' />
 						</Typography>
 
 						{Object.keys(transactions).length > 0 && (
-							<button
-								className='float-right m-3 rounded border-0 bg-transparent-100 px-2 py-1 font-medium hover:bg-primary-400'
+							<Button
+								size='sm'
+								className='float-right m-3 h-auto !px-2 !py-1'
 								onClick={() => {
 									onClearTransactions()
 								}}
 							>
-								<FontAwesomeIcon icon={faClose} className='inline' /> <Typography className='inline'>Clear</Typography>
-							</button>
+								<Typography variant='sm'>Clear</Typography>
+							</Button>
 						)}
 
 						{Object.keys(transactions).length > 0 ? (
@@ -107,22 +108,22 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 								{_.reverse(Object.keys(transactions))
 									.slice(0, 5)
 									.map(txHash => (
-										<div key={txHash} className='flex w-full items-center justify-between bg-primary-100 px-3 py-1'>
+										<div key={txHash} className='bg-primary-100 flex w-full items-center justify-between px-3 py-1'>
 											{transactions[txHash].receipt ? (
 												transactions[txHash].receipt.status === 1 ? (
-													<FontAwesomeIcon icon={faCircleCheck} className='text-green' size='sm' />
+													<FontAwesomeIcon icon={faCircleCheck} className='text-baoRed' size='sm' />
 												) : (
-													<FontAwesomeIcon icon={faCircleXmark} className='text-red' />
+													<FontAwesomeIcon icon={faCircleXmark} className='text-baoRed' size='sm' />
 												)
 											) : (
-												<MoonLoader size={12} speedMultiplier={0.8} color='#FFD84B' />
+												<MoonLoader size={12} speedMultiplier={0.8} color='#e21a53' />
 											)}
 											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
 												<a>
-													<Typography variant='sm' className='text-end text-baoWhite hover:text-baoRed'>
+													<Typography variant='base' className='text-end text-baoWhite hover:text-baoRed'>
 														{transactions[txHash].description}
 														<Tooltipped content='View on Etherscan'>
-															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1' size='sm' />
+															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 text-baoRed' size='sm' />
 														</Tooltipped>
 													</Typography>
 												</a>

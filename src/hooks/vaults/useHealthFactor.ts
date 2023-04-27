@@ -7,8 +7,9 @@ import useBao from '../base/useBao'
 import { useAccountLiquidity } from './useAccountLiquidity'
 import { useVaultPrices } from './usePrices'
 import { useAccountVaults } from './useVaults'
+import { exponentiate } from '@/utils/numberFormat'
 
-const useHealthFactor = (vaultName: string) => {
+const useHealthFactor = (vaultName: string, borrowChange: BigNumber) => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()
 	const { account } = useWeb3React()
@@ -42,18 +43,18 @@ const useHealthFactor = (vaultName: string) => {
 		}, BigNumber.from(0))
 
 		try {
-			const _healthFactor = collateralSummation.div(usdBorrow.toString())
+			const _healthFactor = collateralSummation.div(exponentiate(borrowChange).toString())
 			setHealthFactor(_healthFactor)
 		} catch {
 			setHealthFactor(BigNumber.from(0))
 		}
-	}, [vaults, accountLiquidity, bao, account, prices])
+	}, [accountLiquidity, vaults, bao, account, prices, borrowChange])
 
 	useEffect(() => {
 		if (!(vaults && accountLiquidity && bao && account && prices)) return
 
 		fetchHealthFactor()
-	}, [vaults, accountLiquidity, bao, account, prices, fetchHealthFactor])
+	}, [vaults, accountLiquidity, bao, account, prices, fetchHealthFactor, borrowChange])
 
 	return healthFactor
 }

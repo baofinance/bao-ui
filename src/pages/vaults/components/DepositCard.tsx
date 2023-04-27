@@ -14,10 +14,11 @@ import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { Fragment, useCallback, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import VaultButton from './VaultButton'
 import Card from '@/components/Card/Card'
 import Tooltipped from '@/components/Tooltipped'
+import BorrowCard from './BorrowCard'
 
 export const DepositCard = ({
 	vaultName,
@@ -26,6 +27,7 @@ export const DepositCard = ({
 	supplyBalances,
 	exchangeRates,
 	accountBalances,
+	onUpdate,
 }: {
 	vaultName: string
 	balances: Balance[]
@@ -33,6 +35,7 @@ export const DepositCard = ({
 	collateral: ActiveSupportedVault[]
 	exchangeRates: any
 	accountBalances: Balance[]
+	onUpdate: (updatedState: any) => void
 }) => {
 	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
@@ -85,6 +88,12 @@ export const DepositCard = ({
 		},
 		[setVal],
 	)
+
+	useEffect(() => {
+		if (val != '') {
+			onUpdate(decimate(parseUnits(val).mul(asset.price)).toString())
+		}
+	}, [val])
 
 	return (
 		<>
@@ -199,7 +208,7 @@ export const DepositCard = ({
 								</div>
 							)}
 						</Listbox>
-						<div className='m-auto'>
+						<div className='m-auto w-full'>
 							<Input value={val} onChange={handleChange} onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))} />
 						</div>
 						<div className='m-1 mr-3'>

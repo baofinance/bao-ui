@@ -13,7 +13,8 @@ import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import BorrowCard from './components/BorrowCard'
 import DepositCard from './components/DepositCard'
 import MintCard from './components/MintCard'
 import Positions from './components/Positions'
@@ -38,6 +39,28 @@ export async function getStaticProps({ params }: { params: any }) {
 const Vault: NextPage<{
 	vaultName: string
 }> = ({ vaultName }) => {
+	const [depositVal, setDepositVal] = useState('0')
+	const [mintVal, setMintVal] = useState('0')
+
+	const handleDepositVal = useCallback(
+		(updatedState: any) => {
+			// update the parent component's state with the new value
+			setDepositVal(updatedState)
+		},
+		[depositVal],
+	)
+
+	const handleMintVal = useCallback(
+		(updatedState: any) => {
+			// update the parent component's state with the new value
+			setMintVal(updatedState)
+		},
+		[mintVal],
+	)
+
+	console.log('depositVal', depositVal)
+	console.log('mintVal', mintVal)
+
 	const _vaults = useVaults(vaultName)
 	const accountBalances = useAccountBalances(vaultName)
 	const accountVaults = useAccountVaults(vaultName)
@@ -105,18 +128,10 @@ const Vault: NextPage<{
 									collateral={collateral}
 									exchangeRates={exchangeRates}
 									accountBalances={accountBalances}
+									onUpdate={handleDepositVal}
 								/>
-							</div>
-
-							<div className='col-span-3'>
-								<MintCard vaultName={vaultName} prices={prices} accountLiquidity={accountLiquidity} synth={synth} collateral={collateral} />
-							</div>
-						</div>
-						<div className='grid w-full grid-cols-6 gap-16 rounded-lg'>
-							<div className='col-span-3'>
 								<Positions
 									vaultName={vaultName}
-									balances={balances}
 									supplyBalances={supplyBalances}
 									collateral={collateral}
 									exchangeRates={exchangeRates}
@@ -126,7 +141,17 @@ const Vault: NextPage<{
 								/>
 							</div>
 
-							<div className='col-span-3'></div>
+							<div className='col-span-3'>
+								<MintCard
+									vaultName={vaultName}
+									prices={prices}
+									accountLiquidity={accountLiquidity}
+									synth={synth}
+									collateral={collateral}
+									onUpdate={handleMintVal}
+								/>
+								<BorrowCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
+							</div>
 						</div>
 					</>
 				) : (

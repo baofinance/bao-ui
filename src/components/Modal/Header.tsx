@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { FC, ReactNode } from 'react'
 
 import Typography from '@/components/Typography'
+import Button from '../Button'
 
 export interface ModalHeaderProps {
 	children?: ReactNode
@@ -17,18 +18,18 @@ const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack
 		<>
 			<div className='mb-4 flex h-8'>
 				<div className='flex flex-col items-center gap-1'>
-					<Typography variant='xl' className='font-bakbak'>
+					<Typography variant='h3' className='font-bakbak'>
 						{onBack && <FontAwesomeIcon icon={faArrowLeft} onClick={onBack} size='sm' className='mr-2 cursor-pointer hover:text-baoRed' />}
 						{header ? header : children}
 					</Typography>
 					{subheader && <Typography variant='sm'>{subheader}</Typography>}
 				</div>
 			</div>
-			<div className='absolute right-0 top-0 hidden pr-6 pt-4 sm:block'>
+			<div className='absolute right-0 top-0 hidden pr-4 pt-4 sm:block'>
 				{onClose && (
-					<button className='bg-primary-100 rounded-md outline-none hover:text-baoRed' onClick={onClose}>
-						<FontAwesomeIcon icon={faClose} className='h-6 w-6' />
-					</button>
+					<Button onClick={onClose} className='m-auto h-auto !px-3 !py-1'>
+						<FontAwesomeIcon icon={faClose} width={6} height={6} />
+					</Button>
 				)}
 			</div>
 		</>

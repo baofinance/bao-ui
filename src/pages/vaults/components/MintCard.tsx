@@ -15,9 +15,10 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import VaultButton from './VaultButton'
 import Tooltipped from '@/components/Tooltipped'
+import BorrowCard from './BorrowCard'
 
 export const MintCard = ({
 	vaultName,
@@ -25,12 +26,14 @@ export const MintCard = ({
 	prices,
 	accountLiquidity,
 	collateral,
+	onUpdate,
 }: {
 	vaultName: string
 	prices: any
 	accountLiquidity: AccountLiquidity
 	synth: ActiveSupportedVault
 	collateral: ActiveSupportedVault[]
+	onUpdate: (updatedState: any) => void
 }) => {
 	const { account, library, chainId } = useWeb3React()
 	const [val, setVal] = useState<string>('')
@@ -69,6 +72,12 @@ export const MintCard = ({
 		[setVal],
 	)
 
+	useEffect(() => {
+		if (val != '') {
+			onUpdate(decimate(parseUnits(val).mul(synth.price)).toString())
+		}
+	}, [val])
+
 	const vaultTVLs = collateral.map(vault => ({ tvl: vault.liquidity.mul(vault.price) }))
 	const totalCollateral = useMemo(() => vaultTVLs.reduce((acc, curr) => acc.add(curr.tvl), BigNumber.from(0)), [vaultTVLs])
 
@@ -102,7 +111,7 @@ export const MintCard = ({
 								</div>
 							</div>
 						</div>
-						<div className='m-auto'>
+						<div className='m-auto w-full'>
 							<Input value={val} onChange={handleChange} onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))} />
 						</div>
 						<div className='m-1 mr-3'>
