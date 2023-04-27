@@ -96,7 +96,7 @@ export const BoostCalc = () => {
 					Boost Calculator
 				</Typography>
 				<div
-					className={`my-2 grid w-full grid-cols-8 justify-evenly gap-4 rounded border text-transparent-200 bg-primary-100 bg-opacity-80 p-4`}
+					className={`my-2 grid w-full grid-cols-8 justify-evenly gap-4 rounded border  bg-opacity-80 p-4`}
 				>
 					<div className='col-span-2'>
 						<label className='text-xs text-baoRed'>Select a gauge</label>
@@ -106,7 +106,7 @@ export const BoostCalc = () => {
 									<div>
 										<div className='inline-flex rounded-md border-none shadow-sm'>
 											<div className='inline-flex rounded-md border-none shadow-sm'>
-												<div className='inline-flex h-8 items-center rounded-l-md border text-transparent-200 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
+												<div className='inline-flex h-8 items-center rounded-l-md border  py-2 pl-3 pr-4 text-white shadow-sm'>
 													<span className={`mr-1 text-baoRed`}>
 														<CheckIcon className='h-5 w-5' aria-hidden='true' />
 													</span>
@@ -115,7 +115,7 @@ export const BoostCalc = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'inline-flex h-8 items-center rounded-l-none rounded-r-md border text-transparent-200 bg-primary-200 p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
+														'inline-flex h-8 items-center rounded-l-none rounded-r-md border bg-primary-200 p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -129,14 +129,14 @@ export const BoostCalc = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y divide-primary-500 overflow-hidden rounded-md border border-primary-500 bg-primary-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y divide-primary-500 overflow-hidden rounded-md border border-primary-500  shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
 													gauges.map((gauge: any) => (
 														<Listbox.Option
 															key={gauge.name}
 															className={({ active }) =>
 																classNames(
-																	active ? 'bg-primary-100 text-baoRed' : 'text-baoWhite',
+																	active ? ' text-baoRed' : 'text-baoWhite',
 																	'cursor-pointer select-none p-2 text-sm',
 																)
 															}
@@ -166,7 +166,7 @@ export const BoostCalc = () => {
 					</div>
 					<div className='col-span-2'>
 						<label className='text-xs text-baoRed'>Deposit Amount</label>
-						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
+						<div className='flex h-8 gap-2 rounded-md '>
 							<input
 								type='number'
 								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
@@ -177,7 +177,7 @@ export const BoostCalc = () => {
 					</div>
 					<div className='col-span-2'>
 						<label className='text-xs text-baoRed'>BAO Tokens</label>
-						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
+						<div className='flex h-8 gap-2 rounded-md '>
 							<input
 								type='number'
 								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'

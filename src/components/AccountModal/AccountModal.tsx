@@ -108,7 +108,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 								{_.reverse(Object.keys(transactions))
 									.slice(0, 5)
 									.map(txHash => (
-										<div key={txHash} className='bg-primary-100 flex w-full items-center justify-between px-3 py-1'>
+										<div key={txHash} className=' flex w-full items-center justify-between px-3 py-1'>
 											{transactions[txHash].receipt ? (
 												transactions[txHash].receipt.status === 1 ? (
 													<FontAwesomeIcon icon={faCircleCheck} className='text-baoRed' size='sm' />

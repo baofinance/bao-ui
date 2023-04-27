@@ -28,14 +28,14 @@ export interface TypographyProps extends React.AllHTMLAttributes<React.ReactHTML
 }
 
 const Typography: FC<TypographyProps> = forwardRef(
-	({ variant = 'base', component = 'div', className = 'antialiased', children = [], onClick = undefined, ...rest }, ref) => {
+	({ variant = 'base', component = 'div', className = 'antialiased, text-baoWhite', children = [], onClick = undefined, ...rest }, ref) => {
 		return React.createElement(
 			component,
 			{
 				className: classNames(
 					VARIANTS[variant],
 					// @ts-ignore TYPE NEEDS FIXING
-					onClick ? 'cursor-pointer select-none' : '',
+					onClick ? 'cursor-pointer select-none ' : '',
 					className,
 				),
 				onClick,

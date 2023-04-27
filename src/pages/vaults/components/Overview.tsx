@@ -1,28 +1,43 @@
+import { ActiveSupportedVault } from '@/bao/lib/types'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
 import { isDesktop } from 'react-device-detect'
 
-export const Overview = ({ vaultName }: { vaultName: string }) => {
+type OverviewProps = {
+	title?: string
+	asset: ActiveSupportedVault
+	amount?: string
+	vaultName: string
+	mintVal: string
+	depositVal: string
+}
+
+const Overview: React.FC<OverviewProps> = ({ asset, amount, vaultName, mintVal, depositVal }: OverviewProps) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const accountLiquidity = useAccountLiquidity(vaultName)
-	const healthFactor = useHealthFactor(vaultName)
+
+	const change = mintVal && depositVal ? BigNumber.from(mintVal).sub(BigNumber.from(depositVal)) : BigNumber.from(0)
+	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
+	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
+	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
+	const newBorrowable = asset && decimate(borrowable).sub(BigNumber.from(parseUnits(formatUnits(change, 36 - asset.underlyingDecimals))))
+
+	const borrowChange = borrow.add(exponentiate(change))
+	const healthFactor = useHealthFactor(vaultName, borrowChange)
 
 	const borrowLimit =
 		accountLiquidity && !accountLiquidity.usdBorrow.eq(0)
 			? accountLiquidity.usdBorrow.div(accountLiquidity.usdBorrowable.add(accountLiquidity.usdBorrow)).mul(100)
 			: BigNumber.from(0)
-
-	const borrowable = accountLiquidity ? decimate(accountLiquidity.usdBorrow).add(accountLiquidity.usdBorrowable) : BigNumber.from(0)
 
 	const healthFactorColor = (healthFactor: BigNumber) => {
 		const c = healthFactor.eq(0)
@@ -37,23 +52,23 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 
 	return accountLiquidity ? (
 		<>
-			<div className={`mx-auto my-4 grid items-center justify-evenly ${isDesktop ? 'grid-cols-5' : 'grid-cols-2'} gap-4`}>
-				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
+			<div className={`mx-auto my-4 grid grid-cols-5 items-center justify-evenly gap-4`}>
+				<div className='glassmorphic-card col-span1 w-fit !px-8 !py-6 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-baoRed'>
+						<Typography variant='base' className='font-bakbak text-baoRed'>
 							Net APY
 						</Typography>
-						<Typography variant='base' className='font-semibold'>
+						<Typography variant='h3' className='font-bakbak'>
 							{`${accountLiquidity ? getDisplayBalance(accountLiquidity.netApy) : 0}`}%
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
+				<div className='glassmorphic-card col-span1 w-fit !px-8 !py-6 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-baoRed'>
+						<Typography variant='base' className='font-bakbak text-baoRed'>
 							Your Collateral
 						</Typography>
-						<Typography variant='base' className='font-medium'>
+						<Typography variant='h3' className='font-bakbak'>
 							$
 							{`${
 								bao && account && accountLiquidity
@@ -65,11 +80,17 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 				</div>
 
 				{isDesktop && (
-					<div className='flex flex-col'>
-						<div className='m-auto w-[150px]'>
+					<div className='glassmorphic-card col-span1 py-12'>
+						<div className='m-auto w-[15vh]'>
 							<CircularProgressbarWithChildren
 								value={parseFloat(
-									getDisplayBalance(accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0, 18, 0),
+									getDisplayBalance(
+										accountLiquidity && newBorrowable && !newBorrowable.eq(0)
+											? (parseFloat(accountLiquidity.usdBorrow.toString()) / parseFloat(newBorrowable.toString())) * 100
+											: 0,
+										18,
+										2,
+									),
 								)}
 								strokeWidth={10}
 								styles={buildStyles({
@@ -78,17 +99,19 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 								})}
 							>
 								<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
-									<div className='bg-primary-100 relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full'>
+									<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full'>
 										<div
 											className='absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center rounded-full p-1'
-											style={{ marginTop: '15px' }}
+											style={{ marginTop: '10px' }}
 										>
-											<Typography variant='sm' className='text-baoRed'>
+											<Typography variant='xs' className='font-medium text-baoWhite'>
 												Debt Limit
 											</Typography>
-											<Typography>
+											<Typography variant='sm' className='font-bold text-baoWhite'>
 												{getDisplayBalance(
-													accountLiquidity && !borrowable.eq(0) ? accountLiquidity.usdBorrow.div(borrowable).mul(100) : 0,
+													accountLiquidity && newBorrowable && !newBorrowable.eq(0)
+														? accountLiquidity.usdBorrow.div(newBorrowable).mul(100)
+														: 0,
 													18,
 													0,
 												)}
@@ -98,27 +121,30 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 									</div>
 								</div>
 							</CircularProgressbarWithChildren>
-						</div>
+						</div>{' '}
 					</div>
 				)}
 
-				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
+				<div className='glassmorphic-card col-span1 m-auto mr-0 w-fit !px-8 !py-6 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-baoRed'>
+						<Typography variant='base' className='font-bakbak text-baoRed'>
 							Total Debt
 						</Typography>
-						<Typography variant='base' className='font-medium'>
+						<Typography variant='h3' className='font-bakbak'>
 							${`${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}`}
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
+				<div className='glassmorphic-card col-span1 m-auto mr-0 w-fit !px-8 !py-6 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
-						<Typography variant='sm' className='text-baoRed'>
+						<Typography variant='base' className='font-bakbak text-baoRed'>
 							Health Factor{' '}
-							<Tooltipped content='Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated.' />
+							<Tooltipped
+								className='glassmorphic-card !rounded-lg'
+								content='Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated.'
+							/>
 						</Typography>
-						<Typography variant='base' className='font-medium'>
+						<Typography variant='h3' className='font-bakbak'>
 							{' '}
 							{healthFactor &&
 								// FIXME: ethers.BigNumber does not end up as infinite ever.
@@ -152,7 +178,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 
 			{!isDesktop && (
 				<div className='w-full'>
-					<div className='bg-primary-100 mt-4 flex w-full justify-center rounded border p-4 text-transparent-200'>
+					<div className='mt-4 flex w-full justify-center rounded border p-4'>
 						<div className='flex w-full flex-row items-center justify-center text-sm font-medium'>
 							<div className='flex flex-row items-center gap-2'>
 								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-baoRed'>

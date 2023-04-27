@@ -18,7 +18,7 @@ import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import VaultButton from './VaultButton'
 import Tooltipped from '@/components/Tooltipped'
-import BorrowCard from './BorrowCard'
+import BorrowCard from './DebtCard'
 
 export const MintCard = ({
 	vaultName,
@@ -132,52 +132,12 @@ export const MintCard = ({
 						</div>
 					</div>
 					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite text-opacity-50'>
-						Vault Info
+						Mint Info
 					</Typography>
 					<div className='flex flex-col gap-4 rounded'>
 						<StatBlock
 							className='flex basis-1/2 flex-col'
 							stats={[
-								{
-									label: `Current ${synth.underlyingSymbol} Price`,
-									value: (
-										<>
-											<Typography className='inline-block align-middle font-bold'>${getDisplayBalance(synth.price)}</Typography>
-										</>
-									),
-								},
-								{
-									label: 'Total Debt',
-									value: (
-										<>
-											<Tooltipped
-												content={`$${getDisplayBalance(decimate(synth.totalBorrows.mul(synth.price)), synth.underlyingDecimals)}`}
-												key={synth.underlyingSymbol}
-												placement='top'
-												className='rounded-full bg-baoRed'
-											>
-												<Typography className='inline-block align-middle font-bold'>{getDisplayBalance(synth.totalBorrows)}</Typography>
-											</Tooltipped>
-											<Image
-												className='z-10 ml-1 inline-block select-none'
-												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
-												alt={synth && synth.underlyingSymbol}
-												width={16}
-												height={16}
-											/>
-										</>
-									),
-								},
-								{
-									label: 'Total Collateral',
-									value: (
-										<>
-											<Typography className='inline-block align-middle font-bold'>
-												${getDisplayBalance(decimate(totalCollateral))}
-											</Typography>
-										</>
-									),
-								},
 								{
 									label: 'Minimum Mint',
 									value: (

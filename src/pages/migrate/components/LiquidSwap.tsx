@@ -139,7 +139,7 @@ const LiquidSwap: React.FC = () => {
 									})}
 								>
 									<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
-										<div className='bg-primary-100 relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full'>
+										<div className=' relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full'>
 											<div
 												className='absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center rounded-full p-1'
 												style={{ marginTop: '15px' }}

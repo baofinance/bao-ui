@@ -105,7 +105,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const shouldBeWarned = canStartDistribution || canEndDistribution
 
 	return (
-		<div className='bg-primary-100 col-span-2 row-span-1 rounded border p-4 text-transparent-200'>
+		<div className=' col-span-2 row-span-1 rounded border p-4'>
 			{(lockInfo && lockInfo.lockEnd.gt(timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp)) ? (
 				<>
 					<Typography variant='xl' className='mb-4 text-center font-bold'>

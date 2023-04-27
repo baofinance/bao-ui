@@ -38,7 +38,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	return (
-		<div className='col-span-2 grid h-full grid-rows-6 items-center rounded border text-transparent-200 bg-primary-100 p-4'>
+		<div className='col-span-2 grid h-full grid-rows-6 items-center rounded border  p-4'>
 			<Typography variant='xl' className='mb-4 text-center font-bold'>
 				Lock Info
 			</Typography>
@@ -135,7 +135,7 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
 	return (
-		<div className='grid h-full grid-rows-6 items-center justify-end rounded border text-transparent-200 bg-primary-100 p-4'>
+		<div className='grid h-full grid-rows-6 items-center justify-end rounded border  p-4'>
 			<Typography className='mb-4 text-center font-bold'>Protocol Statistics</Typography>
 			<div className='grid grid-cols-2 items-center gap-1'>
 				<Typography variant='sm' className='text-baoRed'>
@@ -224,7 +224,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 			<div
 				className={`my-2 grid w-full grid-flow-col ${
 					isDesktop ? 'grid-rows-1 gap-4' : 'grid-rows-3 gap-2'
-				} justify-evenly rounded border text-transparent-200 bg-primary-100 bg-opacity-80 p-4`}
+				} justify-evenly rounded border  bg-opacity-80 p-4`}
 			>
 				<div className='items-center justify-center text-center'>
 					<div className='text-center'>

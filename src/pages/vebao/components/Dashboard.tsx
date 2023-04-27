@@ -155,7 +155,7 @@ export const Dashboard = () => {
 			<Typography variant='xl' className='mb-2 mt-4 font-bold'>
 				Voting Dashboard
 			</Typography>
-			<div className={`bg-primary-100 w-full justify-evenly gap-4 rounded border bg-opacity-80 p-4 text-transparent-200`}>
+			<div className={` w-full justify-evenly gap-4 rounded border bg-opacity-80 p-4`}>
 				<div className='grid grid-cols-3 gap-4'>
 					<div className='col-span-1'>
 						<label className='text-xs text-baoRed'>Select Gauge</label>
@@ -165,7 +165,7 @@ export const Dashboard = () => {
 									<div>
 										<div className='inline-flex rounded-md border-none shadow-sm'>
 											<div className='inline-flex rounded-md border-none shadow-sm'>
-												<div className='bg-primary-100 inline-flex items-center rounded-l-md border py-2 pl-3 pr-4 text-transparent-200 text-white shadow-sm'>
+												<div className=' inline-flex items-center rounded-l-md border py-2 pl-3 pr-4 text-white shadow-sm'>
 													{selectedOption === '' ? (
 														<Typography>Select a gauge</Typography>
 													) : (
@@ -213,7 +213,7 @@ export const Dashboard = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 text-sm font-medium text-baoWhite text-transparent-200 hover:bg-transparent-100')
+														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -227,14 +227,14 @@ export const Dashboard = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='divide-primary-500 border-primary-500 bg-primary-100 absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y overflow-hidden rounded-md border shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='divide-primary-500 border-primary-500  absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y overflow-hidden rounded-md border shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
 													gauges.map((gauge: any, i: number) => (
 														<Listbox.Option
 															key={gauge.name}
 															className={({ active }) =>
 																classNames(
-																	active ? 'bg-primary-100 text-baoRed' : 'text-baoWhite',
+																	active ? ' text-baoRed' : 'text-baoWhite',
 																	'cursor-pointer select-none p-2 text-sm',
 																)
 															}
@@ -428,12 +428,12 @@ export const Dashboard = () => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
-							className='bg-primary-100 relative -mr-1 h-6
+							className=' relative -mr-1 h-6
 				w-12 appearance-none rounded border-solid border-inherit pl-2 text-end 
 				align-middle font-bold outline-none outline outline-2 outline-offset-2
 				 transition-all duration-200 disabled:text-baoWhite md:text-sm'
 						/>
-						<Typography variant='base' className='border-primary-500 bg-primary-100 m-0 rounded border-solid border-inherit p-0 font-bold'>
+						<Typography variant='base' className='border-primary-500  m-0 rounded border-solid border-inherit p-0 font-bold'>
 							%
 						</Typography>
 						<>
@@ -465,7 +465,7 @@ export const Dashboard = () => {
 				<div className='mt-4 grid grid-cols-6 gap-4'>
 					<div className='col-span-2'>
 						<label className='text-sm text-baoRed'>Deposit Amount</label>
-						<div className='bg-primary-100 flex h-8 gap-2 rounded-md'>
+						<div className=' flex h-8 gap-2 rounded-md'>
 							<input
 								type='number'
 								className='border-primary-500 rounded border bg-transparent-100 px-2 py-1 outline-none'
@@ -476,7 +476,7 @@ export const Dashboard = () => {
 					</div>
 					<div className='col-span-2'>
 						<label className='text-sm text-baoRed'>BAO Tokens</label>
-						<div className='bg-primary-100 flex h-8 gap-2 rounded-md'>
+						<div className=' flex h-8 gap-2 rounded-md'>
 							<input
 								type='number'
 								className='border-primary-500 rounded border bg-transparent-100 px-2 py-1 outline-none'

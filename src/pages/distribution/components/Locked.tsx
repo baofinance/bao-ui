@@ -85,14 +85,14 @@ const Migration: React.FC = () => {
 									<div className='relative'>
 										<div className='inline-flex w-full rounded-md border-none shadow-sm'>
 											<div className='inline-flex w-full rounded-md border-none shadow-sm'>
-												<div className='bg-primary-100 inline-flex w-full items-center rounded-l-md border py-2 pl-3 pr-4 text-transparent-200 text-white shadow-sm'>
+												<div className=' inline-flex w-full items-center rounded-l-md border py-2 pl-3 pr-4 text-white shadow-sm'>
 													<CheckIcon className='h-5 w-5' aria-hidden='true' />
 													<p className='ml-2.5 font-medium'>{selectedOption.name}</p>
 												</div>
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 font-medium text-baoWhite text-transparent-200 hover:bg-transparent-100')
+														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -112,7 +112,7 @@ const Migration: React.FC = () => {
 													<Listbox.Option
 														key={option.name}
 														className={({ active }) =>
-															classNames(active ? 'bg-primary-100 text-baoRed' : 'text-baoWhite', 'cursor-pointer select-none p-4')
+															classNames(active ? ' text-baoRed' : 'text-baoWhite', 'cursor-pointer select-none p-4')
 														}
 														value={option}
 													>
@@ -141,21 +141,21 @@ const Migration: React.FC = () => {
 					<div className='mb-4 flex w-full flex-col items-end justify-end gap-2'>
 						<div className='flex flex-row items-center'>
 							<Typography className='px-2 font-semibold text-baoWhite'>Total Locked BAO</Typography>
-							<div className='bg-primary-100 flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4 text-transparent-200'>
+							<div className=' flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(dist ? dist.amountOwedTotal : BigNumber.from(0))}</Typography>
 							</div>
 						</div>
 						<div className='flex flex-row items-center'>
 							<Typography className='px-2 font-semibold text-baoWhite'>BAO Pending Claim</Typography>
-							<div className='bg-primary-100 flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4 text-transparent-200'>
+							<div className=' flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(dist ? dist.curve : BigNumber.from(0))}</Typography>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className='bg-primary-100 mb-4 flex flex-col rounded p-4'>
+				<div className=' mb-4 flex flex-col rounded p-4'>
 					{selectedOption.id == 1 && <Migrate />}
 					{selectedOption.id == 2 && <Claim />}
 					{selectedOption.id == 3 && <End />}
@@ -205,7 +205,7 @@ const Migration: React.FC = () => {
 								<Typography variant='sm' className='py-1 font-medium text-baoRed'>
 									Distribution Amount
 								</Typography>
-								<div className='bg-primary-100 flex h-8 w-auto flex-row items-center justify-start gap-2 rounded border px-2 py-4 text-transparent-200'>
+								<div className=' flex h-8 w-auto flex-row items-center justify-start gap-2 rounded border px-2 py-4'>
 									<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 									<Typography className='font-semibold'>{getDisplayBalance(dist ? dist.amountOwedTotal : BigNumber.from(0))}</Typography>
 								</div>
@@ -214,7 +214,7 @@ const Migration: React.FC = () => {
 								<Typography variant='sm' className='py-1 font-medium text-baoRed'>
 									Date Started
 								</Typography>
-								<div className='bg-primary-100 flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4 text-transparent-200'>
+								<div className=' flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4'>
 									<Typography className='font-semibold'>{new Date(dist.dateStarted.mul(1000).toNumber()).toLocaleString()}</Typography>
 								</div>
 							</div>
@@ -223,7 +223,7 @@ const Migration: React.FC = () => {
 								<Typography variant='sm' className='py-1 font-medium text-baoRed'>
 									Date Ended
 								</Typography>
-								<div className='bg-primary-100 flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4 text-transparent-200'>
+								<div className=' flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4'>
 									<Typography className='font-semibold'>{new Date(dist.dateEnded.mul(1000).toNumber()).toLocaleString()}</Typography>
 								</div>
 							</div>
@@ -264,7 +264,7 @@ const Migration: React.FC = () => {
 					<div className='flex flex-col items-center'>
 						<div className='mb-5 mt-2 flex flex-col items-center'>
 							<Typography className='py-2 font-semibold text-baoWhite'>Distribution Amount</Typography>
-							<div className='bg-primary-100 flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4 text-transparent-200'>
+							<div className=' flex h-8 w-auto flex-row items-center justify-center gap-2 rounded border px-2 py-4'>
 								<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
 								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf ? merkleLeaf.amount : BigNumber.from(0))}</Typography>
 							</div>

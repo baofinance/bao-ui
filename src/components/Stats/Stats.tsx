@@ -22,7 +22,7 @@ export const StatBlock = ({ label, stats, className = '' }: StatBlockProps) => (
 					</Typography>
 				</div>
 			)}
-			<div className='realtive bg-primary-100 flex min-h-fit min-w-fit flex-1 flex-col rounded'>
+			<div className='realtive  flex min-h-fit min-w-fit flex-1 flex-col rounded'>
 				{stats.map(({ label, value }) => (
 					<div className='odd:bg-primary-200 grid grid-cols-2 break-words rounded px-3 py-3 last:pb-1' key={label}>
 						<Typography variant='base' className='my-auto align-middle font-medium text-baoWhite'>
@@ -46,7 +46,7 @@ export const StatCards = ({ label, stats }: StatBlockProps) => (
 			</div>
 		)}
 		{stats.map(({ label, value }) => (
-			<div key={label} className='realtive bg-primary-100 flex min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200'>
+			<div key={label} className='realtive  flex min-w-[15%] flex-1 flex-col rounded border px-4 py-3'>
 				<div className='break-words text-center' key={label}>
 					<Typography variant='sm' className='mb-1 text-left text-baoRed'>
 						{label}
@@ -67,7 +67,7 @@ export const FeeBlock = ({ label, stats }: StatBlockProps) => (
 				{label}
 			</Typography>
 		</div>
-		<div className='realtive bg-primary-100 flex min-h-fit min-w-fit flex-1 flex-col rounded p-2'>
+		<div className='realtive  flex min-h-fit min-w-fit flex-1 flex-col rounded p-2'>
 			{stats.map(({ label, value }) => (
 				<div className='odd:bg-primary-200 grid grid-cols-2 break-words rounded px-2 py-2' key={label}>
 					<Typography variant='base' className='font-semibold text-baoWhite'>

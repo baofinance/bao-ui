@@ -46,10 +46,10 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 			</div>
 			{displayType === 'TABLE' ? (
 				<>
-					<div className='rounded border text-transparent-200 bg-primary-200'>
+					<div className='rounded border bg-primary-200'>
 						<table className='w-full'>
 							<thead>
-								<tr className='rounded-t-lg bg-primary-100'>
+								<tr className='rounded-t-lg '>
 									<th className='w-[10%] rounded-tl-lg p-2 text-center font-bold'>Token</th>
 									<th className='w-[40%] p-2 text-start font-bold'>Allocation</th>
 									<th className='w-[20%] p-2 text-center font-bold'>Price</th>
@@ -63,7 +63,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 										.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
 										.map(component => {
 											return (
-												<tr key={component.symbol} className='even:bg-primary-100'>
+												<tr key={component.symbol} className='even:'>
 													<td className='p-2 text-center'>
 														<Tooltipped content={component.symbol} placement='left'>
 															<a>
@@ -123,7 +123,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 					</div>
 				</>
 			) : (
-				<div className='rounded border text-transparent-200 bg-primary-100'>
+				<div className='rounded border '>
 					<div className='flex flex-row justify-center'>
 						<div className='flex flex-col'>
 							<DonutGraph width={250} height={250} composition={composition} basket={basketId} rates={rates} info={info} />

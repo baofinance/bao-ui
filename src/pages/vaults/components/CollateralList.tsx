@@ -14,7 +14,7 @@ import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
 
-export const Positions = ({
+export const CollateralList = ({
 	vaultName,
 	collateral,
 	supplyBalances,
@@ -34,11 +34,11 @@ export const Positions = ({
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
-				Your Collateral
+				Collateral
 			</Typography>
 			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite text-opacity-50' />
 			{collateral.map((vault: ActiveSupportedVault) => (
-				<OpenPosition
+				<CollateralListItem
 					vault={vault}
 					vaultName={vaultName}
 					accountBalances={accountBalances}
@@ -53,7 +53,7 @@ export const Positions = ({
 	)
 }
 
-const OpenPosition: React.FC<OpenPositionProps> = ({
+const CollateralListItem: React.FC<CollateralListItemProps> = ({
 	vault,
 	vaultName,
 	accountBalances,
@@ -146,9 +146,9 @@ const OpenPosition: React.FC<OpenPositionProps> = ({
 	)
 }
 
-export default Positions
+export default CollateralList
 
-type OpenPositionProps = {
+type CollateralListItemProps = {
 	vault: ActiveSupportedVault
 	vaultName: string
 	accountBalances?: Balance[]
