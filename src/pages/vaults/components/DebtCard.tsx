@@ -37,7 +37,7 @@ const DebtCard: React.FC<DebtCardProps> = ({ asset, amount, vaultName, mintVal, 
 	const accountLiquidity = useAccountLiquidity(vaultName)
 
 	const borrowed = useMemo(
-		() => asset && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
+		() => asset && borrowBalances && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
 		[borrowBalances, asset],
 	)
 

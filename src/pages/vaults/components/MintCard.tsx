@@ -112,7 +112,12 @@ export const MintCard = ({
 							</div>
 						</div>
 						<div className='m-auto w-full'>
-							<Input value={val} onChange={handleChange} onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))} />
+							<Input
+								value={val}
+								onChange={handleChange}
+								onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
+								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
+							/>
 						</div>
 						<div className='m-1 mr-3'>
 							<VaultButton
