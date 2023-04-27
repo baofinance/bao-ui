@@ -38,7 +38,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 	return accountLiquidity ? (
 		<>
 			<div className={`mx-auto my-4 grid items-center justify-evenly ${isDesktop ? 'grid-cols-5' : 'grid-cols-2'} gap-4`}>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-baoRed'>
 							Net APY
@@ -48,7 +48,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-baoRed'>
 							Your Collateral
@@ -78,9 +78,9 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 								})}
 							>
 								<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
-									<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full bg-primary-100'>
+									<div className='bg-primary-100 relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full'>
 										<div
-											className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
+											className='absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center rounded-full p-1'
 											style={{ marginTop: '15px' }}
 										>
 											<Typography variant='sm' className='text-baoRed'>
@@ -102,7 +102,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 					</div>
 				)}
 
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-baoRed'>
 							Total Debt
@@ -112,7 +112,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 						</Typography>
 					</div>
 				</div>
-				<div className='realtive flex h-fit min-w-[15%] flex-1 flex-col rounded border text-transparent-200 bg-primary-100 px-4 py-3 lg:px-3 lg:py-2'>
+				<div className='realtive bg-primary-100 flex h-fit min-w-[15%] flex-1 flex-col rounded border px-4 py-3 text-transparent-200 lg:px-3 lg:py-2'>
 					<div className='break-words text-center'>
 						<Typography variant='sm' className='text-baoRed'>
 							Health Factor{' '}
@@ -152,7 +152,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 
 			{!isDesktop && (
 				<div className='w-full'>
-					<div className='mt-4 flex w-full justify-center rounded border text-transparent-200 bg-primary-100 p-4'>
+					<div className='bg-primary-100 mt-4 flex w-full justify-center rounded border p-4 text-transparent-200'>
 						<div className='flex w-full flex-row items-center justify-center text-sm font-medium'>
 							<div className='flex flex-row items-center gap-2'>
 								<Typography variant='sm' className='flex whitespace-nowrap text-sm font-medium text-baoRed'>
@@ -167,8 +167,8 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 								</Typography>
 							</div>
 
-							<div className='ml-2 flex h-1 w-full rounded bg-primary-400'>
-								<div className='flex rounded bg-text-100' style={{ width: `${borrowLimit}%` }} />
+							<div className='bg-primary-400 ml-2 flex h-1 w-full rounded'>
+								<div className='bg-text-100 flex rounded' style={{ width: `${borrowLimit}%` }} />
 							</div>
 
 							<div className='flex flex-row items-center'>
