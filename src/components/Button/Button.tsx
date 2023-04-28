@@ -90,7 +90,7 @@ export const NavButtons = ({ options, active, onClick, className }: NavButtonPro
 				<Button
 					size='md'
 					key={option}
-					className={classNames(`${option === active && '!bg-transparent-100'} w-full`, className)}
+					className={classNames(`${option === active && '!border-baoRed !bg-baoRed !bg-opacity-20'} w-full`, className)}
 					onClick={() => onClick(option)}
 				>
 					{option}

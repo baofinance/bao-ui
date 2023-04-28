@@ -20,13 +20,15 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const bao = useBao()
 	const poolInfo = usePoolInfo(gauge)
 	const gaugeInfo = useGaugeInfo(gauge)
-	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[2].vaultAddresses[chainId], 'baoUSD')
-	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].markets[0].vaultAddresses[chainId], 'baoUSD')
+	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[1].vaultAddresses[chainId], 'baoUSD')
+	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].markets[3].vaultAddresses[chainId], 'baoUSD')
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
 
+	console.log('baoUSDPrice', baoUSDPrice.toString())
+	console.log('threeCrvPrice', threeCrvPrice.toString())
 	const poolTVL = useMemo(() => {
 		return (
 			poolInfo &&

@@ -29,7 +29,7 @@ const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, tvl, rewardsValue, show,
 				onClose={hideModal}
 				header={
 					<>
-						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
+						<Typography variant='xl' className='mr-1 inline-block'>
 							{operation}
 						</Typography>
 						{operation !== 'Rewards' ? (
