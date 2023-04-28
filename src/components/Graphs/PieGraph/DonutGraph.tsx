@@ -37,16 +37,18 @@ export type DonutProps = {
 export default function DonutGraph({ width, height, composition, rates, info, margin = defaultMargin }: DonutProps) {
 	const [active, setActive] = useState(null)
 
-	const assetsBalance: AssetAllocationAmount[] = composition.map(component => {
-		return {
-			tvl: component.price.mul(component.balance.toString()).div(BigNumber.from(10).pow(component.decimals)),
-			symbol: component.symbol,
-			balance: component.balance,
-			decimals: component.decimals,
-			frequency: component.percentage,
-			color: component.color,
-		}
-	})
+	const assetsBalance: AssetAllocationAmount[] =
+		composition &&
+		composition.map(component => {
+			return {
+				tvl: component.price.mul(component.balance.toString()).div(BigNumber.from(10).pow(component.decimals)),
+				symbol: component.symbol,
+				balance: component.balance,
+				decimals: component.decimals,
+				frequency: component.percentage,
+				color: component.color,
+			}
+		})
 
 	const frequency = (d: AssetAllocationAmount) => parseFloat(formatUnits(d.frequency))
 

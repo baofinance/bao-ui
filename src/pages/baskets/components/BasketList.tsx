@@ -28,7 +28,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
-			<button className='hover:bg-primary-200 w-full rounded bg-transparent-100 px-4 py-2 text-baoWhite hover:bg-baoBlack'>
+			<button className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'>
 				<div className='flex w-full flex-row'>
 					<div className='flex w-full'>
 						<div className='my-auto'>
@@ -38,13 +38,14 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 									{basket.symbol}
 								</Typography>
 								{isDesktop && (
-									<Typography variant='base' className={`ml-2 font-semibold text-baoRed`}>
+									<Typography variant='sm' className={`ml-2 text-baoWhite`}>
 										{basket.desc}
 									</Typography>
 								)}
 							</span>
 						</div>
 					</div>
+
 					<div className='mx-auto my-0 flex w-full items-center justify-center'>
 						{composition ? (
 							composition.map((component: any) => {
@@ -60,14 +61,12 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 							<Loader />
 						)}
 					</div>
+
 					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center text-right'>
 						<span className='inline-block'>
 							{rates ? (
 								<>
-									<Typography variant='sm' className='m-0 font-semibold leading-5'>
-										${getDisplayBalance(rates.usd)}
-									</Typography>
-									<Badge className='bg-green text-xs font-medium'>0% Fee</Badge>
+									<Typography className='m-0 font-semibold leading-5'>${getDisplayBalance(rates.usd)}</Typography>
 								</>
 							) : (
 								<Loader />

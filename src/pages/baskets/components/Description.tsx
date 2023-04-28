@@ -11,7 +11,7 @@ interface DescriptionProps {
 const Description: React.FC<DescriptionProps> = ({ basketAddress = '' }) => {
 	return (
 		<>
-			<div className={`mt-4 w-full rounded border  ${isDesktop ? 'px-8 py-6' : 'px-4 py-3'}`}>
+			<div className='glassmorphic-card mt-4 p-8'>
 				{basketAddress === Config.addressMap.bDEFI && <BDEFI />}
 				{basketAddress === Config.addressMap.bSTBL && <BSTBL />}
 				{basketAddress === Config.addressMap.bETH && <BETH />}
@@ -24,14 +24,14 @@ export default Description
 
 const BDEFI: React.FC = () => (
 	<>
-		<Typography variant='h3' className='mb-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Description
 		</Typography>
 		<Typography variant='p' className='my-4'>
 			The Bao DeFi Basket is divided into key DeFi sectors, which are given a weighting reflecting their maturity and share of the overall
 			market. Within those sectors, each project is weighted on the TVL divided by Fully Diluted Valuation (FDV).
 		</Typography>
-		<Typography variant='h3' className='my-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Objective
 		</Typography>
 		<Typography variant='p' className='my-4'>
@@ -52,7 +52,7 @@ const BDEFI: React.FC = () => (
 			The Bao DeFi Basket will provide the crypto industry’s first automated value investing, decentralized, tokenized portfolios. When you
 			add the prospect of the underlying tokens being put to work to earn yield.
 		</Typography>
-		<Typography variant='h3' className='my-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Criteria
 		</Typography>
 		<Typography variant='p' className='my-4'>
@@ -75,7 +75,7 @@ const BDEFI: React.FC = () => (
 			<li>Be Ethereum-focused</li>
 			<li>Must be sufficiently decentralised</li>
 		</ul>
-		<Typography variant='h3' className='my-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Strategy
 		</Typography>
 		<Typography variant='p' className='my-4'>
@@ -83,7 +83,7 @@ const BDEFI: React.FC = () => (
 			from this productivity without having to perform any actions themselves. These strategies will be changed over time to take advantage
 			of new opportunities or to maximise the yield earned.
 		</Typography>
-		<Typography variant='h3' className='my-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Management
 		</Typography>
 		<Typography variant='p' className='my-4'>
@@ -113,20 +113,22 @@ const BDEFI: React.FC = () => (
 
 const BSTBL: React.FC = () => (
 	<>
-		<Typography variant='h3'>Description</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Description
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The Bao Stable Basket provides a way to diversify counterparty risk on stable assets while the underlying assets are put to work
 			earning yield on various trusted yield farming protocols. Decentralized and non pegged stables will be used where yield is available.
 		</Typography>
-		<Typography variant='xl' className='my-2'>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
 			Fees
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Entry Fee: 0%</li>
 			<li>Streaming Fee: 0%</li>
 			<li>Redemption Fee: 0%</li>
 		</ul>
-		<Typography variant='h3' className='my-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Objective
 		</Typography>
 		<Typography variant='p' className='my-4'>
@@ -145,15 +147,17 @@ const BSTBL: React.FC = () => (
 			The basket will start with a mixture of centrally issued and decentralized stable coins and deposit them in a variety of protocols to
 			earn yield on them, swapping strategies regularly to maximize the yield earned.
 		</Typography>
-		<Typography variant='h3'>Criteria</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Criteria
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			For a project to be included in the Bao Stable basket, it must fit the below criteria in order to reduce the risk of the basket and
 			fit the desires of the community.
 		</Typography>
-		<Typography variant='xl' className='my-2'>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
 			Characteristics
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Be a stable token project available on the Ethereum blockchain.</li>
 			<li>Be in liquid markets and being used in different lending protocols.</li>
 			<li>The protocol must be running for 6 months before qulaifying to be included in the basket.</li>
@@ -163,29 +167,39 @@ const BSTBL: React.FC = () => (
 			</li>
 			<li>Must be sufficiently decentralized and/or collateralized.</li>
 		</ul>
-		<Typography variant='h3'>Strategy</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Strategy
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			It is possible for the underlying tokens to utilize strategies that will earn yield, maximising value for basket holders, who benefit
 			from this productivity without having to perform any actions themselves. These strategies will be changed over time to take advantage
 			of new opportunities or to maximise the yield earned.
 		</Typography>
-		<Typography variant='h3'>Management</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Management
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The Basket is maintained quarterly in two phases.
 		</Typography>
-		<Typography variant='xl'>Determination Phase</Typography>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
+			Determination Phase
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The determination phase takes place during the final 2 weeks of the quarter. During this phase the changes needed for the next
 			reconstitution are determined. Strategies and allocation % will be revisited in order to reach the balance between decentralization
 			and having the most optimal yet secure yield possible for those stables. Proposed changes will be published on the governance forum
 			for 1 week then a governance vote will run for the community to approve changes.
 		</Typography>
-		<Typography variant='xl'>Reconstitution Phase</Typography>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
+			Reconstitution Phase
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			In the two weeks following a successful vote, the basket components will be adjusted as per the instructions published during the
 			final 2 weeks of the quarter.
 		</Typography>
-		<Typography variant='xl'>Emergency Maintenance</Typography>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
+			Emergency Maintenance
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The multisig holders are authorized by the community to re-balance baskets outside the usual schedule during moments that they
 			collectively deem to be critical emergencies. This clause will allow for quick re-balancing in the event of a protocol or basket being
@@ -206,7 +220,9 @@ const BSTBL: React.FC = () => (
 
 const BETH: React.FC = () => (
 	<>
-		<Typography variant='h3'>Description</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Description
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The Bao Ethereum Basket contains leading interest-bearing liquid-staked ETH tokens.
 		</Typography>
@@ -215,15 +231,15 @@ const BETH: React.FC = () => (
 			ideal collateral while promoting a more even distribution between staking providers, helping to prevent any single provider from
 			becoming dominant.
 		</Typography>
-		<Typography variant='xl' className='my-2'>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
 			Fees
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Entry Fee: 0%</li>
 			<li>Streaming Fee: 0.5%</li>
 			<li>Redemption Fee: 0%</li>
 		</ul>
-		<Typography variant='h3' className='my-2'>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
 			Objective
 		</Typography>
 		<Typography variant='p' className='my-4'>
@@ -233,25 +249,31 @@ const BETH: React.FC = () => (
 		<Typography variant='p' className='my-4'>
 			By spreading the risk over several tokens, you reduce the impact of problems any single tokens face.{' '}
 		</Typography>
-		<Typography variant='xl' className='my-2'>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
 			Characteristics
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Liquidity on ETH main net, with at least one supported pool allowing a $1m buy with less than 2% slippage.</li>
 			<li>Operating for 3+ months.</li>
 			<li>Chainlink price feed.</li>
 			<li>Have wrapped tokens that compound staking rewards to minimize gas costs.</li>
 			<li>Be non-custodial.</li>
 		</ul>
-		<Typography variant='h3'>Strategy</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Strategy
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			Liquid-staked ETH tokens earn a yield from staking returns. Additional strategies can be approved via governance.
 		</Typography>
-		<Typography variant='h3'>Management</Typography>
+		<Typography variant='h3' className='mb-2 font-bakbak'>
+			Management
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The basket is maintained via governance at any time during three phases.
 		</Typography>
-		<Typography variant='xl'>Determination Phase</Typography>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
+			Determination Phase
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The determination phase begins when a concept is posted on the governance forum to rebalance the basket and takes place over two
 			weeks. During the first week, the Bao community on the governance forum determines changes needed for the subsequent reconstitution to
@@ -260,11 +282,15 @@ const BETH: React.FC = () => (
 		<Typography variant='p' className='my-4'>
 			The suggested changes will be posted as a BIP on the governance forum during the second week.
 		</Typography>
-		<Typography variant='xl'>Reconstitution Phase</Typography>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
+			Reconstitution Phase
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The basket components will be adjusted per the instructions in the two weeks following a successful vote.
 		</Typography>
-		<Typography variant='xl'>Emergency Maintenance</Typography>
+		<Typography variant='xl' className='mb-2 font-bakbak'>
+			Emergency Maintenance
+		</Typography>
 		<Typography variant='p' className='my-4'>
 			The multisig holders are authorized by the community to re-balance baskets outside the usual schedule during moments that they
 			collectively deem to be critical emergencies. This clause will allow for quick re-balancing in the event of a protocol or basket being

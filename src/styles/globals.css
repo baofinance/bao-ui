@@ -191,9 +191,10 @@ input[type='number'] {
 	position: relative;
 	/* Setting the size of the upper layer to 80% of the screen size*/
 	min-height: 70vh;
+	max-width: 1280px;
 	width: 80vw;
 	justify-content: space-between;
-	margin-left: 10vw;
+	margin: auto;
 	z-index: 4;
 }
 
