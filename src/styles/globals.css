@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 html {
-	overflow-y: scroll !important;
 }
 
 body {
@@ -321,4 +320,8 @@ input[type='number'] {
 
 .CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-trail {
 	stroke: transparent;
+}
+
+.modal-open { 
+	overflow: auto; padding-right: 0px !important; 
 }
