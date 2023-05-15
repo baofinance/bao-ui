@@ -1,44 +1,31 @@
-import Config from '@/bao/lib/config'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import { NavButtons } from '@/components/Button'
+import Button from '@/components/Button'
 import Input from '@/components/Input'
-import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
+import useContract from '@/hooks/base/useContract'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
+import { useApprovals } from '@/hooks/vaults/useApprovals'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
-import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
+import { Erc20 } from '@/typechain/Erc20'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
-import { faSync } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber, FixedNumber } from 'ethers'
-import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils'
+import { BigNumber, ethers } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
-import BallastButton from '../BallastButton'
-import VaultStats from '../Stats'
-import VaultButton from '../VaultButton'
 
-export enum VaultOperations {
-	supply = 'Supply',
-	withdraw = 'Withdraw',
-	mint = 'Mint',
-	repay = 'Repay',
-	ballast = 'Ballast',
-}
-
-export type VaultModalProps = {
+export type WithdrawModalProps = {
 	asset: ActiveSupportedVault
 	show: boolean
 	onHide: () => void
 	vaultName: string
 }
 
-const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalProps & { operations: VaultOperations[] }) => {
-	const [operation, setOperation] = useState(operations[0])
+const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) => {
 	const [val, setVal] = useState<string>('')
 	const balances = useAccountBalances(vaultName)
 	const borrowBalances = useBorrowBalances(vaultName)
@@ -46,6 +33,8 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
 	const { prices } = useVaultPrices(vaultName)
+	const { pendingTx, handleTx } = useTransactionHandler()
+	const { vaultContract } = asset
 
 	const supply = useMemo(
 		() =>
@@ -85,32 +74,7 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 	)
 
 	const max = () => {
-		switch (operation) {
-			case VaultOperations.supply:
-				return balances
-					? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
-					: BigNumber.from(0)
-			//Broken
-			case VaultOperations.withdraw:
-				return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
-			//Broken
-			case VaultOperations.mint:
-				return prices && accountLiquidity && asset.price.gt(0)
-					? BigNumber.from(
-							FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
-								FixedNumber.from(formatUnits(asset.price)),
-							),
-					  )
-					: BigNumber.from(0)
-			case VaultOperations.repay:
-				if (borrowBalances && balances) {
-					const borrowBalance = borrowBalances.find(_balance => _balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()).balance
-					const walletBalance = balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
-					return walletBalance.lt(borrowBalance) ? walletBalance : borrowBalance
-				} else {
-					return BigNumber.from(0)
-				}
-		}
+		return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
 	}
 
 	const handleChange = useCallback(
@@ -131,14 +95,11 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 				<Modal.Header onClose={hideModal}>
 					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
-							{operation}
+							Withdraw
 						</Typography>
 						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} />
 					</div>
 				</Modal.Header>
-				<Modal.Options>
-					<NavButtons options={operations} active={operation} onClick={setOperation} />
-				</Modal.Options>
 				<>
 					<Modal.Body>
 						<div className='mb-4 flex h-full flex-col items-center justify-center'>
@@ -169,25 +130,22 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 								}
 							/>
 						</div>
-						<VaultStats operation={operation} asset={asset} amount={val} vaultName={vaultName} />
 					</Modal.Body>
 					<Modal.Actions>
-						<VaultButton
-							vaultName={vaultName}
-							operation={operation}
-							asset={asset}
-							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-							isDisabled={
-								!val ||
-								(val && parseUnits(val, asset.underlyingDecimals).gt(max())) ||
-								// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
-								(val &&
-									borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
-									parseUnits(val, asset.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
-									operation === VaultOperations.mint)
-							}
-							onHide={hideModal}
-						/>
+						<Button
+							fullWidth
+							className='!rounded-full'
+							disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+							onClick={() => {
+								handleTx(
+									vaultContract.redeemUnderlying(parseUnits(val)),
+									`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+									() => onHide(),
+								)
+							}}
+						>
+							Withdraw
+						</Button>{' '}
 					</Modal.Actions>
 				</>
 			</Modal>
@@ -195,4 +153,4 @@ const VaultModal = ({ operations, asset, show, onHide, vaultName }: VaultModalPr
 	)
 }
 
-export default VaultModal
+export default WithdrawModal

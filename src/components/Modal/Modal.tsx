@@ -76,7 +76,7 @@ const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children,
 								transparent ? '' : '!border !border-solid !border-baoWhite !border-opacity-20 bg-baoBlack bg-opacity-80',
 								isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : '',
 								isDesktop ? `w-full` : 'mx-auto max-h-[85vh] w-[85vw]',
-								'inline-block transform rounded-xl p-4 text-left align-bottom',
+								'inline-block transform rounded-xl p-6 text-left align-bottom',
 							)}
 						>
 							{children}

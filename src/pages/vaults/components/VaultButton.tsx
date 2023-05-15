@@ -56,7 +56,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 							}
 							handleTx(
 								mintTx,
-								`Vaults: Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`,
+								`${vaultName} Vault: Supply ${getDisplayBalance(val, asset.underlyingDecimals).toString()} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -71,7 +71,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `Vaults: Approve ${asset.underlyingSymbol}`)
+							handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
 						Approve
@@ -87,7 +87,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 						onClick={() => {
 							handleTx(
 								vaultContract.redeemUnderlying(val.toString()),
-								`Vaults: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => onHide(),
 							)
 						}}
@@ -105,7 +105,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 						onClick={() => {
 							handleTx(
 								vaultContract.borrow(val),
-								`Vaults: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								`${vaultName} Vault: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 								() => {
 									onHide()
 								},
@@ -132,8 +132,10 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 							} else {
 								repayTx = vaultContract.repayBorrow(val)
 							}
-							handleTx(repayTx, `Vaults: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () =>
-								onHide(),
+							handleTx(
+								repayTx,
+								`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								() => onHide(),
 							)
 						}}
 					>
@@ -146,7 +148,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 						onClick={() => {
 							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 							const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `Vaults: Approve ${asset.underlyingSymbol}`)
+							handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
 						}}
 					>
 						Approve {asset.underlyingSymbol}

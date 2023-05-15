@@ -13,6 +13,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
+import WithdrawModal from './Modals/WithdrawModal'
 
 export const CollateralList = ({
 	vaultName,
@@ -48,7 +49,7 @@ export const CollateralList = ({
 					exchangeRates={exchangeRates}
 					key={vault.vaultAddress}
 				/>
-			))}{' '}
+			))}
 		</>
 	)
 }
@@ -59,8 +60,8 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 	accountBalances,
 	supplyBalances,
 	exchangeRates,
-}: OpenPositionProps) => {
-	const [showSupplyModal, setShowSupplyModal] = useState(false)
+}: CollateralListItemProps) => {
+	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const { account } = useWeb3React()
 
 	const suppliedUnderlying = useMemo(() => {
@@ -81,7 +82,7 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 
 	const handleOpen = () => {
 		!isOpen ? setIsOpen(true) : setIsOpen(false)
-		showSupplyModal && setIsOpen(true)
+		showWithdrawModal && setIsOpen(true)
 	}
 
 	const baskets = useBaskets()
@@ -138,10 +139,13 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 					</div>
 
 					<div className='col-span-3 m-auto mr-0 items-end'>
-						<Button size='xs'>Withdraw</Button>
+						<Button size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account}>
+							Withdraw
+						</Button>
 					</div>
 				</div>
 			</div>
+			<WithdrawModal asset={vault} vaultName={vaultName} show={showWithdrawModal} onHide={() => setShowWithdrawModal(false)} />
 		</>
 	)
 }

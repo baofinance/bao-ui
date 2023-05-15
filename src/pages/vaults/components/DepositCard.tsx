@@ -19,6 +19,8 @@ import VaultButton from './VaultButton'
 import Card from '@/components/Card/Card'
 import Tooltipped from '@/components/Tooltipped'
 import BorrowCard from './DebtCard'
+import SupplyModal from './Modals/SupplyModal'
+import Button from '@/components/Button'
 
 export const DepositCard = ({
 	vaultName,
@@ -40,6 +42,13 @@ export const DepositCard = ({
 	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
 	const [selectedOption, setSelectedOption] = useState('ETH')
+	const [showSupplyModal, setShowSupplyModal] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
+
+	const handleOpen = () => {
+		!isOpen ? setIsOpen(true) : setIsOpen(false)
+		showSupplyModal && setIsOpen(true)
+	}
 
 	const asset =
 		collateral &&
@@ -217,12 +226,18 @@ export const DepositCard = ({
 							/>
 						</div>
 						<div className='m-1 mr-3'>
-							<VaultButton
-								vaultName={vaultName}
-								operation={'Supply'}
+							<Button
+								onClick={() => setShowSupplyModal(true)}
+								disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+							>
+								Supply
+							</Button>
+							<SupplyModal
 								asset={asset}
+								vaultName={vaultName}
 								val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-								isDisabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+								show={showSupplyModal}
+								onHide={() => setShowSupplyModal(false)}
 							/>
 						</div>
 					</div>
