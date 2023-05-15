@@ -43,56 +43,54 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 				</div>
 			</Modal.Header>
 			<Modal.Body>
-				{!pendingTx ? (
-					<Typography variant='lg' className='p-6 text-center font-bakbak'>
-						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} className='inline p-1' />
-						{getDisplayBalance(val, asset.underlyingDecimals).toString()} {asset.underlyingSymbol}{' '}
-						<Badge>${getDisplayBalance(decimate(usdValue))}</Badge>
-					</Typography>
-				) : (
-					<div className='flex flex-row justify-center p-6 align-middle'>
-						<MoonLoader size={24} speedMultiplier={0.8} color='#e21a53' className='align-middle' />
-						<Typography variant='lg' className='ml-4 mt-1 inline-block align-middle font-bakbak'>
-							Pending Transaction
-						</Typography>
-					</div>
-				)}
+				<Typography variant='lg' className='p-6 text-center font-bakbak'>
+					<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} className='inline p-1' />
+					{getDisplayBalance(val, asset.underlyingDecimals).toString()} {asset.underlyingSymbol}{' '}
+					<Badge>${getDisplayBalance(decimate(usdValue))}</Badge>
+				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				{approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
-					<Button
-						fullWidth
-						className='!rounded-full'
-						disabled={!val || pendingTx}
-						onClick={async () => {
-							let supplyTx
-							if (asset.underlyingAddress === 'ETH') {
-								// @ts-ignore
-								supplyTx = vaultContract.mint(true, {
-									value: val,
-								})
-								// TODO- Give the user the option in the SupplyModal to tick collateral on/off
-							} else {
-								// @ts-ignore
-								supplyTx = vaultContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
-							}
-							handleTx(supplyTx, `${vaultName} Vault: Supply ${val} ${asset.underlyingSymbol}`, () => onHide())
-						}}
-					>
-						Confirm
-					</Button>
+				{!pendingTx ? (
+					approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
+						<Button
+							fullWidth
+							className='!rounded-full'
+							disabled={!val}
+							onClick={async () => {
+								let supplyTx
+								if (asset.underlyingAddress === 'ETH') {
+									// @ts-ignore
+									supplyTx = vaultContract.mint(true, {
+										value: val,
+									})
+									// TODO- Give the user the option in the SupplyModal to tick collateral on/off
+								} else {
+									// @ts-ignore
+									supplyTx = vaultContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
+								}
+								handleTx(supplyTx, `${vaultName} Vault: Supply ${val} ${asset.underlyingSymbol}`, () => onHide())
+							}}
+						>
+							Confirm
+						</Button>
+					) : (
+						<Button
+							fullWidth
+							className='!rounded-full'
+							disabled={!approvals}
+							onClick={() => {
+								// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+								const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
+								handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
+							}}
+						>
+							Approve
+						</Button>
+					)
 				) : (
-					<Button
-						fullWidth
-						className='!rounded-full'
-						disabled={!approvals}
-						onClick={() => {
-							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
-						}}
-					>
-						Approve
+					<Button fullWidth className='!rounded-full'>
+						<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
+						Pending Transaction
 					</Button>
 				)}
 			</Modal.Actions>

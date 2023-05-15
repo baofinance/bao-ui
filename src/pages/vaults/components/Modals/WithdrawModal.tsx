@@ -13,10 +13,14 @@ import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { Erc20 } from '@/typechain/Erc20'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
+import Link from 'next/link'
 import React, { useCallback, useMemo, useState } from 'react'
+import { MoonLoader } from 'react-spinners'
 
 export type WithdrawModalProps = {
 	asset: ActiveSupportedVault
@@ -33,7 +37,7 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
 	const { prices } = useVaultPrices(vaultName)
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
 
 	const supply = useMemo(
@@ -132,20 +136,30 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						<Button
-							fullWidth
-							className='!rounded-full'
-							disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-							onClick={() => {
-								handleTx(
-									vaultContract.redeemUnderlying(parseUnits(val)),
-									`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-									() => onHide(),
-								)
-							}}
-						>
-							Withdraw
-						</Button>{' '}
+						{!pendingTx ? (
+							<Button
+								fullWidth
+								className='!rounded-full'
+								disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+								onClick={() => {
+									handleTx(
+										vaultContract.redeemUnderlying(parseUnits(val)),
+										`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+										() => onHide(),
+									)
+								}}
+							>
+								Withdraw
+							</Button>
+						) : (
+							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+								<Button fullWidth className='!rounded-full'>
+									<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
+									Pending Transaction
+									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+								</Button>
+							</a>
+						)}
 					</Modal.Actions>
 				</>
 			</Modal>
