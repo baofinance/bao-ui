@@ -4,21 +4,16 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import { useApprovals } from '@/hooks/vaults/useApprovals'
-import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
+import { useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
-import { useVaultPrices } from '@/hooks/vaults/usePrices'
-import { Erc20 } from '@/typechain/Erc20'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import Link from 'next/link'
 import React, { useCallback, useMemo, useState } from 'react'
 import { MoonLoader } from 'react-spinners'
 
@@ -31,12 +26,9 @@ export type WithdrawModalProps = {
 
 const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) => {
 	const [val, setVal] = useState<string>('')
-	const balances = useAccountBalances(vaultName)
-	const borrowBalances = useBorrowBalances(vaultName)
 	const supplyBalances = useSupplyBalances(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
-	const { prices } = useVaultPrices(vaultName)
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
 
@@ -71,11 +63,6 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(asset.price))
 		}
 	}
-
-	const borrowed = useMemo(
-		() => asset && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
-		[borrowBalances, asset],
-	)
 
 	const max = () => {
 		return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
