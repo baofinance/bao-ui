@@ -20,7 +20,7 @@ const PopupTitle: React.FC<PopupTitleProps> = ({ success }) => {
 	return (
 		<div className='flex items-center'>
 			<div className='flex-1'>
-				<Typography>Transaction {titleText}</Typography>
+				<Typography className='font-bakbak text-lg'>Transaction {titleText}</Typography>
 			</div>
 			<div className={`text-${color}`}>
 				<Typography>
