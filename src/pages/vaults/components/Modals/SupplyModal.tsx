@@ -71,7 +71,7 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 								}
 								handleTx(
 									supplyTx,
-									`${vaultName} Vault: Supply ${formatUnits(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+									`${vaultName} Vault: Supply ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
 									() => onHide(),
 								)
 							}}

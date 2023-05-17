@@ -84,12 +84,10 @@ const Vault: NextPage<{
 
 	const userVaults = useMemo(() => {
 		if (!(accountVaults && supplyBalances)) return
-		return accountVaults
-			.filter(vault => !vault.isSynth)
-			.sort((a, b) => {
-				void a
-				return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
-			})
+		return accountVaults.sort((a, b) => {
+			void a
+			return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+		})
 	}, [accountVaults, supplyBalances])
 
 	const synth = useMemo(() => {
@@ -101,9 +99,6 @@ const Vault: NextPage<{
 	const totalCollateral = useMemo(() => vaultTVLs && vaultTVLs.reduce((acc, curr) => acc.add(curr.tvl), BigNumber.from(0)), [vaultTVLs])
 	const totalDebt = synth && synth.totalBorrows.mul(synth.price)
 
-	console.log('accountVaults', accountVaults)
-	console.log('accountLiquidity', accountLiquidity.usdSupply)
-	console.log('borrowable', accountLiquidity.usdBorrowable)
 	return (
 		<>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
@@ -163,7 +158,7 @@ const Vault: NextPage<{
 												Borrow Rate
 											</Typography>
 											<Typography variant='xl' className='inline-block font-bakbak leading-5'>
-												{getDisplayBalance(synth.borrowApy)}%
+												{getDisplayBalance(synth.borrowApy, 18, 2)}%
 											</Typography>
 											<Typography className='ml-1 inline-block font-bakbak leading-5 text-baoWhite'>vAPY</Typography>
 										</div>

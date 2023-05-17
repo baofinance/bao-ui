@@ -13,6 +13,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
+import RepayModal from './Modals/RepayModal'
 import WithdrawModal from './Modals/WithdrawModal'
 
 export const CollateralList = ({
@@ -35,21 +36,23 @@ export const CollateralList = ({
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
-				Collateral
+				Open Positions
 			</Typography>
 			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite text-opacity-50' />
-			{collateral.map((vault: ActiveSupportedVault) => (
-				<CollateralListItem
-					vault={vault}
-					vaultName={vaultName}
-					accountBalances={accountBalances}
-					accountVaults={accountVaults}
-					supplyBalances={supplyBalances}
-					borrowBalances={borrowBalances}
-					exchangeRates={exchangeRates}
-					key={vault.vaultAddress}
-				/>
-			))}
+			{collateral
+				.map((vault: ActiveSupportedVault) => (
+					<CollateralListItem
+						vault={vault}
+						vaultName={vaultName}
+						accountBalances={accountBalances}
+						accountVaults={accountVaults}
+						supplyBalances={supplyBalances}
+						borrowBalances={borrowBalances}
+						exchangeRates={exchangeRates}
+						key={vault.vaultAddress}
+					/>
+				))
+				.sort((a, b) => (a.props.vault.isSynth === true ? -1 : b.props.vault.isSynth === false ? 1 : 0))}
 		</>
 	)
 }
@@ -59,9 +62,11 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 	vaultName,
 	accountBalances,
 	supplyBalances,
+	borrowBalances,
 	exchangeRates,
 }: CollateralListItemProps) => {
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
+	const [showRepayModal, setShowRepayModal] = useState(false)
 	const { account } = useWeb3React()
 
 	const suppliedUnderlying = useMemo(() => {
@@ -71,19 +76,17 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 		return decimate(supply.balance.mul(exchangeRates[vault.vaultAddress]))
 	}, [supplyBalances, exchangeRates, vault.vaultAddress])
 
+	const borrowed = useMemo(
+		() => vault && borrowBalances.find(balance => balance.address === vault.vaultAddress).balance,
+		[borrowBalances, vault],
+	)
+
 	// FIXME: Causes crash
 	// const isInVault = useMemo(() => {
 	// 	return accountVaults && vault && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
 	// }, [accountVaults, vault])
 
 	// const [isChecked, setIsChecked] = useState(!!isInVault)
-
-	const [isOpen, setIsOpen] = useState(false)
-
-	const handleOpen = () => {
-		!isOpen ? setIsOpen(true) : setIsOpen(false)
-		showWithdrawModal && setIsOpen(true)
-	}
 
 	const baskets = useBaskets()
 	const basket =
@@ -104,6 +107,10 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 			  100
 			: 0
 
+	console.log(vaultName, 'isSynth?', vault.isSynth)
+	console.log(vaultName, 'borrowed', borrowed.toString())
+	console.log(vaultName, 'suppliedUnderlying', suppliedUnderlying.toString())
+
 	return (
 		<>
 			<div className='glassmorphic-card my-4 p-2'>
@@ -122,30 +129,44 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 					</div>
 					<div className='col-span-3 mr-0 items-start'>
 						<Tooltipped
-							content={`$${getDisplayBalance(decimate(suppliedUnderlying.mul(vault.price)))}`}
+							content={`$${getDisplayBalance((!vault.isSynth ? decimate(suppliedUnderlying) : decimate(borrowed)).mul(vault.price))}`}
 							key={vault.underlyingSymbol}
 							placement='top'
 							className='rounded-full bg-baoRed font-bold'
 						>
 							<Typography className='text-center leading-5'>
-								<span className='align-middle font-bold'>{`${getDisplayBalance(suppliedUnderlying, vault.underlyingDecimals)}`}</span>
+								<span className='align-middle font-bold'>{`${getDisplayBalance(
+									!vault.isSynth ? suppliedUnderlying : borrowed,
+									vault.underlyingDecimals,
+								)}`}</span>
 							</Typography>
 						</Tooltipped>
 					</div>
 					<div className='col-span-3 m-auto items-center justify-center'>
 						<Typography className='font-bold leading-5'>
-							{vault.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
+							{vault.isBasket && avgBasketAPY
+								? getDisplayBalance(avgBasketAPY, 0, 2) + '%'
+								: vault.isSynth
+								? getDisplayBalance(vault.borrowApy, 18, 2) + '%'
+								: '-'}
 						</Typography>
 					</div>
 
-					<div className='col-span-3 m-auto mr-0 items-end'>
-						<Button size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account}>
-							Withdraw
-						</Button>
+					<div className='col-span-3 m-auto mr-0 w-full items-end'>
+						{!vault.isSynth ? (
+							<Button fullWidth size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account}>
+								Withdraw
+							</Button>
+						) : (
+							<Button fullWidth size='xs' onClick={() => setShowRepayModal(true)} disabled={!account}>
+								Repay
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>
 			<WithdrawModal asset={vault} vaultName={vaultName} show={showWithdrawModal} onHide={() => setShowWithdrawModal(false)} />
+			<RepayModal asset={vault} vaultName={vaultName} show={showRepayModal} onHide={() => setShowRepayModal(false)} />
 		</>
 	)
 }

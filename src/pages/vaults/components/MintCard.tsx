@@ -125,7 +125,7 @@ export const MintCard = ({
 							<Button
 								onClick={() => setShowMintModal(true)}
 								disabled={
-									(!account && !val) ||
+									!val ||
 									(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
 									// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
 									(val &&
