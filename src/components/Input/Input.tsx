@@ -49,8 +49,8 @@ const Input: React.FC<InputProps> = ({
 				{!disabled && (
 					<>
 						{onSelectMax && (
-							<div className='flex h-full items-center justify-center rounded-l-none rounded-r-lg bg-baoBlack'>
-								<Button onClick={onSelectMax} className='mr-4 !rounded-full border border-baoRed !px-2' size='xs'>
+							<div className='flex h-full items-center justify-center bg-baoBlack'>
+								<Button onClick={onSelectMax} className='mr-2 !rounded-full border border-baoRed !px-2' size='xs'>
 									<Typography variant='base' className='font-bakbak font-normal text-baoWhite'>
 										MAX
 									</Typography>

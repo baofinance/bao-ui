@@ -16,7 +16,7 @@ import React, { useMemo, useState } from 'react'
 import RepayModal from './Modals/RepayModal'
 import WithdrawModal from './Modals/WithdrawModal'
 
-export const CollateralList = ({
+export const PositionList = ({
 	vaultName,
 	collateral,
 	supplyBalances,
@@ -41,7 +41,7 @@ export const CollateralList = ({
 			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite text-opacity-50' />
 			{collateral
 				.map((vault: ActiveSupportedVault) => (
-					<CollateralListItem
+					<PositionListItem
 						vault={vault}
 						vaultName={vaultName}
 						accountBalances={accountBalances}
@@ -57,14 +57,14 @@ export const CollateralList = ({
 	)
 }
 
-const CollateralListItem: React.FC<CollateralListItemProps> = ({
+const PositionListItem: React.FC<PositionListItemProps> = ({
 	vault,
 	vaultName,
 	accountBalances,
 	supplyBalances,
 	borrowBalances,
 	exchangeRates,
-}: CollateralListItemProps) => {
+}: PositionListItemProps) => {
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
 	const { account } = useWeb3React()
@@ -143,7 +143,7 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 						</Tooltipped>
 					</div>
 					<div className='col-span-3 m-auto items-center justify-center'>
-						<Typography className='font-bold leading-5'>
+						<Typography className={`font-bold leading-5 ${vault.isSynth ? `text-red` : avgBasketAPY > 0 && `text-green`}`}>
 							{vault.isBasket && avgBasketAPY
 								? getDisplayBalance(avgBasketAPY, 0, 2) + '%'
 								: vault.isSynth
@@ -171,9 +171,9 @@ const CollateralListItem: React.FC<CollateralListItemProps> = ({
 	)
 }
 
-export default CollateralList
+export default PositionList
 
-type CollateralListItemProps = {
+type PositionListItemProps = {
 	vault: ActiveSupportedVault
 	vaultName: string
 	accountBalances?: Balance[]

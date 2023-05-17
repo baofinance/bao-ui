@@ -4,15 +4,17 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
+import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
+import { useApprovals } from '@/hooks/vaults/useApprovals'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
-import { useVaultPrices } from '@/hooks/vaults/usePrices'
+import { Erc20 } from '@/typechain/Erc20'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -32,6 +34,8 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 	const supplyBalances = useSupplyBalances(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
+	const { approvals } = useApprovals(vaultName)
+	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
@@ -134,29 +138,44 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 					</Modal.Body>
 					<Modal.Actions>
 						{!pendingTx ? (
-							<Button
-								fullWidth
-								className='!rounded-full'
-								disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-								onClick={() => {
-									let repayTx
-									if (asset.underlyingAddress === 'ETH') {
-										// @ts-ignore
-										repayTx = vaultContract.repayBorrow({
-											value: val,
-										})
-									} else {
-										repayTx = vaultContract.repayBorrow(val)
-									}
-									handleTx(
-										repayTx,
-										`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-										() => onHide(),
-									)
-								}}
-							>
-								Repay
-							</Button>
+							approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
+								<Button
+									fullWidth
+									className='!rounded-full'
+									disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+									onClick={() => {
+										let repayTx
+										if (asset.underlyingAddress === 'ETH') {
+											// @ts-ignore
+											repayTx = vaultContract.repayBorrow({
+												value: parseUnits(val, asset.underlyingDecimals),
+											})
+										} else {
+											repayTx = vaultContract.repayBorrow(parseUnits(val, asset.underlyingDecimals))
+										}
+										handleTx(
+											repayTx,
+											`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+											() => onHide(),
+										)
+									}}
+								>
+									Repay
+								</Button>
+							) : (
+								<Button
+									fullWidth
+									className='!rounded-full'
+									disabled={!approvals || !val}
+									onClick={() => {
+										// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+										const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
+										handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
+									}}
+								>
+									Approve
+								</Button>
+							)
 						) : (
 							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 								<Button fullWidth className='!rounded-full'>

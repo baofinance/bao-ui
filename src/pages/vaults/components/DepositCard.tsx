@@ -18,7 +18,7 @@ import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'reac
 import VaultButton from './VaultButton'
 import Card from '@/components/Card/Card'
 import Tooltipped from '@/components/Tooltipped'
-import BorrowCard from './DebtCard'
+import BorrowCard from './DashboardCard'
 import SupplyModal from './Modals/SupplyModal'
 import Button from '@/components/Button'
 

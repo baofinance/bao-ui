@@ -3,6 +3,9 @@
 import classNames from 'classnames'
 import React, { ReactNode, useMemo } from 'react'
 import Loader from '../Loader'
+import { MoonLoader } from 'react-spinners'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
@@ -17,7 +20,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 	children?: ReactNode
 	size?: ButtonSize
 	fullWidth?: boolean
-	pendingTx?: string
+	pendingTx?: string | boolean
+	txHash?: string
 	inline?: boolean
 	href?: string
 	text?: any
@@ -25,7 +29,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ children, className = '', size = 'md', fullWidth = false, pendingTx, inline, text, href, disabled, ...rest }, ref) => {
+	({ children, className = '', size = 'md', fullWidth = false, pendingTx, txHash, inline, text, href, disabled, ...rest }, ref) => {
 		const ButtonChild = useMemo(() => {
 			if (href) {
 				return (
@@ -40,9 +44,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		const isDisabled = useMemo(() => typeof pendingTx === 'string' || pendingTx || disabled === true, [disabled, pendingTx])
 
-		const buttonText = pendingTx ? <Loader /> : children
+		const buttonText = children
 
-		return (
+		return !pendingTx ? (
 			<button
 				{...rest}
 				ref={ref}
@@ -54,19 +58,39 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
 					`relative flex w-fit items-center justify-center overflow-hidden rounded-full border border-baoWhite border-opacity-20
-					bg-baoWhite bg-opacity-5 px-4 py-2 font-bakbak text-lg text-baoWhite duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20`,
+				bg-baoWhite bg-opacity-5 px-4 py-2 font-bakbak text-lg text-baoWhite duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20`,
 					className,
 				)}
 			>
-				{pendingTx ? (
-					<Loader />
-				) : (
-					<>
-						{ButtonChild}
-						{buttonText}
-					</>
-				)}
+				<>
+					{ButtonChild}
+					{buttonText}
+				</>
 			</button>
+		) : (
+			<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+				<button
+					{...rest}
+					ref={ref}
+					disabled={isDisabled}
+					className={classNames(
+						// @ts-ignore TYPE NEEDS FIXING
+						Size[size],
+						inline ? 'inline-block' : 'flex',
+						fullWidth ? 'w-full' : '',
+						disabled ? 'cursor-not-allowed opacity-50' : '',
+						`relative flex w-fit items-center justify-center overflow-hidden rounded-full border border-baoWhite border-opacity-20
+					bg-baoWhite bg-opacity-5 px-4 py-2 font-bakbak text-lg text-baoWhite duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20`,
+						className,
+					)}
+				>
+					<>
+						<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
+						Pending Transaction
+						<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+					</>
+				</button>
+			</a>
 		)
 	},
 )

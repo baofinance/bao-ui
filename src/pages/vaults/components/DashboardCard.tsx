@@ -21,7 +21,7 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
 
-type DebtCardProps = {
+type DashboardCardProps = {
 	title?: string
 	asset: ActiveSupportedVault
 	amount?: string
@@ -30,7 +30,7 @@ type DebtCardProps = {
 	depositVal: string
 }
 
-const DebtCard: React.FC<DebtCardProps> = ({ asset, amount, vaultName, mintVal, depositVal }: DebtCardProps) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ asset, amount, vaultName, mintVal, depositVal }: DashboardCardProps) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const borrowBalances = useBorrowBalances(vaultName)
@@ -174,4 +174,4 @@ const DebtCard: React.FC<DebtCardProps> = ({ asset, amount, vaultName, mintVal, 
 	)
 }
 
-export default DebtCard
+export default DashboardCard

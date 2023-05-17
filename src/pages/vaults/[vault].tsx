@@ -15,8 +15,8 @@ import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
-import CollateralList from './components/CollateralList'
-import DebtCard from './components/DebtCard'
+import PositionList from './components/PositionsCard'
+import DebtCard from './components/DashboardCard'
 import DepositCard from './components/DepositCard'
 import MintCard from './components/MintCard'
 
@@ -170,7 +170,7 @@ const Vault: NextPage<{
 						{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
 							<div className='grid grid-cols-2 gap-16'>
 								<div className='col-span-1'>
-									<CollateralList
+									<PositionList
 										vaultName={vaultName}
 										supplyBalances={supplyBalances}
 										collateral={userVaults}
