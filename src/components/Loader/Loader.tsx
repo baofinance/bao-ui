@@ -9,7 +9,7 @@ interface LoaderProps {
 const Loader: React.FC<LoaderProps> = ({ text }) => {
 	return (
 		<div className='inline items-center justify-center'>
-			<PulseLoader size={6} speedMultiplier={0.8} color='rgb(250 242 227)' />
+			<PulseLoader size={6} speedMultiplier={0.8} color='#e21a53' />
 			{text && <div className='text-baoWhite'>{text}</div>}
 		</div>
 	)

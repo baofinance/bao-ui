@@ -83,10 +83,10 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 								{displayId}
 								{pendingTxs > 0 && (
 									<>
-										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 -mt-1 text-baoRed' />
+										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 mt-1 text-baoRed' />
 										<Loader />
 										<span className='ml-2'>{pendingTxs}</span>
-										<FontAwesomeIcon icon={faReceipt} className='mx-2 -mt-1 text-baoRed' />
+										<FontAwesomeIcon icon={faReceipt} className='mx-2 mt-1 text-baoRed' />
 									</>
 								)}
 							</div>
