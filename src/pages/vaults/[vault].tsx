@@ -73,6 +73,16 @@ const Vault: NextPage<{
 	const { prices } = useVaultPrices(vaultName)
 
 	const collateral = useMemo(() => {
+		if (!(_vaults && supplyBalances)) return
+		return _vaults
+			.filter(vault => !vault.isSynth)
+			.sort((a, b) => {
+				void a
+				return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+			})
+	}, [_vaults, supplyBalances])
+
+	const userVaults = useMemo(() => {
 		if (!(accountVaults && supplyBalances)) return
 		return accountVaults
 			.filter(vault => !vault.isSynth)
@@ -168,7 +178,7 @@ const Vault: NextPage<{
 									<CollateralList
 										vaultName={vaultName}
 										supplyBalances={supplyBalances}
-										collateral={collateral}
+										collateral={userVaults}
 										exchangeRates={exchangeRates}
 										accountBalances={accountBalances}
 										accountVaults={accountVaults}

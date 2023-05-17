@@ -104,6 +104,11 @@ export const DepositCard = ({
 		}
 	}, [val])
 
+	const hide = () => {
+		setVal('')
+		setShowSupplyModal(false)
+	}
+
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
@@ -225,7 +230,7 @@ export const DepositCard = ({
 								placeholder={`${formatUnits(max(), asset.underlyingDecimals)}`}
 							/>
 						</div>
-						<div className='m-1 mr-3'>
+						<div className='m-auto mr-2'>
 							<Button
 								onClick={() => setShowSupplyModal(true)}
 								disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
@@ -237,7 +242,7 @@ export const DepositCard = ({
 								vaultName={vaultName}
 								val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
 								show={showSupplyModal}
-								onHide={() => setShowSupplyModal(false)}
+								onHide={hide}
 							/>
 						</div>
 					</div>

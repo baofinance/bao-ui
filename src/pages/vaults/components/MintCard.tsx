@@ -1,4 +1,5 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
+import Button from '@/components/Button'
 import Card from '@/components/Card/Card'
 import Input from '@/components/Input'
 import { StatBlock } from '@/components/Stats'
@@ -13,7 +14,7 @@ import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import VaultButton from './VaultButton'
+import MintModal from './Modals/MintModal'
 
 export const MintCard = ({
 	vaultName,
@@ -32,6 +33,7 @@ export const MintCard = ({
 }) => {
 	const { account, library, chainId } = useWeb3React()
 	const [val, setVal] = useState<string>('')
+	const [showMintModal, setShowMintModal] = useState(false)
 	const borrowBalances = useBorrowBalances(vaultName)
 
 	const { data: maxMintable } = useQuery(
@@ -72,6 +74,11 @@ export const MintCard = ({
 			onUpdate(decimate(parseUnits(val).mul(synth.price)).toString())
 		}
 	}, [val])
+
+	const hide = () => {
+		setVal('')
+		setShowMintModal(false)
+	}
 
 	const vaultTVLs = collateral.map(vault => ({ tvl: vault.liquidity.mul(vault.price) }))
 	const totalCollateral = useMemo(() => vaultTVLs.reduce((acc, curr) => acc.add(curr.tvl), BigNumber.from(0)), [vaultTVLs])
@@ -114,20 +121,26 @@ export const MintCard = ({
 								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
 							/>
 						</div>
-						<div className='m-1 mr-3'>
-							<VaultButton
-								vaultName={vaultName}
-								operation={'Mint'}
-								asset={synth}
-								val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
-								isDisabled={
-									!val ||
+						<div className='m-auto mr-2'>
+							<Button
+								onClick={() => setShowMintModal(true)}
+								disabled={
+									(!account && !val) ||
 									(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
 									// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
 									(val &&
 										borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
 										parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
 								}
+							>
+								Mint
+							</Button>
+							<MintModal
+								asset={synth}
+								vaultName={vaultName}
+								val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
+								show={showMintModal}
+								onHide={hide}
 							/>
 						</div>
 					</div>
