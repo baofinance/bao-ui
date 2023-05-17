@@ -104,19 +104,19 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 				</Pie>
 				{!active ? (
 					<>
-						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-lg' dy={-2}>
 							{`${rates && info ? `$${getDisplayBalance(rates.usd.mul(info.totalSupply), 36)}` : <Loader />}`}
 						</Text>
-						<Text textAnchor='middle' fill='#aa9585' className='text-xs' dy={14}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-xs' dy={14}>
 							{`Total Value Locked`}
 						</Text>
 					</>
 				) : (
 					<>
-						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-lg' dy={-2}>
 							{`$${active && getDisplayBalance(active.tvl)}`}
 						</Text>
-						<Text textAnchor='middle' fill={active.color} className='text-xs' dy={14}>
+						<Text textAnchor='middle' fill={active.color} className='font-bakbak text-xs' dy={14}>
 							{`${getDisplayBalance(active.balance, active.decimals, 4)} ${active.symbol}`}
 						</Text>
 					</>
