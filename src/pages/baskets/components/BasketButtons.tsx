@@ -26,18 +26,18 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 			<BasketModal basket={basket} operation={modalOperation} show={showBasketModal} hideModal={() => setShowBasketModal(false)} />
 			<div className='mt-4 grid grid-cols-3 gap-4'>
 				<div>
-					<Button fullWidth onClick={() => handleClick('MINT')}>
+					<Button fullWidth onClick={() => handleClick('MINT')} className='glassmorphic-card !justify-center !text-center'>
 						Mint
 					</Button>
 				</div>
 				<div>
-					<Button fullWidth onClick={() => handleClick('REDEEM')}>
+					<Button fullWidth onClick={() => handleClick('REDEEM')} className='glassmorphic-card !justify-center !text-center'>
 						Redeem
 					</Button>
 				</div>
 				<div>
 					<a href={`${swapLink}`} target='_blank' rel='noreferrer'>
-						<Button fullWidth text='Swap' disabled={basket.name === 'bETH'} />
+						<Button fullWidth text='Swap' disabled={basket.name === 'bETH'} className='glassmorphic-card !justify-center !text-center' />
 					</a>
 				</div>
 			</div>
