@@ -1,15 +1,12 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import Badge from '@/components/Badge'
 import Card from '@/components/Card/Card'
 import Input from '@/components/Input'
 import { StatBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
 import { AccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useBorrowBalances } from '@/hooks/vaults/useBalances'
-import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { providerKey } from '@/utils/index'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, FixedNumber } from 'ethers'
@@ -17,8 +14,6 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import VaultButton from './VaultButton'
-import Tooltipped from '@/components/Tooltipped'
-import BorrowCard from './DebtCard'
 
 export const MintCard = ({
 	vaultName,
@@ -51,7 +46,7 @@ export const MintCard = ({
 	)
 
 	const borrowed = useMemo(
-		() => synth && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,
+		() => synth && borrowBalances && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,
 		[borrowBalances, synth],
 	)
 

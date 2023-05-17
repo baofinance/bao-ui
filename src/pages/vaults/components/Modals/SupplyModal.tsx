@@ -10,6 +10,7 @@ import { useApprovals } from '@/hooks/vaults/useApprovals'
 import { Erc20 } from '@/typechain/Erc20'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber, ethers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
 import { MoonLoader } from 'react-spinners'
@@ -68,7 +69,11 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 									// @ts-ignore
 									supplyTx = vaultContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 								}
-								handleTx(supplyTx, `${vaultName} Vault: Supply ${val} ${asset.underlyingSymbol}`, () => onHide())
+								handleTx(
+									supplyTx,
+									`${vaultName} Vault: Supply ${formatUnits(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+									() => onHide(),
+								)
 							}}
 						>
 							Confirm
