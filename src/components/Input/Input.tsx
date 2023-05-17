@@ -32,7 +32,7 @@ const Input: React.FC<InputProps> = ({
 	className,
 }) => {
 	return (
-		<div className={classNames('align-center flex w-full rounded border-0', className)}>
+		<div className={classNames('align-center flex w-full rounded border border-baoWhite border-opacity-20', className)}>
 			<div className='align-center relative flex w-full justify-center align-middle'>
 				{!!startAdornment && startAdornment}
 				<input
