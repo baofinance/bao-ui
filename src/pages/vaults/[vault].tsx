@@ -9,18 +9,16 @@ import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { BigNumber } from 'ethers'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
+import CollateralList from './components/CollateralList'
 import DebtCard from './components/DebtCard'
 import DepositCard from './components/DepositCard'
 import MintCard from './components/MintCard'
-import CollateralList from './components/CollateralList'
-import Overview from './components/Overview'
-import Tooltipped from '@/components/Tooltipped'
-import { BigNumber } from 'ethers'
 
 export async function getStaticPaths() {
 	return {
@@ -75,14 +73,14 @@ const Vault: NextPage<{
 	const { prices } = useVaultPrices(vaultName)
 
 	const collateral = useMemo(() => {
-		if (!(_vaults && supplyBalances)) return
-		return _vaults
+		if (!(accountVaults && supplyBalances)) return
+		return accountVaults
 			.filter(vault => !vault.isSynth)
 			.sort((a, b) => {
 				void a
 				return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
 			})
-	}, [_vaults, supplyBalances])
+	}, [accountVaults, supplyBalances])
 
 	const synth = useMemo(() => {
 		if (!_vaults) return
@@ -93,6 +91,9 @@ const Vault: NextPage<{
 	const totalCollateral = useMemo(() => vaultTVLs && vaultTVLs.reduce((acc, curr) => acc.add(curr.tvl), BigNumber.from(0)), [vaultTVLs])
 	const totalDebt = synth && synth.totalBorrows.mul(synth.price)
 
+	console.log('accountVaults', accountVaults)
+	console.log('accountLiquidity', accountLiquidity.usdSupply)
+	console.log('borrowable', accountLiquidity.usdBorrowable)
 	return (
 		<>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
@@ -161,22 +162,24 @@ const Vault: NextPage<{
 							</div>
 						</div>
 
-						<div className='grid grid-cols-2 gap-16'>
-							<div className='col-span-1'>
-								<CollateralList
-									vaultName={vaultName}
-									supplyBalances={supplyBalances}
-									collateral={collateral}
-									exchangeRates={exchangeRates}
-									accountBalances={accountBalances}
-									accountVaults={accountVaults}
-									borrowBalances={borrowBalances}
-								/>
+						{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
+							<div className='grid grid-cols-2 gap-16'>
+								<div className='col-span-1'>
+									<CollateralList
+										vaultName={vaultName}
+										supplyBalances={supplyBalances}
+										collateral={collateral}
+										exchangeRates={exchangeRates}
+										accountBalances={accountBalances}
+										accountVaults={accountVaults}
+										borrowBalances={borrowBalances}
+									/>
+								</div>
+								<div className='col-span-1'>
+									<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
+								</div>
 							</div>
-							<div className='col-span-1'>
-								<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
-							</div>
-						</div>
+						)}
 
 						<div className='grid grid-cols-2 gap-16'>
 							<div className='col-span-1'>
