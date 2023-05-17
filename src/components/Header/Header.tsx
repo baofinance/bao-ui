@@ -1,10 +1,6 @@
 import Config from '@/bao/lib/config'
-import Container from '@/components/Container'
 import Logo from '@/components/Logo'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
-import useProofs from '@/hooks/distribution/useProofs'
-import useUserFarmInfo from '@/hooks/farms/useUserFarmInfo'
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -58,14 +54,6 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 const Header: FC = () => {
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
-	const merkleLeaf = useProofs()
-	const dist = useDistributionInfo()
-	const canStartDistribution = !!merkleLeaf && !!dist && !!dist.dateEnded.eq(0)
-
-	const farm1Balance = useUserFarmInfo(0)
-	const farm2Balance = useUserFarmInfo(200)
-	const farm3Balance = useUserFarmInfo(201)
-
 	return (
 		<header className='glassmorphic-card z-50 mx-[10vh] my-8 w-auto'>
 			<nav>
@@ -113,13 +101,10 @@ const Header: FC = () => {
 													>
 														<div className='space-y-4'>
 															<MobileNavLink href='/vaults'>VAULTS</MobileNavLink>
+															<MobileNavLink href='/ballast'>BALLST</MobileNavLink>
 															<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
 															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
 															<MobileNavLink href='/gauges'>GAUGES</MobileNavLink>
-															{canStartDistribution && <MobileNavLink href='/distribution'>DISTRIBUTION</MobileNavLink>}
-															{(farm1Balance?.amount.gt(0) || farm2Balance?.amount.gt(0) || farm3Balance?.amount.gt(0)) && (
-																<MobileNavLink href='/farms'>FARMS</MobileNavLink>
-															)}
 														</div>
 													</Popover.Panel>
 												</>

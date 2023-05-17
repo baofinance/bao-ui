@@ -119,9 +119,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 					<Web3ReactManager>
 						<BaoProvider>
 							<TransactionProvider>
-								<VaultsProvider>
-									<FarmsProvider>{children}</FarmsProvider>
-								</VaultsProvider>
+								<VaultsProvider>{children}</VaultsProvider>
 							</TransactionProvider>
 						</BaoProvider>
 					</Web3ReactManager>
