@@ -1,4 +1,3 @@
-import Badge from '@/components/Badge'
 import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'

@@ -18,7 +18,6 @@ const useHealthFactor = (vaultName: string, borrowChange: BigNumber) => {
 	const { prices } = useVaultPrices(vaultName)
 
 	const fetchHealthFactor = useCallback(async () => {
-		const usdBorrow = BigNumber.from(parseUnits(accountLiquidity.usdBorrow.toString()))
 		const _vaults = vaults.filter(vault => vault && !vault?.isSynth)
 
 		const balanceQuery = Multicall.createCallContext(
@@ -48,7 +47,7 @@ const useHealthFactor = (vaultName: string, borrowChange: BigNumber) => {
 		} catch {
 			setHealthFactor(BigNumber.from(0))
 		}
-	}, [accountLiquidity, vaults, bao, account, prices, borrowChange])
+	}, [vaults, bao, account, prices, borrowChange])
 
 	useEffect(() => {
 		if (!(vaults && accountLiquidity && bao && account && prices)) return

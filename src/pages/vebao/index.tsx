@@ -1,15 +1,11 @@
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
 import usePrice from '@/hooks/base/usePrice'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
-import BigNumber from 'bignumber.js'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -18,29 +14,11 @@ import Lock from './components/Lock'
 import { ProtocolStats } from './components/Stats'
 
 const VeBAO: React.FC = () => {
-	const { library, account, chainId } = useWeb3React()
+	const { chainId } = useWeb3React()
 	const lockInfo = useLockInfo()
 	const veInfo = useVeInfo()
 	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
 	const baoPrice = usePrice('bao-finance-v2')
-
-	const enabled = !!library
-	const { data: blockTimestamp, refetch } = useQuery(
-		['block timestamp', providerKey(library, account, chainId)],
-		async () => {
-			const block = await library.getBlock()
-			return block.timestamp as BigNumber
-		},
-		{
-			enabled,
-		},
-	)
-
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-	//useTxReceiptUpdater(_refetch)
-	useBlockUpdater(_refetch, 1)
 
 	return (
 		<>

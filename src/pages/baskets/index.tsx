@@ -1,13 +1,10 @@
+import Button from '@/components/Button'
+import Typography from '@/components/Typography'
+import useBaskets from '@/hooks/baskets/useBaskets'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-
-import PageHeader from '@/components/PageHeader'
-import Typography from '@/components/Typography'
-import useBaskets from '@/hooks/baskets/useBaskets'
-
 import BasketList from './components/BasketList'
-import Button from '@/components/Button'
 
 const Baskets: React.FC = () => {
 	const baskets = useBaskets()

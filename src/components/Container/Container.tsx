@@ -1,5 +1,4 @@
-import React, { ReactNode } from 'react'
-import { isDesktop } from 'react-device-detect'
+import { ReactNode } from 'react'
 
 import classNames from 'classnames'
 

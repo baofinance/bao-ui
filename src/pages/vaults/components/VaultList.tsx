@@ -82,7 +82,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 							<span className='inline-block'>
 								{synth ? (
 									<>
-										<Typography variant='base' className='m-0 font-bold leading-5'>
+										<Typography variant='base' className='m-0 font-bakbak leading-5'>
 											{getDisplayBalance(synth.borrowApy)}%
 										</Typography>
 									</>

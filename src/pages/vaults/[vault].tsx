@@ -15,10 +15,10 @@ import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
-import PositionList from './components/PositionsCard'
 import DebtCard from './components/DashboardCard'
 import DepositCard from './components/DepositCard'
 import MintCard from './components/MintCard'
+import PositionList from './components/PositionsCard'
 
 export async function getStaticPaths() {
 	return {
@@ -191,9 +191,7 @@ const Vault: NextPage<{
 								<DepositCard
 									vaultName={vaultName}
 									balances={balances}
-									supplyBalances={supplyBalances}
 									collateral={collateral}
-									exchangeRates={exchangeRates}
 									accountBalances={accountBalances}
 									onUpdate={handleDepositVal}
 								/>
@@ -204,7 +202,6 @@ const Vault: NextPage<{
 									prices={prices}
 									accountLiquidity={accountLiquidity}
 									synth={synth}
-									collateral={collateral}
 									onUpdate={handleMintVal}
 								/>
 							</div>

@@ -89,10 +89,6 @@ export const Dashboard = () => {
 		[setVal],
 	)
 
-	const onVotingSliderChange = (value: number | number[]) => {
-		setVal(value as number)
-	}
-
 	const handleBaoChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
 			setBaoAmount(e.currentTarget.value)

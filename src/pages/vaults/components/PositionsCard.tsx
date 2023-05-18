@@ -60,7 +60,6 @@ export const PositionList = ({
 const PositionListItem: React.FC<PositionListItemProps> = ({
 	vault,
 	vaultName,
-	accountBalances,
 	supplyBalances,
 	borrowBalances,
 	exchangeRates,
@@ -106,10 +105,6 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 					composition.length) *
 			  100
 			: 0
-
-	console.log(vaultName, 'isSynth?', vault.isSynth)
-	console.log(vaultName, 'borrowed', borrowed.toString())
-	console.log(vaultName, 'suppliedUnderlying', suppliedUnderlying.toString())
 
 	return (
 		<>

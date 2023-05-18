@@ -12,13 +12,10 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { Erc20 } from '@/typechain/Erc20'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
-import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
-import { MoonLoader } from 'react-spinners'
 
 export type RepayModalProps = {
 	asset: ActiveSupportedVault
@@ -139,53 +136,47 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						{!pendingTx ? (
-							approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
-								<Button
-									fullWidth
-									className='!rounded-full'
-									disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-									onClick={() => {
-										let repayTx
-										if (asset.underlyingAddress === 'ETH') {
-											// @ts-ignore
-											repayTx = vaultContract.repayBorrow({
-												value: parseUnits(val, asset.underlyingDecimals),
-											})
-										} else {
-											repayTx = vaultContract.repayBorrow(parseUnits(val, asset.underlyingDecimals))
-										}
-										handleTx(
-											repayTx,
-											`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-											() => onHide(),
-										)
-									}}
-								>
-									Repay
-								</Button>
-							) : (
-								<Button
-									fullWidth
-									className='!rounded-full'
-									disabled={!approvals || !val}
-									onClick={() => {
-										// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-										const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
-										handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
-									}}
-								>
-									Approve
-								</Button>
-							)
+						{approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
+							<Button
+								fullWidth
+								className='!rounded-full'
+								disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+								onClick={() => {
+									let repayTx
+									if (asset.underlyingAddress === 'ETH') {
+										// @ts-ignore
+										repayTx = vaultContract.repayBorrow({
+											value: parseUnits(val, asset.underlyingDecimals),
+										})
+									} else {
+										repayTx = vaultContract.repayBorrow(parseUnits(val, asset.underlyingDecimals))
+									}
+									handleTx(
+										repayTx,
+										`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+										() => onHide(),
+									)
+								}}
+								pendingTx={pendingTx}
+								txHash={txHash}
+							>
+								Repay
+							</Button>
 						) : (
-							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
-								<Button fullWidth className='!rounded-full'>
-									<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
-									Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
-								</Button>
-							</a>
+							<Button
+								fullWidth
+								className='!rounded-full'
+								disabled={!approvals || !val}
+								onClick={() => {
+									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
+									const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
+									handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
+								}}
+								pendingTx={pendingTx}
+								txHash={txHash}
+							>
+								Approve
+							</Button>
 						)}
 					</Modal.Actions>
 				</>

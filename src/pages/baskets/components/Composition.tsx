@@ -1,18 +1,15 @@
 import Badge from '@/components/Badge'
-import Button from '@/components/Button/Button'
 import DonutGraph from '@/components/Graphs/PieGraph'
-import Loader, { PageLoader } from '@/components/Loader'
+import { PageLoader } from '@/components/Loader'
 import { Progress } from '@/components/ProgressBar'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BN from 'bignumber.js' // INFO: this is necessary for decimal display logic
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useState } from 'react'
+import React from 'react'
 import { isDesktop } from 'react-device-detect'
 
 type CompositionProps = {
@@ -22,11 +19,7 @@ type CompositionProps = {
 	basketId: string
 }
 
-type DisplayType = 'TABLE' | 'PIE'
-
 const Composition: React.FC<CompositionProps> = ({ composition, rates, info, basketId }) => {
-	const [displayType, setDisplayType] = useState<DisplayType>('TABLE')
-
 	return (
 		<>
 			<div className='mb-2 mt-4 flex flex-row'>

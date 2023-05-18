@@ -16,23 +16,19 @@ import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import SupplyModal from './Modals/SupplyModal'
 
 export const DepositCard = ({
 	vaultName,
 	collateral,
 	balances,
-	supplyBalances,
-	exchangeRates,
 	accountBalances,
 	onUpdate,
 }: {
 	vaultName: string
 	balances: Balance[]
-	supplyBalances: Balance[]
 	collateral: ActiveSupportedVault[]
-	exchangeRates: any
 	accountBalances: Balance[]
 	onUpdate: (updatedState: any) => void
 }) => {
@@ -40,12 +36,6 @@ export const DepositCard = ({
 	const [val, setVal] = useState<string>('')
 	const [selectedOption, setSelectedOption] = useState('ETH')
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const [isOpen, setIsOpen] = useState(false)
-
-	const handleOpen = () => {
-		!isOpen ? setIsOpen(true) : setIsOpen(false)
-		showSupplyModal && setIsOpen(true)
-	}
 
 	const asset =
 		collateral &&
@@ -75,13 +65,6 @@ export const DepositCard = ({
 			  100
 			: 0
 
-	const suppliedUnderlying = useMemo(() => {
-		const supply = supplyBalances && asset && supplyBalances.find(balance => balance.address === asset.vaultAddress)
-		const supplyBalance = supply && supply.balance && (supply.balance === undefined ? BigNumber.from(0) : supply.balance)
-		if (exchangeRates && asset && exchangeRates[asset.vaultAddress] === undefined) return BigNumber.from(0)
-		return supplyBalance && exchangeRates && decimate(supplyBalance.mul(exchangeRates[asset.vaultAddress]))
-	}, [supplyBalances, exchangeRates, asset])
-
 	const max = () => {
 		return balances
 			? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
@@ -99,7 +82,7 @@ export const DepositCard = ({
 		if (val != '') {
 			onUpdate(decimate(parseUnits(val).mul(asset.price)).toString())
 		}
-	}, [val])
+	}, [asset, onUpdate, val])
 
 	const hide = () => {
 		setVal('')

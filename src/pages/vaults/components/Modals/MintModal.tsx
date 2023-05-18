@@ -4,16 +4,11 @@ import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useApprovals } from '@/hooks/vaults/useApprovals'
-import { Erc20 } from '@/typechain/Erc20'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { BigNumber, ethers } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
-import { MoonLoader } from 'react-spinners'
 
 export type MintModalProps = {
 	asset: ActiveSupportedVault
@@ -24,10 +19,8 @@ export type MintModalProps = {
 }
 
 const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
-	const { pendingTx, txSuccess, handleTx } = useTransactionHandler()
-	const { approvals } = useApprovals(vaultName)
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
-	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 	const usdValue = val.mul(asset.price)
 
 	const hideModal = useCallback(() => {
@@ -51,29 +44,24 @@ const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
 				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				{!pendingTx ? (
-					<Button
-						fullWidth
-						className='!rounded-full'
-						disabled={!val}
-						onClick={() => {
-							handleTx(
-								vaultContract.borrow(val),
-								`${vaultName} Vault: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-								() => {
-									onHide()
-								},
-							)
-						}}
-					>
-						Confirm
-					</Button>
-				) : (
-					<Button fullWidth className='!rounded-full'>
-						<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
-						Pending Transaction
-					</Button>
-				)}
+				<Button
+					fullWidth
+					className='!rounded-full'
+					disabled={!val}
+					onClick={() => {
+						handleTx(
+							vaultContract.borrow(val),
+							`${vaultName} Vault: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+							() => {
+								onHide()
+							},
+						)
+					}}
+					pendingTx={pendingTx}
+					txHash={txHash}
+				>
+					Confirm
+				</Button>
 			</Modal.Actions>
 		</Modal>
 	)

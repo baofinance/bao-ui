@@ -136,7 +136,7 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHead
 	return (
 		<div className='flex flex-row px-2 py-3'>
 			{headers.map((header: string) => (
-				<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bold first:text-left' key={header}>
+				<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bakbak first:text-left' key={header}>
 					{header}
 				</Typography>
 			))}
@@ -170,7 +170,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 									<Image className='z-20 -ml-2 inline-block select-none' src={farm.iconB} alt={farm.lpToken} width={32} height={32} />
 								</div>
 								<span className='inline-block text-left align-middle'>
-									<Typography variant='base' className='font-bold'>
+									<Typography variant='base' className='font-bakbak'>
 										{farm.name}
 									</Typography>
 									<Typography variant='sm' className={`font-light text-baoRed`}>

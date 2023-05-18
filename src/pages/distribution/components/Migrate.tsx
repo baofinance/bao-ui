@@ -39,10 +39,10 @@ const Migration: React.FC = () => {
 
 	return (
 		<div className='flex flex-col px-4'>
-			<Typography variant='hero' className='my-3 text-center font-bold'>
+			<Typography variant='hero' className='my-3 text-center font-bakbak'>
 				Migrate
 			</Typography>
-			<Typography variant='xl' className='text-center font-bold'>
+			<Typography variant='xl' className='text-center font-bakbak'>
 				Locked BAO to veBAO
 			</Typography>
 			<Typography variant='p' className='mt-5 leading-normal'>
@@ -79,7 +79,7 @@ const Migration: React.FC = () => {
 						backgroundColor: '#622a2a',
 					}}
 				/>
-				<Typography variant='sm' className='text-center'>
+				<Typography variant='sm' className='text-center font-bakbak'>
 					Lock until {new Date(lockTime).toDateString()}
 				</Typography>
 			</div>

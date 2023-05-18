@@ -57,7 +57,7 @@ const LiquidSwap: React.FC = () => {
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='sm:w-4/5'>
-				<Typography variant='lg' className='text-lg font-bold text-baoWhite'>
+				<Typography variant='lg' className='font-bakbak text-lg text-baoWhite'>
 					Exchange Unlocked BAO
 				</Typography>
 				<Typography className='mt-2 text-baoRed'>

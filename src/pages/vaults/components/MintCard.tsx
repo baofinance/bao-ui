@@ -21,14 +21,12 @@ export const MintCard = ({
 	synth,
 	prices,
 	accountLiquidity,
-	collateral,
 	onUpdate,
 }: {
 	vaultName: string
 	prices: any
 	accountLiquidity: AccountLiquidity
 	synth: ActiveSupportedVault
-	collateral: ActiveSupportedVault[]
 	onUpdate: (updatedState: any) => void
 }) => {
 	const { account, library, chainId } = useWeb3React()
@@ -73,15 +71,12 @@ export const MintCard = ({
 		if (val != '') {
 			onUpdate(decimate(parseUnits(val).mul(synth.price)).toString())
 		}
-	}, [val])
+	}, [onUpdate, synth, val])
 
 	const hide = () => {
 		setVal('')
 		setShowMintModal(false)
 	}
-
-	const vaultTVLs = collateral.map(vault => ({ tvl: vault.liquidity.mul(vault.price) }))
-	const totalCollateral = useMemo(() => vaultTVLs.reduce((acc, curr) => acc.add(curr.tvl), BigNumber.from(0)), [vaultTVLs])
 
 	return (
 		<>

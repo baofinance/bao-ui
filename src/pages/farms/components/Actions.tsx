@@ -1,6 +1,6 @@
-import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
+import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { PoolType } from '@/contexts/Farms/types'
@@ -23,7 +23,6 @@ import Link from 'next/link'
 import { default as React, useCallback, useState } from 'react'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
-import Loader from '@/components/Loader'
 
 interface StakeProps {
 	lpContract: Uni_v2_lp
@@ -207,8 +206,8 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHi
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='mb-1 flex w-full items-center justify-center gap-1'>
-							<Typography className='text-baoRed'>Staked Balance:</Typography>
-							<Typography className='font-bold'>
+							<Typography className='font-bakbak text-baoRed'>Staked Balance:</Typography>
+							<Typography className='font-bakbak'>
 								{getDisplayBalance(max)} {tokenName}
 							</Typography>
 						</div>
@@ -257,7 +256,7 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={32} height={32} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='xl' className='font-medium'>
+							<Typography variant='xl' className='font-bakbak'>
 								{getDisplayBalance(earnings)}
 							</Typography>
 						</div>

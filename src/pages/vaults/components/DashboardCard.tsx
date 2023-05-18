@@ -1,36 +1,26 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Card from '@/components/Card/Card'
-import Loader from '@/components/Loader'
-import { StatBlock } from '@/components/Stats'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
-import { BasketInfo } from '@/hooks/baskets/useBasketInfo'
-import { BasketRates } from '@/hooks/baskets/useBasketRate'
-import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useBorrowBalances } from '@/hooks/vaults/useBalances'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
-import { Group } from '@visx/group'
-import Pie from '@visx/shape/lib/shapes/Pie'
-import { Text } from '@visx/text'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
 
 type DashboardCardProps = {
-	title?: string
 	asset: ActiveSupportedVault
-	amount?: string
 	vaultName: string
 	mintVal: string
 	depositVal: string
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ asset, amount, vaultName, mintVal, depositVal }: DashboardCardProps) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal, depositVal }: DashboardCardProps) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
 	const borrowBalances = useBorrowBalances(vaultName)

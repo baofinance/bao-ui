@@ -29,10 +29,10 @@ const Migration: React.FC = () => {
 	return (
 		<div className='flex flex-col px-4'>
 			<div className='flex flex-col items-center'>
-				<Typography variant='hero' className='my-3 text-center font-bold'>
+				<Typography variant='hero' className='my-3 text-center font-bakbak'>
 					Claim
 				</Typography>
-				<Typography variant='xl' className='text-center font-bold'>
+				<Typography variant='xl' className='text-center font-bakbak'>
 					Pending Unlocked BAO
 				</Typography>
 				<Typography variant='p' className='mt-5 leading-normal'>
@@ -74,7 +74,7 @@ const Migration: React.FC = () => {
 				<div className='flex flex-col'>
 					<div className='my-5 flex w-full flex-row items-center justify-center gap-4'>
 						<div className='flex flex-col gap-2'>
-							<Typography variant='lg' className='text-md px-2 font-bold text-baoWhite'>
+							<Typography variant='lg' className='text-md px-2 font-bakbak text-baoWhite'>
 								Claimable BAO:
 							</Typography>
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>
@@ -85,7 +85,7 @@ const Migration: React.FC = () => {
 							</div>
 						</div>
 						<div className='flex flex-col gap-2 text-center'>
-							<Typography variant='lg' className='text-md px-2 font-bold text-baoWhite'>
+							<Typography variant='lg' className='text-md px-2 font-bakbak text-baoWhite'>
 								Last Claim:
 							</Typography>
 							<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2 py-4'>

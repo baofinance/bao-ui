@@ -54,10 +54,10 @@ const Migration: React.FC = () => {
 	return (
 		<div className='flex flex-col px-4'>
 			<div className='flex flex-col'>
-				<Typography variant='hero' className='my-3 text-center font-bold'>
+				<Typography variant='hero' className='my-3 text-center font-bakbak'>
 					End Distribution
 				</Typography>
-				<Typography variant='xl' className='text-center font-bold'>
+				<Typography variant='xl' className='text-center font-bakbak'>
 					Receive tokens early at a cost
 				</Typography>
 				<Typography variant='p' className='my-4 leading-normal'>
@@ -66,7 +66,7 @@ const Migration: React.FC = () => {
 					The slash fee is based on the slash rate function defined below which will end the distribution and allow the user to receive the
 					rest of their tokens (minus slash fee) immediately.
 				</Typography>
-				<Typography variant='lg' className='mt-2 mb-2 font-medium text-baoWhite'>
+				<Typography variant='lg' className='mt-2 mb-2 font-bakbak text-baoWhite'>
 					Slash Function
 				</Typography>
 				<code>
@@ -86,23 +86,23 @@ const Migration: React.FC = () => {
 
 				<div className='flex flex-col my-4 gap-5'>
 					<div className='flex flex-col justify-center gap-2 rounded'>
-						<Typography variant='base' className='text-md flex flex-row font-bold text-baoWhite'>
+						<Typography variant='base' className='text-md flex flex-row font-bakbak text-baoWhite'>
 							Tokens that will be slashed (lost) if you end your distribution early:
 						</Typography>
 						<div className='flex flex-row items-center gap-2'>
 							<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-							<Typography variant='base' className='font-semibold'>
+							<Typography variant='base' className='font-bakbak'>
 								{getDisplayBalance(tokensToSlash)}
 							</Typography>
 						</div>
 					</div>
 					<div className='flex flex-col justify-center gap-2 rounded'>
-						<Typography variant='base' className='text-md flex flex-row font-bold text-baoWhite'>
+						<Typography variant='base' className='text-md flex flex-row font-bakbak text-baoWhite'>
 							Your new distribution total (including tokens pending claim or already claimed):
 						</Typography>
 						<div className='flex flex-row items-center gap-2'>
 							<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-							<Typography variant='base' className='font-semibold'>
+							<Typography variant='base' className='font-bakbak'>
 								{getDisplayBalance(tokensYouGet)}
 							</Typography>
 						</div>
@@ -152,14 +152,14 @@ const Migration: React.FC = () => {
 					onClose={modalHide}
 					header={
 						<>
-							<Typography variant='h2' className='inline-block font-semibold text-red'>
+							<Typography variant='h2' className='inline-block font-bakbak text-red'>
 								Warning!
 							</Typography>
 						</>
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='xl' className='pb-2 font-semibold'>
+					<Typography variant='xl' className='pb-2 font-bakbak'>
 						This is action is irreversible and forfeits tokens!
 					</Typography>
 					<Typography variant='p' className='leading-normal'>
@@ -179,11 +179,11 @@ const Migration: React.FC = () => {
 							<div className='my-2 flex w-full flex-row items-center justify-center gap-4'>
 								<div className='flex flex-col gap-2'>
 									<div className='flex h-8 flex-row items-center justify-center gap-2 rounded px-2'>
-										<Typography variant='base' className='text-md px-2 font-bold text-baoWhite'>
+										<Typography variant='base' className='text-md px-2 font-bakbak text-baoWhite'>
 											BAO you will forfeit due to slashing:
 										</Typography>
 										<Image src='/images/tokens/BAO.png' height={24} width={24} alt='BAO' />
-										<Typography variant='base' className='font-semibold'>
+										<Typography variant='base' className='font-bakbak'>
 											{getDisplayBalance(tokensToSlash)}
 										</Typography>
 									</div>

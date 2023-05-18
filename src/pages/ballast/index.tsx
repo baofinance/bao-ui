@@ -1,5 +1,4 @@
 import Button from '@/components/Button'
-import PageHeader from '@/components/PageHeader'
 import Typography from '@/components/Typography'
 import { NextSeo } from 'next-seo'
 import React from 'react'

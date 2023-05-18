@@ -16,7 +16,6 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
 
 const GaugeList: React.FC = () => {

@@ -15,7 +15,7 @@ const Farms: React.FC = () => {
 			<PageHeader title='Farms' />
 			<Card className='flex'>
 				<div className='flex-row'>
-					<Typography variant='lg' className='mr-2 inline font-bold text-red'>
+					<Typography variant='lg' className='mr-2 inline font-bakbak text-red'>
 						Attention:
 					</Typography>
 					<Typography className='inline'>
