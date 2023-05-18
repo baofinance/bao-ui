@@ -107,7 +107,7 @@ input[type='number'] {
 }
 
 .react-datepicker__current-month {
-	@apply ml-2.5 text-lg font-semibold text-baoRed;
+	@apply ml-2.5 text-lg font-bakbak text-baoRed;
 }
 
 .react-datepicker__week {
@@ -115,7 +115,7 @@ input[type='number'] {
 }
 
 .react-datepicker__day-names {
-	@apply flex justify-around text-center text-xs font-medium text-baoRed;
+	@apply flex justify-around text-center text-xs font-bakbak text-baoRed;
 }
 
 .react-datepicker__day-name {

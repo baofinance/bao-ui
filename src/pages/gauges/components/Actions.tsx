@@ -65,10 +65,10 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='text-baoRed'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Balance:
 							</Typography>
-							<Typography variant='sm'>
+							<Typography variant='sm' className='font-bakbak'>
 								{fullBalance}{' '}
 								<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
@@ -164,10 +164,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='text-baoRed'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Balance:
 							</Typography>
-							<Typography variant='sm'>
+							<Typography variant='sm' className='font-bakbak'>
 								{getDisplayBalance(fullBalance, 0)}{' '}
 								<Link href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									<a>
@@ -221,7 +221,7 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={32} height={32} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='xl' className='font-medium'>
+							<Typography variant='xl' className='font-bakbak'>
 								{gaugeInfo && getDisplayBalance(gaugeInfo.claimableTokens)}
 							</Typography>
 						</div>
@@ -321,7 +321,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 				/>
 				<div className='mt-4'>
 					<div className='text-center'>
-						<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bold text-baoWhite'>
+						<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bakbak text-baoWhite'>
 							Vote
 						</Typography>
 					</div>

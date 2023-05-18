@@ -99,7 +99,7 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 			<Modal isOpen={show} onDismiss={hideModal}>
 				<Modal.Header onClose={hideModal}>
 					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
-						<Typography variant='xl' className='mr-1 inline-block font-semibold'>
+						<Typography variant='xl' className='mr-1 inline-block'>
 							Repay
 						</Typography>
 						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} />
@@ -110,10 +110,10 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 						<div className='mb-4 flex h-full flex-col items-center justify-center'>
 							<div className='flex w-full flex-row'>
 								<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-									<Typography variant='sm' className='text-baoRed'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
 										Availalble:
 									</Typography>
-									<Typography variant='sm'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${asset.underlyingSymbol}`}</Typography>
+									<Typography variant='sm' className='font-bakbak'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${asset.underlyingSymbol}`}</Typography>
 								</div>
 							</div>
 							<Input

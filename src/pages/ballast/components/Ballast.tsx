@@ -41,10 +41,10 @@ export const Ballast = () => {
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-					<Typography variant='sm' className='text-baoRed'>
+					<Typography variant='sm' className='font-bakbak text-baoRed'>
 						Balance:
 					</Typography>
-					<Typography variant='sm'>
+					<Typography variant='sm' className='font-bakbak'>
 						{selectedOption === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(wethBalance)} WETH`}
 					</Typography>
 				</div>
@@ -84,10 +84,10 @@ export const Ballast = () => {
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-					<Typography variant='sm' className='text-baoRed'>
+					<Typography variant='sm' className='font-bakbak text-baoRed'>
 						Balance:
 					</Typography>
-					<Typography variant='sm'>
+					<Typography variant='sm' className='font-bakbak'>
 						{selectedOption === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
 					</Typography>
 				</div>

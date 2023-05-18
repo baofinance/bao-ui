@@ -88,7 +88,7 @@ export const MintCard = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Mint
 			</Typography>
-			<Card className='glassmorphic-card p-4'>
+			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
 					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
 						<div>
@@ -155,7 +155,7 @@ export const MintCard = ({
 									label: 'Minimum Mint',
 									value: (
 										<>
-											<Typography className='inline-block align-middle font-bold'>
+											<Typography className='inline-block align-middle'>
 												{synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'}{' '}
 												{synth.minimumBorrow ? synth.underlyingSymbol : ''}
 											</Typography>
@@ -166,7 +166,7 @@ export const MintCard = ({
 									label: 'Max Mintable',
 									value: (
 										<>
-											<Typography className='inline-block align-middle font-bold'>
+											<Typography className='inline-block align-middle'>
 												{getDisplayBalance(maxMintable ? maxMintable : 0)} {synth.underlyingSymbol}
 											</Typography>
 										</>

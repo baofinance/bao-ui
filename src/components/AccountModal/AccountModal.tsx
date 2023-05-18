@@ -1,4 +1,4 @@
-import { faCircleCheck, faCircleXmark, faClose, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faCircleXmark, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 //import { utils } from 'ethers'
@@ -58,10 +58,10 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='base' className='font-bold'>
+							<Typography variant='lg' className='font-bakbak'>
 								{getDisplayBalance(baoBalance)}
 							</Typography>
-							<Typography variant='sm' className='text-baoRed'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								BAO Balance
 							</Typography>
 						</div>
@@ -76,10 +76,10 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='base' className='font-bold'>
+							<Typography variant='lg' className='font-bakbak'>
 								{getDisplayBalance(lockInfo ? lockInfo.balance : BigNumber.from(0))}
 							</Typography>
-							<Typography variant='sm' className='text-baoRed'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								veBAO Balance
 							</Typography>
 						</div>
@@ -120,7 +120,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 											)}
 											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
 												<a>
-													<Typography variant='base' className='text-end text-baoWhite hover:text-baoRed'>
+													<Typography variant='base' className='text-end font-bakbak text-baoWhite hover:text-baoRed'>
 														{transactions[txHash].description}
 														<Tooltipped content='View on Etherscan'>
 															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 text-baoRed' size='sm' />

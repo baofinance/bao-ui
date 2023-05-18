@@ -23,10 +23,7 @@ const Card: CardType<CardProps> = ({ children, className }) => {
 	return (
 		<div className='flex flex-col justify-center'>
 			<div
-				className={classNames(
-					'shadow-primary-300/50 relative flex flex-col items-center break-words rounded border bg-clip-border p-3 shadow-2xl',
-					className,
-				)}
+				className={classNames('relative flex flex-col items-center break-words rounded border bg-clip-border p-3 shadow-2xl', className)}
 			>
 				{children}
 			</div>

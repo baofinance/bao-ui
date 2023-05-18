@@ -292,7 +292,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 					onClose={modalHide}
 					header={
 						<>
-							<Typography variant='h2' className='inline-block font-semibold text-red'>
+							<Typography variant='h2' className='inline-block font-bakbak text-red'>
 								Warning!
 							</Typography>
 						</>

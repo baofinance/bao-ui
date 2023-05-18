@@ -103,13 +103,13 @@ const Migration: React.FC = () => {
 				<Modal.Header
 					onClose={modalHide}
 					header={
-						<Typography variant='h2' className='font-semibold text-red'>
+						<Typography variant='h2' className='font-bakbak text-red'>
 							Warning!
 						</Typography>
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='xl' className='pb-2 font-semibold'>
+					<Typography variant='xl' className='pb-2 font-bakbak'>
 						This is action is irreversible!
 					</Typography>
 					<Typography variant='p' className='leading-normal'>

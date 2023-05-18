@@ -66,7 +66,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, amount, vaultName,
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Dashboard
 			</Typography>
-			<Card className='glassmorphic-card p-4'>
+			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
 					<div className='grid w-full grid-cols-12 px-4 pt-2'>
 						<div className='col-span-4'>
@@ -151,10 +151,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, amount, vaultName,
 											className='absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center rounded-full p-1'
 											style={{ marginTop: '10px' }}
 										>
-											<Typography variant='xs' className='font-medium text-baoWhite'>
+											<Typography variant='xs' className='font-bakbak text-baoWhite'>
 												Debt Health
 											</Typography>
-											<Typography variant='sm' className='font-bold text-baoWhite'>
+											<Typography variant='sm' className='font-bakbak text-baoWhite'>
 												{healthFactor &&
 													(healthFactor.lte(BigNumber.from(0))
 														? '-'

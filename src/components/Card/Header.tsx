@@ -14,7 +14,7 @@ const CardHeader: FC<CardHeaderProps> = ({ header, subheader, children, classNam
 	return (
 		<div className={classNames('flex justify-between', className)}>
 			<div className='mb-2 flex flex-col items-center justify-center gap-1'>
-				<Typography className='flex gap-3 font-bold'>
+				<Typography className='flex gap-3 font-bakbak'>
 					{header}
 					{children}
 				</Typography>

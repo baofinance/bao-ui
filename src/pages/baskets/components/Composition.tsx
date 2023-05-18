@@ -91,20 +91,18 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 															/>
 														</td>
 														<td className='p-2 text-center'>
-															<Badge className='bg-transparent-100 font-semibold'>${getDisplayBalance(component.price)}</Badge>
+															<Badge className='bg-opacity-0'>${getDisplayBalance(component.price)}</Badge>
 														</td>
 														<td className='p-2 text-center'>
 															<Tooltipped content={component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(8)}%` : '-'}>
 																<a>
-																	<Badge className='bg-baoRed font-semibold'>
-																		{component.apy ? `${getDisplayBalance(component.apy.mul(100))}%` : '-'}
-																	</Badge>
+																	<Badge>{component.apy ? `${getDisplayBalance(component.apy.mul(100))}%` : '-'}</Badge>
 																</a>
 															</Tooltipped>
 														</td>
 														{isDesktop && (
 															<td className='p-2 text-center'>
-																<Badge className='bg-baoRed font-semibold'>{component.strategy || 'None'}</Badge>
+																<Badge>{component.strategy || 'None'}</Badge>
 															</td>
 														)}
 													</tr>

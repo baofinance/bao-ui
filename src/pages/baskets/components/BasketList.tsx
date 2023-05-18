@@ -66,7 +66,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 						<span className='inline-block'>
 							{rates ? (
 								<>
-									<Typography className='m-0 font-semibold leading-5'>${getDisplayBalance(rates.usd)}</Typography>
+									<Typography className='m-0 font-bakbak leading-5'>${getDisplayBalance(rates.usd)}</Typography>
 								</>
 							) : (
 								<Loader />

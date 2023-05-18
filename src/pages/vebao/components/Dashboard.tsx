@@ -165,7 +165,7 @@ export const Dashboard = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-baoBlack text-baoRed' : 'text-baoWhite'),
-														'bg-primary-200 inline-flex items-center rounded-full bg-baoWhite bg-opacity-10 text-sm font-medium text-baoWhite hover:bg-baoRed hover:bg-opacity-60')
+														'inline-flex items-center rounded-full bg-baoWhite bg-opacity-10 font-bakbak text-sm text-baoWhite hover:bg-baoRed hover:bg-opacity-60')
 													}
 												>
 													<div className='inline-flex items-center rounded-l-full border-0 py-2 pl-4 pr-4 text-baoWhite shadow-sm'>
@@ -422,7 +422,7 @@ export const Dashboard = () => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='bg-primary-400 accent-text-400 h-2 w-full appearance-none rounded-full disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-full disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>

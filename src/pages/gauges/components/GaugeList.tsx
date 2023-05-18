@@ -100,7 +100,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 								<Typography variant='base' className='font-bakbak'>
 									{gauge.name}
 								</Typography>
-								<Typography variant='sm' className={`flex align-middle font-semibold text-baoRed`}>
+								<Typography className={`flex align-middle font-bakbak text-baoRed`}>
 									<Image src={`/images/platforms/${gauge.type}.png`} height={16} width={16} alt={gauge.type} className='mr-1 inline' />
 									{gauge.type}
 								</Typography>
@@ -109,21 +109,19 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 					</div>
 
 					<div className='mx-auto my-0 flex basis-1/4 items-center justify-center'>
-						<Typography variant='base' className='ml-2 inline-block font-medium'>
+						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
 
 					<div className='mx-auto my-0 flex basis-1/4 items-center justify-center'>
-						<Typography variant='base' className='ml-2 inline-block font-medium'>
-							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
-							</Typography>
+						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
+							{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
 						</Typography>
 					</div>
 
 					<div className='mx-auto my-0 flex basis-1/4 flex-col items-end justify-center text-right'>
-						<Typography variant='base' className='ml-2 inline-block font-medium'>
+						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
 						</Typography>
 					</div>

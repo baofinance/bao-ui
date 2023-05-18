@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
@@ -8,8 +7,6 @@ import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
 import useProofs from '@/hooks/distribution/useProofs'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
@@ -21,7 +18,6 @@ import React, { Fragment, useState } from 'react'
 import Claim from './Claim'
 import End from './End'
 import Migrate from './Migrate'
-import Loader from '@/components/Loader'
 
 const options = [
 	{
@@ -43,7 +39,7 @@ const options = [
 
 const Migration: React.FC = () => {
 	const [selectedOption, setSelectedOption] = useState(options[0])
-	const { handleTx, pendingTx } = useTransactionHandler()
+	const { handleTx, pendingTx, txHash } = useTransactionHandler()
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 	const dist = useDistributionInfo()
 	const merkleLeaf = useProofs()
@@ -92,7 +88,7 @@ const Migration: React.FC = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'bg-primary-200 inline-flex items-center rounded-l-none rounded-r-md border p-2 font-medium text-baoWhite hover:bg-transparent-100')
+														'inline-flex items-center rounded-l-none rounded-r-md border p-2 font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -107,7 +103,7 @@ const Migration: React.FC = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='divide-text-200 bg-primary-200 absolute z-10 mt-2 w-80 origin-top-right divide-y overflow-hidden rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 mt-2 w-80 origin-top-right divide-y overflow-hidden rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{options.map(option => (
 													<Listbox.Option
 														key={option.name}
@@ -269,22 +265,17 @@ const Migration: React.FC = () => {
 								<Typography className='font-bold'>{getDisplayBalance(merkleLeaf ? merkleLeaf.amount : BigNumber.from(0))}</Typography>
 							</div>
 						</div>
-						{pendingTx ? (
-							<Button disabled={true} className='bg-primary-500'>
-								<Loader />
-							</Button>
-						) : (
-							<Button
-								disabled={!canStartDistribution}
-								className='bg-primary-500'
-								onClick={async () => {
-									const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
-									handleTx(startDistribution, `Start Distribution`)
-								}}
-							>
-								Start Distribution
-							</Button>
-						)}
+						<Button
+							disabled={!canStartDistribution}
+							onClick={async () => {
+								const startDistribution = distribution.startDistribution(merkleLeaf.proof, merkleLeaf.amount)
+								handleTx(startDistribution, `Start Distribution`)
+							}}
+							pendingTx={pendingTx}
+							txHash={txHash}
+						>
+							Start Distribution
+						</Button>
 					</div>
 				</div>
 			</div>

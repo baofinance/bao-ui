@@ -149,7 +149,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<Typography variant='sm' className='text-center'>
 								<b className='font-bold'>NOTE:</b> When you redeem {basket.name}, you will receive the underlying tokens. Alternatively, you
 								can swap {basket.name}{' '}
-								<a href={`${swapLink}`} target='blank' className='font-semibold hover:text-baoRed'>
+								<a href={`${swapLink}`} target='blank' className='font-bold hover:text-baoRed'>
 									here <FontAwesomeIcon size='xs' icon={faExternalLinkAlt} />
 								</a>
 								. <Badge className='mt-2'>CAUTION: Slippage may apply on swaps!</Badge>

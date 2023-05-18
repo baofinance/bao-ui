@@ -13,7 +13,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ headers, className }: Li
 			{headers.map((header: string) => (
 				<Typography
 					variant='lg'
-					className='flex w-full flex-col items-center pb-0 text-center font-bakbak first:items-start last:items-end'
+					className='flex w-full flex-col items-center px-4 pb-0 text-center font-bakbak first:items-start last:items-end'
 					key={header}
 				>
 					{header}

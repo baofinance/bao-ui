@@ -114,7 +114,7 @@ export const DepositCard = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Deposit
 			</Typography>
-			<Card className='glassmorphic-card p-4'>
+			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
 					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
@@ -280,7 +280,7 @@ export const DepositCard = ({
 								label: 'Collateral Factor',
 								value: (
 									<>
-										<Typography className='inline-block align-middle font-bold'>
+										<Typography className='inline-block align-middle '>
 											{getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%
 										</Typography>
 									</>
@@ -290,9 +290,7 @@ export const DepositCard = ({
 								label: 'Initial Margin Factor',
 								value: (
 									<>
-										<Typography className='inline-block align-middle font-bold'>
-											{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%
-										</Typography>
+										<Typography className='inline-block align-middle '>{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%</Typography>
 									</>
 								),
 							},
@@ -300,7 +298,7 @@ export const DepositCard = ({
 								label: 'Reserve Factor',
 								value: (
 									<>
-										<Typography className='inline-block align-middle font-bold'>
+										<Typography className='inline-block align-middle '>
 											{getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%
 										</Typography>
 									</>
@@ -310,7 +308,7 @@ export const DepositCard = ({
 								label: 'Total Reserves',
 								value: (
 									<>
-										<Typography className='inline-block align-middle font-bold'>
+										<Typography className='inline-block align-middle '>
 											${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}
 										</Typography>
 									</>

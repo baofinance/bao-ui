@@ -113,7 +113,7 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 
 	return (
 		<>
-			<div className='glassmorphic-card my-4 p-2'>
+			<div className='glassmorphic-card my-4 p-4'>
 				<div className='grid w-full grid-cols-12 items-center justify-center px-2'>
 					<div className='items-left col-span-3 m-auto ml-0 text-start align-middle'>
 						<Image
@@ -124,7 +124,9 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 							className='inline-block select-none'
 						/>
 						<span className='inline-block text-left align-middle'>
-							<Typography className='ml-2 font-bold leading-5'>{vault.underlyingSymbol}</Typography>
+							<Typography variant='lg' className='ml-2 font-bakbak leading-5'>
+								{vault.underlyingSymbol}
+							</Typography>
 						</span>
 					</div>
 					<div className='col-span-3 mr-0 items-start'>
@@ -132,10 +134,10 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 							content={`$${getDisplayBalance((!vault.isSynth ? decimate(suppliedUnderlying) : decimate(borrowed)).mul(vault.price))}`}
 							key={vault.underlyingSymbol}
 							placement='top'
-							className='rounded-full bg-baoRed font-bold'
+							className='rounded-full bg-baoRed'
 						>
-							<Typography className='text-center leading-5'>
-								<span className='align-middle font-bold'>{`${getDisplayBalance(
+							<Typography variant='lg' className='text-center font-bakbak leading-5'>
+								<span className='align-middle'>{`${getDisplayBalance(
 									!vault.isSynth ? suppliedUnderlying : borrowed,
 									vault.underlyingDecimals,
 								)}`}</span>
@@ -143,7 +145,10 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 						</Tooltipped>
 					</div>
 					<div className='col-span-3 m-auto items-center justify-center'>
-						<Typography className={`font-bold leading-5 ${vault.isSynth ? `text-red` : avgBasketAPY > 0 && `text-green`}`}>
+						<Typography
+							variant='lg'
+							className={`font-bakbak text-lg leading-5 ${vault.isSynth ? `text-red` : avgBasketAPY > 0 && `text-green`}`}
+						>
 							{vault.isBasket && avgBasketAPY
 								? getDisplayBalance(avgBasketAPY, 0, 2) + '%'
 								: vault.isSynth

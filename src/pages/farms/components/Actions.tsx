@@ -78,10 +78,10 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 								<Typography variant='sm'>0.75%</Typography>
 							</div>
 							<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-								<Typography variant='sm' className='text-baoRed'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
 									Balance:
 								</Typography>
-								<Typography variant='sm'>
+								<Typography variant='sm' className='font-bakbak'>
 									{getDisplayBalance(max).toString()}{' '}
 									<a href={pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 										{tokenName} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
