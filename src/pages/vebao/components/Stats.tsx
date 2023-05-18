@@ -1,5 +1,6 @@
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
+import Card from '@/components/Card'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -33,77 +34,90 @@ function addDays(numOfDays: number, date = new Date()) {
 
 const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 	const { account } = useWeb3React()
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const claimableFees = useClaimableFees()
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	return (
-		<div className='col-span-2 grid h-full grid-rows-6 items-center rounded border  p-4'>
-			<Typography variant='xl' className='mb-4 text-center font-bold'>
+		<div className='col-span-2 grid'>
+			<Typography variant='xl' className='mb-4 text-center font-bakbak'>
 				Lock Info
 			</Typography>
-			<div className='grid items-center gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-baoRed'>Earned Rewards</Typography>
-				<div className='flex justify-end'>
-					<div className='-mr-1 flex h-10 items-center justify-center rounded-l bg-primary-400'>
-						<Typography className='ml-2 inline font-semibold'>${claimableFees ? getDisplayBalance(claimableFees) : 0}</Typography>
-						<Image src='/images/tokens/baoUSD.png' alt='BAO' width={16} height={16} className='ml-1 mr-2 inline' />
-					</div>
-					{pendingTx ? (
-						<Button className='rounded-l-none border-0' disabled={true}>
-							Claim
-						</Button>
-					) : (
+			<div className='glassmorphic-card grid h-full grid-rows-5 items-center rounded px-8 py-6'>
+				<div className='grid grid-cols-2 items-center gap-1'>
+					<Typography variant='lg' className='font-bakbak'>
+						Earned Rewards
+					</Typography>
+					<div className='flex justify-end'>
+						<div className='flex h-10 items-center justify-center'>
+							<Typography variant='lg' className='ml-2 inline font-bakbak'>
+								${claimableFees ? getDisplayBalance(claimableFees) : 0}
+							</Typography>
+							<Image src='/images/tokens/baoUSD.png' alt='BAO' width={16} height={16} className='ml-1 mr-2 inline' />
+						</div>
+
 						<Button
-							size='sm'
+							size='xs'
 							disabled={!claimableFees || claimableFees.lte(0)}
 							onClick={async () => {
 								const harvestTx = feeDistributor['claim(address)'](account)
 								handleTx(harvestTx, `veBAO: Claim ${getDisplayBalance(claimableFees)} baoUSD`)
 							}}
-							className='rounded-l-none border-0 text-base'
+							pendingTx={pendingTx}
+							txHash={txHash}
+							className='my-auto ml-1'
 						>
 							Claim
 						</Button>
-					)}
+					</div>
 				</div>
-			</div>
-			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-baoRed'>veBAO APR</Typography>
-				<>
-					<Typography className='ml-1 inline text-end font-bold'>-</Typography>
-				</>
-			</div>
-			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-baoRed'>veBAO Balance</Typography>
-				<>
-					<Typography className='ml-1 inline text-end font-bold'>
-						{account && !isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance)))
-							? window.screen.width > 1200
-								? getDisplayBalance(lockInfo && lockInfo.balance)
-								: truncateNumber(lockInfo && lockInfo.balance)
-							: '-'}
+				<div className='grid gap-1 md:grid-cols-2'>
+					<Typography variant='lg' className='font-bakbak'>
+						veBAO APR
 					</Typography>
-				</>
-			</div>
-			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-baoRed'>BAO Locked</Typography>
-				<>
-					<Typography className='ml-1 inline text-end font-bold'>
-						<>{lockInfo ? getDisplayBalance(lockInfo.lockAmount) : '-'}</>
+					<>
+						<Typography variant='lg' className='ml-2 inline text-end font-bakbak'>
+							-
+						</Typography>
+					</>
+				</div>
+				<div className='grid gap-1 md:grid-cols-2'>
+					<Typography variant='lg' className='font-bakbak'>
+						veBAO Balance
 					</Typography>
-				</>
-			</div>
+					<>
+						<Typography variant='lg' className='ml-2 inline text-end font-bakbak'>
+							{account && !isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance)))
+								? window.screen.width > 1200
+									? getDisplayBalance(lockInfo && lockInfo.balance)
+									: truncateNumber(lockInfo && lockInfo.balance)
+								: '-'}
+						</Typography>
+					</>
+				</div>
+				<div className='grid gap-1 md:grid-cols-2'>
+					<Typography variant='lg' className='font-bakbak'>
+						BAO Locked
+					</Typography>
+					<>
+						<Typography variant='lg' className='ml-2 inline text-end font-bakbak'>
+							<>{lockInfo ? getDisplayBalance(lockInfo.lockAmount) : '-'}</>
+						</Typography>
+					</>
+				</div>
 
-			<div className='grid gap-1 md:grid-cols-2'>
-				<Typography className='font-medium text-baoRed'>Locked Until</Typography>
-				<>
-					<Typography className='ml-1 inline text-end font-bold'>
-						{!account || (lockInfo && timestamp && lockInfo.lockEnd.mul(1000).lt(timestamp))
-							? '-'
-							: new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}
+				<div className='grid gap-1 md:grid-cols-2'>
+					<Typography variant='lg' className='font-bakbak'>
+						Locked Until
 					</Typography>
-				</>
+					<>
+						<Typography variant='lg' className='ml-2 inline text-end font-bakbak'>
+							{!account || (lockInfo && timestamp && lockInfo.lockEnd.mul(1000).lt(timestamp))
+								? '-'
+								: new Date(lockInfo && lockInfo.lockEnd.mul(1000).toNumber()).toDateString()}
+						</Typography>
+					</>
+				</div>
 			</div>
 		</div>
 	)
@@ -112,7 +126,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 export default LockStats
 
 export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
-	const { chainId } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
@@ -135,61 +149,83 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
 	return (
-		<div className='grid h-full grid-rows-6 items-center justify-end rounded border  p-4'>
-			<Typography className='mb-4 text-center font-bold'>Protocol Statistics</Typography>
-			<div className='grid grid-cols-2 items-center gap-1'>
-				<Typography variant='sm' className='text-baoRed'>
-					Total Value Locked
-				</Typography>
-				<>
-					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						${veInfo && baoPrice ? getDisplayBalance(decimate(veInfo.totalSupply.mul(baoPrice))) : 0}
-					</Typography>
-				</>
-			</div>
-			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-baoRed'>
-					Percentage of BAO Locked
-				</Typography>
-				<>
-					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						{suppliedPercentage && `${getDisplayBalance(suppliedPercentage)}%`}
-					</Typography>
-				</>
-			</div>
-			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-baoRed'>
-					Average Lock Time
-				</Typography>
-				<>
-					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						{avgLock ? avgLock : 0} Years
-					</Typography>
-				</>
-			</div>
-			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-baoRed'>
-					Next Distribution
-				</Typography>
-				<>
-					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						{nextFeeDistribution && timestamp && nextFeeDistribution.mul(1000).lte(timestamp)
-							? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
-							: `-`}
-					</Typography>
-				</>
-			</div>
-			<div className='grid grid-cols-2 gap-1'>
-				<Typography variant='sm' className='text-baoRed'>
-					Average Weekly Earnings
-				</Typography>
-				<>
-					<Typography variant='sm' className='ml-1 inline text-end font-semibold'>
-						-
-					</Typography>
-				</>
-			</div>
-		</div>
+		<>
+			<Typography variant='xl' className='p-4 text-center font-bakbak'>
+				Protocol Statistics
+			</Typography>
+			<Card className='glassmorphic-card p-4'>
+				<Card.Body>
+					<div className='grid w-full grid-cols-12 gap-4 px-4 pt-2 !text-center'>
+						<div className='col-span-4'>
+							<div className='grid h-full grid-rows-2 gap-4'>
+								<div className='row-span-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										Total Value Locked
+									</Typography>
+									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+										${veInfo && baoPrice ? getDisplayBalance(decimate(veInfo.totalSupply.mul(baoPrice))) : 0}
+									</Typography>
+								</div>
+								<div className='row-span-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										Total veBAO Supply
+									</Typography>
+									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+										{veInfo && `${getDisplayBalance(veInfo.totalSupply)}`}
+									</Typography>
+								</div>
+							</div>
+						</div>
+						<div className='col-span-4'>
+							<div className='grid h-full grid-rows-2 gap-4'>
+								<div className='row-span-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										Average Lock Time
+									</Typography>
+									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+										{avgLock ? avgLock : 0} Years
+									</Typography>
+								</div>
+								<div className='row-span-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										% of BAO Locked
+									</Typography>
+									<div>
+										<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+											{suppliedPercentage ? `${getDisplayBalance(suppliedPercentage)}%` : '-'}
+										</Typography>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className='col-span-4'>
+							<div className='grid h-full grid-rows-2 gap-4'>
+								<div className='row-span-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										Next Distribution
+									</Typography>
+									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+										{account && nextFeeDistribution && timestamp && nextFeeDistribution.mul(1000).lte(timestamp)
+											? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
+											: `-`}
+									</Typography>
+								</div>
+								<div className='row-span-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										Average Weekly Earnings
+									</Typography>
+									<div>
+										<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+											-
+										</Typography>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Card.Body>
+			</Card>
+		</>
 	)
 }
 
@@ -218,7 +254,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 
 	return (
 		<div>
-			<Typography variant='xl' className='mt-4 font-bold'>
+			<Typography variant='xl' className='mt-4 font-bakbak'>
 				Protocol Statistics
 			</Typography>
 			<div
@@ -233,7 +269,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 						</Typography>
 					</div>
 					<Typography>
-						<Typography variant='lg' className='font-bold'>
+						<Typography variant='lg' className='font-bakbak'>
 							${veInfo && baoPrice ? getDisplayBalance(decimate(veInfo.totalSupply.mul(baoPrice))) : 0}
 						</Typography>
 					</Typography>
@@ -244,7 +280,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 							Percentage of BAO Locked
 						</Typography>
 					</div>
-					<Typography variant='lg' className='font-bold'>
+					<Typography variant='lg' className='font-bakbak'>
 						{suppliedPercentage ? `${getDisplayBalance(suppliedPercentage)}%` : '-'}
 					</Typography>
 				</div>
@@ -254,7 +290,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 							Average Lock Time
 						</Typography>
 					</div>
-					<Typography variant='lg' className='font-bold'>
+					<Typography variant='lg' className='font-bakbak'>
 						{avgLock ? avgLock : 0} Years
 					</Typography>
 				</div>
@@ -264,7 +300,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 							Next Distribution
 						</Typography>
 					</div>
-					<Typography variant='lg' className='font-bold'>
+					<Typography variant='lg' className='font-bakbak'>
 						{account && nextFeeDistribution && timestamp && nextFeeDistribution.mul(1000).lte(timestamp)
 							? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
 							: `-`}
@@ -276,7 +312,7 @@ export const ProtocolStatsHoriz = ({ veInfo, timestamp, baoPrice }: StatsProps) 
 							Average Weekly Earnings
 						</Typography>
 					</div>
-					<Typography variant='lg' className='font-bold'>
+					<Typography variant='lg' className='font-bakbak'>
 						-
 					</Typography>
 				</div>

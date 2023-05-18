@@ -19,7 +19,9 @@ const Vaults: React.FC = () => {
 						Bao Vaults allow users to mint synthetic price-stable assets with our yield bearing Bao Baskets or ETH as collateral. Mint
 						instantly and on your terms!
 					</Typography>
-					<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+					<a href='https://info.bao.finance/docs/franchises/bao-markets-hard-synths' target='_blank' rel='noopener noreferrer'>
+						<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+					</a>
 				</div>
 				<div className='col-span-3'>
 					<VaultList />

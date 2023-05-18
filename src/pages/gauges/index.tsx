@@ -19,7 +19,9 @@ const Gauges: React.FC = () => {
 						set-and-forget, maximizing your returns at a fraction of the cost and effort. Baskets leverage automated strategies utilizing
 						staking, lending, and yield farming- No management or constant monitoring necessary!
 					</Typography>
-					<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+					<a href='https://info.bao.finance/docs/guides/gauges/depositing-lps-for-rewards' target='_blank' rel='noopener noreferrer'>
+						<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+					</a>
 				</div>
 				<div className='col-span-3'>
 					<GaugeList />

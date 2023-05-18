@@ -19,7 +19,9 @@ const Vaults: React.FC = () => {
 						The Ballast allow users to mint or redeem Bao synths with an equivalent asset for a 1% fee. This represents an opportunity for
 						low-risk arbitrage between the ballast and the markets.
 					</Typography>
-					<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+					<a href='https://info.bao.finance/docs/guides/bao-markets/ballast' target='_blank' rel='noopener noreferrer'>
+						<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+					</a>
 				</div>
 				<div className='col-span-3'>
 					<Ballast />

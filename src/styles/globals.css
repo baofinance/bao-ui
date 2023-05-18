@@ -180,7 +180,7 @@ input[type='number'] {
 		appearance: none;
 		height: 15px;
 		cursor: ew-resize;
-		background: #ffd84b;
+		background: #e21a53;
 		border-radius: 50%;
 	}
 }
@@ -198,7 +198,6 @@ input[type='number'] {
 }
 
 .glassmorphic-card {
-	justify-content: space-between;
 	background: #1e202280;
 	backdrop-filter: blur(25px);
 	-webkit-backdrop-filter: blur(25px);

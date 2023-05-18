@@ -3,7 +3,6 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
-import Loader from '@/components/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useAllowance from '@/hooks/base/useAllowance'
@@ -17,8 +16,6 @@ import { LockInfo } from '@/hooks/vebao/useLockInfo'
 import type { Baov2, VotingEscrow } from '@/typechain/index'
 import { dateFromEpoch, getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
@@ -38,7 +35,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const { library, chainId } = useWeb3React()
 	const [val, setVal] = useState('')
 	const allowance = useAllowance(Config.contracts.Baov2[chainId].address, Config.contracts.votingEscrow[chainId].address)
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
@@ -105,74 +102,70 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	const shouldBeWarned = canStartDistribution || canEndDistribution
 
 	return (
-		<div className=' col-span-2 row-span-1 rounded border p-4'>
+		<div className='col-span-2 row-span-1'>
 			{(lockInfo && lockInfo.lockEnd.gt(timestamp)) || (lockInfo && lockInfo.lockEnd.mul(1000).lt(timestamp)) ? (
 				<>
-					<Typography variant='xl' className='mb-4 text-center font-bold'>
+					<Typography variant='xl' className='mb-4 text-center font-bakbak'>
 						Lock BAO for veBAO
 					</Typography>
-					<div className='flex flex-row gap-3'>
-						<div className='flex w-full flex-col'>
-							<div className='mb-1 flex w-full items-center gap-1'>
-								<Typography variant='sm' className='text-baoRed'>
-									Bao Balance:
-								</Typography>
-								<Typography variant='sm'>{getDisplayBalance(baoBalance)}</Typography>
-							</div>
-							<Input
-								onSelectMax={() => handleSelectMax()}
-								onSelectHalf={() => handleSelectHalf()}
-								onChange={handleChange}
-								value={val}
-								label={
-									<div className='flex flex-row items-center pl-2 pr-3'>
-										<div className='flex justify-center'>
-											<Image src='/images/tokens/BAO.png' width={32} height={32} alt='BAO' className='block align-middle' />
+					<div className='glassmorphic-card grid items-center rounded px-8 py-6'>
+						<div className='flex flex-row gap-3'>
+							<div className='flex w-full flex-col'>
+								<div className='mb-1 flex w-full items-center gap-1'>
+									<Typography variant='sm' className='font-bakbak text-baoRed'>
+										Bao Balance:
+									</Typography>
+									<Typography variant='sm' className='font-bakbak'>
+										{getDisplayBalance(baoBalance)}
+									</Typography>
+								</div>
+								<Input
+									onSelectMax={() => handleSelectMax()}
+									onSelectHalf={() => handleSelectHalf()}
+									onChange={handleChange}
+									value={val}
+									label={
+										<div className='flex flex-row items-center pl-2 pr-3'>
+											<div className='flex justify-center'>
+												<Image src='/images/tokens/BAO.png' width={32} height={32} alt='BAO' className='block align-middle' />
+											</div>
 										</div>
-									</div>
-								}
-							/>
-							<div className='float-left mt-2 flex w-full items-center gap-1'>
-								<Typography variant='sm' className='text-baoRed'>
-									Lock Length
+									}
+								/>
+								<div className='float-left mt-2 flex w-full items-center gap-1'>
+									<Typography className='mt-2 font-bakbak'>Lock Length</Typography>
+								</div>
+								<div className='px-2'>
+									<Slider
+										max={max}
+										value={weeks}
+										onChange={onSliderChange}
+										className='mt-4'
+										handleStyle={{
+											backgroundColor: '#e21a53',
+											borderColor: '#e21a53',
+											boxShadow: 'none',
+											opacity: 1,
+										}}
+										trackStyle={{
+											backgroundColor: '#e21a53',
+											borderColor: '#e21a53',
+										}}
+										railStyle={{
+											backgroundColor: '#faf2e340',
+										}}
+									/>
+								</div>
+								<Typography variant='sm' className='text-center font-bakbak'>
+									Lock until {new Date(lockTime).toDateString()}
 								</Typography>
 							</div>
-							<div className='px-2'>
-								<Slider
-									max={max}
-									value={weeks}
-									onChange={onSliderChange}
-									className='mt-4'
-									handleStyle={{
-										backgroundColor: '#FFD84B',
-										borderColor: '#FFD84B',
-										boxShadow: 'none',
-										opacity: 1,
-									}}
-									trackStyle={{
-										backgroundColor: '#CC9902',
-										borderColor: '#CC9902',
-									}}
-									railStyle={{
-										backgroundColor: '#622a2a',
-									}}
-								/>
-							</div>
-							<Typography variant='sm' className='text-center'>
-								Lock until {new Date(lockTime).toDateString()}
-							</Typography>
 						</div>
-					</div>
-					<div className='flex flex-col'>
-						{isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance))) || lockInfo.balance.lte(0) ? (
-							<div className='mt-3 flex flex-row gap-4'>
-								{allowance && allowance.lte(0) ? (
-									<>
-										{pendingTx ? (
-											<Button fullWidth disabled={true}>
-												Approving BAO
-											</Button>
-										) : (
+						<div className='flex flex-col'>
+							{isNaN(lockInfo && parseFloat(formatUnits(lockInfo.balance))) || lockInfo.balance.lte(0) ? (
+								<div className='mt-3 flex flex-row gap-4'>
+									{allowance && allowance.lte(0) ? (
+										<>
 											<Button
 												fullWidth
 												disabled={baoBalance.lte(0) && !shouldBeWarned}
@@ -185,18 +178,14 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 														handleTx(approveTx, `veBAO: Approve BAO`)
 													}
 												}}
+												pendingTx={pendingTx}
+												txHash={txHash}
 											>
 												{shouldBeWarned ? 'Read Warning' : 'Approve BAO'}
 											</Button>
-										)}
-									</>
-								) : (
-									<>
-										{pendingTx ? (
-											<Button fullWidth disabled={true}>
-												<Loader />
-											</Button>
-										) : (
+										</>
+									) : (
+										<>
 											<Button
 												fullWidth
 												disabled={baoBalance.lte(0) && !shouldBeWarned}
@@ -208,23 +197,19 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 														handleTx(lockTx, `veBAO: Locked ${parseFloat(val).toFixed(4)} BAO until ${lockTime.toLocaleDateString()}`)
 													}
 												}}
+												pendingTx={pendingTx}
+												txHash={txHash}
 											>
 												{shouldBeWarned ? 'Read Warning' : 'Create Lock'}
 											</Button>
-										)}
-									</>
-								)}
-							</div>
-						) : (
-							<div className='flex w-full flex-row gap-4'>
-								<div className='mt-3 grid w-full gap-2 md:grid-cols-2'>
-									{allowance && allowance.lte(0) ? (
-										<>
-											{pendingTx ? (
-												<Button fullWidth disabled={true}>
-													Approving BAO
-												</Button>
-											) : (
+										</>
+									)}
+								</div>
+							) : (
+								<div className='flex w-full flex-row gap-4'>
+									<div className='mt-3 grid w-full gap-2 md:grid-cols-2'>
+										{allowance && allowance.lte(0) ? (
+											<>
 												<Button
 													fullWidth
 													disabled={baoBalance.lte(0) && !shouldBeWarned}
@@ -237,42 +222,36 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 															handleTx(approveTx, `veBAO: Approve BAO`)
 														}
 													}}
+													pendingTx={pendingTx}
+													txHash={txHash}
 												>
 													{shouldBeWarned ? 'Read Warning' : 'Approve BAO'}
 												</Button>
-											)}
-										</>
-									) : pendingTx ? (
-										<Button disabled={true}>
-											<Loader />
-										</Button>
-									) : (
-										<Button
-											disabled={
-												!val ||
-												!lockTime ||
-												isNaN(val as any) ||
-												parseFloat(val) > parseFloat(formatUnits(baoBalance)) ||
-												parseFloat(val) <= 0
-											}
-											onClick={async () => {
-												const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
-												handleTx(
-													lockTx,
-													`veBAO: Increased lock by ${parseFloat(val).toFixed(4)} BAO until ${new Date(
-														lockInfo.lockEnd.mul(1000).toNumber(),
-													).toLocaleDateString()}`,
-												)
-											}}
-										>
-											Increase Amount
-										</Button>
-									)}
-									{pendingTx ? (
-										<Button fullWidth disabled={true}>
-											<Loader />
-										</Button>
-									) : (
+											</>
+										) : (
+											<Button
+												disabled={
+													!val ||
+													!lockTime ||
+													isNaN(val as any) ||
+													parseFloat(val) > parseFloat(formatUnits(baoBalance)) ||
+													parseFloat(val) <= 0
+												}
+												onClick={async () => {
+													const lockTx = votingEscrow.increase_amount(ethers.utils.parseEther(val.toString()))
+													handleTx(
+														lockTx,
+														`veBAO: Increased lock by ${parseFloat(val).toFixed(4)} BAO until ${new Date(
+															lockInfo.lockEnd.mul(1000).toNumber(),
+														).toLocaleDateString()}`,
+													)
+												}}
+												pendingTx={pendingTx}
+												txHash={txHash}
+											>
+												Increase Amount
+											</Button>
+										)}
 										<Button
 											fullWidth
 											disabled={!lockTime || lockTime <= currentLockEnd || max <= 0}
@@ -280,13 +259,15 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 												const lockTx = votingEscrow.increase_unlock_time(getEpochSecondForDay(lockTime))
 												handleTx(lockTx, `veBAO: Increased lock until ${lockTime.toLocaleDateString()}`)
 											}}
+											pendingTx={pendingTx}
+											txHash={txHash}
 										>
 											Increase Lock Time
 										</Button>
-									)}
+									</div>
 								</div>
-							</div>
-						)}
+							)}
+						</div>
 					</div>
 				</>
 			) : (
@@ -318,7 +299,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='xl' className='inline-block font-semibold'>
+					<Typography variant='xl' className='inline-block font-bakbak'>
 						This account has a BAOv1 distribution!
 					</Typography>
 					<Typography variant='p' className='leading-normal'>

@@ -1,5 +1,4 @@
 //import { useWeb3React } from '@web3-react/core'
-import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
@@ -27,7 +26,6 @@ import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import CountdownTimer from './CountdownTimer'
-import Loader from '@/components/Loader'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -37,7 +35,7 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 	const [val, setVal] = useState('')
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -104,24 +102,20 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 					</>
 				) : (
 					<>
-						{pendingTx ? (
-							<Button fullWidth disabled={true}>
-								<Loader />
-							</Button>
-						) : (
-							<Button
-								fullWidth
-								disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
-								onClick={async () => {
-									const amount = parseUnits(val)
-									const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
+						<Button
+							fullWidth
+							disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
+							onClick={async () => {
+								const amount = parseUnits(val)
+								const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
 
-									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${getDisplayBalance(amount)} ${gauge.name}`, () => hideModal())
-								}}
-							>
-								Deposit {gauge.name}
-							</Button>
-						)}
+								handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${getDisplayBalance(amount)} ${gauge.name}`, () => hideModal())
+							}}
+							pendingTx={pendingTx}
+							txHash={txHash}
+						>
+							Deposit {gauge.name}
+						</Button>
 					</>
 				)}
 			</Modal.Actions>
@@ -138,7 +132,7 @@ interface UnstakeProps {
 export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const gaugeInfo = useGaugeInfo(gauge)
 
@@ -188,24 +182,21 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 			</Modal.Body>
 			<Modal.Actions>
 				<>
-					{pendingTx ? (
-						<Button disabled={true}>
-							<Loader />
-						</Button>
-					) : (
-						<Button
-							disabled={
-								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
-							}
-							onClick={async () => {
-								const amount = parseUnits(val, 18)
-								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
-								handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
-							}}
-						>
-							Withdraw {gauge.name}
-						</Button>
-					)}
+					<Button
+						fullWidth
+						disabled={
+							!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
+						}
+						onClick={async () => {
+							const amount = parseUnits(val, 18)
+							const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
+							handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
+						}}
+						pendingTx={pendingTx}
+						txHash={txHash}
+					>
+						Withdraw {gauge.name}
+					</Button>
 				</>
 			</Modal.Actions>
 		</>
@@ -218,7 +209,7 @@ interface RewardsProps {
 
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const minterContract = useContract<Minter>('Minter')
 
 	return (
@@ -238,22 +229,18 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
-				{pendingTx ? (
-					<Button fullWidth disabled={true}>
-						<Loader />
-					</Button>
-				) : (
-					<Button
-						fullWidth
-						disabled={!gaugeInfo || !gaugeInfo.claimableTokens || gaugeInfo.claimableTokens.lte(0)}
-						onClick={async () => {
-							const harvestTx = minterContract.mint(gauge.gaugeAddress)
-							handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
-						}}
-					>
-						Harvest BAO
-					</Button>
-				)}
+				<Button
+					fullWidth
+					disabled={!gaugeInfo || !gaugeInfo.claimableTokens || gaugeInfo.claimableTokens.lte(0)}
+					onClick={async () => {
+						const harvestTx = minterContract.mint(gauge.gaugeAddress)
+						handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
+					}}
+					pendingTx={pendingTx}
+					txHash={txHash}
+				>
+					Harvest BAO
+				</Button>
 			</Modal.Actions>
 		</>
 	)
@@ -266,7 +253,7 @@ interface VoteProps {
 }
 
 export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 	const lockInfo = useLockInfo()
 	const votingPowerAllocated = useVotingPowerAllocated()
@@ -357,7 +344,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='bg-primary-400 accent-text-400 h-2 w-full appearance-none rounded-full disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-full bg-baoWhite bg-opacity-20 accent-baoRed disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -368,8 +355,8 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
-							className='bg-background-100 relative -mr-1 h-6 w-10
-				min-w-0 appearance-none rounded border-solid border-inherit pl-2 text-end 
+							className='relative -mr-1 h-6 w-10 min-w-0 appearance-none
+				rounded border-solid border-inherit bg-baoBlack bg-opacity-80 pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
 				 duration-200 disabled:text-baoWhite md:text-sm'
 						/>
@@ -381,22 +368,18 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 			</Modal.Body>
 			<Modal.Actions>
 				<>
-					{pendingTx ? (
-						<Button fullWidth disabled={true}>
-							<Loader />
-						</Button>
-					) : (
-						<Button
-							fullWidth
-							disabled={!val || isNaN(val as any) || (lockInfo && lockInfo.balance.eq(0))}
-							onClick={async () => {
-								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
-								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
-							}}
-						>
-							Vote for {gauge.name}
-						</Button>
-					)}
+					<Button
+						fullWidth
+						disabled={!val || isNaN(val as any) || (lockInfo && lockInfo.balance.eq(0))}
+						onClick={async () => {
+							const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
+							handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
+						}}
+						pendingTx={pendingTx}
+						txHash={txHash}
+					>
+						Vote for {gauge.name}
+					</Button>
 				</>
 			</Modal.Actions>
 		</>

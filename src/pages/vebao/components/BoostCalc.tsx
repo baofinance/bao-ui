@@ -1,4 +1,5 @@
 import Button from '@/components/Button'
+import Input from '@/components/Input'
 import Typography from '@/components/Typography'
 import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
 import useGauges from '@/hooks/gauges/useGauges'
@@ -95,9 +96,7 @@ export const BoostCalc = () => {
 				<Typography variant='xl' className='mt-4 font-bold'>
 					Boost Calculator
 				</Typography>
-				<div
-					className={`my-2 grid w-full grid-cols-8 justify-evenly gap-4 rounded border  bg-opacity-80 p-4`}
-				>
+				<div className={`my-2 grid w-full grid-cols-8 justify-evenly gap-4 rounded border bg-opacity-80 p-4`}>
 					<div className='col-span-2'>
 						<label className='text-xs text-baoRed'>Select a gauge</label>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
@@ -115,7 +114,7 @@ export const BoostCalc = () => {
 												<Listbox.Button
 													className={
 														(classNames(open ? 'bg-transparent-100 text-baoRed' : 'text-baoWhite'),
-														'inline-flex h-8 items-center rounded-l-none rounded-r-md border bg-primary-200 p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
+														'bg-primary-200 inline-flex h-8 items-center rounded-l-none rounded-r-md border p-2 text-sm font-medium text-baoWhite hover:bg-transparent-100')
 													}
 												>
 													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
@@ -129,16 +128,13 @@ export const BoostCalc = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y divide-primary-500 overflow-hidden rounded-md border border-primary-500  shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='divide-primary-500 border-primary-500 absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y overflow-hidden rounded-md border  shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
 													gauges.map((gauge: any) => (
 														<Listbox.Option
 															key={gauge.name}
 															className={({ active }) =>
-																classNames(
-																	active ? ' text-baoRed' : 'text-baoWhite',
-																	'cursor-pointer select-none p-2 text-sm',
-																)
+																classNames(active ? ' text-baoRed' : 'text-baoWhite', 'cursor-pointer select-none p-2 text-sm')
 															}
 															value={gauge.name}
 														>
@@ -167,23 +163,13 @@ export const BoostCalc = () => {
 					<div className='col-span-2'>
 						<label className='text-xs text-baoRed'>Deposit Amount</label>
 						<div className='flex h-8 gap-2 rounded-md '>
-							<input
-								type='number'
-								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
-								value={depositAmount}
-								onChange={handleDepositChange}
-							/>
+							<Input value={depositAmount} onChange={handleDepositChange} />
 						</div>
 					</div>
 					<div className='col-span-2'>
 						<label className='text-xs text-baoRed'>BAO Tokens</label>
 						<div className='flex h-8 gap-2 rounded-md '>
-							<input
-								type='number'
-								className='rounded border border-primary-500 bg-transparent-100 px-2 py-1 outline-none'
-								value={baoAmount}
-								onChange={handleBaoChange}
-							/>
+							<Input value={baoAmount} onChange={handleBaoChange} />
 						</div>
 					</div>
 					<div className='col-span-2'>
