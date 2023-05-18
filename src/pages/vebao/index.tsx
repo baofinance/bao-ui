@@ -59,7 +59,7 @@ const VeBAO: React.FC = () => {
 					</a>
 				</div>
 				<div className='col-span-3'>
-					<ProtocolStats baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} veInfo={veInfo} timestamp={blockTimestamp} />
+					<ProtocolStats baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} veInfo={veInfo} />
 				</div>
 			</div>
 

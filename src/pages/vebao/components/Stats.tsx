@@ -2,6 +2,7 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Typography from '@/components/Typography'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useClaimableFees from '@/hooks/vebao/useClaimableFees'
@@ -10,7 +11,10 @@ import { useNextDistribution } from '@/hooks/vebao/useNextDistribution'
 import { VeInfo } from '@/hooks/vebao/useVeInfo'
 import { Baov2 } from '@/typechain/Baov2'
 import { FeeDistributor } from '@/typechain/FeeDistributor'
+import { providerKey } from '@/utils/index'
 import { decimate, exponentiate, getDisplayBalance, truncateNumber } from '@/utils/numberFormat'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
@@ -125,8 +129,8 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 
 export default LockStats
 
-export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
-	const { account, chainId } = useWeb3React()
+export const ProtocolStats = ({ veInfo, baoPrice }: StatsProps) => {
+	const { library, account, chainId } = useWeb3React()
 	const [totalSupply, setTotalSupply] = useState<BigNumber>(BigNumber.from(0))
 	const baoV2 = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
@@ -147,6 +151,24 @@ export const ProtocolStats = ({ veInfo, timestamp, baoPrice }: StatsProps) => {
 	const nextFeeDistribution = useNextDistribution()
 	const ratio = veInfo ? parseFloat(formatUnits(veInfo.supply)) / parseFloat(formatUnits(veInfo.totalSupply)) : 0
 	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
+
+	const enabled = !!library
+	const { data: timestamp, refetch } = useQuery(
+		['block timestamp', providerKey(library, account, chainId)],
+		async () => {
+			const block = await library.getBlock()
+			return block.timestamp as BigNumber
+		},
+		{
+			enabled,
+		},
+	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+	//useTxReceiptUpdater(_refetch)
+	useBlockUpdater(_refetch, 1)
 
 	return (
 		<>

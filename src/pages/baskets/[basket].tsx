@@ -1,38 +1,26 @@
 import Badge from '@/components/Badge'
-import PageHeader from '@/components/PageHeader'
 import Tooltipped from '@/components/Tooltipped'
+import Typography from '@/components/Typography'
 import useBasketInfo from '@/hooks/baskets/useBasketInfo'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
+import useNav from '@/hooks/baskets/useNav'
 import usePairPrice from '@/hooks/baskets/usePairPrice'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
-import {
-	faAngleDoubleDown,
-	faAngleDoubleRight,
-	faAngleDoubleUp,
-	faArrowLeft,
-	faCoins,
-	faFileContract,
-	faHandHoldingUsd,
-	faMoneyBillWave,
-} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { BigNumber } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
+import Image from 'next/future/image'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
-import BasketStats from './components/BasketStats'
 import Composition from './components/Composition'
 import Description from './components/Description'
-import Typography from '@/components/Typography'
-import Image from 'next/future/image'
-import Link from 'next/link'
-import useNav from '@/hooks/baskets/useNav'
-import { BigNumber } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
 //import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 export async function getStaticPaths() {

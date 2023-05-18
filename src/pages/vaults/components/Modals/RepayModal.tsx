@@ -113,7 +113,9 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 									<Typography variant='sm' className='font-bakbak text-baoRed'>
 										Availalble:
 									</Typography>
-									<Typography variant='sm' className='font-bakbak'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${asset.underlyingSymbol}`}</Typography>
+									<Typography variant='sm' className='font-bakbak'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${
+										asset.underlyingSymbol
+									}`}</Typography>
 								</div>
 							</div>
 							<Input

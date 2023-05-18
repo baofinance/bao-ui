@@ -5,8 +5,8 @@ import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { BaoDistribution } from '@/typechain/BaoDistribution'
 //import { useWeb3React } from '@web3-react/core'
-import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
 import useClaimable from '@/hooks/distribution/useClaimable'
+import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
@@ -49,7 +49,7 @@ const Migration: React.FC = () => {
 						alt='Distribution function'
 					/>
 				</div>
-				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-baoRed'>
+				<Typography variant='xs' className='bg-background-100 my-4 rounded p-2 text-center text-baoRed'>
 					This graph shows how someone's distribution of locked BAO tokens will unlock over time following.
 				</Typography>
 				<Typography variant='p' className='mt-2 leading-normal'>
@@ -65,7 +65,7 @@ const Migration: React.FC = () => {
 					<Latex>{`\\(x = Days \\)`}</Latex>
 					<Latex>{`\\(P_{u}(x) \\begin{cases} \\begin{matrix} (\\frac{2x}{219})^2 & 0 \\leq x \\leq 1095 \\\\ 100 & x > 1095 \\end{matrix} \\end{cases} \\)`}</Latex>
 				</div>
-				<Typography variant='xs' className='my-4 rounded bg-background-100 p-2 text-center text-baoRed'>
+				<Typography variant='xs' className='bg-background-100 my-4 rounded p-2 text-center text-baoRed'>
 					The forumla which determines how many tokens you may claim from your distribution at a given moment in time.
 				</Typography>
 			</div>

@@ -1,7 +1,9 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import Badge from '@/components/Badge'
+import Button from '@/components/Button'
+import Card from '@/components/Card/Card'
 import Input from '@/components/Input'
 import { StatBlock } from '@/components/Stats'
+import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
@@ -15,12 +17,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import VaultButton from './VaultButton'
-import Card from '@/components/Card/Card'
-import Tooltipped from '@/components/Tooltipped'
-import BorrowCard from './DashboardCard'
 import SupplyModal from './Modals/SupplyModal'
-import Button from '@/components/Button'
 
 export const DepositCard = ({
 	vaultName,
