@@ -422,7 +422,7 @@ export const Dashboard = () => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='h-2 w-full appearance-none rounded-full disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-full bg-baoWhite bg-opacity-20 disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -434,8 +434,8 @@ export const Dashboard = () => {
 							placeholder={val.toString()}
 							value={val}
 							className='relative -mr-1 h-6 w-12
-				appearance-none rounded border-solid border-inherit bg-baoBlack bg-opacity-80 pl-2 
-				text-end align-middle font-bakbak text-lg font-bold outline-none outline
+				appearance-none rounded border-solid border-inherit bg-baoBlack bg-opacity-0 pl-2 
+				text-end align-middle font-bakbak text-lg outline-none outline
 				 outline-2 outline-offset-2 transition-all duration-200 disabled:text-baoWhite'
 						/>
 						<Typography variant='lg' className='m-0 p-0 font-bakbak'>
