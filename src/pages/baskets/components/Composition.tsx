@@ -42,17 +42,13 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 								<table className='w-full'>
 									<thead>
 										<tr className='rounded-t-lg'>
-											<th className='w-[20%] rounded-tl-lg p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-60 lg:w-[10%]'>
+											<th className='w-[20%] rounded-tl-lg p-2 text-center font-bakbak text-lg font-normal text-baoWhite/60 lg:w-[10%]'>
 												Token
 											</th>
-											<th className='w-[40%] p-2 text-start font-bakbak text-lg font-normal text-baoWhite text-opacity-60'>Allocation</th>
-											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-60 lg:w-[20%]'>
-												Price
-											</th>
-											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-60 lg:w-[15%]'>
-												APY
-											</th>
-											<th className='hidden w-[20%] rounded-tr-lg p-2 font-bakbak text-lg font-normal text-baoWhite text-opacity-50 lg:block lg:!w-auto  lg:!text-center'>
+											<th className='w-[40%] p-2 text-start font-bakbak text-lg font-normal text-baoWhite/60'>Allocation</th>
+											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite/60 lg:w-[20%]'>Price</th>
+											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite/60 lg:w-[15%]'>APY</th>
+											<th className='hidden w-[20%] rounded-tr-lg p-2 font-bakbak text-lg font-normal text-baoWhite/60 lg:block lg:!w-auto  lg:!text-center'>
 												Strategy
 											</th>
 										</tr>

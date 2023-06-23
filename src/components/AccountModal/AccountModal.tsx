@@ -16,8 +16,8 @@ import Image from 'next/future/image'
 import Link from 'next/link'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import { MoonLoader } from 'react-spinners'
 import Tooltipped from '../Tooltipped'
+import { PendingTransaction } from '../Loader/Loader'
 
 interface AccountModalProps {
 	show: boolean
@@ -108,7 +108,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 													<FontAwesomeIcon icon={faCircleXmark} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
 												)
 											) : (
-												<MoonLoader size={12} speedMultiplier={0.8} color='#e21a53' />
+												<PendingTransaction />
 											)}
 											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
 												<a>

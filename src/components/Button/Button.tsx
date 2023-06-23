@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import React, { ReactNode, useMemo } from 'react'
-import Loader from '../Loader'
-import { MoonLoader } from 'react-spinners'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { PendingTransaction } from '../Loader/Loader'
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
@@ -85,8 +84,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					)}
 				>
 					<>
-						<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
-						Pending Transaction
+						<PendingTransaction /> Pending Transaction
 						<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
 					</>
 				</button>

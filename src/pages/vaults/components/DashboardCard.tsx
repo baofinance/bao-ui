@@ -56,16 +56,14 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Dashboard
 			</Typography>
-			<Card className='glassmorphic-card p-6'>
+			<Card className='glassmorphic-card lg:p-6'>
 				<Card.Body>
-					<div className='grid w-full grid-cols-12 px-4 pt-2'>
+					<div className='grid w-full grid-cols-8 gap-6 px-2 pt-2 lg:grid-cols-12 lg:gap-0 lg:px-4'>
 						<div className='col-span-4'>
-							<div className='grid h-full grid-rows-2'>
+							<div className='grid h-full gap-2 lg:grid-rows-2'>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Collateral
-									</Typography>
-									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+									<Typography className='font-bakbak text-baoRed'>Collateral</Typography>
+									<Typography className='m-auto inline-block align-middle font-bakbak text-base text-baoWhite lg:text-xl'>
 										$
 										{`${
 											bao && account && accountLiquidity
@@ -75,16 +73,14 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 									</Typography>
 								</div>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Debt
-									</Typography>
+									<Typography className='font-bakbak text-baoRed'>Debt</Typography>
 									<div>
-										<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+										<Typography className='m-auto inline-block align-middle font-bakbak text-base text-baoWhite lg:text-xl'>
 											${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}
 										</Typography>
 									</div>
 									<Typography className='m-auto inline-block align-middle font-bakbak text-baoRed'>
-										{borrowed ? getDisplayBalance(borrowed) : 0}{' '}
+										{borrowed ? getDisplayBalance(borrowed) : 0}
 									</Typography>
 									<Image
 										className='z-10 m-auto ml-1 inline-block select-none align-middle'
@@ -96,7 +92,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 								</div>
 							</div>
 						</div>
-						<div className='col-span-4'>
+						<div className='col-span-4 hidden lg:block'>
 							<div className='grid h-full grid-rows-2'>
 								<div className='row-span-1'>
 									<Typography variant='sm' className='font-bakbak text-baoRed'>
@@ -118,7 +114,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 								</div>
 							</div>
 						</div>
-						<div className='col-span-4 float-right m-auto mr-0 w-[15vh]'>
+						<div className='order-first col-span-4 float-right m-auto lg:order-3 lg:mr-0 lg:w-fit'>
 							<CircularProgressbarWithChildren
 								value={parseFloat(
 									getDisplayBalance(

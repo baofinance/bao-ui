@@ -6,7 +6,7 @@ html {
 }
 
 body {
-	background: #1e2022 url('/images/bao-background.webp') fixed;
+	background: #1e2022;
 	font-family: 'Inter', sans-serif;
 	color: #faf2e3;
 	margin: 0;

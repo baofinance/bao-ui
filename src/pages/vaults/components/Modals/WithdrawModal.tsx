@@ -2,6 +2,7 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -9,6 +10,8 @@ import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
@@ -122,22 +125,32 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						<Button
-							fullWidth
-							className='!rounded-full'
-							disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-							onClick={() => {
-								handleTx(
-									vaultContract.redeemUnderlying(parseUnits(val)),
-									`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-									() => onHide(),
-								)
-							}}
-							pendingTx={pendingTx}
-							txHash={txHash}
-						>
-							Withdraw
-						</Button>
+						{pendingTx ? (
+							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+								<Button fullWidth className='!rounded-full'>
+									<PendingTransaction />
+									Pending Transaction
+									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+								</Button>
+							</a>
+						) : (
+							<Button
+								fullWidth
+								className='!rounded-full'
+								disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+								onClick={() => {
+									handleTx(
+										vaultContract.redeemUnderlying(parseUnits(val)),
+										`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+										() => onHide(),
+									)
+								}}
+								pendingTx={pendingTx}
+								txHash={txHash}
+							>
+								Withdraw
+							</Button>
+						)}
 					</Modal.Actions>
 				</>
 			</Modal>

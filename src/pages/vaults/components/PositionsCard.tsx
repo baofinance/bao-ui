@@ -15,6 +15,7 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import RepayModal from './Modals/RepayModal'
 import WithdrawModal from './Modals/WithdrawModal'
+import { isDesktop } from 'react-device-detect'
 
 export const PositionList = ({
 	vaultName,
@@ -38,7 +39,7 @@ export const PositionList = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Open Positions
 			</Typography>
-			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite text-opacity-50' />
+			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite/60' />
 			{collateral
 				.map((vault: ActiveSupportedVault) => (
 					<PositionListItem
@@ -108,17 +109,17 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 
 	return (
 		<>
-			<div className='glassmorphic-card my-4 p-4'>
+			<div className='glassmorphic-card my-4 p-2 lg:p-4'>
 				<div className='grid w-full grid-cols-12 items-center justify-center px-2'>
-					<div className='items-left col-span-3 m-auto ml-0 text-start align-middle'>
+					<div className='items-left col-span-3 m-auto text-start align-middle lg:ml-0'>
 						<Image
 							src={`/images/tokens/${vault.icon}`}
 							alt={`${vault.underlyingSymbol}`}
-							width={24}
-							height={24}
+							width={isDesktop ? 24 : 32}
+							height={isDesktop ? 24 : 32}
 							className='inline-block select-none'
 						/>
-						<span className='inline-block text-left align-middle'>
+						<span className='hidden text-left align-middle lg:inline-block'>
 							<Typography variant='lg' className='ml-2 font-bakbak leading-5'>
 								{vault.underlyingSymbol}
 							</Typography>
@@ -154,11 +155,11 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 
 					<div className='col-span-3 m-auto mr-0 w-full items-end'>
 						{!vault.isSynth ? (
-							<Button fullWidth size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account}>
+							<Button fullWidth size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account} className='text-sm lg:text-base'>
 								Withdraw
 							</Button>
 						) : (
-							<Button fullWidth size='xs' onClick={() => setShowRepayModal(true)} disabled={!account}>
+							<Button fullWidth size='xs' onClick={() => setShowRepayModal(true)} disabled={!account} className='text-sm lg:text-base'>
 								Repay
 							</Button>
 						)}

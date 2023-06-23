@@ -213,7 +213,10 @@ const Vault: NextPage<{
 						</div>
 
 						{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
-							<div className='grid gap-16 lg:grid-cols-2'>
+							<div className='mt-6 grid gap-6 lg:grid lg:grid-cols-2 lg:flex-col lg:gap-16'>
+								<div className='col-span-1'>
+									<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
+								</div>
 								<div className='lg:col-span-1'>
 									<PositionList
 										vaultName={vaultName}
@@ -225,13 +228,10 @@ const Vault: NextPage<{
 										borrowBalances={borrowBalances}
 									/>
 								</div>
-								<div className='col-span-1'>
-									<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
-								</div>
 							</div>
 						)}
 
-						<div className='grid gap-16 lg:grid-cols-2'>
+						<div className='mt-6 grid gap-6 lg:grid-cols-2 lg:gap-16'>
 							<div className='lg:col-span-1'>
 								<DepositCard
 									vaultName={vaultName}

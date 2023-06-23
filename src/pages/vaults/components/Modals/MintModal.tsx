@@ -2,10 +2,13 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
@@ -44,24 +47,33 @@ const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
 				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				<Button
-					fullWidth
-					className='!rounded-full'
-					disabled={!val}
-					onClick={() => {
-						handleTx(
-							vaultContract.borrow(val),
-							`${vaultName} Vault: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-							() => {
-								onHide()
-							},
-						)
-					}}
-					pendingTx={pendingTx}
-					txHash={txHash}
-				>
-					Confirm
-				</Button>
+				{pendingTx ? (
+					<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+						<Button fullWidth className='!rounded-full'>
+							<PendingTransaction /> Pending Transaction
+							<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+						</Button>
+					</a>
+				) : (
+					<Button
+						fullWidth
+						className='!rounded-full'
+						disabled={!val}
+						onClick={() => {
+							handleTx(
+								vaultContract.borrow(val),
+								`${vaultName} Vault: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								() => {
+									onHide()
+								},
+							)
+						}}
+						pendingTx={pendingTx}
+						txHash={txHash}
+					>
+						Confirm
+					</Button>
+				)}
 			</Modal.Actions>
 		</Modal>
 	)

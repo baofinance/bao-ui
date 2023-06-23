@@ -2,6 +2,7 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
@@ -9,6 +10,8 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/vaults/useApprovals'
 import { Erc20 } from '@/typechain/Erc20'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
@@ -49,7 +52,14 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				{approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
+				{pendingTx ? (
+					<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+						<Button fullWidth className='!rounded-full'>
+							<PendingTransaction /> Pending Transaction
+							<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+						</Button>
+					</a>
+				) : approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth
 						className='!rounded-full'

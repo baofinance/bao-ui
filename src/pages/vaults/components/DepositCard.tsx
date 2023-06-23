@@ -17,6 +17,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
 
 export const DepositCard = ({
@@ -101,19 +102,19 @@ export const DepositCard = ({
 							{({ open }) => (
 								<div>
 									<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
-										<div className='m-2 flex w-16 rounded-full border-none bg-baoWhite bg-opacity-5 duration-300 hover:bg-transparent-300 lg:w-32'>
-											<div className='m-auto w-auto py-3 text-baoWhite'>
+										<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
+											<div className='m-auto text-baoWhite lg:py-3'>
 												{selectedOption === '' ? (
 													<Typography>Select a collateral</Typography>
 												) : (
-													<div className='h-full items-start'>
+													<div className='items-start'>
 														<div className='inline-block lg:mr-2'>
 															<Image
 																className='z-10 inline-block select-none'
 																src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
 																alt={asset && asset.underlyingSymbol}
-																width={24}
-																height={24}
+																width={isDesktop ? 24 : 32}
+																height={isDesktop ? 24 : 32}
 															/>
 														</div>
 														<span className='hidden text-left align-middle lg:inline-block'>
@@ -124,14 +125,17 @@ export const DepositCard = ({
 													</div>
 												)}
 											</div>
-											<div className='m-auto -ml-2 w-auto justify-end text-end lg:ml-0'>
+											<div className='m-auto hidden justify-end text-end lg:ml-0 lg:block'>
 												<ChevronDownIcon className='h-5 w-5 text-baoRed' aria-hidden='true' />
 											</div>
+										</div>
+										<div className='m-auto block justify-end text-end lg:ml-0 lg:hidden'>
+											<ChevronDownIcon className='-mr-1 h-5 w-5 text-baoWhite' aria-hidden='true' />
 										</div>
 									</Listbox.Button>
 
 									<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-										<Listbox.Options className='absolute z-10 -mt-1 ml-3 w-auto origin-top-right overflow-hidden rounded-3xl bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+										<Listbox.Options className='absolute z-10 w-auto origin-top-right overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 											<div className='grid grid-cols-6 p-2 font-bakbak font-normal text-baoWhite'>
 												<div className='col-span-2'>
 													<Typography variant='lg'>Asset</Typography>
@@ -208,12 +212,14 @@ export const DepositCard = ({
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), asset.underlyingDecimals)}`}
+								className='h-10 lg:h-auto'
 							/>
 						</div>
 						<div className='m-auto mr-2'>
 							<Button
 								onClick={() => setShowSupplyModal(true)}
 								disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+								className={'!h-10 !px-2 !text-sm lg:!text-base'}
 							>
 								Supply
 							</Button>
@@ -226,7 +232,7 @@ export const DepositCard = ({
 							/>
 						</div>
 					</div>
-					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite text-opacity-50'>
+					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>
 						Collateral Info
 					</Typography>
 					<StatBlock
@@ -242,7 +248,7 @@ export const DepositCard = ({
 											placement='top'
 											className='rounded-full bg-baoRed'
 										>
-											<Typography className='inline-block align-middle'>
+											<Typography className='inline-block align-middle text-sm lg:text-base'>
 												{getDisplayBalance(asset.supplied, asset.underlyingDecimals)}
 											</Typography>
 										</Tooltipped>
@@ -260,7 +266,7 @@ export const DepositCard = ({
 								label: 'Collateral Factor',
 								value: (
 									<>
-										<Typography className='inline-block align-middle '>
+										<Typography className='inline-block align-middle text-sm lg:text-base'>
 											{getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%
 										</Typography>
 									</>
@@ -270,7 +276,9 @@ export const DepositCard = ({
 								label: 'Initial Margin Factor',
 								value: (
 									<>
-										<Typography className='inline-block align-middle '>{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%</Typography>
+										<Typography className='inline-block align-middle text-sm lg:text-base'>
+											{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%
+										</Typography>
 									</>
 								),
 							},
@@ -278,7 +286,7 @@ export const DepositCard = ({
 								label: 'Reserve Factor',
 								value: (
 									<>
-										<Typography className='inline-block align-middle '>
+										<Typography className='inline-block align-middle text-sm lg:text-base'>
 											{getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%
 										</Typography>
 									</>
@@ -288,7 +296,7 @@ export const DepositCard = ({
 								label: 'Total Reserves',
 								value: (
 									<>
-										<Typography className='inline-block align-middle '>
+										<Typography className='inline-block align-middle text-sm lg:text-base'>
 											${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}
 										</Typography>
 									</>

@@ -3,6 +3,7 @@ import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
@@ -20,7 +21,6 @@ import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
-import { MoonLoader } from 'react-spinners'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -277,8 +277,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					{pendingTx ? (
 						<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 							<Button fullWidth className='!rounded-full'>
-								<MoonLoader size={16} speedMultiplier={0.8} color='#e21a53' className='mr-2 mt-1 align-middle' />
-								Pending Transaction
+								<PendingTransaction /> Pending Transaction
 								<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
 							</Button>
 						</a>

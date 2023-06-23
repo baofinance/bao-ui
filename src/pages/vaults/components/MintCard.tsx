@@ -15,6 +15,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import MintModal from './Modals/MintModal'
+import { isDesktop } from 'react-device-detect'
 
 export const MintCard = ({
 	vaultName,
@@ -87,19 +88,19 @@ export const MintCard = ({
 				<Card.Body>
 					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
 						<div>
-							<div className='m-2 flex w-32 justify-center rounded-full border-none bg-baoWhite bg-opacity-5 p-1'>
-								<div className='justify-center py-2 text-baoWhite'>
-									<div className='h-full justify-center'>
-										<div className='mr-2 inline-block'>
+							<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
+								<div className='m-auto text-baoWhite lg:py-3'>
+									<div className='items-start'>
+										<div className='inline-block lg:mr-2'>
 											<Image
 												className='z-10 inline-block select-none'
 												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
 												alt={synth && synth.underlyingSymbol}
-												width={24}
-												height={24}
+												width={isDesktop ? 24 : 32}
+												height={isDesktop ? 24 : 32}
 											/>
 										</div>
-										<span className='inline-block text-left align-middle'>
+										<span className='hidden text-left align-middle lg:inline-block'>
 											<Typography variant='lg' className='font-bakbak'>
 												{synth && synth.underlyingSymbol}
 											</Typography>
@@ -114,6 +115,7 @@ export const MintCard = ({
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
+								className='h-10 lg:h-auto'
 							/>
 						</div>
 						<div className='m-auto mr-2'>
@@ -127,6 +129,7 @@ export const MintCard = ({
 										borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
 										parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
 								}
+								className={'!h-10 !px-2 !text-sm lg:!text-base'}
 							>
 								Mint
 							</Button>
@@ -139,7 +142,7 @@ export const MintCard = ({
 							/>
 						</div>
 					</div>
-					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite text-opacity-50'>
+					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>
 						Mint Info
 					</Typography>
 					<div className='flex flex-col gap-4 rounded'>
@@ -150,10 +153,16 @@ export const MintCard = ({
 									label: 'Minimum Mint',
 									value: (
 										<>
-											<Typography className='inline-block align-middle'>
+											<Typography className='inline-block align-middle text-sm lg:text-base'>
 												{synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'}{' '}
-												{synth.minimumBorrow ? synth.underlyingSymbol : ''}
 											</Typography>
+											<Image
+												className={(synth.minimumBorrow && 'hidden', 'z-10 ml-1 inline-block select-none')}
+												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												alt={synth && synth.underlyingSymbol}
+												width={16}
+												height={16}
+											/>
 										</>
 									),
 								},
@@ -161,9 +170,16 @@ export const MintCard = ({
 									label: 'Max Mintable',
 									value: (
 										<>
-											<Typography className='inline-block align-middle'>
-												{getDisplayBalance(maxMintable ? maxMintable : 0)} {synth.underlyingSymbol}
+											<Typography className='inline-block align-middle text-sm lg:text-base'>
+												{getDisplayBalance(maxMintable ? maxMintable : 0)}
 											</Typography>
+											<Image
+												className='z-10 ml-1 inline-block select-none'
+												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												alt={synth && synth.underlyingSymbol}
+												width={16}
+												height={16}
+											/>
 										</>
 									),
 								},
