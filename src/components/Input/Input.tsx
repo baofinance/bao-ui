@@ -42,7 +42,7 @@ const Input: React.FC<InputProps> = ({
 					value={value}
 					onChange={onChange}
 					className='relative
-				w-full min-w-0 appearance-none rounded-3xl rounded-r-none border-solid border-inherit bg-baoBlack py-3 pl-4
+				w-full min-w-0 appearance-none rounded-3xl rounded-r-3xl border-solid border-inherit bg-baoBlack py-3 pl-4
 				text-start align-middle text-base text-baoWhite outline-none outline outline-2 outline-offset-2
 				 transition-all duration-200 disabled:text-opacity-60'
 				/>

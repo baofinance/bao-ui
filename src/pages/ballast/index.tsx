@@ -3,6 +3,7 @@ import Typography from '@/components/Typography'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 import BallastCard from './components/Ballast'
+import { Icon } from '@/components/Icon'
 
 const Ballast: React.FC = () => {
 	return (
@@ -13,9 +14,12 @@ const Ballast: React.FC = () => {
 					<Typography variant='hero' className='stroke'>
 						Ballast
 					</Typography>
-					<Typography className='text-base font-light tracking-tight lg:mb-4'>
-						Mint or redeem synths with an equivalent asset for a small fee.
-					</Typography>
+					<div className='mt-4 flex gap-2'>
+						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
+						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
+							Mint or redeem synths with an equivalent asset for a small fee.
+						</Typography>
+					</div>
 					<div className='hidden lg:block'>
 						<a href='https://info.bao.finance/docs/guides/bao-markets/ballast' target='_blank' rel='noopener noreferrer'>
 							<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>

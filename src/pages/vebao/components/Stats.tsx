@@ -43,14 +43,10 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 
 	return (
 		<div className='col-span-2 grid'>
-			<Typography variant='xl' className='mb-4 text-center font-bakbak'>
-				Lock Info
-			</Typography>
-			<div className='glassmorphic-card grid h-full grid-rows-5 items-center rounded px-8 py-6'>
+			<Typography className='mb-4 text-center font-bakbak text-xl'>Lock Info</Typography>
+			<div className='glassmorphic-card grid h-full grid-rows-5 items-center rounded p-6'>
 				<div className='grid grid-cols-2 items-center gap-1'>
-					<Typography variant='lg' className='font-bakbak'>
-						Earned Rewards
-					</Typography>
+					<Typography className='font-bakbak text-lg'>Earned Rewards</Typography>
 					<div className='flex justify-end'>
 						<div className='flex h-10 items-center justify-center'>
 							<Typography variant='lg' className='ml-2 inline font-bakbak'>
@@ -74,7 +70,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 						</Button>
 					</div>
 				</div>
-				<div className='grid gap-1 md:grid-cols-2'>
+				<div className='grid grid-cols-2 gap-1'>
 					<Typography variant='lg' className='font-bakbak'>
 						veBAO APR
 					</Typography>
@@ -84,7 +80,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 						</Typography>
 					</>
 				</div>
-				<div className='grid gap-1 md:grid-cols-2'>
+				<div className='grid grid-cols-2 gap-1'>
 					<Typography variant='lg' className='font-bakbak'>
 						veBAO Balance
 					</Typography>
@@ -98,7 +94,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 						</Typography>
 					</>
 				</div>
-				<div className='grid gap-1 md:grid-cols-2'>
+				<div className='grid grid-cols-2 gap-1'>
 					<Typography variant='lg' className='font-bakbak'>
 						BAO Locked
 					</Typography>
@@ -109,7 +105,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 					</>
 				</div>
 
-				<div className='grid gap-1 md:grid-cols-2'>
+				<div className='grid grid-cols-2 gap-1'>
 					<Typography variant='lg' className='font-bakbak'>
 						Locked Until
 					</Typography>
@@ -176,55 +172,45 @@ export const ProtocolStats = ({ veInfo, baoPrice }: StatsProps) => {
 			</Typography>
 			<Card className='glassmorphic-card p-4'>
 				<Card.Body>
-					<div className='grid w-full grid-cols-12 gap-4 px-4 pt-2 !text-center'>
-						<div className='col-span-4'>
+					<div className='flex w-full gap-4 px-4 pt-2 !text-center lg:grid lg:grid-cols-12'>
+						<div className='lg:col-span-4'>
 							<div className='grid h-full grid-rows-2 gap-4'>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Total Value Locked
-									</Typography>
-									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+									<Typography className='font-bakbak text-sm text-baoRed '>{isDesktop ? 'Total Value Locked' : 'TVL'}</Typography>
+									<Typography className='m-auto inline-block align-middle font-bakbak text-baoWhite lg:text-lg'>
 										${veInfo && baoPrice ? getDisplayBalance(decimate(veInfo.totalSupply.mul(baoPrice))) : 0}
 									</Typography>
 								</div>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Total veBAO Supply
-									</Typography>
-									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+									<Typography className='font-bakbak text-sm text-baoRed '>{isDesktop ? 'Total veBAO Supply' : 'Total veBAO'}</Typography>
+									<Typography className='m-auto inline-block align-middle font-bakbak text-baoWhite lg:text-lg'>
 										{veInfo && `${getDisplayBalance(veInfo.totalSupply)}`}
 									</Typography>
 								</div>
 							</div>
 						</div>
-						<div className='col-span-4'>
+						<div className='lg:col-span-4'>
 							<div className='grid h-full grid-rows-2 gap-4'>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Average Lock Time
-									</Typography>
-									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+									<Typography className='font-bakbak text-sm text-baoRed '>{isDesktop ? 'Average Lock Time' : 'Avg. Lock'}</Typography>
+									<Typography className='m-auto inline-block align-middle font-bakbak text-baoWhite lg:text-lg'>
 										{avgLock ? avgLock : 0} Years
 									</Typography>
 								</div>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										% of BAO Locked
-									</Typography>
+									<Typography className='font-bakbak text-sm text-baoRed '>{isDesktop ? '% of BAO Locked' : '% Locked'}</Typography>
 									<div>
-										<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
+										<Typography className='m-auto inline-block align-middle font-bakbak text-baoWhite lg:text-lg'>
 											{suppliedPercentage ? `${getDisplayBalance(suppliedPercentage)}%` : '-'}
 										</Typography>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div className='col-span-4'>
+						<div className='lg:col-span-4'>
 							<div className='grid h-full grid-rows-2 gap-4'>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Next Distribution
-									</Typography>
+									<Typography className='font-bakbak text-sm text-baoRed '>{isDesktop ? 'Next Distribution' : 'Next Dist.'}</Typography>
 									<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>
 										{account && nextFeeDistribution && timestamp && nextFeeDistribution.mul(1000).lte(timestamp)
 											? addDays(1, new Date(nextFeeDistribution.mul(1000).toNumber())).toDateString()
@@ -232,8 +218,8 @@ export const ProtocolStats = ({ veInfo, baoPrice }: StatsProps) => {
 									</Typography>
 								</div>
 								<div className='row-span-1'>
-									<Typography variant='sm' className='font-bakbak text-baoRed'>
-										Average Weekly Earnings
+									<Typography className='font-bakbak text-xs text-baoRed '>
+										{isDesktop ? 'Average Weekly Earnings' : 'Avg. Earnings (W)'}
 									</Typography>
 									<div>
 										<Typography variant='xl' className='m-auto inline-block align-middle font-bakbak text-baoWhite'>

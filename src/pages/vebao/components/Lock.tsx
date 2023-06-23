@@ -37,7 +37,7 @@ const Lock: React.FC = () => {
 
 	return (
 		<>
-			<div className='grid grid-cols-4 gap-4'>
+			<div className='mt-6 grid gap-4 lg:mt-0 lg:grid-cols-4'>
 				<Actions lockInfo={lockInfo} baoBalance={baoBalance} />
 				<LockStats baoBalance={baoBalance} lockInfo={lockInfo} timestamp={blockTimestamp} />
 			</div>

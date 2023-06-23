@@ -12,6 +12,7 @@ import { isDesktop } from 'react-device-detect'
 import Dashboard from './components/Dashboard'
 import Lock from './components/Lock'
 import { ProtocolStats } from './components/Stats'
+import { Icon } from '@/components/Icon'
 
 const VeBAO: React.FC = () => {
 	const { chainId } = useWeb3React()
@@ -22,21 +23,30 @@ const VeBAO: React.FC = () => {
 
 	return (
 		<>
-			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
-			<div className='mb-6 grid grid-cols-5 gap-32'>
-				<div className='col-span-2'>
+			<NextSeo
+				title={'veBAO'}
+				description={
+					'veBAO enables users to lock governance tokens, amplifying their voting power to influence gauge weights and direct incentives within the ecosystem.'
+				}
+			/>
+			<div className='grid gap-4 lg:grid-cols-5 lg:gap-24'>
+				<div className='w-full lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
 						veBAO
 					</Typography>
-					<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-4 font-light tracking-tight'>
-						Bao Vaults allow users to mint synthetic price-stable assets with our yield bearing Bao Baskets or ETH as collateral. Mint
-						instantly and on your terms!
-					</Typography>
-					<a href='https://info.bao.finance/docs/distribution-tokenomics' target='_blank' rel='noopener noreferrer'>
-						<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
-					</a>
+					<div className='mt-4 flex gap-2'>
+						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
+						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
+							Lock governance tokens, amplifying voting power to influence gauge weights and direct incentives within the ecosystem.
+						</Typography>
+					</div>
+					<div className='hidden lg:block'>
+						<a href='https://info.bao.finance/docs/distribution-tokenomics' target='_blank' rel='noopener noreferrer'>
+							<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+						</a>
+					</div>
 				</div>
-				<div className='col-span-3'>
+				<div className='lg:col-span-3'>
 					<ProtocolStats baoPrice={baoPrice} baoBalance={baoBalance} lockInfo={lockInfo} veInfo={veInfo} />
 				</div>
 			</div>

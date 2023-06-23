@@ -2,6 +2,7 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
+import { Icon } from '@/components/Icon'
 import Input from '@/components/Input'
 import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
@@ -140,19 +141,30 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 										{rates && getDisplayBalance(rates.dai)}
 									</Badge>
 								</div>
-								<Typography variant='sm' className='text-center'>
-									When minting 2% of the cost is included to account for slippage. Any unused tokens will be returned in the mint
-									transaction.
-								</Typography>
+								<div className='mt-4 flex gap-2 rounded-3xl bg-baoWhite/5 p-4'>
+									<Icon icon='warning' className='m-0 h-6 w-6 flex-none' />
+									<Typography variant='sm' className='m-0 pr-1'>
+										There will be an extra 2% of the cost included to account for slippage. Any unused tokens will be returned as part of
+										the mint transaction.
+									</Typography>
+								</div>
 							</>
 						) : (
-							<Typography variant='sm' className='text-center'>
-								When you redeem {basket.name}, you will receive the underlying tokens. Alternatively, you can swap {basket.name}{' '}
-								<a href={`${swapLink}`} target='blank' className='font-bold hover:text-baoRed'>
-									here <FontAwesomeIcon size='xs' icon={faExternalLinkAlt} />
-								</a>
-								. <Badge className='mt-2'>CAUTION: Slippage may apply on swaps!</Badge>
-							</Typography>
+							<div className='rounded-3xl bg-baoWhite/5 p-4'>
+								<div className='mt-4 flex gap-2'>
+									<Icon icon='warning' className='m-0 h-6 w-6 flex-none' />
+									<Typography variant='sm' className='m-0 pr-1'>
+										When you redeem {basket.name}, you will receive the underlying tokens. Alternatively, you can swap {basket.name}{' '}
+										<a href={`${swapLink}`} target='blank' className='font-bold hover:text-baoRed'>
+											here <FontAwesomeIcon size='xs' icon={faExternalLinkAlt} />
+										</a>
+										.
+									</Typography>
+								</div>
+								<div className='m-auto px-2 pt-2 text-center'>
+									<Badge>Slippage may occur on swaps!</Badge>
+								</div>
+							</div>
 						)}
 					</div>
 					<div className='flex w-full flex-col'>

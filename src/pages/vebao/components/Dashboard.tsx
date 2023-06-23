@@ -1,4 +1,5 @@
 import Button from '@/components/Button'
+import { Icon } from '@/components/Icon'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
@@ -148,7 +149,13 @@ export const Dashboard = () => {
 			<Typography variant='xl' className='mb-4 mt-4 text-center font-bakbak'>
 				Voting Dashboard
 			</Typography>
-			<div className={`glassmorphic-card w-full justify-evenly gap-4 rounded border bg-opacity-80 p-8`}>
+			<div className={`glassmorphic-card flex gap-4 rounded border bg-opacity-80 p-6 lg:hidden`}>
+				<Icon icon='warning' className='h-8 w-8 flex-none' />
+				<div className='m-0 flex-auto'>
+					<Typography className='m-0'>Please visit the desktop version of the app to vote on gauges.</Typography>
+				</div>
+			</div>
+			<div className={`glassmorphic-card hidden w-full justify-evenly gap-4 rounded border bg-opacity-80 p-8 lg:block`}>
 				<div className='grid grid-cols-3 gap-4'>
 					<div className='col-span-1 text-center'>
 						<Typography className='font-bakbak text-sm text-baoRed'>Select Gauge</Typography>
@@ -418,7 +425,7 @@ export const Dashboard = () => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='h-2 w-full appearance-none rounded-full bg-baoWhite bg-opacity-20 disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-3xl bg-baoWhite bg-opacity-20 disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -430,7 +437,7 @@ export const Dashboard = () => {
 							placeholder={val.toString()}
 							value={val}
 							className='relative -mr-1 h-6 w-12
-				appearance-none rounded border-solid border-inherit bg-baoBlack bg-opacity-0 pl-2 
+				appearance-none rounded-3xl border-solid border-inherit bg-baoBlack bg-opacity-0 pl-2 
 				text-end align-middle font-bakbak text-lg outline-none outline
 				 outline-2 outline-offset-2 transition-all duration-200 disabled:text-baoWhite'
 						/>

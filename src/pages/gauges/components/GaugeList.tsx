@@ -93,8 +93,8 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 					<div className='flex basis-1/3 lg:basis-1/4'>
 						<div className='mx-0 my-auto inline-block h-full items-center'>
 							<div className='mr-2 hidden lg:inline-block'>
-								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={32} height={32} />
-								<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={32} height={32} />
+								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={24} height={24} />
+								<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={24} height={24} />
 							</div>
 							<span className='inline-block text-left align-middle'>
 								<Typography variant='base' className='font-bakbak'>
@@ -126,7 +126,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</Typography>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/3'>
+					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/4'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
 						</Typography>
