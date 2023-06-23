@@ -32,7 +32,7 @@ const Input: React.FC<InputProps> = ({
 	className,
 }) => {
 	return (
-		<div className={classNames('align-center flex w-full rounded-3xl border border-baoWhite border-opacity-20', className)}>
+		<div className={'align-center flex w-full rounded-3xl border border-baoWhite border-opacity-20'}>
 			<div className='align-center relative flex w-full justify-center align-middle'>
 				{!!startAdornment && startAdornment}
 				<input
@@ -41,10 +41,10 @@ const Input: React.FC<InputProps> = ({
 					placeholder={placeholder}
 					value={value}
 					onChange={onChange}
-					className='relative
-				w-full min-w-0 appearance-none rounded-3xl rounded-r-3xl border-solid border-inherit bg-baoBlack py-3 pl-4
-				text-start align-middle text-base text-baoWhite outline-none outline outline-2 outline-offset-2
-				 transition-all duration-200 disabled:text-opacity-60'
+					className={classNames(
+						'relative w-full min-w-0 appearance-none rounded-3xl rounded-r-3xl border-solid border-inherit bg-baoBlack py-3 pl-4 text-start align-middle text-base text-baoWhite outline-none outline outline-2 outline-offset-2 transition-all duration-200 disabled:text-opacity-60',
+						className,
+					)}
 				/>
 				{!disabled && (
 					<>

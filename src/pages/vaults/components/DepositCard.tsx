@@ -212,14 +212,14 @@ export const DepositCard = ({
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), asset.underlyingDecimals)}`}
-								className='h-10 lg:h-auto'
+								className='h-10 !rounded-r-none lg:h-auto'
 							/>
 						</div>
 						<div className='m-auto mr-2'>
 							<Button
 								onClick={() => setShowSupplyModal(true)}
 								disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-								className={'!h-10 !px-2 !text-sm lg:!text-base'}
+								className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 							>
 								Supply
 							</Button>

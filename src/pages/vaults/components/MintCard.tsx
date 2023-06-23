@@ -115,7 +115,7 @@ export const MintCard = ({
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
-								className='h-10 lg:h-auto'
+								className='h-10 !rounded-r-none lg:h-auto'
 							/>
 						</div>
 						<div className='m-auto mr-2'>
@@ -129,7 +129,7 @@ export const MintCard = ({
 										borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
 										parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
 								}
-								className={'!h-10 !px-2 !text-sm lg:!text-base'}
+								className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 							>
 								Mint
 							</Button>
