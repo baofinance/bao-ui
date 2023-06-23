@@ -10,6 +10,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import _ from 'lodash'
 import { useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import { animated, interpolate, useTransition } from 'react-spring'
 
 interface AssetAllocationAmount {
@@ -107,7 +108,7 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-lg' dy={-2}>
 							{`${rates && info ? `$${getDisplayBalance(rates.usd.mul(info.totalSupply), 36)}` : <Loader />}`}
 						</Text>
-						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-xs' dy={14}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-sm' dy={14}>
 							{`Total Value Locked`}
 						</Text>
 					</>

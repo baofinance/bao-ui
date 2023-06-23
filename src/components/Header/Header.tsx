@@ -9,9 +9,8 @@ import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { FC, Fragment, ReactNode } from 'react'
-import { isDesktop } from 'react-device-detect'
 import AccountButton from '../AccountButton'
-import MigrateButton from '../MigrateButton'
+import Container from '../Container'
 import Nav from '../Nav'
 
 export interface IconProps {
@@ -45,7 +44,13 @@ export interface MobileNavLinkProps {
 
 const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...props }) => {
 	return (
-		<Popover.Button as={Link} href={href} target={target} className='block text-base leading-7 tracking-tight text-baoWhite' {...props}>
+		<Popover.Button
+			as={Link}
+			href={href}
+			target={target}
+			className='block font-bakbak text-lg leading-7 tracking-tight text-baoWhite'
+			{...props}
+		>
 			{children}
 		</Popover.Button>
 	)
@@ -55,73 +60,86 @@ const Header: FC = () => {
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
 	return (
-		<header className='glassmorphic-card z-50 mx-[10vh] my-8 w-auto'>
+		<header>
 			<nav>
-				<div className='relative z-50 flex max-w-full justify-between px-8 py-4'>
-					<div className='relative z-10 flex items-center gap-8'>
-						<Logo />
+				<Container className='relative z-50 flex !max-w-full justify-between py-8'>
+					<div className='relative z-10 flex items-center gap-16'>
+						<Link href='/' aria-label='Home'>
+							<Logo className='h-10 w-auto' />
+						</Link>
 					</div>
-					<div className='flex items-center gap-2'>
-						{isDesktop ? (
-							<div className='mr-8 flex gap-8'>
-								<Nav />
-							</div>
-						) : (
-							<Popover>
-								{({ open }) => (
-									<>
-										<Popover.Button
-											className='stroke-text-100 relative z-10 -mr-2 inline-flex items-center rounded p-2 outline-none hover:bg-baoRed/50 [&:not(:focus-visible)]:focus:outline-none'
-											aria-label='Toggle site navigation'
-										>
-											{({ open }) => (open ? <ChevronUpIcon className='h-6 w-6' /> : <MenuIcon className='h-6 w-6' />)}
-										</Popover.Button>
-										<AnimatePresence initial={false}>
-											{open && (
-												<>
-													<Popover.Overlay
-														static
-														as={motion.div}
-														initial={{ opacity: 0 }}
-														animate={{ opacity: 1 }}
-														exit={{ opacity: 0 }}
-														className='bg-background-100/60 fixed inset-0 z-0 backdrop-blur'
-													/>
-													<Popover.Panel
-														static
-														as={motion.div}
-														initial={{ opacity: 0, y: -32 }}
-														animate={{ opacity: 1, y: 0 }}
-														exit={{
-															opacity: 0,
-															y: -32,
-															transition: { duration: 0.2 },
-														}}
-														className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-baoRed px-6 pb-6 pt-32'
-													>
-														<div className='space-y-4'>
-															<MobileNavLink href='/vaults'>VAULTS</MobileNavLink>
-															<MobileNavLink href='/ballast'>BALLST</MobileNavLink>
-															<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
-															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
-															<MobileNavLink href='/gauges'>GAUGES</MobileNavLink>
-														</div>
-													</Popover.Panel>
-												</>
-											)}
-										</AnimatePresence>
-									</>
-								)}
-							</Popover>
-						)}
-
-						{baov1Balance.gt(0) && <MigrateButton />}
+					<div className='flex items-center gap-6'>
+						<div className='hidden gap-6 lg:flex'>
+							<Nav />
+						</div>
 						<AccountButton />
+						<Popover className='block lg:hidden'>
+							{({ open }) => (
+								<>
+									<Popover.Button
+										className='relative z-10 inline-flex h-[40px] w-[40px] items-center rounded-3xl stroke-baoWhite p-2 active:stroke-gray-900 [&:not(:focus-visible)]:focus:outline-none'
+										aria-label='Toggle site navigation'
+									>
+										<div className='flex flex-col items-center justify-center'>
+											<span
+												className={`block h-0.5 w-6 rounded-sm bg-baoWhite 
+                    transition-all duration-300 ease-out ${open ? 'translate-y-1 rotate-45' : '-translate-y-0.5'}`}
+											></span>
+											<span
+												className={`my-0.5 block h-0.5 w-6 rounded-sm bg-baoWhite transition-all duration-300 ease-out ${
+													open ? 'opacity-0' : 'opacity-100'
+												}`}
+											></span>
+											<span
+												className={`block h-0.5 w-6 rounded-sm bg-baoWhite 
+                    transition-all duration-300 ease-out ${open ? '-translate-y-1 -rotate-45' : 'translate-y-0.5'}`}
+											></span>
+										</div>
+									</Popover.Button>
+									<AnimatePresence initial={false}>
+										{open && (
+											<>
+												<Popover.Overlay
+													static
+													as={motion.div}
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+													className='fixed inset-0 z-0 bg-baoBlack/60 backdrop-blur'
+												/>
+												<Popover.Panel
+													static
+													as={motion.div}
+													initial={{ opacity: 0, y: -32 }}
+													animate={{ opacity: 1, y: 0 }}
+													exit={{
+														opacity: 0,
+														y: -32,
+														transition: { duration: 0.2 },
+													}}
+													className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-baoBlack px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
+												>
+													<div className='space-y-4'>
+														<MobileNavLink href='/vaults'>VAULTS</MobileNavLink>
+														<MobileNavLink href='/ballast'>BALLAST</MobileNavLink>
+														<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
+														<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
+														<MobileNavLink href='/gauges'>GAUGES</MobileNavLink>
+													</div>
+												</Popover.Panel>
+											</>
+										)}
+									</AnimatePresence>
+								</>
+							)}
+						</Popover>
 
-						<Menu as='div' className='relative !z-[9999] inline-block text-left'>
-							<Menu.Button className='h-10 w-10 rounded'>
+						{/* {baov1Balance.gt(0) && <MigrateButton />} */}
+
+						<Menu as='div' className='relative !z-[9999] hidden text-left lg:inline-block'>
+							<Menu.Button className='h-10 rounded'>
 								<span className='sr-only'>Open options</span>
-								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5 text-baoRed' aria-hidden='true' />
+								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5 text-baoWhite' aria-hidden='true' />
 							</Menu.Button>
 
 							<Transition
@@ -133,7 +151,7 @@ const Header: FC = () => {
 								leaveFrom='transform opacity-100 scale-100'
 								leaveTo='transform opacity-0 scale-95'
 							>
-								<Menu.Items className='absolute right-0 !z-[9999] mt-2 w-fit origin-top-right rounded-md border border-transparent-100 bg-baoBlack shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+								<Menu.Items className='absolute right-0 !z-[9999] mt-2 w-fit origin-top-right rounded-md border border-baoWhite/20 bg-baoBlack shadow-lg ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
 									<div className='z-[9999] py-1'>
 										<Menu.Item>
 											{({ active }) => (
@@ -268,7 +286,7 @@ const Header: FC = () => {
 							</Transition>
 						</Menu>
 					</div>
-				</div>
+				</Container>
 			</nav>
 		</header>
 	)

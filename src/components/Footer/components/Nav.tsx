@@ -7,7 +7,7 @@ import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {
 	return (
-		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm'}`}>
+		<div className='flex items-center text-sm lg:text-lg'>
 			<Tooltipped content='Discord' placement='top'>
 				<a
 					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'

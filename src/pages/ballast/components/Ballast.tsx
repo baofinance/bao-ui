@@ -41,18 +41,20 @@ export const Ballast = () => {
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-					<Typography variant='sm' className='font-bakbak text-baoRed'>
+					<Typography variant='sm' className='font-bold text-baoRed'>
 						Balance:
 					</Typography>
-					<Typography variant='sm' className='font-bakbak'>
+					<Typography variant='sm' className='font-bold'>
 						{selectedOption === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(wethBalance)} WETH`}
 					</Typography>
 				</div>
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-					<Typography variant='sm' className='text-baoRed'>
+					<Typography variant='sm' className='font-bold text-baoRed'>
 						Reserves:
 					</Typography>
-					<Typography variant='sm'>{ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}</Typography>
+					<Typography variant='sm' className='font-bold'>
+						{ballastInfo ? getDisplayBalance(ballastInfo.reserves) : <Loader />}
+					</Typography>
 				</div>
 			</div>
 			<Input
@@ -64,7 +66,7 @@ export const Ballast = () => {
 				}
 				disabled={swapDirection}
 				label={
-					<div className='flex flex-row items-center rounded-r-lg bg-baoBlack pl-2 pr-4'>
+					<div className='flex flex-row items-center rounded-r-3xl bg-baoBlack pl-2 pr-4'>
 						<div className='flex w-6 justify-center'>
 							<Image
 								src={`/images/tokens/${selectedOption === 'baoUSD' ? 'DAI' : 'WETH'}.png`}
@@ -75,7 +77,7 @@ export const Ballast = () => {
 						</div>
 					</div>
 				}
-				className='m-auto h-[60px]'
+				className='m-auto'
 			/>
 		</>
 	)
@@ -84,21 +86,23 @@ export const Ballast = () => {
 		<>
 			<div className='flex w-full flex-row'>
 				<div className='float-left mb-1 flex w-full items-center justify-start gap-1'>
-					<Typography variant='sm' className='font-bakbak text-baoRed'>
+					<Typography variant='sm' className='font-bold text-baoRed'>
 						Balance:
 					</Typography>
-					<Typography variant='sm' className='font-bakbak'>
+					<Typography variant='sm' className='font-bold'>
 						{selectedOption === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
 					</Typography>
 				</div>
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
-					<Typography variant='sm' className='text-baoRed'>
+					<Typography variant='sm' className='font-bold text-baoRed'>
 						Mint Limit:
 					</Typography>
-					<Typography variant='sm'>{ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}</Typography>
+					<Typography variant='sm' className='font-bold'>
+						{ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}
+					</Typography>
 				</div>
 			</div>
-			<div className='m-auto flex h-[60px] w-full rounded-lg border border-baoWhite border-opacity-20 bg-baoBlack'>
+			<div className='m-auto flex w-full rounded-3xl border border-baoWhite border-opacity-20 bg-baoBlack'>
 				<Input
 					onSelectMax={() => setInputVal(formatEther(selectedOption === 'baoUSD' ? baoUSDBalance : baoETHBalance).toString())}
 					onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
@@ -108,14 +112,14 @@ export const Ballast = () => {
 					}
 					disabled={!swapDirection}
 					placeholder={`${formatEther(selectedOption === 'baoUSD' ? baoUSDBalance : baoETHBalance).toString()}`}
-					className='m-auto ml-1 !rounded-lg !border-0'
+					className='m-auto ml-1 !rounded-3xl !border-0'
 				/>
 				<Listbox value={selectedOption} onChange={setSelectedOption}>
 					{({ open }) => (
 						<div className='flex-col'>
 							<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
 								<div className='m-2 flex w-40 rounded-full border-none bg-baoWhite bg-opacity-5 px-1 duration-300 hover:bg-transparent-300'>
-									<div className='m-auto w-auto py-2 text-baoWhite'>
+									<div className='m-auto w-auto py-1 text-baoWhite lg:py-2'>
 										{selectedOption === '' ? (
 											<Typography>Select a collateral</Typography>
 										) : (
@@ -125,12 +129,12 @@ export const Ballast = () => {
 														className='z-10 inline-block select-none'
 														src={`/images/tokens/${selectedOption}.png`}
 														alt={`baoUSD`}
-														width={24}
-														height={24}
+														width={20}
+														height={20}
 													/>
 												</div>
 												<span className='inline-block text-left align-middle'>
-													<Typography variant='xl' className='font-bakbak'>
+													<Typography variant='base' className='font-bakbak'>
 														{selectedOption}
 													</Typography>
 												</span>
@@ -144,7 +148,7 @@ export const Ballast = () => {
 							</Listbox.Button>
 
 							<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-								<Listbox.Options className='absolute z-10 -mt-1 ml-3 w-[260px] origin-top-right overflow-hidden rounded-lg bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+								<Listbox.Options className='absolute inset-x-20 z-10 -mt-1 ml-3 w-[260px] origin-left overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none lg:inset-x-auto'>
 									<div className='grid grid-cols-4 p-2 font-bakbak font-normal text-baoWhite'>
 										<div className='col-span-2'>
 											<Typography variant='lg'>Asset</Typography>
@@ -160,7 +164,7 @@ export const Ballast = () => {
 										className={({ active }) =>
 											classNames(
 												active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-												'cursor-pointer select-none rounded-lg border border-baoBlack p-4 text-sm',
+												'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
 											)
 										}
 										value={'baoUSD'}
@@ -199,7 +203,7 @@ export const Ballast = () => {
 										className={({ active }) =>
 											classNames(
 												active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-												'cursor-pointer select-none rounded-lg border border-baoBlack p-4 text-sm',
+												'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
 											)
 										}
 										value={'baoETH'}
@@ -249,11 +253,11 @@ export const Ballast = () => {
 					{swapDirection ? bInput : aInput}
 					<div className='mt-4 block select-none text-center'>
 						<span
-							className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-baoRed p-2 text-lg hover:cursor-pointer hover:bg-baoRed hover:bg-opacity-80'
+							className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-baoRed p-2 hover:cursor-pointer hover:bg-baoRed hover:bg-opacity-80'
 							onClick={() => setSwapDirection(!swapDirection)}
 						>
-							<FontAwesomeIcon icon={faSync} size='xs' className='m-auto' />
-							<Typography variant='xs' className='inline'>
+							<FontAwesomeIcon icon={faSync} size='sm' className='m-auto' />
+							<Typography variant='sm' className='inline font-bold'>
 								Fee: {ballastInfo ? `${(100 / 10000) * 100}%` : <Loader />}
 							</Typography>
 						</span>

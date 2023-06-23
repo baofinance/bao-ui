@@ -101,13 +101,13 @@ export const DepositCard = ({
 							{({ open }) => (
 								<div>
 									<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
-										<div className='m-2 flex w-32 rounded-full border-none bg-baoWhite bg-opacity-5 duration-300 hover:bg-transparent-300'>
+										<div className='m-2 flex w-16 rounded-full border-none bg-baoWhite bg-opacity-5 duration-300 hover:bg-transparent-300 lg:w-32'>
 											<div className='m-auto w-auto py-3 text-baoWhite'>
 												{selectedOption === '' ? (
 													<Typography>Select a collateral</Typography>
 												) : (
 													<div className='h-full items-start'>
-														<div className='mr-2 inline-block'>
+														<div className='inline-block lg:mr-2'>
 															<Image
 																className='z-10 inline-block select-none'
 																src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
@@ -116,7 +116,7 @@ export const DepositCard = ({
 																height={24}
 															/>
 														</div>
-														<span className='inline-block text-left align-middle'>
+														<span className='hidden text-left align-middle lg:inline-block'>
 															<Typography variant='xl' className='font-bakbak'>
 																{asset && asset.underlyingSymbol}
 															</Typography>
@@ -124,14 +124,14 @@ export const DepositCard = ({
 													</div>
 												)}
 											</div>
-											<div className='m-auto ml-0 w-auto justify-end text-end'>
+											<div className='m-auto -ml-2 w-auto justify-end text-end lg:ml-0'>
 												<ChevronDownIcon className='h-5 w-5 text-baoRed' aria-hidden='true' />
 											</div>
 										</div>
 									</Listbox.Button>
 
 									<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-										<Listbox.Options className='absolute z-10 -mt-1 ml-3 w-auto origin-top-right overflow-hidden rounded-lg bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+										<Listbox.Options className='absolute z-10 -mt-1 ml-3 w-auto origin-top-right overflow-hidden rounded-3xl bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 											<div className='grid grid-cols-6 p-2 font-bakbak font-normal text-baoWhite'>
 												<div className='col-span-2'>
 													<Typography variant='lg'>Asset</Typography>
@@ -154,7 +154,7 @@ export const DepositCard = ({
 														className={({ active }) =>
 															classNames(
 																active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																'cursor-pointer select-none rounded-lg border border-baoBlack p-4 text-sm',
+																'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
 															)
 														}
 														value={asset.underlyingSymbol}

@@ -71,26 +71,26 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	return (
 		<>
-			{isDesktop &&
-				(!account ? (
-					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
-						Connect <FontAwesomeIcon icon={faLink} className='ml-1' />
+			{!account ? (
+				<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
+					Connect <FontAwesomeIcon icon={faLink} className='ml-1' />
+				</Button>
+			) : (
+				<>
+					<Button onClick={() => setShowAccountModal(true)} size='sm'>
+						<div className='items-center'>
+							{displayId}
+							{pendingTxs > 0 && (
+								<>
+									<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 mt-1 text-baoRed' />
+									<Loader />
+									<span className='ml-2'>{pendingTxs}</span>
+									<FontAwesomeIcon icon={faReceipt} className='mx-2 mt-1 text-baoRed' />
+								</>
+							)}
+						</div>
 					</Button>
-				) : (
-					<>
-						<Button onClick={() => setShowAccountModal(true)} size='sm'>
-							<div className='items-center'>
-								{displayId}
-								{pendingTxs > 0 && (
-									<>
-										<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 mt-1 text-baoRed' />
-										<Loader />
-										<span className='ml-2'>{pendingTxs}</span>
-										<FontAwesomeIcon icon={faReceipt} className='mx-2 mt-1 text-baoRed' />
-									</>
-								)}
-							</div>
-						</Button>
+					<div className='hidden lg:block'>
 						<Listbox value={selectedAsset} onChange={setSelectedAsset}>
 							{({ open }) => (
 								<>
@@ -124,14 +124,14 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 origin-bottom-left overflow-hidden rounded-lg bg-baoBlack bg-opacity-80 p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 origin-bottom-left overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{assets.map(([index, symbol, balance]) => (
 													<Listbox.Option
 														key={index}
 														className={({ active }) =>
 															classNames(
 																active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																'cursor-pointer select-none rounded-lg border border-baoBlack border-opacity-0 p-2',
+																'cursor-pointer select-none rounded-3xl border border-baoBlack border-opacity-0 p-2',
 															)
 														}
 														value={symbol}
@@ -162,24 +162,10 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 								</>
 							)}
 						</Listbox>
-					</>
-				))}
-
-			{!isDesktop &&
-				(!account ? (
-					<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
-						{' '}
-						Connect <FontAwesomeIcon icon={faLink} className='ml-4' />
-					</Button>
-				) : (
-					<Button onClick={() => setShowAccountModal(true)} size='sm'>
-						{account.slice(0, 6)}...
-						{account.slice(account.length - 4, account.length)}
-					</Button>
-				))}
-
+					</div>
+				</>
+			)}
 			<AccountModal show={showAccountModal} onHide={() => setShowAccountModal(false)} />
-
 			<WalletProviderModal show={showWalletProviderModal} onHide={() => setShowWalletProviderModal(false)} />
 		</>
 	)

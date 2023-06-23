@@ -95,8 +95,8 @@ function App({ Component, pageProps }: AppProps) {
 			</Head>
 			<Providers>
 				<DefaultSeo {...SEO} />
-				<main>
-					<TxPopup />
+				<TxPopup />
+				<div className='flex min-h-[100vh] flex-col justify-between'>
 					<Header />
 					<Page>
 						<Container>
@@ -104,7 +104,7 @@ function App({ Component, pageProps }: AppProps) {
 						</Container>
 					</Page>
 					<Footer />
-				</main>
+				</div>
 			</Providers>
 		</>
 	)

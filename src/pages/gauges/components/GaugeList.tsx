@@ -17,13 +17,14 @@ import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import GaugeModal from './Modals'
+import { isDesktop } from 'react-device-detect'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
 
 	return (
 		<>
-			<ListHeader headers={['Gauge Name', 'Current Weight', 'APR', 'TVL']} />
+			<ListHeader headers={isDesktop ? ['Gauge Name', 'Current Weight', 'APR', 'TVL'] : ['Name', 'APR', 'TVL']} />
 			<div className='flex flex-col gap-4'>
 				{gauges.length ? (
 					gauges.map((gauge: ActiveSupportedGauge, i: number) => (
@@ -89,9 +90,9 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 				disabled={!account}
 			>
 				<div className='flex w-full flex-row'>
-					<div className='flex basis-1/4'>
+					<div className='flex basis-1/3 lg:basis-1/4'>
 						<div className='mx-0 my-auto inline-block h-full items-center'>
-							<div className='mr-2 inline-block'>
+							<div className='mr-2 hidden lg:inline-block'>
 								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={32} height={32} />
 								<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={32} height={32} />
 							</div>
@@ -100,26 +101,32 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 									{gauge.name}
 								</Typography>
 								<Typography className={`flex align-middle font-bakbak text-baoRed`}>
-									<Image src={`/images/platforms/${gauge.type}.png`} height={16} width={16} alt={gauge.type} className='mr-1 inline' />
+									<Image
+										src={`/images/platforms/${gauge.type}.png`}
+										height={16}
+										width={16}
+										alt={gauge.type}
+										className='mr-1 hidden lg:inline'
+									/>
 									{gauge.type}
 								</Typography>
 							</span>
 						</div>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/4 items-center justify-center'>
+					<div className='mx-auto my-0 hidden items-center justify-center lg:flex lg:basis-1/4'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/4 items-center justify-center'>
+					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/4'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
 						</Typography>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/4 flex-col items-end justify-center text-right'>
+					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/3'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
 						</Typography>

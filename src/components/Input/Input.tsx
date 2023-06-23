@@ -32,7 +32,7 @@ const Input: React.FC<InputProps> = ({
 	className,
 }) => {
 	return (
-		<div className={classNames('align-center flex w-full rounded border border-baoWhite border-opacity-20', className)}>
+		<div className={classNames('align-center flex w-full rounded-3xl border border-baoWhite border-opacity-20', className)}>
 			<div className='align-center relative flex w-full justify-center align-middle'>
 				{!!startAdornment && startAdornment}
 				<input
@@ -42,14 +42,14 @@ const Input: React.FC<InputProps> = ({
 					value={value}
 					onChange={onChange}
 					className='relative
-				w-full min-w-0 appearance-none rounded rounded-r-none border-solid border-inherit bg-baoBlack py-3 pl-4
+				w-full min-w-0 appearance-none rounded-3xl rounded-r-none border-solid border-inherit bg-baoBlack py-3 pl-4
 				text-start align-middle text-base text-baoWhite outline-none outline outline-2 outline-offset-2
 				 transition-all duration-200 disabled:text-opacity-50'
 				/>
 				{!disabled && (
 					<>
 						{onSelectMax && (
-							<div className='flex h-full items-center justify-center bg-baoBlack'>
+							<div className='flex h-full items-center justify-center rounded-r-3xl bg-baoBlack'>
 								<Button onClick={onSelectMax} className='mr-2 !rounded-full border border-baoRed !px-2' size='xs'>
 									<Typography variant='base' className='font-bakbak font-normal text-baoWhite'>
 										MAX

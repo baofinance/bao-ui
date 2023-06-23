@@ -14,7 +14,7 @@ import { isDesktop } from 'react-device-detect'
 export const VaultList: React.FC = () => {
 	return (
 		<>
-			<ListHeader headers={['Vault Name', 'Collateral Assets', 'Borrow vAPR']} />
+			<ListHeader headers={isDesktop ? ['Vault Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
 			<div className='flex flex-col gap-4'>
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />

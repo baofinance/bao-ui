@@ -76,11 +76,12 @@ const Basket: NextPage<{
 			<NextSeo title={`${basketId} Basket`} description={`Mint or Redeem ${basketId}`} />
 			<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
 				<Link href='/baskets'>
-					<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-7 align-middle duration-200 hover:bg-baoRed'>
+					<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed lg:p-7'>
 						<FontAwesomeIcon icon={faArrowLeft} size='lg' />
 					</div>
 				</Link>
-				<div className='glassmorphic-card grid w-full grid-cols-4 !px-8 !py-4'>
+				{/*Desktop*/}
+				<div className='glassmorphic-card hidden w-full !px-8 !py-4 lg:grid lg:grid-cols-4'>
 					<div className='col-span-1 mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 						<Image
 							src={`/images/tokens/${basket.icon}`}
@@ -111,7 +112,7 @@ const Basket: NextPage<{
 									Supply
 								</Typography>
 								<Typography variant='xl' className='inline-block font-bakbak leading-5'>
-									{info ? `${getDisplayBalance(info.totalSupply)} ${basket.symbol}` : <Loader />}
+									{info ? `${getDisplayBalance(info.totalSupply)}` : <Loader />}
 								</Typography>
 							</div>
 							<div className='col-span-1 break-words text-center'>
@@ -143,7 +144,62 @@ const Basket: NextPage<{
 						</div>
 					</div>
 				</div>
+				{/*Mobile*/}
+				<div className='w-full lg:hidden'>
+					<div className='my-0 flex w-full flex-row items-center justify-end align-middle'>
+						<Image
+							src={`/images/tokens/${basket.icon}`}
+							alt={`${basket.symbol}`}
+							width={40}
+							height={40}
+							className='inline-block select-none'
+						/>
+						<span className='inline-block text-left align-middle'>
+							<Typography variant='h3' className='ml-2 inline-block items-center align-middle font-bakbak leading-5'>
+								{basket.symbol}
+							</Typography>
+							<Badge className='ml-2 inline-block font-bakbak text-base'>${getDisplayBalance(rates ? rates.usd : BigNumber.from(0))}</Badge>
+						</span>
+					</div>
+				</div>
 			</div>
+			<div className='glassmorphic-card grid grid-cols-3 !rounded-3xl lg:hidden'>
+				<div className='col-span-1 break-words px-2 py-2 text-center'>
+					<Typography variant='sm' className='font-bakbak text-baoRed'>
+						Market Cap
+					</Typography>
+					<Typography variant='base' className='inline-block font-bakbak leading-5'>
+						{marketCap ? `$${getDisplayBalance(marketCap)}` : <Loader />}
+					</Typography>
+				</div>
+				<div className='col-span-1 break-words px-2 py-2 text-center'>
+					<Typography variant='sm' className='font-bakbak text-baoRed'>
+						NAV{' '}
+						<Tooltipped
+							content={`The Net Asset Value is the value of one ${
+								basket && basket.symbol
+							} token if you were to own each underlying asset with identical weighting to the basket.`}
+							placement='top'
+						/>
+					</Typography>
+					<Typography variant='base' className='inline-block font-bakbak leading-5'>
+						{nav ? `$${parseFloat(nav.toString()).toFixed(2)}` : <Loader />}
+					</Typography>
+				</div>
+				<div className='col-span-1 break-words px-2 py-2 text-center'>
+					<Typography variant='sm' className='font-bakbak text-baoRed'>
+						Premium{' '}
+						<Tooltipped
+							content={`Percent difference between the price on exchange 
+							and the price to mint.`}
+						/>
+					</Typography>
+					<Typography variant='base' className='inline-block font-bakbak leading-5'>
+						{premium ? `${premium.toFixed(4)}%` : <Loader />}
+					</Typography>
+				</div>
+			</div>
+
 			<Composition composition={composition} rates={rates} info={info} basketId={basketId} />
 			<BasketButtons basket={basket} swapLink={basket.swap} />
 			<Description basketAddress={basket.basketAddresses[1]} />

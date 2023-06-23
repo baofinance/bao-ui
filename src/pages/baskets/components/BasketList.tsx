@@ -8,14 +8,14 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import React from 'react'
-import { isDesktop } from 'react-device-detect'
 
+import { isDesktop } from 'react-device-detect'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
 	return (
 		<>
-			<ListHeader headers={['Basket Name', 'Underlying Assets', 'Cost to Mint']} />
+			<ListHeader headers={isDesktop ? ['Basket Name', 'Underlying Assets', 'Cost to Mint'] : ['Name', 'Assets', 'Cost']} />
 			<div className='flex flex-col gap-4'>{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}</div>
 		</>
 	)
@@ -36,11 +36,9 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 								<Typography variant='lg' className='ml-2 font-bakbak'>
 									{basket.symbol}
 								</Typography>
-								{isDesktop && (
-									<Typography variant='sm' className={`ml-2 text-baoWhite`}>
-										{basket.desc}
-									</Typography>
-								)}
+								<Typography variant='sm' className='ml-2 hidden text-baoWhite lg:block'>
+									{basket.desc}
+								</Typography>
 							</span>
 						</div>
 					</div>
@@ -65,7 +63,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 						<span className='inline-block'>
 							{rates ? (
 								<>
-									<Typography className='m-0 font-bakbak leading-5'>${getDisplayBalance(rates.usd)}</Typography>
+									<Typography className='m-0 font-bakbak text-lg leading-5'>${getDisplayBalance(rates.usd)}</Typography>
 								</>
 							) : (
 								<Loader />

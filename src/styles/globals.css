@@ -6,7 +6,7 @@ html {
 }
 
 body {
-	background: url(/images/bao-background.webp) fixed;
+	background: #1e2022 url('/images/bao-background.webp') fixed;
 	font-family: 'Inter', sans-serif;
 	color: #faf2e3;
 	margin: 0;
@@ -183,18 +183,6 @@ input[type='number'] {
 		background: #e21a53;
 		border-radius: 50%;
 	}
-}
-
-.app-layer {
-	display: flex;
-	position: relative;
-	/* Setting the size of the upper layer to 80% of the screen size*/
-	min-height: 70vh;
-	max-width: 1280px;
-	width: 80vw;
-	justify-content: space-between;
-	margin: auto;
-	z-index: 4;
 }
 
 .glassmorphic-card {

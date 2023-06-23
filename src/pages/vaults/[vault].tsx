@@ -107,11 +107,12 @@ const Vault: NextPage<{
 					<>
 						<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
 							<Link href='/vaults'>
-								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-7 align-middle duration-200 hover:bg-baoRed'>
+								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed lg:p-7'>
 									<FontAwesomeIcon icon={faArrowLeft} size='lg' />
 								</div>
 							</Link>
-							<div className='glassmorphic-card grid w-full grid-cols-4 !px-8 !py-4'>
+							{/*Desktop*/}
+							<div className='glassmorphic-card hidden w-full !px-8 !py-4 lg:grid lg:grid-cols-4'>
 								<div className='col-span-1 mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
 									<Image
 										src={`/images/tokens/${synth.icon}`}
@@ -165,11 +166,55 @@ const Vault: NextPage<{
 									</div>
 								</div>
 							</div>
+							{/*Mobile*/}
+							<div className='w-full lg:hidden'>
+								<div className='my-0 flex w-full flex-row items-center justify-end align-middle'>
+									<Image
+										src={`/images/tokens/${synth.icon}`}
+										alt={`${synth.underlyingSymbol}`}
+										width={40}
+										height={40}
+										className='inline-block select-none'
+									/>
+									<span className='inline-block text-left align-middle'>
+										<Typography variant='h3' className='ml-2 inline-block items-center align-middle font-bakbak leading-5'>
+											{synth.underlyingSymbol}
+										</Typography>
+										<Badge className='ml-2 inline-block font-bakbak text-base'>${getDisplayBalance(synth.price)}</Badge>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div className='glassmorphic-card grid grid-cols-3 !rounded-3xl lg:hidden'>
+							<div className='col-span-1 break-words px-2 py-2 text-center'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
+									Total Debt
+								</Typography>
+								<Typography variant='base' className='inline-block font-bakbak leading-5'>
+									${getDisplayBalance(decimate(totalDebt), synth.underlyingDecimals)}
+								</Typography>
+							</div>
+							<div className='col-span-1 break-words px-2 py-2 text-center'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
+									Total Collateral
+								</Typography>
+								<Typography variant='base' className='inline-block font-bakbak leading-5'>
+									${getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)}
+								</Typography>
+							</div>
+							<div className='col-span-1 break-words px-2 py-2 text-center'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
+									Borrow Rate
+								</Typography>
+								<Typography variant='base' className='inline-block font-bakbak leading-5'>
+									{getDisplayBalance(synth.borrowApy, 18, 2)}%
+								</Typography>
+							</div>
 						</div>
 
 						{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
-							<div className='grid grid-cols-2 gap-16'>
-								<div className='col-span-1'>
+							<div className='grid gap-16 lg:grid-cols-2'>
+								<div className='lg:col-span-1'>
 									<PositionList
 										vaultName={vaultName}
 										supplyBalances={supplyBalances}
@@ -186,8 +231,8 @@ const Vault: NextPage<{
 							</div>
 						)}
 
-						<div className='grid grid-cols-2 gap-16'>
-							<div className='col-span-1'>
+						<div className='grid gap-16 lg:grid-cols-2'>
+							<div className='lg:col-span-1'>
 								<DepositCard
 									vaultName={vaultName}
 									balances={balances}

@@ -231,7 +231,7 @@ export const Dashboard = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 ml-16 origin-top-right overflow-hidden rounded-lg bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 ml-16 origin-top-right overflow-hidden rounded-3xl bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
 													gauges.map((gauge: any, i: number) => (
 														<Listbox.Option
@@ -239,7 +239,7 @@ export const Dashboard = () => {
 															className={({ active }) =>
 																classNames(
 																	active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																	'cursor-pointer select-none rounded-lg border border-baoBlack p-4 text-sm',
+																	'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
 																)
 															}
 															value={gauge.name}

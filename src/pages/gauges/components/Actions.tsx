@@ -65,10 +65,10 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='font-bakbak text-baoRed'>
+							<Typography variant='sm' className='font-bold text-baoRed'>
 								Balance:
 							</Typography>
-							<Typography variant='sm' className='font-bakbak'>
+							<Typography variant='sm' className='font-bold'>
 								{fullBalance}{' '}
 								<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
@@ -164,10 +164,10 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='font-bakbak text-baoRed'>
+							<Typography variant='sm' className='font-bold text-baoRed'>
 								Balance:
 							</Typography>
-							<Typography variant='sm' className='font-bakbak'>
+							<Typography variant='sm' className='font-bold'>
 								{getDisplayBalance(fullBalance, 0)}{' '}
 								<Link href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									<a>

@@ -6,6 +6,7 @@ import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useCallback, useState } from 'react'
 import Actions from './Actions'
+import { isDesktop } from 'react-device-detect'
 
 type GaugeModalProps = {
 	gauge: ActiveSupportedGauge
@@ -16,7 +17,7 @@ type GaugeModalProps = {
 }
 
 const GaugeModal: React.FC<GaugeModalProps> = ({ gauge, tvl, rewardsValue, show, onHide }) => {
-	const operations = ['Stake', 'Unstake', 'Vote', 'Rewards']
+	const operations = isDesktop ? ['Stake', 'Unstake', 'Vote', 'Rewards'] : ['Stake', 'Unstake', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 
 	const hideModal = useCallback(() => {

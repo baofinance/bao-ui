@@ -24,37 +24,37 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 		<>
 			<div className='mb-2 mt-4 flex flex-row'>
 				<div className='flex flex-row items-center justify-center'>
-					<Typography variant='h3' className='float-left mr-2 inline font-bakbak'>
-						Allocation Breakdown
-					</Typography>
+					<Typography className='font-bakbak !text-xl lg:!text-2xl'>Allocation Breakdown</Typography>
 				</div>
 			</div>
 			<>
-				<div className='glassmorphic-card min-h-[200px] p-4'>
+				<div className='glassmorphic-card min-h-[200px] !rounded-3xl lg:p-4'>
 					{composition ? (
-						<div className='grid grid-cols-6'>
-							<div className='col-span-1'>
+						<div className='grid grid-cols-4 lg:grid-cols-6'>
+							<div className='hidden lg:col-span-1 lg:block'>
 								<div className='flex flex-row justify-center'>
 									<div className='flex flex-col'>
 										<DonutGraph width={200} height={200} composition={composition} basket={basketId} rates={rates} info={info} />
 									</div>
 								</div>
 							</div>
-							<div className='col-span-5'>
+							<div className='col-span-4 lg:col-span-5'>
 								<table className='w-full'>
 									<thead>
-										<tr className='rounded-t-lg '>
-											<th className='w-[10%] rounded-tl-lg p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-50'>
+										<tr className='rounded-t-lg'>
+											<th className='w-[20%] rounded-tl-lg p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-60 lg:w-[10%]'>
 												Token
 											</th>
-											<th className='w-[40%] p-2 text-start font-bakbak text-lg font-normal text-baoWhite text-opacity-50'>Allocation</th>
-											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-50'>Price</th>
-											<th className='w-[10%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-50'>APY</th>
-											{isDesktop && (
-												<th className='w-[15%] rounded-tr-lg p-2 px-4 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-50'>
-													Strategy
-												</th>
-											)}
+											<th className='w-[40%] p-2 text-start font-bakbak text-lg font-normal text-baoWhite text-opacity-60'>Allocation</th>
+											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-60 lg:w-[20%]'>
+												Price
+											</th>
+											<th className='w-[20%] p-2 text-center font-bakbak text-lg font-normal text-baoWhite text-opacity-60 lg:w-[15%]'>
+												APY
+											</th>
+											<th className='hidden w-[20%] rounded-tr-lg p-2 font-bakbak text-lg font-normal text-baoWhite text-opacity-50 lg:block lg:!w-auto  lg:!text-center'>
+												Strategy
+											</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -84,7 +84,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 															/>
 														</td>
 														<td className='p-2 text-center'>
-															<Badge className='bg-opacity-0'>${getDisplayBalance(component.price)}</Badge>
+															<Typography className='font-lg font-bakbak'>${getDisplayBalance(component.price)}</Typography>
 														</td>
 														<td className='p-2 text-center'>
 															<Tooltipped content={component.apy ? `${new BN(formatUnits(component.apy.mul(100))).toFixed(8)}%` : '-'}>
@@ -93,11 +93,9 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 																</a>
 															</Tooltipped>
 														</td>
-														{isDesktop && (
-															<td className='p-2 text-center'>
-																<Badge>{component.strategy || 'None'}</Badge>
-															</td>
-														)}
+														<td className='hidden p-2 text-center lg:block'>
+															<Badge>{component.strategy || 'None'}</Badge>
+														</td>
 													</tr>
 												)
 											})}

@@ -48,13 +48,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 		<Modal isOpen={show} onDismiss={onHide}>
 			<Modal.Header header={'Account'} onClose={onHide} />
 			<Modal.Body>
-				<div className={`grid grid-flow-col grid-cols-2 gap-4 p-4`}>
+				<div className='grid grid-flow-col grid-cols-2 gap-4 p-4'>
 					<div className='flex items-center justify-center'>
-						<div
-							className={`flex ${
-								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
-							} items-center rounded-full bg-transparent-100`}
-						>
+						<div className='flex min-h-[36px] min-w-[36px] items-center rounded-full bg-transparent-100 lg:min-h-[48px] lg:min-w-[48px]'>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
@@ -62,17 +58,13 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 								{getDisplayBalance(baoBalance)}
 							</Typography>
 							<Typography variant='sm' className='font-bakbak text-baoRed'>
-								BAO Balance
+								BAO {isDesktop && 'Balance'}
 							</Typography>
 						</div>
 					</div>
 
 					<div className='flex items-center justify-center'>
-						<div
-							className={`flex ${
-								isDesktop ? 'min-h-[48px] min-w-[48px]' : 'min-h-[36px] min-w-[36px]'
-							} items-center rounded-full bg-transparent-100`}
-						>
+						<div className='flex min-h-[36px] min-w-[36px] items-center rounded-full bg-transparent-100 lg:min-h-[48px] lg:min-w-[48px]'>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
 						<div className='ml-2'>
@@ -80,13 +72,13 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 								{getDisplayBalance(lockInfo ? lockInfo.balance : BigNumber.from(0))}
 							</Typography>
 							<Typography variant='sm' className='font-bakbak text-baoRed'>
-								veBAO Balance
+								veBAO {isDesktop && 'Balance'}
 							</Typography>
 						</div>
 					</div>
 				</div>
 				<>
-					<div className='mt-4 flex-1 rounded border border-baoWhite border-opacity-20 bg-baoBlack bg-opacity-5 pb-3 text-baoWhite'>
+					<div className='mt-4 flex-1 rounded-3xl border border-baoWhite border-opacity-20 bg-baoBlack bg-opacity-5 pb-3 text-baoWhite'>
 						<Typography variant='lg' className='float-left mt-2 px-3 py-2 font-bakbak'>
 							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-baoRed' size='sm' />
 						</Typography>
@@ -111,16 +103,16 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 										<div key={txHash} className=' flex w-full items-center justify-between px-3 py-1'>
 											{transactions[txHash].receipt ? (
 												transactions[txHash].receipt.status === 1 ? (
-													<FontAwesomeIcon icon={faCircleCheck} className='text-baoRed' size='sm' />
+													<FontAwesomeIcon icon={faCircleCheck} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
 												) : (
-													<FontAwesomeIcon icon={faCircleXmark} className='text-baoRed' size='sm' />
+													<FontAwesomeIcon icon={faCircleXmark} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
 												)
 											) : (
 												<MoonLoader size={12} speedMultiplier={0.8} color='#e21a53' />
 											)}
 											<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${txHash}`} target='_blank'>
 												<a>
-													<Typography variant='base' className='text-end font-bakbak text-baoWhite hover:text-baoRed'>
+													<Typography className='text-end text-sm text-baoWhite hover:text-baoRed lg:text-base'>
 														{transactions[txHash].description}
 														<Tooltipped content='View on Etherscan'>
 															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 text-baoRed' size='sm' />
@@ -133,7 +125,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 							</>
 						) : (
 							<div className='flex w-full items-center px-3 py-1'>
-								<Typography variant='sm' className='text-end font-normal text-baoRed'>
+								<Typography variant='sm' className='text-end font-normal text-baoWhite/60'>
 									Completed transactions will show here...
 								</Typography>
 							</div>

@@ -7,8 +7,9 @@ interface ContainerProps {
 	className?: string
 }
 
-const Container = ({ children, className }: ContainerProps) => <div className={classNames(className)}>{children}</div>
-
+export function Container({ className = '', ...props }) {
+	return <div className={classNames('mx-auto px-4 sm:px-6 lg:px-8', className)} {...props} />
+}
 export default Container
 
 export const AbsoluteContainer = ({ children }: ContainerProps) => (

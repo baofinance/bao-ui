@@ -11,7 +11,7 @@ interface DescriptionProps {
 const Description: React.FC<DescriptionProps> = ({ basketAddress = '' }) => {
 	return (
 		<>
-			<div className='glassmorphic-card mt-4 p-8'>
+			<div className='glassmorphic-card mt-4 !rounded-3xl px-4 py-4 lg:p-8'>
 				{basketAddress === Config.addressMap.bDEFI && <BDEFI />}
 				{basketAddress === Config.addressMap.bSTBL && <BSTBL />}
 				{basketAddress === Config.addressMap.bETH && <BETH />}
