@@ -19,6 +19,7 @@ import { formatEther } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { Fragment, useMemo, useState } from 'react'
 import BallastButton from './BallastButton'
+import { isDesktop } from 'react-device-detect'
 
 export const Ballast = () => {
 	const [selectedOption, setSelectedOption] = useState('baoUSD')
@@ -45,7 +46,12 @@ export const Ballast = () => {
 						Balance:
 					</Typography>
 					<Typography variant='sm' className='font-bold'>
-						{selectedOption === 'baoUSD' ? `${getDisplayBalance(daiBalance)} DAI` : `${getDisplayBalance(wethBalance)} WETH`}
+						{selectedOption === 'baoUSD' ? `${getDisplayBalance(daiBalance)}` : `${getDisplayBalance(wethBalance)}`}
+						{selectedOption === 'baoUSD' ? (
+							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/DAI.png' alt='DAI' width={16} height={16} />
+						) : (
+							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/WETH.png' alt='WETH' width={16} height={16} />
+						)}
 					</Typography>
 				</div>
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
@@ -90,12 +96,17 @@ export const Ballast = () => {
 						Balance:
 					</Typography>
 					<Typography variant='sm' className='font-bold'>
-						{selectedOption === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)} baoUSD` : `${getDisplayBalance(baoETHBalance)} baoETH`}
+						{selectedOption === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)}` : `${getDisplayBalance(baoETHBalance)}`}
+						{selectedOption === 'baoUSD' ? (
+							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoUSD' width={16} height={16} />
+						) : (
+							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/baoETH.png' alt='baoETH' width={16} height={16} />
+						)}
 					</Typography>
 				</div>
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
 					<Typography variant='sm' className='font-bold text-baoRed'>
-						Mint Limit:
+						{isDesktop ? 'Mint' : ''} Limit:
 					</Typography>
 					<Typography variant='sm' className='font-bold'>
 						{ballastInfo ? getDisplayBalance(ballastInfo.supplyCap) : <Loader />}
@@ -119,9 +130,9 @@ export const Ballast = () => {
 						<div className='flex-col'>
 							<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
 								<div className='m-2 flex w-40 rounded-full border-none bg-baoWhite bg-opacity-5 px-1 duration-300 hover:bg-transparent-300'>
-									<div className='m-auto w-auto py-1 text-baoWhite lg:py-2'>
+									<div className='m-auto w-auto py-1 text-baoWhite'>
 										{selectedOption === '' ? (
-											<Typography>Select a collateral</Typography>
+											<Typography>Select a synth</Typography>
 										) : (
 											<div className='h-full items-start'>
 												<div className='mr-2 inline-block'>
@@ -133,7 +144,7 @@ export const Ballast = () => {
 														height={20}
 													/>
 												</div>
-												<span className='inline-block text-left align-middle'>
+												<span className='hidden text-left align-middle lg:inline-block'>
 													<Typography variant='base' className='font-bakbak'>
 														{selectedOption}
 													</Typography>

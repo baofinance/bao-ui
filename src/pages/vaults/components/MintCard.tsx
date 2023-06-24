@@ -115,7 +115,7 @@ export const MintCard = ({
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
-								className='h-10 !rounded-r-none lg:h-auto'
+								className='h-10 bg-baoBlack lg:h-auto'
 							/>
 						</div>
 						<div className='m-auto mr-2'>
