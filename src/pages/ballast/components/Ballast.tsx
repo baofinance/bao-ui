@@ -130,7 +130,7 @@ export const Ballast = () => {
 						<div className='flex-col'>
 							<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
 								<div className='m-2 flex w-40 rounded-full border-none bg-baoWhite bg-opacity-5 px-1 duration-300 hover:bg-transparent-300'>
-									<div className='m-auto w-auto py-1 text-baoWhite'>
+									<div className='m-auto w-auto py-1 text-baoWhite lg:py-2'>
 										{selectedOption === '' ? (
 											<Typography>Select a synth</Typography>
 										) : (
@@ -144,7 +144,7 @@ export const Ballast = () => {
 														height={20}
 													/>
 												</div>
-												<span className='hidden text-left align-middle lg:inline-block'>
+												<span className='inline-block text-left align-middle'>
 													<Typography variant='base' className='font-bakbak'>
 														{selectedOption}
 													</Typography>
