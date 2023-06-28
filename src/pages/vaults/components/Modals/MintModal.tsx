@@ -10,8 +10,10 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
+import VaultButton from '../VaultButton'
 
 export type MintModalProps = {
 	asset: ActiveSupportedVault
@@ -25,6 +27,8 @@ const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
 	const usdValue = val.mul(asset.price)
+
+	const operation = 'Mint'
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -47,33 +51,14 @@ const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
 				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				{pendingTx ? (
-					<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
-						<Button fullWidth className='!rounded-full'>
-							<PendingTransaction /> Pending Transaction
-							<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
-						</Button>
-					</a>
-				) : (
-					<Button
-						fullWidth
-						className='!rounded-full'
-						disabled={!val}
-						onClick={() => {
-							handleTx(
-								vaultContract.borrow(val),
-								`${vaultName} Vault: Mint ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-								() => {
-									onHide()
-								},
-							)
-						}}
-						pendingTx={pendingTx}
-						txHash={txHash}
-					>
-						Confirm
-					</Button>
-				)}
+				<VaultButton
+					operation={operation}
+					asset={asset}
+					val={val ? val : BigNumber.from(0)}
+					isDisabled={!val}
+					onHide={onHide}
+					vaultName={vaultName}
+				/>
 			</Modal.Actions>
 		</Modal>
 	)

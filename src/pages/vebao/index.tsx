@@ -29,7 +29,7 @@ const VeBAO: React.FC = () => {
 					'veBAO enables users to lock governance tokens, amplifying their voting power to influence gauge weights and direct incentives within the ecosystem.'
 				}
 			/>
-			<div className='grid gap-4 lg:grid-cols-5 lg:gap-24'>
+			<div className='mb-6 grid gap-4 lg:grid-cols-5 lg:gap-24'>
 				<div className='w-full lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
 						veBAO

@@ -13,8 +13,10 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
+import VaultButton from '../VaultButton'
 
 export type SupplyModalProps = {
 	asset: ActiveSupportedVault
@@ -30,6 +32,7 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 	const { vaultContract } = asset
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 	const usdValue = val.mul(asset.price)
+	const operation = 'Supply'
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -52,55 +55,7 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				{pendingTx ? (
-					<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
-						<Button fullWidth className='!rounded-full'>
-							<PendingTransaction /> Pending Transaction
-							<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
-						</Button>
-					</a>
-				) : approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
-					<Button
-						fullWidth
-						className='!rounded-full'
-						disabled={!val}
-						onClick={async () => {
-							let supplyTx
-							if (asset.underlyingAddress === 'ETH') {
-								// @ts-ignore
-								supplyTx = vaultContract.mint(true, {
-									value: val,
-								})
-								// TODO- Give the user the option in the SupplyModal to tick collateral on/off
-							} else {
-								// @ts-ignore
-								supplyTx = vaultContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
-							}
-							handleTx(
-								supplyTx,
-								`${vaultName} Vault: Supply ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-								() => onHide(),
-							)
-						}}
-					>
-						Confirm
-					</Button>
-				) : (
-					<Button
-						fullWidth
-						className='!rounded-full'
-						disabled={!approvals}
-						onClick={() => {
-							// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-							const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
-							handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
-						}}
-						pendingTx={pendingTx}
-						txHash={txHash}
-					>
-						Approve
-					</Button>
-				)}
+				<VaultButton operation={operation} asset={asset} val={val} isDisabled={!val} onHide={onHide} vaultName={vaultName} />
 			</Modal.Actions>
 		</Modal>
 	)

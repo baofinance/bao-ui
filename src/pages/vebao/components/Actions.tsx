@@ -230,6 +230,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 											</>
 										) : (
 											<Button
+												fullWidth
 												disabled={
 													!val ||
 													!lockTime ||
@@ -275,6 +276,7 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 					<Card.Header>Your Lock Has Expired</Card.Header>
 					<Card.Body className='flex h-full w-full items-center justify-center'>
 						<Button
+							fullWidth
 							onClick={async () => {
 								const lockTx = votingEscrow.withdraw()
 								handleTx(lockTx, `veBAO: Unstaked ${getDisplayBalance(lockInfo.lockAmount)} BAO`)

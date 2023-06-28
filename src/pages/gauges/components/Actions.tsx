@@ -17,7 +17,7 @@ import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useUserSlopes from '@/hooks/vebao/useUserSlopes'
 import type { Gauge, GaugeController, Minter } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLink, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -26,6 +26,7 @@ import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import CountdownTimer from './CountdownTimer'
+import { PendingTransaction } from '@/components/Loader/Loader'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -83,9 +84,12 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 				{allowance && allowance.lte(0) ? (
 					<>
 						{pendingTx ? (
-							<Button fullWidth disabled={true}>
-								Approving {gauge.name}
-							</Button>
+							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+								<Button fullWidth className='!rounded-full'>
+									<PendingTransaction /> Pending Transaction
+									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+								</Button>
+							</a>
 						) : (
 							<Button
 								fullWidth

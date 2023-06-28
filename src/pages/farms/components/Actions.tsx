@@ -13,7 +13,7 @@ import useStakedBalance from '@/hooks/farms/useStakedBalance'
 import { Uni_v2_lp__factory } from '@/typechain/factories'
 import type { Masterchef, Uni_v2_lp } from '@/typechain/index'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLink, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, Contract, ethers } from 'ethers'
@@ -23,6 +23,7 @@ import Link from 'next/link'
 import { default as React, useCallback, useState } from 'react'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
+import { PendingTransaction } from '@/components/Loader/Loader'
 
 interface StakeProps {
 	lpContract: Uni_v2_lp
@@ -39,7 +40,7 @@ interface StakeProps {
 export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max, tokenName = '', pairUrl = '', onHide }) => {
 	const { library } = useWeb3React()
 	const [val, setVal] = useState('')
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -103,9 +104,12 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 				{allowance && allowance.lte(0) ? (
 					<>
 						{pendingTx ? (
-							<Button fullWidth disabled={true}>
-								Approving {tokenName}
-							</Button>
+							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+								<Button fullWidth className='!rounded-full'>
+									<PendingTransaction /> Pending Transaction
+									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+								</Button>
+							</a>
 						) : (
 							<Button
 								fullWidth
@@ -127,9 +131,12 @@ export const Stake: React.FC<StakeProps> = ({ lpTokenAddress, pid, poolType, max
 						{poolType !== PoolType.ARCHIVED ? (
 							<>
 								{pendingTx ? (
-									<Button fullWidth disabled={true}>
-										<Loader />
-									</Button>
+									<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+										<Button fullWidth className='!rounded-full'>
+											<PendingTransaction /> Pending Transaction
+											<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+										</Button>
+									</a>
 								) : (
 									<Button
 										fullWidth
@@ -177,7 +184,7 @@ interface UnstakeProps {
 
 export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHide }) => {
 	const [val, setVal] = useState('')
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 
 	const stakedBalance = useStakedBalance(pid)
 
@@ -217,9 +224,12 @@ export const Unstake: React.FC<UnstakeProps> = ({ max, tokenName = '', pid, onHi
 			<Modal.Actions>
 				<>
 					{pendingTx ? (
-						<Button disabled={true}>
-							<Loader />
-						</Button>
+						<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+							<Button fullWidth className='!rounded-full'>
+								<PendingTransaction /> Pending Transaction
+								<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+							</Button>
+						</a>
 					) : (
 						<Button
 							disabled={stakedBalance.eq(BigNumber.from(0))}
@@ -244,7 +254,7 @@ interface RewardsProps {
 
 export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 	const earnings = useEarnings(pid)
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const masterChefContract = useContract<Masterchef>('Masterchef')
 
 	return (
@@ -266,9 +276,12 @@ export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
 			<Modal.Actions>
 				<>
 					{pendingTx ? (
-						<Button fullWidth disabled={true}>
-							<Loader />
-						</Button>
+						<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+							<Button fullWidth className='!rounded-full'>
+								<PendingTransaction /> Pending Transaction
+								<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+							</Button>
+						</a>
 					) : (
 						<Button
 							fullWidth

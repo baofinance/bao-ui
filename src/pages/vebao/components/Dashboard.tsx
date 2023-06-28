@@ -2,6 +2,7 @@ import Button from '@/components/Button'
 import { Icon } from '@/components/Icon'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
@@ -19,6 +20,8 @@ import CountdownTimer from '@/pages/gauges/components/CountdownTimer'
 import { GaugeController } from '@/typechain/GaugeController'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
@@ -60,7 +63,7 @@ export const Dashboard = () => {
 		setLockTime(getDayOffset(currentLockEnd, (value as number) * 7))
 	}
 
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 
 	const { gaugeTVL } = useGaugeTVL(gauge)
@@ -146,7 +149,7 @@ export const Dashboard = () => {
 
 	return (
 		<div>
-			<Typography variant='xl' className='mb-4 mt-4 text-center font-bakbak'>
+			<Typography variant='xl' className='mb-6 mt-6 text-center font-bakbak'>
 				Voting Dashboard
 			</Typography>
 			<div className={`glassmorphic-card flex gap-4 rounded border bg-opacity-80 p-6 lg:hidden`}>
@@ -446,9 +449,11 @@ export const Dashboard = () => {
 						</Typography>
 						<>
 							{pendingTx ? (
-								<Button className='ml-8 w-[20%]' disabled={true}>
-									<Loader />
-								</Button>
+								<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+									<Button className='ml-8 w-[20%] !rounded-full'>
+										<PendingTransaction />
+									</Button>
+								</a>
 							) : (
 								<Button
 									className='ml-8 w-[20%]'

@@ -16,6 +16,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
+import VaultButton from '../VaultButton'
 
 export type WithdrawModalProps = {
 	asset: ActiveSupportedVault
@@ -31,6 +32,8 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 	const { exchangeRates } = useExchangeRates(vaultName)
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
+
+	const operation = 'Withdraw'
 
 	const supply = useMemo(
 		() =>
@@ -125,32 +128,14 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						{pendingTx ? (
-							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
-								<Button fullWidth className='!rounded-full'>
-									<PendingTransaction />
-									Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
-								</Button>
-							</a>
-						) : (
-							<Button
-								fullWidth
-								className='!rounded-full'
-								disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-								onClick={() => {
-									handleTx(
-										vaultContract.redeemUnderlying(parseUnits(val)),
-										`${vaultName} Vault: Withdraw ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-										() => onHide(),
-									)
-								}}
-								pendingTx={pendingTx}
-								txHash={txHash}
-							>
-								Withdraw
-							</Button>
-						)}
+						<VaultButton
+							operation={operation}
+							asset={asset}
+							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+							isDisabled={!val}
+							onHide={onHide}
+							vaultName={vaultName}
+						/>
 					</Modal.Actions>
 				</>
 			</Modal>

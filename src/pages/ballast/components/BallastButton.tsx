@@ -52,7 +52,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 
 			handleTx(
 				ballast.sell(parseUnits(inputVal).toString()),
-				`Ballast: Swap ${vaultName === 'baoUSD' ? 'baoUSD for DAI' : 'baoETH for ETH'}`,
+				`Ballast: Swap ${vaultName === 'baoUSD' ? 'baoUSD for DAI' : 'baoETH for WETH'}`,
 			)
 		} else {
 			// DAI->baoUSD
@@ -81,7 +81,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			}
 		if (vaultName === 'baoETH')
 			if (swapDirection) {
-				return baoETHApproval && baoETHApproval.gt(0) ? 'Swap baoETH for ETH' : 'Approve baoETH'
+				return baoETHApproval && baoETHApproval.gt(0) ? 'Swap baoETH for WETH' : 'Approve baoETH'
 			} else {
 				return wethApproval && wethApproval.gt(0) ? 'Swap WETH for baoETH' : 'Approve WETH'
 			}

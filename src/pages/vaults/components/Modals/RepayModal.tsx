@@ -19,6 +19,7 @@ import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
+import VaultButton from '../VaultButton'
 
 export type RepayModalProps = {
 	asset: ActiveSupportedVault
@@ -39,6 +40,8 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { vaultContract } = asset
+
+	const operation = 'Repay'
 
 	const supply = useMemo(
 		() =>
@@ -139,56 +142,14 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						{pendingTx ? (
-							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
-								<Button fullWidth className='!rounded-full'>
-									<PendingTransaction />
-									Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
-								</Button>
-							</a>
-						) : approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
-							<Button
-								fullWidth
-								className='!rounded-full'
-								disabled={!val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-								onClick={() => {
-									let repayTx
-									if (asset.underlyingAddress === 'ETH') {
-										// @ts-ignore
-										repayTx = vaultContract.repayBorrow({
-											value: parseUnits(val, asset.underlyingDecimals),
-										})
-									} else {
-										repayTx = vaultContract.repayBorrow(parseUnits(val, asset.underlyingDecimals))
-									}
-									handleTx(
-										repayTx,
-										`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
-										() => onHide(),
-									)
-								}}
-								pendingTx={pendingTx}
-								txHash={txHash}
-							>
-								Repay
-							</Button>
-						) : (
-							<Button
-								fullWidth
-								className='!rounded-full'
-								disabled={!approvals || !val}
-								onClick={() => {
-									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-									const tx = erc20.approve(vaultContract.address, ethers.constants.MaxUint256)
-									handleTx(tx, `${vaultName} Vault: Approve ${asset.underlyingSymbol}`)
-								}}
-								pendingTx={pendingTx}
-								txHash={txHash}
-							>
-								Approve
-							</Button>
-						)}
+						<VaultButton
+							operation={operation}
+							asset={asset}
+							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+							isDisabled={!val}
+							onHide={onHide}
+							vaultName={vaultName}
+						/>
 					</Modal.Actions>
 				</>
 			</Modal>
