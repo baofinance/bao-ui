@@ -413,11 +413,11 @@ export default {
 			poolInfoAddresses: {
 				1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
 			},
-			name: 'baoETH-ETH',
-			symbol: 'baoETH-ETH',
+			name: 'baoETH-WETH',
+			symbol: 'baoETH-WETH',
 			type: 'Balancer',
 			iconA: '/images/tokens/baoETH.png',
-			iconB: '/images/tokens/ETH.png',
+			iconB: '/images/tokens/WETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
 		},
 		{

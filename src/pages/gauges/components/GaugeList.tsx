@@ -24,7 +24,20 @@ const GaugeList: React.FC = () => {
 
 	return (
 		<>
-			<ListHeader headers={isDesktop ? ['Gauge Name', 'Current Weight', 'APR', 'TVL'] : ['Name', 'APR', 'TVL']} />
+			<div className={`flex w-full flex-row px-2 py-3`}>
+				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-2/5 lg:text-lg'>
+					{isDesktop && 'Gauge'} Name
+				</Typography>
+				<Typography className='hidden w-full flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:flex lg:basis-1/5 lg:text-lg'>
+					Weight
+				</Typography>
+				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-1/5 lg:text-lg'>
+					APR
+				</Typography>
+				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-1/5 lg:text-lg'>
+					TVL
+				</Typography>
+			</div>
 			<div className='flex flex-col gap-4'>
 				{gauges.length ? (
 					gauges.map((gauge: ActiveSupportedGauge, i: number) => (
@@ -100,7 +113,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 				disabled={!account}
 			>
 				<div className='flex w-full flex-row'>
-					<div className='flex basis-1/3 lg:basis-1/4'>
+					<div className='flex basis-1/3 lg:basis-2/5'>
 						<div className='mx-0 my-auto inline-block h-full items-center'>
 							<div className='mr-2 hidden lg:inline-block'>
 								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={24} height={24} />
@@ -124,19 +137,19 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 					</div>
 
-					<div className='mx-auto my-0 hidden items-center justify-center lg:flex lg:basis-1/4'>
+					<div className='mx-auto my-0 hidden items-center justify-center lg:flex lg:basis-1/5'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/4'>
+					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/5'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
 						</Typography>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/4'>
+					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/5'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 							${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
 						</Typography>
