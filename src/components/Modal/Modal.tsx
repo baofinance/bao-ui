@@ -50,8 +50,7 @@ const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children,
 					>
 						<Dialog.Overlay
 							className={classNames(
-								isDesktop ? 'bg-[rgb(0,0,0,0.4)]  backdrop-blur-[10px]' : ' bg-[rgb(0,0,0,0.8)]',
-								'fixed inset-0 filter',
+								'fixed inset-0 bg-[rgb(0,0,0,0.8)] filter backdrop-blur-[10px] lg:bg-[rgb(0,0,0,0.4)] lg:backdrop-blur-[10px]',
 							)}
 						/>
 					</Transition.Child>
@@ -73,10 +72,10 @@ const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children,
 					>
 						<div
 							className={classNames(
-								transparent ? '' : '!border !border-solid !border-primary-100 bg-background-100',
+								transparent
+									? ''
+									: 'mx-auto inline-block max-h-[85vh] w-[85vw] transform rounded-3xl !border !border-solid !border-baoWhite !border-opacity-20 bg-baoBlack bg-opacity-80 p-4 text-left align-bottom lg:w-full lg:p-6',
 								isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : '',
-								isDesktop ? `w-full` : 'mx-auto max-h-[85vh] w-[85vw]',
-								'inline-block transform rounded-xl p-4 text-left align-bottom',
 							)}
 						>
 							{children}

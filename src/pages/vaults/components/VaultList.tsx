@@ -14,7 +14,7 @@ import { isDesktop } from 'react-device-detect'
 export const VaultList: React.FC = () => {
 	return (
 		<>
-			<ListHeader headers={['Vault Name', 'Collateral Assets', 'Borrow vAPR']} />
+			<ListHeader headers={isDesktop ? ['Vault Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
 			<div className='flex flex-col gap-4'>
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />
@@ -35,42 +35,23 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 		return _vaults?.filter(vault => !vault.isSynth)
 	}, [_vaults])
 
-	// FIXME: this is a hack to get the average APY of the basket
-	// const baskets = useBaskets()
-	// const basket = useMemo(() => {
-	// 	if (!baskets) return
-	// 	return baskets.find(basket => basket.symbol === 'bSTBL')
-	// }, [baskets])
-	// const info = useBasketInfo(basket)
-	// const composition = useComposition(basket)
-	// const avgBasketAPY =
-	// 	composition &&
-	// 	(composition
-	// 		.map(function (component) {
-	// 			return component.apy
-	// 		})
-	// 		.reduce(function (a, b) {
-	// 			return a + parseFloat(formatUnits(b))
-	// 		}, 0) /
-	// 		composition.length) *
-	// 		100
-
-	// const allCollateralAPY = collateral && collateral.map(() => avgBasketAPY && avgBasketAPY)
-	// const maxAPY = allCollateralAPY ? Math.max(...allCollateralAPY) : 0
-	// const minAPY = allCollateralAPY ? Math.min(...allCollateralAPY) : 0
-
 	return (
 		synth && (
 			<Link href={`/vaults/${vaultName}`} key={vaultName}>
-				<button className='w-full rounded border border-primary-300 bg-primary-100 p-4 py-2 hover:bg-primary-200' disabled={!account}>
+				<button
+					className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
+					disabled={!account}
+				>
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
 								<Image src={`/images/tokens/${vaultName}.png`} alt={vaultName} className={`inline-block`} height={32} width={32} />
 								<span className='inline-block text-left align-middle'>
-									<Typography className='ml-2 font-bold'>{vaultName}</Typography>
+									<Typography variant='lg' className='ml-2 font-bakbak'>
+										{vaultName}
+									</Typography>
 									{isDesktop && (
-										<Typography variant='sm' className={`ml-2 font-light text-text-200`}>
+										<Typography variant='sm' className={`ml-2 text-baoWhite`}>
 											{synth.desc}
 										</Typography>
 									)}
@@ -97,20 +78,11 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 								<Loader />
 							)}
 						</div>
-						{/* 
-						FIXME: this is a placeholder for the APY range
-						<div className='mx-auto my-0 flex w-full items-center justify-center'>
-							<Typography variant='sm' className='m-0 font-semibold'>
-								{collateral ? '0 - ' + getDisplayBalance(maxAPY, 0, 2) + '%' : <Loader />}
-							</Typography>
-						</div> 
-						*/}
-
 						<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
 							<span className='inline-block'>
 								{synth ? (
 									<>
-										<Typography variant='sm' className='m-0 font-semibold leading-5'>
+										<Typography variant='base' className='m-0 font-bakbak leading-5'>
 											{getDisplayBalance(synth.borrowApy)}%
 										</Typography>
 									</>

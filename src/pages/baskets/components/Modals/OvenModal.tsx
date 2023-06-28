@@ -29,8 +29,8 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 		<>
 			<Modal isOpen={show} onDismiss={hideModal}>
 				<Modal.Header onClose={hideModal}>
-					<div className='mx-0 my-auto flex h-full items-center text-text-100'>
-						<Typography variant='h3' className='mr-2 mb-0'>
+					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
+						<Typography variant='h3' className='mb-0 mr-2'>
 							{basket.symbol} Oven
 						</Typography>
 						<Image src={basket.icon} width={32} height={32} alt={basket.symbol} />
@@ -64,7 +64,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 						<div className='flex h-full flex-col items-center justify-center'>
 							<div className='flex w-full flex-row'>
 								<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-									<Typography variant='sm' className='text-text-200'>
+									<Typography variant='sm' className='text-baoRed'>
 										{`Available:`}{' '}
 									</Typography>
 									<Typography variant='sm'>{`${getDisplayBalance(ethBalance || BigNumber.from('0'))} ETH`}</Typography>

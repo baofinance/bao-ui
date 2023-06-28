@@ -39,10 +39,10 @@ const Migration: React.FC = () => {
 
 	return (
 		<div className='flex flex-col px-4'>
-			<Typography variant='hero' className='my-3 text-center font-bold'>
+			<Typography variant='hero' className='my-3 text-center font-bakbak'>
 				Migrate
 			</Typography>
-			<Typography variant='xl' className='text-center font-bold'>
+			<Typography variant='xl' className='text-center font-bakbak'>
 				Locked BAO to veBAO
 			</Typography>
 			<Typography variant='p' className='mt-5 leading-normal'>
@@ -79,7 +79,7 @@ const Migration: React.FC = () => {
 						backgroundColor: '#622a2a',
 					}}
 				/>
-				<Typography variant='sm' className='text-center'>
+				<Typography variant='sm' className='text-center font-bakbak'>
 					Lock until {new Date(lockTime).toDateString()}
 				</Typography>
 			</div>
@@ -95,7 +95,7 @@ const Migration: React.FC = () => {
 					Migrate to veBAO
 				</Button>
 			</div>
-			<Typography variant='sm' className='m-auto text-text-200'>
+			<Typography variant='sm' className='m-auto text-baoRed'>
 				* This action can be done only <b className='font-bold'>once</b> and can <b className='font-bold'>not</b> be reversed!
 			</Typography>
 
@@ -103,13 +103,13 @@ const Migration: React.FC = () => {
 				<Modal.Header
 					onClose={modalHide}
 					header={
-						<Typography variant='h2' className='font-semibold text-red'>
+						<Typography variant='h2' className='font-bakbak text-red'>
 							Warning!
 						</Typography>
 					}
 				/>
 				<Modal.Body>
-					<Typography variant='xl' className='pb-2 font-semibold'>
+					<Typography variant='xl' className='pb-2 font-bakbak'>
 						This is action is irreversible!
 					</Typography>
 					<Typography variant='p' className='leading-normal'>

@@ -7,10 +7,10 @@ import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {
 	return (
-		<div className={`flex items-center ${isDesktop ? 'text-lg' : 'text-sm'}`}>
+		<div className='flex items-center text-sm lg:text-lg'>
 			<Tooltipped content='Discord' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://discord.gg/BW3P62vJXT'
 					aria-label='Discord'
@@ -21,7 +21,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='Twitter' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://twitter.com/BaoCommunity'
 					aria-label='Twitter'
@@ -32,7 +32,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='Medium' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://medium.com/baomunity'
 					aria-label='Medium'
@@ -43,7 +43,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='Governance Forum' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://gov.bao.finance/'
 					aria-label='Governance Forum'
@@ -54,7 +54,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='Snapshot' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://snapshot.org/#/baovotes.eth/'
 					aria-label='Snapshot'
@@ -65,7 +65,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='Documentation' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://docs.bao.finance/'
 					aria-label='Documentation'
@@ -76,7 +76,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='GitHub' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://github.com/baofinance'
 					aria-label='GitHub'
@@ -87,7 +87,7 @@ const Nav: React.FC = () => {
 			</Tooltipped>
 			<Tooltipped content='Bug Bounty Program' placement='top'>
 				<a
-					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-text-400'
+					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
 					href='https://www.immunefi.com/bounty/baofinance'
 					aria-label='Bug Bounty Program'

@@ -1,5 +1,7 @@
-import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
+import { Icon } from '@/components/Icon'
+import Input from '@/components/Input'
+import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
@@ -17,8 +19,6 @@ import CountdownTimer from '@/pages/gauges/components/CountdownTimer'
 import { GaugeController } from '@/typechain/GaugeController'
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from '@/utils/date'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
@@ -26,7 +26,6 @@ import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import Link from 'next/link'
 import Slider from 'rc-slider'
 import React, { Fragment, useCallback, useState } from 'react'
 
@@ -91,10 +90,6 @@ export const Dashboard = () => {
 		[setVal],
 	)
 
-	const onVotingSliderChange = (value: number | number[]) => {
-		setVal(value as number)
-	}
-
 	const handleBaoChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
 			setBaoAmount(e.currentTarget.value)
@@ -151,71 +146,88 @@ export const Dashboard = () => {
 
 	return (
 		<div>
-			<Typography variant='xl' className='mt-4 mb-2 font-bold'>
+			<Typography variant='xl' className='mb-4 mt-4 text-center font-bakbak'>
 				Voting Dashboard
 			</Typography>
-			<div className={`w-full justify-evenly gap-4 rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4`}>
+			<div className={`glassmorphic-card flex gap-4 rounded border bg-opacity-80 p-6 lg:hidden`}>
+				<Icon icon='warning' className='h-8 w-8 flex-none' />
+				<div className='m-0 flex-auto'>
+					<Typography className='m-0'>Please visit the desktop version of the app to vote on gauges.</Typography>
+				</div>
+			</div>
+			<div className={`glassmorphic-card hidden w-full justify-evenly gap-4 rounded border bg-opacity-80 p-8 lg:block`}>
 				<div className='grid grid-cols-3 gap-4'>
-					<div className='col-span-1'>
-						<label className='text-xs text-text-200'>Select Gauge</label>
+					<div className='col-span-1 text-center'>
+						<Typography className='font-bakbak text-sm text-baoRed'>Select Gauge</Typography>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
 							{({ open }) => (
 								<>
 									<div>
 										<div className='inline-flex rounded-md border-none shadow-sm'>
 											<div className='inline-flex rounded-md border-none shadow-sm'>
-												<div className='inline-flex items-center rounded-l-md border border-primary-300 bg-primary-100 py-2 pl-3 pr-4 text-white shadow-sm'>
-													{selectedOption === '' ? (
-														<Typography>Select a gauge</Typography>
-													) : (
-														<div className='mx-0 my-auto inline-block h-full items-center'>
-															<div className='mr-2 inline-block'>
-																<Image
-																	className='z-10 inline-block select-none'
-																	src={gauge.iconA}
-																	alt={gauge.symbol}
-																	width={24}
-																	height={24}
-																/>
-																<Image
-																	className='z-20 -ml-2 inline-block select-none'
-																	src={gauge.iconB}
-																	alt={gauge.symbol}
-																	width={24}
-																	height={24}
-																/>
-															</div>
-															<span className='inline-block text-left align-middle'>
-																<Typography variant='sm' className='font-bold'>
-																	{gauge.name}
-																</Typography>
-																<Typography variant='xs' className={`font-light text-text-200`}>
-																	{gauge.type.toLowerCase() === 'curve' ? (
-																		<Image src='/images/platforms/Curve.png' height={12} width={12} alt='Curve' className='mr-1 inline' />
-																	) : gauge.type.toLowerCase() === 'uniswap' ? (
-																		<Image
-																			src='/images/platforms/Uniswap.png'
-																			height={12}
-																			width={12}
-																			alt='Uniswap'
-																			className='mr-1 inline'
-																		/>
-																	) : (
-																		<Image src='/images/platforms/Saddle.png' height={12} width={12} alt='Saddle' className='mr-1 inline' />
-																	)}
-																	{gauge.type}
-																</Typography>
-															</span>
-														</div>
-													)}
-												</div>
 												<Listbox.Button
 													className={
-														(classNames(open ? 'bg-primary-300 text-text-400' : 'text-text-100'),
-														'inline-flex items-center rounded-l-none rounded-r-md border border-primary-300 bg-primary-200 p-2 text-sm font-medium text-text-100 hover:bg-primary-300')
+														(classNames(open ? 'bg-baoBlack text-baoRed' : 'text-baoWhite'),
+														'inline-flex items-center rounded-full bg-baoWhite bg-opacity-10 font-bakbak text-sm text-baoWhite hover:bg-baoRed hover:bg-opacity-60')
 													}
 												>
-													<ChevronDownIcon className='h-5 w-5 text-white' aria-hidden='true' />
+													<div className='inline-flex items-center rounded-l-full border-0 py-2 pl-4 pr-4 text-baoWhite shadow-sm'>
+														{selectedOption === '' ? (
+															<Typography>Select a gauge</Typography>
+														) : (
+															<div className='mx-0 my-auto inline-block h-full items-center'>
+																<div className='mr-2 inline-block'>
+																	<Image
+																		className='z-10 inline-block select-none'
+																		src={gauge.iconA}
+																		alt={gauge.symbol}
+																		width={24}
+																		height={24}
+																	/>
+																	<Image
+																		className='z-20 -ml-2 inline-block select-none'
+																		src={gauge.iconB}
+																		alt={gauge.symbol}
+																		width={24}
+																		height={24}
+																	/>
+																</div>
+																<span className='inline-block text-left align-middle'>
+																	<Typography className='font-bakbak'>{gauge.name}</Typography>
+																	<Typography variant='sm' className={`font-bakbak text-baoRed`}>
+																		{gauge.type.toLowerCase() === 'curve' ? (
+																			<Image
+																				src='/images/platforms/Curve.png'
+																				height={12}
+																				width={12}
+																				alt='Curve'
+																				className='-mt-1 mr-1 inline'
+																			/>
+																		) : gauge.type.toLowerCase() === 'uniswap' ? (
+																			<Image
+																				src='/images/platforms/Uniswap.png'
+																				height={12}
+																				width={12}
+																				alt='Uniswap'
+																				className='-mt-1 mr-1 inline'
+																			/>
+																		) : (
+																			<Image
+																				src='/images/platforms/Saddle.png'
+																				height={12}
+																				width={12}
+																				alt='Saddle'
+																				className='-mt-1 mr-1 inline'
+																			/>
+																		)}
+																		{gauge.type}
+																	</Typography>
+																</span>
+															</div>
+														)}
+													</div>
+
+													<ChevronDownIcon className='m-auto mr-4 h-6 w-6 text-baoRed' aria-hidden='true' />
 												</Listbox.Button>
 											</div>
 										</div>
@@ -226,15 +238,15 @@ export const Dashboard = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 mt-1 h-auto w-auto origin-top-right divide-y divide-primary-500 overflow-hidden rounded-md border border-primary-500 bg-primary-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 ml-16 origin-top-right overflow-hidden rounded-3xl bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
 													gauges.map((gauge: any, i: number) => (
 														<Listbox.Option
 															key={gauge.name}
 															className={({ active }) =>
 																classNames(
-																	active ? 'bg-primary-100 text-text-400' : 'text-text-100',
-																	'cursor-pointer select-none p-2 text-sm',
+																	active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
+																	'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
 																)
 															}
 															value={gauge.name}
@@ -258,17 +270,15 @@ export const Dashboard = () => {
 																		/>
 																	</div>
 																	<span className='inline-block text-left align-middle'>
-																		<Typography variant='sm' className='font-bold'>
-																			{gauge.name}
-																		</Typography>
-																		<Typography variant='xs' className={`font-light text-text-200`}>
+																		<Typography className='font-bakbak'>{gauge.name}</Typography>
+																		<Typography variant='sm' className={`font-bakbak text-baoRed`}>
 																			{gauge.type.toLowerCase() === 'curve' ? (
 																				<Image
 																					src='/images/platforms/Curve.png'
 																					height={12}
 																					width={12}
 																					alt='Curve'
-																					className='mr-1 inline'
+																					className='-mt-1 mr-1 inline'
 																				/>
 																			) : gauge.type.toLowerCase() === 'uniswap' ? (
 																				<Image
@@ -276,7 +286,7 @@ export const Dashboard = () => {
 																					height={12}
 																					width={12}
 																					alt='Uniswap'
-																					className='mr-1 inline'
+																					className='-mt-1 mr-1 inline'
 																				/>
 																			) : (
 																				<Image
@@ -284,7 +294,7 @@ export const Dashboard = () => {
 																					height={12}
 																					width={12}
 																					alt='Saddle'
-																					className='mr-1 inline'
+																					className='-mt-1 mr-1 inline'
 																				/>
 																			)}
 																			{gauge.type}
@@ -307,11 +317,11 @@ export const Dashboard = () => {
 					<div className='col-span-1 mt-6 flex items-center justify-center text-center align-middle'>
 						<div className='m-auto'>
 							<div className='text-center'>
-								<Typography variant='xs' className='text-text-200'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
 									Voting Period Ends
 								</Typography>
 							</div>
-							<div className='text-lg font-bold'>
+							<div className='font-bakbak text-lg'>
 								<CountdownTimer />
 							</div>
 						</div>
@@ -319,11 +329,11 @@ export const Dashboard = () => {
 					<div className='col-span-1 mt-6 flex items-center justify-center text-center align-middle'>
 						<div className='m-auto align-middle'>
 							<div className='text-center'>
-								<Typography variant='xs' className='text-text-200'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
 									Total Voting Power Allocated
 								</Typography>
 							</div>
-							<Typography variant='lg' className='font-bold'>
+							<Typography variant='lg' className='font-bakbak'>
 								{(votingPowerAllocated ? votingPowerAllocated.div(BigNumber.from(100)) : BigNumber.from(0)).toString()}%
 							</Typography>
 						</div>
@@ -334,61 +344,61 @@ export const Dashboard = () => {
 				<div className='mt-8 grid grid-cols-6 gap-4'>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Gauge TVL
 							</Typography>
 						</div>
-						<Typography variant='lg' className='ml-2 inline-block font-bold'>
+						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
 							${gaugeTVL ? getDisplayBalance(decimate(gaugeTVL)) : '0'}
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Total veBAO Allocated
 							</Typography>
 						</div>
-						<Typography variant='lg' className='ml-2 inline-block font-bold'>
+						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
 							{veInfo ? (parseFloat(formatUnits(veInfo.totalSupply)) * parseFloat(formatUnits(currentWeight))).toLocaleString() : '0'}
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Current Weight
 							</Typography>
 						</div>
-						<Typography variant='lg' className='ml-2 inline-block font-bold'>
+						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Current APR
 							</Typography>
 						</div>
-						<Typography variant='lg' className='ml-2 inline-block font-bold'>
+						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(currentAPR)}%
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Future Weight
 							</Typography>
 						</div>
-						<Typography variant='lg' className='ml-2 inline-block font-bold'>
+						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(futureWeight.mul(100), 18, 2)}%
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
 						<div className='text-center'>
-							<Typography variant='xs' className='text-text-200'>
+							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								Future APR
 							</Typography>
 						</div>
-						<Typography variant='lg' className='ml-2 inline-block font-bold'>
+						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
 							{getDisplayBalance(futureAPR)}%
 						</Typography>
 					</div>
@@ -415,11 +425,10 @@ export const Dashboard = () => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='h-2 w-full appearance-none rounded-full bg-primary-400 accent-text-400 disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-3xl bg-baoWhite bg-opacity-20 disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
-
 						<input
 							type='number'
 							id='points'
@@ -428,23 +437,17 @@ export const Dashboard = () => {
 							placeholder={val.toString()}
 							value={val}
 							className='relative -mr-1 h-6 w-12
-				appearance-none rounded border-solid border-inherit bg-primary-100 pl-2 text-end 
-				align-middle font-bold outline-none outline outline-2 outline-offset-2
-				 transition-all duration-200 disabled:text-text-100 md:text-sm'
+				appearance-none rounded-3xl border-solid border-inherit bg-baoBlack bg-opacity-0 pl-2 
+				text-end align-middle font-bakbak text-lg outline-none outline
+				 outline-2 outline-offset-2 transition-all duration-200 disabled:text-baoWhite'
 						/>
-						<Typography variant='base' className='m-0 rounded border-solid border-inherit border-primary-500 bg-primary-100 p-0 font-bold'>
+						<Typography variant='lg' className='m-0 p-0 font-bakbak'>
 							%
 						</Typography>
 						<>
 							{pendingTx ? (
 								<Button className='ml-8 w-[20%]' disabled={true}>
-									{typeof pendingTx === 'string' ? (
-										<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-											Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-										</Link>
-									) : (
-										'Pending Transaction'
-									)}
+									<Loader />
 								</Button>
 							) : (
 								<Button
@@ -464,36 +467,22 @@ export const Dashboard = () => {
 				{/* End of Voting Slider Section */}
 				<div className='m-4' />
 				{/* Start of BoostCalc Section */}
-				<Typography variant='xl' className='mt-4 mb-2 font-bold'>
+				<Typography variant='xl' className='mb-2 mt-4 font-bakbak'>
 					Boost Calculator
 				</Typography>
 				<div className='mt-4 grid grid-cols-6 gap-4'>
 					<div className='col-span-2'>
-						<label className='text-sm text-text-200'>Deposit Amount</label>
-						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
-							<input
-								type='number'
-								className='rounded border border-primary-500 bg-primary-300 px-2 py-1 outline-none'
-								value={depositAmount}
-								onChange={handleDepositChange}
-							/>
-						</div>
+						<label className='font-bakbak text-sm text-baoRed'>Deposit Amount</label>
+						<Input value={depositAmount} onChange={handleDepositChange} />
 					</div>
 					<div className='col-span-2'>
-						<label className='text-sm text-text-200'>BAO Tokens</label>
-						<div className='flex h-8 gap-2 rounded-md bg-primary-100'>
-							<input
-								type='number'
-								className='rounded border border-primary-500 bg-primary-300 px-2 py-1 outline-none'
-								value={baoAmount}
-								onChange={handleBaoChange}
-							/>
-						</div>
+						<label className='font-bakbak text-sm text-baoRed'>BAO Tokens</label>
+						<Input value={baoAmount} onChange={handleBaoChange} />
 					</div>
 					<div className='col-span-2'>
 						<div className='w-full'>
-							<label className='float-left mb-2 text-sm text-text-200'>Lock until</label>
-							<label className='float-right mb-2 text-sm text-text-100'>{new Date(lockTime).toDateString()}</label>
+							<label className='float-left mb-2 font-bakbak text-sm text-baoRed'>Lock until</label>
+							<label className='float-right mb-2 font-bakbak text-sm text-baoWhite'>{new Date(lockTime).toDateString()}</label>
 						</div>
 						<div className='p-4'>
 							<Slider
@@ -502,19 +491,19 @@ export const Dashboard = () => {
 								max={max}
 								value={weeks}
 								onChange={onCalcSliderChange}
-								className='mt-4'
+								className='mt-6'
 								handleStyle={{
-									backgroundColor: '#FFD84B',
-									borderColor: '#FFD84B',
+									backgroundColor: '#e21a53',
+									borderColor: '#e21a53',
 									boxShadow: 'none',
 									opacity: 1,
 								}}
 								trackStyle={{
-									backgroundColor: '#CC9902',
-									borderColor: '#CC9902',
+									backgroundColor: '#e21a53',
+									borderColor: '#e21a53',
 								}}
 								railStyle={{
-									backgroundColor: '#622a2a',
+									backgroundColor: '#faf2e340',
 								}}
 							/>
 						</div>
@@ -523,9 +512,9 @@ export const Dashboard = () => {
 						<Button onClick={calc}>Calculate</Button>
 					</div>
 					<div className='col-span-2 justify-center text-center'>
-						<label className='text-sm text-text-200'>veBAO</label>
-						<div className='flex h-8 gap-2 rounded-md !text-center font-bold'>
-							<Typography className='inline-block w-full !text-center font-bold'>
+						<label className='font-bakbak text-sm text-baoRed'>veBAO</label>
+						<div className='flex h-8 gap-2 rounded-md !text-center'>
+							<Typography variant='lg' className='inline-block w-full !text-center font-bakbak'>
 								{isNaN(veBaoEstimate(parseFloat(baoAmount), lockTime))
 									? 0
 									: veBaoEstimate(parseFloat(baoAmount), lockTime).toLocaleString()}
@@ -533,11 +522,13 @@ export const Dashboard = () => {
 						</div>
 					</div>
 					<div className='col-span-2 h-12 text-center'>
-						<label className='text-sm text-text-200'>Boost</label>
+						<label className='font-bakbak text-sm text-baoRed'>Boost</label>
 						<div className='flex w-full gap-2 rounded-md'>
-							<Typography className='inline-block w-full !text-center font-bold'>
+							<Typography variant='lg' className='inline-block w-full !text-center font-bakbak'>
 								{`${Math.min(boost < 0 ? 2.5 : boost, 2.5).toFixed(2)}`}
-								<Typography className='inline-block text-text-400'>x</Typography>
+								<Typography variant='lg' className='inline-block text-baoRed'>
+									x
+								</Typography>
 							</Typography>
 						</div>
 					</div>

@@ -136,7 +136,7 @@ const FarmListHeader: React.FC<FarmListHeaderProps> = ({ headers }: FarmListHead
 	return (
 		<div className='flex flex-row px-2 py-3'>
 			{headers.map((header: string) => (
-				<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bold first:text-left' key={header}>
+				<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bakbak first:text-left' key={header}>
 					{header}
 				</Typography>
 			))}
@@ -161,7 +161,7 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 	return (
 		<>
 			<button className='w-full py-2' onClick={() => setShowFarmModal(true)} disabled={!account}>
-				<div className='rounded border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
+				<div className='rounded border p-4'>
 					<div className='flex w-full flex-row items-center'>
 						<div className={`mx-auto my-0 flex basis-1/3 flex-col text-left`}>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
@@ -170,10 +170,10 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 									<Image className='z-20 -ml-2 inline-block select-none' src={farm.iconB} alt={farm.lpToken} width={32} height={32} />
 								</div>
 								<span className='inline-block text-left align-middle'>
-									<Typography variant='base' className='font-bold'>
+									<Typography variant='base' className='font-bakbak'>
 										{farm.name}
 									</Typography>
-									<Typography variant='sm' className={`font-light text-text-200`}>
+									<Typography variant='sm' className={`font-light text-baoRed`}>
 										{farm.type === 'SushiSwap LP' ? (
 											<Image src='/images/tokens/SUSHI.png' height={12} width={12} alt='SushiSwap' className='mr-1 inline' />
 										) : (

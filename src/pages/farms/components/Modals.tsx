@@ -140,7 +140,7 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 				/>
 				<Typography variant='p' className='mt-2'>
 					Your first deposit activates and each withdraw resets the timer for penalities and fees, this is pool based. Be sure to read the{' '}
-					<a href='https://docs.bao.finance/' target='_blank' rel='noopener noreferrer' className='font-semibold hover:text-text-400'>
+					<a href='https://docs.bao.finance/' target='_blank' rel='noopener noreferrer' className='font-semibold hover:text-baoRed'>
 						docs
 					</a>{' '}
 					before using the farms so you are familiar with protocol risks and fees!

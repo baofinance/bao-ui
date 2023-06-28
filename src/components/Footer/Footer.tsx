@@ -1,16 +1,16 @@
 import React from 'react'
-
-import Container from '../Container'
 import Nav from './components/Nav'
 
 const Footer: React.FC = () => (
-	<footer className='m-auto mt-4 p-4'>
-		<Container className='m-auto mb-3 flex h-[72px] items-center'>
-			<div className='flex flex-1 justify-center'>
-				<Nav />
+	<>
+		<footer>
+			<div className='mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8'>
+				<nav className='-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12' aria-label='Footer'>
+					<Nav />
+				</nav>
 			</div>
-		</Container>
-	</footer>
+		</footer>
+	</>
 )
 
 export default Footer

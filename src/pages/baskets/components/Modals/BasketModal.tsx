@@ -2,7 +2,9 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
+import { Icon } from '@/components/Icon'
 import Input from '@/components/Input'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
@@ -14,12 +16,11 @@ import useBasketRates from '@/hooks/baskets/useBasketRate'
 import type { Dai, SimpleUniRecipe } from '@/typechain/index'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
-import { faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLink, faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 
 type ModalProps = {
@@ -36,11 +37,11 @@ enum MintOption {
 
 // TODO: Make the BasketModal a modular component that can work with different recipes and different input tokens.
 const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal }) => {
-	const [value, setValue] = useState<string | undefined>('0')
-	const [secondaryValue, setSecondaryValue] = useState<string | undefined>('0')
+	const [val, setVal] = useState<string | undefined>('')
+	const [secondaryVal, setSecondaryVal] = useState<string | undefined>('')
 	const [mintOption, setMintOption] = useState<MintOption>(basket.symbol === 'bstbl' ? MintOption.DAI : MintOption.ETH)
 
-	const { handleTx, pendingTx } = useTransactionHandler()
+	const { handleTx, pendingTx, txHash } = useTransactionHandler()
 	const rates = useBasketRates(basket)
 
 	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe', basket.recipeAddress)
@@ -63,26 +64,26 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			case 'MINT':
 				if (mintOption === MintOption.DAI) {
 					// If DAI allowance is zero or insufficient, send an Approval TX
-					if (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) {
-						// TODO: give the user a notice that we're approving max uint and instruct them how to change this value.
+					if (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(val))) {
+						// TODO: give the user a notice that we're approving max uint and instruct them how to change this val.
 						tx = dai.approve(recipe.address, ethers.constants.MaxUint256)
 						handleTx(tx, 'Baskets Recipe: Approve DAI')
 						break
 					}
 
-					tx = recipe.bake(basket.address, parseUnits(value), parseUnits(secondaryValue))
+					tx = recipe.bake(basket.address, parseUnits(val), parseUnits(secondaryVal))
 				} else {
 					// Else, use ETH to mint
-					tx = recipe.toBasket(basket.address, parseUnits(secondaryValue), {
-						value: parseUnits(value),
+					tx = recipe.toBasket(basket.address, parseUnits(secondaryVal), {
+						value: parseUnits(val),
 					})
 				}
 
-				handleTx(tx, `${basket.symbol} Basket: Mint ${getDisplayBalance(secondaryValue, 0) || 0} ${basket.symbol}`, () => hide())
+				handleTx(tx, `${basket.symbol} Basket: Mint ${getDisplayBalance(secondaryVal, 0) || 0} ${basket.symbol}`, () => hide())
 				break
 			case 'REDEEM':
-				tx = basket.basketContract.exitPool(parseUnits(value))
-				handleTx(tx, `${basket.symbol} Basket: Redeem ${getDisplayBalance(value, 0)} ${basket.symbol}`, () => hide())
+				tx = basket.basketContract.exitPool(parseUnits(val))
+				handleTx(tx, `${basket.symbol} Basket: Redeem ${getDisplayBalance(val, 0)} ${basket.symbol}`, () => hide())
 		}
 	}
 
@@ -91,30 +92,31 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			return true
 		}
 		if (operation === 'MINT') {
+			const _val = val && parseUnits(val)
 			const daiOrEth = mintOption === MintOption.DAI ? daiBalance : ethBalance
 			const walletBallance = operation === 'MINT' ? daiOrEth : basketBalance
-			let canParseValue = true
+			let canParseVal = true
 			try {
-				parseUnits(value)
+				parseUnits(val)
 			} catch {
-				canParseValue = false
+				canParseVal = false
 			}
 			console.log('daiAllowance', daiAllowance)
 			return (
 				mintOption === MintOption.DAI &&
 				daiAllowance &&
-				(daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) &&
-				canParseValue &&
-				(parseUnits(value).eq(0) || parseUnits(value).gt(walletBallance))
+				(daiAllowance.eq(0) || daiAllowance.lt(_val)) &&
+				canParseVal &&
+				(parseUnits(val).eq(0) || parseUnits(val).gt(walletBallance))
 			)
 		}
 		return false
-	}, [pendingTx, operation, mintOption, daiAllowance, value, daiBalance, ethBalance, basketBalance])
+	}, [pendingTx, operation, mintOption, daiAllowance, val, daiBalance, ethBalance, basketBalance])
 
 	const hide = () => {
 		hideModal()
-		setValue('0')
-		setSecondaryValue('0')
+		setVal('')
+		setSecondaryVal('')
 	}
 
 	return basket ? (
@@ -122,7 +124,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			<Modal isOpen={show} onDismiss={hide}>
 				<Modal.Header
 					header={
-						<div className='mx-0 my-auto flex h-full items-center gap-2 text-text-100'>
+						<div className='mx-0 my-auto flex h-full items-center gap-2 text-baoWhite'>
 							{operation === 'MINT' ? 'Mint' : 'Redeem'} {basket.symbol}
 							<Image src={`/images/tokens/${basket.icon}`} width={32} height={32} alt={basket.symbol} />
 						</div>
@@ -136,35 +138,42 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 								<div className='mb-2 text-center'>
 									<Badge>
 										1 {basket.symbol} = <FontAwesomeIcon icon={faEthereum} /> {rates && getDisplayBalance(rates.eth)}
-										{' = '}
-										{rates && getDisplayBalance(rates.dai)} DAI
+										{' = $'}
+										{rates && getDisplayBalance(rates.dai)}
 									</Badge>
 								</div>
-								<Typography variant='sm' className='text-center'>
-									<b className='font-medium'>NOTE:</b> An extra 2% of the mint cost will be included to account for slippage. Any unused
-									input tokens will be returned in the mint transaction.
-								</Typography>
+								<div className='mt-4 flex gap-2 rounded-3xl bg-baoWhite/5 p-4'>
+									<Icon icon='warning' className='m-0 h-6 w-6 flex-none' />
+									<Typography variant='sm' className='m-0 pr-1'>
+										There will be an extra 2% of the cost included to account for slippage. Any unused tokens will be returned as part of
+										the mint transaction.
+									</Typography>
+								</div>
 							</>
 						) : (
-							<Typography variant='sm' className='text-center'>
-								<b className='font-medium'>NOTE:</b> When you redeem {basket.name}, you will receive the underlying tokens. Alternatively,
-								you can swap {basket.name}{' '}
-								<a href={`${swapLink}`} target='blank' className='font-semibold hover:text-text-400'>
-									here
-								</a>
-								.{' '}
-								<Badge className='mt-2 bg-red/50 text-center text-xs'>
-									<b className='font-medium'>CAUTION:</b> Slippage may apply on swaps!
-								</Badge>
-							</Typography>
+							<div className='rounded-3xl bg-baoWhite/5 p-4'>
+								<div className='mt-4 flex gap-2'>
+									<Icon icon='warning' className='m-0 h-6 w-6 flex-none' />
+									<Typography variant='sm' className='m-0 pr-1'>
+										When you redeem {basket.name}, you will receive the underlying tokens. Alternatively, you can swap {basket.name}{' '}
+										<a href={`${swapLink}`} target='blank' className='font-bold hover:text-baoRed'>
+											here <FontAwesomeIcon size='xs' icon={faExternalLinkAlt} />
+										</a>
+										.
+									</Typography>
+								</div>
+								<div className='m-auto px-2 pt-2 text-center'>
+									<Badge>Slippage may occur on swaps!</Badge>
+								</div>
+							</div>
 						)}
 					</div>
 					<div className='flex w-full flex-col'>
 						<div className='flex h-full flex-col items-center justify-center'>
 							<div className='flex w-full flex-row'>
 								<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-									<Typography variant='sm' className='text-text-200'>
-										{`Available:`}
+									<Typography variant='sm' className='font-semibold text-baoRed'>
+										Balance:
 									</Typography>
 									<Typography variant='sm'>
 										{operation === 'MINT'
@@ -176,21 +185,21 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 								</div>
 							</div>
 							<Input
-								value={value}
-								onChange={e => setValue(e.currentTarget.value)}
-								onSelectMax={() => setValue(formatUnits(basketBalance, 18))}
+								value={val}
+								onChange={e => setVal(e.currentTarget.value)}
+								onSelectMax={() => setVal(formatUnits(basketBalance, 18))}
 								disabled={operation === 'MINT'}
 								label={
-									<div className='flex flex-row items-center'>
+									<div className='flex flex-row items-center rounded-r-3xl bg-baoBlack'>
 										{operation === 'MINT' && basket.symbol.toLowerCase() === 'bstbl' && (
 											<>
 												<Tooltipped content={`Swap input currency to ${mintOption === MintOption.DAI ? 'ETH' : 'DAI'}`}>
 													<Button
 														size='xs'
 														onClick={() => {
-															// Clear input values
-															setValue('0')
-															setSecondaryValue('0')
+															// Clear input vals
+															setVal('')
+															setSecondaryVal('')
 															// Swap mint option
 															setMintOption(mintOption === MintOption.DAI ? MintOption.ETH : MintOption.DAI)
 														}}
@@ -201,7 +210,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 												</Tooltipped>
 											</>
 										)}
-										<div className='flex flex-row items-center pl-2 pr-4'>
+										<div className='flex flex-row items-center rounded-r-3xl bg-baoBlack pl-2 pr-4'>
 											<div className='flex w-6 justify-center'>
 												{operation === 'MINT' ? (
 													<Image
@@ -222,24 +231,24 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 								<>
 									<br />
 									<Input
-										value={secondaryValue}
+										value={secondaryVal}
 										onChange={e => {
 											try {
 												parseUnits(e.currentTarget.value)
 											} catch {
-												setValue('0')
-												setSecondaryValue('0')
+												setVal('')
+												setSecondaryVal('')
 												return
 											}
-											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											// Seek to mint 98% of total val (use remaining 2% as slippage protection)
 											const inputVal = decimate(
 												BigNumber.from(mintOption === MintOption.DAI ? rates.dai : rates.eth).mul(parseUnits(e.currentTarget.value)),
 											).mul(parseUnits('1.02'))
-											setSecondaryValue(e.currentTarget.value)
-											setValue(formatUnits(decimate(inputVal)))
+											setSecondaryVal(e.currentTarget.value)
+											setVal(formatUnits(decimate(inputVal)))
 										}}
 										onSelectMax={() => {
-											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											// Seek to mint 98% of total val (use remaining 2% as slippage protection)
 											let usedBal
 											let usedRate
 											switch (mintOption) {
@@ -253,13 +262,13 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 													break
 											}
 
-											// Seek to mint 98% of total value (use remaining 2% as slippage protection)
+											// Seek to mint 98% of total val (use remaining 2% as slippage protection)
 											const maxVal = usedBal.mul(parseUnits('0.98')).div(usedRate)
-											setSecondaryValue(formatUnits(maxVal))
-											setValue(formatUnits(usedBal))
+											setSecondaryVal(formatUnits(maxVal))
+											setVal(formatUnits(usedBal))
 										}}
 										label={
-											<div className='flex flex-row items-center pl-2 pr-4'>
+											<div className='flex flex-row items-center rounded-r-3xl bg-baoBlack pl-2 pr-4'>
 												<div className='flex w-6 justify-center'>
 													<Image
 														src={`/images/tokens/${basket.icon}`}
@@ -278,36 +287,33 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					</div>
 				</Modal.Body>
 				<Modal.Actions>
-					<Button
-						fullWidth
-						disabled={isButtonDisabled || (mintOption === MintOption.DAI && daiBalance.lte(0)) || value === '0'}
-						onClick={handleOperation}
-					>
-						{pendingTx ? (
-							typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls[0]}/tx/${pendingTx}`} target='_blank'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)
-						) : operation === 'MINT' &&
-						  mintOption === MintOption.DAI &&
-						  daiAllowance &&
-						  (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(value))) ? (
-							'Approve DAI'
-						) : !value ? (
-							'Enter a Value'
-						) : isButtonDisabled ? (
-							'Invalid Input'
-						) : operation === 'MINT' ? (
-							`Mint ${(secondaryValue && getDisplayBalance(secondaryValue, 0)) || 0} ${basket.symbol}`
-						) : (
-							`Redeem ${(value && getDisplayBalance(value, 0)) || 0} ${basket.symbol}`
-						)}
-					</Button>
+					{pendingTx ? (
+						<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+							<Button fullWidth className='!rounded-full'>
+								<PendingTransaction /> Pending Transaction
+								<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+							</Button>
+						</a>
+					) : (
+						<Button
+							fullWidth
+							disabled={isButtonDisabled || (mintOption === MintOption.DAI && daiBalance.lte(0)) || val === '0'}
+							onClick={handleOperation}
+						>
+							{operation === 'MINT' &&
+							mintOption === MintOption.DAI &&
+							daiAllowance &&
+							(daiAllowance.eq(0) || daiAllowance.lt(parseUnits(val)))
+								? 'Approve DAI'
+								: !val
+								? 'Enter a Value'
+								: isButtonDisabled
+								? 'Invalid Input'
+								: operation === 'MINT'
+								? `Mint ${(secondaryVal && getDisplayBalance(secondaryVal, 0)) || 0} ${basket.symbol}`
+								: `Redeem ${(val && getDisplayBalance(val, 0)) || 0} ${basket.symbol}`}
+						</Button>
+					)}
 				</Modal.Actions>
 			</Modal>
 		</>

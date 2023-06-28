@@ -1,4 +1,5 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
+import { ListHeader } from '@/components/List'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
@@ -15,49 +16,27 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
+import { isDesktop } from 'react-device-detect'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
 
 	return (
 		<>
-			<div className='flex w-full flex-row'>
-				<div className='flex w-full flex-col'>
-					{isDesktop ? (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'TVL', 'APR']} />
-					) : (
-						<GaugeListHeader headers={['Gauge', 'Gauge Weight', 'APR']} />
-					)}
-					{gauges.length ? (
-						gauges.map((gauge: ActiveSupportedGauge, i: number) => (
-							<React.Fragment key={i}>
-								<GaugeListItem gauge={gauge} />
-							</React.Fragment>
-						))
-					) : (
-						<PageLoader block />
-					)}
-				</div>
+			<ListHeader headers={isDesktop ? ['Gauge Name', 'Current Weight', 'APR', 'TVL'] : ['Name', 'APR', 'TVL']} />
+			<div className='flex flex-col gap-4'>
+				{gauges.length ? (
+					gauges.map((gauge: ActiveSupportedGauge, i: number) => (
+						<React.Fragment key={i}>
+							<GaugeListItem gauge={gauge} />
+						</React.Fragment>
+					))
+				) : (
+					<PageLoader block />
+				)}
 			</div>
 		</>
-	)
-}
-
-type GaugeListHeaderProps = {
-	headers: string[]
-}
-
-const GaugeListHeader: React.FC<GaugeListHeaderProps> = ({ headers }: GaugeListHeaderProps) => {
-	return (
-		<div className='flex flex-row px-2 py-3'>
-			{headers.map((header: string) => (
-				<Typography variant='lg' className='flex w-full flex-col px-2 pb-0 text-right font-bold first:text-left' key={header}>
-					{header}
-				</Typography>
-			))}
-		</div>
 	)
 }
 
@@ -86,16 +65,10 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 
 	const boost = useMemo(() => {
 		const _depositAmount = depositAmount ? formatUnits(decimate(depositAmount)) : '0'
-		console.log(gauge.symbol, '_depositAmount', _depositAmount)
 		const l = parseFloat(_depositAmount) * 1e18
-		console.log(gauge.symbol, 'l', l)
 		const working_balances = gaugeInfo && account ? parseFloat(gaugeInfo.workingBalance.toString()) : 1 * 1e18 //determine workingBalance of depositAmount
-		console.log(gauge.symbol, 'working_balances', working_balances)
 		const working_supply = gaugeInfo && parseFloat(gaugeInfo.workingSupply.toString())
-		console.log(gauge.symbol, 'working_supply', working_supply)
-		console.log(gauge.symbol, 'tvl', tvl)
 		const L = tvl * 1e18 + l
-		console.log(gauge.symbol, 'L', L)
 		const lim = (l * 40) / 100
 		console.log(gauge.symbol, 'lim', lim)
 		console.log(gauge.symbol, 'veEstimate', veEstimate)
@@ -105,7 +78,6 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		const limplus = lim + (L * veBAO * 60) / (totalVePower * 1e20)
 		console.log(gauge.symbol, 'limplus', limplus)
 		const limfinal = Math.min(l, limplus)
-		console.log(gauge.symbol, 'limfinal', limfinal)
 		const old_bal = working_balances
 		console.log(gauge.symbol, 'old_bal', old_bal)
 		const noboost_lim = (l * 40) / 100
@@ -122,45 +94,52 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 
 	return (
 		<>
-			<button className='w-full py-2' onClick={() => setShowGaugeModal(true)} disabled={!account}>
-				<div className='rounded border border-primary-300 bg-primary-100 p-4 hover:bg-primary-200'>
-					<div className='flex w-full flex-row items-center'>
-						<div className={`mx-auto my-0 flex ${isDesktop ? 'basis-1/4' : 'basis-1/2'} flex-col text-left`}>
-							<div className='mx-0 my-auto inline-block h-full items-center'>
-								<div className='mr-2 inline-block'>
-									<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={32} height={32} />
-									<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={32} height={32} />
-								</div>
-								<span className='inline-block text-left align-middle'>
-									<Typography variant='base' className='font-bold'>
-										{gauge.name}
-									</Typography>
-									<Typography variant='sm' className={`font-light text-text-200`}>
-										<Image src={`/images/platforms/${gauge.type}.png`} height={12} width={12} alt='Curve' className='mr-1 inline' />
-										{gauge.type}
-									</Typography>
-								</span>
+			<button
+				className='glassmorphic-card w-full px-4 py-2 duration-300 hover:cursor-pointer hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
+				onClick={() => setShowGaugeModal(true)}
+				disabled={!account}
+			>
+				<div className='flex w-full flex-row'>
+					<div className='flex basis-1/3 lg:basis-1/4'>
+						<div className='mx-0 my-auto inline-block h-full items-center'>
+							<div className='mr-2 hidden lg:inline-block'>
+								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={24} height={24} />
+								<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={24} height={24} />
 							</div>
-						</div>
-						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
-							</Typography>
-						</div>
-						<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-							<Typography variant='base' className='ml-2 inline-block font-medium'>
-								${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
-							</Typography>
-						</div>
-						{isDesktop && (
-							<div className='mx-auto my-0 flex basis-1/4 flex-col text-right'>
-								<Typography variant='base' className='ml-2 inline-block font-medium'>
-									<Typography variant='base' className='ml-2 inline-block font-medium'>
-										{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
-									</Typography>
+							<span className='inline-block text-left align-middle'>
+								<Typography variant='base' className='font-bakbak'>
+									{gauge.name}
 								</Typography>
-							</div>
-						)}
+								<Typography className={`flex align-middle font-bakbak text-baoRed`}>
+									<Image
+										src={`/images/platforms/${gauge.type}.png`}
+										height={16}
+										width={16}
+										alt={gauge.type}
+										className='mr-1 hidden lg:inline'
+									/>
+									{gauge.type}
+								</Typography>
+							</span>
+						</div>
+					</div>
+
+					<div className='mx-auto my-0 hidden items-center justify-center lg:flex lg:basis-1/4'>
+						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
+							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
+						</Typography>
+					</div>
+
+					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/4'>
+						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
+							{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
+						</Typography>
+					</div>
+
+					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/4'>
+						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
+							${getDisplayBalance(formatUnits(gaugeTVL ? gaugeTVL : BigNumber.from(0)))}
+						</Typography>
 					</div>
 				</div>
 			</button>

@@ -153,6 +153,19 @@ export default {
 			stabilizer: '0x720282BB7e721634c95F0933636DE3171dc405de',
 			markets: [
 				{
+					mid: 4,
+					symbol: 'bdETH',
+					vaultAddresses: {
+						1: '0xF635fdF9B36b557bD281aa02fdfaeBEc04CD084A',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+				},
+				{
 					mid: 1,
 					symbol: 'bdUSD',
 					vaultAddresses: {
@@ -198,19 +211,6 @@ export default {
 					underlyingDecimals: 18,
 				},
 				{
-					mid: 4,
-					symbol: 'bdETH',
-					vaultAddresses: {
-						1: '0xF635fdF9B36b557bD281aa02fdfaeBEc04CD084A',
-					},
-					underlyingAddresses: {
-						1: 'ETH',
-					},
-					icon: 'ETH.png',
-					coingeckoId: 'weth',
-					underlyingDecimals: 18,
-				},
-				{
 					mid: 2,
 					symbol: 'bdETH',
 					archived: true,
@@ -232,6 +232,19 @@ export default {
 			oracle: '0xbCb0a842aF60c6F09827F34841d3A8770995c6e0',
 			stabilizer: '0xC137fa40Ff0cb53ff157e1dCafc7262877069219',
 			markets: [
+				{
+					mid: 4,
+					symbol: 'bdEther',
+					vaultAddresses: {
+						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+				},
 				{
 					mid: 1,
 					symbol: 'bdbaoETH',
@@ -276,19 +289,6 @@ export default {
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 					isBasket: true,
-				},
-				{
-					mid: 4,
-					symbol: 'bdEther',
-					vaultAddresses: {
-						1: '0x104079a87CE46fe2Cf27b811f6b406b69F6872B3',
-					},
-					underlyingAddresses: {
-						1: 'ETH',
-					},
-					icon: 'ETH.png',
-					coingeckoId: 'weth',
-					underlyingDecimals: 18,
 				},
 			],
 		},

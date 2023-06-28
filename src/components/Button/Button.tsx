@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/display-name */
-import Config from '@/bao/lib/config'
-import classNames from 'classnames'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classNames from 'classnames'
 import React, { ReactNode, useMemo } from 'react'
-import Loader from '../Loader'
+import { PendingTransaction } from '../Loader/Loader'
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const Size = {
-	xs: 'text-xs rounded px-2 h-8',
-	sm: 'text-sm rounded px-3 h-10',
-	md: 'text-base rounded px-4 h-12',
-	lg: 'text-lg rounded px-6 h-16',
+	xs: 'rounded-full px-2 h-8',
+	sm: 'rounded-full px-4 h-10',
+	md: 'rounded-full px-6 h-12',
+	lg: 'rounded-full px-8 h-16',
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children?: ReactNode
 	size?: ButtonSize
 	fullWidth?: boolean
-	pendingTx?: string
+	pendingTx?: string | boolean
+	txHash?: string
 	inline?: boolean
 	href?: string
 	text?: any
@@ -28,11 +28,11 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ children, className = '', size = 'md', fullWidth = false, pendingTx, inline, text, href, disabled, ...rest }, ref) => {
+	({ children, className = '', size = 'md', fullWidth = false, pendingTx, txHash, inline, text, href, disabled, ...rest }, ref) => {
 		const ButtonChild = useMemo(() => {
 			if (href) {
 				return (
-					<a href={href} target='_blank' rel='noreferrer' className='hover:text-text-100 focus:text-text-100'>
+					<a href={href} target='_blank' rel='noreferrer' className='hover:text-baoWhite focus:text-baoWhite'>
 						{text}
 					</a>
 				)
@@ -43,24 +43,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		const isDisabled = useMemo(() => typeof pendingTx === 'string' || pendingTx || disabled === true, [disabled, pendingTx])
 
-		const buttonText = pendingTx ? (
-			typeof pendingTx === 'string' ? (
-				<a
-					href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-					target='_blank'
-					rel='noreferrer'
-					className='hover:text-text-100 focus:text-text-100'
-				>
-					Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-				</a>
-			) : (
-				'Pending Transaction'
-			)
-		) : (
-			children
-		)
+		const buttonText = children
 
-		return (
+		return !pendingTx ? (
 			<button
 				{...rest}
 				ref={ref}
@@ -71,20 +56,39 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
-					`relative items-center justify-center gap-1 overflow-hidden border font-semibold`,
-					'border-primary-300 bg-primary-200 duration-200 hover:bg-primary-300',
+					`relative flex w-fit items-center justify-center overflow-hidden rounded-full border border-baoWhite border-opacity-20
+				bg-baoWhite bg-opacity-5 px-4 py-2 font-bakbak text-lg text-baoWhite duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20`,
 					className,
 				)}
 			>
-				{pendingTx ? (
-					<Loader />
-				) : (
-					<>
-						{ButtonChild}
-						{buttonText}
-					</>
-				)}
+				<>
+					{ButtonChild}
+					{buttonText}
+				</>
 			</button>
+		) : (
+			<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+				<button
+					{...rest}
+					ref={ref}
+					disabled={isDisabled}
+					className={classNames(
+						// @ts-ignore TYPE NEEDS FIXING
+						Size[size],
+						inline ? 'inline-block' : 'flex',
+						fullWidth ? 'w-full' : '',
+						disabled ? 'cursor-not-allowed opacity-50' : '',
+						`relative flex w-fit items-center justify-center overflow-hidden rounded-full border border-baoWhite border-opacity-20
+					bg-baoWhite bg-opacity-5 px-4 py-2 font-bakbak text-lg text-baoWhite duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20`,
+						className,
+					)}
+				>
+					<>
+						<PendingTransaction /> Pending Transaction
+						<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+					</>
+				</button>
+			</a>
 		)
 	},
 )
@@ -105,7 +109,7 @@ export const NavButtons = ({ options, active, onClick, className }: NavButtonPro
 				<Button
 					size='md'
 					key={option}
-					className={classNames(`${option === active && '!bg-primary-300'} w-full`, className)}
+					className={classNames(`${option === active && '!border-baoRed !bg-baoRed !bg-opacity-20'} w-full`, className)}
 					onClick={() => onClick(option)}
 				>
 					{option}

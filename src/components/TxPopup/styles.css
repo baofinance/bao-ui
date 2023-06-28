@@ -1,18 +1,22 @@
 .rnc__notification-item {
   border-radius: 3px;
-  box-shadow: 1px 3px 4px rgb(0 0 0 / 20%);
   cursor: pointer;
   display: flex;
-  margin-bottom: 15px;
+  margin-bottom: 2rem;
   position: relative;
-  background-color: rgb(57 24 24 / 1);
-  border-left: 8px solid rgb(86 36 36 / 1);
+  justify-content: space-between;
+	background: #1e202280;
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(25px);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
+	border: 1px solid #faf2e318;
 }
 
 .rnc__notification-title {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 200;
   margin-bottom: 5px;
+  font-family: 'BakBak One'
 }
 
 .rnc__notification-message {

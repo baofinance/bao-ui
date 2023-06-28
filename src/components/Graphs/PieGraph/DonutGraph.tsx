@@ -10,6 +10,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import _ from 'lodash'
 import { useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import { animated, interpolate, useTransition } from 'react-spring'
 
 interface AssetAllocationAmount {
@@ -37,16 +38,18 @@ export type DonutProps = {
 export default function DonutGraph({ width, height, composition, rates, info, margin = defaultMargin }: DonutProps) {
 	const [active, setActive] = useState(null)
 
-	const assetsBalance: AssetAllocationAmount[] = composition.map(component => {
-		return {
-			tvl: component.price.mul(component.balance.toString()).div(BigNumber.from(10).pow(component.decimals)),
-			symbol: component.symbol,
-			balance: component.balance,
-			decimals: component.decimals,
-			frequency: component.percentage,
-			color: component.color,
-		}
-	})
+	const assetsBalance: AssetAllocationAmount[] =
+		composition &&
+		composition.map(component => {
+			return {
+				tvl: component.price.mul(component.balance.toString()).div(BigNumber.from(10).pow(component.decimals)),
+				symbol: component.symbol,
+				balance: component.balance,
+				decimals: component.decimals,
+				frequency: component.percentage,
+				color: component.color,
+			}
+		})
 
 	const frequency = (d: AssetAllocationAmount) => parseFloat(formatUnits(d.frequency))
 
@@ -102,19 +105,19 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 				</Pie>
 				{!active ? (
 					<>
-						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-lg' dy={-2}>
 							{`${rates && info ? `$${getDisplayBalance(rates.usd.mul(info.totalSupply), 36)}` : <Loader />}`}
 						</Text>
-						<Text textAnchor='middle' fill='#aa9585' className='text-xs' dy={14}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-sm' dy={14}>
 							{`Total Value Locked`}
 						</Text>
 					</>
 				) : (
 					<>
-						<Text textAnchor='middle' fill='#fff8ee' className='text-lg font-bold' dy={-2}>
+						<Text textAnchor='middle' fill='#faf2e3' className='font-bakbak text-lg' dy={-2}>
 							{`$${active && getDisplayBalance(active.tvl)}`}
 						</Text>
-						<Text textAnchor='middle' fill={active.color} className='text-xs' dy={14}>
+						<Text textAnchor='middle' fill={active.color} className='font-bakbak text-xs' dy={14}>
 							{`${getDisplayBalance(active.balance, active.decimals, 4)} ${active.symbol}`}
 						</Text>
 					</>

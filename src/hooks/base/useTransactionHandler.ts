@@ -9,6 +9,8 @@ const useTransactionHandler = () => {
 	const { onAddTransaction, onTxReceipt } = useTransactionProvider()
 	const [pendingTx, setPendingTx] = useState<string | boolean>(false)
 	const [txSuccess, setTxSuccess] = useState<boolean>(false)
+	const [txHash, setTxHash] = useState<string>('')
+	const [txDescription, setTxDescription] = useState<string>('')
 
 	const clearPendingTx = () => {
 		setPendingTx(false)
@@ -32,6 +34,8 @@ const useTransactionHandler = () => {
 			const tx = await _tx
 			handlePendingTx(tx.hash, description)
 			setPendingTx(true)
+			setTxHash(tx.hash)
+			setTxDescription(description)
 			const receipt = await tx.wait()
 			handleReceipt(receipt)
 			if (cb) cb()
@@ -83,6 +87,8 @@ const useTransactionHandler = () => {
 		pendingTx,
 		handleTx,
 		txSuccess,
+		txHash,
+		txDescription,
 	}
 }
 

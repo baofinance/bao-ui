@@ -17,12 +17,12 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	supplyCap,
 	reserves,
 }: BallastButtonProps) => {
-	const { handleTx } = useTransactionHandler()
+	const { handleTx, pendingTx, txHash } = useTransactionHandler()
 	const ballast = useContract<Stabilizer>('Stabilizer', Config.vaults[vaultName].stabilizer)
-	const daiApproval = useAllowance(Config.addressMap.DAI, ballast.address)
-	const wethApproval = useAllowance(Config.addressMap.WETH, ballast.address)
-	const baoUSDApproval = useAllowance(Config.addressMap.baoUSD, ballast.address)
-	const baoETHApproval = useAllowance(Config.addressMap.baoETH, ballast.address)
+	const daiApproval = useAllowance(Config.addressMap.DAI, ballast && ballast.address)
+	const wethApproval = useAllowance(Config.addressMap.WETH, ballast && ballast.address)
+	const baoUSDApproval = useAllowance(Config.addressMap.baoUSD, ballast && ballast.address)
+	const baoETHApproval = useAllowance(Config.addressMap.baoETH, ballast && ballast.address)
 	const dai = useContract<Dai>('Dai', Config.addressMap.DAI)
 	const weth = useContract<Dai>('Weth', Config.addressMap.WETH)
 	const baoUSD = useContract<Erc20>('Erc20', Config.addressMap.baoUSD)
@@ -72,23 +72,23 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	}
 
 	const buttonText = () => {
-		if (!(daiApproval && baoUSDApproval && wethApproval)) return <Loader />
+		if (!(daiApproval && baoUSDApproval && wethApproval && baoETHApproval)) return <Loader />
 		if (vaultName === 'baoUSD')
 			if (swapDirection) {
-				return baoUSDApproval.gt(0) ? 'Swap baoUSD for DAI' : 'Approve baoUSD'
+				return baoUSDApproval && baoUSDApproval.gt(0) ? 'Swap baoUSD for DAI' : 'Approve baoUSD'
 			} else {
-				return daiApproval.gt(0) ? 'Swap DAI for baoUSD' : 'Approve DAI'
+				return daiApproval && daiApproval.gt(0) ? 'Swap DAI for baoUSD' : 'Approve DAI'
 			}
 		if (vaultName === 'baoETH')
 			if (swapDirection) {
-				return baoETHApproval.gt(0) ? 'Swap baoETH for ETH' : 'Approve baoETH'
+				return baoETHApproval && baoETHApproval.gt(0) ? 'Swap baoETH for ETH' : 'Approve baoETH'
 			} else {
-				return wethApproval.gt(0) ? 'Swap WETH for baoETH' : 'Approve WETH'
+				return wethApproval && wethApproval.gt(0) ? 'Swap WETH for baoETH' : 'Approve WETH'
 			}
 	}
 
 	return (
-		<Button fullWidth onClick={handleClick} disabled={isDisabled}>
+		<Button fullWidth onClick={handleClick} disabled={isDisabled} pendingTx={pendingTx} txHash={txHash}>
 			{buttonText()}
 		</Button>
 	)

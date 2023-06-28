@@ -3,17 +3,15 @@
 @tailwind utilities;
 
 html {
-	overflow-y: scroll !important;
 }
 
 body {
-	background: url(/images/background_overlay_dark.png), radial-gradient(circle at center, #391818, #210e0e 50%) fixed;
+	background: #1e2022;
+	font-family: 'Inter', sans-serif;
+	color: #faf2e3;
 	margin: 0;
-	font-family: 'Rubik', sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	color: #fff8ee;
-	transition: 200ms;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 input::-webkit-outer-spin-button,
@@ -61,15 +59,15 @@ input[type='number'] {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-	background: #391818;
+	background: #e21a53;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-	background: #622a2a;
+	background: #1e2022;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-	background: #562424;
+	background: #1e2022;
 }
 
 #__next {
@@ -81,11 +79,11 @@ input[type='number'] {
 }
 
 .react-datepicker__input-container input {
-	@apply block w-full rounded border border-primary-300 bg-primary-100 text-base shadow-sm md:text-sm;
+	@apply block w-full rounded border bg-transparent-100 text-base shadow-sm md:text-sm;
 }
 
 .react-datepicker-popper {
-	@apply z-40 w-72 rounded border-2 border-primary-300 bg-primary-100 px-3 py-2 text-sm shadow;
+	@apply z-40 w-72 rounded border-2 bg-transparent-100 px-3 py-2 text-sm shadow;
 }
 
 .react-datepicker-left {
@@ -93,11 +91,11 @@ input[type='number'] {
 }
 
 .react-datepicker-right {
-	@apply absolute right-0 left-auto top-11 transform-none !important;
+	@apply absolute left-auto right-0 top-11 transform-none !important;
 }
 
 .react-datepicker__portal {
-	@apply absolute top-12 right-0 z-10 w-72 transform-none rounded border-2 border-primary-300 bg-white px-3 py-2 text-sm shadow;
+	@apply absolute right-0 top-12 z-10 w-72 transform-none rounded border-2 border-transparent-200 bg-baoWhite px-3 py-2 text-sm shadow;
 }
 
 .react-datepicker__month-container {
@@ -109,7 +107,7 @@ input[type='number'] {
 }
 
 .react-datepicker__current-month {
-	@apply ml-2.5 text-lg font-semibold text-text-200;
+	@apply ml-2.5 text-lg font-bakbak text-baoRed;
 }
 
 .react-datepicker__week {
@@ -117,11 +115,11 @@ input[type='number'] {
 }
 
 .react-datepicker__day-names {
-	@apply flex justify-around text-center text-xs font-medium text-text-200;
+	@apply flex justify-around text-center text-xs font-bakbak text-baoRed;
 }
 
 .react-datepicker__day-name {
-	@apply flex h-8 w-8 items-center justify-center rounded-full py-1 text-text-400;
+	@apply flex h-8 w-8 items-center justify-center rounded-full py-1 text-baoRed;
 }
 
 .react-datepicker__navigation {
@@ -137,7 +135,7 @@ input[type='number'] {
 }
 
 .react-datepicker__day {
-	@apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center py-1 text-sm leading-loose text-text-100 transition;
+	@apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center py-1 text-sm leading-loose text-baoWhite transition;
 }
 
 .react-datepicker__day--disabled {
@@ -164,7 +162,7 @@ input[type='number'] {
 }
 
 .react-datepicker__day--selected {
-	@apply rounded border border-primary-400 bg-primary-300 text-white;
+	@apply rounded border bg-transparent-100 text-white;
 }
 
 .react-datepicker__day--range-start {
@@ -182,7 +180,135 @@ input[type='number'] {
 		appearance: none;
 		height: 15px;
 		cursor: ew-resize;
-		background: #ffd84b;
+		background: #e21a53;
 		border-radius: 50%;
 	}
+}
+
+.glassmorphic-card {
+	background: #1e202280;
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(25px);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
+	border-radius: 3rem;
+	border: 1px solid #faf2e318;
+}
+
+.stroke {
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke-color: #e21a53;
+	-webkit-text-stroke-width: 1.5px;
+}
+
+.stroke-white {
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke-color: #faf2e3;
+	-webkit-text-stroke-width: 1.5px;
+}
+
+.iconAnim {
+	fill: #ff0000;
+}
+
+.iconAnim:hover {
+	filter: hue-rotate(0deg);
+	animation: iconColor 5s infinite linear;
+}
+
+@keyframes iconColor {
+	12.5% {
+		fill: hue-rotate(20deg);
+	}
+	25% {
+		fill: hue-rotate(40deg);
+	}
+	37.5% {
+		fill: hue-rotate(60deg);
+	}
+	50% {
+		fill: hue-rotate(80deg);
+	}
+	62.5% {
+		fill: hue-rotate(100deg);
+	}
+	75% {
+		fill: hue-rotate(120deg);
+	}
+	87.5% {
+		fill: hue-rotate(140deg);
+	}
+	100% {
+		fill: hue-rotate(160deg);
+	}
+}
+
+/*
+ * react-circular-progressbar styles
+ * All of the styles in this file are configurable!
+ */
+
+.CircularProgressbar {
+	/*
+	 * This fixes an issue where the CircularProgressbar svg has
+	 * 0 width inside a "display: flex" container, and thus not visible.
+	 */
+	width: 100%;
+	/*
+	 * This fixes a centering issue with CircularProgressbarWithChildren:
+	 * https://github.com/kevinsqi/react-circular-progressbar/issues/94
+	 */
+	vertical-align: middle;
+}
+
+.CircularProgressbar .CircularProgressbar-path {
+	stroke: #3e98c7;
+	stroke-linecap: round;
+	-webkit-transition: stroke-dashoffset 0.5s ease 0s;
+	transition: stroke-dashoffset 0.5s ease 0s;
+}
+
+.CircularProgressbar .CircularProgressbar-trail {
+	stroke: #faf2e320;
+	/* Used when trail is not full diameter, i.e. when props.circleRatio is set */
+	stroke-linecap: round;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+	fill: #3e98c7;
+	font-size: 20px;
+	dominant-baseline: middle;
+	text-anchor: middle;
+}
+
+.CircularProgressbar .CircularProgressbar-background {
+	fill: #d6d6d6;
+}
+
+/*
+   * Sample background styles. Use these with e.g.:
+   *
+   *   <CircularProgressbar
+   *     className="CircularProgressbar-inverted"
+   *     background
+   *     percentage={50}
+   *   />
+   */
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-background {
+	fill: #3e98c7;
+}
+
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-text {
+	fill: #fff;
+}
+
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-path {
+	stroke: #fff;
+}
+
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-trail {
+	stroke: transparent;
+}
+
+.modal-open { 
+	overflow: auto; padding-right: 0px !important; 
 }

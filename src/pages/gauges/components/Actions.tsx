@@ -1,5 +1,4 @@
 //import { useWeb3React } from '@web3-react/core'
-import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
@@ -36,7 +35,7 @@ interface StakeProps {
 
 export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 	const [val, setVal] = useState('')
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
@@ -66,12 +65,12 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='text-text-200'>
+							<Typography variant='sm' className='font-bold text-baoRed'>
 								Balance:
 							</Typography>
-							<Typography variant='sm'>
+							<Typography variant='sm' className='font-bold'>
 								{fullBalance}{' '}
-								<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
+								<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 								</a>
 							</Typography>
@@ -103,30 +102,20 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 					</>
 				) : (
 					<>
-						{pendingTx ? (
-							<Button fullWidth disabled={true}>
-								{typeof pendingTx === 'string' ? (
-									<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</Link>
-								) : (
-									'Pending Transaction'
-								)}
-							</Button>
-						) : (
-							<Button
-								fullWidth
-								disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
-								onClick={async () => {
-									const amount = parseUnits(val)
-									const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
+						<Button
+							fullWidth
+							disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
+							onClick={async () => {
+								const amount = parseUnits(val)
+								const stakeTx = gauge.gaugeContract['deposit(uint256)'](amount)
 
-									handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${getDisplayBalance(amount)} ${gauge.name}`, () => hideModal())
-								}}
-							>
-								Deposit {gauge.name}
-							</Button>
-						)}
+								handleTx(stakeTx, `${gauge.name} Gauge: Deposit ${getDisplayBalance(amount)} ${gauge.name}`, () => hideModal())
+							}}
+							pendingTx={pendingTx}
+							txHash={txHash}
+						>
+							Deposit {gauge.name}
+						</Button>
 					</>
 				)}
 			</Modal.Actions>
@@ -143,7 +132,7 @@ interface UnstakeProps {
 export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const gaugeInfo = useGaugeInfo(gauge)
 
@@ -175,12 +164,12 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
 						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
-							<Typography variant='sm' className='text-text-200'>
+							<Typography variant='sm' className='font-bold text-baoRed'>
 								Balance:
 							</Typography>
-							<Typography variant='sm'>
+							<Typography variant='sm' className='font-bold'>
 								{getDisplayBalance(fullBalance, 0)}{' '}
-								<Link href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-text-400'>
+								<Link href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									<a>
 										{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
 									</a>
@@ -193,32 +182,21 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 			</Modal.Body>
 			<Modal.Actions>
 				<>
-					{pendingTx ? (
-						<Button disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									<a>
-										Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-									</a>
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
-						</Button>
-					) : (
-						<Button
-							disabled={
-								!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
-							}
-							onClick={async () => {
-								const amount = parseUnits(val, 18)
-								const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
-								handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
-							}}
-						>
-							Withdraw {gauge.name}
-						</Button>
-					)}
+					<Button
+						fullWidth
+						disabled={
+							!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance) || gaugeInfo.balance.eq(BigNumber.from(0))
+						}
+						onClick={async () => {
+							const amount = parseUnits(val, 18)
+							const unstakeTx = gaugeContract['withdraw(uint256)'](amount)
+							handleTx(unstakeTx, `${gauge.name} Gauge: Withdraw ${formatUnits(amount)} ${gauge.name}`, () => hideModal())
+						}}
+						pendingTx={pendingTx}
+						txHash={txHash}
+					>
+						Withdraw {gauge.name}
+					</Button>
 				</>
 			</Modal.Actions>
 		</>
@@ -231,7 +209,7 @@ interface RewardsProps {
 
 export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 	const gaugeInfo = useGaugeInfo(gauge)
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const minterContract = useContract<Minter>('Minter')
 
 	return (
@@ -239,11 +217,11 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 			<Modal.Body className='h-[120px]'>
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex items-center justify-center'>
-						<div className='flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border-0 bg-primary-300'>
+						<div className='flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full border-0 bg-transparent-100'>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={32} height={32} className='m-auto' />
 						</div>
 						<div className='ml-2'>
-							<Typography variant='xl' className='font-medium'>
+							<Typography variant='xl' className='font-bakbak'>
 								{gaugeInfo && getDisplayBalance(gaugeInfo.claimableTokens)}
 							</Typography>
 						</div>
@@ -251,30 +229,18 @@ export const Rewards: React.FC<RewardsProps> = ({ gauge }) => {
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
-				{pendingTx ? (
-					<Button fullWidth disabled={true}>
-						{typeof pendingTx === 'string' ? (
-							<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-								<a>
-									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-								</a>
-							</Link>
-						) : (
-							'Pending Transaction'
-						)}
-					</Button>
-				) : (
-					<Button
-						fullWidth
-						disabled={!gaugeInfo || !gaugeInfo.claimableTokens || gaugeInfo.claimableTokens.lte(0)}
-						onClick={async () => {
-							const harvestTx = minterContract.mint(gauge.gaugeAddress)
-							handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
-						}}
-					>
-						Harvest BAO
-					</Button>
-				)}
+				<Button
+					fullWidth
+					disabled={!gaugeInfo || !gaugeInfo.claimableTokens || gaugeInfo.claimableTokens.lte(0)}
+					onClick={async () => {
+						const harvestTx = minterContract.mint(gauge.gaugeAddress)
+						handleTx(harvestTx, `${gauge.name} Gauge: Harvest ${getDisplayBalance(gaugeInfo && gaugeInfo.claimableTokens)} BAO`)
+					}}
+					pendingTx={pendingTx}
+					txHash={txHash}
+				>
+					Harvest BAO
+				</Button>
 			</Modal.Actions>
 		</>
 	)
@@ -287,7 +253,7 @@ interface VoteProps {
 }
 
 export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
-	const { pendingTx, handleTx } = useTransactionHandler()
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 	const lockInfo = useLockInfo()
 	const votingPowerAllocated = useVotingPowerAllocated()
@@ -355,7 +321,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 				/>
 				<div className='mt-4'>
 					<div className='text-center'>
-						<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bold text-text-100'>
+						<Typography variant={`${isDesktop ? 'base' : 'sm'}`} className='mb-3 font-bakbak text-baoWhite'>
 							Vote
 						</Typography>
 					</div>
@@ -378,7 +344,7 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 									: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
-							className='h-2 w-full appearance-none rounded-full bg-primary-400 accent-text-400 disabled:cursor-not-allowed'
+							className='h-2 w-full appearance-none rounded-full bg-baoWhite bg-opacity-20 accent-baoRed disabled:cursor-not-allowed'
 							onChange={handleChange}
 							onInput={handleChange}
 						/>
@@ -389,10 +355,10 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 							onChange={handleChange}
 							placeholder={val.toString()}
 							value={val}
-							className='relative -mr-1 h-6 w-10 min-w-0
-				appearance-none rounded border-solid border-inherit bg-background-100 pl-2 text-end 
+							className='relative -mr-1 h-6 w-10 min-w-0 appearance-none
+				rounded border-solid border-inherit bg-baoBlack bg-opacity-80 pl-2 text-end 
 				align-middle outline-none outline outline-2 outline-offset-2 transition-all
-				 duration-200 disabled:text-text-100 md:text-sm'
+				 duration-200 disabled:text-baoWhite md:text-sm'
 						/>
 						<Typography variant='sm' className='m-0 mr-2 rounded border-solid border-inherit p-0'>
 							%
@@ -402,28 +368,18 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 			</Modal.Body>
 			<Modal.Actions>
 				<>
-					{pendingTx ? (
-						<Button fullWidth disabled={true}>
-							{typeof pendingTx === 'string' ? (
-								<Link href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank' rel='noopener noreferrer'>
-									Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
-								</Link>
-							) : (
-								'Pending Transaction'
-							)}
-						</Button>
-					) : (
-						<Button
-							fullWidth
-							disabled={!val || isNaN(val as any) || (lockInfo && lockInfo.balance.eq(0))}
-							onClick={async () => {
-								const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
-								handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
-							}}
-						>
-							Vote for {gauge.name}
-						</Button>
-					)}
+					<Button
+						fullWidth
+						disabled={!val || isNaN(val as any) || (lockInfo && lockInfo.balance.eq(0))}
+						onClick={async () => {
+							const voteTx = gaugeControllerContract.vote_for_gauge_weights(gauge.gaugeAddress, BigNumber.from(val).mul(100))
+							handleTx(voteTx, `${gauge.name} Gauge: Voted ${parseFloat(BigNumber.from(val).toString()).toFixed(2)}% of your veBAO`)
+						}}
+						pendingTx={pendingTx}
+						txHash={txHash}
+					>
+						Vote for {gauge.name}
+					</Button>
 				</>
 			</Modal.Actions>
 		</>

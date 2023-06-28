@@ -3,8 +3,8 @@ module.exports = {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
 		fontFamily: {
-			rubik: ['Rubik', 'sans-serif'],
-			kaushan: ['Kaushan Script', 'cursive'],
+			bakbak: ['Bakbak One', 'sans-serif'],
+			inter: ['Inter', 'sans-serif'],
 		},
 		accordion: {
 			styles: {
@@ -17,8 +17,7 @@ module.exports = {
 		},
 		extend: {
 			backgroundImage: () => ({
-				darkOverlay: "url('/images/background_overlay_dark.png'), radial-gradient(circle at center, #391818, #210e0e 50%) fixed",
-				lightOverlay: "url('/images/background_overlay_light.png'), radial-gradient(circle at center, #efeae7, #fff8ee 50%) fixed",
+				baoBackground: "url('/images/bao-background.png')",
 			}),
 			colors: {
 				current: 'currentColor',
@@ -27,42 +26,21 @@ module.exports = {
 				red: '#dc3545',
 				green: '#28a745',
 				blue: '#007bff',
-				primary: {
-					100: '#391818',
-					200: '#481e1e',
-					300: '#562424',
-					400: '#622a2a',
-					500: '#622a2a',
-				},
-				secondary: {
-					100: '#efeae7',
-					200: '#e7dfda',
-					300: '#ded4ce',
-					400: '#d6c9c2',
-					500: '#cebfb6',
-				},
-				text: {
-					100: '#fff8ee', //primary
-					200: '#aa9585', //secondary
-					300: '#CC9902', //active link
-					400: '#FFD84B', //hover link
-				},
-				background: {
-					100: '#210e0e', //dark
-					200: '#fff8ee', //light
-				},
+				baoWhite: '#faf2e3',
+				baoBlack: '#1e2022',
+				baoRed: '#e21a53',
 				transparent: {
-					100: 'rgba(0, 0, 0, 0.1)', //dark
-					200: 'rgba(256, 256, 256, 0.1)', //light
+					100: '#1e202280', //black
+					200: '#faf2e380', //white
+					300: '#e21a5380', //red
 				},
 			},
 			fontSize: {
 				hero: [
 					'48px',
 					{
-						letterSpacing: '-0.02em;',
+						letterSpacing: '0.05em;',
 						lineHeight: '96px',
-						fontWeight: 500,
 					},
 				],
 			},

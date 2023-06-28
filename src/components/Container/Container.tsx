@@ -1,5 +1,4 @@
-import React, { ReactNode } from 'react'
-import { isDesktop } from 'react-device-detect'
+import { ReactNode } from 'react'
 
 import classNames from 'classnames'
 
@@ -8,12 +7,9 @@ interface ContainerProps {
 	className?: string
 }
 
-const Container = ({ children, className }: ContainerProps) => (
-	<div className={classNames(`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${isDesktop ? 'min-w-[1200px]' : 'min-w-full'}`, className)}>
-		{children}
-	</div>
-)
-
+export function Container({ className = '', ...props }) {
+	return <div className={classNames('mx-auto px-4 sm:px-6 lg:px-8', className)} {...props} />
+}
 export default Container
 
 export const AbsoluteContainer = ({ children }: ContainerProps) => (

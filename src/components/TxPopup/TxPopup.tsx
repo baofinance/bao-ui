@@ -20,9 +20,9 @@ const PopupTitle: React.FC<PopupTitleProps> = ({ success }) => {
 	return (
 		<div className='flex items-center'>
 			<div className='flex-1'>
-				<Typography>Transaction {titleText}</Typography>
+				<Typography className='font-bakbak text-lg text-baoWhite'>Transaction {titleText}</Typography>
 			</div>
-			<div className={`text-${color}`}>
+			<div className={color ? `text-${color}` : `text-baoWhite`}>
 				<Typography>
 					<FontAwesomeIcon icon={icon} />
 				</Typography>
@@ -45,10 +45,10 @@ const PopupMessage: React.FC<PopupMessageProps> = ({ description, hash }) => {
 					target='_blank'
 					rel='noreferrer'
 					href={`https://etherscan.io/tx/${hash}`}
-					className='text-text-400 visited:text-text-300 hover:text-text-300'
+					className='text-baoWhite/60 visited:text-baoRed/80 hover:text-baoRed'
 				>
 					{hash.slice(0, 6)}...{hash.slice(-5, -1)} - View on Explorer
-					<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 hover:text-text-300' size='xs' />
+					<FontAwesomeIcon icon={faExternalLinkAlt} className='hover:text-text-300 ml-1' size='xs' />
 				</a>
 			</Typography>
 		</div>

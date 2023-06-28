@@ -1,10 +1,6 @@
 import Config from '@/bao/lib/config'
-import Container from '@/components/Container'
 import Logo from '@/components/Logo'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import useDistributionInfo from '@/hooks/distribution/useDistributionInfo'
-import useProofs from '@/hooks/distribution/useProofs'
-import useUserFarmInfo from '@/hooks/farms/useUserFarmInfo'
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,9 +9,8 @@ import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { FC, Fragment, ReactNode } from 'react'
-import { isDesktop } from 'react-device-detect'
 import AccountButton from '../AccountButton'
-import MigrateButton from '../MigrateButton'
+import Container from '../Container'
 import Nav from '../Nav'
 
 export interface IconProps {
@@ -49,7 +44,13 @@ export interface MobileNavLinkProps {
 
 const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...props }) => {
 	return (
-		<Popover.Button as={Link} href={href} target={target} className='block text-base leading-7 tracking-tight text-text-100' {...props}>
+		<Popover.Button
+			as={Link}
+			href={href}
+			target={target}
+			className='block font-bakbak text-lg leading-7 tracking-tight text-baoWhite'
+			{...props}
+		>
 			{children}
 		</Popover.Button>
 	)
@@ -58,86 +59,87 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 const Header: FC = () => {
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
-	const merkleLeaf = useProofs()
-	const dist = useDistributionInfo()
-	const canStartDistribution = !!merkleLeaf && !!dist && !!dist.dateEnded.eq(0)
-
-	const farm1Balance = useUserFarmInfo(0)
-	const farm2Balance = useUserFarmInfo(200)
-	const farm3Balance = useUserFarmInfo(201)
-
 	return (
-		<header className='fixed top-0 z-50 w-full border-b border-b-primary-300 bg-background-100'>
+		<header>
 			<nav>
-				<Container className='relative z-50 flex max-w-full justify-between py-4'>
-					<div className='relative z-10 flex items-center gap-8'>
-						<Logo />
-						{isDesktop && (
-							<div className='flex gap-8'>
-								<Nav />
-							</div>
-						)}
+				<Container className='relative z-50 flex !max-w-full justify-between py-8'>
+					<div className='relative z-10 flex items-center gap-16'>
+						<Link href='/' aria-label='Home'>
+							<Logo className='h-10 w-auto' />
+						</Link>
 					</div>
-					<div className='flex items-center gap-2'>
-						{!isDesktop && (
-							<Popover>
-								{({ open }) => (
-									<>
-										<Popover.Button
-											className='relative z-10 -mr-2 inline-flex items-center rounded stroke-text-100 p-2 outline-none hover:bg-primary-100/50 [&:not(:focus-visible)]:focus:outline-none'
-											aria-label='Toggle site navigation'
-										>
-											{({ open }) => (open ? <ChevronUpIcon className='h-6 w-6' /> : <MenuIcon className='h-6 w-6' />)}
-										</Popover.Button>
-										<AnimatePresence initial={false}>
-											{open && (
-												<>
-													<Popover.Overlay
-														static
-														as={motion.div}
-														initial={{ opacity: 0 }}
-														animate={{ opacity: 1 }}
-														exit={{ opacity: 0 }}
-														className='fixed inset-0 z-0 bg-background-100/60 backdrop-blur'
-													/>
-													<Popover.Panel
-														static
-														as={motion.div}
-														initial={{ opacity: 0, y: -32 }}
-														animate={{ opacity: 1, y: 0 }}
-														exit={{
-															opacity: 0,
-															y: -32,
-															transition: { duration: 0.2 },
-														}}
-														className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-background-100 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
-													>
-														<div className='space-y-4'>
-															<MobileNavLink href='/'>Vaults</MobileNavLink>
-															<MobileNavLink href='/baskets'>Baskets</MobileNavLink>
-															<MobileNavLink href='/vebao'>veBAO</MobileNavLink>
-															<MobileNavLink href='/gauges'>Gauges</MobileNavLink>
-															{canStartDistribution && <MobileNavLink href='/distribution'>Distribution</MobileNavLink>}
-															{(farm1Balance?.amount.gt(0) || farm2Balance?.amount.gt(0) || farm3Balance?.amount.gt(0)) && (
-																<MobileNavLink href='/farms'>Farms</MobileNavLink>
-															)}
-														</div>
-													</Popover.Panel>
-												</>
-											)}
-										</AnimatePresence>
-									</>
-								)}
-							</Popover>
-						)}
-
-						{baov1Balance.gt(0) && <MigrateButton />}
+					<div className='flex items-center gap-6'>
+						<div className='hidden gap-6 lg:flex'>
+							<Nav />
+						</div>
 						<AccountButton />
+						<Popover className='block lg:hidden'>
+							{({ open }) => (
+								<>
+									<Popover.Button
+										className='relative z-10 inline-flex h-[40px] w-[40px] items-center rounded-3xl stroke-baoWhite p-2 active:stroke-gray-900 [&:not(:focus-visible)]:focus:outline-none'
+										aria-label='Toggle site navigation'
+									>
+										<div className='flex flex-col items-center justify-center'>
+											<span
+												className={`block h-0.5 w-6 rounded-sm bg-baoWhite 
+                    transition-all duration-300 ease-out ${open ? 'translate-y-1 rotate-45' : '-translate-y-0.5'}`}
+											></span>
+											<span
+												className={`my-0.5 block h-0.5 w-6 rounded-sm bg-baoWhite transition-all duration-300 ease-out ${
+													open ? 'opacity-0' : 'opacity-100'
+												}`}
+											></span>
+											<span
+												className={`block h-0.5 w-6 rounded-sm bg-baoWhite 
+                    transition-all duration-300 ease-out ${open ? '-translate-y-1 -rotate-45' : 'translate-y-0.5'}`}
+											></span>
+										</div>
+									</Popover.Button>
+									<AnimatePresence initial={false}>
+										{open && (
+											<>
+												<Popover.Overlay
+													static
+													as={motion.div}
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+													className='fixed inset-0 z-0 bg-baoBlack/60 backdrop-blur'
+												/>
+												<Popover.Panel
+													static
+													as={motion.div}
+													initial={{ opacity: 0, y: -32 }}
+													animate={{ opacity: 1, y: 0 }}
+													exit={{
+														opacity: 0,
+														y: -32,
+														transition: { duration: 0.2 },
+													}}
+													className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-baoBlack px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
+												>
+													<div className='space-y-4'>
+														<MobileNavLink href='/vaults'>BORROW</MobileNavLink>
+														<MobileNavLink href='/ballast'>SWAP</MobileNavLink>
+														<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
+														<MobileNavLink href='/gauges'>EARN</MobileNavLink>
+														<MobileNavLink href='/vebao'>STAKE</MobileNavLink>
+													</div>
+												</Popover.Panel>
+											</>
+										)}
+									</AnimatePresence>
+								</>
+							)}
+						</Popover>
 
-						<Menu as='div' className='relative inline-block text-left'>
-							<Menu.Button className='h-10 w-10 rounded border border-primary-300 bg-primary-200 hover:bg-primary-300'>
+						{/* {baov1Balance.gt(0) && <MigrateButton />} */}
+
+						<Menu as='div' className='relative !z-[9999] hidden text-left lg:inline-block'>
+							<Menu.Button className='h-10 rounded'>
 								<span className='sr-only'>Open options</span>
-								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5' aria-hidden='true' />
+								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5 text-baoWhite' aria-hidden='true' />
 							</Menu.Button>
 
 							<Transition
@@ -149,8 +151,8 @@ const Header: FC = () => {
 								leaveFrom='transform opacity-100 scale-100'
 								leaveTo='transform opacity-0 scale-95'
 							>
-								<Menu.Items className='absolute right-0 z-10 mt-2 w-fit origin-top-right rounded-md border border-primary-300 bg-background-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-									<div className='py-1'>
+								<Menu.Items className='absolute right-0 !z-[9999] mt-2 w-fit origin-top-right rounded-md border border-baoWhite/20 bg-baoBlack shadow-lg ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
+									<div className='z-[9999] py-1'>
 										<Menu.Item>
 											{({ active }) => (
 												<a
@@ -159,7 +161,7 @@ const Header: FC = () => {
 													aria-label='Documentation'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -175,7 +177,7 @@ const Header: FC = () => {
 													aria-label='Governance Forums'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -191,7 +193,7 @@ const Header: FC = () => {
 													aria-label='Snapshot'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -207,7 +209,7 @@ const Header: FC = () => {
 													aria-label='Discord'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -223,7 +225,7 @@ const Header: FC = () => {
 													aria-label='GitHub'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -239,7 +241,7 @@ const Header: FC = () => {
 													aria-label='Immunefi'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -255,7 +257,7 @@ const Header: FC = () => {
 													aria-label='Twitter'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
@@ -271,7 +273,7 @@ const Header: FC = () => {
 													aria-label='Medium'
 													rel='noreferrer'
 													className={classNames(
-														active ? 'bg-primary-100 text-text-400' : 'text-text-100',
+														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>

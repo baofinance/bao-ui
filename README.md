@@ -13,4 +13,4 @@ how to report new bugs, coding standards, and development guidelines.
 
 - Check out [@BaoCommunity](https://twitter.com/BaoCommunity) on twitter
 - Take a look at the official [BAO docs](https://info.bao.finance/docs)
-- Join our [discord](https://discord.gg/BW3P62vJXT)
+- Join our [discord](https://discord.gg/BW3P62vJXT) 

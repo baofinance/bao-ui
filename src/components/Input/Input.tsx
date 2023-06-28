@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 
 import Button from '@/components/Button'
 import classNames from 'classnames'
+import Typography from '../Typography'
 
 export interface InputProps {
 	endAdornment?: ReactNode
@@ -31,7 +32,7 @@ const Input: React.FC<InputProps> = ({
 	className,
 }) => {
 	return (
-		<div className={classNames('align-center flex h-12 w-full rounded border-0 bg-primary-400', className)}>
+		<div className={classNames('align-center flex w-full rounded-3xl border border-baoWhite border-opacity-20', className)}>
 			<div className='align-center relative flex w-full justify-center align-middle'>
 				{!!startAdornment && startAdornment}
 				<input
@@ -40,22 +41,17 @@ const Input: React.FC<InputProps> = ({
 					placeholder={placeholder}
 					value={value}
 					onChange={onChange}
-					className='text-default font-strong relative h-12 w-full min-w-0 
-				appearance-none rounded border-solid border-inherit bg-primary-400 pl-4 pr-4 text-start 
-				align-middle outline-none outline outline-2 outline-offset-2 transition-all
-				 duration-200 disabled:text-text-200 md:text-sm'
+					className='relative
+				w-full min-w-0 appearance-none rounded-3xl rounded-r-3xl border-solid border-inherit bg-baoBlack py-3 pl-4
+				text-start align-middle text-base text-baoWhite outline-none outline outline-2 outline-offset-2
+				 transition-all duration-200 disabled:text-opacity-60'
 				/>
 				{!disabled && (
 					<>
 						{onSelectMax && (
-							<div className='flex h-full items-center justify-center'>
-								{onSelectHalf && (
-									<Button size='xs' onClick={onSelectHalf} className='mr-1'>
-										½
-									</Button>
-								)}
-								<Button size='xs' onClick={onSelectMax} className='mr-1'>
-									MAX
+							<div className='flex h-full items-center justify-center rounded-r-3xl bg-baoBlack'>
+								<Button onClick={onSelectMax} className='mr-1 !rounded-full border border-baoRed !p-1 lg:mr-2 lg:!p-2' size='xs'>
+									<Typography className='font-bakbak text-sm font-normal text-baoWhite lg:text-base'>MAX</Typography>
 								</Button>
 							</div>
 						)}

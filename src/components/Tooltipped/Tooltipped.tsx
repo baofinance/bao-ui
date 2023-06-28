@@ -19,11 +19,14 @@ const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement, c
 			content={content}
 			placement={placement}
 			offset={10}
-			className={classNames('max-w-xs rounded border border-primary-300 bg-primary-100 px-2 py-1 text-center', className)}
+			className={classNames(
+				'z-[9999] max-w-xs rounded border border-baoWhite border-opacity-20 bg-baoBlack px-2 py-1 text-center',
+				className,
+			)}
 		>
 			{children || (
 				<span>
-					<FontAwesomeIcon icon={faQuestionCircle} className='text-text-100 duration-200 hover:text-text-400' />
+					<FontAwesomeIcon icon={faQuestionCircle} className='text-baoWhite duration-200 hover:text-baoRed' />
 				</span>
 			)}
 		</Tooltip>
