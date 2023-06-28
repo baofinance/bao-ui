@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useId } from 'react'
 import clsx from 'clsx'
 
@@ -14,14 +15,7 @@ const iconStyles = {
 	amber: '[--icon-foreground:theme(colors.amber.900)] [--icon-background:theme(colors.amber.100)]',
 }
 
-interface IconProps {
-	id?: string
-	color?: string
-	icon: string
-	className?: string
-}
-
-export const Icon: React.FC<IconProps> = ({ color = 'blue', icon, className }) => {
+export const Icon = ({ color = 'blue', icon, className }) => {
 	const id = useId()
 	const IconComponent = icons[icon]
 
