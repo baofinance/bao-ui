@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import Config from '@/bao/lib/config'
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import { PendingTransaction } from '@/components/Loader/Loader'
@@ -8,10 +7,9 @@ import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useApprovals } from '@/hooks/vaults/useApprovals'
 import type { Erc20 } from '@/typechain/index'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLink, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
-import Link from 'next/link'
 
 type VaultButtonProps = {
 	operation: string
@@ -131,8 +129,10 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 							} else {
 								repayTx = vaultContract.repayBorrow(val)
 							}
-							handleTx(repayTx, `${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`, () =>
-								onHide(),
+							handleTx(
+								repayTx,
+								`${vaultName} Vault: Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.underlyingSymbol}`,
+								() => onHide(),
 							)
 						}}
 					>
