@@ -147,7 +147,7 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
 								</Button>
 							</a>
-						) : approvals && asset && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
+						) : approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 							<Button
 								fullWidth
 								className='!rounded-full'
