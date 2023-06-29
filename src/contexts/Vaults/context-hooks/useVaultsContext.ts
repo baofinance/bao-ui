@@ -1,13 +1,13 @@
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
 import Config from '@/bao/lib/config'
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import { decimate, exponentiate } from '@/utils/numberFormat'
-import { parseUnits } from 'ethers/lib/utils'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { Cether__factory, Ctoken__factory, Erc20__factory, Comptroller__factory, VaultOracle__factory } from '@/typechain/factories'
+import { Cether__factory, Comptroller__factory, Ctoken__factory, Erc20__factory, VaultOracle__factory } from '@/typechain/factories'
 import type { Cether, Ctoken } from '@/typechain/index'
+import { decimate, exponentiate } from '@/utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
+import { useCallback, useEffect, useState } from 'react'
 
 type Cvault = Cether | Ctoken
 
@@ -127,12 +127,12 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 	}, [fetchVaults, library, account, chainId, transactions])
 
 	// DIRTY FIX TO SHOW VAULTS ON INITIALIZATION
-	const [initialized, setInitialized] = useState(false);
+	const [initialized, setInitialized] = useState(false)
 	const dirtyFix_reRender = () => {
-		setInitialized(!initialized);
+		setInitialized(!initialized)
 	}
 	useEffect(() => {
-		dirtyFix_reRender();
+		dirtyFix_reRender()
 	}, [initialized])
 	// END OF DIRTY TRICK
 
