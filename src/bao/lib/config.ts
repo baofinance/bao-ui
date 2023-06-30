@@ -462,6 +462,27 @@ export default {
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
 		},
+		{
+			gid: 9,
+			gaugeAddresses: {
+				1: '0x123Ec6701097d1C95771d0b8Fa48B0d88E7D7B62',
+			},
+			poolAddresses: {
+				1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
+			},
+			lpAddresses: {
+				1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
+			},
+			poolInfoAddresses: {
+				1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
+			},
+			name: 'bETH/baoETH-ETH',
+			symbol: 'bETH/baoETH-ETH',
+			type: 'Balancer',
+			iconA: '/images/tokens/bETH.png',
+			iconB: '/images/tokens/baoETH.png',
+			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
+		},
 	],
 	baskets: [
 		{
