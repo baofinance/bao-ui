@@ -59,9 +59,6 @@ const Vault: NextPage<{
 		[mintVal],
 	)
 
-	console.log('depositVal', depositVal)
-	console.log('mintVal', mintVal)
-
 	const _vaults = useVaults(vaultName)
 	const accountBalances = useAccountBalances(vaultName)
 	const accountVaults = useAccountVaults(vaultName)

@@ -83,24 +83,14 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		const working_supply = gaugeInfo && parseFloat(gaugeInfo.workingSupply.toString())
 		const L = tvl * 1e18 + l
 		const lim = (l * 40) / 100
-		console.log(gauge.symbol, 'lim', lim)
-		console.log(gauge.symbol, 'veEstimate', veEstimate)
 		const veBAO = veEstimate * 1e18
-		console.log(gauge.symbol, 'veBAO', veBAO)
-		console.log(gauge.symbol, 'totalVePower', totalVePower)
 		const limplus = lim + (L * veBAO * 60) / (totalVePower * 1e20)
-		console.log(gauge.symbol, 'limplus', limplus)
 		const limfinal = Math.min(l, limplus)
 		const old_bal = working_balances
-		console.log(gauge.symbol, 'old_bal', old_bal)
 		const noboost_lim = (l * 40) / 100
-		console.log(gauge.symbol, 'noboost_lim', noboost_lim)
 		const noboost_supply = working_supply + noboost_lim - old_bal
-		console.log(gauge.symbol, 'noboost_supply', noboost_supply)
 		const _working_supply = working_supply + limfinal - old_bal
-		console.log(gauge.symbol, '_working_supply', _working_supply)
 		const boost = limfinal / _working_supply / (noboost_lim / noboost_supply)
-		console.log(gauge.symbol, 'boost', boost)
 
 		return boost
 	}, [account, depositAmount, gaugeInfo, totalVePower, tvl, veEstimate])

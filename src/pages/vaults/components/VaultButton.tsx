@@ -114,7 +114,6 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 				)
 
 			case 'Repay':
-				console.log(approvals && approvals[asset.underlyingAddress])
 				return approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 					<Button
 						fullWidth

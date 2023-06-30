@@ -101,7 +101,6 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			} catch {
 				canParseVal = false
 			}
-			console.log('daiAllowance', daiAllowance)
 			return (
 				mintOption === MintOption.DAI &&
 				daiAllowance &&

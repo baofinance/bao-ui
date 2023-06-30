@@ -27,8 +27,6 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
 
-	console.log('baoUSDPrice', baoUSDPrice.toString())
-	console.log('threeCrvPrice', threeCrvPrice.toString())
 	const poolTVL = useMemo(() => {
 		return (
 			poolInfo &&
