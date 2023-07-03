@@ -3,7 +3,7 @@ import Typography from '@/components/Typography'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import { NextSeo } from 'next-seo'
 import React from 'react'
-import BasketList from './components/BasketList'
+import BasketList from './baskets/components/BasketList'
 import { Icon } from '@/components/Icon'
 
 const Baskets: React.FC = () => {
