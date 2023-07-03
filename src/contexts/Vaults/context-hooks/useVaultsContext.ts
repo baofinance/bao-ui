@@ -126,15 +126,5 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 		fetchVaults('baoETH')
 	}, [fetchVaults, library, account, chainId, transactions])
 
-	// DIRTY FIX TO SHOW VAULTS ON INITIALIZATION
-	const [initialized, setInitialized] = useState(false)
-	const dirtyFix_reRender = () => {
-		setInitialized(!initialized)
-	}
-	useEffect(() => {
-		dirtyFix_reRender()
-	}, [initialized])
-	// END OF DIRTY TRICK
-
 	return vaults
 }
