@@ -399,27 +399,27 @@ export default {
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x7e9afd25f5ec0eb24d7d4b089ae7ecb9651c8b1f000000000000000000000511',
 		},
-		// {
-		// 	gid: 6,
-		// 	gaugeAddresses: {
-		// 		1: '0x15174daafd4a72f282cf875a839d1abe9bf444c1',
-		// 	},
-		// 	poolAddresses: {
-		// 		1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
-		// 	},
-		// 	lpAddresses: {
-		// 		1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
-		// 	},
-		// 	poolInfoAddresses: {
-		// 		1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
-		// 	},
-		// 	name: 'baoETH-ETH',
-		// 	symbol: 'baoETH-ETH',
-		// 	type: 'Balancer',
-		// 	iconA: '/images/tokens/baoETH.png',
-		// 	iconB: '/images/tokens/ETH.png',
-		// 	pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
-		// },
+		{
+			gid: 6,
+			gaugeAddresses: {
+				1: '0x15174daafd4a72f282cf875a839d1abe9bf444c1',
+			},
+			poolAddresses: {
+				1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
+			},
+			lpAddresses: {
+				1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
+			},
+			poolInfoAddresses: {
+				1: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
+			},
+			name: 'baoETH-ETH',
+			symbol: 'baoETH-ETH',
+			type: 'Balancer',
+			iconA: '/images/tokens/baoETH.png',
+			iconB: '/images/tokens/ETH.png',
+			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
+		},
 		{
 			gid: 7,
 			gaugeAddresses: {
@@ -441,48 +441,48 @@ export default {
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
 		},
-		// {
-		// 	gid: 8,
-		// 	gaugeAddresses: {
-		// 		1: '0x0e7b7f385dc87e515b44e05233c340d474ea9d7c',
-		// 	},
-		// 	poolAddresses: {
-		// 		1: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
-		// 	},
-		// 	lpAddresses: {
-		// 		1: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
-		// 	},
-		// 	poolInfoAddresses: {
-		// 		1: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
-		// 	},
-		// 	name: 'baoETH-ETH/BAO',
-		// 	symbol: 'baoETH-ETH/BAO',
-		// 	type: 'Balancer',
-		// 	iconA: '/images/tokens/baoETH.png',
-		// 	iconB: '/images/tokens/ETH.png',
-		// 	pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
-		// },
-		// {
-		// 	gid: 9,
-		// 	gaugeAddresses: {
-		// 		1: '0x123Ec6701097d1C95771d0b8Fa48B0d88E7D7B62',
-		// 	},
-		// 	poolAddresses: {
-		// 		1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
-		// 	},
-		// 	lpAddresses: {
-		// 		1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
-		// 	},
-		// 	poolInfoAddresses: {
-		// 		1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
-		// 	},
-		// 	name: 'bETH/baoETH-ETH',
-		// 	symbol: 'bETH/baoETH-ETH',
-		// 	type: 'Balancer',
-		// 	iconA: '/images/tokens/bETH.png',
-		// 	iconB: '/images/tokens/baoETH.png',
-		// 	pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
-		// },
+		{
+			gid: 8,
+			gaugeAddresses: {
+				1: '0x0e7b7f385dc87e515b44e05233c340d474ea9d7c',
+			},
+			poolAddresses: {
+				1: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
+			},
+			lpAddresses: {
+				1: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
+			},
+			poolInfoAddresses: {
+				1: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
+			},
+			name: 'baoETH-ETH/BAO',
+			symbol: 'baoETH-ETH/BAO',
+			type: 'Balancer',
+			iconA: '/images/tokens/baoETH.png',
+			iconB: '/images/tokens/ETH.png',
+			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
+		},
+		{
+			gid: 9,
+			gaugeAddresses: {
+				1: '0x123Ec6701097d1C95771d0b8Fa48B0d88E7D7B62',
+			},
+			poolAddresses: {
+				1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
+			},
+			lpAddresses: {
+				1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
+			},
+			poolInfoAddresses: {
+				1: '0x0Bbc7B78Ff8453c40718E290b33F1d00ee67274E',
+			},
+			name: 'bETH/baoETH-ETH',
+			symbol: 'bETH/baoETH-ETH',
+			type: 'Balancer',
+			iconA: '/images/tokens/bETH.png',
+			iconB: '/images/tokens/baoETH.png',
+			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
+		},
 	],
 	baskets: [
 		{

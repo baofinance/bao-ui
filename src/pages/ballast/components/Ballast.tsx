@@ -158,7 +158,7 @@ export const Ballast = () => {
 								</div>
 							</Listbox.Button>
 
-							{/* <Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
+							<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
 								<Listbox.Options className='absolute inset-x-20 z-10 -mt-1 ml-3 w-[260px] origin-left overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none lg:inset-x-auto'>
 									<div className='grid grid-cols-4 p-2 font-bakbak font-normal text-baoWhite'>
 										<div className='col-span-2'>
@@ -249,7 +249,7 @@ export const Ballast = () => {
 										)}
 									</Listbox.Option>
 								</Listbox.Options>
-							</Transition> */}
+							</Transition>
 						</div>
 					)}
 				</Listbox>
