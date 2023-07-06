@@ -105,7 +105,7 @@ export default {
 		},
 		FeeDistributor: {
 			1: {
-				address: '0x3dCe48CfC0bEA704ec1640b34b33eC55F97D3056',
+				address: '0xa1D0CCFcCb3064D4703060400F0D7E0FE0405e13',
 			},
 		},
 		Dai: {
