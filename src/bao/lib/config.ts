@@ -130,6 +130,13 @@ export default {
 				address: '0x235b30088E66d2D28F137b422B9349fBa51E0248',
 			},
 		},
+
+		// Balancer
+		BalancerVault: {
+			1: {
+				address: '0xBA12222222228d8Ba445958a75a0704d566BF2C8',
+			},
+		},
 	},
 	subgraphs: {
 		sushiExchange: {
@@ -398,6 +405,7 @@ export default {
 			iconA: '/images/tokens/baoUSD.png',
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x7e9afd25f5ec0eb24d7d4b089ae7ecb9651c8b1f000000000000000000000511',
+			balancerPoolId: '0x7e9afd25f5ec0eb24d7d4b089ae7ecb9651c8b1f000000000000000000000511',
 		},
 		{
 			gid: 6,
@@ -419,6 +427,7 @@ export default {
 			iconA: '/images/tokens/baoETH.png',
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
+			balancerPoolId: '0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
 		},
 		{
 			gid: 7,
@@ -440,6 +449,7 @@ export default {
 			iconA: '/images/tokens/baoUSD.png',
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
+			balancerPoolId: '0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
 		},
 		{
 			gid: 8,
@@ -461,6 +471,7 @@ export default {
 			iconA: '/images/tokens/baoETH.png',
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
+			balancerPoolId: '0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
 		},
 		{
 			gid: 9,
@@ -482,6 +493,7 @@ export default {
 			iconA: '/images/tokens/bETH.png',
 			iconB: '/images/tokens/baoETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
+			balancerPoolId: '0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
 		},
 	],
 	baskets: [

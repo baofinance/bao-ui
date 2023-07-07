@@ -3,8 +3,11 @@
 /* eslint-disable */
 export { BEthRecipe__factory } from "./BEthRecipe__factory";
 export { BStblRecipe__factory } from "./BStblRecipe__factory";
+export { BalancerComposableStablePool__factory } from "./BalancerComposableStablePool__factory";
 export { BalancerPool__factory } from "./BalancerPool__factory";
 export { BalancerUniswapPipe__factory } from "./BalancerUniswapPipe__factory";
+export { BalancerVault__factory } from "./BalancerVault__factory";
+export { BalancerWeightedPool__factory } from "./BalancerWeightedPool__factory";
 export { Bao__factory } from "./Bao__factory";
 export { BaoDistribution__factory } from "./BaoDistribution__factory";
 export { Baov2__factory } from "./Baov2__factory";

@@ -2,7 +2,13 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { CurveLp__factory, SaddleLp__factory, Uni_v2_lp__factory } from '@/typechain/factories'
+import {
+	CurveLp__factory,
+	SaddleLp__factory,
+	Uni_v2_lp__factory,
+	BalancerWeightedPool__factory,
+	BalancerComposableStablePool__factory,
+} from '@/typechain/factories'
 import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
@@ -14,6 +20,7 @@ import usePrice from '../base/usePrice'
 import { useVaultPrice } from '../vaults/useVaultPrice'
 import useGaugeInfo from './useGaugeInfo'
 import usePoolInfo from './usePoolInfo'
+import { formatUnits } from 'ethers/lib/utils'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId } = useWeb3React()
@@ -22,10 +29,13 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const gaugeInfo = useGaugeInfo(gauge)
 	const bSTBLPrice = useVaultPrice(Config.vaults['baoUSD'].markets[1].vaultAddresses[chainId], 'baoUSD')
 	const baoUSDPrice = useVaultPrice(Config.vaults['baoUSD'].markets[3].vaultAddresses[chainId], 'baoUSD')
+	const bETHPrice = useVaultPrice(Config.vaults['baoETH'].markets[1].vaultAddresses[chainId], 'baoETH')
+	const baoETHPrice = useVaultPrice(Config.vaults['baoETH'].markets[2].vaultAddresses[chainId], 'baoETH')
 	const daiPrice = usePrice('dai')
 	const ethPrice = usePrice('ethereum')
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
+	const lusdPrice = usePrice('liquity-usd')
 
 	const poolTVL = useMemo(() => {
 		return (
@@ -44,13 +54,17 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
 					? baoPrice && ethPrice && baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
 					: baoPrice && ethPrice && baoPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'baoUSD-LUSD'
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
+					? baoUSDPrice && lusdPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(lusdPrice.mul(poolInfo.token1Balance))
+					: baoUSDPrice && lusdPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(lusdPrice.mul(poolInfo.token0Balance))
 				: gauge.symbol === 'saddle-FRAXBP-baoUSD'
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 					? baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
 					: baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
 				: BigNumber.from(0))
 		)
-	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, poolInfo, threeCrvPrice])
+	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, lusdPrice, poolInfo, threeCrvPrice])
 
 	const enabled = !!gauge && !!library && !!bao && !!poolTVL
 	const { data: tvlData, refetch } = useQuery(

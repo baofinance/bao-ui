@@ -42,6 +42,7 @@ export interface SupportedGauge {
 	iconA: string
 	iconB: string
 	pairUrl: string
+	balancerPoolId: string
 	gaugeAddresses: {
 		[network: number]: string
 	}

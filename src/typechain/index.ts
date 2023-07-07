@@ -3,8 +3,11 @@
 /* eslint-disable */
 export type { BEthRecipe } from "./BEthRecipe";
 export type { BStblRecipe } from "./BStblRecipe";
+export type { BalancerComposableStablePool } from "./BalancerComposableStablePool";
 export type { BalancerPool } from "./BalancerPool";
 export type { BalancerUniswapPipe } from "./BalancerUniswapPipe";
+export type { BalancerVault } from "./BalancerVault";
+export type { BalancerWeightedPool } from "./BalancerWeightedPool";
 export type { Bao } from "./Bao";
 export type { BaoDistribution } from "./BaoDistribution";
 export type { Baov2 } from "./Baov2";
@@ -54,8 +57,11 @@ export type { VaultOracle } from "./VaultOracle";
 export type { VotingEscrow } from "./VotingEscrow";
 export type { Weth } from "./Weth";
 export * as factories from "./factories";
+export { BalancerComposableStablePool__factory } from "./factories/BalancerComposableStablePool__factory";
 export { BalancerPool__factory } from "./factories/BalancerPool__factory";
 export { BalancerUniswapPipe__factory } from "./factories/BalancerUniswapPipe__factory";
+export { BalancerVault__factory } from "./factories/BalancerVault__factory";
+export { BalancerWeightedPool__factory } from "./factories/BalancerWeightedPool__factory";
 export { Bao__factory } from "./factories/Bao__factory";
 export { BaoDistribution__factory } from "./factories/BaoDistribution__factory";
 export { Baov2__factory } from "./factories/Baov2__factory";
