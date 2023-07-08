@@ -2,25 +2,19 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import {
-	CurveLp__factory,
-	SaddleLp__factory,
-	Uni_v2_lp__factory,
-	BalancerWeightedPool__factory,
-	BalancerComposableStablePool__factory,
-} from '@/typechain/factories'
+import { BalancerComposableStablePool__factory, CurveLp__factory, SaddleLp__factory, Uni_v2_lp__factory } from '@/typechain/factories'
 import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { useMemo } from 'react'
+import { formatUnits } from 'ethers/lib/utils'
+import { useMemo, useState } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
 import { useVaultPrice } from '../vaults/useVaultPrice'
 import useGaugeInfo from './useGaugeInfo'
 import usePoolInfo from './usePoolInfo'
-import { formatUnits } from 'ethers/lib/utils'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const { library, chainId } = useWeb3React()
@@ -36,6 +30,14 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const threeCrvPrice = usePrice('lp-3pool-curve')
 	const baoPrice = usePrice('bao-finance-v2')
 	const lusdPrice = usePrice('liquity-usd')
+
+	const [baoUSDlusdPrice, setBaoUSDlusdPrice] = useState<BigNumber>(BigNumber.from(0))
+	const [baoETHethPrice, setBaoETHethPrice] = useState<BigNumber>(BigNumber.from(0))
+	const [bETHbaoETHPrice, setBETHbaoETHPrice] = useState<BigNumber>(BigNumber.from(0))
+
+	console.log('bETH Price', formatUnits(bETHPrice))
+	console.log('baoETH/ETH Price', formatUnits(baoETHethPrice))
+	console.log('baoUSD/LUSD Price', formatUnits(baoUSDlusdPrice))
 
 	const poolTVL = useMemo(() => {
 		return (
@@ -58,13 +60,43 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 					? baoUSDPrice && lusdPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(lusdPrice.mul(poolInfo.token1Balance))
 					: baoUSDPrice && lusdPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(lusdPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'baoETH-ETH'
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETH.toLowerCase()
+					? baoETHPrice && ethPrice && baoETHPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
+					: baoETHPrice && ethPrice && baoETHPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'baoUSD-LUSD/BAO'
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
+					? baoUSDlusdPrice && baoPrice && baoPrice.mul(poolInfo.token0Balance).add(baoUSDlusdPrice.mul(poolInfo.token1Balance))
+					: baoUSDlusdPrice && baoPrice && baoPrice.mul(poolInfo.token1Balance).add(baoUSDlusdPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'baoETH-ETH/BAO'
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
+					? baoETHethPrice && baoPrice && baoPrice.mul(poolInfo.token0Balance).add(baoETHethPrice.mul(poolInfo.token1Balance))
+					: baoETHethPrice && baoPrice && baoPrice.mul(poolInfo.token1Balance).add(baoETHethPrice.mul(poolInfo.token0Balance))
+				: gauge.symbol === 'bETH/baoETH-ETH'
+				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETHETH.toLowerCase()
+					? baoETHethPrice && bETHPrice && baoETHethPrice.mul(poolInfo.token0Balance).add(bETHPrice.mul(poolInfo.token1Balance))
+					: baoETHethPrice && bETHPrice && baoETHethPrice.mul(poolInfo.token1Balance).add(bETHPrice.mul(poolInfo.token0Balance))
 				: gauge.symbol === 'saddle-FRAXBP-baoUSD'
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 					? baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
 					: baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
 				: BigNumber.from(0))
 		)
-	}, [bSTBLPrice, baoPrice, baoUSDPrice, daiPrice, ethPrice, gauge.symbol, lusdPrice, poolInfo, threeCrvPrice])
+	}, [
+		bETHPrice,
+		bSTBLPrice,
+		baoETHPrice,
+		baoETHethPrice,
+		baoPrice,
+		baoUSDPrice,
+		baoUSDlusdPrice,
+		daiPrice,
+		ethPrice,
+		gauge.symbol,
+		lusdPrice,
+		poolInfo,
+		threeCrvPrice,
+	])
 
 	const enabled = !!gauge && !!library && !!bao && !!poolTVL
 	const { data: tvlData, refetch } = useQuery(
@@ -73,6 +105,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
 			const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
 			const saddleLpContract = SaddleLp__factory.connect(gauge.lpAddress, library)
+			const balancerComposableStablePool = BalancerComposableStablePool__factory.connect(gauge.lpAddress, library)
 			const query = Multicall.createCallContext([
 				gauge.type.toLowerCase() === 'curve'
 					? {
@@ -86,6 +119,12 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 							ref: gauge?.lpAddress,
 							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
 					  }
+					: gauge.type.toLowerCase() === 'balancer'
+					? {
+							contract: balancerComposableStablePool,
+							ref: gauge?.lpAddress,
+							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'getActualSupply' }],
+					  }
 					: {
 							contract: saddleLpContract,
 							ref: gauge?.lpAddress,
@@ -97,6 +136,11 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			const gaugeBalance = res0[0].values[0]
 			const totalSupply = res0[1].values[0]
 			const lpPrice = poolTVL && poolTVL.div(totalSupply)
+			const setLpPrice = gauge.symbol === 'baoUSD-LUSD/BAO' ? setBaoUSDlusdPrice(lpPrice) : setBaoETHethPrice(lpPrice)
+
+			console.log(`${gauge.symbol} Balance:`, gaugeBalance && formatUnits(gaugeBalance))
+			console.log(`${gauge.symbol} LP Price:`, lpPrice && formatUnits(lpPrice))
+
 			const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
 			const depositAmount = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.balance)
 

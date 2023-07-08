@@ -9,7 +9,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 type PoolInfoTypes = {
 	token0Address: string
@@ -106,9 +106,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 						: gauge.type.toLowerCase() === 'balancer'
 						? res0[0].values[0][0].toString() === gauge.poolAddress
 							? res0[0].values[0][1].toString() === gauge.poolAddress
-								? res0[0].values[1][2].hex.toString()
-								: res0[0].values[1][1].hex.toString()
-							: res0[0].values[1][0].hex.toString()
+								? res0[0].values[1][2].hex
+								: res0[0].values[1][1].hex
+							: res0[0].values[1][0].hex
 						: res0[0].values[0].toString(),
 				token1Balance:
 					gauge.type.toLowerCase() === 'curve'
@@ -118,9 +118,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 						: gauge.type.toLowerCase() === 'balancer'
 						? res0[0].values[0][0].toString() === gauge.poolAddress
 							? res0[0].values[0][1].toString() === gauge.poolAddress
-								? res0[0].values[1][0].hex.toString()
-								: res0[0].values[1][2].hex.toString()
-							: res0[0].values[1][1].hex.toString()
+								? res0[0].values[1][0].hex
+								: res0[0].values[1][2].hex
+							: res0[0].values[1][1].hex
 						: res0[3].values[0].toString(),
 				token0Decimals: gauge.type.toLowerCase() === 'curve' ? res0[1].values[0].toString() : 18,
 				token1Decimals: gauge.type.toLowerCase() === 'curve' ? res0[1].values[1].toString() : 18,
@@ -136,7 +136,6 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 	}
 	useTxReceiptUpdater(_refetch)
 	useBlockUpdater(_refetch, 10)
-	console.log(gauge.symbol, poolInfo)
 	return poolInfo
 }
 
