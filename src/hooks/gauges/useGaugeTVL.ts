@@ -8,7 +8,7 @@ import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatUnits, parseEther } from 'ethers/lib/utils'
 import { useMemo, useState } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
@@ -31,18 +31,21 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const baoPrice = usePrice('bao-finance-v2')
 	const lusdPrice = usePrice('liquity-usd')
 
-	console.log('baoUSD Price', formatUnits(baoUSDPrice))
-	console.log('bSTBL Price', formatUnits(bSTBLPrice))
-	console.log('bETH Price', formatUnits(bETHPrice))
-	console.log('baoETH Price', formatUnits(baoETHPrice))
+	// const [baoUSDlusdPrice, setBaoUSDlusdPrice] = useState<BigNumber>(BigNumber.from(0))
+	// const [baoETHethPrice, setBaoETHethPrice] = useState<BigNumber>(BigNumber.from(0))
 
-	const [baoUSDlusdPrice, setBaoUSDlusdPrice] = useState<BigNumber>(BigNumber.from(0))
-	const [baoETHethPrice, setBaoETHethPrice] = useState<BigNumber>(BigNumber.from(0))
-	const [bETHbaoETHPrice, setBETHbaoETHPrice] = useState<BigNumber>(BigNumber.from(0))
+	//TEMPORARY FIXES FOR BPT PRICES
+	const baoUSDlusdPrice = lusdPrice && lusdPrice
+	const baoETHethPrice = ethPrice && ethPrice
 
-	console.log('bETH Price', formatUnits(bETHPrice))
-	console.log('baoETH/ETH Price', formatUnits(baoETHethPrice))
-	console.log('baoUSD/LUSD Price', formatUnits(baoUSDlusdPrice))
+	// console.log('baoUSD Price:', formatUnits(baoUSDPrice))
+	// console.log('bSTBL Price:', formatUnits(bSTBLPrice))
+	// console.log('bETH Price:', formatUnits(bETHPrice))
+	// console.log('baoETH Price:', formatUnits(baoETHPrice))
+	// console.log('bETH Price', formatUnits(bETHPrice))
+	// console.log('baoETH/ETH Price', formatUnits(baoETHethPrice))
+	// console.log('baoUSD/LUSD Price', formatUnits(baoUSDlusdPrice))
+	// console.log('bao Price:', formatUnits(baoPrice))
 
 	const poolTVL = useMemo(() => {
 		return (
@@ -77,7 +80,7 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
 					? baoETHethPrice && baoPrice && baoPrice.mul(poolInfo.token0Balance).add(baoETHethPrice.mul(poolInfo.token1Balance))
 					: baoETHethPrice && baoPrice && baoPrice.mul(poolInfo.token1Balance).add(baoETHethPrice.mul(poolInfo.token0Balance))
-				: gauge.symbol === 'bETH/baoETH-ETH'
+				: gauge.symbol === 'baoETH-ETH/bETH'
 				? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETHETH.toLowerCase()
 					? baoETHethPrice && bETHPrice && baoETHethPrice.mul(poolInfo.token0Balance).add(bETHPrice.mul(poolInfo.token1Balance))
 					: baoETHethPrice && bETHPrice && baoETHethPrice.mul(poolInfo.token1Balance).add(bETHPrice.mul(poolInfo.token0Balance))
@@ -141,7 +144,14 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			const gaugeBalance = res0[0].values[0]
 			const totalSupply = res0[1].values[0]
 			const lpPrice = poolTVL && poolTVL.div(totalSupply)
-			const setLpPrice = gauge.symbol === 'baoUSD-LUSD/BAO' ? setBaoUSDlusdPrice(lpPrice) : setBaoETHethPrice(lpPrice)
+			// const setLpPrice =
+			// 	gauge.symbol === 'baoUSD-LUSD/BAO'
+			// 		? setBaoUSDlusdPrice(lpPrice)
+			// 		: gauge.symbol === 'baoETH-ETH/BAO'
+			// 		? setBaoETHethPrice(lpPrice)
+			// 		: gauge.symbol === 'bETH/baoETH-ETH'
+			// 		? setBaoETHethPrice(lpPrice)
+			// 		: null
 
 			console.log(`${gauge.symbol} Balance:`, gaugeBalance && formatUnits(gaugeBalance))
 			console.log(`${gauge.symbol} LP Price:`, lpPrice && formatUnits(lpPrice))
