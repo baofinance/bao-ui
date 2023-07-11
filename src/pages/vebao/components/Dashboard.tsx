@@ -139,7 +139,7 @@ export const Dashboard = () => {
 				</div>
 			</div>
 			<div className={`glassmorphic-card hidden w-full justify-evenly gap-4 rounded border bg-opacity-80 p-8 lg:block`}>
-				<div className='grid grid-cols-3 gap-4'>
+				<div className='grid grid-cols-4 gap-4'>
 					<div className='col-span-1 text-center'>
 						<Typography className='font-bakbak text-sm text-baoRed'>Select Gauge</Typography>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
@@ -192,6 +192,14 @@ export const Dashboard = () => {
 																				height={12}
 																				width={12}
 																				alt='Uniswap'
+																				className='-mt-1 mr-1 inline'
+																			/>
+																		) : gauge.type.toLowerCase() === 'balancer' ? (
+																			<Image
+																				src='/images/platforms/Balancer.png'
+																				height={12}
+																				width={12}
+																				alt='Balancer'
 																				className='-mt-1 mr-1 inline'
 																			/>
 																		) : (
@@ -271,6 +279,14 @@ export const Dashboard = () => {
 																					alt='Uniswap'
 																					className='-mt-1 mr-1 inline'
 																				/>
+																			) : gauge.type.toLowerCase() === 'balancer' ? (
+																				<Image
+																					src='/images/platforms/Balancer.png'
+																					height={12}
+																					width={12}
+																					alt='Balancer'
+																					className='-mt-1 mr-1 inline'
+																				/>
 																			) : (
 																				<Image
 																					src='/images/platforms/Saddle.png'
@@ -318,6 +334,18 @@ export const Dashboard = () => {
 							</div>
 							<Typography variant='lg' className='font-bakbak'>
 								{(votingPowerAllocated ? votingPowerAllocated.div(BigNumber.from(100)) : BigNumber.from(0)).toString()}%
+							</Typography>
+						</div>
+					</div>
+					<div className='col-span-1 mt-6 flex items-center justify-center text-center align-middle'>
+						<div className='m-auto align-middle'>
+							<div className='text-center'>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
+									Allocated to {gauge.symbol}
+								</Typography>
+							</div>
+							<Typography variant='lg' className='font-bakbak'>
+								{(userSlopes ? userSlopes.power.div(BigNumber.from(100)) : BigNumber.from(0)).toString()}%
 							</Typography>
 						</div>
 					</div>
