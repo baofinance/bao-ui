@@ -38,6 +38,10 @@
           {
             "key": "Vary",
             "value": "Accept-Encoding"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "origin-when-cross-origin"
           }
         ]
       },
