@@ -2,7 +2,7 @@
 
 # Bao Finance UI
 
-This is the [app.bao.finance](https://app.bao.finance) UI project.
+This is the [old.baofinance.io](https://old.baofinance.io) UI project.
 
 ## Contributing
 
