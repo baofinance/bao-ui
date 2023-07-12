@@ -24,7 +24,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState } from 'react'
 
-console.log('v2.0.0')
+console.log('v2.0.4')
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
