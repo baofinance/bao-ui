@@ -25,7 +25,7 @@ export class WalletConnectV2Connector extends AbstractConnector {
 	activate = async (): Promise<ConnectorUpdate<string | number>> => {
 		const provider = await import('@walletconnect/ethereum-provider').then(module => {
 			return module.default.init({
-				projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECTID,
+				projectId: '1ecf17999639b9fe3f94eed0ef97286b',
 				rpcMap: RPC_URLS,
 				chains: [1],
 				showQrModal: true,
